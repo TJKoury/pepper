@@ -3636,7 +3636,6 @@ module pepper_states
       real(wp) :: svminr = -1.0_wp  !! minimum radius of the bounding spheres for the saved body and surfaces
    end type zzdsksph_state
 
-
    ! ------------------------------------------------------------------ ZZDYNFRM
 
    !> SPICE Private routine intended solely for the support of SPICE
@@ -3696,7 +3695,6 @@ module pepper_states
       character(kvnmln) :: itmvdf ( 2 ) = ' '  !! kernel variable names PRI_VECTOR_DEF and SEC_VECTOR_DEF
       character(kvnmln) :: itmvec ( 2 ) = ' '  !! kernel variable names PRI_VECTOR and SEC_VECTOR
    end type zzdynrot_state
-
 
    ! ------------------------------------------------------------------ ZZEKAD06
 
@@ -3894,7 +3892,6 @@ module pepper_states
 
    ! ------------------------------------------------------------------ ZZEKVADR
 
-
    !> Compute the EK scratch area base address of the row vector having
    !> a specified index, given a union of EK join row sets and a row
    !> vector index. Also return the base address of the row
@@ -3936,8 +3933,6 @@ module pepper_states
       real(wp) :: origin ( 3 )  !! the origin (zero vector), constant
       real(wp), allocatable :: work ( :, : )  !! work: projections of the FOV boundary vectors onto the FOV plane; grows to the number of vectors (SPICELIB: 10000)
    end type zzelvupy_state
-
-
 
    ! ------------------------------------------------------------------ ZZFTPCHK
 
@@ -4541,8 +4536,6 @@ module pepper_states
       real(wp) :: voxsiz = 0.0_wp  !! voxel size of the saved segment
    end type zzptpl02_state
 
-
-
    ! ------------------------------------------------------------------ ZZRTNMAT
 
    !> Given a vector, return a transformation matrix that maps from the
@@ -4762,21 +4755,13 @@ module pepper_states
       character(32) :: svshap ( spshpn ) = [ character(32) :: 'POINT', 'SPHERE' ]  !! names of the supported target shapes (POINT, SPHERE), constant
    end type zzspin_state
 
-
-
    ! ------------------------------------------------------------------ ZZSPKAP0
-
 
    ! ------------------------------------------------------------------ ZZSPKAP1
 
-
-
-
    ! ------------------------------------------------------------------ ZZSPKEZ0
 
-
    ! ------------------------------------------------------------------ ZZSPKEZ1
-
 
    ! ------------------------------------------------------------------ ZZSPKFAO
 
@@ -4873,29 +4858,19 @@ module pepper_states
 
    ! ------------------------------------------------------------------ ZZSPKGO0
 
-
    ! ------------------------------------------------------------------ ZZSPKGO1
-
 
    ! ------------------------------------------------------------------ ZZSPKGP0
 
-
    ! ------------------------------------------------------------------ ZZSPKGP1
-
-
-
 
    ! ------------------------------------------------------------------ ZZSPKPA0
 
-
    ! ------------------------------------------------------------------ ZZSPKPA1
-
 
    ! ------------------------------------------------------------------ ZZSPKZP0
 
-
    ! ------------------------------------------------------------------ ZZSPKZP1
-
 
    ! ------------------------------------------------------------------ ZZSRFKER
 
@@ -5162,8 +5137,6 @@ module pepper_states
    end type zzxlatei_state
 
 contains
-
-
 
    !> Set the initial values of a new dafah_state: SPICELIB's DATA
    !> values, and zero for the other components.
@@ -5596,7 +5569,6 @@ contains
       call move_alloc(from%name, to%name)
    end subroutine move_kernel
 
-
    !> Set the initial values of a new limbpt_state: SPICELIB's DATA
    !> values, and zero for the other components.
    pure subroutine init_limbpt_state(state)
@@ -5630,8 +5602,6 @@ contains
       state%svctr5 = 0
       state%svradi = 0.0_wp
    end subroutine init_limbpt_state
-
-
 
    !> The slot of a kernel pool variable: 0 if there is no such variable.
    pure integer(ip) function pool_find(self, name) result(i)
@@ -5761,7 +5731,6 @@ contains
       call move_alloc(from%cvals, to%cvals)
    end subroutine move_variable
 
-
    !> Set the initial values of a new sc01_state: SPICELIB's DATA
    !> values, and zero for the other components.
    pure subroutine init_sc01_state(state)
@@ -5793,8 +5762,6 @@ contains
       state%timsys = 0
       state%pass1 = .true.
    end subroutine init_sc01_state
-
-
 
    !> Set the initial values of a new termpt_state: SPICELIB's DATA
    !> values, and zero for the other components.
@@ -6066,8 +6033,6 @@ contains
       call move_alloc(from%name, to%name)
    end subroutine move_file
 
-
-
    !> Set the initial values of a new zzdsksbf_state: SPICELIB's DATA
    !> values, and zero for the other components.
    pure subroutine init_zzdsksbf_state(state)
@@ -6231,7 +6196,6 @@ contains
       logical :: found
       call self%id_map%get(surface_key(id_text(id), body), i, found)
    end function surface_names_id_index
-
 
    !> Set the initial values of a new zzswfxfm_state: SPICELIB's DATA
    !> values, and zero for the other components.

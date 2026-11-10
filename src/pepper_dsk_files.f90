@@ -12,116 +12,100 @@ submodule (pepper_instance) pepper_dsk_files
 
 contains
 
-!$Procedure      ZZSIZEOK ( Determine if the size of a segment is ok )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     This routine exists to determine whether or not the type of
+      !>     a DAF segment is compatible with the sizes allowed for SPK
+      !>     type 01 segments or CK type 02 segments.  However, more generally
+      !>     it determines whether or not the integer equation:
+      !>
+      !>         SIZE = PSIZE*N + (N-OFFSET)/DSIZE
+      !>
+      !>     can be satisfied for some value of N.  Moreover, if such
+      !>     an N exists (there can be only one) it returns that value.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     SIZE       Constant terms in the equation given in the abstract.
+      !>     PSIZE
+      !>     DSIZE
+      !>
+      !>     OFFSET     Constant term in the equation above.  It should be
+      !>                1 or 0.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     OK         is TRUE if an integer solution for N exists.  Otherwise
+      !>                it is returned FALSE.
+      !>
+      !>     N          is the solution to the equation in the abstract
+      !>                if such a solution exists.  Otherwise it is returned
+      !>                with the value zero.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If SIZE, PSIZE, or DSIZE is less than 1, OK is set to FALSE
+      !>         N is set to zero and no attempt is made at finding a
+      !>         solution.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine determines whether or not the integer arithmetic
+      !>     equation
+      !>
+      !>         SIZE = PSIZE*N + (N-1)/DSIZE
+      !>
+      !>     has a solution for N and if so returns the value of N.
+      !>
+      !>     The routine is intended for checking the sizes of segments
+      !>     for SPK type 01 and CK type 02.  For SPK type 01,
+      !>
+      !>        SIZE   = segment size - 1
+      !>        PSIZE  = 72
+      !>        DSIZE  = 100
+      !>        OFFSET = 0
+      !>
+      !>     for CK type 02,
+      !>
+      !>        SIZE   = segment size
+      !>        PSIZE  = 10
+      !>        DSIZE  = 100
+      !>        OFFSET = 1
+      !>
+      !> ## Examples
+      !>
+      !>     None.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     W.L. Taber      (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 02-DEC-1999 (WLT)
       module procedure zzsizeok
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     This routine exists to determine whether or not the type of
-!!     a DAF segment is compatible with the sizes allowed for SPK
-!!     type 01 segments or CK type 02 segments.  However, more generally
-!!     it determines whether or not the integer equation:
-!!
-!!         SIZE = PSIZE*N + (N-OFFSET)/DSIZE
-!!
-!!     can be satisfied for some value of N.  Moreover, if such
-!!     an N exists (there can be only one) it returns that value.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!     NUMERIC
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
-
-! $ Detailed_Input
-!
-!     SIZE       Constant terms in the equation given in the abstract.
-!     PSIZE
-!     DSIZE
-!
-!     OFFSET     Constant term in the equation above.  It should be
-!                1 or 0.
-!
-! $ Detailed_Output
-!
-!     OK         is TRUE if an integer solution for N exists.  Otherwise
-!                it is returned FALSE.
-!
-!     N          is the solution to the equation in the abstract
-!                if such a solution exists.  Otherwise it is returned
-!                with the value zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If SIZE, PSIZE, or DSIZE is less than 1, OK is set to FALSE
-!         N is set to zero and no attempt is made at finding a
-!         solution.
-!
-! $ Particulars
-!
-!     This routine determines whether or not the integer arithmetic
-!     equation
-!
-!         SIZE = PSIZE*N + (N-1)/DSIZE
-!
-!     has a solution for N and if so returns the value of N.
-!
-!     The routine is intended for checking the sizes of segments
-!     for SPK type 01 and CK type 02.  For SPK type 01,
-!
-!        SIZE   = segment size - 1
-!        PSIZE  = 72
-!        DSIZE  = 100
-!        OFFSET = 0
-!
-!     for CK type 02,
-!
-!        SIZE   = segment size
-!        PSIZE  = 10
-!        DSIZE  = 100
-!        OFFSET = 1
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber      (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 02-DEC-1999 (WLT)
-!
-!-&
 
 !
 !     Here's the scoop.
@@ -200,91 +184,73 @@ contains
       return
       end procedure zzsizeok
 
-!$Procedure      ZZCKSPK ( SPK or CK )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     This routine determines whether or not a DAF file attached to
+      !>     the supplied handle is an SPK, CK or unknown file.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     HANDLE     is the handle of a DAF file open for read.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     CKSPK      is a string containing one of the following 3 values
+      !>                'SPK', 'CK' or '?'
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine examines the first segment of a DAF that is
+      !>     a candidate for being an SPK or CK and returns a diagnosis
+      !>     of the type of the file.
+      !>
+      !> ## Examples
+      !>
+      !>     None.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     W.L. Taber      (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
+      !>
+      !>        Replaced DAFRDA call with DAFGDA.
+      !>        Added IMPLICIT NONE.
+      !>
+      !>-    SPICELIB Version 1.0.0, 03-DEC-1999 (WLT)
       module procedure zzckspk
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     This routine determines whether or not a DAF file attached to
-!!     the supplied handle is an SPK, CK or unknown file.
-!!
-!! ## Required Reading
-!!
-!!      None.
-!!
-!! ## Keywords
-!!
-!!      PRIVATE
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       implicit none
       real(wp) :: chcktm_1(1)  !! one-element copy of chcktm (array argument)
       real(wp) :: frsttm_1(1)  !! one-element copy of frsttm (array argument)
       real(wp) :: lastdp_1(1)  !! one-element copy of lastdp (array argument)
 
-! $ Detailed_Input
-!
-!     HANDLE     is the handle of a DAF file open for read.
-!
-! $ Detailed_Output
-!
-!     CKSPK      is a string containing one of the following 3 values
-!                'SPK', 'CK' or '?'
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine examines the first segment of a DAF that is
-!     a candidate for being an SPK or CK and returns a diagnosis
-!     of the type of the file.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber      (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
-!
-!        Replaced DAFRDA call with DAFGDA.
-!        Added IMPLICIT NONE.
-!
-!-    SPICELIB Version 1.0.0, 03-DEC-1999 (WLT)
-!
-!-&
-
-!
-!     Local parameters
-!
 !     The following parameters point to the various slots in the
 !     integer portion of the DAF descriptor where the values are
 !     located.
@@ -561,620 +527,584 @@ contains
 
       end procedure zzckspk
 
-!$Procedure GETFAT ( Get file architecture and type )
-
+      !> ## Detailed Input
+      !>
+      !>     FILE     is the name of a SPICE kernel file whose architecture
+      !>              and type are desired.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     ARCH     is the file architecture of the SPICE kernel file
+      !>              specified by FILE. If the architecture cannot be
+      !>              determined or is not recognized the value '?' is
+      !>              returned.
+      !>
+      !>              Architectures currently recognized are:
+      !>
+      !>                 DAF -- The file is based on the DAF architecture.
+      !>                 DAS -- The file is based on the DAS architecture.
+      !>                 XFR -- The file is in a SPICE transfer file format.
+      !>                 DEC -- The file is an old SPICE decimal text file.
+      !>                 ASC -- An ASCII text file.
+      !>                 KPL -- Kernel Pool File (i.e., a text kernel)
+      !>                 TXT -- An ASCII text file.
+      !>                 TE1 -- Text E-Kernel type 1.
+      !>                 ?   -- The architecture could not be determined.
+      !>
+      !>              This variable must be at least 3 characters long.
+      !>
+      !>     KERTYP   is the type of the SPICE kernel file. If the type
+      !>              can not be determined the value '?' is returned.
+      !>
+      !>              Kernel file types may be any sequence of at most four
+      !>              printing characters. NAIF has reserved for its use
+      !>              types which contain all upper case letters.
+      !>
+      !>              A file type of 'PRE' means that the file is a
+      !>              pre-release file.
+      !>
+      !>              This variable may be at most 4 characters long.
+      !>
+      !> ## Parameters
+      !>
+      !>     RECL     is the record length of a binary kernel file. Each
+      !>              record must be large enough to hold 128 double
+      !>              precision numbers. The units in which the record
+      !>              length must be specified vary from environment to
+      !>              environment. For example, VAX Fortran requires
+      !>              record lengths to be specified in longwords,
+      !>              where two longwords equal one double precision
+      !>              number.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the filename specified is blank, the error
+      !>         SPICE(BLANKFILENAME) is signaled.
+      !>
+      !>     2)  If any inquire on the filename specified by FILE, required to
+      !>         obtain information about the physical file, fails for some
+      !>         reason, the error SPICE(INQUIREERROR) is signaled.
+      !>
+      !>     3)  If the file specified by FILE does not exist, the error
+      !>         SPICE(FILENOTFOUND) is signaled.
+      !>
+      !>     4)  If the file specified by FILE is already open but not through
+      !>         SPICE interfaces, the error SPICE(EXTERNALOPEN) is signaled.
+      !>
+      !>     5)  If an attempt to open the file specified by FILE fails when
+      !>         this routine requires that it succeed, the error
+      !>         SPICE(FILEOPENFAILED) is signaled.
+      !>
+      !>     6)  If an attempt to read the file specified by FILE fails when
+      !>         this routine requires that it succeed, the error
+      !>         SPICE(FILEREADFAILED) is signaled.
+      !>
+      !>     7)  If an issue is detected during the opening the input file or
+      !>         the process to determine its architecture and type, an error
+      !>         is signaled by a routine in the call tree of this routine.
+      !>
+      !>     8)  If the ID word in a DAF based kernel is 'NAIF/DAF', then the
+      !>         algorithm GETFAT uses to distinguish between CK and SPK
+      !>         kernels may result in an indeterminate KERTYP if the SPK or
+      !>         CK files have invalid first segments.
+      !>
+      !> ## Files
+      !>
+      !>     The SPICE kernel file specified by FILE is opened and then
+      !>     closed by this routine to determine its file architecture and
+      !>     type. Filenames of open files should not be passed to this
+      !>     routine.
+      !>
+      !> ## Particulars
+      !>
+      !>     This subroutine is a support utility routine that determines the
+      !>     architecture and type of a SPICE kernel file.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Determine the file architecture and file type of all the
+      !>        kernels loaded through a meta-kernel, and of a kernel in
+      !>        transfer format.
+      !>
+      !>        Use the SPK kernel below to provide an example of a kernel in
+      !>        transfer format.
+      !>
+      !>           earthstns_itrf93_050714.xsp
+      !>
+      !>        Use the meta-kernel shown below to load the other types of
+      !>        SPICE kernels.
+      !>
+      !>           KPL/MK
+      !>
+      !>           File: getfat_ex1.tm
+      !>
+      !>           This meta-kernel is intended to support operation of SPICE
+      !>           example programs. The kernels shown here should not be
+      !>           assumed to contain adequate or correct versions of data
+      !>           required by SPICE-based user applications.
+      !>
+      !>           In order for an application to use this meta-kernel, the
+      !>           kernels referenced here must be present in the user's
+      !>           current working directory.
+      !>
+      !>           The names and contents of the kernels referenced
+      !>           by this meta-kernel are as follows:
+      !>
+      !>              File name                        Contents
+      !>              ---------                        --------
+      !>              de430.bsp                        Planetary ephemeris
+      !>              mar097.bsp                       Mars satellite ephemeris
+      !>              pck00010.tpc                     Planet orientation and
+      !>                                               radii
+      !>              naif0011.tls                     Leapseconds
+      !>              mgs_moc_v20.ti                   MGS MOC instrument
+      !>                                               parameters
+      !>              mgs_sclkscet_00061.tsc           MGS SCLK coefficients
+      !>              mgs_sc_ext12.bc                  MGS s/c bus attitude
+      !>              mgs_ext12_ipng_mgs95j.bsp        MGS ephemeris
+      !>              megr90n000cb_plate.bds           Plate model based on
+      !>                                               MEGDR DEM, resolution
+      !>                                               4 pixels/degree.
+      !>
+      !>           \begindata
+      !>
+      !>              KERNELS_TO_LOAD = ( 'de430.bsp',
+      !>                                  'mar097.bsp',
+      !>                                  'pck00010.tpc',
+      !>                                  'naif0011.tls',
+      !>                                  'mgs_moc_v20.ti',
+      !>                                  'mgs_sclkscet_00061.tsc',
+      !>                                  'mgs_sc_ext12.bc',
+      !>                                  'mgs_ext12_ipng_mgs95j.bsp',
+      !>                                  'megr90n000cb_plate.bds'      )
+      !>           \begintext
+      !>
+      !>           End of meta-kernel
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM GETFAT_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local parameters.
+      !>        C
+      !>              INTEGER               ARCHLN
+      !>              PARAMETER           ( ARCHLN = 4 )
+      !>
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 256 )
+      !>
+      !>              INTEGER               KTYPLN
+      !>              PARAMETER           ( KTYPLN = 5 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(ARCHLN)    ARCH
+      !>              CHARACTER*(FILSIZ)    FNAME
+      !>              CHARACTER*(28)        FNAME1
+      !>              CHARACTER*(KTYPLN)    KTYPE
+      !>              CHARACTER*(FILSIZ)    SOURCE
+      !>
+      !>              INTEGER               COUNT
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Check the file architecture and type of an SPK
+      !>        C     in transfer format.
+      !>        C
+      !>              FNAME1 = 'earthstns_itrf93_050714.xsp'
+      !>
+      !>              CALL GETFAT ( FNAME1, ARCH, KTYPE )
+      !>
+      !>              WRITE(*,*) 'File name     : ', FNAME1
+      !>              WRITE(*,*) '  Architecture: ', ARCH
+      !>              WRITE(*,*) '  Kernel type : ', KTYPE
+      !>              WRITE(*,*) ' '
+      !>
+      !>        C
+      !>        C     Load the kernels.
+      !>        C
+      !>              CALL FURNSH ( 'getfat_ex1.tm' )
+      !>
+      !>        C
+      !>        C     Get the file architecture and kernel type for each of
+      !>        C     the kernels in the kernel pool.
+      !>        C
+      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>
+      !>              DO I= 1, COUNT
+      !>
+      !>                 CALL KDATA ( I,     'ALL', FNAME, KTYPE, SOURCE,
+      !>             .                HANDLE, FOUND                      )
+      !>
+      !>                 CALL GETFAT ( FNAME, ARCH, KTYPE )
+      !>
+      !>                 WRITE(*,*) 'File name     : ', FNAME
+      !>                 WRITE(*,*) '  Source      : ', SOURCE
+      !>                 WRITE(*,*) '  Architecture: ', ARCH
+      !>                 WRITE(*,*) '  Kernel type : ', KTYPE
+      !>                 WRITE(*,*) ' '
+      !>
+      !>              END DO
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         File name     : earthstns_itrf93_050714.xsp
+      !>           Architecture: XFR
+      !>           Kernel type : DAF
+      !>
+      !>         File name     : getfat_ex1.tm
+      !>           Source      :
+      !>           Architecture: KPL
+      !>           Kernel type : MK
+      !>
+      !>         File name     : de430.bsp
+      !>           Source      : getfat_ex1.tm
+      !>           Architecture: DAF
+      !>           Kernel type : SPK
+      !>
+      !>         File name     : mar097.bsp
+      !>           Source      : getfat_ex1.tm
+      !>           Architecture: DAF
+      !>           Kernel type : SPK
+      !>
+      !>         File name     : pck00010.tpc
+      !>           Source      : getfat_ex1.tm
+      !>           Architecture: KPL
+      !>           Kernel type : PCK
+      !>
+      !>         File name     : naif0011.tls
+      !>           Source      : getfat_ex1.tm
+      !>           Architecture: KPL
+      !>           Kernel type : LSK
+      !>
+      !>         File name     : mgs_moc_v20.ti
+      !>           Source      : getfat_ex1.tm
+      !>           Architecture: KPL
+      !>           Kernel type : IK
+      !>
+      !>         File name     : mgs_sclkscet_00061.tsc
+      !>           Source      : getfat_ex1.tm
+      !>           Architecture: KPL
+      !>           Kernel type : SCLK
+      !>
+      !>         File name     : mgs_sc_ext12.bc
+      !>           Source      : getfat_ex1.tm
+      !>           Architecture: DAF
+      !>           Kernel type : CK
+      !>
+      !>         File name     : mgs_ext12_ipng_mgs95j.bsp
+      !>           Source      : getfat_ex1.tm
+      !>           Architecture: DAF
+      !>           Kernel type : SPK
+      !>
+      !>         File name     : megr90n000cb_plate.bds
+      !>           Source      : getfat_ex1.tm
+      !>           Architecture: DAS
+      !>           Kernel type : DSK
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  In order to properly determine the type of DAF based binary
+      !>         kernels, the routine requires that their first segments and
+      !>         the meta data necessary to address them are valid.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 5.1.0, 28-NOV-2021 (BVS)
+      !>
+      !>        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+      !>
+      !>-    SPICELIB Version 5.0.1, 07-AUG-2020 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard. Added complete
+      !>        code example to $Examples section.
+      !>
+      !>-    SPICELIB Version 5.0.0, 05-FEB-2015 (NJB)
+      !>
+      !>        Updated to support integration of DAS into the
+      !>        handle manager subsystem. Now opened DAS files
+      !>        must be known to that subsystem; if this routine
+      !>        encounters an open, unrecognized DAS file, an
+      !>        error is signaled.
+      !>
+      !>        Corrected various typos in comments.
+      !>
+      !>-    SPICELIB Version 4.25.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-INTEL.
+      !>
+      !>-    SPICELIB Version 4.24.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 4.23.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 4.22.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 4.21.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 4.20.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL.
+      !>
+      !>-    SPICELIB Version 4.19.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-CC_C.
+      !>
+      !>-    SPICELIB Version 4.18.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+      !>
+      !>-    SPICELIB Version 4.17.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+      !>
+      !>-    SPICELIB Version 4.16.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 4.15.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 4.14.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-64BIT-MS_C.
+      !>
+      !>-    SPICELIB Version 4.13.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-INTEL_C.
+      !>
+      !>-    SPICELIB Version 4.12.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 4.11.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 4.10.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for PC-LINUX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 4.9.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for MAC-OSX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 4.8.0, 19-FEB-2008 (BVS)
+      !>
+      !>        Updated for PC-LINUX-IFORT.
+      !>
+      !>-    SPICELIB Version 4.7.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 4.6.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-INTEL_C.
+      !>
+      !>-    SPICELIB Version 4.5.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-IFORT.
+      !>
+      !>-    SPICELIB Version 4.4.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-IFORT.
+      !>
+      !>-    SPICELIB Version 4.3.0, 26-OCT-2005 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 4.2.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN_C.
+      !>
+      !>-    SPICELIB Version 4.1.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN.
+      !>
+      !>-    SPICELIB Version 4.0.2, 24-APR-2003 (EDW)
+      !>
+      !>        Added MAC-OSX-F77 to the list of platforms
+      !>        that require READONLY to read write protected
+      !>        kernels.
+      !>
+      !>-    SPICELIB Version 4.0.1, 17-JUL-2002 (BVS)
+      !>
+      !>        Added MAC-OSX environments.
+      !>
+      !>-    SPICELIB Version 4.0.0, 22-AUG-2001 (WLT) (FST) (EDW)
+      !>
+      !>        Added code so that the architecture and type of open binary
+      !>        SPICE kernels can be determined.
+      !>
+      !>        Added exception for MACPPC_C (CodeWarrior Mac classic).
+      !>        Reduced RECL value to 12 to prevent expression of
+      !>        the fseek bug.
+      !>
+      !>-    SPICELIB Version 3.2.0, 06-DEC-1999 (WLT)
+      !>
+      !>        The heuristics for distinguishing between CK and SPK have
+      !>        been enhanced so that the routine is no longer requires
+      !>        that TICKS in C-kernels be positive or integral.
+      !>
+      !>-    SPICELIB Version 3.1.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 3.1.3, 22-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 3.1.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 3.1.1, 18-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 3.1.0, 11-FEB-1999 (FST)
+      !>
+      !>        Added an integrality check to Test 3. If LASTDP is not
+      !>        an integral value, then GETFAT simply returns KERTYP = '?',
+      !>        since it is of an indeterminate type.
+      !>
+      !>-    SPICELIB Version 3.0.0, 07-APR-1998 (NJB)
+      !>
+      !>        Module was updated for the PC-LINUX platform.
+      !>
+      !>-    SPICELIB Version 2.0.0, 19-DEC-1995 (KRG)
+      !>
+      !>        Added several new features to the subroutine:
+      !>
+      !>         - Error handling has been enhanced.
+      !>         - Several new file architectures have been added.
+      !>
+      !>        Removed the mention of 1000 characters as a candidate for the
+      !>        record length of a file.
+      !>
+      !>        Added the exception for a blank filename to the header. The
+      !>        error is signaled, but it was not listed in the header.
+      !>
+      !>        Added IOSTAT values to the appropriate error messages.
+      !>
+      !>        Non-printing characters are replaced with blanks in the ID
+      !>        word when it is read. This deals with the case where a
+      !>        platform allows a text file to be opened as an unformatted
+      !>        file and the ID word does not completely fill 8 characters.
+      !>
+      !>-    SPICELIB Version 1.4.0, 05-JAN-1995 (HAN)
+      !>
+      !>        Removed ENV11 since it is now the same as ENV2.
+      !>        Removed ENV10 since it is the same as the VAX environment.
+      !>
+      !>-    SPICELIB Version 1.3.0, 30-AUG-1994 (HAN)
+      !>
+      !>        Added two new environments, DEC Alpha/OpenVMS and
+      !>        Sun/Solaris, to the source master file.
+      !>
+      !>-    SPICELIB Version 1.2.0, 25-MAR-1994 (HAN)
+      !>
+      !>        Added two new environments, DEC Alpha/OpenVMS and
+      !>        Sun/Solaris, to the source master file.
+      !>
+      !>-    SPICELIB Version 1.1.0, 25-MAR-1994 (HAN)
+      !>
+      !>        Modified master source code file to use READONLY on platforms
+      !>        that support it. Also, changed some local declaration comment
+      !>        lines to match the standard NAIF template.
+      !>
+      !>-    SPICELIB Version 1.0.0, 24-JUL-1993 (WLT) (HAN) (KRG)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 4.0.0, 22-AUG-2001 (WLT) (FST) (EDW)
+      !>
+      !>        Added code so that the architecture and type of open binary
+      !>        SPICE kernels can be determined. This uses the new DAF/DAS
+      !>        handle manager as well as examination of handles of open DAS
+      !>        files. Currently the handle manager deals only with DAF
+      !>        files. This routine should be updated again when the DAS
+      !>        system is integrated with the handle manager.
+      !>
+      !>        Some slight changes were required to support ZZDDHFNH on
+      !>        the VAX environment. This resulted in the addition of
+      !>        the logical USEFNH that is set to true in most
+      !>        environments, and never used again other than to allow
+      !>        the invocation of the ZZDDHFNH module.
+      !>
+      !>-    SPICELIB Version 2.0.0, 19-DEC-1995 (KRG)
+      !>
+      !>        Added several new features to the subroutine:
+      !>
+      !>         - Error handling has been enhanced.
+      !>         - Several new file architectures have been added.
+      !>
+      !>        Removed the mention of 1000 characters as a candidate for the
+      !>        record length of a file. It seems unlikely that we will
+      !>        encounter an environment where 1000 characters of storage is
+      !>        larger than the storage necessary for 128 double precision
+      !>        numbers; typically there are 8 characters per double precision
+      !>        number, yielding 1024 characters.
+      !>
+      !>        Added the exception for a blank filename to the header. The
+      !>        error is signaled, but it was not listed in the header.
+      !>
+      !>        Added IOSTAT values to the appropriate error messages.
+      !>
+      !>        Non-printing characters are replaced with blanks in the ID
+      !>        word when it is read. This deals with the case where a
+      !>        platform allows a text file to be opened as an unformatted
+      !>        file and the ID word does not completely fill 8 characters.
       module procedure getfat
-!! ## Abstract
-!!
-!!     Determine the architecture and type of SPICE kernels.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     KERNEL
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: nextwd, ucase
       use pepper_inc_zzddhman
       implicit none
 
-
-! $ Detailed_Input
-!
-!     FILE     is the name of a SPICE kernel file whose architecture
-!              and type are desired.
-!
-! $ Detailed_Output
-!
-!     ARCH     is the file architecture of the SPICE kernel file
-!              specified by FILE. If the architecture cannot be
-!              determined or is not recognized the value '?' is
-!              returned.
-!
-!              Architectures currently recognized are:
-!
-!                 DAF -- The file is based on the DAF architecture.
-!                 DAS -- The file is based on the DAS architecture.
-!                 XFR -- The file is in a SPICE transfer file format.
-!                 DEC -- The file is an old SPICE decimal text file.
-!                 ASC -- An ASCII text file.
-!                 KPL -- Kernel Pool File (i.e., a text kernel)
-!                 TXT -- An ASCII text file.
-!                 TE1 -- Text E-Kernel type 1.
-!                 ?   -- The architecture could not be determined.
-!
-!              This variable must be at least 3 characters long.
-!
-!     KERTYP   is the type of the SPICE kernel file. If the type
-!              can not be determined the value '?' is returned.
-!
-!              Kernel file types may be any sequence of at most four
-!              printing characters. NAIF has reserved for its use
-!              types which contain all upper case letters.
-!
-!              A file type of 'PRE' means that the file is a
-!              pre-release file.
-!
-!              This variable may be at most 4 characters long.
-!
-! $ Parameters
-!
-!     RECL     is the record length of a binary kernel file. Each
-!              record must be large enough to hold 128 double
-!              precision numbers. The units in which the record
-!              length must be specified vary from environment to
-!              environment. For example, VAX Fortran requires
-!              record lengths to be specified in longwords,
-!              where two longwords equal one double precision
-!              number.
-!
-! $ Exceptions
-!
-!     1)  If the filename specified is blank, the error
-!         SPICE(BLANKFILENAME) is signaled.
-!
-!     2)  If any inquire on the filename specified by FILE, required to
-!         obtain information about the physical file, fails for some
-!         reason, the error SPICE(INQUIREERROR) is signaled.
-!
-!     3)  If the file specified by FILE does not exist, the error
-!         SPICE(FILENOTFOUND) is signaled.
-!
-!     4)  If the file specified by FILE is already open but not through
-!         SPICE interfaces, the error SPICE(EXTERNALOPEN) is signaled.
-!
-!     5)  If an attempt to open the file specified by FILE fails when
-!         this routine requires that it succeed, the error
-!         SPICE(FILEOPENFAILED) is signaled.
-!
-!     6)  If an attempt to read the file specified by FILE fails when
-!         this routine requires that it succeed, the error
-!         SPICE(FILEREADFAILED) is signaled.
-!
-!     7)  If an issue is detected during the opening the input file or
-!         the process to determine its architecture and type, an error
-!         is signaled by a routine in the call tree of this routine.
-!
-!     8)  If the ID word in a DAF based kernel is 'NAIF/DAF', then the
-!         algorithm GETFAT uses to distinguish between CK and SPK
-!         kernels may result in an indeterminate KERTYP if the SPK or
-!         CK files have invalid first segments.
-!
-! $ Files
-!
-!     The SPICE kernel file specified by FILE is opened and then
-!     closed by this routine to determine its file architecture and
-!     type. Filenames of open files should not be passed to this
-!     routine.
-!
-! $ Particulars
-!
-!     This subroutine is a support utility routine that determines the
-!     architecture and type of a SPICE kernel file.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Determine the file architecture and file type of all the
-!        kernels loaded through a meta-kernel, and of a kernel in
-!        transfer format.
-!
-!        Use the SPK kernel below to provide an example of a kernel in
-!        transfer format.
-!
-!           earthstns_itrf93_050714.xsp
-!
-!        Use the meta-kernel shown below to load the other types of
-!        SPICE kernels.
-!
-!           KPL/MK
-!
-!           File: getfat_ex1.tm
-!
-!           This meta-kernel is intended to support operation of SPICE
-!           example programs. The kernels shown here should not be
-!           assumed to contain adequate or correct versions of data
-!           required by SPICE-based user applications.
-!
-!           In order for an application to use this meta-kernel, the
-!           kernels referenced here must be present in the user's
-!           current working directory.
-!
-!           The names and contents of the kernels referenced
-!           by this meta-kernel are as follows:
-!
-!              File name                        Contents
-!              ---------                        --------
-!              de430.bsp                        Planetary ephemeris
-!              mar097.bsp                       Mars satellite ephemeris
-!              pck00010.tpc                     Planet orientation and
-!                                               radii
-!              naif0011.tls                     Leapseconds
-!              mgs_moc_v20.ti                   MGS MOC instrument
-!                                               parameters
-!              mgs_sclkscet_00061.tsc           MGS SCLK coefficients
-!              mgs_sc_ext12.bc                  MGS s/c bus attitude
-!              mgs_ext12_ipng_mgs95j.bsp        MGS ephemeris
-!              megr90n000cb_plate.bds           Plate model based on
-!                                               MEGDR DEM, resolution
-!                                               4 pixels/degree.
-!
-!           \begindata
-!
-!              KERNELS_TO_LOAD = ( 'de430.bsp',
-!                                  'mar097.bsp',
-!                                  'pck00010.tpc',
-!                                  'naif0011.tls',
-!                                  'mgs_moc_v20.ti',
-!                                  'mgs_sclkscet_00061.tsc',
-!                                  'mgs_sc_ext12.bc',
-!                                  'mgs_ext12_ipng_mgs95j.bsp',
-!                                  'megr90n000cb_plate.bds'      )
-!           \begintext
-!
-!           End of meta-kernel
-!
-!        Example code begins here.
-!
-!              PROGRAM GETFAT_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER               ARCHLN
-!              PARAMETER           ( ARCHLN = 4 )
-!
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 256 )
-!
-!              INTEGER               KTYPLN
-!              PARAMETER           ( KTYPLN = 5 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(ARCHLN)    ARCH
-!              CHARACTER*(FILSIZ)    FNAME
-!              CHARACTER*(28)        FNAME1
-!              CHARACTER*(KTYPLN)    KTYPE
-!              CHARACTER*(FILSIZ)    SOURCE
-!
-!              INTEGER               COUNT
-!              INTEGER               HANDLE
-!              INTEGER               I
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Check the file architecture and type of an SPK
-!        C     in transfer format.
-!        C
-!              FNAME1 = 'earthstns_itrf93_050714.xsp'
-!
-!              CALL GETFAT ( FNAME1, ARCH, KTYPE )
-!
-!              WRITE(*,*) 'File name     : ', FNAME1
-!              WRITE(*,*) '  Architecture: ', ARCH
-!              WRITE(*,*) '  Kernel type : ', KTYPE
-!              WRITE(*,*) ' '
-!
-!        C
-!        C     Load the kernels.
-!        C
-!              CALL FURNSH ( 'getfat_ex1.tm' )
-!
-!        C
-!        C     Get the file architecture and kernel type for each of
-!        C     the kernels in the kernel pool.
-!        C
-!              CALL KTOTAL ( 'ALL', COUNT )
-!
-!              DO I= 1, COUNT
-!
-!                 CALL KDATA ( I,     'ALL', FNAME, KTYPE, SOURCE,
-!             .                HANDLE, FOUND                      )
-!
-!                 CALL GETFAT ( FNAME, ARCH, KTYPE )
-!
-!                 WRITE(*,*) 'File name     : ', FNAME
-!                 WRITE(*,*) '  Source      : ', SOURCE
-!                 WRITE(*,*) '  Architecture: ', ARCH
-!                 WRITE(*,*) '  Kernel type : ', KTYPE
-!                 WRITE(*,*) ' '
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         File name     : earthstns_itrf93_050714.xsp
-!           Architecture: XFR
-!           Kernel type : DAF
-!
-!         File name     : getfat_ex1.tm
-!           Source      :
-!           Architecture: KPL
-!           Kernel type : MK
-!
-!         File name     : de430.bsp
-!           Source      : getfat_ex1.tm
-!           Architecture: DAF
-!           Kernel type : SPK
-!
-!         File name     : mar097.bsp
-!           Source      : getfat_ex1.tm
-!           Architecture: DAF
-!           Kernel type : SPK
-!
-!         File name     : pck00010.tpc
-!           Source      : getfat_ex1.tm
-!           Architecture: KPL
-!           Kernel type : PCK
-!
-!         File name     : naif0011.tls
-!           Source      : getfat_ex1.tm
-!           Architecture: KPL
-!           Kernel type : LSK
-!
-!         File name     : mgs_moc_v20.ti
-!           Source      : getfat_ex1.tm
-!           Architecture: KPL
-!           Kernel type : IK
-!
-!         File name     : mgs_sclkscet_00061.tsc
-!           Source      : getfat_ex1.tm
-!           Architecture: KPL
-!           Kernel type : SCLK
-!
-!         File name     : mgs_sc_ext12.bc
-!           Source      : getfat_ex1.tm
-!           Architecture: DAF
-!           Kernel type : CK
-!
-!         File name     : mgs_ext12_ipng_mgs95j.bsp
-!           Source      : getfat_ex1.tm
-!           Architecture: DAF
-!           Kernel type : SPK
-!
-!         File name     : megr90n000cb_plate.bds
-!           Source      : getfat_ex1.tm
-!           Architecture: DAS
-!           Kernel type : DSK
-!
-! $ Restrictions
-!
-!     1)  In order to properly determine the type of DAF based binary
-!         kernels, the routine requires that their first segments and
-!         the meta data necessary to address them are valid.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     H.A. Neilan        (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.1.0, 28-NOV-2021 (BVS)
-!
-!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
-!
-!-    SPICELIB Version 5.0.1, 07-AUG-2020 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example to $Examples section.
-!
-!-    SPICELIB Version 5.0.0, 05-FEB-2015 (NJB)
-!
-!        Updated to support integration of DAS into the
-!        handle manager subsystem. Now opened DAS files
-!        must be known to that subsystem; if this routine
-!        encounters an open, unrecognized DAS file, an
-!        error is signaled.
-!
-!        Corrected various typos in comments.
-!
-!-    SPICELIB Version 4.25.0, 10-MAR-2014 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-INTEL.
-!
-!-    SPICELIB Version 4.24.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-IFORT.
-!
-!-    SPICELIB Version 4.23.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-GFORTRAN.
-!
-!-    SPICELIB Version 4.22.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 4.21.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GCC_C.
-!
-!-    SPICELIB Version 4.20.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL.
-!
-!-    SPICELIB Version 4.19.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-CC_C.
-!
-!-    SPICELIB Version 4.18.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
-!
-!-    SPICELIB Version 4.17.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
-!
-!-    SPICELIB Version 4.16.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-WINDOWS-64BIT-IFORT.
-!
-!-    SPICELIB Version 4.15.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 4.14.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-64BIT-MS_C.
-!
-!-    SPICELIB Version 4.13.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-INTEL_C.
-!
-!-    SPICELIB Version 4.12.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-IFORT.
-!
-!-    SPICELIB Version 4.11.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 4.10.0, 18-MAR-2009 (BVS)
-!
-!        Updated for PC-LINUX-GFORTRAN.
-!
-!-    SPICELIB Version 4.9.0, 18-MAR-2009 (BVS)
-!
-!        Updated for MAC-OSX-GFORTRAN.
-!
-!-    SPICELIB Version 4.8.0, 19-FEB-2008 (BVS)
-!
-!        Updated for PC-LINUX-IFORT.
-!
-!-    SPICELIB Version 4.7.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GCC_C.
-!
-!-    SPICELIB Version 4.6.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-INTEL_C.
-!
-!-    SPICELIB Version 4.5.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-IFORT.
-!
-!-    SPICELIB Version 4.4.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-WINDOWS-IFORT.
-!
-!-    SPICELIB Version 4.3.0, 26-OCT-2005 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-GCC_C.
-!
-!-    SPICELIB Version 4.2.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN_C.
-!
-!-    SPICELIB Version 4.1.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN.
-!
-!-    SPICELIB Version 4.0.2, 24-APR-2003 (EDW)
-!
-!        Added MAC-OSX-F77 to the list of platforms
-!        that require READONLY to read write protected
-!        kernels.
-!
-!-    SPICELIB Version 4.0.1, 17-JUL-2002 (BVS)
-!
-!        Added MAC-OSX environments.
-!
-!-    SPICELIB Version 4.0.0, 22-AUG-2001 (WLT) (FST) (EDW)
-!
-!        Added code so that the architecture and type of open binary
-!        SPICE kernels can be determined.
-!
-!        Added exception for MACPPC_C (CodeWarrior Mac classic).
-!        Reduced RECL value to 12 to prevent expression of
-!        the fseek bug.
-!
-!-    SPICELIB Version 3.2.0, 06-DEC-1999 (WLT)
-!
-!        The heuristics for distinguishing between CK and SPK have
-!        been enhanced so that the routine is no longer requires
-!        that TICKS in C-kernels be positive or integral.
-!
-!-    SPICELIB Version 3.1.4, 08-OCT-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. New
-!        environments are WIN-NT
-!
-!-    SPICELIB Version 3.1.3, 22-SEP-1999 (NJB)
-!
-!        CSPICE environments were added. Some typos were corrected.
-!
-!-    SPICELIB Version 3.1.2, 28-JUL-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. New
-!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!
-!-    SPICELIB Version 3.1.1, 18-MAR-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. Previously,
-!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!        by the environment label SUN.
-!
-!-    SPICELIB Version 3.1.0, 11-FEB-1999 (FST)
-!
-!        Added an integrality check to Test 3. If LASTDP is not
-!        an integral value, then GETFAT simply returns KERTYP = '?',
-!        since it is of an indeterminate type.
-!
-!-    SPICELIB Version 3.0.0, 07-APR-1998 (NJB)
-!
-!        Module was updated for the PC-LINUX platform.
-!
-!-    SPICELIB Version 2.0.0, 19-DEC-1995 (KRG)
-!
-!        Added several new features to the subroutine:
-!
-!         - Error handling has been enhanced.
-!         - Several new file architectures have been added.
-!
-!        Removed the mention of 1000 characters as a candidate for the
-!        record length of a file.
-!
-!        Added the exception for a blank filename to the header. The
-!        error is signaled, but it was not listed in the header.
-!
-!        Added IOSTAT values to the appropriate error messages.
-!
-!        Non-printing characters are replaced with blanks in the ID
-!        word when it is read. This deals with the case where a
-!        platform allows a text file to be opened as an unformatted
-!        file and the ID word does not completely fill 8 characters.
-!
-!-    SPICELIB Version 1.4.0, 05-JAN-1995 (HAN)
-!
-!        Removed ENV11 since it is now the same as ENV2.
-!        Removed ENV10 since it is the same as the VAX environment.
-!
-!-    SPICELIB Version 1.3.0, 30-AUG-1994 (HAN)
-!
-!        Added two new environments, DEC Alpha/OpenVMS and
-!        Sun/Solaris, to the source master file.
-!
-!-    SPICELIB Version 1.2.0, 25-MAR-1994 (HAN)
-!
-!        Added two new environments, DEC Alpha/OpenVMS and
-!        Sun/Solaris, to the source master file.
-!
-!-    SPICELIB Version 1.1.0, 25-MAR-1994 (HAN)
-!
-!        Modified master source code file to use READONLY on platforms
-!        that support it. Also, changed some local declaration comment
-!        lines to match the standard NAIF template.
-!
-!-    SPICELIB Version 1.0.0, 24-JUL-1993 (WLT) (HAN) (KRG)
-!
-!-&
-
-! $ Index_Entries
-!
-!     determine the architecture and type of a kernel file
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 4.0.0, 22-AUG-2001 (WLT) (FST) (EDW)
-!
-!        Added code so that the architecture and type of open binary
-!        SPICE kernels can be determined. This uses the new DAF/DAS
-!        handle manager as well as examination of handles of open DAS
-!        files. Currently the handle manager deals only with DAF
-!        files. This routine should be updated again when the DAS
-!        system is integrated with the handle manager.
-!
-!        Some slight changes were required to support ZZDDHFNH on
-!        the VAX environment. This resulted in the addition of
-!        the logical USEFNH that is set to true in most
-!        environments, and never used again other than to allow
-!        the invocation of the ZZDDHFNH module.
-!
-!-    SPICELIB Version 2.0.0, 19-DEC-1995 (KRG)
-!
-!        Added several new features to the subroutine:
-!
-!         - Error handling has been enhanced.
-!         - Several new file architectures have been added.
-!
-!        Removed the mention of 1000 characters as a candidate for the
-!        record length of a file. It seems unlikely that we will
-!        encounter an environment where 1000 characters of storage is
-!        larger than the storage necessary for 128 double precision
-!        numbers; typically there are 8 characters per double precision
-!        number, yielding 1024 characters.
-!
-!        Added the exception for a blank filename to the header. The
-!        error is signaled, but it was not listed in the header.
-!
-!        Added IOSTAT values to the appropriate error messages.
-!
-!        Non-printing characters are replaced with blanks in the ID
-!        word when it is read. This deals with the case where a
-!        platform allows a text file to be opened as an unformatted
-!        file and the ID word does not completely fill 8 characters.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
       integer(ip), parameter :: lbcell = -5
 
 !
@@ -1194,9 +1124,6 @@ contains
 
       integer(ip), parameter :: maxpch = 126
 
-!
-!     Local Variables
-!
       character(wdsize)     filarc
       character(filsiz)     fname
       character(idlen)      idword
@@ -1592,158 +1519,124 @@ contains
 
       end procedure getfat
 
-!$Procedure SURFNM ( Surface normal vector on an ellipsoid )
-
+      !> ## Detailed Input
+      !>
+      !>     A        is the length of the semi-axis of the ellipsoid that is
+      !>              parallel to the X-axis of the body-fixed reference frame.
+      !>
+      !>     B        is the length of the semi-axis of the ellipsoid that is
+      !>              parallel to the Y-axis of the body-fixed reference frame.
+      !>
+      !>     C        is the length of the semi-axis of the ellipsoid that is
+      !>              parallel to the Z-axis of the body-fixed reference frame.
+      !>
+      !>     POINT    is a 3-vector giving the bodyfixed coordinates of a point
+      !>              on the ellipsoid. In bodyfixed coordinates, the semi-axes
+      !>              of the ellipsoid are aligned with the X, Y, and Z-axes of
+      !>              the reference frame.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NORMAL   is the unit vector pointing away from the ellipsoid and
+      !>              normal to the ellipsoid at POINT.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If any of the axes are non-positive, the error
+      !>         SPICE(BADAXISLENGTH) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine computes the outward pointing unit normal vector to
+      !>     the ellipsoid having semi-axes of length A, B, and C from the
+      !>     point POINT.
+      !>
+      !> ## Examples
+      !>
+      !>     A typical use of SURFNM would be to find the angle of incidence
+      !>     of the light from the sun at a point on the surface of an
+      !>     ellipsoid.
+      !>
+      !>     Let Q be a 3-vector representing the rectangular body-fixed
+      !>     coordinates of a point on the ellipsoid (we are assuming that
+      !>     the axes of the ellipsoid are aligned with the axes of the
+      !>     body fixed frame.) Let V be the vector from Q to the sun in
+      !>     bodyfixed coordinates. Then the following code fragment could
+      !>     be used to compute angle of incidence of sunlight at Q.
+      !>
+      !>        CALL SURFNM   ( A, B, C, Q, NRML )
+      !>
+      !>        INCIDN = VSEP ( V,          NRML )
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  It is assumed that the input POINT is indeed on the ellipsoid.
+      !>         No checking for this is done.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.4.0, 26-OCT-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Removed
+      !>        unnecessary $Revisions section.
+      !>
+      !>        Updated the documentation to refer to "reference frame" instead
+      !>        of "coordinate system" as per NAIF conventions.
+      !>
+      !>-    SPICELIB Version 1.3.2, 23-FEB-2016 (NJB)
+      !>
+      !>        Corrected some typos in the header.
+      !>
+      !>-    SPICELIB Version 1.3.1, 18-MAY-2010 (BVS)
+      !>
+      !>        Removed "C$" marker from text in the header.
+      !>
+      !>-    SPICELIB Version 1.3.0, 02-SEP-2005 (NJB)
+      !>
+      !>        Updated to remove non-standard use of duplicate arguments
+      !>        in VHAT call.
+      !>
+      !>-    SPICELIB Version 1.2.0, 07-AUG-1996 (WLT)
+      !>
+      !>        Added a SAVE statement so that the error message will
+      !>        not be lost between separate invocations of the routine.
+      !>
+      !>-    SPICELIB Version 1.1.0, 21-JUL-1995 (WLT)
+      !>
+      !>        A typo in the $Examples section was corrected
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
       module procedure surfnm
-!! ## Abstract
-!!
-!!     Compute the outward-pointing, unit normal vector at a point on
-!!     the surface of an ellipsoid.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ELLIPSOID
-!!     GEOMETRY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vhatip
       implicit none
 
-! $ Detailed_Input
-!
-!     A        is the length of the semi-axis of the ellipsoid that is
-!              parallel to the X-axis of the body-fixed reference frame.
-!
-!     B        is the length of the semi-axis of the ellipsoid that is
-!              parallel to the Y-axis of the body-fixed reference frame.
-!
-!     C        is the length of the semi-axis of the ellipsoid that is
-!              parallel to the Z-axis of the body-fixed reference frame.
-!
-!     POINT    is a 3-vector giving the bodyfixed coordinates of a point
-!              on the ellipsoid. In bodyfixed coordinates, the semi-axes
-!              of the ellipsoid are aligned with the X, Y, and Z-axes of
-!              the reference frame.
-!
-! $ Detailed_Output
-!
-!     NORMAL   is the unit vector pointing away from the ellipsoid and
-!              normal to the ellipsoid at POINT.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If any of the axes are non-positive, the error
-!         SPICE(BADAXISLENGTH) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine computes the outward pointing unit normal vector to
-!     the ellipsoid having semi-axes of length A, B, and C from the
-!     point POINT.
-!
-! $ Examples
-!
-!     A typical use of SURFNM would be to find the angle of incidence
-!     of the light from the sun at a point on the surface of an
-!     ellipsoid.
-!
-!     Let Q be a 3-vector representing the rectangular body-fixed
-!     coordinates of a point on the ellipsoid (we are assuming that
-!     the axes of the ellipsoid are aligned with the axes of the
-!     body fixed frame.) Let V be the vector from Q to the sun in
-!     bodyfixed coordinates. Then the following code fragment could
-!     be used to compute angle of incidence of sunlight at Q.
-!
-!        CALL SURFNM   ( A, B, C, Q, NRML )
-!
-!        INCIDN = VSEP ( V,          NRML )
-!
-! $ Restrictions
-!
-!     1)  It is assumed that the input POINT is indeed on the ellipsoid.
-!         No checking for this is done.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.4.0, 26-OCT-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Removed
-!        unnecessary $Revisions section.
-!
-!        Updated the documentation to refer to "reference frame" instead
-!        of "coordinate system" as per NAIF conventions.
-!
-!-    SPICELIB Version 1.3.2, 23-FEB-2016 (NJB)
-!
-!        Corrected some typos in the header.
-!
-!-    SPICELIB Version 1.3.1, 18-MAY-2010 (BVS)
-!
-!        Removed "C$" marker from text in the header.
-!
-!-    SPICELIB Version 1.3.0, 02-SEP-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in VHAT call.
-!
-!-    SPICELIB Version 1.2.0, 07-AUG-1996 (WLT)
-!
-!        Added a SAVE statement so that the error message will
-!        not be lost between separate invocations of the routine.
-!
-!-    SPICELIB Version 1.1.0, 21-JUL-1995 (WLT)
-!
-!        A typo in the $Examples section was corrected
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     surface normal vector on an ellipsoid
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Variables
-!
       real(wp)              m
       real(wp)              a1
       real(wp)              b1
@@ -1756,10 +1649,6 @@ contains
            'Axes B and C were nonpositive.', &
            'All three axes were nonpositive.' ]
       integer(ip)           bad
-
-!
-!     Initial values
-!
 
 !
 !     Standard SPICE error handling.
@@ -1826,381 +1715,345 @@ contains
       return
       end procedure surfnm
 
-!$Procedure NEARPT ( Nearest point on an ellipsoid )
-
+      !> ## Detailed Input
+      !>
+      !>     POSITN   is a 3-vector giving the position of a point with respect
+      !>              to the center of an ellipsoid. The vector is expressed
+      !>              in a body-fixed reference frame. The semi-axes of the
+      !>              ellipsoid are aligned with the x, y, and z-axes of the
+      !>              body-fixed frame.
+      !>
+      !>     A        is the length of the semi-axis of the ellipsoid that is
+      !>              parallel to the x-axis of the body-fixed reference frame.
+      !>
+      !>     B        is the length of the semi-axis of the ellipsoid that is
+      !>              parallel to the y-axis of the body-fixed reference frame.
+      !>
+      !>     C        is the length of the semi-axis of the ellipsoid that is
+      !>              parallel to the z-axis of the body-fixed reference frame.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NPOINT   is the nearest point on the ellipsoid to POSITN.
+      !>              NPOINT is a 3-vector expressed in the body-fixed
+      !>              reference frame.
+      !>
+      !>     ALT      is the altitude of POSITN above the ellipsoid. If
+      !>              POSITN is inside the ellipsoid, ALT will be negative
+      !>              and have magnitude equal to the distance between
+      !>              NPOINT and POSITN.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If any of the axis lengths A, B or C are non-positive, the
+      !>         error SPICE(BADAXISLENGTH) is signaled.
+      !>
+      !>     2)  If the ratio of the longest to the shortest ellipsoid axis
+      !>         is large enough so that arithmetic expressions involving its
+      !>         squared value may overflow, the error SPICE(BADAXISLENGTH)
+      !>         is signaled.
+      !>
+      !>     3)  If any of the expressions
+      !>
+      !>            A * ABS( POSITN(1) ) / m**2
+      !>            B * ABS( POSITN(2) ) / m**2
+      !>            C * ABS( POSITN(3) ) / m**2
+      !>
+      !>         where `m' is the minimum of { A, B, C }, is large enough so
+      !>         that arithmetic expressions involving these sub-expressions
+      !>         may overflow, the error SPICE(INPUTSTOOLARGE) is signaled.
+      !>
+      !>     4)  If the axes of the ellipsoid have radically different
+      !>         magnitudes, for example if the ratios of the axis lengths vary
+      !>         by 10 orders of magnitude, the results may have poor
+      !>         precision. No error checks are done to identify this problem.
+      !>
+      !>     5)  If the axes of the ellipsoid and the input point POSITN have
+      !>         radically different magnitudes, for example if the ratio of
+      !>         the magnitude of POSITN to the length of the shortest axis is
+      !>         1.E25, the results may have poor precision. No error checks
+      !>         are done to identify this problem.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Many applications of this routine are more easily performed
+      !>     using the higher-level SPICELIB routine SUBPNT. This routine
+      !>     is the mathematical workhorse on which SUBPNT relies.
+      !>
+      !>     This routine solves for the location, N, on the surface of an
+      !>     ellipsoid nearest to an arbitrary location, P, relative to that
+      !>     ellipsoid.
+      !>
+      !> ## Examples
+      !>
+      !>     Example 1.
+      !>
+      !>     The code fragment below illustrates how you can use SPICELIB to
+      !>     compute the apparent sub-earth point on the moon.
+      !>
+      !>     C
+      !>     C     Load the ephemeris, leapseconds and physical constants
+      !>     C     files first. We assume the names of these files are
+      !>     C     stored in the character variables SPK, LSK and
+      !>     C     PCK.
+      !>     C
+      !>           CALL FURNSH ( SPK )
+      !>           CALL FURNSH ( LSK )
+      !>           CALL FURNSH ( PCK )
+      !>
+      !>     C
+      !>     C     Get the apparent position of the moon as seen from the
+      !>     C     earth. Look up this position vector in the moon
+      !>     C     body-fixed frame IAU_MOON. The orientation of the
+      !>     C     IAU_MOON frame will be computed at epoch ET-LT.
+      !>     C
+      !>           CALL SPKPOS ( 'moon',  ET,    'IAU_MOON', 'LT+S',
+      !>          .              'earth', TRGPOS, LT                 )
+      !>
+      !>     C
+      !>     C     Negate the moon's apparent position to obtain the
+      !>     C     position of the earth in the moon's body-fixed frame.
+      !>     C
+      !>           CALL VMINUS ( TRGPOS, EVEC )
+      !>
+      !>     C
+      !>     C     Get the lengths of the principal axes of the moon.
+      !>     C     Transfer the elements of the array RADII to the
+      !>     C     variables A, B, C to enhance readability.
+      !>     C
+      !>           CALL BODVRD (  'MOON',    'RADII', DIM, RADII )
+      !>           CALL VUPACK (  RADII,  A,       B,   C     )
+      !>
+      !>     C
+      !>     C     Finally get the point SUBPNT on the surface of the
+      !>     C     moon closest to the earth --- the sub-earth point.
+      !>     C     SUBPNT is expressed in the IAU_MOON reference frame.
+      !>     C
+      !>           CALL NEARPT ( EVEC, A, B, C, SUBPNT, ALT )
+      !>
+      !>     Example 2.
+      !>
+      !>     One can use this routine to define a generalization of GEODETIC
+      !>     coordinates called GAUSSIAN coordinates of a triaxial body. (The
+      !>     name is derived from the famous Gauss-map of classical
+      !>     differential geometry).  The coordinates are longitude,
+      !>     latitude, and altitude.
+      !>
+      !>     We let the x-axis of the body fixed coordinate system point
+      !>     along the longest axis of the triaxial body. The y-axis points
+      !>     along the middle axis and the z-axis points along the shortest
+      !>     axis.
+      !>
+      !>     Given a point P, there is a point on the ellipsoid that is
+      !>     closest to P, call it Q. The latitude and longitude of P
+      !>     are determined by constructing the outward pointing unit normal
+      !>     to the ellipsoid at Q. Latitude of P is the latitude that the
+      !>     normal points toward in the body-fixed frame. Longitude is
+      !>     the longitude the normal points to in the body-fixed frame.
+      !>     The altitude is the signed distance from P to Q, positive if P
+      !>     is outside the ellipsoid, negative if P is inside.
+      !>     (the mapping of the point Q to the unit normal at Q is the
+      !>     Gauss-map of Q).
+      !>
+      !>     To obtain the Gaussian coordinates of a point whose position
+      !>     in body-fixed rectangular coordinates is given by a vector P,
+      !>     the code fragment below will suffice.
+      !>
+      !>        CALL NEARPT ( P,    A, B, C, Q, ALT  )
+      !>        CALL SURFNM (       A, B, C  Q, NRML )
+      !>
+      !>        CALL RECLAT ( NRML, R, LONG, LAT     )
+      !>
+      !>     The Gaussian coordinates are LONG, LAT, and ALT.
+      !>
+      !> ## Restrictions
+      !>
+      !>     See $Exceptions section.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     C.H. Acton         (JPL)
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.0.0, 26-OCT-2021 (NJB) (JDR) (EDW)
+      !>
+      !>        Edit to logic to reduce unneeded operations when
+      !>        error or projection vectors equal zero. Addition
+      !>        of details concerning the "ellipsoid near point"
+      !>        problem and solution.
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.4.0, 27-JUN-2013 (NJB)
+      !>
+      !>        Updated in-line comments.
+      !>
+      !>     Last update was 04-MAR-2013 (NJB)
+      !>
+      !>        Bug fix: now correctly computes off-axis solution for
+      !>        the case of a prolate ellipsoid and a viewing point
+      !>        on the interior long axis.
+      !>
+      !>-    SPICELIB Version 1.3.1, 07-FEB-2008 (NJB)
+      !>
+      !>        Header update: header now refers to SUBPNT rather
+      !>        than deprecated routine SUBPT.
+      !>
+      !>-    SPICELIB Version 1.3.0, 07-AUG-2006 (NJB)
+      !>
+      !>        Bug fix: added initialization of variable SNGLPT to support
+      !>                  operation under the Macintosh Intel Fortran
+      !>                  compiler. Note that this bug did not affect
+      !>                  operation of this routine on other platforms.
+      !>
+      !>-    SPICELIB Version 1.2.0, 15-NOV-2005 (EDW) (NJB)
+      !>
+      !>        Various changes were made to ensure that all loops terminate.
+      !>
+      !>        Bug fix: scale of transverse component of error vector
+      !>        was corrected for the exterior point case.
+      !>
+      !>        Bug fix: non-standard use of duplicate arguments in VSCL
+      !>        calls was corrected.
+      !>
+      !>        Error checking was added to screen out inputs that might
+      !>        cause numeric overflow.
+      !>
+      !>        Replaced BODVAR call in examples to BODVRD.
+      !>
+      !>-    SPICELIB Version 1.1.1, 28-JUL-2003 (NJB) (CHA)
+      !>
+      !>        Various header corrections were made.
+      !>
+      !>-    SPICELIB Version 1.1.0, 27-NOV-1990 (WLT)
+      !>
+      !>        The routine was substantially rewritten to achieve
+      !>        more robust behavior and document the mathematics
+      !>        of the routine.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 1.1.0, 27-NOV-1990 (NJB)
+      !>
+      !>        Bug fix: added initialization of variable SNGLPT to support
+      !>                  operation under the Macintosh Intel Fortran
+      !>                  compiler. Note that this bug did not affect
+      !>                  operation of this routine on other platforms. The
+      !>                  statement referencing the uninitialized variable
+      !>                  was:
+      !>
+      !>           IF ( INSIDE  .AND. (      SNGLPT .EQ. 2
+      !>     .                          .OR. SNGLPT .EQ. 3 ) ) THEN
+      !>
+      !>        SNGLPT is uninitialized only if INSIDE is .FALSE.,
+      !>        so the  value of the logical expression is not affected by
+      !>        the uninitialized value of SNGLPT.
+      !>
+      !>        However, the Intel Fortran compiler for the Mac flags a runtime
+      !>        error when the above code is exercised. So SNGLPT is now
+      !>        initialized prior to the above IF statement.
+      !>
+      !>-    SPICELIB Version 1.2.0, 15-NOV-2005 (EDW) (NJB)
+      !>
+      !>        Bug fix: scale of transverse component of error vector
+      !>        was corrected for the exterior point case.
+      !>        Replaced BODVAR call in examples to BODVRD.
+      !>
+      !>        Bug fix: non-standard use of duplicate arguments in VSCL
+      !>        calls was corrected.
+      !>
+      !>        Various changes were made to ensure that all loops terminate.
+      !>
+      !>        Error checking was added to screen out inputs that might
+      !>        cause numeric overflow.
+      !>
+      !>        Removed secant solution branch from root-finding loop.
+      !>        Although the secant solution sped up some root searches,
+      !>        it caused large numbers of unnecessary iterations in others.
+      !>
+      !>        Changed the expression:
+      !>
+      !>           IF (       LAMBDA .EQ. LOWER
+      !>     .          .OR.  LAMBDA .EQ. UPPER ) THEN
+      !>
+      !>        to
+      !>
+      !>           IF (      APPROX( LAMBDA, LOWER, CNVTOL )
+      !>     .          .OR. APPROX( LAMBDA, UPPER, CNVTOL )  ) THEN
+      !>
+      !>        Use of APPROX eliminates the possibility of an infinite loop
+      !>        when LAMBDA approaches to within epsilon of, but does not
+      !>        equate to UPPER or LOWER. Infinite loops occurred under some
+      !>        compiler's optimizations.
+      !>
+      !>        The loop also includes a check on number of iterations,
+      !>        signaling an error if the bisection loop uses more than
+      !>        MAXITR passes.
+      !>
+      !>        TOUCHD is now used to defeat extended-register usage in
+      !>        cases where such usage may cause logic problems.
+      !>
+      !>        Some minor code changes were made to ensure that various
+      !>        variables remain in their expected ranges.
+      !>
+      !>        A few code changes were made to enhance clarity.
+      !>
+      !>-    SPICELIB Version 1.1.0, 27-NOV-1990 (WLT)
+      !>
+      !>        The routine was nearly rewritten so that points
+      !>        near the coordinate planes in the interior of the ellipsoid
+      !>        could be handled without fear of floating point overflow
+      !>        or divide by zero.
+      !>
+      !>        While the mathematical ideas involved in the original routine
+      !>        are retained, the code is for the most part new. In addition,
+      !>        the new code has been documented far more extensively than was
+      !>        NEARPT 1.0.0.
+      !>
+      !>-    Beta Version 2.0.0, 9-JAN-1989 (WLT)
+      !>
+      !>        Error handling added has been added for bad axes values.
+      !>
+      !>        The algorithm did not work correctly for some points inside
+      !>        the ellipsoid lying on the plane orthogonal to the shortest
+      !>        axis of the ellipsoid. The problem was corrected.
+      !>
+      !>        Finally the algorithm was made slightly more robust and clearer
+      !>        by use of SPICELIB routines and by normalizing the inputs.
+      !>
+      !>        Add an example to the header section.
       module procedure nearpt
-!! ## Abstract
-!!
-!!     Locate the point on the surface of an ellipsoid that is nearest
-!!     to a specified position. Also return the altitude of the position
-!!     above the ellipsoid.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ALTITUDE
-!!     ELLIPSOID
-!!     GEOMETRY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_arrays, only: orderd, reordd
       use pepper_math, only: approx, vdist, vnorm, vperp
       implicit none
-
-! $ Detailed_Input
-!
-!     POSITN   is a 3-vector giving the position of a point with respect
-!              to the center of an ellipsoid. The vector is expressed
-!              in a body-fixed reference frame. The semi-axes of the
-!              ellipsoid are aligned with the x, y, and z-axes of the
-!              body-fixed frame.
-!
-!     A        is the length of the semi-axis of the ellipsoid that is
-!              parallel to the x-axis of the body-fixed reference frame.
-!
-!     B        is the length of the semi-axis of the ellipsoid that is
-!              parallel to the y-axis of the body-fixed reference frame.
-!
-!     C        is the length of the semi-axis of the ellipsoid that is
-!              parallel to the z-axis of the body-fixed reference frame.
-!
-! $ Detailed_Output
-!
-!     NPOINT   is the nearest point on the ellipsoid to POSITN.
-!              NPOINT is a 3-vector expressed in the body-fixed
-!              reference frame.
-!
-!     ALT      is the altitude of POSITN above the ellipsoid. If
-!              POSITN is inside the ellipsoid, ALT will be negative
-!              and have magnitude equal to the distance between
-!              NPOINT and POSITN.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If any of the axis lengths A, B or C are non-positive, the
-!         error SPICE(BADAXISLENGTH) is signaled.
-!
-!     2)  If the ratio of the longest to the shortest ellipsoid axis
-!         is large enough so that arithmetic expressions involving its
-!         squared value may overflow, the error SPICE(BADAXISLENGTH)
-!         is signaled.
-!
-!     3)  If any of the expressions
-!
-!            A * ABS( POSITN(1) ) / m**2
-!            B * ABS( POSITN(2) ) / m**2
-!            C * ABS( POSITN(3) ) / m**2
-!
-!         where `m' is the minimum of { A, B, C }, is large enough so
-!         that arithmetic expressions involving these sub-expressions
-!         may overflow, the error SPICE(INPUTSTOOLARGE) is signaled.
-!
-!     4)  If the axes of the ellipsoid have radically different
-!         magnitudes, for example if the ratios of the axis lengths vary
-!         by 10 orders of magnitude, the results may have poor
-!         precision. No error checks are done to identify this problem.
-!
-!     5)  If the axes of the ellipsoid and the input point POSITN have
-!         radically different magnitudes, for example if the ratio of
-!         the magnitude of POSITN to the length of the shortest axis is
-!         1.E25, the results may have poor precision. No error checks
-!         are done to identify this problem.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     Many applications of this routine are more easily performed
-!     using the higher-level SPICELIB routine SUBPNT. This routine
-!     is the mathematical workhorse on which SUBPNT relies.
-!
-!     This routine solves for the location, N, on the surface of an
-!     ellipsoid nearest to an arbitrary location, P, relative to that
-!     ellipsoid.
-!
-! $ Examples
-!
-!     Example 1.
-!
-!     The code fragment below illustrates how you can use SPICELIB to
-!     compute the apparent sub-earth point on the moon.
-!
-!     C
-!     C     Load the ephemeris, leapseconds and physical constants
-!     C     files first. We assume the names of these files are
-!     C     stored in the character variables SPK, LSK and
-!     C     PCK.
-!     C
-!           CALL FURNSH ( SPK )
-!           CALL FURNSH ( LSK )
-!           CALL FURNSH ( PCK )
-!
-!     C
-!     C     Get the apparent position of the moon as seen from the
-!     C     earth. Look up this position vector in the moon
-!     C     body-fixed frame IAU_MOON. The orientation of the
-!     C     IAU_MOON frame will be computed at epoch ET-LT.
-!     C
-!           CALL SPKPOS ( 'moon',  ET,    'IAU_MOON', 'LT+S',
-!          .              'earth', TRGPOS, LT                 )
-!
-!     C
-!     C     Negate the moon's apparent position to obtain the
-!     C     position of the earth in the moon's body-fixed frame.
-!     C
-!           CALL VMINUS ( TRGPOS, EVEC )
-!
-!     C
-!     C     Get the lengths of the principal axes of the moon.
-!     C     Transfer the elements of the array RADII to the
-!     C     variables A, B, C to enhance readability.
-!     C
-!           CALL BODVRD (  'MOON',    'RADII', DIM, RADII )
-!           CALL VUPACK (  RADII,  A,       B,   C     )
-!
-!     C
-!     C     Finally get the point SUBPNT on the surface of the
-!     C     moon closest to the earth --- the sub-earth point.
-!     C     SUBPNT is expressed in the IAU_MOON reference frame.
-!     C
-!           CALL NEARPT ( EVEC, A, B, C, SUBPNT, ALT )
-!
-!     Example 2.
-!
-!     One can use this routine to define a generalization of GEODETIC
-!     coordinates called GAUSSIAN coordinates of a triaxial body. (The
-!     name is derived from the famous Gauss-map of classical
-!     differential geometry).  The coordinates are longitude,
-!     latitude, and altitude.
-!
-!     We let the x-axis of the body fixed coordinate system point
-!     along the longest axis of the triaxial body. The y-axis points
-!     along the middle axis and the z-axis points along the shortest
-!     axis.
-!
-!     Given a point P, there is a point on the ellipsoid that is
-!     closest to P, call it Q. The latitude and longitude of P
-!     are determined by constructing the outward pointing unit normal
-!     to the ellipsoid at Q. Latitude of P is the latitude that the
-!     normal points toward in the body-fixed frame. Longitude is
-!     the longitude the normal points to in the body-fixed frame.
-!     The altitude is the signed distance from P to Q, positive if P
-!     is outside the ellipsoid, negative if P is inside.
-!     (the mapping of the point Q to the unit normal at Q is the
-!     Gauss-map of Q).
-!
-!     To obtain the Gaussian coordinates of a point whose position
-!     in body-fixed rectangular coordinates is given by a vector P,
-!     the code fragment below will suffice.
-!
-!        CALL NEARPT ( P,    A, B, C, Q, ALT  )
-!        CALL SURFNM (       A, B, C  Q, NRML )
-!
-!        CALL RECLAT ( NRML, R, LONG, LAT     )
-!
-!     The Gaussian coordinates are LONG, LAT, and ALT.
-!
-! $ Restrictions
-!
-!     See $Exceptions section.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     C.H. Acton         (JPL)
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0, 26-OCT-2021 (NJB) (JDR) (EDW)
-!
-!        Edit to logic to reduce unneeded operations when
-!        error or projection vectors equal zero. Addition
-!        of details concerning the "ellipsoid near point"
-!        problem and solution.
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.4.0, 27-JUN-2013 (NJB)
-!
-!        Updated in-line comments.
-!
-!     Last update was 04-MAR-2013 (NJB)
-!
-!        Bug fix: now correctly computes off-axis solution for
-!        the case of a prolate ellipsoid and a viewing point
-!        on the interior long axis.
-!
-!-    SPICELIB Version 1.3.1, 07-FEB-2008 (NJB)
-!
-!        Header update: header now refers to SUBPNT rather
-!        than deprecated routine SUBPT.
-!
-!-    SPICELIB Version 1.3.0, 07-AUG-2006 (NJB)
-!
-!        Bug fix: added initialization of variable SNGLPT to support
-!                  operation under the Macintosh Intel Fortran
-!                  compiler. Note that this bug did not affect
-!                  operation of this routine on other platforms.
-!
-!-    SPICELIB Version 1.2.0, 15-NOV-2005 (EDW) (NJB)
-!
-!        Various changes were made to ensure that all loops terminate.
-!
-!        Bug fix: scale of transverse component of error vector
-!        was corrected for the exterior point case.
-!
-!        Bug fix: non-standard use of duplicate arguments in VSCL
-!        calls was corrected.
-!
-!        Error checking was added to screen out inputs that might
-!        cause numeric overflow.
-!
-!        Replaced BODVAR call in examples to BODVRD.
-!
-!-    SPICELIB Version 1.1.1, 28-JUL-2003 (NJB) (CHA)
-!
-!        Various header corrections were made.
-!
-!-    SPICELIB Version 1.1.0, 27-NOV-1990 (WLT)
-!
-!        The routine was substantially rewritten to achieve
-!        more robust behavior and document the mathematics
-!        of the routine.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     distance from point to ellipsoid
-!     nearest point on an ellipsoid
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 27-NOV-1990 (NJB)
-!
-!        Bug fix: added initialization of variable SNGLPT to support
-!                  operation under the Macintosh Intel Fortran
-!                  compiler. Note that this bug did not affect
-!                  operation of this routine on other platforms. The
-!                  statement referencing the uninitialized variable
-!                  was:
-!
-!           IF ( INSIDE  .AND. (      SNGLPT .EQ. 2
-!     .                          .OR. SNGLPT .EQ. 3 ) ) THEN
-!
-!        SNGLPT is uninitialized only if INSIDE is .FALSE.,
-!        so the  value of the logical expression is not affected by
-!        the uninitialized value of SNGLPT.
-!
-!        However, the Intel Fortran compiler for the Mac flags a runtime
-!        error when the above code is exercised. So SNGLPT is now
-!        initialized prior to the above IF statement.
-!
-!-    SPICELIB Version 1.2.0, 15-NOV-2005 (EDW) (NJB)
-!
-!        Bug fix: scale of transverse component of error vector
-!        was corrected for the exterior point case.
-!        Replaced BODVAR call in examples to BODVRD.
-!
-!        Bug fix: non-standard use of duplicate arguments in VSCL
-!        calls was corrected.
-!
-!        Various changes were made to ensure that all loops terminate.
-!
-!        Error checking was added to screen out inputs that might
-!        cause numeric overflow.
-!
-!        Removed secant solution branch from root-finding loop.
-!        Although the secant solution sped up some root searches,
-!        it caused large numbers of unnecessary iterations in others.
-!
-!        Changed the expression:
-!
-!           IF (       LAMBDA .EQ. LOWER
-!     .          .OR.  LAMBDA .EQ. UPPER ) THEN
-!
-!        to
-!
-!           IF (      APPROX( LAMBDA, LOWER, CNVTOL )
-!     .          .OR. APPROX( LAMBDA, UPPER, CNVTOL )  ) THEN
-!
-!        Use of APPROX eliminates the possibility of an infinite loop
-!        when LAMBDA approaches to within epsilon of, but does not
-!        equate to UPPER or LOWER. Infinite loops occurred under some
-!        compiler's optimizations.
-!
-!        The loop also includes a check on number of iterations,
-!        signaling an error if the bisection loop uses more than
-!        MAXITR passes.
-!
-!        TOUCHD is now used to defeat extended-register usage in
-!        cases where such usage may cause logic problems.
-!
-!        Some minor code changes were made to ensure that various
-!        variables remain in their expected ranges.
-!
-!        A few code changes were made to enhance clarity.
-!
-!-    SPICELIB Version 1.1.0, 27-NOV-1990 (WLT)
-!
-!        The routine was nearly rewritten so that points
-!        near the coordinate planes in the interior of the ellipsoid
-!        could be handled without fear of floating point overflow
-!        or divide by zero.
-!
-!        While the mathematical ideas involved in the original routine
-!        are retained, the code is for the most part new. In addition,
-!        the new code has been documented far more extensively than was
-!        NEARPT 1.0.0.
-!
-!-    Beta Version 2.0.0, 9-JAN-1989 (WLT)
-!
-!        Error handling added has been added for bad axes values.
-!
-!        The algorithm did not work correctly for some points inside
-!        the ellipsoid lying on the plane orthogonal to the shortest
-!        axis of the ellipsoid. The problem was corrected.
-!
-!        Finally the algorithm was made slightly more robust and clearer
-!        by use of SPICELIB routines and by normalizing the inputs.
-!
-!        Add an example to the header section.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 
 !
 !     Parameters
@@ -2246,9 +2099,6 @@ contains
 !
       integer(ip), parameter :: msglen = 80
 
-!
-!     Local Variables
-!
       character(msglen), parameter :: mssg   ( 7 ) = &
          [ character(msglen) :: 'Axis A was nonpositive. ?', 'Axis B was nonpositive. ?', &
            'Axes A and B were nonpositive. ?', &
@@ -2302,14 +2152,6 @@ contains
       logical               inside
       logical               solvng
       logical               trim
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
 
 !
 !     Here's what you can expect to find in the routine below.
@@ -3847,382 +3689,347 @@ contains
       return
       end procedure nearpt
 
-!$Procedure RECGEO ( Rectangular to geodetic )
-
+      !> ## Detailed Input
+      !>
+      !>     RECTAN   are the rectangular coordinates of a point. RECTAN
+      !>              must be in the same units as RE.
+      !>
+      !>     RE       is the equatorial radius of a reference spheroid. This
+      !>              spheroid is a volume of revolution: its horizontal cross
+      !>              sections are circular. The shape of the spheroid is
+      !>              defined by an equatorial radius RE and a polar radius RP.
+      !>              RE must be in the same units as RECTAN.
+      !>
+      !>     F        is the flattening coefficient = (RE-RP) / RE, where RP is
+      !>              the polar radius of the spheroid.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     LON      is the geodetic longitude of the input point. This is the
+      !>              angle between the prime meridian and the meridian
+      !>              containing RECTAN. The direction of increasing longitude
+      !>              is from the +X axis towards the +Y axis.
+      !>
+      !>              LON is output in radians. The range of LON is [-pi, pi].
+      !>
+      !>     LAT      is the geodetic latitude of the input point. For a point
+      !>              P on the reference spheroid, this is the angle between
+      !>              the XY plane and the outward normal vector at P. For a
+      !>              point P not on the reference spheroid, the geodetic
+      !>              latitude is that of the closest point to P on the
+      !>              spheroid.
+      !>
+      !>              LAT is output in radians. The range of LAT is
+      !>              [-pi/2, pi/2].
+      !>
+      !>     ALT      is the altitude of point above the reference spheroid.
+      !>
+      !>              The units associated with ALT are those associated with
+      !>              the inputs RECTAN and RE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the equatorial radius is non-positive, the error
+      !>         SPICE(VALUEOUTOFRANGE) is signaled.
+      !>
+      !>     2)  If the flattening coefficient is greater than or equal to
+      !>         one, the error SPICE(VALUEOUTOFRANGE) is signaled.
+      !>
+      !>     3)  For points inside the reference ellipsoid, the nearest
+      !>         point on the ellipsoid to RECTAN may not be unique, so
+      !>         latitude may not be well-defined.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Given the body-fixed rectangular coordinates of a point, and the
+      !>     constants describing the reference spheroid,  this routine
+      !>     returns the geodetic coordinates of the point. The body-fixed
+      !>     rectangular frame is that having the x-axis pass through the
+      !>     0 degree latitude 0 degree longitude point. The y-axis passes
+      !>     through the 0 degree latitude 90 degree longitude. The z-axis
+      !>     passes through the 90 degree latitude point. For some bodies
+      !>     this coordinate system may not be a right-handed coordinate
+      !>     system.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for these examples may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Find the geodetic coordinates of the point having Earth
+      !>        rectangular coordinates:
+      !>
+      !>           X (km) =  -2541.748162
+      !>           Y (km) =   4780.333036
+      !>           Z (km) =   3360.428190
+      !>
+      !>        Use the PCK kernel below to load the required triaxial
+      !>        ellipsoidal shape model and orientation data for the Earth.
+      !>
+      !>           pck00010.tpc
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM RECGEO_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     SPICELIB functions
+      !>        C
+      !>              DOUBLE PRECISION      DPR
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              DOUBLE PRECISION      ALT
+      !>              DOUBLE PRECISION      F
+      !>              DOUBLE PRECISION      LAT
+      !>              DOUBLE PRECISION      LON
+      !>              DOUBLE PRECISION      RADII  ( 3 )
+      !>              DOUBLE PRECISION      RE
+      !>              DOUBLE PRECISION      RECTAN ( 3 )
+      !>              DOUBLE PRECISION      RP
+      !>
+      !>              INTEGER               N
+      !>
+      !>        C
+      !>        C     Load a PCK file containing a triaxial
+      !>        C     ellipsoidal shape model and orientation
+      !>        C     data for the Earth.
+      !>        C
+      !>              CALL FURNSH ( 'pck00010.tpc' )
+      !>
+      !>        C
+      !>        C     Retrieve the triaxial radii of the Earth
+      !>        C
+      !>              CALL BODVRD ( 'EARTH', 'RADII', 3, N, RADII )
+      !>
+      !>        C
+      !>        C     Compute flattening coefficient.
+      !>        C
+      !>              RE  =  RADII(1)
+      !>              RP  =  RADII(3)
+      !>              F   =  ( RE - RP ) / RE
+      !>
+      !>        C
+      !>        C     Set a body-fixed position.
+      !>        C
+      !>              RECTAN(1) =  -2541.748162D0
+      !>              RECTAN(2) =   4780.333036D0
+      !>              RECTAN(3) =   3360.428190D0
+      !>
+      !>        C
+      !>        C     Do the conversion. Output angles in degrees.
+      !>        C
+      !>              CALL RECGEO( RECTAN, RADII(1), F, LON, LAT, ALT )
+      !>
+      !>              WRITE (*,*) 'Rectangular coordinates in km (x, y, z)'
+      !>              WRITE (*,'(A,3F14.6)') ' ', RECTAN
+      !>              WRITE (*,*) 'Geodetic coordinates in deg and '
+      !>             . //         'km (lon, lat, alt)'
+      !>              WRITE (*,'(A,3F14.6)') ' ', LON * DPR(), LAT * DPR(), ALT
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Rectangular coordinates in km (x, y, z)
+      !>           -2541.748162   4780.333036   3360.428190
+      !>         Geodetic coordinates in deg and km (lon, lat, alt)
+      !>             118.000000     31.999957      0.001916
+      !>
+      !>     2) Create a table showing a variety of rectangular coordinates
+      !>        and the corresponding Earth geodetic coordinates. The
+      !>        values are computed using the equatorial radius of the Clark
+      !>        66 spheroid and the Clark 66 flattening factor:
+      !>
+      !>           radius: 6378.2064
+      !>           flattening factor: 1./294.9787
+      !>
+      !>        Note: the values shown above may not be current or suitable
+      !>              for your application.
+      !>
+      !>        Corresponding rectangular and geodetic coordinates are
+      !>        listed to three decimal places. Output angles are in degrees.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM RECGEO_EX2
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     SPICELIB functions
+      !>        C
+      !>              DOUBLE PRECISION      DPR
+      !>
+      !>        C
+      !>        C     Local parameters.
+      !>        C
+      !>              INTEGER               NREC
+      !>              PARAMETER           ( NREC = 11 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              DOUBLE PRECISION      ALT
+      !>              DOUBLE PRECISION      CLARKR
+      !>              DOUBLE PRECISION      CLARKF
+      !>              DOUBLE PRECISION      LAT
+      !>              DOUBLE PRECISION      LON
+      !>              DOUBLE PRECISION      RECTAN ( 3, NREC )
+      !>
+      !>              INTEGER               I
+      !>              INTEGER               J
+      !>
+      !>        C
+      !>        C     Define the input rectangular coordinates.
+      !>        C
+      !>              DATA                 RECTAN /
+      !>             .                  0.D0,         0.D0,         0.D0,
+      !>             .               6378.2064D0,     0.D0,         0.D0,
+      !>             .                  0.D0,      6378.2064D0,     0.D0,
+      !>             .                  0.D0,         0.D0,      6378.2064D0,
+      !>             .              -6378.2064D0,     0.D0,         0.D0,
+      !>             .                  0.D0,     -6378.2064D0,     0.D0,
+      !>             .                  0.D0,         0.D0,     -6378.2064D0,
+      !>             .               6378.2064D0,  6378.2064D0,     0.D0,
+      !>             .               6378.2064D0,     0.D0,      6378.2064D0,
+      !>             .                  0.D0,      6378.2064D0,  6378.2064D0,
+      !>             .               6378.2064D0,  6378.2064D0,  6378.2064D0 /
+      !>
+      !>        C
+      !>        C     Using the equatorial radius of the Clark66 spheroid
+      !>        C     (CLARKR = 6378.2064 km) and the Clark 66 flattening
+      !>        C     factor (CLARKF = 1.0 / 294.9787 ) convert from
+      !>        C     body fixed rectangular coordinates.
+      !>        C
+      !>              CLARKR = 6378.2064D0
+      !>              CLARKF = 1.0D0 / 294.9787D0
+      !>
+      !>        C
+      !>        C     Print the banner.
+      !>        C
+      !>              WRITE(*,*) ' RECTAN(1)  RECTAN(2)  RECTAN(3) '
+      !>             . //        '   LON      LAT       ALT'
+      !>              WRITE(*,*) ' ---------  ---------  --------- '
+      !>             . //        ' -------  -------  ---------'
+      !>
+      !>        C
+      !>        C     Do the conversion. Output angles in degrees.
+      !>        C
+      !>              DO I = 1, NREC
+      !>
+      !>                 CALL RECGEO( RECTAN(1,I), CLARKR, CLARKF,
+      !>             .                LON,         LAT,    ALT    )
+      !>
+      !>                 WRITE (*,'(3F11.3,2F9.3,F11.3)')
+      !>             .             ( RECTAN(J,I), J=1,3 ), LON * DPR(),
+      !>             .             LAT * DPR(), ALT
+      !>
+      !>              END DO
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>          RECTAN(1)  RECTAN(2)  RECTAN(3)    LON      LAT       ALT
+      !>          ---------  ---------  ---------  -------  -------  ---------
+      !>              0.000      0.000      0.000    0.000   90.000  -6356.584
+      !>           6378.206      0.000      0.000    0.000    0.000      0.000
+      !>              0.000   6378.206      0.000   90.000    0.000      0.000
+      !>              0.000      0.000   6378.206    0.000   90.000     21.623
+      !>          -6378.206      0.000      0.000  180.000    0.000      0.000
+      !>              0.000  -6378.206      0.000  -90.000    0.000      0.000
+      !>              0.000      0.000  -6378.206    0.000  -90.000     21.623
+      !>           6378.206   6378.206      0.000   45.000    0.000   2641.940
+      !>           6378.206      0.000   6378.206    0.000   45.137   2652.768
+      !>              0.000   6378.206   6378.206   90.000   45.137   2652.768
+      !>           6378.206   6378.206   6378.206   45.000   35.370   4676.389
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     [1]  R. Bate, D. Mueller, and J. White, "Fundamentals of
+      !>          Astrodynamics," Dover Publications Inc., 1971.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     C.H. Acton         (JPL)
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.2.0, 01-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Changed the output argument name LONG to LON for consistency
+      !>        with other routines.
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Added complete
+      !>        code examples.
+      !>
+      !>-    SPICELIB Version 1.1.0, 03-AUG-2016 (BVS) (NJB)
+      !>
+      !>        Re-implemented derivation of longitude to improve
+      !>        accuracy.
+      !>
+      !>        Minor header edits.
+      !>
+      !>-    SPICELIB Version 1.0.3, 02-JUL-2007 (NJB)
+      !>
+      !>        In $Examples section of header, description of right-hand
+      !>        table was updated to use correct names of columns. Term
+      !>        "bodyfixed" is now hyphenated.
+      !>
+      !>-    SPICELIB Version 1.0.2, 30-JUL-2003 (NJB) (CHA)
+      !>
+      !>        Various header changes were made to improve clarity. Some
+      !>        minor header corrections were made.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
+      !>
+      !> ## Revisions
+      !>
+      !>-    Beta Version 3.0.1, 9-JUN-1989 (HAN)
+      !>
+      !>        Error handling was added to detect and equatorial radius
+      !>        whose value is less than or equal to zero.
+      !>
+      !>-    Beta Version 2.0.0, 21-DEC-1988 (HAN)
+      !>
+      !>        Error handling to detect invalid flattening coefficients
+      !>        was added. Because the flattening coefficient is used to
+      !>        compute the length of an axis, it must be checked so that
+      !>        the length is greater than zero.
       module procedure recgeo
-!! ## Abstract
-!!
-!!     Convert from rectangular coordinates to geodetic coordinates.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     COORDINATES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: wp
       use pepper_math, only: reclat
       implicit none
 
-! $ Detailed_Input
-!
-!     RECTAN   are the rectangular coordinates of a point. RECTAN
-!              must be in the same units as RE.
-!
-!     RE       is the equatorial radius of a reference spheroid. This
-!              spheroid is a volume of revolution: its horizontal cross
-!              sections are circular. The shape of the spheroid is
-!              defined by an equatorial radius RE and a polar radius RP.
-!              RE must be in the same units as RECTAN.
-!
-!     F        is the flattening coefficient = (RE-RP) / RE, where RP is
-!              the polar radius of the spheroid.
-!
-! $ Detailed_Output
-!
-!     LON      is the geodetic longitude of the input point. This is the
-!              angle between the prime meridian and the meridian
-!              containing RECTAN. The direction of increasing longitude
-!              is from the +X axis towards the +Y axis.
-!
-!              LON is output in radians. The range of LON is [-pi, pi].
-!
-!     LAT      is the geodetic latitude of the input point. For a point
-!              P on the reference spheroid, this is the angle between
-!              the XY plane and the outward normal vector at P. For a
-!              point P not on the reference spheroid, the geodetic
-!              latitude is that of the closest point to P on the
-!              spheroid.
-!
-!              LAT is output in radians. The range of LAT is
-!              [-pi/2, pi/2].
-!
-!     ALT      is the altitude of point above the reference spheroid.
-!
-!              The units associated with ALT are those associated with
-!              the inputs RECTAN and RE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the equatorial radius is non-positive, the error
-!         SPICE(VALUEOUTOFRANGE) is signaled.
-!
-!     2)  If the flattening coefficient is greater than or equal to
-!         one, the error SPICE(VALUEOUTOFRANGE) is signaled.
-!
-!     3)  For points inside the reference ellipsoid, the nearest
-!         point on the ellipsoid to RECTAN may not be unique, so
-!         latitude may not be well-defined.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     Given the body-fixed rectangular coordinates of a point, and the
-!     constants describing the reference spheroid,  this routine
-!     returns the geodetic coordinates of the point. The body-fixed
-!     rectangular frame is that having the x-axis pass through the
-!     0 degree latitude 0 degree longitude point. The y-axis passes
-!     through the 0 degree latitude 90 degree longitude. The z-axis
-!     passes through the 90 degree latitude point. For some bodies
-!     this coordinate system may not be a right-handed coordinate
-!     system.
-!
-! $ Examples
-!
-!     The numerical results shown for these examples may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Find the geodetic coordinates of the point having Earth
-!        rectangular coordinates:
-!
-!           X (km) =  -2541.748162
-!           Y (km) =   4780.333036
-!           Z (km) =   3360.428190
-!
-!        Use the PCK kernel below to load the required triaxial
-!        ellipsoidal shape model and orientation data for the Earth.
-!
-!           pck00010.tpc
-!
-!        Example code begins here.
-!
-!              PROGRAM RECGEO_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              DOUBLE PRECISION      DPR
-!
-!        C
-!        C     Local variables
-!        C
-!              DOUBLE PRECISION      ALT
-!              DOUBLE PRECISION      F
-!              DOUBLE PRECISION      LAT
-!              DOUBLE PRECISION      LON
-!              DOUBLE PRECISION      RADII  ( 3 )
-!              DOUBLE PRECISION      RE
-!              DOUBLE PRECISION      RECTAN ( 3 )
-!              DOUBLE PRECISION      RP
-!
-!              INTEGER               N
-!
-!        C
-!        C     Load a PCK file containing a triaxial
-!        C     ellipsoidal shape model and orientation
-!        C     data for the Earth.
-!        C
-!              CALL FURNSH ( 'pck00010.tpc' )
-!
-!        C
-!        C     Retrieve the triaxial radii of the Earth
-!        C
-!              CALL BODVRD ( 'EARTH', 'RADII', 3, N, RADII )
-!
-!        C
-!        C     Compute flattening coefficient.
-!        C
-!              RE  =  RADII(1)
-!              RP  =  RADII(3)
-!              F   =  ( RE - RP ) / RE
-!
-!        C
-!        C     Set a body-fixed position.
-!        C
-!              RECTAN(1) =  -2541.748162D0
-!              RECTAN(2) =   4780.333036D0
-!              RECTAN(3) =   3360.428190D0
-!
-!        C
-!        C     Do the conversion. Output angles in degrees.
-!        C
-!              CALL RECGEO( RECTAN, RADII(1), F, LON, LAT, ALT )
-!
-!              WRITE (*,*) 'Rectangular coordinates in km (x, y, z)'
-!              WRITE (*,'(A,3F14.6)') ' ', RECTAN
-!              WRITE (*,*) 'Geodetic coordinates in deg and '
-!             . //         'km (lon, lat, alt)'
-!              WRITE (*,'(A,3F14.6)') ' ', LON * DPR(), LAT * DPR(), ALT
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Rectangular coordinates in km (x, y, z)
-!           -2541.748162   4780.333036   3360.428190
-!         Geodetic coordinates in deg and km (lon, lat, alt)
-!             118.000000     31.999957      0.001916
-!
-!     2) Create a table showing a variety of rectangular coordinates
-!        and the corresponding Earth geodetic coordinates. The
-!        values are computed using the equatorial radius of the Clark
-!        66 spheroid and the Clark 66 flattening factor:
-!
-!           radius: 6378.2064
-!           flattening factor: 1./294.9787
-!
-!        Note: the values shown above may not be current or suitable
-!              for your application.
-!
-!        Corresponding rectangular and geodetic coordinates are
-!        listed to three decimal places. Output angles are in degrees.
-!
-!        Example code begins here.
-!
-!              PROGRAM RECGEO_EX2
-!              IMPLICIT NONE
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              DOUBLE PRECISION      DPR
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER               NREC
-!              PARAMETER           ( NREC = 11 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              DOUBLE PRECISION      ALT
-!              DOUBLE PRECISION      CLARKR
-!              DOUBLE PRECISION      CLARKF
-!              DOUBLE PRECISION      LAT
-!              DOUBLE PRECISION      LON
-!              DOUBLE PRECISION      RECTAN ( 3, NREC )
-!
-!              INTEGER               I
-!              INTEGER               J
-!
-!        C
-!        C     Define the input rectangular coordinates.
-!        C
-!              DATA                 RECTAN /
-!             .                  0.D0,         0.D0,         0.D0,
-!             .               6378.2064D0,     0.D0,         0.D0,
-!             .                  0.D0,      6378.2064D0,     0.D0,
-!             .                  0.D0,         0.D0,      6378.2064D0,
-!             .              -6378.2064D0,     0.D0,         0.D0,
-!             .                  0.D0,     -6378.2064D0,     0.D0,
-!             .                  0.D0,         0.D0,     -6378.2064D0,
-!             .               6378.2064D0,  6378.2064D0,     0.D0,
-!             .               6378.2064D0,     0.D0,      6378.2064D0,
-!             .                  0.D0,      6378.2064D0,  6378.2064D0,
-!             .               6378.2064D0,  6378.2064D0,  6378.2064D0 /
-!
-!        C
-!        C     Using the equatorial radius of the Clark66 spheroid
-!        C     (CLARKR = 6378.2064 km) and the Clark 66 flattening
-!        C     factor (CLARKF = 1.0 / 294.9787 ) convert from
-!        C     body fixed rectangular coordinates.
-!        C
-!              CLARKR = 6378.2064D0
-!              CLARKF = 1.0D0 / 294.9787D0
-!
-!        C
-!        C     Print the banner.
-!        C
-!              WRITE(*,*) ' RECTAN(1)  RECTAN(2)  RECTAN(3) '
-!             . //        '   LON      LAT       ALT'
-!              WRITE(*,*) ' ---------  ---------  --------- '
-!             . //        ' -------  -------  ---------'
-!
-!        C
-!        C     Do the conversion. Output angles in degrees.
-!        C
-!              DO I = 1, NREC
-!
-!                 CALL RECGEO( RECTAN(1,I), CLARKR, CLARKF,
-!             .                LON,         LAT,    ALT    )
-!
-!                 WRITE (*,'(3F11.3,2F9.3,F11.3)')
-!             .             ( RECTAN(J,I), J=1,3 ), LON * DPR(),
-!             .             LAT * DPR(), ALT
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!          RECTAN(1)  RECTAN(2)  RECTAN(3)    LON      LAT       ALT
-!          ---------  ---------  ---------  -------  -------  ---------
-!              0.000      0.000      0.000    0.000   90.000  -6356.584
-!           6378.206      0.000      0.000    0.000    0.000      0.000
-!              0.000   6378.206      0.000   90.000    0.000      0.000
-!              0.000      0.000   6378.206    0.000   90.000     21.623
-!          -6378.206      0.000      0.000  180.000    0.000      0.000
-!              0.000  -6378.206      0.000  -90.000    0.000      0.000
-!              0.000      0.000  -6378.206    0.000  -90.000     21.623
-!           6378.206   6378.206      0.000   45.000    0.000   2641.940
-!           6378.206      0.000   6378.206    0.000   45.137   2652.768
-!              0.000   6378.206   6378.206   90.000   45.137   2652.768
-!           6378.206   6378.206   6378.206   45.000   35.370   4676.389
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     [1]  R. Bate, D. Mueller, and J. White, "Fundamentals of
-!          Astrodynamics," Dover Publications Inc., 1971.
-!
-! $ Author_and_Institution
-!
-!     C.H. Acton         (JPL)
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 01-OCT-2021 (JDR) (NJB)
-!
-!        Changed the output argument name LONG to LON for consistency
-!        with other routines.
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code examples.
-!
-!-    SPICELIB Version 1.1.0, 03-AUG-2016 (BVS) (NJB)
-!
-!        Re-implemented derivation of longitude to improve
-!        accuracy.
-!
-!        Minor header edits.
-!
-!-    SPICELIB Version 1.0.3, 02-JUL-2007 (NJB)
-!
-!        In $Examples section of header, description of right-hand
-!        table was updated to use correct names of columns. Term
-!        "bodyfixed" is now hyphenated.
-!
-!-    SPICELIB Version 1.0.2, 30-JUL-2003 (NJB) (CHA)
-!
-!        Various header changes were made to improve clarity. Some
-!        minor header corrections were made.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     rectangular to geodetic
-!
-!-&
-
-! $ Revisions
-!
-!-    Beta Version 3.0.1, 9-JUN-1989 (HAN)
-!
-!        Error handling was added to detect and equatorial radius
-!        whose value is less than or equal to zero.
-!
-!-    Beta Version 2.0.0, 21-DEC-1988 (HAN)
-!
-!        Error handling to detect invalid flattening coefficients
-!        was added. Because the flattening coefficient is used to
-!        compute the length of an axis, it must be checked so that
-!        the length is greater than zero.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       real(wp) a
       real(wp) b
       real(wp) c
@@ -4291,189 +4098,166 @@ contains
       return
       end procedure recgeo
 
-!$Procedure  ZZVRTPLT  ( create vertex-plate mapping )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines. Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Generate a data structure that represents the mapping from
+      !>     vertices to the plates containing them.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     NV         Number of vertices.
+      !>
+      !>     NP         Number of plates.
+      !>
+      !>     PLATES     Plate array: this is an array of 3-tuples of
+      !>                vertex indices. The elements
+      !>
+      !>                   PLATES(1:3,I)
+      !>
+      !>                are the indices of the vertices of the Ith plate.
+      !>
+      !>     CELLSZ     Size of cell array: explicit workspace dimension used
+      !>                for error checking. This value should be
+      !>
+      !>                   3*NP
+      !>
+      !>     MAXLST     Maximum size of output plate list. This size should be
+      !>
+      !>                   3*NP  +  NV
+      !>
+      !>     CELLS      workspace array used to construct the vertex-plate
+      !>                mapping.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     CELLS      Workspace array used to construct the vertex-plate
+      !>                mapping.
+      !>
+      !>     VRTPTR     Array of pointers associating plate lists with
+      !>                vertices. The Ith element of VRTPTR contains
+      !>                the start index in PLTLST of the list associated with
+      !>                the Ith vertex.
+      !>
+      !>                The size of this array must be at least NV.
+      !>
+      !>     NLIST      Length of the output plate data list PLTLST.
+      !>
+      !>     PLTLST     Plate data list: for each vertex, there is a count
+      !>                of associated plates, followed by the IDs of those
+      !>                plates. The count for vertex I is located at
+      !>
+      !>                   PLTLST( VRTPTR(I) )
+      !>
+      !>                The size of this array must be at least MAXLST.
+      !>
+      !> ## Parameters
+      !>
+      !>     See parameter declarations in
+      !>
+      !>        dsk02.inc
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input plate count NP is non-positive, the
+      !>         error SPICE(BADPLATECOUNT) is signaled.
+      !>
+      !>     2)  If the input vertex count NV is non-positive, the
+      !>         error SPICE(BADVERTEXCOUNT) is signaled.
+      !>
+      !>     3)  If the cell array size CELLSZ is less than
+      !>
+      !>            3 * NP
+      !>
+      !>         the error SPICE(CELLARRAYTOOSMALL) is signaled.
+      !>
+      !>     4)  If the plate list size MAXPLT is less than
+      !>
+      !>            ( 3 * NP ) + NV
+      !>
+      !>         the error SPICE(PLATELISTTOOSMALL) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine supports the DSK type 2 spatial index
+      !>     routines
+      !>
+      !>        DSKMI2
+      !>        DSKSI2
+      !>
+      !> ## Examples
+      !>
+      !>     See usage in DSKMI2.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>     J.A. Bytof      (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 20-NOV-2020 (NJB)
+      !>
+      !>        Bug fix: in call to ZZADDLNK, size of pointer array was
+      !>        changed from NP to NV.
+      !>
+      !>-    SPICELIB Version 1.0.0, 20-MAY-2016 (NJB)
+      !>
+      !>        Updated error handling. Now ZZVRTPLT performs precise checks
+      !>        on cell and plate array size inputs.
+      !>
+      !>        22-DEC-2015 (NJB)
+      !>
+      !>           Renamed routine from VRTCOM to ZZVRTPLT.
+      !>
+      !>           CAUTION: argument list change! Removed input workspace
+      !>           array for pointer construction. Array was named PNTRS.
+      !>
+      !>           Added error checks for input counts and sizes.
+      !>
+      !>           Now calls updated 3.0.0 version of ZZUNTNGL.
+      !>
+      !>        03-MAY-2014 (NJB)
+      !>
+      !>           Now calls ZZ* versions of supporting routines.
+      !>
+      !>           Changed argument list to include sizes of arrays.
+      !>           Changed error handling to make use of array sizes.
+      !>           Changed call to UNTNGL to accommodate argument
+      !>           list change in that routine. Updated header I/O
+      !>           descriptions.
+      !>
+      !>        12-JUL-2011 (NJB)
+      !>
+      !>           Argument list change: the input arrays V1, V2, V3 were
+      !>           replaced with the input array PLATES.
+      !>
+      !>        04-MAY-2010 (NJB)
+      !>
+      !>           Now accepts input workspace arrays PNTRS and CELLS.
+      !>           Changed INCLUDE file to dsk02.inc.
+      !>
+      !>        08-OCT-2009 (NJB)
+      !>
+      !>           Re-ordered header sections.
+      !>
+      !>        04-FEB-1999 (JAB)
       module procedure zzvrtplt
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Generate a data structure that represents the mapping from
-!!     vertices to the plates containing them.
-!!
-!! ## Required Reading
-!!
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DSK
-!!     PLATE
-!!     VERTEX
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     NV         Number of vertices.
-!!
-!!     NP         Number of plates.
-!!
-!!     PLATES     Plate array: this is an array of 3-tuples of
-!!                vertex indices. The elements
-!!
-!!                   PLATES(1:3,I)
-!!
-!!                are the indices of the vertices of the Ith plate.
-!!
-!!     CELLSZ     Size of cell array: explicit workspace dimension used
-!!                for error checking. This value should be
-!!
-!!                   3*NP
-!!
-!!     MAXLST     Maximum size of output plate list. This size should be
-!!
-!!                   3*NP  +  NV
-!!
-!!     CELLS      workspace array used to construct the vertex-plate
-!!                mapping.
-!!
-!! ## Detailed Output
-!!
-!!     CELLS      Workspace array used to construct the vertex-plate
-!!                mapping.
-!!
-!!     VRTPTR     Array of pointers associating plate lists with
-!!                vertices. The Ith element of VRTPTR contains
-!!                the start index in PLTLST of the list associated with
-!!                the Ith vertex.
-!!
-!!                The size of this array must be at least NV.
-!!
-!!     NLIST      Length of the output plate data list PLTLST.
-!!
-!!     PLTLST     Plate data list: for each vertex, there is a count
-!!                of associated plates, followed by the IDs of those
-!!                plates. The count for vertex I is located at
-!!
-!!                   PLTLST( VRTPTR(I) )
-!!
-!!                The size of this array must be at least MAXLST.
-!!
-!! ## Parameters
-!!
-!!     See parameter declarations in
-!!
-!!        dsk02.inc
-!!
-!! ## Exceptions
-!!
-!!     1)  If the input plate count NP is non-positive, the
-!!         error SPICE(BADPLATECOUNT) is signaled.
-!!
-!!     2)  If the input vertex count NV is non-positive, the
-!!         error SPICE(BADVERTEXCOUNT) is signaled.
-!!
-!!     3)  If the cell array size CELLSZ is less than
-!!
-!!            3 * NP
-!!
-!!         the error SPICE(CELLARRAYTOOSMALL) is signaled.
-!!
-!!     4)  If the plate list size MAXPLT is less than
-!!
-!!            ( 3 * NP ) + NV
-!!
-!!         the error SPICE(PLATELISTTOOSMALL) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine supports the DSK type 2 spatial index
-!!     routines
-!!
-!!        DSKMI2
-!!        DSKSI2
-!!
-!! ## Examples
-!!
-!!     See usage in DSKMI2.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman    (JPL)
-!!     J.A. Bytof      (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.1.0, 20-NOV-2020 (NJB)
-!!
-!!        Bug fix: in call to ZZADDLNK, size of pointer array was
-!!        changed from NP to NV.
-!!
-!!-    SPICELIB Version 1.0.0, 20-MAY-2016 (NJB)
-!!
-!!        Updated error handling. Now ZZVRTPLT performs precise checks
-!!        on cell and plate array size inputs.
-!!
-!!        22-DEC-2015 (NJB)
-!!
-!!           Renamed routine from VRTCOM to ZZVRTPLT.
-!!
-!!           CAUTION: argument list change! Removed input workspace
-!!           array for pointer construction. Array was named PNTRS.
-!!
-!!           Added error checks for input counts and sizes.
-!!
-!!           Now calls updated 3.0.0 version of ZZUNTNGL.
-!!
-!!        03-MAY-2014 (NJB)
-!!
-!!           Now calls ZZ* versions of supporting routines.
-!!
-!!           Changed argument list to include sizes of arrays.
-!!           Changed error handling to make use of array sizes.
-!!           Changed call to UNTNGL to accommodate argument
-!!           list change in that routine. Updated header I/O
-!!           descriptions.
-!!
-!!        12-JUL-2011 (NJB)
-!!
-!!           Argument list change: the input arrays V1, V2, V3 were
-!!           replaced with the input array PLATES.
-!!
-!!        04-MAY-2010 (NJB)
-!!
-!!           Now accepts input workspace arrays PNTRS and CELLS.
-!!           Changed INCLUDE file to dsk02.inc.
-!!
-!!        08-OCT-2009 (NJB)
-!!
-!!           Re-ordered header sections.
-!!
-!!        04-FEB-1999 (JAB)
-!!
-!! ## Index Entries
-!!
-!!     create vertex to plate map
-!!
-!!     SPICELIB functions
-!!
-!!     Local variables.
-!!
       use pepper_kinds, only: ip
       use pepper_inc_dsk02
       implicit none
@@ -4587,121 +4371,91 @@ contains
       return
       end procedure zzvrtplt
 
-!$Procedure  ZZVOXCVO ( Voxel to coarse voxel offset )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines. Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Map voxel coordinates to coarse voxel coordinates and offset
+      !>     relative to coarse voxel. Offset coordinates are 1-based.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     VIXYZ      is an array containing integer Cartesian coordinates
+      !>                of a voxel in the fine voxel grid. Coordinates are
+      !>                1-based.
+      !>
+      !>     NVOX       is an array containing the integer extents of the fine
+      !>                voxel grid. Units are voxels.
+      !>
+      !>     CGRSCL     is the coarse voxel scale. This is the integer ratio
+      !>                of the coarse voxel edge length to the fine voxel
+      !>                edge length.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     CGXYZ      is an array containing integer Cartesian coordinates
+      !>                of the coarse voxel that contains the fine voxel
+      !>                indexed by VIXYZ. Coordinates are 1-based.
+      !>
+      !>     CGOFF      is an array containing the integer Cartesian
+      !>                coordinates of the fine voxel relative to the coarse
+      !>                voxel that contains it. Coordinates are 1-based.
+      !>
+      !>     CGOF1D     is the 1-dimensional offset of the input fine voxel
+      !>                relative to the coarse voxel that contains it. The
+      !>                offset is 1-based.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If any input fine voxel grid dimension is non-positive,
+      !>        the error SPICE(VALUEOUTOFRANGE) is signaled.
+      !>
+      !>     2) If the coarse voxel scale is non-positive, the error
+      !>        SPICE(VALUEOUTOFRANGE) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine encapsulates a frequently used type 2 DSK address
+      !>     calculation. The output offset CGOF1D is useful for locating
+      !>     a fine voxel's pointer into the voxel-plate list.
+      !>
+      !> ## Examples
+      !>
+      !>     See usage in the routine ZZMKSPIN.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman   (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 23-AUG-2016 (NJB)
+      !>
+      !>        $Exceptions section was updated.
+      !>
+      !>     Based on DSKLIB Version 1.0.0, 20-MAR-2015 (NJB)
       module procedure zzvoxcvo
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Map voxel coordinates to coarse voxel coordinates and offset
-!!     relative to coarse voxel. Offset coordinates are 1-based.
-!!
-!! ## Required Reading
-!!
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DSK
-!!     PRIVATE
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     VIXYZ      is an array containing integer Cartesian coordinates
-!                of a voxel in the fine voxel grid. Coordinates are
-!                1-based.
-!
-!     NVOX       is an array containing the integer extents of the fine
-!                voxel grid. Units are voxels.
-!
-!     CGRSCL     is the coarse voxel scale. This is the integer ratio
-!                of the coarse voxel edge length to the fine voxel
-!                edge length.
-!
-! $ Detailed_Output
-!
-!     CGXYZ      is an array containing integer Cartesian coordinates
-!                of the coarse voxel that contains the fine voxel
-!                indexed by VIXYZ. Coordinates are 1-based.
-!
-!     CGOFF      is an array containing the integer Cartesian
-!                coordinates of the fine voxel relative to the coarse
-!                voxel that contains it. Coordinates are 1-based.
-!
-!     CGOF1D     is the 1-dimensional offset of the input fine voxel
-!                relative to the coarse voxel that contains it. The
-!                offset is 1-based.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If any input fine voxel grid dimension is non-positive,
-!        the error SPICE(VALUEOUTOFRANGE) is signaled.
-!
-!     2) If the coarse voxel scale is non-positive, the error
-!        SPICE(VALUEOUTOFRANGE) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine encapsulates a frequently used type 2 DSK address
-!     calculation. The output offset CGOF1D is useful for locating
-!     a fine voxel's pointer into the voxel-plate list.
-!
-! $ Examples
-!
-!     See usage in the routine ZZMKSPIN.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 23-AUG-2016 (NJB)
-!
-!        $Exceptions section was updated.
-!
-!     Based on DSKLIB Version 1.0.0, 20-MAR-2015 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     map voxel to coarse voxel offset
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           i
 
       if ( ctx%failed() ) return
@@ -4780,114 +4534,90 @@ contains
 
       end procedure zzvoxcvo
 
-!$Procedure ZZVOX2ID ( Return voxel index from coords )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines. Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Given a voxel's grid coordinates and the voxel grid
+      !>     dimensions, return the voxel's 1-dimensional index.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     VIXYZ      An integer 3-vector storing the voxel grid coordinates
+      !>                for the point of interest.
+      !>
+      !>     NVOX       An array of three positive integers defining a voxel
+      !>                grid's extents in the X, Y, and Z directions.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     The function returns the value of the voxel index.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     None.
+      !>
+      !> ## Examples
+      !>
+      !>     See usage in ZZMKSPIN.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>     J.A. Bytof      (JPL)
+      !>     E.D. Wright     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
+      !>
+      !>        Updated version info.
+      !>
+      !>        17-JAN-2016 (NJB)
+      !>
+      !>           Re-wrote portions of header.
+      !>
+      !>        08-OCT-2009 (NJB)
+      !>
+      !>           Re-ordered header sections.
+      !>
+      !>        23-SEP-2004 (EDW)
+      !>
+      !>           Recast equation to improve runtime performance.
+      !>           Edited comments for clarity.
+      !>
+      !>           Subroutine renamed from GETXYZ.
+      !>
+      !>        19-FEB-2000 (JAB)
+      !>
+      !>           Removed SAVED variables.
+      !>
+      !>        04-FEB-1999 (JAB)
       module procedure zzvox2id
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Given a voxel's grid coordinates and the voxel grid
-!!     dimensions, return the voxel's 1-dimensional index.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     COORDINATE
-!!     DSK
-!!     INDEX
-!!     VOXEL
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit              none
-
-! $ Detailed_Input
-!
-!     VIXYZ      An integer 3-vector storing the voxel grid coordinates
-!                for the point of interest.
-!
-!     NVOX       An array of three positive integers defining a voxel
-!                grid's extents in the X, Y, and Z directions.
-!
-! $ Detailed_Output
-!
-!     The function returns the value of the voxel index.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     See usage in ZZMKSPIN.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     J.A. Bytof      (JPL)
-!     E.D. Wright     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
-!
-!        Updated version info.
-!
-!        17-JAN-2016 (NJB)
-!
-!           Re-wrote portions of header.
-!
-!        08-OCT-2009 (NJB)
-!
-!           Re-ordered header sections.
-!
-!        23-SEP-2004 (EDW)
-!
-!           Recast equation to improve runtime performance.
-!           Edited comments for clarity.
-!
-!           Subroutine renamed from GETXYZ.
-!
-!        19-FEB-2000 (JAB)
-!
-!           Removed SAVED variables.
-!
-!        04-FEB-1999 (JAB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     given a voxel's coordinates return the voxel index
-!
-!-&
 
 !
 !     Convert from voxel coordinates to voxel index. A more
@@ -4908,194 +4638,177 @@ contains
       return
       end procedure zzvox2id
 
-!$Procedure ZZTRVLNK ( Traverse AB cell linked-list )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines. Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Traverse an AB pool linked list, searching for all cells that are
+      !>     associated with a specified A-value. Store the B-values of these
+      !>     cells in an array.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     AVAL       is an index associated with a pool entry. AVAL
+      !>                is the index of the Ith value of a finite set "A."
+      !>                AVAL is an index into the PNTRS array.
+      !>
+      !>     MAXA       Size of PNTRS array.
+      !>
+      !>     PNTRS      is an array of integers acting as pointers into the
+      !>                cell array. The element at index I of PNTRS points to
+      !>                the head of a linked list in CELLS that associates
+      !>                B-values with the index I. Here I is the "A value."
+      !>
+      !>                If there are no values associated with the Ith A value,
+      !>                PNTRS(I) is null (-1).
+      !>
+      !>     CELLSZ     is the number of cells in the cell array. The array
+      !>                has dimensions
+      !>
+      !>                   (2, CELLSZ)
+      !>
+      !>     CELLS      is the input cell array. The element
+      !>
+      !>                   CELLS ( 1, PNTRS(AVAL) )
+      !>
+      !>                contains a B-value associated with AVAL. The element
+      !>
+      !>                   CELLS ( 2, PNTRS(AVAL) )
+      !>
+      !>                is a pointer to the next node of the list associated
+      !>                with AVAL, or is null (-1) if the list contains only
+      !>                one element. The pointer element of the last list node
+      !>                for AVAL is null.
+      !>
+      !>     MAXB       is the size of the output B-value list.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NB         is the number of nodes in the list associated with
+      !>                AVAL.
+      !>
+      !>     BLIST      is an array containing the B-values of the nodes
+      !>                associated with AVAL. There is one entry in BLIST for
+      !>                each node in the list associated with AVAL; the list
+      !>                may contain duplicates.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the array index AVAL is less than 1 or exceeds the
+      !>         declared size of the PNTR array, the error
+      !>         SPICE(INDEXOUTOFRANGE) is signaled. Occurrence of this error
+      !>         may result from the fine voxel scale being too small for the
+      !>         data.
+      !>
+      !>     2)  If the size of the output BLIST array is non-positive, the
+      !>         error SPICE(INVALIDSIZE) is signaled.
+      !>
+      !>     3)  If an element of the PNTRS array is larger than the length
+      !>         CELLSZ of the cell array, the error SPICE(POINTEROUTOFRANGE)
+      !>         is signaled.
+      !>
+      !>     4)  If the number of output list entries exceeds the size MAXB of
+      !>         the output list array, the error SPICE(BARRAYTOOSMALL) is
+      !>         signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The AB list routines support manipulation of a data structure that
+      !>     represents a one-to-many mapping from a set A to a set B. Each
+      !>     element of set A is mapped to a set of values from B, where the
+      !>     range values are represented by a linked list of entries in the
+      !>     cell array.
+      !>
+      !>     The elements of set B associated with the Ith element of A are
+      !>     stored in a linked list of cells starting with the cell
+      !>     consisting of elements
+      !>
+      !>        CELLS(*,PNTRS(I))
+      !>
+      !>     The set A is really an abstraction: it's just some finite set
+      !>     with size in the range 1:MAXA. The input AVAL is not a member of
+      !>     A but rather just an index into A. For consistency with existing
+      !>     code, the name AVAL has been retained.
+      !>
+      !>     The fact that B values are stored in linked lists enables a
+      !>     program to store entries for A-B associations in random order.
+      !>     For example, in the process of constructing DSK type 2 segments,
+      !>     the of non-empty fine voxels intersected by a given plate can be
+      !>     computed; then an entry representing a voxel-plate association
+      !>     can be made for each fine voxel in the set. In this case, the
+      !>     set "A" is the set of fine voxels belonging to non-empty coarse
+      !>     voxels.
+      !>
+      !>     This routine supports creation of DSK type 2 segments. It is used
+      !>     for creation of both voxel-plate association data structures and
+      !>     of vertex-plate association data structures.
+      !>
+      !> ## Examples
+      !>
+      !>     See usage in the routine ZZUNTNGL.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>     J.A. Bytof      (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 23-AUG-2016 (NJB)
+      !>
+      !>      07-JAN-2016 (NJB)
+      !>
+      !>        Strengthened check on invalid pointer. Renamed argument MAXCEL
+      !>        to CELLSZ. Updated header comments.
+      !>
+      !>      26-MAR-2015 (NJB)
+      !>
+      !>        Updated long error messages to improve accuracy.
+      !>
+      !>        Header update: added description of MAXB input
+      !>        argument. Updated description of MAXA input
+      !>        argument. Filled out Exceptions section.
+      !>
+      !>      30-APR-2014 (NJB)
+      !>
+      !>        Changed argument list: each array argument now
+      !>        has an associated argument giving its size.
+      !>        Updated error checking to check array indices
+      !>        against array sizes.
+      !>
+      !>      08-OCT-2009 (NJB)
+      !>
+      !>        Re-ordered header sections.
+      !>
+      !>      11-JUN-2004 (EDW)
+      !>
+      !>        Added check on AVAL to ensure it's smaller
+      !>        than the size of MAXA.
+      !>
+      !>      26-AUG-2002 (BVS)
+      !>
+      !>        Replaced WRITE with normal error reporting calls.
+      !>
+      !>      03-FEB-1999 (JAB)
       module procedure zztrvlnk
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Traverse an AB pool linked list, searching for all cells that are
-!!     associated with a specified A-value. Store the B-values of these
-!!     cells in an array.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     linked list
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     AVAL       is an index associated with a pool entry. AVAL
-!!                is the index of the Ith value of a finite set "A."
-!!                AVAL is an index into the PNTRS array.
-!!
-!!     MAXA       Size of PNTRS array.
-!!
-!!     PNTRS      is an array of integers acting as pointers into the
-!!                cell array. The element at index I of PNTRS points to
-!!                the head of a linked list in CELLS that associates
-!!                B-values with the index I. Here I is the "A value."
-!!
-!!                If there are no values associated with the Ith A value,
-!!                PNTRS(I) is null (-1).
-!!
-!!     CELLSZ     is the number of cells in the cell array. The array
-!!                has dimensions
-!!
-!!                   (2, CELLSZ)
-!!
-!!     CELLS      is the input cell array. The element
-!!
-!!                   CELLS ( 1, PNTRS(AVAL) )
-!!
-!!                contains a B-value associated with AVAL. The element
-!!
-!!                   CELLS ( 2, PNTRS(AVAL) )
-!!
-!!                is a pointer to the next node of the list associated
-!!                with AVAL, or is null (-1) if the list contains only
-!!                one element. The pointer element of the last list node
-!!                for AVAL is null.
-!!
-!!     MAXB       is the size of the output B-value list.
-!!
-!! ## Detailed Output
-!!
-!!     NB         is the number of nodes in the list associated with
-!!                AVAL.
-!!
-!!     BLIST      is an array containing the B-values of the nodes
-!!                associated with AVAL. There is one entry in BLIST for
-!!                each node in the list associated with AVAL; the list
-!!                may contain duplicates.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the array index AVAL is less than 1 or exceeds the
-!!         declared size of the PNTR array, the error
-!!         SPICE(INDEXOUTOFRANGE) is signaled. Occurrence of this error
-!!         may result from the fine voxel scale being too small for the
-!!         data.
-!!
-!!     2)  If the size of the output BLIST array is non-positive, the
-!!         error SPICE(INVALIDSIZE) is signaled.
-!!
-!!     3)  If an element of the PNTRS array is larger than the length
-!!         CELLSZ of the cell array, the error SPICE(POINTEROUTOFRANGE)
-!!         is signaled.
-!!
-!!     4)  If the number of output list entries exceeds the size MAXB of
-!!         the output list array, the error SPICE(BARRAYTOOSMALL) is
-!!         signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     The AB list routines support manipulation of a data structure that
-!!     represents a one-to-many mapping from a set A to a set B. Each
-!!     element of set A is mapped to a set of values from B, where the
-!!     range values are represented by a linked list of entries in the
-!!     cell array.
-!!
-!!     The elements of set B associated with the Ith element of A are
-!!     stored in a linked list of cells starting with the cell
-!!     consisting of elements
-!!
-!!        CELLS(*,PNTRS(I))
-!!
-!!     The set A is really an abstraction: it's just some finite set
-!!     with size in the range 1:MAXA. The input AVAL is not a member of
-!!     A but rather just an index into A. For consistency with existing
-!!     code, the name AVAL has been retained.
-!!
-!!     The fact that B values are stored in linked lists enables a
-!!     program to store entries for A-B associations in random order.
-!!     For example, in the process of constructing DSK type 2 segments,
-!!     the of non-empty fine voxels intersected by a given plate can be
-!!     computed; then an entry representing a voxel-plate association
-!!     can be made for each fine voxel in the set. In this case, the
-!!     set "A" is the set of fine voxels belonging to non-empty coarse
-!!     voxels.
-!!
-!!     This routine supports creation of DSK type 2 segments. It is used
-!!     for creation of both voxel-plate association data structures and
-!!     of vertex-plate association data structures.
-!!
-!! ## Examples
-!!
-!!     See usage in the routine ZZUNTNGL.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman    (JPL)
-!!     J.A. Bytof      (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 23-AUG-2016 (NJB)
-!!
-!!      07-JAN-2016 (NJB)
-!!
-!!        Strengthened check on invalid pointer. Renamed argument MAXCEL
-!!        to CELLSZ. Updated header comments.
-!!
-!!      26-MAR-2015 (NJB)
-!!
-!!        Updated long error messages to improve accuracy.
-!!
-!!        Header update: added description of MAXB input
-!!        argument. Updated description of MAXA input
-!!        argument. Filled out Exceptions section.
-!!
-!!      30-APR-2014 (NJB)
-!!
-!!        Changed argument list: each array argument now
-!!        has an associated argument giving its size.
-!!        Updated error checking to check array indices
-!!        against array sizes.
-!!
-!!      08-OCT-2009 (NJB)
-!!
-!!        Re-ordered header sections.
-!!
-!!      11-JUN-2004 (EDW)
-!!
-!!        Added check on AVAL to ensure it's smaller
-!!        than the size of MAXA.
-!!
-!!      26-AUG-2002 (BVS)
-!!
-!!        Replaced WRITE with normal error reporting calls.
-!!
-!!      03-FEB-1999 (JAB)
-!!
-!! ## Index Entries
-!!
-!!     AB cells
-!!
       use pepper_kinds, only: ip
       implicit none
       integer(ip)           i
@@ -5181,175 +4894,149 @@ contains
       return
       end procedure zztrvlnk
 
-!$Procedure ZZUNTNGL ( Untangle an AB linked-cell list  )
-
+      !> ## Detailed Input
+      !>
+      !>     NPTR       is the size of the input pointer array INPTR.
+      !>
+      !>     MAXCEL     is the number of cells in the CELLS array. That
+      !>                array has dimensions
+      !>
+      !>                   (2, MAXCEL)
+      !>
+      !>     CELLS      is an array containing linked lists of "B" values.
+      !>                The elements at indices
+      !>
+      !>                   (1,K)
+      !>                   (2,K)
+      !>
+      !>                are, respectively, a "B" value and a pointer to
+      !>                another element of the array. Null pointers are
+      !>                indicated by the value -1.
+      !>
+      !>                Each linked list in CELLS contains a set of "B"
+      !>                values associated with a particular "A" value.
+      !>                The input pointer list maps "A" values to the head
+      !>                of the associated list in CELLS.
+      !>
+      !>     MAXB       is the maximum number of elements in the output
+      !>                array OUTLST.
+      !>
+      !>     PNTRS      is an array of pointers from A values to
+      !>                linked lists of "B" entries in the CELLS array.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     PNTRS      is an array of pointers that map "A" values to
+      !>                their associated "B" values in the array OUTLST.
+      !>                Null pointers are indicated by the value -1.
+      !>
+      !>                PNTRS must be declared with size at least NPTR.
+      !>
+      !>     NOUT       is the number of elements in the output list OUTLST.
+      !>
+      !>     OUTLST     is an array containing lists of "B" values. The Kth
+      !>                element of PNTRS is the index of the start of a list
+      !>                in OUTLST of "B" values associated with the "A" value
+      !>                having index K. The list of values associated with an
+      !>                "A" value starts with a count and is followed by
+      !>                the values themselves.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  The routine signals the error SPICE(BARRAYTOOSMALL) if the
+      !>         entire set of B-value lists from the input cell array,
+      !>         including the counts for each list, array cannot be stored in
+      !>         the OUTLST array.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The AB list routines support manipulation of a data structure that
+      !>     represents a one-to-many mapping from a set A to a set B. Each
+      !>     element of set A is mapped to a set of values from B, where the
+      !>     range values are represented by a linked list of entries in the
+      !>     cell array.
+      !>
+      !>     The elements of set B associated with the Ith element of A are
+      !>     stored in a linked list of cells starting with the cell
+      !>     consisting of elements
+      !>
+      !>        CELLS(*,PNTRS(I))
+      !>
+      !>     The set A is really an abstraction: it's just some finite set
+      !>     with size in the range 1:MAXA. The input AVAL is not a member of
+      !>     A but rather just an index into A. For consistency with existing
+      !>     code, the name AVAL has been retained.
+      !>
+      !>     The fact that B values are stored in linked lists enables a
+      !>     program to store entries for A-B associations in random order.
+      !>     For example, in the process of constructing DSK type 2 segments,
+      !>     the of non-empty fine voxels intersected by a given plate can be
+      !>     computed; then an entry representing a voxel-plate association
+      !>     can be made for each fine voxel in the set. In this case, the
+      !>     set "A" is the set of fine voxels belonging to non-empty coarse
+      !>     voxels.
+      !>
+      !>     This routine supports creation of DSK type 2 segments. It is used
+      !>     for creation of both voxel-plate association data structures and
+      !>     of vertex-plate association data structures.
+      !>
+      !> ## Examples
+      !>
+      !>     See usage in ZZMKSPIN.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>     J.A. Bytof      (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 23-AUG-2016 (NJB)
+      !>
+      !>      07-JAN-2016 (NJB)
+      !>
+      !>        Argument list change: removed INPTR; renamed
+      !>        OUTPTR to PNTRS. PNTRS is an in-out argument.
+      !>        Updated header.
+      !>
+      !>      30-APR-2014 (NJB)
+      !>
+      !>        Changed argument list to accommodate
+      !>        better error checking. Added error checks
+      !>        for array overflows. Changed calls to
+      !>        ADDLNK and TRVLNK. Updated header I/O
+      !>        descriptions.
+      !>
+      !>      08-OCT-2009 (NJB)
+      !>
+      !>        Re-ordered header sections.
+      !>
+      !>      16-JUL-2004 (EDW)
+      !>
+      !>        Added check on NPTR to ensure it's smaller
+      !>        than the size of the pointer arrays.
+      !>
+      !>        Removed use of BVAL array, TRVLNK now directly
+      !>        writes to OUTLST array.
+      !>
+      !>      03-FEB-1999 (JAB)
       module procedure zzuntngl
-!! ## Abstract
-!!
-!!     Untangle an unsorted AB linked-cell list into an A-index and
-!!     associated B-list.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     AB linked list
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     NPTR       is the size of the input pointer array INPTR.
-!!
-!!     MAXCEL     is the number of cells in the CELLS array. That
-!!                array has dimensions
-!!
-!!                   (2, MAXCEL)
-!!
-!!     CELLS      is an array containing linked lists of "B" values.
-!!                The elements at indices
-!!
-!!                   (1,K)
-!!                   (2,K)
-!!
-!!                are, respectively, a "B" value and a pointer to
-!!                another element of the array. Null pointers are
-!!                indicated by the value -1.
-!!
-!!                Each linked list in CELLS contains a set of "B"
-!!                values associated with a particular "A" value.
-!!                The input pointer list maps "A" values to the head
-!!                of the associated list in CELLS.
-!!
-!!     MAXB       is the maximum number of elements in the output
-!!                array OUTLST.
-!!
-!!     PNTRS      is an array of pointers from A values to
-!!                linked lists of "B" entries in the CELLS array.
-!!
-!! ## Detailed Output
-!!
-!!     PNTRS      is an array of pointers that map "A" values to
-!!                their associated "B" values in the array OUTLST.
-!!                Null pointers are indicated by the value -1.
-!!
-!!                PNTRS must be declared with size at least NPTR.
-!!
-!!     NOUT       is the number of elements in the output list OUTLST.
-!!
-!!     OUTLST     is an array containing lists of "B" values. The Kth
-!!                element of PNTRS is the index of the start of a list
-!!                in OUTLST of "B" values associated with the "A" value
-!!                having index K. The list of values associated with an
-!!                "A" value starts with a count and is followed by
-!!                the values themselves.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  The routine signals the error SPICE(BARRAYTOOSMALL) if the
-!!         entire set of B-value lists from the input cell array,
-!!         including the counts for each list, array cannot be stored in
-!!         the OUTLST array.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     The AB list routines support manipulation of a data structure that
-!!     represents a one-to-many mapping from a set A to a set B. Each
-!!     element of set A is mapped to a set of values from B, where the
-!!     range values are represented by a linked list of entries in the
-!!     cell array.
-!!
-!!     The elements of set B associated with the Ith element of A are
-!!     stored in a linked list of cells starting with the cell
-!!     consisting of elements
-!!
-!!        CELLS(*,PNTRS(I))
-!!
-!!     The set A is really an abstraction: it's just some finite set
-!!     with size in the range 1:MAXA. The input AVAL is not a member of
-!!     A but rather just an index into A. For consistency with existing
-!!     code, the name AVAL has been retained.
-!!
-!!     The fact that B values are stored in linked lists enables a
-!!     program to store entries for A-B associations in random order.
-!!     For example, in the process of constructing DSK type 2 segments,
-!!     the of non-empty fine voxels intersected by a given plate can be
-!!     computed; then an entry representing a voxel-plate association
-!!     can be made for each fine voxel in the set. In this case, the
-!!     set "A" is the set of fine voxels belonging to non-empty coarse
-!!     voxels.
-!!
-!!     This routine supports creation of DSK type 2 segments. It is used
-!!     for creation of both voxel-plate association data structures and
-!!     of vertex-plate association data structures.
-!!
-!! ## Examples
-!!
-!!     See usage in ZZMKSPIN.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman    (JPL)
-!!     J.A. Bytof      (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 23-AUG-2016 (NJB)
-!!
-!!      07-JAN-2016 (NJB)
-!!
-!!        Argument list change: removed INPTR; renamed
-!!        OUTPTR to PNTRS. PNTRS is an in-out argument.
-!!        Updated header.
-!!
-!!      30-APR-2014 (NJB)
-!!
-!!        Changed argument list to accommodate
-!!        better error checking. Added error checks
-!!        for array overflows. Changed calls to
-!!        ADDLNK and TRVLNK. Updated header I/O
-!!        descriptions.
-!!
-!!      08-OCT-2009 (NJB)
-!!
-!!        Re-ordered header sections.
-!!
-!!      16-JUL-2004 (EDW)
-!!
-!!        Added check on NPTR to ensure it's smaller
-!!        than the size of the pointer arrays.
-!!
-!!        Removed use of BVAL array, TRVLNK now directly
-!!        writes to OUTLST array.
-!!
-!!      03-FEB-1999 (JAB)
-!!
-!! ## Index Entries
-!!
-!!     AB linked list
-!!
-!!     SPICELIB functions
-!!
-!!     Local Variables
-!!
       use pepper_kinds, only: ip
       implicit none
       integer(ip)           aval
@@ -5477,132 +5164,110 @@ contains
       return
       end procedure zzuntngl
 
-!$Procedure      ZZINILNK ( Initialize an AB cell linked-list )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines. Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Initialize an AB cell linked-list structure.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     MAXP       is the length of the pointer array PNTRS.
+      !>
+      !>     MAXC       is the length of the cell array CELLS. The array has
+      !>                dimensions
+      !>
+      !>                   ( 2, MAXC )
+      !>
+      !>                Elements
+      !>
+      !>                   ( 1, * )
+      !>
+      !>                normally contain "A-values"; elements
+      !>
+      !>                   ( 2, * )
+      !>
+      !>                normally contain pointers.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NCELL      is the number of cells in use; this argument is
+      !>                initialized to zero. This is done as a convenience
+      !>                for the calling routine, which usually must keep
+      !>                track of the number of cells in use.
+      !>
+      !>     PNTRS      is the pointer array, initialized so that each
+      !>                element contains -1, which represents a null
+      !>                pointer.
+      !>
+      !>     CELLS      is a cell array, initialized so that each pointer
+      !>                element contains -1, and so that each value
+      !>                element contains 0.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the DSK type 2 include file
+      !>
+      !>        dsk02.inc
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the pointer array size MAXP is non-positive, the
+      !>         error SPICE(VALUEOUTOFRANGE) is signaled.
+      !>
+      !>     2)  If the cell array size MAXC is non-positive, the
+      !>         error SPICE(VALUEOUTOFRANGE) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine supports creation of DSK type 2 segments.
+      !>     It is used for creation of both voxel-plate association
+      !>     data structures and of vertex-plate association data
+      !>     structures.
+      !>
+      !> ## Examples
+      !>
+      !>     See usage in ZZMKSPIN.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>     J.A. Bytof      (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
+      !>
+      !>        Updated version info.
+      !>
+      !>        05-JAN-2016 (NJB)
+      !>
+      !>           Added error checks on input dimension arguments. Re-wrote
+      !>           some of the argument descriptions. Added private routine
+      !>           warning to header abstract.
+      !>
+      !>        08-OCT-2009 (NJB)
+      !>
+      !>           Re-ordered header sections.
+      !>
+      !>        03-FEB-1999 (JAB)
       module procedure zzinilnk
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Initialize an AB cell linked-list structure.
-!!
-!! ## Required Reading
-!!
-!!     None
-!!
-!! ## Keywords
-!!
-!!     DSK
-!!     Utility
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
-
-! $ Detailed_Input
-!
-!     MAXP       is the length of the pointer array PNTRS.
-!
-!     MAXC       is the length of the cell array CELLS. The array has
-!                dimensions
-!
-!                   ( 2, MAXC )
-!
-!                Elements
-!
-!                   ( 1, * )
-!
-!                normally contain "A-values"; elements
-!
-!                   ( 2, * )
-!
-!                normally contain pointers.
-!
-! $ Detailed_Output
-!
-!     NCELL      is the number of cells in use; this argument is
-!                initialized to zero. This is done as a convenience
-!                for the calling routine, which usually must keep
-!                track of the number of cells in use.
-!
-!     PNTRS      is the pointer array, initialized so that each
-!                element contains -1, which represents a null
-!                pointer.
-!
-!     CELLS      is a cell array, initialized so that each pointer
-!                element contains -1, and so that each value
-!                element contains 0.
-!
-! $ Parameters
-!
-!     See the DSK type 2 include file
-!
-!        dsk02.inc
-!
-! $ Exceptions
-!
-!     1)  If the pointer array size MAXP is non-positive, the
-!         error SPICE(VALUEOUTOFRANGE) is signaled.
-!
-!     2)  If the cell array size MAXC is non-positive, the
-!         error SPICE(VALUEOUTOFRANGE) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine supports creation of DSK type 2 segments.
-!     It is used for creation of both voxel-plate association
-!     data structures and of vertex-plate association data
-!     structures.
-!
-! $ Examples
-!
-!     See usage in ZZMKSPIN.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     J.A. Bytof      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
-!
-!        Updated version info.
-!
-!        05-JAN-2016 (NJB)
-!
-!           Added error checks on input dimension arguments. Re-wrote
-!           some of the argument descriptions. Added private routine
-!           warning to header abstract.
-!
-!        08-OCT-2009 (NJB)
-!
-!           Re-ordered header sections.
-!
-!        03-FEB-1999 (JAB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     initialize an AB cell linked-list
-!
-!-&
 
       integer(ip)           i
 
@@ -5651,163 +5316,138 @@ contains
       return
       end procedure zzinilnk
 
-!$Procedure ZZGETVOX ( Coordinates of voxel containing a point )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines. Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     This subroutine returns the 1-based voxel coordinates of the
+      !>     voxel that contains a given point.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     VOXSIZ     is a double precision scalar value giving the size of
+      !>                each cubical voxel in model units.
+      !>
+      !>     VOXORI     is a double precision 3-vector indicating the location
+      !>                of the voxel grid origin in model units.
+      !>
+      !>     NVOX       is an integer 3-vector giving the length of each
+      !>                side of the voxel grid in voxel units.
+      !>
+      !>     XYZ        is a double precision 3-vector containing the location
+      !>                of the point in question in model units.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     INBOX      is a logical scalar indicating whether or not the
+      !>                point XYZ lies within the extent of the voxel grid.
+      !>
+      !>     VOXCOR     is an integer 3-vector containing the x, y, and z
+      !>                voxel indices of the voxel containing the point.
+      !>
+      !>                VOXCOR is valid only if INBOX is .TRUE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If VOXSIZ is less than or equal to zero, the error
+      !>         SPICE(NONPOSITIVEVALUE) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This is not a general coordinate conversion routine. This routine
+      !>     returns valid voxel coordinates only for voxels inside the voxel
+      !>     grid.
+      !>
+      !>     Points on the outer surface of the grid, as defined by the voxel
+      !>     origin and the grid dimensions, are considered to be inside the
+      !>     grid.
+      !>
+      !>     Points outside of the grid are not mapped to voxel coordinates.
+      !>
+      !> ## Examples
+      !>
+      !>   C
+      !>   C     Some position in model coordinates, i.e. the body fixed
+      !>   C     units and frame coordinates.
+      !>   C
+      !>         DOUBLE PRECISION       POS(3)
+      !>
+      !>               ...
+      !>
+      !>   C
+      !>   C     Retrieve the voxel grid geometry description.
+      !>   C
+      !>         CALL VOXDIM ( NVOX, VOXSIZ, VOXORI)
+      !>
+      !>   C
+      !>   C     Convert the coordinate POS to voxel grid indices.
+      !>   C
+      !>         CALL ZZGETVOX ( VOXSIZ, VOXORI, NVOX, POS, INBOX, VOXCOR )
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>     J.A. Bytof      (JPL)
+      !>     E.D. Wright     (JPL
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
+      !>
+      !>        Corrected typos in comments.
+      !>
+      !>-    SPICELIB Version 1.0.0, 18-MAR-2016 (NJB)
+      !>
+      !>        Added error check for non-positive voxel size.
+      !>        Made small changes to header.
+      !>
+      !>        17-JAN-2016 (NJB)
+      !>
+      !>           Functional change: routine returns valid voxel coordinates
+      !>           only for voxels inside the voxel grid. Points on the outer
+      !>           surface of the grid are considered to be inside the grid.
+      !>
+      !>           Changed check-in to discovery style.
+      !>
+      !>           Corrected rounding for voxels on outer edge of grid.
+      !>           Updated header.
+      !>
+      !>        08-OCT-2009 (NJB)
+      !>
+      !>           Re-ordered header sections.
+      !>
+      !>        14-SEP-2004 (EDW)
+      !>
+      !>           Corrected VOXID(I) functions to allow for
+      !>           negative voxel coordinates. Original functions
+      !>           returned values GE 1.
+      !>
+      !>           Added Examples section.
+      !>
+      !>        28-JAN-1999 (JAB)
+      !>
+      !>           Original version.
       module procedure zzgetvox
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     This subroutine returns the 1-based voxel coordinates of the
-!!     voxel that contains a given point.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PLATE
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       implicit none
-
-! $ Detailed_Input
-!
-!     VOXSIZ     is a double precision scalar value giving the size of
-!                each cubical voxel in model units.
-!
-!     VOXORI     is a double precision 3-vector indicating the location
-!                of the voxel grid origin in model units.
-!
-!     NVOX       is an integer 3-vector giving the length of each
-!                side of the voxel grid in voxel units.
-!
-!     XYZ        is a double precision 3-vector containing the location
-!                of the point in question in model units.
-!
-! $ Detailed_Output
-!
-!     INBOX      is a logical scalar indicating whether or not the
-!                point XYZ lies within the extent of the voxel grid.
-!
-!     VOXCOR     is an integer 3-vector containing the x, y, and z
-!                voxel indices of the voxel containing the point.
-!
-!                VOXCOR is valid only if INBOX is .TRUE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If VOXSIZ is less than or equal to zero, the error
-!         SPICE(NONPOSITIVEVALUE) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This is not a general coordinate conversion routine. This routine
-!     returns valid voxel coordinates only for voxels inside the voxel
-!     grid.
-!
-!     Points on the outer surface of the grid, as defined by the voxel
-!     origin and the grid dimensions, are considered to be inside the
-!     grid.
-!
-!     Points outside of the grid are not mapped to voxel coordinates.
-!
-! $ Examples
-!
-!   C
-!   C     Some position in model coordinates, i.e. the body fixed
-!   C     units and frame coordinates.
-!   C
-!         DOUBLE PRECISION       POS(3)
-!
-!               ...
-!
-!   C
-!   C     Retrieve the voxel grid geometry description.
-!   C
-!         CALL VOXDIM ( NVOX, VOXSIZ, VOXORI)
-!
-!   C
-!   C     Convert the coordinate POS to voxel grid indices.
-!   C
-!         CALL ZZGETVOX ( VOXSIZ, VOXORI, NVOX, POS, INBOX, VOXCOR )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     J.A. Bytof      (JPL)
-!     E.D. Wright     (JPL
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    SPICELIB Version 1.0.0, 18-MAR-2016 (NJB)
-!
-!        Added error check for non-positive voxel size.
-!        Made small changes to header.
-!
-!        17-JAN-2016 (NJB)
-!
-!           Functional change: routine returns valid voxel coordinates
-!           only for voxels inside the voxel grid. Points on the outer
-!           surface of the grid are considered to be inside the grid.
-!
-!           Changed check-in to discovery style.
-!
-!           Corrected rounding for voxels on outer edge of grid.
-!           Updated header.
-!
-!        08-OCT-2009 (NJB)
-!
-!           Re-ordered header sections.
-!
-!        14-SEP-2004 (EDW)
-!
-!           Corrected VOXID(I) functions to allow for
-!           negative voxel coordinates. Original functions
-!           returned values GE 1.
-!
-!           Added Examples section.
-!
-!        28-JAN-1999 (JAB)
-!
-!           Original version.
-!
-!-&
-
-! $ Index_Entries
-!
-!     returns the voxel grid indices containing a given point
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 
 !
 !     Local variables.
@@ -5889,185 +5529,164 @@ contains
       return
       end procedure zzgetvox
 
-!$Procedure      ZZADDLNK ( Add a new AB cell to an AB structure )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines. Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Add a new AB cell to an AB cell pool and update the A-value
+      !>     pointer array.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     AVAL       is an index associated with a new pool entry. AVAL
+      !>                is the index of the Ith value of a finite set "A."
+      !>                AVAL is an index into the PNTRS array.
+      !>
+      !>     BVAL       is a B-value associated with AVAL. A new cell is to be
+      !>                allocated to associate AVAL and BVAL.
+      !>
+      !>     MAXA       Size of pointer array. AVAL must not exceed
+      !>                this value.
+      !>
+      !>     CELLSZ     Number of cells in the cell array CELLS. The array
+      !>                has dimension (2, CELLSZ).
+      !>
+      !>     PNTRS      is an array of integers acting as pointers into the
+      !>                cell array. The element at index I of PNTRS points to
+      !>                the head of a linked list in CELLS that associates
+      !>                B-values with the index I. Here I is the "A value."
+      !>
+      !>     NCELL      Number of cells in use on input. NCELL is incremented
+      !>                by one on output.
+      !>
+      !>     CELLS      Cell array, updated on output.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     PNTRS      is the input pointer array, modified to reflect the
+      !>                addition of a new cell entry. The element
+      !>
+      !>                   PNTRS(AVAL)
+      !>
+      !>                contains the second subscript in CELLS of the new
+      !>                entry.
+      !>
+      !>     NCELL      Number of cells in use on output. NCELL is incremented
+      !>                by one relative to its input value.
+      !>
+      !>     CELLS      is the input cell array, with a new entry. The element
+      !>
+      !>                   CELLS ( 1, PNTRS(AVAL) )
+      !>
+      !>                contains BVAL. The element
+      !>
+      !>                   CELLS ( 2, PNTRS(AVAL) )
+      !>
+      !>                is a pointer to the previous head of the list
+      !>                associated with AVAL, or is null (-1) if the list was
+      !>                previously empty.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the array index AVAL exceeds the size MAXA of the
+      !>         A-value pointer array, the error SPICE(AVALOUTOFRANGE) is
+      !>         signaled.
+      !>
+      !>         Occurrence of this error in the context of DSK type 2 spatial
+      !>         index creation can result from the fine voxel scale having
+      !>         been set to a value too small for the plate set.
+      !>
+      !>     2)  If the required cell count exceeds the size CELLSZ of the
+      !>         cell array, the error SPICE(CELLARRAYTOOSMALL) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The AB list routines support manipulation of a data structure that
+      !>     represents a one-to-many mapping from a set A to a set B. Each
+      !>     element of set A is mapped to a set of values from B, where the
+      !>     range values are represented by a linked list of entries in the
+      !>     cell array.
+      !>
+      !>     The elements of set B associated with the Ith element of A are
+      !>     stored in a linked list of cells starting with the cell
+      !>     consisting of elements
+      !>
+      !>        CELLS(*,PNTRS(I))
+      !>
+      !>     The set A is really an abstraction: it's just some finite set
+      !>     with size in the range 1:MAXA. The input AVAL is not a member of
+      !>     A but rather just an index into A. For consistency with existing
+      !>     code, the name AVAL has been retained.
+      !>
+      !>     The fact that B values are stored in linked lists enables a
+      !>     program to store entries for A-B associations in random order.
+      !>     For example, in the process of constructing DSK type 2 segments,
+      !>     the of non-empty fine voxels intersected by a given plate can be
+      !>     computed; then an entry representing a voxel-plate association
+      !>     can be made for each fine voxel in the set. In this case, the
+      !>     set "A" is the set of fine voxels belonging to non-empty coarse
+      !>     voxels.
+      !>
+      !>     This routine supports creation of DSK type 2 segments. It is used
+      !>     for creation of both voxel-plate association data structures and
+      !>     of vertex-plate association data structures.
+      !>
+      !> ## Examples
+      !>
+      !>     See usage in ZZMKSPIN.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>     J.A. Bytof      (JPL)
+      !>     E.D. Wright     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    MKDSK Version 2.1.0, 15-JAN-2016 (NJB)
+      !>
+      !>        Updated error check on AVAL.
+      !>
+      !>        Filled in or update various header entries.
+      !>
+      !>-    MKDSK Version 2.0.0, 30-APR-2014 (NJB)
+      !>
+      !>        Argument list change: now accepts separate inputs for pointer
+      !>        list size and cell size.
+      !>
+      !>-    MKDSK Version 1.2.0, 04-MAY-2010 (NJB)
+      !>
+      !>        Changed INCLUDE file to dsk02.inc.
+      !>
+      !>-    MKDSK Version 1.1.1, 08-OCT-2009 (NJB)
+      !>
+      !>        Re-ordered header sections.
+      !>
+      !>-    MKDSK Version 1.1.0, 11-JUN-2004 (EDW)
+      !>
+      !>        Added check on AVAL to ensure it's smaller
+      !>        than the size of CELLSZ.
+      !>
+      !>-    MKDSK Version 1.0.0, 03-FEB-1999 (JAB)
       module procedure zzaddlnk
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Add a new AB cell to an AB cell pool and update the A-value
-!!     pointer array.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     AB linked list
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     AVAL       is an index associated with a new pool entry. AVAL
-!!                is the index of the Ith value of a finite set "A."
-!!                AVAL is an index into the PNTRS array.
-!!
-!!     BVAL       is a B-value associated with AVAL. A new cell is to be
-!!                allocated to associate AVAL and BVAL.
-!!
-!!     MAXA       Size of pointer array. AVAL must not exceed
-!!                this value.
-!!
-!!     CELLSZ     Number of cells in the cell array CELLS. The array
-!!                has dimension (2, CELLSZ).
-!!
-!!     PNTRS      is an array of integers acting as pointers into the
-!!                cell array. The element at index I of PNTRS points to
-!!                the head of a linked list in CELLS that associates
-!!                B-values with the index I. Here I is the "A value."
-!!
-!!     NCELL      Number of cells in use on input. NCELL is incremented
-!!                by one on output.
-!!
-!!     CELLS      Cell array, updated on output.
-!!
-!! ## Detailed Output
-!!
-!!     PNTRS      is the input pointer array, modified to reflect the
-!!                addition of a new cell entry. The element
-!!
-!!                   PNTRS(AVAL)
-!!
-!!                contains the second subscript in CELLS of the new
-!!                entry.
-!!
-!!     NCELL      Number of cells in use on output. NCELL is incremented
-!!                by one relative to its input value.
-!!
-!!     CELLS      is the input cell array, with a new entry. The element
-!!
-!!                   CELLS ( 1, PNTRS(AVAL) )
-!!
-!!                contains BVAL. The element
-!!
-!!                   CELLS ( 2, PNTRS(AVAL) )
-!!
-!!                is a pointer to the previous head of the list
-!!                associated with AVAL, or is null (-1) if the list was
-!!                previously empty.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the array index AVAL exceeds the size MAXA of the
-!!         A-value pointer array, the error SPICE(AVALOUTOFRANGE) is
-!!         signaled.
-!!
-!!         Occurrence of this error in the context of DSK type 2 spatial
-!!         index creation can result from the fine voxel scale having
-!!         been set to a value too small for the plate set.
-!!
-!!     2)  If the required cell count exceeds the size CELLSZ of the
-!!         cell array, the error SPICE(CELLARRAYTOOSMALL) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     The AB list routines support manipulation of a data structure that
-!!     represents a one-to-many mapping from a set A to a set B. Each
-!!     element of set A is mapped to a set of values from B, where the
-!!     range values are represented by a linked list of entries in the
-!!     cell array.
-!!
-!!     The elements of set B associated with the Ith element of A are
-!!     stored in a linked list of cells starting with the cell
-!!     consisting of elements
-!!
-!!        CELLS(*,PNTRS(I))
-!!
-!!     The set A is really an abstraction: it's just some finite set
-!!     with size in the range 1:MAXA. The input AVAL is not a member of
-!!     A but rather just an index into A. For consistency with existing
-!!     code, the name AVAL has been retained.
-!!
-!!     The fact that B values are stored in linked lists enables a
-!!     program to store entries for A-B associations in random order.
-!!     For example, in the process of constructing DSK type 2 segments,
-!!     the of non-empty fine voxels intersected by a given plate can be
-!!     computed; then an entry representing a voxel-plate association
-!!     can be made for each fine voxel in the set. In this case, the
-!!     set "A" is the set of fine voxels belonging to non-empty coarse
-!!     voxels.
-!!
-!!     This routine supports creation of DSK type 2 segments. It is used
-!!     for creation of both voxel-plate association data structures and
-!!     of vertex-plate association data structures.
-!!
-!! ## Examples
-!!
-!!     See usage in ZZMKSPIN.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman    (JPL)
-!!     J.A. Bytof      (JPL)
-!!     E.D. Wright     (JPL)
-!!
-!! ## Version
-!!
-!!-    MKDSK Version 2.1.0, 15-JAN-2016 (NJB)
-!!
-!!        Updated error check on AVAL.
-!!
-!!        Filled in or update various header entries.
-!!
-!!-    MKDSK Version 2.0.0, 30-APR-2014 (NJB)
-!!
-!!        Argument list change: now accepts separate inputs for pointer
-!!        list size and cell size.
-!!
-!!-    MKDSK Version 1.2.0, 04-MAY-2010 (NJB)
-!!
-!!        Changed INCLUDE file to dsk02.inc.
-!!
-!!-    MKDSK Version 1.1.1, 08-OCT-2009 (NJB)
-!!
-!!        Re-ordered header sections.
-!!
-!!-    MKDSK Version 1.1.0, 11-JUN-2004 (EDW)
-!!
-!!        Added check on AVAL to ensure it's smaller
-!!        than the size of CELLSZ.
-!!
-!!-    MKDSK Version 1.0.0, 03-FEB-1999 (JAB)
-!!
-!! ## Index Entries
-!!
-!!     add entry to AB cell pool
-!!
-!!     SPICE functions
-!!
-!!     Standard RETURN test.
-!!
       use pepper_kinds, only: ip
       implicit none
       if ( ctx%failed() ) return
@@ -6114,262 +5733,242 @@ contains
       return
       end procedure zzaddlnk
 
-!$Procedure ZZMKSPIN ( Make spatial index of plates )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines. Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Create voxel grid data structure and voxel-plate mapping.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     NP         Total number of plates in model.
+      !>
+      !>     PLATES     Array containing indices in the array VRTCES of
+      !>                the vertices corresponding to each plate. The
+      !>                elements (1:3,I) of PLATES are the vertex indices
+      !>                of the Ith plate.
+      !>
+      !>     VRTCES     Array containing cartesian coordinates for all
+      !>                vertices in the model reference frame. Elements
+      !>                (1:3,I) of VRTCES are the coordinates of the Ith
+      !>                vertex.
+      !>
+      !>     VOXSCL     The voxel size is determined by the average extent of
+      !>                each plate in XYZ. VOXSCL is a scaling factor that
+      !>                may be used to adjust final voxel size.
+      !>
+      !>     CGSCAL     The coarse voxel grid has voxel edge length
+      !>                larger by factor CGSCAL than the fine voxel
+      !>                edge length.
+      !>
+      !>     MAXPTR     is the maximum number of elements in the output
+      !>                list of voxel pointers.
+      !>
+      !>     MXCELL     is the number of cells in the input cell array.
+      !>                This is the second dimension of the array.
+      !>
+      !>     MAXVXL     is the maximum number of elements in the output
+      !>                voxel-plate list.
+      !>
+      !>     CELLS      workspace array used to construct the voxel-plate
+      !>                mapping.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     CELLS      workspace array used to construct the voxel-plate
+      !>                mapping.
+      !>
+      !>     NVOX       Dimensions of the voxel grid in voxel units.
+      !>
+      !>     VOXSIZ     Size of each voxel in model units (km).
+      !>
+      !>     VOXORI     Origin of voxel grid in model units (km).
+      !>
+      !>     NVXTOT     Total number of voxels in grid.
+      !>
+      !>     NVXPTR     Number of pointers in VXPTR array.
+      !>
+      !>     VXPTR      Array of pointers that map voxels to their associated
+      !>                plated IDs in the voxel to plates list. The Nth
+      !>                element of this array contains a pointer to the Mth
+      !>                element of VXLIST, or -1. If VXPTR(N) is -1, the Nth
+      !>                voxel is empty.
+      !>
+      !>     NVXLST     The total number of elements in the plate list.
+      !>
+      !>     VXLIST     The plates list. For the Nth voxel, VXPTR(N) points to
+      !>                VXLIST(M). VXLIST(M) contains the number plates that
+      !>                intersect voxel N. The IDs of those plates are stored
+      !>                in the following elements.
+      !>
+      !>     EXTENT     is an array of extents of vertex coordinates. Elements
+      !>                indexed (2*I)-1 and 2*I are the minimum and maximum
+      !>                values of the Ith coordinate, taken over all vertices.
+      !>                Units are km.
+      !>
+      !>     CGRPTR     is an of array coarse voxel grid pointers. Null
+      !>                pointers have the value -1. Non-null pointers indicate
+      !>                locations in the voxel pointer array: each non-empty
+      !>                coarse voxel points to a list of pointers for each of
+      !>                the fine voxels it contains.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file dsk02.inc.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If NP is less than 1 or greater than MAXPLT, the error
+      !>         SPICE(VALUEOUTOFRANGE) is signaled.
+      !>
+      !>     2)  If the number of coarse voxels exceeds the grid size MAXCGR,
+      !>         the error SPICE(COARSEGRIDOVERFLOW) is signaled.
+      !>
+      !>     3)  If the voxel count is greater than MAXVOX, the error
+      !>         SPICE(VALUEOUTOFRANGE) is signaled.
+      !>
+      !>     4)  If the coarse voxel count is less than 1 or greater than
+      !>         MAXCGR, the error SPICE(VALUEOUTOFRANGE) is signaled.
+      !>
+      !>     5)  If the coarse voxel scale is less than 1 or more than
+      !>         the cube root of the fine voxel count, the error
+      !>         SPICE(VALUEOUTOFRANGE) will be signaled.
+      !>
+      !>     6)  If the cube of the coarse voxel scale does not divide the
+      !>         fine voxel count evenly, the error SPICE(INCOMPATIBLESCALE)
+      !>         will be signaled.
+      !>
+      !>     7)  If the workspace overflows while this routine accumulates
+      !>         voxel-plate associations, the error will be signaled by
+      !>         a routine in the call tree of this routine.
+      !>
+      !>     8)  If the voxel-plate association list array overflows while
+      !>         this routine accumulates voxel-plate associations, the error
+      !>         will be signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine supports creation of spatial indexes for DSK type 2
+      !>     segments. This routine determines the fine and coarse voxel
+      !>     grid dimensions and parameters. It also builds the voxel-plate
+      !>     association data structures.
+      !>
+      !> ## Examples
+      !>
+      !>     See usage in DSKMI2.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman  (JPL)
+      !>     J.A. Bytof    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 17-FEB-2017 (NJB)
+      !>
+      !>        Added new error checks.
+      !>
+      !>        29-JAN-2016 (NJB)
+      !>
+      !>           Removed reference to ZZVOXPAD. Renamed argument MAXCEL to
+      !>           MXCELL to accommodate declaration of MAXCEL in dsk02.inc.
+      !>
+      !>           Updated long error messages and header comments.
+      !>
+      !>        26-MAR-2015 (NJB)
+      !>
+      !>           Functional change: now fills in the coarse voxel grid
+      !>           pointer array with valid pointers; this is done in one
+      !>           pass. The old version of the routine only marked the
+      !>           elements of this array as null or non-null.
+      !>
+      !>           The algorithm for computing the set of voxels containing
+      !>           the bounding box of each plate was re-written to improve
+      !>           efficiency.
+      !>
+      !>        30-JUN-2014 (NJB)
+      !>
+      !>           Argument list change: removed work space array PNTRS. The
+      !>           pointer array for the voxel-to-plate list mapping is now
+      !>           constructed in place.
+      !>
+      !>           Changed argument list to include sizes of arrays. Changed
+      !>           error handling to make use of array sizes. Changed call to
+      !>           UNTNGL to accommodate argument list change in that routine.
+      !>           Updated header I/O descriptions.
+      !>
+      !>        13-MAY-2010 (NJB)
+      !>
+      !>           Now accepts input workspace arrays PNTRS and CELLS.
+      !>           Replaced argument VERT with arguments VRTCES and PLATES;
+      !>           this was done to greatly reduce the memory needed by this
+      !>           program.
+      !>
+      !>           Changed INCLUDE file to dsk02.inc.
+      !>
+      !>           Bug fix: determination of empty voxels is now based on
+      !>           voxel pointers, not their target values.
+      !>
+      !>        08-OCT-2009 (NJB)
+      !>
+      !>           Re-ordered header sections.
+      !>
+      !>        12-SEP-2004 (EDW)
+      !>
+      !>           Improve/expand comments and descriptions.
+      !>
+      !>        03-FEB-1999 (JAB)
+      !>
+      !>           Original version.
+      !>
+      !> ## Revisions
+      !>
+      !>        20-MAR-2015 (NJB)
+      !>
+      !>        Functional change: now fills in the coarse voxel grid pointer
+      !>        array with valid pointers; this is done in one pass. The old
+      !>        version of the routine only marked the elements of this array
+      !>        as null or non-null.
+      !>
+      !>        The maximum size of the voxel-plate pointer array has been
+      !>        reduced to MAXVOX/2.
+      !>
+      !>        The array mapping voxels to the voxel-plate pointer array is
+      !>        no longer used. Previously, voxel IDs were used as the
+      !>        "A list" elements with which plate lists were associated.
+      !>        Now, indices in the voxel-plate pointer array are used as
+      !>        "A" values.
+      !>
+      !>     SPICELIB functions
+      !>
+      !>     Other functions
+      !>
+      !>     Local parameters
+      !>
+      !>     Fraction of voxel edge length used a tolerance for plate
+      !>     inclusion in voxels:
       module procedure zzmkspin
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Create voxel grid data structure and voxel-plate mapping.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     plate voxel index
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     NP         Total number of plates in model.
-!!
-!!     PLATES     Array containing indices in the array VRTCES of
-!!                the vertices corresponding to each plate. The
-!!                elements (1:3,I) of PLATES are the vertex indices
-!!                of the Ith plate.
-!!
-!!     VRTCES     Array containing cartesian coordinates for all
-!!                vertices in the model reference frame. Elements
-!!                (1:3,I) of VRTCES are the coordinates of the Ith
-!!                vertex.
-!!
-!!     VOXSCL     The voxel size is determined by the average extent of
-!!                each plate in XYZ. VOXSCL is a scaling factor that
-!!                may be used to adjust final voxel size.
-!!
-!!     CGSCAL     The coarse voxel grid has voxel edge length
-!!                larger by factor CGSCAL than the fine voxel
-!!                edge length.
-!!
-!!     MAXPTR     is the maximum number of elements in the output
-!!                list of voxel pointers.
-!!
-!!     MXCELL     is the number of cells in the input cell array.
-!!                This is the second dimension of the array.
-!!
-!!     MAXVXL     is the maximum number of elements in the output
-!!                voxel-plate list.
-!!
-!!     CELLS      workspace array used to construct the voxel-plate
-!!                mapping.
-!!
-!! ## Detailed Output
-!!
-!!     CELLS      workspace array used to construct the voxel-plate
-!!                mapping.
-!!
-!!     NVOX       Dimensions of the voxel grid in voxel units.
-!!
-!!     VOXSIZ     Size of each voxel in model units (km).
-!!
-!!     VOXORI     Origin of voxel grid in model units (km).
-!!
-!!     NVXTOT     Total number of voxels in grid.
-!!
-!!     NVXPTR     Number of pointers in VXPTR array.
-!!
-!!     VXPTR      Array of pointers that map voxels to their associated
-!!                plated IDs in the voxel to plates list. The Nth
-!!                element of this array contains a pointer to the Mth
-!!                element of VXLIST, or -1. If VXPTR(N) is -1, the Nth
-!!                voxel is empty.
-!!
-!!     NVXLST     The total number of elements in the plate list.
-!!
-!!     VXLIST     The plates list. For the Nth voxel, VXPTR(N) points to
-!!                VXLIST(M). VXLIST(M) contains the number plates that
-!!                intersect voxel N. The IDs of those plates are stored
-!!                in the following elements.
-!!
-!!     EXTENT     is an array of extents of vertex coordinates. Elements
-!!                indexed (2*I)-1 and 2*I are the minimum and maximum
-!!                values of the Ith coordinate, taken over all vertices.
-!!                Units are km.
-!!
-!!     CGRPTR     is an of array coarse voxel grid pointers. Null
-!!                pointers have the value -1. Non-null pointers indicate
-!!                locations in the voxel pointer array: each non-empty
-!!                coarse voxel points to a list of pointers for each of
-!!                the fine voxels it contains.
-!!
-!! ## Parameters
-!!
-!!     See the include file dsk02.inc.
-!!
-!! ## Exceptions
-!!
-!!     1)  If NP is less than 1 or greater than MAXPLT, the error
-!!         SPICE(VALUEOUTOFRANGE) is signaled.
-!!
-!!     2)  If the number of coarse voxels exceeds the grid size MAXCGR,
-!!         the error SPICE(COARSEGRIDOVERFLOW) is signaled.
-!!
-!!     3)  If the voxel count is greater than MAXVOX, the error
-!!         SPICE(VALUEOUTOFRANGE) is signaled.
-!!
-!!     4)  If the coarse voxel count is less than 1 or greater than
-!!         MAXCGR, the error SPICE(VALUEOUTOFRANGE) is signaled.
-!!
-!!     5)  If the coarse voxel scale is less than 1 or more than
-!!         the cube root of the fine voxel count, the error
-!!         SPICE(VALUEOUTOFRANGE) will be signaled.
-!!
-!!     6)  If the cube of the coarse voxel scale does not divide the
-!!         fine voxel count evenly, the error SPICE(INCOMPATIBLESCALE)
-!!         will be signaled.
-!!
-!!     7)  If the workspace overflows while this routine accumulates
-!!         voxel-plate associations, the error will be signaled by
-!!         a routine in the call tree of this routine.
-!!
-!!     8)  If the voxel-plate association list array overflows while
-!!         this routine accumulates voxel-plate associations, the error
-!!         will be signaled by a routine in the call tree of this
-!!         routine.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine supports creation of spatial indexes for DSK type 2
-!!     segments. This routine determines the fine and coarse voxel
-!!     grid dimensions and parameters. It also builds the voxel-plate
-!!     association data structures.
-!!
-!! ## Examples
-!!
-!!     See usage in DSKMI2.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman  (JPL)
-!!     J.A. Bytof    (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 17-FEB-2017 (NJB)
-!!
-!!        Added new error checks.
-!!
-!!        29-JAN-2016 (NJB)
-!!
-!!           Removed reference to ZZVOXPAD. Renamed argument MAXCEL to
-!!           MXCELL to accommodate declaration of MAXCEL in dsk02.inc.
-!!
-!!           Updated long error messages and header comments.
-!!
-!!        26-MAR-2015 (NJB)
-!!
-!!           Functional change: now fills in the coarse voxel grid
-!!           pointer array with valid pointers; this is done in one
-!!           pass. The old version of the routine only marked the
-!!           elements of this array as null or non-null.
-!!
-!!           The algorithm for computing the set of voxels containing
-!!           the bounding box of each plate was re-written to improve
-!!           efficiency.
-!!
-!!        30-JUN-2014 (NJB)
-!!
-!!           Argument list change: removed work space array PNTRS. The
-!!           pointer array for the voxel-to-plate list mapping is now
-!!           constructed in place.
-!!
-!!           Changed argument list to include sizes of arrays. Changed
-!!           error handling to make use of array sizes. Changed call to
-!!           UNTNGL to accommodate argument list change in that routine.
-!!           Updated header I/O descriptions.
-!!
-!!        13-MAY-2010 (NJB)
-!!
-!!           Now accepts input workspace arrays PNTRS and CELLS.
-!!           Replaced argument VERT with arguments VRTCES and PLATES;
-!!           this was done to greatly reduce the memory needed by this
-!!           program.
-!!
-!!           Changed INCLUDE file to dsk02.inc.
-!!
-!!           Bug fix: determination of empty voxels is now based on
-!!           voxel pointers, not their target values.
-!!
-!!        08-OCT-2009 (NJB)
-!!
-!!           Re-ordered header sections.
-!!
-!!        12-SEP-2004 (EDW)
-!!
-!!           Improve/expand comments and descriptions.
-!!
-!!        03-FEB-1999 (JAB)
-!!
-!!           Original version.
-!!
-!! ## Index Entries
-!!
-!!     spatial index plates voxels
-!!
-!! ## Revisions
-!!
-!!        20-MAR-2015 (NJB)
-!!
-!!        Functional change: now fills in the coarse voxel grid pointer
-!!        array with valid pointers; this is done in one pass. The old
-!!        version of the routine only marked the elements of this array
-!!        as null or non-null.
-!!
-!!        The maximum size of the voxel-plate pointer array has been
-!!        reduced to MAXVOX/2.
-!!
-!!        The array mapping voxels to the voxel-plate pointer array is
-!!        no longer used. Previously, voxel IDs were used as the
-!!        "A list" elements with which plate lists were associated.
-!!        Now, indices in the voxel-plate pointer array are used as
-!!        "A" values.
-!!
-!!     SPICELIB functions
-!!
-!!     Other functions
-!!
-!!     Local parameters
-!!
-!!     Fraction of voxel edge length used a tolerance for plate
-!!     inclusion in voxels:
-!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
       use pepper_inc_dsk02
       implicit none
       real(wp), parameter :: tol = 1.0e-3_wp
 
-!
-!     Local Variables
-!
       real(wp)              avext
       real(wp)              bxmax
       real(wp)              bxmin
@@ -6428,9 +6027,6 @@ contains
 
       logical               inbox
 
-!
-!     Saved variables
-!
 !     Required for f2c use on Linux, all local variables
 !     to static.
 !
@@ -6896,422 +6492,381 @@ contains
       return
       end procedure zzmkspin
 
-!$Procedure DLAOPN ( DLA, open new file )
-
+      !> ## Detailed Input
+      !>
+      !>     FNAME    is the name of a new DLA file to be created. The file
+      !>              will be left opened for write access.
+      !>
+      !>     FTYPE    is a code for type of data placed into a DLA file. The
+      !>              non-blank part of FTYPE is used as the "file type"
+      !>              portion of the ID word in the DLA file.
+      !>
+      !>              The first nonblank character and the three, or fewer,
+      !>              characters immediately following it, giving four
+      !>              characters, are used to represent the type of the data
+      !>              placed in the DLA file. This is provided as a convenience
+      !>              for higher level software. It is an error if this string
+      !>              is blank. Also, the file type may not contain any
+      !>              nonprinting characters. When written to the DLA file, the
+      !>              value for the type IS case sensitive.
+      !>
+      !>              NAIF has reserved for its own use file types consisting
+      !>              of the upper case letters (A-Z) and the digits 0-9. NAIF
+      !>              recommends lower case or mixed case file types be used by
+      !>              all others in order to avoid any conflicts with NAIF file
+      !>              types.
+      !>
+      !>     IFNAME   is the internal file name for the new file. The name may
+      !>              contain as many as 60 characters. This name should
+      !>              uniquely identify the file.
+      !>
+      !>     NCOMCH   is the number of comment characters to allocate.
+      !>
+      !>              NCOMCH is used to establish the number of comment records
+      !>              that will be allocated to the new DLA file. The number of
+      !>              comment records allocated is the minimum required to
+      !>              store the specified number of comment characters.
+      !>
+      !>              Allocating comment records at file creation time may
+      !>              reduce the likelihood of having to expand the
+      !>              comment area later.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HANDLE   is the file handle associated with the file. This handle
+      !>              is used to identify the file in subsequent calls to other
+      !>              DLA routines.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input filename is blank, an error is signaled by a
+      !>         routine in the call tree of this routine. No file will be
+      !>         created.
+      !>
+      !>     2)  If the specified file cannot be opened without exceeding the
+      !>         maximum allowed number of open DAS files, an error is signaled
+      !>         by a routine in the call tree of this routine. No file will be
+      !>         created.
+      !>
+      !>     3)  If the file cannot be opened properly, an error is signaled by
+      !>         a routine in the call tree of this routine. No file will be
+      !>         created.
+      !>
+      !>     4)  If the initial records in the file cannot be written, an error
+      !>         is signaled by a routine in the call tree of this routine. No
+      !>         file will be created.
+      !>
+      !>     5)  If no logical units are available, an error is signaled by a
+      !>         routine in the call tree of this routine. No file will be
+      !>         created.
+      !>
+      !>     6)  If the file type is blank, an error is signaled by a routine
+      !>         in the call tree of this routine. No file will be created.
+      !>
+      !>     7)  If the file type contains nonprinting characters, decimal 0-31
+      !>         and 127-255, an error is signaled by a routine in the call
+      !>         tree of this routine. No file will be created.
+      !>
+      !>     8)  If the number of comment characters allocated to be allocated,
+      !>         NCOMCH, is negative, the error SPICE(BADRECORDCOUNT) is
+      !>         signaled. No file will be created.
+      !>
+      !> ## Files
+      !>
+      !>     See argument FNAME.
+      !>
+      !> ## Particulars
+      !>
+      !>     DLA files are built using the DAS low-level format; DLA files are
+      !>     a specialized type of DAS file in which data are organized as a
+      !>     doubly linked list of segments. Each segment's data belong to
+      !>     contiguous components of character, double precision, and integer
+      !>     type.
+      !>
+      !>     This routine creates a new DLA file and sets the type of the
+      !>     file to the mnemonic code passed to it.
+      !>
+      !>     DLA files created by this routine have initialized file records.
+      !>     The ID word in a DLA file record has the form
+      !>
+      !>        DAS/xxxx
+      !>
+      !>     where the characters following the slash are supplied by the
+      !>     caller of this routine.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Create a DLA file containing one segment; the segment
+      !>        contains character, double precision, and integer data.
+      !>        After writing and closing the file, open the file for
+      !>        read access; dump the data to standard output.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DLAOPN_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              CHARACTER*(*)         DLA
+      !>              PARAMETER           ( DLA    = 'dlaopn_ex1.dla' )
+      !>
+      !>              INTEGER               IFNLEN
+      !>              PARAMETER           ( IFNLEN =  60 )
+      !>
+      !>              INTEGER               LNSIZE
+      !>              PARAMETER           ( LNSIZE =  61 )
+      !>
+      !>              INTEGER               MAXC
+      !>              PARAMETER           ( MAXC   =  5 )
+      !>
+      !>              INTEGER               MAXD
+      !>              PARAMETER           ( MAXD   =  50 )
+      !>
+      !>              INTEGER               MAXI
+      !>              PARAMETER           ( MAXI   =  100 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(LNSIZE)    CVALS   ( MAXC )
+      !>              CHARACTER*(LNSIZE)    CVALS2  ( MAXC )
+      !>              CHARACTER*(IFNLEN)    IFNAME
+      !>
+      !>              DOUBLE PRECISION      DVALS   ( MAXD )
+      !>              DOUBLE PRECISION      DVALS2  ( MAXD )
+      !>
+      !>              INTEGER               BASE
+      !>              INTEGER               DESCR   ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               IVALS   ( MAXI )
+      !>              INTEGER               IVALS2  ( MAXI )
+      !>              INTEGER               J
+      !>              INTEGER               K
+      !>              INTEGER               N
+      !>              INTEGER               NCOMCH
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Set the internal file name.  Don't reserve characters in
+      !>        C     the DAS comment area.
+      !>        C
+      !>              IFNAME = 'Example DLA file for testing'
+      !>              NCOMCH = 0
+      !>
+      !>        C
+      !>        C     Open a new DLA file.
+      !>        C
+      !>              CALL DLAOPN ( DLA, 'DLA', IFNAME, NCOMCH, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a new segment.
+      !>        C
+      !>              CALL DLABNS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Add character data to the segment.
+      !>        C
+      !>              DO I = 1, MAXC
+      !>
+      !>                 DO J = 1, LNSIZE
+      !>
+      !>                    K = MOD( J+I-1, 10 )
+      !>
+      !>                    CALL INTSTR ( K,  CVALS(I)(J:J) )
+      !>
+      !>                 END DO
+      !>
+      !>              END DO
+      !>
+      !>              CALL DASADC ( HANDLE, MAXC*LNSIZE, 1, LNSIZE, CVALS )
+      !>
+      !>        C
+      !>        C     Add integer and double precision data to the segment.
+      !>        C
+      !>              DO I = 1, MAXI
+      !>                 IVALS(I) = I
+      !>              END DO
+      !>
+      !>              CALL DASADI ( HANDLE, MAXI, IVALS )
+      !>
+      !>              DO I = 1, MAXD
+      !>                 DVALS(I) = I
+      !>              END DO
+      !>
+      !>              CALL DASADD ( HANDLE, MAXD, DVALS )
+      !>
+      !>        C
+      !>        C     End the segment.
+      !>        C
+      !>              CALL DLAENS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Close the file.  The routine DASCLS flushes the DAS
+      !>        C     buffers and segregates the file before closing it.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Now read the file and check the data.
+      !>        C
+      !>              CALL DASOPR ( DLA, HANDLE )
+      !>
+      !>        C
+      !>        C     Obtain the segment descriptor for the sole segment
+      !>        C     in the file. We need not check the found flag
+      !>        C     in this case because we know there is one segment
+      !>        C     in the file.
+      !>        C
+      !>              CALL DLABFS ( HANDLE, DESCR, FOUND )
+      !>
+      !>        C
+      !>        C     Fetch character data from the segment.  Obtain the
+      !>        C     base address of the character data and the
+      !>        C     character count from the descriptor.
+      !>        C
+      !>              BASE = DESCR(CBSIDX)
+      !>              N    = DESCR(CSZIDX)
+      !>
+      !>              CALL DASRDC ( HANDLE, BASE+1, BASE+N, 1, LNSIZE, CVALS2 )
+      !>
+      !>        C
+      !>        C     Display the character data.
+      !>        C
+      !>              WRITE (*,*) ' '
+      !>              WRITE (*,*) 'Character array:'
+      !>
+      !>              DO I = 1, N/LNSIZE
+      !>                 WRITE (*,*) CVALS2(I)
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Fetch and display the integer and double precision data.
+      !>        C
+      !>              BASE = DESCR(IBSIDX)
+      !>              N    = DESCR(ISZIDX)
+      !>
+      !>              CALL DASRDI( HANDLE, BASE+1, BASE+N, IVALS2 )
+      !>
+      !>              WRITE (*,*) ' '
+      !>              WRITE (*,*) 'Integer array:'
+      !>              DO I = 1, N/10
+      !>                 WRITE (*,'(10I6)') (IVALS2((I-1)*10 + J), J=1, 10)
+      !>              END DO
+      !>
+      !>              BASE = DESCR(DBSIDX)
+      !>              N    = DESCR(DSZIDX)
+      !>
+      !>              CALL DASRDD( HANDLE, BASE+1, BASE+N, DVALS2 )
+      !>
+      !>              WRITE (*,*) ' '
+      !>              WRITE (*,*) 'Double precision array:'
+      !>              DO I = 1, N/10
+      !>                 WRITE (*,'(10F6.1)') (DVALS2((I-1)*10 + J), J=1, 10)
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Close the file.  This step is unnecessary in this
+      !>        C     program, but is a good practice in general
+      !>        C     because closing the file frees resources.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Character array:
+      !>         1234567890123456789012345678901234567890123456789012345678901
+      !>         2345678901234567890123456789012345678901234567890123456789012
+      !>         3456789012345678901234567890123456789012345678901234567890123
+      !>         4567890123456789012345678901234567890123456789012345678901234
+      !>         5678901234567890123456789012345678901234567890123456789012345
+      !>
+      !>         Integer array:
+      !>             1     2     3     4     5     6     7     8     9    10
+      !>            11    12    13    14    15    16    17    18    19    20
+      !>            21    22    23    24    25    26    27    28    29    30
+      !>            31    32    33    34    35    36    37    38    39    40
+      !>            41    42    43    44    45    46    47    48    49    50
+      !>            51    52    53    54    55    56    57    58    59    60
+      !>            61    62    63    64    65    66    67    68    69    70
+      !>            71    72    73    74    75    76    77    78    79    80
+      !>            81    82    83    84    85    86    87    88    89    90
+      !>            91    92    93    94    95    96    97    98    99   100
+      !>
+      !>         Double precision array:
+      !>           1.0   2.0   3.0   4.0   5.0   6.0   7.0   8.0   9.0  10.0
+      !>          11.0  12.0  13.0  14.0  15.0  16.0  17.0  18.0  19.0  20.0
+      !>          21.0  22.0  23.0  24.0  25.0  26.0  27.0  28.0  29.0  30.0
+      !>          31.0  32.0  33.0  34.0  35.0  36.0  37.0  38.0  39.0  40.0
+      !>          41.0  42.0  43.0  44.0  45.0  46.0  47.0  48.0  49.0  50.0
+      !>
+      !>        Note that after run completion, a new DLA file exists in the
+      !>        output directory.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 14-SEP-2021 (JDR) (NJB)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Updated the header to describe the usage of input argument
+      !>        NCOMCH instead of the previously documented NCOMR.
+      !>
+      !>        Added complete code example based on that provided for DLABNS
+      !>        and DLAENS.
+      !>
+      !>        Replaced sequence of asterisks with string 'xxxx'
+      !>        in the comment line illustrating the DAS ID word syntax.
+      !>
+      !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
+      !>
+      !>        Updated version info.
+      !>
+      !>        01-APR-2016 (NJB)
+      !>
+      !>           Changed short error message for invalid comment
+      !>           count. Corrected reference to "DASCLU" in comments.
+      !>
+      !>        08-OCT-2009 (NJB)
+      !>
+      !>           Updated header.
+      !>
+      !>        09-FEB-2005 (NJB) (KRG)
       module procedure dlaopn
-!! ## Abstract
-!!
-!!     Open a new DLA file and set the file type.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DLA
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DLA
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
 
-
-! $ Detailed_Input
-!
-!     FNAME    is the name of a new DLA file to be created. The file
-!              will be left opened for write access.
-!
-!     FTYPE    is a code for type of data placed into a DLA file. The
-!              non-blank part of FTYPE is used as the "file type"
-!              portion of the ID word in the DLA file.
-!
-!              The first nonblank character and the three, or fewer,
-!              characters immediately following it, giving four
-!              characters, are used to represent the type of the data
-!              placed in the DLA file. This is provided as a convenience
-!              for higher level software. It is an error if this string
-!              is blank. Also, the file type may not contain any
-!              nonprinting characters. When written to the DLA file, the
-!              value for the type IS case sensitive.
-!
-!              NAIF has reserved for its own use file types consisting
-!              of the upper case letters (A-Z) and the digits 0-9. NAIF
-!              recommends lower case or mixed case file types be used by
-!              all others in order to avoid any conflicts with NAIF file
-!              types.
-!
-!     IFNAME   is the internal file name for the new file. The name may
-!              contain as many as 60 characters. This name should
-!              uniquely identify the file.
-!
-!     NCOMCH   is the number of comment characters to allocate.
-!
-!              NCOMCH is used to establish the number of comment records
-!              that will be allocated to the new DLA file. The number of
-!              comment records allocated is the minimum required to
-!              store the specified number of comment characters.
-!
-!              Allocating comment records at file creation time may
-!              reduce the likelihood of having to expand the
-!              comment area later.
-!
-! $ Detailed_Output
-!
-!     HANDLE   is the file handle associated with the file. This handle
-!              is used to identify the file in subsequent calls to other
-!              DLA routines.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input filename is blank, an error is signaled by a
-!         routine in the call tree of this routine. No file will be
-!         created.
-!
-!     2)  If the specified file cannot be opened without exceeding the
-!         maximum allowed number of open DAS files, an error is signaled
-!         by a routine in the call tree of this routine. No file will be
-!         created.
-!
-!     3)  If the file cannot be opened properly, an error is signaled by
-!         a routine in the call tree of this routine. No file will be
-!         created.
-!
-!     4)  If the initial records in the file cannot be written, an error
-!         is signaled by a routine in the call tree of this routine. No
-!         file will be created.
-!
-!     5)  If no logical units are available, an error is signaled by a
-!         routine in the call tree of this routine. No file will be
-!         created.
-!
-!     6)  If the file type is blank, an error is signaled by a routine
-!         in the call tree of this routine. No file will be created.
-!
-!     7)  If the file type contains nonprinting characters, decimal 0-31
-!         and 127-255, an error is signaled by a routine in the call
-!         tree of this routine. No file will be created.
-!
-!     8)  If the number of comment characters allocated to be allocated,
-!         NCOMCH, is negative, the error SPICE(BADRECORDCOUNT) is
-!         signaled. No file will be created.
-!
-! $ Files
-!
-!     See argument FNAME.
-!
-! $ Particulars
-!
-!     DLA files are built using the DAS low-level format; DLA files are
-!     a specialized type of DAS file in which data are organized as a
-!     doubly linked list of segments. Each segment's data belong to
-!     contiguous components of character, double precision, and integer
-!     type.
-!
-!     This routine creates a new DLA file and sets the type of the
-!     file to the mnemonic code passed to it.
-!
-!     DLA files created by this routine have initialized file records.
-!     The ID word in a DLA file record has the form
-!
-!        DAS/xxxx
-!
-!     where the characters following the slash are supplied by the
-!     caller of this routine.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Create a DLA file containing one segment; the segment
-!        contains character, double precision, and integer data.
-!        After writing and closing the file, open the file for
-!        read access; dump the data to standard output.
-!
-!        Example code begins here.
-!
-!              PROGRAM DLAOPN_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         DLA
-!              PARAMETER           ( DLA    = 'dlaopn_ex1.dla' )
-!
-!              INTEGER               IFNLEN
-!              PARAMETER           ( IFNLEN =  60 )
-!
-!              INTEGER               LNSIZE
-!              PARAMETER           ( LNSIZE =  61 )
-!
-!              INTEGER               MAXC
-!              PARAMETER           ( MAXC   =  5 )
-!
-!              INTEGER               MAXD
-!              PARAMETER           ( MAXD   =  50 )
-!
-!              INTEGER               MAXI
-!              PARAMETER           ( MAXI   =  100 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(LNSIZE)    CVALS   ( MAXC )
-!              CHARACTER*(LNSIZE)    CVALS2  ( MAXC )
-!              CHARACTER*(IFNLEN)    IFNAME
-!
-!              DOUBLE PRECISION      DVALS   ( MAXD )
-!              DOUBLE PRECISION      DVALS2  ( MAXD )
-!
-!              INTEGER               BASE
-!              INTEGER               DESCR   ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               IVALS   ( MAXI )
-!              INTEGER               IVALS2  ( MAXI )
-!              INTEGER               J
-!              INTEGER               K
-!              INTEGER               N
-!              INTEGER               NCOMCH
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Set the internal file name.  Don't reserve characters in
-!        C     the DAS comment area.
-!        C
-!              IFNAME = 'Example DLA file for testing'
-!              NCOMCH = 0
-!
-!        C
-!        C     Open a new DLA file.
-!        C
-!              CALL DLAOPN ( DLA, 'DLA', IFNAME, NCOMCH, HANDLE )
-!
-!        C
-!        C     Begin a new segment.
-!        C
-!              CALL DLABNS ( HANDLE )
-!
-!        C
-!        C     Add character data to the segment.
-!        C
-!              DO I = 1, MAXC
-!
-!                 DO J = 1, LNSIZE
-!
-!                    K = MOD( J+I-1, 10 )
-!
-!                    CALL INTSTR ( K,  CVALS(I)(J:J) )
-!
-!                 END DO
-!
-!              END DO
-!
-!              CALL DASADC ( HANDLE, MAXC*LNSIZE, 1, LNSIZE, CVALS )
-!
-!        C
-!        C     Add integer and double precision data to the segment.
-!        C
-!              DO I = 1, MAXI
-!                 IVALS(I) = I
-!              END DO
-!
-!              CALL DASADI ( HANDLE, MAXI, IVALS )
-!
-!              DO I = 1, MAXD
-!                 DVALS(I) = I
-!              END DO
-!
-!              CALL DASADD ( HANDLE, MAXD, DVALS )
-!
-!        C
-!        C     End the segment.
-!        C
-!              CALL DLAENS ( HANDLE )
-!
-!        C
-!        C     Close the file.  The routine DASCLS flushes the DAS
-!        C     buffers and segregates the file before closing it.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!        C
-!        C     Now read the file and check the data.
-!        C
-!              CALL DASOPR ( DLA, HANDLE )
-!
-!        C
-!        C     Obtain the segment descriptor for the sole segment
-!        C     in the file. We need not check the found flag
-!        C     in this case because we know there is one segment
-!        C     in the file.
-!        C
-!              CALL DLABFS ( HANDLE, DESCR, FOUND )
-!
-!        C
-!        C     Fetch character data from the segment.  Obtain the
-!        C     base address of the character data and the
-!        C     character count from the descriptor.
-!        C
-!              BASE = DESCR(CBSIDX)
-!              N    = DESCR(CSZIDX)
-!
-!              CALL DASRDC ( HANDLE, BASE+1, BASE+N, 1, LNSIZE, CVALS2 )
-!
-!        C
-!        C     Display the character data.
-!        C
-!              WRITE (*,*) ' '
-!              WRITE (*,*) 'Character array:'
-!
-!              DO I = 1, N/LNSIZE
-!                 WRITE (*,*) CVALS2(I)
-!              END DO
-!
-!        C
-!        C     Fetch and display the integer and double precision data.
-!        C
-!              BASE = DESCR(IBSIDX)
-!              N    = DESCR(ISZIDX)
-!
-!              CALL DASRDI( HANDLE, BASE+1, BASE+N, IVALS2 )
-!
-!              WRITE (*,*) ' '
-!              WRITE (*,*) 'Integer array:'
-!              DO I = 1, N/10
-!                 WRITE (*,'(10I6)') (IVALS2((I-1)*10 + J), J=1, 10)
-!              END DO
-!
-!              BASE = DESCR(DBSIDX)
-!              N    = DESCR(DSZIDX)
-!
-!              CALL DASRDD( HANDLE, BASE+1, BASE+N, DVALS2 )
-!
-!              WRITE (*,*) ' '
-!              WRITE (*,*) 'Double precision array:'
-!              DO I = 1, N/10
-!                 WRITE (*,'(10F6.1)') (DVALS2((I-1)*10 + J), J=1, 10)
-!              END DO
-!
-!        C
-!        C     Close the file.  This step is unnecessary in this
-!        C     program, but is a good practice in general
-!        C     because closing the file frees resources.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Character array:
-!         1234567890123456789012345678901234567890123456789012345678901
-!         2345678901234567890123456789012345678901234567890123456789012
-!         3456789012345678901234567890123456789012345678901234567890123
-!         4567890123456789012345678901234567890123456789012345678901234
-!         5678901234567890123456789012345678901234567890123456789012345
-!
-!         Integer array:
-!             1     2     3     4     5     6     7     8     9    10
-!            11    12    13    14    15    16    17    18    19    20
-!            21    22    23    24    25    26    27    28    29    30
-!            31    32    33    34    35    36    37    38    39    40
-!            41    42    43    44    45    46    47    48    49    50
-!            51    52    53    54    55    56    57    58    59    60
-!            61    62    63    64    65    66    67    68    69    70
-!            71    72    73    74    75    76    77    78    79    80
-!            81    82    83    84    85    86    87    88    89    90
-!            91    92    93    94    95    96    97    98    99   100
-!
-!         Double precision array:
-!           1.0   2.0   3.0   4.0   5.0   6.0   7.0   8.0   9.0  10.0
-!          11.0  12.0  13.0  14.0  15.0  16.0  17.0  18.0  19.0  20.0
-!          21.0  22.0  23.0  24.0  25.0  26.0  27.0  28.0  29.0  30.0
-!          31.0  32.0  33.0  34.0  35.0  36.0  37.0  38.0  39.0  40.0
-!          41.0  42.0  43.0  44.0  45.0  46.0  47.0  48.0  49.0  50.0
-!
-!        Note that after run completion, a new DLA file exists in the
-!        output directory.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 14-SEP-2021 (JDR) (NJB)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Updated the header to describe the usage of input argument
-!        NCOMCH instead of the previously documented NCOMR.
-!
-!        Added complete code example based on that provided for DLABNS
-!        and DLAENS.
-!
-!        Replaced sequence of asterisks with string 'xxxx'
-!        in the comment line illustrating the DAS ID word syntax.
-!
-!-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
-!
-!        Updated version info.
-!
-!        01-APR-2016 (NJB)
-!
-!           Changed short error message for invalid comment
-!           count. Corrected reference to "DASCLU" in comments.
-!
-!        08-OCT-2009 (NJB)
-!
-!           Updated header.
-!
-!        09-FEB-2005 (NJB) (KRG)
-!
-!-&
-
-! $ Index_Entries
-!
-!     open a new DLA file
-!     open a new DLA file with write access
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Local variables
-!
       integer(ip)           ncomr
 
       if ( ctx%failed() ) return
@@ -7361,390 +6916,351 @@ contains
       return
       end procedure dlaopn
 
-!$Procedure DLABNS ( DLA, begin new segment )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the integer handle associated with the DLA file to
+      !>              be updated. This handle is used to identify the file
+      !>              in subsequent calls to other DLA or DAS routines.
+      !>
+      !>              The DLA file must be open for write access. A new DLA
+      !>              segment is started in the indicated file. The file
+      !>              is left open, since normally data will be written to
+      !>              the file following a call to this routine.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None. See the $Particulars and $Examples header sections for
+      !>     a description of the actions performed by this routine.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input file handle does not refer to a DAS file that is
+      !>         open for write access, an error is signaled by a routine
+      !>         in the call tree of this routine.
+      !>
+      !>     2)  If an error occurs while reading or writing to the DLA file,
+      !>         the error is signaled by a routine in the call tree of
+      !>         this routine.
+      !>
+      !> ## Files
+      !>
+      !>     See description of input argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     DLA files are built using the DAS low-level format; DLA files are
+      !>     a specialized type of DAS file in which data are organized as a
+      !>     doubly linked list of segments. Each segment's data belong to
+      !>     contiguous components of character, double precision, and integer
+      !>     type.
+      !>
+      !>     This routine supports creation of a DLA segment. DLA segments
+      !>     are created by appending data to the DAS integer, double
+      !>     precision, and character address spaces of a DLA file. The new
+      !>     segment's descriptor is located immediately before the integer
+      !>     component of the segment's data.
+      !>
+      !>     When a new segment is added to a DLA file, the segment is
+      !>     inserted into the file's doubly linked segment list. If the new
+      !>     segment is the first, the DLA file's first and last list entry
+      !>     pointers are updated to point to the new segment; specifically,
+      !>     these pointers point to the first integer of the new segment's
+      !>     descriptor. The backward pointer of the new segment is set to
+      !>     null in this case.
+      !>
+      !>     If the new segment is not the first, the DLA file's list end
+      !>     pointer is updated to point to the new segment, and the forward
+      !>     pointer of the previous segment also is updated to point to the
+      !>     first integer of the new segment's descriptor. The backward
+      !>     pointer of the new segment points to the first integer of the
+      !>     previous segment's descriptor.
+      !>
+      !>     The normal sequence of operations required to create a DLA
+      !>     segment is as follows:
+      !>
+      !>        Call DLAOPN to create a new, empty DLA file.
+      !>
+      !>        For each segment to be created,
+      !>
+      !>           Call DLABNS to begin a segment.
+      !>
+      !>           Use the DAS "add" and "update" routines to populate
+      !>           the segment with data.
+      !>
+      !>           Call DLAENS to end the segment.
+      !>
+      !>        Call DASCLS to segregate and close the DLA file.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Create a DLA file containing one segment; the segment
+      !>        contains character, double precision, and integer data.
+      !>        After writing and closing the file, open the file for
+      !>        read access; dump the data to standard output.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DLABNS_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              CHARACTER*(*)         DLA
+      !>              PARAMETER           ( DLA    = 'dlabns_ex1.dla' )
+      !>
+      !>              INTEGER               IFNLEN
+      !>              PARAMETER           ( IFNLEN =  60 )
+      !>
+      !>              INTEGER               LNSIZE
+      !>              PARAMETER           ( LNSIZE =  61 )
+      !>
+      !>              INTEGER               MAXC
+      !>              PARAMETER           ( MAXC   =  5 )
+      !>
+      !>              INTEGER               MAXD
+      !>              PARAMETER           ( MAXD   =  50 )
+      !>
+      !>              INTEGER               MAXI
+      !>              PARAMETER           ( MAXI   =  100 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(LNSIZE)    CVALS   ( MAXC )
+      !>              CHARACTER*(LNSIZE)    CVALS2  ( MAXC )
+      !>              CHARACTER*(IFNLEN)    IFNAME
+      !>
+      !>              DOUBLE PRECISION      DVALS   ( MAXD )
+      !>              DOUBLE PRECISION      DVALS2  ( MAXD )
+      !>
+      !>              INTEGER               BASE
+      !>              INTEGER               DESCR   ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               IVALS   ( MAXI )
+      !>              INTEGER               IVALS2  ( MAXI )
+      !>              INTEGER               J
+      !>              INTEGER               K
+      !>              INTEGER               N
+      !>              INTEGER               NCOMCH
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Set the internal file name.  Don't reserve characters in
+      !>        C     the DAS comment area.
+      !>        C
+      !>              IFNAME = 'Example DLA file for testing'
+      !>              NCOMCH = 0
+      !>
+      !>        C
+      !>        C     Open a new DLA file.
+      !>        C
+      !>              CALL DLAOPN ( DLA, 'DLA', IFNAME, NCOMCH, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a new segment.
+      !>        C
+      !>              CALL DLABNS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Add character data to the segment.
+      !>        C
+      !>              DO I = 1, MAXC
+      !>
+      !>                 DO J = 1, LNSIZE
+      !>
+      !>                    K = MOD( J+I-1, 10 )
+      !>
+      !>                    CALL INTSTR ( K,  CVALS(I)(J:J) )
+      !>
+      !>                 END DO
+      !>
+      !>              END DO
+      !>
+      !>              CALL DASADC ( HANDLE, MAXC*LNSIZE, 1, LNSIZE, CVALS )
+      !>
+      !>        C
+      !>        C     Add integer and double precision data to the segment.
+      !>        C
+      !>              DO I = 1, MAXI
+      !>                 IVALS(I) = I
+      !>              END DO
+      !>
+      !>              CALL DASADI ( HANDLE, MAXI, IVALS )
+      !>
+      !>              DO I = 1, MAXD
+      !>                 DVALS(I) = I
+      !>              END DO
+      !>
+      !>              CALL DASADD ( HANDLE, MAXD, DVALS )
+      !>
+      !>        C
+      !>        C     End the segment.
+      !>        C
+      !>              CALL DLAENS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Close the file.  The routine DASCLS flushes the DAS
+      !>        C     buffers and segregates the file before closing it.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Now read the file and check the data.
+      !>        C
+      !>              CALL DASOPR ( DLA, HANDLE )
+      !>
+      !>        C
+      !>        C     Obtain the segment descriptor for the sole segment
+      !>        C     in the file. We need not check the found flag
+      !>        C     in this case because we know there is one segment
+      !>        C     in the file.
+      !>        C
+      !>              CALL DLABFS ( HANDLE, DESCR, FOUND )
+      !>
+      !>        C
+      !>        C     Fetch character data from the segment.  Obtain the
+      !>        C     base address of the character data and the
+      !>        C     character count from the descriptor.
+      !>        C
+      !>              BASE = DESCR(CBSIDX)
+      !>              N    = DESCR(CSZIDX)
+      !>
+      !>              CALL DASRDC ( HANDLE, BASE+1, BASE+N, 1, LNSIZE, CVALS2 )
+      !>
+      !>        C
+      !>        C     Display the character data.
+      !>        C
+      !>              WRITE (*,*) ' '
+      !>              WRITE (*,*) 'Character array:'
+      !>
+      !>              DO I = 1, N/LNSIZE
+      !>                 WRITE (*,*) CVALS2(I)
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Fetch and display the integer and double precision data.
+      !>        C
+      !>              BASE = DESCR(IBSIDX)
+      !>              N    = DESCR(ISZIDX)
+      !>
+      !>              CALL DASRDI( HANDLE, BASE+1, BASE+N, IVALS2 )
+      !>
+      !>              WRITE (*,*) ' '
+      !>              WRITE (*,*) 'Integer array:'
+      !>              DO I = 1, N/10
+      !>                 WRITE (*,'(10I6)') (IVALS2((I-1)*10 + J), J=1, 10)
+      !>              END DO
+      !>
+      !>              BASE = DESCR(DBSIDX)
+      !>              N    = DESCR(DSZIDX)
+      !>
+      !>              CALL DASRDD( HANDLE, BASE+1, BASE+N, DVALS2 )
+      !>
+      !>              WRITE (*,*) ' '
+      !>              WRITE (*,*) 'Double precision array:'
+      !>              DO I = 1, N/10
+      !>                 WRITE (*,'(10F6.1)') (DVALS2((I-1)*10 + J), J=1, 10)
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Close the file.  This step is unnecessary in this
+      !>        C     program, but is a good practice in general
+      !>        C     because closing the file frees resources.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Character array:
+      !>         1234567890123456789012345678901234567890123456789012345678901
+      !>         2345678901234567890123456789012345678901234567890123456789012
+      !>         3456789012345678901234567890123456789012345678901234567890123
+      !>         4567890123456789012345678901234567890123456789012345678901234
+      !>         5678901234567890123456789012345678901234567890123456789012345
+      !>
+      !>         Integer array:
+      !>             1     2     3     4     5     6     7     8     9    10
+      !>            11    12    13    14    15    16    17    18    19    20
+      !>            21    22    23    24    25    26    27    28    29    30
+      !>            31    32    33    34    35    36    37    38    39    40
+      !>            41    42    43    44    45    46    47    48    49    50
+      !>            51    52    53    54    55    56    57    58    59    60
+      !>            61    62    63    64    65    66    67    68    69    70
+      !>            71    72    73    74    75    76    77    78    79    80
+      !>            81    82    83    84    85    86    87    88    89    90
+      !>            91    92    93    94    95    96    97    98    99   100
+      !>
+      !>         Double precision array:
+      !>           1.0   2.0   3.0   4.0   5.0   6.0   7.0   8.0   9.0  10.0
+      !>          11.0  12.0  13.0  14.0  15.0  16.0  17.0  18.0  19.0  20.0
+      !>          21.0  22.0  23.0  24.0  25.0  26.0  27.0  28.0  29.0  30.0
+      !>          31.0  32.0  33.0  34.0  35.0  36.0  37.0  38.0  39.0  40.0
+      !>          41.0  42.0  43.0  44.0  45.0  46.0  47.0  48.0  49.0  50.0
+      !>
+      !>        Note that after run completion, a new DLA file exists in the
+      !>        output directory.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 14-JUN-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard. Modified
+      !>        the presentation of the output in the code example to comply
+      !>        with the maximum line length for the header comments.
+      !>
+      !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
+      !>
+      !>        Updated version info.
+      !>
+      !>        13-JUL-2012 (NJB)
+      !>
+      !>           Bug fix: deleted unused line of code.
+      !>           Fixed some header typos.
+      !>
+      !>        08-OCT-2009 (NJB)
+      !>
+      !>           Updated header.
+      !>
+      !>        11-FEB-2005 (NJB)
       module procedure dlabns
-!! ## Abstract
-!!
-!!     Begin a new segment in a DLA file.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DLA
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DLA
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
 
-
-! $ Detailed_Input
-!
-!     HANDLE   is the integer handle associated with the DLA file to
-!              be updated. This handle is used to identify the file
-!              in subsequent calls to other DLA or DAS routines.
-!
-!              The DLA file must be open for write access. A new DLA
-!              segment is started in the indicated file. The file
-!              is left open, since normally data will be written to
-!              the file following a call to this routine.
-!
-! $ Detailed_Output
-!
-!     None. See the $Particulars and $Examples header sections for
-!     a description of the actions performed by this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input file handle does not refer to a DAS file that is
-!         open for write access, an error is signaled by a routine
-!         in the call tree of this routine.
-!
-!     2)  If an error occurs while reading or writing to the DLA file,
-!         the error is signaled by a routine in the call tree of
-!         this routine.
-!
-! $ Files
-!
-!     See description of input argument HANDLE.
-!
-! $ Particulars
-!
-!     DLA files are built using the DAS low-level format; DLA files are
-!     a specialized type of DAS file in which data are organized as a
-!     doubly linked list of segments. Each segment's data belong to
-!     contiguous components of character, double precision, and integer
-!     type.
-!
-!     This routine supports creation of a DLA segment. DLA segments
-!     are created by appending data to the DAS integer, double
-!     precision, and character address spaces of a DLA file. The new
-!     segment's descriptor is located immediately before the integer
-!     component of the segment's data.
-!
-!     When a new segment is added to a DLA file, the segment is
-!     inserted into the file's doubly linked segment list. If the new
-!     segment is the first, the DLA file's first and last list entry
-!     pointers are updated to point to the new segment; specifically,
-!     these pointers point to the first integer of the new segment's
-!     descriptor. The backward pointer of the new segment is set to
-!     null in this case.
-!
-!     If the new segment is not the first, the DLA file's list end
-!     pointer is updated to point to the new segment, and the forward
-!     pointer of the previous segment also is updated to point to the
-!     first integer of the new segment's descriptor. The backward
-!     pointer of the new segment points to the first integer of the
-!     previous segment's descriptor.
-!
-!     The normal sequence of operations required to create a DLA
-!     segment is as follows:
-!
-!        Call DLAOPN to create a new, empty DLA file.
-!
-!        For each segment to be created,
-!
-!           Call DLABNS to begin a segment.
-!
-!           Use the DAS "add" and "update" routines to populate
-!           the segment with data.
-!
-!           Call DLAENS to end the segment.
-!
-!        Call DASCLS to segregate and close the DLA file.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Create a DLA file containing one segment; the segment
-!        contains character, double precision, and integer data.
-!        After writing and closing the file, open the file for
-!        read access; dump the data to standard output.
-!
-!        Example code begins here.
-!
-!              PROGRAM DLABNS_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         DLA
-!              PARAMETER           ( DLA    = 'dlabns_ex1.dla' )
-!
-!              INTEGER               IFNLEN
-!              PARAMETER           ( IFNLEN =  60 )
-!
-!              INTEGER               LNSIZE
-!              PARAMETER           ( LNSIZE =  61 )
-!
-!              INTEGER               MAXC
-!              PARAMETER           ( MAXC   =  5 )
-!
-!              INTEGER               MAXD
-!              PARAMETER           ( MAXD   =  50 )
-!
-!              INTEGER               MAXI
-!              PARAMETER           ( MAXI   =  100 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(LNSIZE)    CVALS   ( MAXC )
-!              CHARACTER*(LNSIZE)    CVALS2  ( MAXC )
-!              CHARACTER*(IFNLEN)    IFNAME
-!
-!              DOUBLE PRECISION      DVALS   ( MAXD )
-!              DOUBLE PRECISION      DVALS2  ( MAXD )
-!
-!              INTEGER               BASE
-!              INTEGER               DESCR   ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               IVALS   ( MAXI )
-!              INTEGER               IVALS2  ( MAXI )
-!              INTEGER               J
-!              INTEGER               K
-!              INTEGER               N
-!              INTEGER               NCOMCH
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Set the internal file name.  Don't reserve characters in
-!        C     the DAS comment area.
-!        C
-!              IFNAME = 'Example DLA file for testing'
-!              NCOMCH = 0
-!
-!        C
-!        C     Open a new DLA file.
-!        C
-!              CALL DLAOPN ( DLA, 'DLA', IFNAME, NCOMCH, HANDLE )
-!
-!        C
-!        C     Begin a new segment.
-!        C
-!              CALL DLABNS ( HANDLE )
-!
-!        C
-!        C     Add character data to the segment.
-!        C
-!              DO I = 1, MAXC
-!
-!                 DO J = 1, LNSIZE
-!
-!                    K = MOD( J+I-1, 10 )
-!
-!                    CALL INTSTR ( K,  CVALS(I)(J:J) )
-!
-!                 END DO
-!
-!              END DO
-!
-!              CALL DASADC ( HANDLE, MAXC*LNSIZE, 1, LNSIZE, CVALS )
-!
-!        C
-!        C     Add integer and double precision data to the segment.
-!        C
-!              DO I = 1, MAXI
-!                 IVALS(I) = I
-!              END DO
-!
-!              CALL DASADI ( HANDLE, MAXI, IVALS )
-!
-!              DO I = 1, MAXD
-!                 DVALS(I) = I
-!              END DO
-!
-!              CALL DASADD ( HANDLE, MAXD, DVALS )
-!
-!        C
-!        C     End the segment.
-!        C
-!              CALL DLAENS ( HANDLE )
-!
-!        C
-!        C     Close the file.  The routine DASCLS flushes the DAS
-!        C     buffers and segregates the file before closing it.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!        C
-!        C     Now read the file and check the data.
-!        C
-!              CALL DASOPR ( DLA, HANDLE )
-!
-!        C
-!        C     Obtain the segment descriptor for the sole segment
-!        C     in the file. We need not check the found flag
-!        C     in this case because we know there is one segment
-!        C     in the file.
-!        C
-!              CALL DLABFS ( HANDLE, DESCR, FOUND )
-!
-!        C
-!        C     Fetch character data from the segment.  Obtain the
-!        C     base address of the character data and the
-!        C     character count from the descriptor.
-!        C
-!              BASE = DESCR(CBSIDX)
-!              N    = DESCR(CSZIDX)
-!
-!              CALL DASRDC ( HANDLE, BASE+1, BASE+N, 1, LNSIZE, CVALS2 )
-!
-!        C
-!        C     Display the character data.
-!        C
-!              WRITE (*,*) ' '
-!              WRITE (*,*) 'Character array:'
-!
-!              DO I = 1, N/LNSIZE
-!                 WRITE (*,*) CVALS2(I)
-!              END DO
-!
-!        C
-!        C     Fetch and display the integer and double precision data.
-!        C
-!              BASE = DESCR(IBSIDX)
-!              N    = DESCR(ISZIDX)
-!
-!              CALL DASRDI( HANDLE, BASE+1, BASE+N, IVALS2 )
-!
-!              WRITE (*,*) ' '
-!              WRITE (*,*) 'Integer array:'
-!              DO I = 1, N/10
-!                 WRITE (*,'(10I6)') (IVALS2((I-1)*10 + J), J=1, 10)
-!              END DO
-!
-!              BASE = DESCR(DBSIDX)
-!              N    = DESCR(DSZIDX)
-!
-!              CALL DASRDD( HANDLE, BASE+1, BASE+N, DVALS2 )
-!
-!              WRITE (*,*) ' '
-!              WRITE (*,*) 'Double precision array:'
-!              DO I = 1, N/10
-!                 WRITE (*,'(10F6.1)') (DVALS2((I-1)*10 + J), J=1, 10)
-!              END DO
-!
-!        C
-!        C     Close the file.  This step is unnecessary in this
-!        C     program, but is a good practice in general
-!        C     because closing the file frees resources.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Character array:
-!         1234567890123456789012345678901234567890123456789012345678901
-!         2345678901234567890123456789012345678901234567890123456789012
-!         3456789012345678901234567890123456789012345678901234567890123
-!         4567890123456789012345678901234567890123456789012345678901234
-!         5678901234567890123456789012345678901234567890123456789012345
-!
-!         Integer array:
-!             1     2     3     4     5     6     7     8     9    10
-!            11    12    13    14    15    16    17    18    19    20
-!            21    22    23    24    25    26    27    28    29    30
-!            31    32    33    34    35    36    37    38    39    40
-!            41    42    43    44    45    46    47    48    49    50
-!            51    52    53    54    55    56    57    58    59    60
-!            61    62    63    64    65    66    67    68    69    70
-!            71    72    73    74    75    76    77    78    79    80
-!            81    82    83    84    85    86    87    88    89    90
-!            91    92    93    94    95    96    97    98    99   100
-!
-!         Double precision array:
-!           1.0   2.0   3.0   4.0   5.0   6.0   7.0   8.0   9.0  10.0
-!          11.0  12.0  13.0  14.0  15.0  16.0  17.0  18.0  19.0  20.0
-!          21.0  22.0  23.0  24.0  25.0  26.0  27.0  28.0  29.0  30.0
-!          31.0  32.0  33.0  34.0  35.0  36.0  37.0  38.0  39.0  40.0
-!          41.0  42.0  43.0  44.0  45.0  46.0  47.0  48.0  49.0  50.0
-!
-!        Note that after run completion, a new DLA file exists in the
-!        output directory.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 14-JUN-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Modified
-!        the presentation of the output in the code example to comply
-!        with the maximum line length for the header comments.
-!
-!-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
-!
-!        Updated version info.
-!
-!        13-JUL-2012 (NJB)
-!
-!           Bug fix: deleted unused line of code.
-!           Fixed some header typos.
-!
-!        08-OCT-2009 (NJB)
-!
-!           Updated header.
-!
-!        11-FEB-2005 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     begin new segment in DLA file
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
       integer(ip), parameter :: fstidx = 1
 
       integer(ip), parameter :: lstidx = 2
 
-!
-!     Local variables
-!
       integer(ip)           addr
       integer(ip)           sgptrs ( 2 )
       integer(ip)           descr  ( dladsz )
@@ -7850,383 +7366,343 @@ contains
       return
       end procedure dlabns
 
-!$Procedure DLAENS ( DLA, end new segment )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the integer handle associated with the DLA file to
+      !>              be updated. This handle is used to identify the file
+      !>              in subsequent calls to other DLA or DAS routines.
+      !>
+      !>              The DLA file must be open for write access. A new DLA
+      !>              segment is completed in the indicated file. The file
+      !>              is left open, since data may be written to the file
+      !>              following a call to this routine.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None. See the $Particulars and $Examples header sections for
+      !>     a description of the actions performed by this routine.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input file handle does not refer to a DAS file that is
+      !>         open for write access, an error is signaled by a routine
+      !>         in the call tree of this routine.
+      !>
+      !>     2)  If an error occurs while reading or writing to the DLA file,
+      !>         the error is signaled by a routine in the call tree of
+      !>         this routine.
+      !>
+      !> ## Files
+      !>
+      !>     See description of input argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     DLA files are built using the DAS low-level format; DLA files are
+      !>     a specialized type of DAS file in which data are organized as a
+      !>     doubly linked list of segments. Each segment's data belong to
+      !>     contiguous components of character, double precision, and integer
+      !>     type.
+      !>
+      !>     This routine supports creation of a DLA segment. DLA segments
+      !>     are created by appending data to the DAS integer, double
+      !>     precision, and character address spaces of a DLA file. The new
+      !>     segment's descriptor is located immediately before the integer
+      !>     component of the segment's data.
+      !>
+      !>     When a new segment is added to a DLA file, the segment is
+      !>     inserted into the file's doubly linked segment list. If the new
+      !>     segment is the first, the DLA file's first and last list entry
+      !>     pointers are updated to point to the new segment; specifically,
+      !>     these pointers point to the first integer of the new segment's
+      !>     descriptor. The backward pointer of the new segment is set to
+      !>     null in this case.
+      !>
+      !>     If the new segment is not the first, the DLA file's list end
+      !>     pointer is updated to point to the new segment, and the forward
+      !>     pointer of the previous segment also is updated to point to the
+      !>     first integer of the new segment's descriptor. The backward
+      !>     pointer of the new segment points to to point to the first
+      !>     integer of the previous segment's descriptor.
+      !>
+      !>     The normal sequence of operations required to create a DLA
+      !>     segment is as follows:
+      !>
+      !>        Call DLAOPN to create a new, empty DLA file.
+      !>
+      !>        For each segment to be created,
+      !>
+      !>           Call DLABNS to begin a segment.
+      !>
+      !>           Use the DAS "add" and "update" routines to populate
+      !>           the segment with data.
+      !>
+      !>           Call DLAENS to end the segment.
+      !>
+      !>        Call DASCLS to segregate and close the DLA file.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Create a DLA file containing one segment; the segment
+      !>        contains character, double precision, and integer data.
+      !>        After writing and closing the file, open the file for
+      !>        read access; dump the data to standard output.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DLAENS_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              CHARACTER*(*)         DLA
+      !>              PARAMETER           ( DLA    = 'dlaens_ex1.dla' )
+      !>
+      !>              INTEGER               IFNLEN
+      !>              PARAMETER           ( IFNLEN =  60 )
+      !>
+      !>              INTEGER               LNSIZE
+      !>              PARAMETER           ( LNSIZE =  61 )
+      !>
+      !>              INTEGER               MAXC
+      !>              PARAMETER           ( MAXC   =  5 )
+      !>
+      !>              INTEGER               MAXD
+      !>              PARAMETER           ( MAXD   =  50 )
+      !>
+      !>              INTEGER               MAXI
+      !>              PARAMETER           ( MAXI   =  100 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(LNSIZE)    CVALS   ( MAXC )
+      !>              CHARACTER*(LNSIZE)    CVALS2  ( MAXC )
+      !>              CHARACTER*(IFNLEN)    IFNAME
+      !>
+      !>              DOUBLE PRECISION      DVALS   ( MAXD )
+      !>              DOUBLE PRECISION      DVALS2  ( MAXD )
+      !>
+      !>              INTEGER               BASE
+      !>              INTEGER               DESCR   ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               IVALS   ( MAXI )
+      !>              INTEGER               IVALS2  ( MAXI )
+      !>              INTEGER               J
+      !>              INTEGER               K
+      !>              INTEGER               N
+      !>              INTEGER               NCOMCH
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Set the internal file name.  Don't reserve characters in
+      !>        C     the DAS comment area.
+      !>        C
+      !>              IFNAME = 'Example DLA file for testing'
+      !>              NCOMCH = 0
+      !>
+      !>        C
+      !>        C     Open a new DLA file.
+      !>        C
+      !>              CALL DLAOPN ( DLA, 'DLA', IFNAME, NCOMCH, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a new segment.
+      !>        C
+      !>              CALL DLABNS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Add character data to the segment.
+      !>        C
+      !>              DO I = 1, MAXC
+      !>
+      !>                 DO J = 1, LNSIZE
+      !>
+      !>                    K = MOD( J+I-1, 10 )
+      !>
+      !>                    CALL INTSTR ( K,  CVALS(I)(J:J) )
+      !>
+      !>                 END DO
+      !>
+      !>              END DO
+      !>
+      !>              CALL DASADC ( HANDLE, MAXC*LNSIZE, 1, LNSIZE, CVALS )
+      !>
+      !>        C
+      !>        C     Add integer and double precision data to the segment.
+      !>        C
+      !>              DO I = 1, MAXI
+      !>                 IVALS(I) = I
+      !>              END DO
+      !>
+      !>              CALL DASADI ( HANDLE, MAXI, IVALS )
+      !>
+      !>              DO I = 1, MAXD
+      !>                 DVALS(I) = I
+      !>              END DO
+      !>
+      !>              CALL DASADD ( HANDLE, MAXD, DVALS )
+      !>
+      !>        C
+      !>        C     End the segment.
+      !>        C
+      !>              CALL DLAENS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Close the file.  The routine DASCLS flushes the DAS
+      !>        C     buffers and segregates the file before closing it.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Now read the file and check the data.
+      !>        C
+      !>              CALL DASOPR ( DLA, HANDLE )
+      !>
+      !>        C
+      !>        C     Obtain the segment descriptor for the sole segment
+      !>        C     in the file. We need not check the found flag
+      !>        C     in this case because we know there is one segment
+      !>        C     in the file.
+      !>        C
+      !>              CALL DLABFS ( HANDLE, DESCR, FOUND )
+      !>
+      !>        C
+      !>        C     Fetch character data from the segment.  Obtain the
+      !>        C     base address of the character data and the
+      !>        C     character count from the descriptor.
+      !>        C
+      !>              BASE = DESCR(CBSIDX)
+      !>              N    = DESCR(CSZIDX)
+      !>
+      !>              CALL DASRDC ( HANDLE, BASE+1, BASE+N, 1, LNSIZE, CVALS2 )
+      !>
+      !>        C
+      !>        C     Display the character data.
+      !>        C
+      !>              WRITE (*,*) ' '
+      !>              WRITE (*,*) 'Character array:'
+      !>
+      !>              DO I = 1, N/LNSIZE
+      !>                 WRITE (*,*) CVALS2(I)
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Fetch and display the integer and double precision data.
+      !>        C
+      !>              BASE = DESCR(IBSIDX)
+      !>              N    = DESCR(ISZIDX)
+      !>
+      !>              CALL DASRDI( HANDLE, BASE+1, BASE+N, IVALS2 )
+      !>
+      !>              WRITE (*,*) ' '
+      !>              WRITE (*,*) 'Integer array:'
+      !>              DO I = 1, N/10
+      !>                 WRITE (*,'(10I6)') (IVALS2((I-1)*10 + J), J=1, 10)
+      !>              END DO
+      !>
+      !>              BASE = DESCR(DBSIDX)
+      !>              N    = DESCR(DSZIDX)
+      !>
+      !>              CALL DASRDD( HANDLE, BASE+1, BASE+N, DVALS2 )
+      !>
+      !>              WRITE (*,*) ' '
+      !>              WRITE (*,*) 'Double precision array:'
+      !>              DO I = 1, N/10
+      !>                 WRITE (*,'(10F6.1)') (DVALS2((I-1)*10 + J), J=1, 10)
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Close the file.  This step is unnecessary in this
+      !>        C     program, but is a good practice in general
+      !>        C     because closing the file frees resources.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Character array:
+      !>         1234567890123456789012345678901234567890123456789012345678901
+      !>         2345678901234567890123456789012345678901234567890123456789012
+      !>         3456789012345678901234567890123456789012345678901234567890123
+      !>         4567890123456789012345678901234567890123456789012345678901234
+      !>         5678901234567890123456789012345678901234567890123456789012345
+      !>
+      !>         Integer array:
+      !>             1     2     3     4     5     6     7     8     9    10
+      !>            11    12    13    14    15    16    17    18    19    20
+      !>            21    22    23    24    25    26    27    28    29    30
+      !>            31    32    33    34    35    36    37    38    39    40
+      !>            41    42    43    44    45    46    47    48    49    50
+      !>            51    52    53    54    55    56    57    58    59    60
+      !>            61    62    63    64    65    66    67    68    69    70
+      !>            71    72    73    74    75    76    77    78    79    80
+      !>            81    82    83    84    85    86    87    88    89    90
+      !>            91    92    93    94    95    96    97    98    99   100
+      !>
+      !>         Double precision array:
+      !>           1.0   2.0   3.0   4.0   5.0   6.0   7.0   8.0   9.0  10.0
+      !>          11.0  12.0  13.0  14.0  15.0  16.0  17.0  18.0  19.0  20.0
+      !>          21.0  22.0  23.0  24.0  25.0  26.0  27.0  28.0  29.0  30.0
+      !>          31.0  32.0  33.0  34.0  35.0  36.0  37.0  38.0  39.0  40.0
+      !>          41.0  42.0  43.0  44.0  45.0  46.0  47.0  48.0  49.0  50.0
+      !>
+      !>        Note that after run completion, a new DLA file exists in the
+      !>        output directory.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 14-JUN-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard. Modified
+      !>        the presentation of the output in the code example to comply
+      !>        with the maximum line length for the header comments.
+      !>
+      !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
+      !>
+      !>        Updated version info.
+      !>
+      !>        08-OCT-2009 (NJB)
+      !>
+      !>           Updated header.
+      !>
+      !>        11-FEB-2005 (NJB)
       module procedure dlaens
-!! ## Abstract
-!!
-!!     End a new segment in a DLA file.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DLA
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DLA
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
-
-! $ Detailed_Input
-!
-!     HANDLE   is the integer handle associated with the DLA file to
-!              be updated. This handle is used to identify the file
-!              in subsequent calls to other DLA or DAS routines.
-!
-!              The DLA file must be open for write access. A new DLA
-!              segment is completed in the indicated file. The file
-!              is left open, since data may be written to the file
-!              following a call to this routine.
-!
-! $ Detailed_Output
-!
-!     None. See the $Particulars and $Examples header sections for
-!     a description of the actions performed by this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input file handle does not refer to a DAS file that is
-!         open for write access, an error is signaled by a routine
-!         in the call tree of this routine.
-!
-!     2)  If an error occurs while reading or writing to the DLA file,
-!         the error is signaled by a routine in the call tree of
-!         this routine.
-!
-! $ Files
-!
-!     See description of input argument HANDLE.
-!
-! $ Particulars
-!
-!     DLA files are built using the DAS low-level format; DLA files are
-!     a specialized type of DAS file in which data are organized as a
-!     doubly linked list of segments. Each segment's data belong to
-!     contiguous components of character, double precision, and integer
-!     type.
-!
-!     This routine supports creation of a DLA segment. DLA segments
-!     are created by appending data to the DAS integer, double
-!     precision, and character address spaces of a DLA file. The new
-!     segment's descriptor is located immediately before the integer
-!     component of the segment's data.
-!
-!     When a new segment is added to a DLA file, the segment is
-!     inserted into the file's doubly linked segment list. If the new
-!     segment is the first, the DLA file's first and last list entry
-!     pointers are updated to point to the new segment; specifically,
-!     these pointers point to the first integer of the new segment's
-!     descriptor. The backward pointer of the new segment is set to
-!     null in this case.
-!
-!     If the new segment is not the first, the DLA file's list end
-!     pointer is updated to point to the new segment, and the forward
-!     pointer of the previous segment also is updated to point to the
-!     first integer of the new segment's descriptor. The backward
-!     pointer of the new segment points to to point to the first
-!     integer of the previous segment's descriptor.
-!
-!     The normal sequence of operations required to create a DLA
-!     segment is as follows:
-!
-!        Call DLAOPN to create a new, empty DLA file.
-!
-!        For each segment to be created,
-!
-!           Call DLABNS to begin a segment.
-!
-!           Use the DAS "add" and "update" routines to populate
-!           the segment with data.
-!
-!           Call DLAENS to end the segment.
-!
-!        Call DASCLS to segregate and close the DLA file.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Create a DLA file containing one segment; the segment
-!        contains character, double precision, and integer data.
-!        After writing and closing the file, open the file for
-!        read access; dump the data to standard output.
-!
-!        Example code begins here.
-!
-!              PROGRAM DLAENS_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         DLA
-!              PARAMETER           ( DLA    = 'dlaens_ex1.dla' )
-!
-!              INTEGER               IFNLEN
-!              PARAMETER           ( IFNLEN =  60 )
-!
-!              INTEGER               LNSIZE
-!              PARAMETER           ( LNSIZE =  61 )
-!
-!              INTEGER               MAXC
-!              PARAMETER           ( MAXC   =  5 )
-!
-!              INTEGER               MAXD
-!              PARAMETER           ( MAXD   =  50 )
-!
-!              INTEGER               MAXI
-!              PARAMETER           ( MAXI   =  100 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(LNSIZE)    CVALS   ( MAXC )
-!              CHARACTER*(LNSIZE)    CVALS2  ( MAXC )
-!              CHARACTER*(IFNLEN)    IFNAME
-!
-!              DOUBLE PRECISION      DVALS   ( MAXD )
-!              DOUBLE PRECISION      DVALS2  ( MAXD )
-!
-!              INTEGER               BASE
-!              INTEGER               DESCR   ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               IVALS   ( MAXI )
-!              INTEGER               IVALS2  ( MAXI )
-!              INTEGER               J
-!              INTEGER               K
-!              INTEGER               N
-!              INTEGER               NCOMCH
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Set the internal file name.  Don't reserve characters in
-!        C     the DAS comment area.
-!        C
-!              IFNAME = 'Example DLA file for testing'
-!              NCOMCH = 0
-!
-!        C
-!        C     Open a new DLA file.
-!        C
-!              CALL DLAOPN ( DLA, 'DLA', IFNAME, NCOMCH, HANDLE )
-!
-!        C
-!        C     Begin a new segment.
-!        C
-!              CALL DLABNS ( HANDLE )
-!
-!        C
-!        C     Add character data to the segment.
-!        C
-!              DO I = 1, MAXC
-!
-!                 DO J = 1, LNSIZE
-!
-!                    K = MOD( J+I-1, 10 )
-!
-!                    CALL INTSTR ( K,  CVALS(I)(J:J) )
-!
-!                 END DO
-!
-!              END DO
-!
-!              CALL DASADC ( HANDLE, MAXC*LNSIZE, 1, LNSIZE, CVALS )
-!
-!        C
-!        C     Add integer and double precision data to the segment.
-!        C
-!              DO I = 1, MAXI
-!                 IVALS(I) = I
-!              END DO
-!
-!              CALL DASADI ( HANDLE, MAXI, IVALS )
-!
-!              DO I = 1, MAXD
-!                 DVALS(I) = I
-!              END DO
-!
-!              CALL DASADD ( HANDLE, MAXD, DVALS )
-!
-!        C
-!        C     End the segment.
-!        C
-!              CALL DLAENS ( HANDLE )
-!
-!        C
-!        C     Close the file.  The routine DASCLS flushes the DAS
-!        C     buffers and segregates the file before closing it.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!        C
-!        C     Now read the file and check the data.
-!        C
-!              CALL DASOPR ( DLA, HANDLE )
-!
-!        C
-!        C     Obtain the segment descriptor for the sole segment
-!        C     in the file. We need not check the found flag
-!        C     in this case because we know there is one segment
-!        C     in the file.
-!        C
-!              CALL DLABFS ( HANDLE, DESCR, FOUND )
-!
-!        C
-!        C     Fetch character data from the segment.  Obtain the
-!        C     base address of the character data and the
-!        C     character count from the descriptor.
-!        C
-!              BASE = DESCR(CBSIDX)
-!              N    = DESCR(CSZIDX)
-!
-!              CALL DASRDC ( HANDLE, BASE+1, BASE+N, 1, LNSIZE, CVALS2 )
-!
-!        C
-!        C     Display the character data.
-!        C
-!              WRITE (*,*) ' '
-!              WRITE (*,*) 'Character array:'
-!
-!              DO I = 1, N/LNSIZE
-!                 WRITE (*,*) CVALS2(I)
-!              END DO
-!
-!        C
-!        C     Fetch and display the integer and double precision data.
-!        C
-!              BASE = DESCR(IBSIDX)
-!              N    = DESCR(ISZIDX)
-!
-!              CALL DASRDI( HANDLE, BASE+1, BASE+N, IVALS2 )
-!
-!              WRITE (*,*) ' '
-!              WRITE (*,*) 'Integer array:'
-!              DO I = 1, N/10
-!                 WRITE (*,'(10I6)') (IVALS2((I-1)*10 + J), J=1, 10)
-!              END DO
-!
-!              BASE = DESCR(DBSIDX)
-!              N    = DESCR(DSZIDX)
-!
-!              CALL DASRDD( HANDLE, BASE+1, BASE+N, DVALS2 )
-!
-!              WRITE (*,*) ' '
-!              WRITE (*,*) 'Double precision array:'
-!              DO I = 1, N/10
-!                 WRITE (*,'(10F6.1)') (DVALS2((I-1)*10 + J), J=1, 10)
-!              END DO
-!
-!        C
-!        C     Close the file.  This step is unnecessary in this
-!        C     program, but is a good practice in general
-!        C     because closing the file frees resources.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Character array:
-!         1234567890123456789012345678901234567890123456789012345678901
-!         2345678901234567890123456789012345678901234567890123456789012
-!         3456789012345678901234567890123456789012345678901234567890123
-!         4567890123456789012345678901234567890123456789012345678901234
-!         5678901234567890123456789012345678901234567890123456789012345
-!
-!         Integer array:
-!             1     2     3     4     5     6     7     8     9    10
-!            11    12    13    14    15    16    17    18    19    20
-!            21    22    23    24    25    26    27    28    29    30
-!            31    32    33    34    35    36    37    38    39    40
-!            41    42    43    44    45    46    47    48    49    50
-!            51    52    53    54    55    56    57    58    59    60
-!            61    62    63    64    65    66    67    68    69    70
-!            71    72    73    74    75    76    77    78    79    80
-!            81    82    83    84    85    86    87    88    89    90
-!            91    92    93    94    95    96    97    98    99   100
-!
-!         Double precision array:
-!           1.0   2.0   3.0   4.0   5.0   6.0   7.0   8.0   9.0  10.0
-!          11.0  12.0  13.0  14.0  15.0  16.0  17.0  18.0  19.0  20.0
-!          21.0  22.0  23.0  24.0  25.0  26.0  27.0  28.0  29.0  30.0
-!          31.0  32.0  33.0  34.0  35.0  36.0  37.0  38.0  39.0  40.0
-!          41.0  42.0  43.0  44.0  45.0  46.0  47.0  48.0  49.0  50.0
-!
-!        Note that after run completion, a new DLA file exists in the
-!        output directory.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 14-JUN-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Modified
-!        the presentation of the output in the code example to comply
-!        with the maximum line length for the header comments.
-!
-!-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
-!
-!        Updated version info.
-!
-!        08-OCT-2009 (NJB)
-!
-!           Updated header.
-!
-!        11-FEB-2005 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     end new segment in DLA file
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Local variables
-!
       integer(ip)           descr  ( dladsz )
       integer(ip)           lastc
       integer(ip)           lastd
@@ -8276,277 +7752,241 @@ contains
       return
       end procedure dlaens
 
-!$Procedure DLABFS ( DLA, begin forward search )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the integer handle associated with the file to be
+      !>              searched. This handle is used to identify the file in
+      !>              subsequent calls to other DLA or DAS routines.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     DLADSC   is the descriptor of the first DLA segment in the
+      !>              file associated with HANDLE.
+      !>
+      !>              The segment descriptor layout is:
+      !>
+      !>                 +---------------+
+      !>                 | BACKWARD PTR  | Linked list backward pointer
+      !>                 +---------------+
+      !>                 | FORWARD PTR   | Linked list forward pointer
+      !>                 +---------------+
+      !>                 | BASE INT ADDR | Base DAS integer address
+      !>                 +---------------+
+      !>                 | INT COMP SIZE | Size of integer segment component
+      !>                 +---------------+
+      !>                 | BASE DP ADDR  | Base DAS d.p. address
+      !>                 +---------------+
+      !>                 | DP COMP SIZE  | Size of d.p. segment component
+      !>                 +---------------+
+      !>                 | BASE CHR ADDR | Base DAS character address
+      !>                 +---------------+
+      !>                 | CHR COMP SIZE | Size of character segment component
+      !>                 +---------------+
+      !>
+      !>              DLADSC is valid only if the output argument FOUND is
+      !>              .TRUE.
+      !>
+      !>     FOUND    is a logical flag indicating whether a segment was
+      !>              found. FOUND has the value .TRUE. if the file
+      !>              contains at least one segment; otherwise FOUND is
+      !>              .FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input file handle is invalid, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     2)  If an error occurs while reading the DLA file, the error
+      !>         is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !> ## Files
+      !>
+      !>     See description of input argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     DLA files are built using the DAS low-level format; DLA files are
+      !>     a specialized type of DAS file in which data are organized as a
+      !>     doubly linked list of segments. Each segment's data belong to
+      !>     contiguous components of character, double precision, and integer
+      !>     type.
+      !>
+      !>     This routine supports forward traversal of a DLA file's segment
+      !>     list. Note that it is not necessary to call this routine to
+      !>     conduct a forward traversal; all that is necessary is to have
+      !>     access to the first descriptor in the file, which this routine
+      !>     provides.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as input,
+      !>     the compiler and supporting libraries, and the machine specific
+      !>     arithmetic implementation.
+      !>
+      !>     1) Open a DLA file for read access, traverse the segment
+      !>        list from front to back, and display segment address
+      !>        and size attributes.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DLABFS_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(FILSIZ)    FNAME
+      !>
+      !>              INTEGER               CURRNT ( DLADSZ )
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               SEGNO
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Prompt for the name of the file to search.
+      !>        C
+      !>              CALL PROMPT ( 'Name of DLA file > ', FNAME )
+      !>
+      !>        C
+      !>        C     Open the DLA file for read access.  Since DLA
+      !>        C     files use the DAS architecture, we can use DAS
+      !>        C     routines to open and close the file.
+      !>        C
+      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a forward search.  Let DLADSC contain
+      !>        C     the descriptor of the first segment.
+      !>        C
+      !>              SEGNO = 0
+      !>
+      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>
+      !>              DO WHILE ( FOUND )
+      !>        C
+      !>        C        Display the contents of the current segment
+      !>        C        descriptor.
+      !>        C
+      !>                 SEGNO = SEGNO + 1
+      !>
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) 'Segment number = ', SEGNO
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) 'Backward segment pointer         = ',
+      !>             .               DLADSC(BWDIDX)
+      !>                 WRITE (*,*) 'Forward segment pointer          = ',
+      !>             .               DLADSC(FWDIDX)
+      !>                 WRITE (*,*) 'Character component base address = ',
+      !>             .               DLADSC(CBSIDX)
+      !>                 WRITE (*,*) 'Character component size         = ',
+      !>             .               DLADSC(CSZIDX)
+      !>                 WRITE (*,*) 'D.p. base address                = ',
+      !>             .               DLADSC(DBSIDX)
+      !>                 WRITE (*,*) 'D.p. component size              = ',
+      !>             .               DLADSC(DSZIDX)
+      !>                 WRITE (*,*) 'Integer base address             = ',
+      !>             .               DLADSC(IBSIDX)
+      !>                 WRITE (*,*) 'Integer component size           = ',
+      !>             .               DLADSC(ISZIDX)
+      !>                 WRITE (*,*) ' '
+      !>
+      !>        C
+      !>        C        Find the next segment.
+      !>        C
+      !>        C        To avoid using DLADSC as both input and output
+      !>        C        in the following call (this use is not allowed
+      !>        C        by the ANSI Fortran 77 standard), we copy DLADSC
+      !>        C        into the variable CURRNT.  We then find the
+      !>        C        segment following CURRNT.
+      !>        C
+      !>                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
+      !>                 CALL DLAFNS ( HANDLE, CURRNT, DLADSC, FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Close the file using the DAS close routine.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds, the output
+      !>        was:
+      !>
+      !>        Name of DLA file > phobos512.bds
+      !>
+      !>         Segment number =            1
+      !>
+      !>         Backward segment pointer         =           -1
+      !>         Forward segment pointer          =           -1
+      !>         Character component base address =            0
+      !>         Character component size         =            0
+      !>         D.p. base address                =            0
+      !>         D.p. component size              =      4737076
+      !>         Integer base address             =           11
+      !>         Integer component size           =     29692614
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 02-JUL-2021 (JDR)
+      !>
+      !>        Changed output argument name DESCR to DLADSC for consistency
+      !>        with other routines.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
+      !>
+      !>        Updated version info.
+      !>
+      !>        23-JAN-2013 (NJB)
+      !>
+      !>           Deleted third exception description from the $Exceptions
+      !>           header section.
+      !>
+      !>        08-OCT-2009 (NJB)
+      !>
+      !>           Updated header.
+      !>
+      !>        10-FEB-2005 (NJB)
       module procedure dlabfs
-!! ## Abstract
-!!
-!!     Begin a forward segment search in a DLA file.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DLA
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DLA
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
-
-! $ Detailed_Input
-!
-!     HANDLE   is the integer handle associated with the file to be
-!              searched. This handle is used to identify the file in
-!              subsequent calls to other DLA or DAS routines.
-!
-! $ Detailed_Output
-!
-!     DLADSC   is the descriptor of the first DLA segment in the
-!              file associated with HANDLE.
-!
-!              The segment descriptor layout is:
-!
-!                 +---------------+
-!                 | BACKWARD PTR  | Linked list backward pointer
-!                 +---------------+
-!                 | FORWARD PTR   | Linked list forward pointer
-!                 +---------------+
-!                 | BASE INT ADDR | Base DAS integer address
-!                 +---------------+
-!                 | INT COMP SIZE | Size of integer segment component
-!                 +---------------+
-!                 | BASE DP ADDR  | Base DAS d.p. address
-!                 +---------------+
-!                 | DP COMP SIZE  | Size of d.p. segment component
-!                 +---------------+
-!                 | BASE CHR ADDR | Base DAS character address
-!                 +---------------+
-!                 | CHR COMP SIZE | Size of character segment component
-!                 +---------------+
-!
-!              DLADSC is valid only if the output argument FOUND is
-!              .TRUE.
-!
-!     FOUND    is a logical flag indicating whether a segment was
-!              found. FOUND has the value .TRUE. if the file
-!              contains at least one segment; otherwise FOUND is
-!              .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input file handle is invalid, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     2)  If an error occurs while reading the DLA file, the error
-!         is signaled by a routine in the call tree of this
-!         routine.
-!
-! $ Files
-!
-!     See description of input argument HANDLE.
-!
-! $ Particulars
-!
-!     DLA files are built using the DAS low-level format; DLA files are
-!     a specialized type of DAS file in which data are organized as a
-!     doubly linked list of segments. Each segment's data belong to
-!     contiguous components of character, double precision, and integer
-!     type.
-!
-!     This routine supports forward traversal of a DLA file's segment
-!     list. Note that it is not necessary to call this routine to
-!     conduct a forward traversal; all that is necessary is to have
-!     access to the first descriptor in the file, which this routine
-!     provides.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as input,
-!     the compiler and supporting libraries, and the machine specific
-!     arithmetic implementation.
-!
-!     1) Open a DLA file for read access, traverse the segment
-!        list from front to back, and display segment address
-!        and size attributes.
-!
-!        Example code begins here.
-!
-!              PROGRAM DLABFS_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(FILSIZ)    FNAME
-!
-!              INTEGER               CURRNT ( DLADSZ )
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               SEGNO
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Prompt for the name of the file to search.
-!        C
-!              CALL PROMPT ( 'Name of DLA file > ', FNAME )
-!
-!        C
-!        C     Open the DLA file for read access.  Since DLA
-!        C     files use the DAS architecture, we can use DAS
-!        C     routines to open and close the file.
-!        C
-!              CALL DASOPR ( FNAME, HANDLE )
-!
-!        C
-!        C     Begin a forward search.  Let DLADSC contain
-!        C     the descriptor of the first segment.
-!        C
-!              SEGNO = 0
-!
-!              CALL DLABFS ( HANDLE, DLADSC, FOUND )
-!
-!              DO WHILE ( FOUND )
-!        C
-!        C        Display the contents of the current segment
-!        C        descriptor.
-!        C
-!                 SEGNO = SEGNO + 1
-!
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) 'Segment number = ', SEGNO
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) 'Backward segment pointer         = ',
-!             .               DLADSC(BWDIDX)
-!                 WRITE (*,*) 'Forward segment pointer          = ',
-!             .               DLADSC(FWDIDX)
-!                 WRITE (*,*) 'Character component base address = ',
-!             .               DLADSC(CBSIDX)
-!                 WRITE (*,*) 'Character component size         = ',
-!             .               DLADSC(CSZIDX)
-!                 WRITE (*,*) 'D.p. base address                = ',
-!             .               DLADSC(DBSIDX)
-!                 WRITE (*,*) 'D.p. component size              = ',
-!             .               DLADSC(DSZIDX)
-!                 WRITE (*,*) 'Integer base address             = ',
-!             .               DLADSC(IBSIDX)
-!                 WRITE (*,*) 'Integer component size           = ',
-!             .               DLADSC(ISZIDX)
-!                 WRITE (*,*) ' '
-!
-!        C
-!        C        Find the next segment.
-!        C
-!        C        To avoid using DLADSC as both input and output
-!        C        in the following call (this use is not allowed
-!        C        by the ANSI Fortran 77 standard), we copy DLADSC
-!        C        into the variable CURRNT.  We then find the
-!        C        segment following CURRNT.
-!        C
-!                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
-!                 CALL DLAFNS ( HANDLE, CURRNT, DLADSC, FOUND )
-!
-!              END DO
-!
-!        C
-!        C     Close the file using the DAS close routine.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds, the output
-!        was:
-!
-!        Name of DLA file > phobos512.bds
-!
-!         Segment number =            1
-!
-!         Backward segment pointer         =           -1
-!         Forward segment pointer          =           -1
-!         Character component base address =            0
-!         Character component size         =            0
-!         D.p. base address                =            0
-!         D.p. component size              =      4737076
-!         Integer base address             =           11
-!         Integer component size           =     29692614
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 02-JUL-2021 (JDR)
-!
-!        Changed output argument name DESCR to DLADSC for consistency
-!        with other routines.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
-!
-!        Updated version info.
-!
-!        23-JAN-2013 (NJB)
-!
-!           Deleted third exception description from the $Exceptions
-!           header section.
-!
-!        08-OCT-2009 (NJB)
-!
-!           Updated header.
-!
-!        10-FEB-2005 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     begin forward search in DLA file
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           this
 
 !
@@ -8585,282 +8025,246 @@ contains
       return
       end procedure dlabfs
 
-!$Procedure DLABBS ( DLA, begin backward search )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the integer handle associated with the file to be
+      !>              searched. This handle is used to identify the file in
+      !>              subsequent calls to other DLA or DAS routines.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     DLADSC   is the descriptor of the last DLA segment in the
+      !>              file associated with HANDLE.
+      !>
+      !>              The segment descriptor layout is:
+      !>
+      !>                 +---------------+
+      !>                 | BACKWARD PTR  | Linked list backward pointer
+      !>                 +---------------+
+      !>                 | FORWARD PTR   | Linked list forward pointer
+      !>                 +---------------+
+      !>                 | BASE INT ADDR | Base DAS integer address
+      !>                 +---------------+
+      !>                 | INT COMP SIZE | Size of integer segment component
+      !>                 +---------------+
+      !>                 | BASE DP ADDR  | Base DAS d.p. address
+      !>                 +---------------+
+      !>                 | DP COMP SIZE  | Size of d.p. segment component
+      !>                 +---------------+
+      !>                 | BASE CHR ADDR | Base DAS character address
+      !>                 +---------------+
+      !>                 | CHR COMP SIZE | Size of character segment component
+      !>                 +---------------+
+      !>
+      !>              DLADSC is valid only if the output argument FOUND is
+      !>              .TRUE.
+      !>
+      !>     FOUND    is a logical flag indicating whether a segment was
+      !>              found. FOUND has the value .TRUE. if the file
+      !>              contains at least one segment; otherwise FOUND is
+      !>              .FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input file handle is invalid, an error is
+      !>         signaled by a routine in the call tree of this routine.
+      !>
+      !>     2)  If an error occurs while reading the DLA file, the error
+      !>         is signaled by a routine in the call tree of this routine.
+      !>
+      !>     3)  If the input descriptor is invalid, this routine will
+      !>         fail in an unpredictable manner.
+      !>
+      !> ## Files
+      !>
+      !>     See description of input argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     DLA files are built using the DAS low-level format; DLA files are
+      !>     a specialized type of DAS file in which data are organized as a
+      !>     doubly linked list of segments. Each segment's data belong to
+      !>     contiguous components of character, double precision, and integer
+      !>     type.
+      !>
+      !>     This routine supports backward traversal of a DLA file's segment
+      !>     list. Note that it is not necessary to call this routine to
+      !>     conduct a backward traversal; all that is necessary is to have
+      !>     access to the last descriptor in the file, which this routine
+      !>     provides.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as input,
+      !>     the compiler and supporting libraries, and the machine specific
+      !>     arithmetic implementation.
+      !>
+      !>     1) Open a DLA file for read access, traverse the segment
+      !>        list from back to front, and display segment address
+      !>        and size attributes.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DLABBS_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(FILSIZ)    FNAME
+      !>
+      !>              INTEGER               CURRNT ( DLADSZ )
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               NSEGS
+      !>              INTEGER               SEGNO
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Prompt for the name of the file to search.
+      !>        C
+      !>              CALL PROMPT ( 'Name of DLA file > ', FNAME )
+      !>
+      !>        C
+      !>        C     Open the DLA file for read access.  Since DLA
+      !>        C     files use the DAS architecture, we can use DAS
+      !>        C     routines to open and close the file.
+      !>        C
+      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>
+      !>        C
+      !>        C     Count the segments in the file; this allows us
+      !>        C     to label the segments in our display.
+      !>        C
+      !>              NSEGS = 0
+      !>              CALL DLABBS ( HANDLE, DLADSC, FOUND )
+      !>
+      !>              DO WHILE ( FOUND )
+      !>
+      !>                 NSEGS = NSEGS + 1
+      !>                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
+      !>                 CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Begin a backward search.  Let DLADSC contain
+      !>        C     the descriptor of the last segment.
+      !>        C
+      !>              SEGNO = NSEGS + 1
+      !>
+      !>              CALL DLABBS ( HANDLE, DLADSC, FOUND )
+      !>
+      !>              DO WHILE ( FOUND )
+      !>        C
+      !>        C        Display the contents of the current segment
+      !>        C        descriptor.
+      !>        C
+      !>                 SEGNO = SEGNO - 1
+      !>
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) 'Segment number = ', SEGNO
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) 'Backward segment pointer         = ',
+      !>             .               DLADSC(BWDIDX)
+      !>                 WRITE (*,*) 'Forward segment pointer          = ',
+      !>             .               DLADSC(FWDIDX)
+      !>                 WRITE (*,*) 'Character component base address = ',
+      !>             .               DLADSC(CBSIDX)
+      !>                 WRITE (*,*) 'Character component size         = ',
+      !>             .               DLADSC(CSZIDX)
+      !>                 WRITE (*,*) 'D.p. base address                = ',
+      !>             .               DLADSC(DBSIDX)
+      !>                 WRITE (*,*) 'D.p. component size              = ',
+      !>             .               DLADSC(DSZIDX)
+      !>                 WRITE (*,*) 'Integer base address             = ',
+      !>             .               DLADSC(IBSIDX)
+      !>                 WRITE (*,*) 'Integer component size           = ',
+      !>             .               DLADSC(ISZIDX)
+      !>                 WRITE (*,*) ' '
+      !>
+      !>        C
+      !>        C        Find the previous segment.
+      !>        C
+      !>        C        To avoid using DLADSC as both input and output
+      !>        C        in the following call (this use is not allowed
+      !>        C        by the ANSI Fortran 77 standard), we copy DLADSC
+      !>        C        into the variable CURRNT.  We then find the
+      !>        C        segment preceding CURRNT.
+      !>        C
+      !>                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
+      !>                 CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Close the file using the DAS close routine.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds, the output
+      !>        was:
+      !>
+      !>        Name of DLA file > phobos512.bds
+      !>
+      !>         Segment number =            1
+      !>
+      !>         Backward segment pointer         =           -1
+      !>         Forward segment pointer          =           -1
+      !>         Character component base address =            0
+      !>         Character component size         =            0
+      !>         D.p. base address                =            0
+      !>         D.p. component size              =      4737076
+      !>         Integer base address             =           11
+      !>         Integer component size           =     29692614
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
+      !>
+      !>        Changed output argument name DESCR to DLADSC for consistency
+      !>        with other routines.
+      !>
+      !>        Edits the header comments to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.0, 21-APR-2010 (NJB)
       module procedure dlabbs
-!! ## Abstract
-!!
-!!     Begin a backward segment search in a DLA file.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DLA
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DLA
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
-
-! $ Detailed_Input
-!
-!     HANDLE   is the integer handle associated with the file to be
-!              searched. This handle is used to identify the file in
-!              subsequent calls to other DLA or DAS routines.
-!
-! $ Detailed_Output
-!
-!     DLADSC   is the descriptor of the last DLA segment in the
-!              file associated with HANDLE.
-!
-!              The segment descriptor layout is:
-!
-!                 +---------------+
-!                 | BACKWARD PTR  | Linked list backward pointer
-!                 +---------------+
-!                 | FORWARD PTR   | Linked list forward pointer
-!                 +---------------+
-!                 | BASE INT ADDR | Base DAS integer address
-!                 +---------------+
-!                 | INT COMP SIZE | Size of integer segment component
-!                 +---------------+
-!                 | BASE DP ADDR  | Base DAS d.p. address
-!                 +---------------+
-!                 | DP COMP SIZE  | Size of d.p. segment component
-!                 +---------------+
-!                 | BASE CHR ADDR | Base DAS character address
-!                 +---------------+
-!                 | CHR COMP SIZE | Size of character segment component
-!                 +---------------+
-!
-!              DLADSC is valid only if the output argument FOUND is
-!              .TRUE.
-!
-!     FOUND    is a logical flag indicating whether a segment was
-!              found. FOUND has the value .TRUE. if the file
-!              contains at least one segment; otherwise FOUND is
-!              .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input file handle is invalid, an error is
-!         signaled by a routine in the call tree of this routine.
-!
-!     2)  If an error occurs while reading the DLA file, the error
-!         is signaled by a routine in the call tree of this routine.
-!
-!     3)  If the input descriptor is invalid, this routine will
-!         fail in an unpredictable manner.
-!
-! $ Files
-!
-!     See description of input argument HANDLE.
-!
-! $ Particulars
-!
-!     DLA files are built using the DAS low-level format; DLA files are
-!     a specialized type of DAS file in which data are organized as a
-!     doubly linked list of segments. Each segment's data belong to
-!     contiguous components of character, double precision, and integer
-!     type.
-!
-!     This routine supports backward traversal of a DLA file's segment
-!     list. Note that it is not necessary to call this routine to
-!     conduct a backward traversal; all that is necessary is to have
-!     access to the last descriptor in the file, which this routine
-!     provides.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as input,
-!     the compiler and supporting libraries, and the machine specific
-!     arithmetic implementation.
-!
-!     1) Open a DLA file for read access, traverse the segment
-!        list from back to front, and display segment address
-!        and size attributes.
-!
-!        Example code begins here.
-!
-!              PROGRAM DLABBS_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(FILSIZ)    FNAME
-!
-!              INTEGER               CURRNT ( DLADSZ )
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               NSEGS
-!              INTEGER               SEGNO
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Prompt for the name of the file to search.
-!        C
-!              CALL PROMPT ( 'Name of DLA file > ', FNAME )
-!
-!        C
-!        C     Open the DLA file for read access.  Since DLA
-!        C     files use the DAS architecture, we can use DAS
-!        C     routines to open and close the file.
-!        C
-!              CALL DASOPR ( FNAME, HANDLE )
-!
-!        C
-!        C     Count the segments in the file; this allows us
-!        C     to label the segments in our display.
-!        C
-!              NSEGS = 0
-!              CALL DLABBS ( HANDLE, DLADSC, FOUND )
-!
-!              DO WHILE ( FOUND )
-!
-!                 NSEGS = NSEGS + 1
-!                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
-!                 CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
-!
-!              END DO
-!
-!        C
-!        C     Begin a backward search.  Let DLADSC contain
-!        C     the descriptor of the last segment.
-!        C
-!              SEGNO = NSEGS + 1
-!
-!              CALL DLABBS ( HANDLE, DLADSC, FOUND )
-!
-!              DO WHILE ( FOUND )
-!        C
-!        C        Display the contents of the current segment
-!        C        descriptor.
-!        C
-!                 SEGNO = SEGNO - 1
-!
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) 'Segment number = ', SEGNO
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) 'Backward segment pointer         = ',
-!             .               DLADSC(BWDIDX)
-!                 WRITE (*,*) 'Forward segment pointer          = ',
-!             .               DLADSC(FWDIDX)
-!                 WRITE (*,*) 'Character component base address = ',
-!             .               DLADSC(CBSIDX)
-!                 WRITE (*,*) 'Character component size         = ',
-!             .               DLADSC(CSZIDX)
-!                 WRITE (*,*) 'D.p. base address                = ',
-!             .               DLADSC(DBSIDX)
-!                 WRITE (*,*) 'D.p. component size              = ',
-!             .               DLADSC(DSZIDX)
-!                 WRITE (*,*) 'Integer base address             = ',
-!             .               DLADSC(IBSIDX)
-!                 WRITE (*,*) 'Integer component size           = ',
-!             .               DLADSC(ISZIDX)
-!                 WRITE (*,*) ' '
-!
-!        C
-!        C        Find the previous segment.
-!        C
-!        C        To avoid using DLADSC as both input and output
-!        C        in the following call (this use is not allowed
-!        C        by the ANSI Fortran 77 standard), we copy DLADSC
-!        C        into the variable CURRNT.  We then find the
-!        C        segment preceding CURRNT.
-!        C
-!                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
-!                 CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
-!
-!              END DO
-!
-!        C
-!        C     Close the file using the DAS close routine.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds, the output
-!        was:
-!
-!        Name of DLA file > phobos512.bds
-!
-!         Segment number =            1
-!
-!         Backward segment pointer         =           -1
-!         Forward segment pointer          =           -1
-!         Character component base address =            0
-!         Character component size         =            0
-!         D.p. base address                =            0
-!         D.p. component size              =      4737076
-!         Integer base address             =           11
-!         Integer component size           =     29692614
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
-!
-!        Changed output argument name DESCR to DLADSC for consistency
-!        with other routines.
-!
-!        Edits the header comments to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 21-APR-2010 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     begin backward search in DLA file
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           this
 
 !
@@ -8899,278 +8303,241 @@ contains
       return
       end procedure dlabbs
 
-!$Procedure DLAFNS ( DLA, find next segment )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the integer handle associated with the file to be
+      !>              searched. This handle is used to identify the file in
+      !>              subsequent calls to other DLA or DAS routines.
+      !>
+      !>     DLADSC   is the descriptor of a DLA segment in the file
+      !>              associated with HANDLE. The descriptor of the
+      !>              segment following DLADSC is sought.
+      !>
+      !>              The segment descriptor layout is:
+      !>
+      !>                 +---------------+
+      !>                 | BACKWARD PTR  | Linked list backward pointer
+      !>                 +---------------+
+      !>                 | FORWARD PTR   | Linked list forward pointer
+      !>                 +---------------+
+      !>                 | BASE INT ADDR | Base DAS integer address
+      !>                 +---------------+
+      !>                 | INT COMP SIZE | Size of integer segment component
+      !>                 +---------------+
+      !>                 | BASE DP ADDR  | Base DAS d.p. address
+      !>                 +---------------+
+      !>                 | DP COMP SIZE  | Size of d.p. segment component
+      !>                 +---------------+
+      !>                 | BASE CHR ADDR | Base DAS character address
+      !>                 +---------------+
+      !>                 | CHR COMP SIZE | Size of character segment component
+      !>                 +---------------+
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NXTDSC   is the descriptor of the next DLA segment following
+      !>              the segment associated with the input argument DLADSC.
+      !>
+      !>              NXTDSC is valid only if the output argument FOUND is
+      !>              .TRUE.
+      !>
+      !>     FOUND    is a logical flag indicating whether the next segment
+      !>              was found. FOUND has the value .TRUE. if the segment
+      !>              was found; otherwise FOUND is .FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input file handle is invalid, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     2)  If an error occurs while reading the DLA file, the error
+      !>         is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !>     3)  If the input descriptor is invalid, this routine will
+      !>         fail in an unpredictable manner.
+      !>
+      !> ## Files
+      !>
+      !>     See description of input argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     DLA files are built using the DAS low-level format; DLA files are
+      !>     a specialized type of DAS file in which data are organized as a
+      !>     doubly linked list of segments. Each segment's data belong to
+      !>     contiguous components of character, double precision, and integer
+      !>     type.
+      !>
+      !>     This routine supports forward traversal of a DLA file's segment
+      !>     list. A forward traversal may be started from any segment in
+      !>     the file; it is not necessary to call DLABFS first. The role
+      !>     of DLABFS is simply to return the descriptor of the first
+      !>     segment in the file.
+      !>
+      !> ## Examples
+      !>
+      !>     1) Open a DLA file for read access, traverse the segment
+      !>        list from front to back, and display segment address
+      !>        and size attributes.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DLAFNS_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(FILSIZ)    FNAME
+      !>
+      !>              INTEGER               CURRNT ( DLADSZ )
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               SEGNO
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Prompt for the name of the file to search.
+      !>        C
+      !>              CALL PROMPT ( 'Name of DLA file > ', FNAME )
+      !>
+      !>        C
+      !>        C     Open the DLA file for read access.  Since DLA
+      !>        C     files use the DAS architecture, we can use DAS
+      !>        C     routines to open and close the file.
+      !>        C
+      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a forward search.  Let DLADSC contain
+      !>        C     the descriptor of the first segment.
+      !>        C
+      !>              SEGNO = 0
+      !>
+      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>
+      !>              DO WHILE ( FOUND )
+      !>        C
+      !>        C        Display the contents of the current segment
+      !>        C        descriptor.
+      !>        C
+      !>                 SEGNO = SEGNO + 1
+      !>
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) 'Segment number = ', SEGNO
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) 'Backward segment pointer         = ',
+      !>             .               DLADSC(BWDIDX)
+      !>                 WRITE (*,*) 'Forward segment pointer          = ',
+      !>             .               DLADSC(FWDIDX)
+      !>                 WRITE (*,*) 'Character component base address = ',
+      !>             .               DLADSC(CBSIDX)
+      !>                 WRITE (*,*) 'Character component size         = ',
+      !>             .               DLADSC(CSZIDX)
+      !>                 WRITE (*,*) 'D.p. base address                = ',
+      !>             .               DLADSC(DBSIDX)
+      !>                 WRITE (*,*) 'D.p. component size              = ',
+      !>             .               DLADSC(DSZIDX)
+      !>                 WRITE (*,*) 'Integer base address             = ',
+      !>             .               DLADSC(IBSIDX)
+      !>                 WRITE (*,*) 'Integer component size           = ',
+      !>             .               DLADSC(ISZIDX)
+      !>                 WRITE (*,*) ' '
+      !>
+      !>        C
+      !>        C        Find the next segment.
+      !>        C
+      !>        C        To avoid using DLADSC as both input and output
+      !>        C        in the following call (this use is not allowed
+      !>        C        by the ANSI Fortran 77 standard), we copy DLADSC
+      !>        C        into the variable CURRNT.  We then find the
+      !>        C        segment following CURRNT.
+      !>        C
+      !>                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
+      !>                 CALL DLAFNS ( HANDLE, CURRNT, DLADSC, FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Close the file using the DAS close routine.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds, the output
+      !>        was:
+      !>
+      !>        Name of DLA file > phobos512.bds
+      !>
+      !>         Segment number =            1
+      !>
+      !>         Backward segment pointer         =           -1
+      !>         Forward segment pointer          =           -1
+      !>         Character component base address =            0
+      !>         Character component size         =            0
+      !>         D.p. base address                =            0
+      !>         D.p. component size              =      4737076
+      !>         Integer base address             =           11
+      !>         Integer component size           =     29692614
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 02-JUL-2021 (JDR)
+      !>
+      !>        Changed input argument name DESCR to DLADSC for consistency
+      !>        with other routines.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
+      !>
+      !>        Updated version info.
+      !>
+      !>        23-JAN-2013 (NJB)
+      !>
+      !>           Added to $Exceptions header section a mention
+      !>           of the invalid input descriptor error case.
+      !>
+      !>        08-OCT-2009 (NJB)
+      !>
+      !>           Updated header.
+      !>
+      !>        10-FEB-2005 (NJB)
       module procedure dlafns
-!! ## Abstract
-!!
-!!     Find the segment following a specified segment in a DLA file.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DLA
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DLA
-!!     FILES
-!!     SEARCH
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
 
-
-! $ Detailed_Input
-!
-!     HANDLE   is the integer handle associated with the file to be
-!              searched. This handle is used to identify the file in
-!              subsequent calls to other DLA or DAS routines.
-!
-!     DLADSC   is the descriptor of a DLA segment in the file
-!              associated with HANDLE. The descriptor of the
-!              segment following DLADSC is sought.
-!
-!              The segment descriptor layout is:
-!
-!                 +---------------+
-!                 | BACKWARD PTR  | Linked list backward pointer
-!                 +---------------+
-!                 | FORWARD PTR   | Linked list forward pointer
-!                 +---------------+
-!                 | BASE INT ADDR | Base DAS integer address
-!                 +---------------+
-!                 | INT COMP SIZE | Size of integer segment component
-!                 +---------------+
-!                 | BASE DP ADDR  | Base DAS d.p. address
-!                 +---------------+
-!                 | DP COMP SIZE  | Size of d.p. segment component
-!                 +---------------+
-!                 | BASE CHR ADDR | Base DAS character address
-!                 +---------------+
-!                 | CHR COMP SIZE | Size of character segment component
-!                 +---------------+
-!
-! $ Detailed_Output
-!
-!     NXTDSC   is the descriptor of the next DLA segment following
-!              the segment associated with the input argument DLADSC.
-!
-!              NXTDSC is valid only if the output argument FOUND is
-!              .TRUE.
-!
-!     FOUND    is a logical flag indicating whether the next segment
-!              was found. FOUND has the value .TRUE. if the segment
-!              was found; otherwise FOUND is .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input file handle is invalid, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     2)  If an error occurs while reading the DLA file, the error
-!         is signaled by a routine in the call tree of this
-!         routine.
-!
-!     3)  If the input descriptor is invalid, this routine will
-!         fail in an unpredictable manner.
-!
-! $ Files
-!
-!     See description of input argument HANDLE.
-!
-! $ Particulars
-!
-!     DLA files are built using the DAS low-level format; DLA files are
-!     a specialized type of DAS file in which data are organized as a
-!     doubly linked list of segments. Each segment's data belong to
-!     contiguous components of character, double precision, and integer
-!     type.
-!
-!     This routine supports forward traversal of a DLA file's segment
-!     list. A forward traversal may be started from any segment in
-!     the file; it is not necessary to call DLABFS first. The role
-!     of DLABFS is simply to return the descriptor of the first
-!     segment in the file.
-!
-! $ Examples
-!
-!     1) Open a DLA file for read access, traverse the segment
-!        list from front to back, and display segment address
-!        and size attributes.
-!
-!        Example code begins here.
-!
-!              PROGRAM DLAFNS_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(FILSIZ)    FNAME
-!
-!              INTEGER               CURRNT ( DLADSZ )
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               SEGNO
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Prompt for the name of the file to search.
-!        C
-!              CALL PROMPT ( 'Name of DLA file > ', FNAME )
-!
-!        C
-!        C     Open the DLA file for read access.  Since DLA
-!        C     files use the DAS architecture, we can use DAS
-!        C     routines to open and close the file.
-!        C
-!              CALL DASOPR ( FNAME, HANDLE )
-!
-!        C
-!        C     Begin a forward search.  Let DLADSC contain
-!        C     the descriptor of the first segment.
-!        C
-!              SEGNO = 0
-!
-!              CALL DLABFS ( HANDLE, DLADSC, FOUND )
-!
-!              DO WHILE ( FOUND )
-!        C
-!        C        Display the contents of the current segment
-!        C        descriptor.
-!        C
-!                 SEGNO = SEGNO + 1
-!
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) 'Segment number = ', SEGNO
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) 'Backward segment pointer         = ',
-!             .               DLADSC(BWDIDX)
-!                 WRITE (*,*) 'Forward segment pointer          = ',
-!             .               DLADSC(FWDIDX)
-!                 WRITE (*,*) 'Character component base address = ',
-!             .               DLADSC(CBSIDX)
-!                 WRITE (*,*) 'Character component size         = ',
-!             .               DLADSC(CSZIDX)
-!                 WRITE (*,*) 'D.p. base address                = ',
-!             .               DLADSC(DBSIDX)
-!                 WRITE (*,*) 'D.p. component size              = ',
-!             .               DLADSC(DSZIDX)
-!                 WRITE (*,*) 'Integer base address             = ',
-!             .               DLADSC(IBSIDX)
-!                 WRITE (*,*) 'Integer component size           = ',
-!             .               DLADSC(ISZIDX)
-!                 WRITE (*,*) ' '
-!
-!        C
-!        C        Find the next segment.
-!        C
-!        C        To avoid using DLADSC as both input and output
-!        C        in the following call (this use is not allowed
-!        C        by the ANSI Fortran 77 standard), we copy DLADSC
-!        C        into the variable CURRNT.  We then find the
-!        C        segment following CURRNT.
-!        C
-!                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
-!                 CALL DLAFNS ( HANDLE, CURRNT, DLADSC, FOUND )
-!
-!              END DO
-!
-!        C
-!        C     Close the file using the DAS close routine.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds, the output
-!        was:
-!
-!        Name of DLA file > phobos512.bds
-!
-!         Segment number =            1
-!
-!         Backward segment pointer         =           -1
-!         Forward segment pointer          =           -1
-!         Character component base address =            0
-!         Character component size         =            0
-!         D.p. base address                =            0
-!         D.p. component size              =      4737076
-!         Integer base address             =           11
-!         Integer component size           =     29692614
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 02-JUL-2021 (JDR)
-!
-!        Changed input argument name DESCR to DLADSC for consistency
-!        with other routines.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
-!
-!        Updated version info.
-!
-!        23-JAN-2013 (NJB)
-!
-!           Added to $Exceptions header section a mention
-!           of the invalid input descriptor error case.
-!
-!        08-OCT-2009 (NJB)
-!
-!           Updated header.
-!
-!        10-FEB-2005 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     find next segment in DLA file
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           fwd
 
 !
@@ -9206,285 +8573,248 @@ contains
       return
       end procedure dlafns
 
-!$Procedure DLAFPS ( DLA, find previous segment )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the integer handle associated with the file to be
+      !>              searched. This handle is used to identify the file in
+      !>              subsequent calls to other DLA or DAS routines.
+      !>
+      !>     DLADSC   is the descriptor of a DLA segment in the file
+      !>              associated with HANDLE. The descriptor of the
+      !>              segment preceding DLADSC is sought.
+      !>
+      !>              The segment descriptor layout is:
+      !>
+      !>                 +---------------+
+      !>                 | BACKWARD PTR  | Linked list backward pointer
+      !>                 +---------------+
+      !>                 | FORWARD PTR   | Linked list forward pointer
+      !>                 +---------------+
+      !>                 | BASE INT ADDR | Base DAS integer address
+      !>                 +---------------+
+      !>                 | INT COMP SIZE | Size of integer segment component
+      !>                 +---------------+
+      !>                 | BASE DP ADDR  | Base DAS d.p. address
+      !>                 +---------------+
+      !>                 | DP COMP SIZE  | Size of d.p. segment component
+      !>                 +---------------+
+      !>                 | BASE CHR ADDR | Base DAS character address
+      !>                 +---------------+
+      !>                 | CHR COMP SIZE | Size of character segment component
+      !>                 +---------------+
+      !>
+      !> ## Detailed Output
+      !>
+      !>     PRVDSC   is the descriptor of the DLA segment preceding the
+      !>              segment associated with the input argument DLADSC.
+      !>
+      !>              PRVDSC is valid only if the output argument FOUND is
+      !>              .TRUE.
+      !>
+      !>     FOUND    is a logical flag indicating whether the previous
+      !>              segment was found. FOUND has the value .TRUE. if the
+      !>              segment was found; otherwise FOUND is .FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input file handle is invalid, an error is
+      !>         signaled by a routine in the call tree of this routine.
+      !>
+      !>     2)  If a failure occurs while reading the DLA file, an error
+      !>         is signaled by a routine in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     See description of input argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     DLA files are built using the DAS low-level format; DLA files are
+      !>     a specialized type of DAS file in which data are organized as a
+      !>     doubly linked list of segments. Each segment's data belong to
+      !>     contiguous components of character, double precision, and integer
+      !>     type.
+      !>
+      !>     This routine supports backward traversal of a DLA file's segment
+      !>     list. A backward traversal may be started from any segment in
+      !>     the file; it is not necessary to call DLABBS first. The role of
+      !>     DLABBS is simply to return the descriptor of the last segment in
+      !>     the file.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Open a DLA file for read access, traverse the segment
+      !>        list from back to front, and display segment address
+      !>        and size attributes.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DLAFPS_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(FILSIZ)    FNAME
+      !>
+      !>              INTEGER               CURRNT ( DLADSZ )
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               NSEGS
+      !>              INTEGER               SEGNO
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Prompt for the name of the file to search.
+      !>        C
+      !>              CALL PROMPT ( 'Name of DLA file > ', FNAME )
+      !>
+      !>        C
+      !>        C     Open the DLA file for read access.  Since DLA
+      !>        C     files use the DAS architecture, we can use DAS
+      !>        C     routines to open and close the file.
+      !>        C
+      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>
+      !>        C
+      !>        C     Count the segments in the file; this allows us
+      !>        C     to label the segments in our display.
+      !>        C
+      !>              NSEGS = 0
+      !>              CALL DLABBS ( HANDLE, DLADSC, FOUND )
+      !>
+      !>              DO WHILE ( FOUND )
+      !>
+      !>                 NSEGS = NSEGS + 1
+      !>                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
+      !>                 CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Begin a backward search.  Let DLADSC contain
+      !>        C     the descriptor of the last segment.
+      !>        C
+      !>              SEGNO = NSEGS + 1
+      !>
+      !>              CALL DLABBS ( HANDLE, DLADSC, FOUND )
+      !>
+      !>              DO WHILE ( FOUND )
+      !>        C
+      !>        C        Display the contents of the current segment
+      !>        C        descriptor.
+      !>        C
+      !>                 SEGNO = SEGNO - 1
+      !>
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) 'Segment number = ', SEGNO
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) 'Backward segment pointer         = ',
+      !>             .               DLADSC(BWDIDX)
+      !>                 WRITE (*,*) 'Forward segment pointer          = ',
+      !>             .               DLADSC(FWDIDX)
+      !>                 WRITE (*,*) 'Character component base address = ',
+      !>             .               DLADSC(CBSIDX)
+      !>                 WRITE (*,*) 'Character component size         = ',
+      !>             .               DLADSC(CSZIDX)
+      !>                 WRITE (*,*) 'D.p. base address                = ',
+      !>             .               DLADSC(DBSIDX)
+      !>                 WRITE (*,*) 'D.p. component size              = ',
+      !>             .               DLADSC(DSZIDX)
+      !>                 WRITE (*,*) 'Integer base address             = ',
+      !>             .               DLADSC(IBSIDX)
+      !>                 WRITE (*,*) 'Integer component size           = ',
+      !>             .               DLADSC(ISZIDX)
+      !>                 WRITE (*,*) ' '
+      !>
+      !>        C
+      !>        C        Find the previous segment.
+      !>        C
+      !>        C        To avoid using DLADSC as both input and output
+      !>        C        in the following call (this use is not allowed
+      !>        C        by the ANSI Fortran 77 standard), we copy DLADSC
+      !>        C        into the variable CURRNT.  We then find the
+      !>        C        segment preceding CURRNT.
+      !>        C
+      !>                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
+      !>                 CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Close the file using the DAS close routine.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds, the output
+      !>        was:
+      !>
+      !>        Name of DLA file > phobos512.bds
+      !>
+      !>         Segment number =            1
+      !>
+      !>         Backward segment pointer         =           -1
+      !>         Forward segment pointer          =           -1
+      !>         Character component base address =            0
+      !>         Character component size         =            0
+      !>         D.p. base address                =            0
+      !>         D.p. component size              =      4737076
+      !>         Integer base address             =           11
+      !>         Integer component size           =     29692614
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
+      !>
+      !>        Changed input argument name DESCR to DLADSC for consistency
+      !>        with other routines.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Added solution for code example.
+      !>
+      !>-    SPICELIB Version 1.0.0, 06-JAN-2017 (NJB)
+      !>
+      !>     Original version 21-APR-2010 (NJB)
       module procedure dlafps
-!! ## Abstract
-!!
-!!     Find the segment preceding a specified segment in a DLA file.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DLA
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DLA
-!!     FILES
-!!     SEARCH
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
 
-
-! $ Detailed_Input
-!
-!     HANDLE   is the integer handle associated with the file to be
-!              searched. This handle is used to identify the file in
-!              subsequent calls to other DLA or DAS routines.
-!
-!     DLADSC   is the descriptor of a DLA segment in the file
-!              associated with HANDLE. The descriptor of the
-!              segment preceding DLADSC is sought.
-!
-!              The segment descriptor layout is:
-!
-!                 +---------------+
-!                 | BACKWARD PTR  | Linked list backward pointer
-!                 +---------------+
-!                 | FORWARD PTR   | Linked list forward pointer
-!                 +---------------+
-!                 | BASE INT ADDR | Base DAS integer address
-!                 +---------------+
-!                 | INT COMP SIZE | Size of integer segment component
-!                 +---------------+
-!                 | BASE DP ADDR  | Base DAS d.p. address
-!                 +---------------+
-!                 | DP COMP SIZE  | Size of d.p. segment component
-!                 +---------------+
-!                 | BASE CHR ADDR | Base DAS character address
-!                 +---------------+
-!                 | CHR COMP SIZE | Size of character segment component
-!                 +---------------+
-!
-! $ Detailed_Output
-!
-!     PRVDSC   is the descriptor of the DLA segment preceding the
-!              segment associated with the input argument DLADSC.
-!
-!              PRVDSC is valid only if the output argument FOUND is
-!              .TRUE.
-!
-!     FOUND    is a logical flag indicating whether the previous
-!              segment was found. FOUND has the value .TRUE. if the
-!              segment was found; otherwise FOUND is .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input file handle is invalid, an error is
-!         signaled by a routine in the call tree of this routine.
-!
-!     2)  If a failure occurs while reading the DLA file, an error
-!         is signaled by a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     See description of input argument HANDLE.
-!
-! $ Particulars
-!
-!     DLA files are built using the DAS low-level format; DLA files are
-!     a specialized type of DAS file in which data are organized as a
-!     doubly linked list of segments. Each segment's data belong to
-!     contiguous components of character, double precision, and integer
-!     type.
-!
-!     This routine supports backward traversal of a DLA file's segment
-!     list. A backward traversal may be started from any segment in
-!     the file; it is not necessary to call DLABBS first. The role of
-!     DLABBS is simply to return the descriptor of the last segment in
-!     the file.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Open a DLA file for read access, traverse the segment
-!        list from back to front, and display segment address
-!        and size attributes.
-!
-!        Example code begins here.
-!
-!              PROGRAM DLAFPS_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(FILSIZ)    FNAME
-!
-!              INTEGER               CURRNT ( DLADSZ )
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               NSEGS
-!              INTEGER               SEGNO
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Prompt for the name of the file to search.
-!        C
-!              CALL PROMPT ( 'Name of DLA file > ', FNAME )
-!
-!        C
-!        C     Open the DLA file for read access.  Since DLA
-!        C     files use the DAS architecture, we can use DAS
-!        C     routines to open and close the file.
-!        C
-!              CALL DASOPR ( FNAME, HANDLE )
-!
-!        C
-!        C     Count the segments in the file; this allows us
-!        C     to label the segments in our display.
-!        C
-!              NSEGS = 0
-!              CALL DLABBS ( HANDLE, DLADSC, FOUND )
-!
-!              DO WHILE ( FOUND )
-!
-!                 NSEGS = NSEGS + 1
-!                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
-!                 CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
-!
-!              END DO
-!
-!        C
-!        C     Begin a backward search.  Let DLADSC contain
-!        C     the descriptor of the last segment.
-!        C
-!              SEGNO = NSEGS + 1
-!
-!              CALL DLABBS ( HANDLE, DLADSC, FOUND )
-!
-!              DO WHILE ( FOUND )
-!        C
-!        C        Display the contents of the current segment
-!        C        descriptor.
-!        C
-!                 SEGNO = SEGNO - 1
-!
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) 'Segment number = ', SEGNO
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) 'Backward segment pointer         = ',
-!             .               DLADSC(BWDIDX)
-!                 WRITE (*,*) 'Forward segment pointer          = ',
-!             .               DLADSC(FWDIDX)
-!                 WRITE (*,*) 'Character component base address = ',
-!             .               DLADSC(CBSIDX)
-!                 WRITE (*,*) 'Character component size         = ',
-!             .               DLADSC(CSZIDX)
-!                 WRITE (*,*) 'D.p. base address                = ',
-!             .               DLADSC(DBSIDX)
-!                 WRITE (*,*) 'D.p. component size              = ',
-!             .               DLADSC(DSZIDX)
-!                 WRITE (*,*) 'Integer base address             = ',
-!             .               DLADSC(IBSIDX)
-!                 WRITE (*,*) 'Integer component size           = ',
-!             .               DLADSC(ISZIDX)
-!                 WRITE (*,*) ' '
-!
-!        C
-!        C        Find the previous segment.
-!        C
-!        C        To avoid using DLADSC as both input and output
-!        C        in the following call (this use is not allowed
-!        C        by the ANSI Fortran 77 standard), we copy DLADSC
-!        C        into the variable CURRNT.  We then find the
-!        C        segment preceding CURRNT.
-!        C
-!                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
-!                 CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
-!
-!              END DO
-!
-!        C
-!        C     Close the file using the DAS close routine.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds, the output
-!        was:
-!
-!        Name of DLA file > phobos512.bds
-!
-!         Segment number =            1
-!
-!         Backward segment pointer         =           -1
-!         Forward segment pointer          =           -1
-!         Character component base address =            0
-!         Character component size         =            0
-!         D.p. base address                =            0
-!         D.p. component size              =      4737076
-!         Integer base address             =           11
-!         Integer component size           =     29692614
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
-!
-!        Changed input argument name DESCR to DLADSC for consistency
-!        with other routines.
-!
-!        Edited the header to comply with NAIF standard.
-!        Added solution for code example.
-!
-!-    SPICELIB Version 1.0.0, 06-JAN-2017 (NJB)
-!
-!     Original version 21-APR-2010 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     find previous segment in DLA file
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           bwd
 
 !
@@ -9520,173 +8850,139 @@ contains
       return
       end procedure dlafps
 
-!$Procedure DLASSG ( DLA, same segment? )
-
+      !> ## Detailed Input
+      !>
+      !>     HAN1     is the integer handle associated with a DLA file.
+      !>              The file is open for read access.
+      !>
+      !>     HAN2     is the integer handle associated with a second DLA
+      !>              file. The file is open for read access.
+      !>
+      !>     DSC1     is the DLA descriptor of a segment in the file
+      !>              associated with HAN1.
+      !>
+      !>     DSC2     is the DLA descriptor of a segment in the file
+      !>              associated with HAN2.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     The function returns .TRUE. if and only if the DLA segments
+      !>     match. The segments are considered to match if and only if the
+      !>     input handles match and all elements of the DLA descriptors
+      !>     match.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If any of the inputs are invalid, this routine will
+      !>         fail in an unspecified manner.
+      !>
+      !> ## Files
+      !>
+      !>     See description of input arguments HAN1 and HAN2.
+      !>
+      !> ## Particulars
+      !>
+      !>     DLA files are built using the DAS low-level format; DLA files are
+      !>     a specialized type of DAS file in which data are organized as a
+      !>     doubly linked list of segments. Each segment's data belong to
+      !>     contiguous components of character, double precision, and integer
+      !>     type.
+      !>
+      !>     This routine supports DLA and DSK routines by enabling
+      !>     them to determine whether a given DLA segment matches one
+      !>     they've previously examined. This may allow such routines
+      !>     to avoid buffering information redundantly.
+      !>
+      !> ## Examples
+      !>
+      !>     1)  A typical use of this routine is to enable a subroutine
+      !>         to determine whether a DLA segment identified by a
+      !>         handle and DLA descriptor matches one seen previously.
+      !>         The logic of such a test can be implemented as follows:
+      !>
+      !>                   SUBROUTINE SUBA ( HANDLE, DLADSC )
+      !>                   IMPLICIT NONE
+      !>
+      !>                   INCLUDE 'dla.inc'
+      !>
+      !>                   INTEGER               HANDLE
+      !>                   INTEGER               DLADSC ( * )
+      !>
+      !>             C
+      !>             C     SPICELIB functions
+      !>             C
+      !>                   LOGICAL               DLASSG
+      !>                   LOGICAL               FAILED
+      !>             C
+      !>             C     Local variables
+      !>             C
+      !>                   INTEGER               PRVDSC ( DLADSZ )
+      !>                   INTEGER               PRVHAN
+      !>
+      !>             C
+      !>             C     Saved variables
+      !>             C
+      !>                   SAVE                  PRVDSC
+      !>                   SAVE                  PRVHAN
+      !>
+      !>             C
+      !>             C     Initial values
+      !>             C
+      !>                   DATA                  PRVHAN / 0 /
+      !>
+      !>                   ...
+      !>
+      !>                   IF ( .NOT. DLASSG( HANDLE, PRVHAN,
+      !>                  .                   DLADSC, PRVDSC ) ) THEN
+      !>
+      !>                      [Examine segment]
+      !>
+      !>                      IF ( .NOT. FAILED() ) THEN
+      !>             C
+      !>             C           Save values only if no error occurred.
+      !>             C
+      !>                         CALL MOVEI ( DLADSC, DLADSZ, PRVDSC )
+      !>                         PRVHAN = HANDLE
+      !>
+      !>                      END IF
+      !>
+      !>                   END IF
+      !>
+      !>                   [Normal case]
+      !>
+      !>                   ...
+      !>
+      !>                   END
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine relies on uniqueness of DAS file handles.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-JUL-2020 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.0, 19-MAY-2016 (NJB)
       module procedure dlassg
-!! ## Abstract
-!!
-!!     Return a logical value indicating whether a two DLA
-!!     segments, each identified by DAS handle and DLA descriptor,
-!!     are in fact the same segment.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DLA
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DLA
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
 
-
-! $ Detailed_Input
-!
-!     HAN1     is the integer handle associated with a DLA file.
-!              The file is open for read access.
-!
-!     HAN2     is the integer handle associated with a second DLA
-!              file. The file is open for read access.
-!
-!     DSC1     is the DLA descriptor of a segment in the file
-!              associated with HAN1.
-!
-!     DSC2     is the DLA descriptor of a segment in the file
-!              associated with HAN2.
-!
-! $ Detailed_Output
-!
-!     The function returns .TRUE. if and only if the DLA segments
-!     match. The segments are considered to match if and only if the
-!     input handles match and all elements of the DLA descriptors
-!     match.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If any of the inputs are invalid, this routine will
-!         fail in an unspecified manner.
-!
-! $ Files
-!
-!     See description of input arguments HAN1 and HAN2.
-!
-! $ Particulars
-!
-!     DLA files are built using the DAS low-level format; DLA files are
-!     a specialized type of DAS file in which data are organized as a
-!     doubly linked list of segments. Each segment's data belong to
-!     contiguous components of character, double precision, and integer
-!     type.
-!
-!     This routine supports DLA and DSK routines by enabling
-!     them to determine whether a given DLA segment matches one
-!     they've previously examined. This may allow such routines
-!     to avoid buffering information redundantly.
-!
-! $ Examples
-!
-!     1)  A typical use of this routine is to enable a subroutine
-!         to determine whether a DLA segment identified by a
-!         handle and DLA descriptor matches one seen previously.
-!         The logic of such a test can be implemented as follows:
-!
-!                   SUBROUTINE SUBA ( HANDLE, DLADSC )
-!                   IMPLICIT NONE
-!
-!                   INCLUDE 'dla.inc'
-!
-!                   INTEGER               HANDLE
-!                   INTEGER               DLADSC ( * )
-!
-!             C
-!             C     SPICELIB functions
-!             C
-!                   LOGICAL               DLASSG
-!                   LOGICAL               FAILED
-!             C
-!             C     Local variables
-!             C
-!                   INTEGER               PRVDSC ( DLADSZ )
-!                   INTEGER               PRVHAN
-!
-!             C
-!             C     Saved variables
-!             C
-!                   SAVE                  PRVDSC
-!                   SAVE                  PRVHAN
-!
-!             C
-!             C     Initial values
-!             C
-!                   DATA                  PRVHAN / 0 /
-!
-!                   ...
-!
-!                   IF ( .NOT. DLASSG( HANDLE, PRVHAN,
-!                  .                   DLADSC, PRVDSC ) ) THEN
-!
-!                      [Examine segment]
-!
-!                      IF ( .NOT. FAILED() ) THEN
-!             C
-!             C           Save values only if no error occurred.
-!             C
-!                         CALL MOVEI ( DLADSC, DLADSZ, PRVDSC )
-!                         PRVHAN = HANDLE
-!
-!                      END IF
-!
-!                   END IF
-!
-!                   [Normal case]
-!
-!                   ...
-!
-!                   END
-!
-! $ Restrictions
-!
-!     1)  This routine relies on uniqueness of DAS file handles.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 22-JUL-2020 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 19-MAY-2016 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     test DLA segments for match
-!
-!-&
-
-!
-!     Local variables
-!
       integer(ip)           i
 
 !
@@ -9715,169 +9011,135 @@ contains
       return
       end procedure dlassg
 
-!$Procedure DSKOPN ( DSK, open new file )
-
+      !> ## Detailed Input
+      !>
+      !>     FNAME    is the name of a new DSK file to be created. The
+      !>              file will be left opened for write access.
+      !>
+      !>     IFNAME   is the internal file name for the new file. The name
+      !>              may contain as many as 60 characters. All characters
+      !>              of IFNAME should be printing characters (ASCII codes
+      !>              32-126 decimal). This name should uniquely identify
+      !>              the file.
+      !>
+      !>     NCOMCH   is the number of comment characters to allocate.
+      !>              Allocating comment characters at file creation time
+      !>              may reduce the likelihood of having to expand the
+      !>              comment area later.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HANDLE   is the file handle associated with the file. This
+      !>              handle is used to identify the file in subsequent
+      !>              calls to other DSK routines.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input filename is blank, an error is signaled by a
+      !>         routine in the call tree of this routine. No file will be
+      !>         created.
+      !>
+      !>     2)  If the specified file cannot be opened without exceeding the
+      !>         maximum allowed number of open DAS files, an error is signaled
+      !>         by a routine in the call tree of this routine. No file will be
+      !>         created.
+      !>
+      !>     3)  If the file cannot be opened properly, an error is signaled by
+      !>         a routine in the call tree of this routine. No file will be
+      !>         created.
+      !>
+      !>     4)  If the initial records in the file cannot be written, an error
+      !>         is signaled by a routine in the call tree of this routine. No
+      !>         file will be created.
+      !>
+      !>     5)  If no logical units are available, an error is signaled by a
+      !>         routine in the call tree of this routine. No file will be
+      !>         created.
+      !>
+      !>     6)  If the internal file name contains nonprinting characters
+      !>         (ASCII codes decimal 0-31 and 127-255), an error is signaled
+      !>         by a routine in the call tree of this routine. No file will be
+      !>         created.
+      !>
+      !>     7)  If the number of comment characters allocated NCOMCH is
+      !>         negative, an error is signaled by a routine in the call
+      !>         tree of this routine. No file will be created.
+      !>
+      !> ## Files
+      !>
+      !>     See argument FNAME.
+      !>
+      !> ## Particulars
+      !>
+      !>     DSK files are built using the DLA low-level format and
+      !>     the DAS architecture; DLA files are a specialized type of DAS
+      !>     file in which data are organized as a doubly linked list of
+      !>     segments. Each segment's data belong to contiguous components of
+      !>     character, double precision, and integer type.
+      !>
+      !>     This routine creates a new DSK file and sets the type of the
+      !>     file to the mnemonic code passed to it.
+      !>
+      !>     DSK files created by this routine have initialized file records.
+      !>     The ID word in a DSK file record has the form
+      !>
+      !>        DAS/DSK
+      !>
+      !>     where the characters following the slash are supplied by the
+      !>     caller of this routine.
+      !>
+      !> ## Examples
+      !>
+      !>     1)  Create a new DSK file, using an internal file name that
+      !>         attempts to serve as an unique identifier. No room for
+      !>         comments will be reserved.
+      !>
+      !>            FNAME  =  'TEST.DSK'
+      !>            IFNAME =  'TEST.DSK/NAIF/NJB/20-OCT-2006/14:37:00'
+      !>            NCOMCH =   0
+      !>
+      !>            CALL DSKOPN ( FNAME, IFNAME, NCOMCH, HANDLE )
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 02-JUL-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
+      !>
+      !>        Corrected a few header typos.
+      !>
+      !>        29-APR-2010 (NJB)
+      !>
+      !>           Now passes NCOMCH to DLAOPN.
+      !>
+      !>        08-OCT-2009 (NJB)
+      !>
+      !>           Updated header.
+      !>
+      !>        20-OCT-2006 (NJB)
       module procedure dskopn
-!! ## Abstract
-!!
-!!     Open a new DSK file for subsequent write operations.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DSK
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
-
-
-! $ Detailed_Input
-!
-!     FNAME    is the name of a new DSK file to be created. The
-!              file will be left opened for write access.
-!
-!     IFNAME   is the internal file name for the new file. The name
-!              may contain as many as 60 characters. All characters
-!              of IFNAME should be printing characters (ASCII codes
-!              32-126 decimal). This name should uniquely identify
-!              the file.
-!
-!     NCOMCH   is the number of comment characters to allocate.
-!              Allocating comment characters at file creation time
-!              may reduce the likelihood of having to expand the
-!              comment area later.
-!
-! $ Detailed_Output
-!
-!     HANDLE   is the file handle associated with the file. This
-!              handle is used to identify the file in subsequent
-!              calls to other DSK routines.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input filename is blank, an error is signaled by a
-!         routine in the call tree of this routine. No file will be
-!         created.
-!
-!     2)  If the specified file cannot be opened without exceeding the
-!         maximum allowed number of open DAS files, an error is signaled
-!         by a routine in the call tree of this routine. No file will be
-!         created.
-!
-!     3)  If the file cannot be opened properly, an error is signaled by
-!         a routine in the call tree of this routine. No file will be
-!         created.
-!
-!     4)  If the initial records in the file cannot be written, an error
-!         is signaled by a routine in the call tree of this routine. No
-!         file will be created.
-!
-!     5)  If no logical units are available, an error is signaled by a
-!         routine in the call tree of this routine. No file will be
-!         created.
-!
-!     6)  If the internal file name contains nonprinting characters
-!         (ASCII codes decimal 0-31 and 127-255), an error is signaled
-!         by a routine in the call tree of this routine. No file will be
-!         created.
-!
-!     7)  If the number of comment characters allocated NCOMCH is
-!         negative, an error is signaled by a routine in the call
-!         tree of this routine. No file will be created.
-!
-! $ Files
-!
-!     See argument FNAME.
-!
-! $ Particulars
-!
-!     DSK files are built using the DLA low-level format and
-!     the DAS architecture; DLA files are a specialized type of DAS
-!     file in which data are organized as a doubly linked list of
-!     segments. Each segment's data belong to contiguous components of
-!     character, double precision, and integer type.
-!
-!     This routine creates a new DSK file and sets the type of the
-!     file to the mnemonic code passed to it.
-!
-!     DSK files created by this routine have initialized file records.
-!     The ID word in a DSK file record has the form
-!
-!        DAS/DSK
-!
-!     where the characters following the slash are supplied by the
-!     caller of this routine.
-!
-! $ Examples
-!
-!     1)  Create a new DSK file, using an internal file name that
-!         attempts to serve as an unique identifier. No room for
-!         comments will be reserved.
-!
-!            FNAME  =  'TEST.DSK'
-!            IFNAME =  'TEST.DSK/NAIF/NJB/20-OCT-2006/14:37:00'
-!            NCOMCH =   0
-!
-!            CALL DSKOPN ( FNAME, IFNAME, NCOMCH, HANDLE )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 02-JUL-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
-!
-!        Corrected a few header typos.
-!
-!        29-APR-2010 (NJB)
-!
-!           Now passes NCOMCH to DLAOPN.
-!
-!        08-OCT-2009 (NJB)
-!
-!           Updated header.
-!
-!        20-OCT-2006 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     open a new DSK file
-!     open a new DSK file with write access
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 
       if ( ctx%failed() ) return
 
@@ -9886,147 +9148,108 @@ contains
       return
       end procedure dskopn
 
-!$Procedure DSKCLS ( DSK, close file )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the DAS file handle associated with the file.
+      !>              The file may be open for read or write access.
+      !>
+      !>     OPTMIZ   is a logical flag indicating whether the DSK
+      !>              should be segregated before it is closed. This
+      !>              option applies only to files open for write
+      !>              access. The value of OPTMIZ has no effect for
+      !>              files opened for read access.
+      !>
+      !>              See the DAS Required Reading das.req for a
+      !>              discussion of segregation of DAS files.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None. This routine operates by side effects.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If an error occurs when the file is closed, the error is
+      !>         signaled by a routine in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     See argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine provides a DSK-level interface for closing DSK files.
+      !>
+      !>     In cases where DSKs opened for write access are to be closed
+      !>     without segregation, this interface is slightly simpler than that
+      !>     available at the DAS level.
+      !>
+      !> ## Examples
+      !>
+      !>     1) Close a new DSK file using DAS segregation. HANDLE
+      !>        is the DAS file handle of the DSK.
+      !>
+      !>        This is the normal choice for DSK creation.
+      !>
+      !>           CALL DSKCLS ( HANDLE, .TRUE. )
+      !>
+      !>     2) Close a new DSK file without using DAS segregation. The
+      !>        close operation will be fast, but reading the file will be
+      !>        less efficient than if the file had been segregated.
+      !>
+      !>           CALL DSKCLS ( HANDLE, .TRUE. )
+      !>
+      !>     3) Close an existing DSK file that had been opened
+      !>        for read access. In this case OPTMIZ is ignored:
+      !>
+      !>           CALL DSKCLS ( HANDLE, .FALSE. )
+      !>
+      !>        or
+      !>
+      !>           CALL DSKCLS ( HANDLE, .TRUE. )
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine should not be called by user applications
+      !>         that have loaded a DSK file via FURNSH. Such applications
+      !>         should call the KEEPER entry points UNLOAD or KCLEAR instead.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 12-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Bug fix: now calls FAILED after call to DASHAM.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
+      !>
+      !>        09-OCT-2009 (NJB)
+      !>
+      !>           Updated header.
+      !>
+      !>        20-OCT-2006 (NJB)
+      !>
+      !>           Original DSKLIB version.
       module procedure dskcls
-!! ## Abstract
-!!
-!!     Close a DSK file.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DSK
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
 
-
-! $ Detailed_Input
-!
-!     HANDLE   is the DAS file handle associated with the file.
-!              The file may be open for read or write access.
-!
-!     OPTMIZ   is a logical flag indicating whether the DSK
-!              should be segregated before it is closed. This
-!              option applies only to files open for write
-!              access. The value of OPTMIZ has no effect for
-!              files opened for read access.
-!
-!              See the DAS Required Reading das.req for a
-!              discussion of segregation of DAS files.
-!
-! $ Detailed_Output
-!
-!     None. This routine operates by side effects.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If an error occurs when the file is closed, the error is
-!         signaled by a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     See argument HANDLE.
-!
-! $ Particulars
-!
-!     This routine provides a DSK-level interface for closing DSK files.
-!
-!     In cases where DSKs opened for write access are to be closed
-!     without segregation, this interface is slightly simpler than that
-!     available at the DAS level.
-!
-! $ Examples
-!
-!     1) Close a new DSK file using DAS segregation. HANDLE
-!        is the DAS file handle of the DSK.
-!
-!        This is the normal choice for DSK creation.
-!
-!           CALL DSKCLS ( HANDLE, .TRUE. )
-!
-!     2) Close a new DSK file without using DAS segregation. The
-!        close operation will be fast, but reading the file will be
-!        less efficient than if the file had been segregated.
-!
-!           CALL DSKCLS ( HANDLE, .TRUE. )
-!
-!     3) Close an existing DSK file that had been opened
-!        for read access. In this case OPTMIZ is ignored:
-!
-!           CALL DSKCLS ( HANDLE, .FALSE. )
-!
-!        or
-!
-!           CALL DSKCLS ( HANDLE, .TRUE. )
-!
-! $ Restrictions
-!
-!     1)  This routine should not be called by user applications
-!         that have loaded a DSK file via FURNSH. Such applications
-!         should call the KEEPER entry points UNLOAD or KCLEAR instead.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 12-OCT-2021 (JDR) (NJB)
-!
-!        Bug fix: now calls FAILED after call to DASHAM.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
-!
-!        09-OCT-2009 (NJB)
-!
-!           Updated header.
-!
-!        20-OCT-2006 (NJB)
-!
-!           Original DSKLIB version.
-!
-!-&
-
-! $ Index_Entries
-!
-!     close a DSK file
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
       integer(ip), parameter :: methln = 10
 
-!
-!     Local variables
-!
       character(methln)     method
 
       if ( ctx%failed() ) return
@@ -10083,19 +9306,6 @@ contains
 !     Umbrella routine for DSK tolerance and margin parameter access
 !     routines.
 !
-! $ Required_Reading
-!
-!     DSK
-!
-! $ Keywords
-!
-!     DSK
-!     MARGIN
-!     NUMERIC
-!     TOLERANCE
-!
-! $ Declarations
-
 ! $ Detailed_Input
 !
 !     See the entry points for descriptions of their input arguments.
@@ -10182,172 +9392,122 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
 !
-!-&
-
-! $ Index_Entries
-!
-!     DSK tolerance and margin umbrella
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Local variables
-!
 
 !
 !     Saved values
 !
 
-!
-!     Initial values
-!
 !     Caution: this array must be declared in
 !     the order defined by the keywords declared
 !     in dsktol.inc.
 
+      !> ## Detailed Input
+      !>
+      !>     KEYWRD   is an integer code specifying the parameter to
+      !>              retrieve. See the include file dsktol.inc for
+      !>              a description of the possible keywords.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     DPVAL    is the value of the parameter specified by KEYWRD.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file
+      !>
+      !>        dsktol.inc
+      !>
+      !>     for descriptions and values of the tolerance or margin parameters
+      !>     accessed by this routine, and of the keyword parameters used to
+      !>     refer to them.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input keyword is not recognized, the error
+      !>         SPICE(INDEXOUTOFRANGE) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The routines in this package serve to centralize numeric
+      !>     tolerance and margin values used by the DSK subsystem.
+      !>     The subsystem retrieves values from this package to use
+      !>     at run time.
+      !>
+      !>     The entry points of this routine are
+      !>
+      !>        DSKGTL {DSK, get tolerance value}
+      !>        DSKSTL {DSK, set tolerance value}
+      !>
+      !>     To minimize run time overhead, the "keywords" used by
+      !>     these routines to identify parameters are actually
+      !>     integer codes.
+      !>
+      !>     SPICE users may override certain values maintained by
+      !>     this package; others values are fixed. It is recommended
+      !>     that any change to the tolerance values made at run
+      !>     time be performed only by expert SPICE users.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Obtain and display the DSK type 2 plate expansion fraction.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DSKGTL_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Include files
+      !>        C
+      !>              INCLUDE 'dsktol.inc'
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              DOUBLE PRECISION      DPVAL
+      !>
+      !>              CALL DSKGTL ( KEYXFR, DPVAL )
+      !>
+      !>              WRITE(*,*) 'Plate expansion fraction = ', DPVAL
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Plate expansion fraction =    1.0000000000000000E-010
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
+      !>
+      !>        Updated the header to comply with NAIF standard. Added
+      !>        complete example code.
+      !>
+      !>-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
       module procedure dskgtl
-!! ## Abstract
-!!
-!!     Retrieve the value of a specified DSK tolerance or margin
-!!     parameter.
-!!
-!! ## Required Reading
-!!
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DSK
-!!     MARGIN
-!!     NUMERIC
-!!     TOLERANCE
-!!
-!! ## Declarations
-!!
-!!     INTEGER               KEYWRD
-!!     DOUBLE PRECISION      DPVAL
-!!
-!! ## Detailed Input
-!!
-!!     KEYWRD   is an integer code specifying the parameter to
-!!              retrieve. See the include file dsktol.inc for
-!!              a description of the possible keywords.
-!!
-!! ## Detailed Output
-!!
-!!     DPVAL    is the value of the parameter specified by KEYWRD.
-!!
-!! ## Parameters
-!!
-!!     See the include file
-!!
-!!        dsktol.inc
-!!
-!!     for descriptions and values of the tolerance or margin parameters
-!!     accessed by this routine, and of the keyword parameters used to
-!!     refer to them.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the input keyword is not recognized, the error
-!!         SPICE(INDEXOUTOFRANGE) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     The routines in this package serve to centralize numeric
-!!     tolerance and margin values used by the DSK subsystem.
-!!     The subsystem retrieves values from this package to use
-!!     at run time.
-!!
-!!     The entry points of this routine are
-!!
-!!        DSKGTL {DSK, get tolerance value}
-!!        DSKSTL {DSK, set tolerance value}
-!!
-!!     To minimize run time overhead, the "keywords" used by
-!!     these routines to identify parameters are actually
-!!     integer codes.
-!!
-!!     SPICE users may override certain values maintained by
-!!     this package; others values are fixed. It is recommended
-!!     that any change to the tolerance values made at run
-!!     time be performed only by expert SPICE users.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Obtain and display the DSK type 2 plate expansion fraction.
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DSKGTL_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Include files
-!!        C
-!!              INCLUDE 'dsktol.inc'
-!!
-!!        C
-!!        C     Local variables
-!!        C
-!!              DOUBLE PRECISION      DPVAL
-!!
-!!              CALL DSKGTL ( KEYXFR, DPVAL )
-!!
-!!              WRITE(*,*) 'Plate expansion fraction = ', DPVAL
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!         Plate expansion fraction =    1.0000000000000000E-010
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
-!!
-!!        Updated the header to comply with NAIF standard. Added
-!!        complete example code.
-!!
-!!-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
-!!
-!! ## Index Entries
-!!
-!!     retrieve DSK tolerance or margin parameters
-!!
-!!     Use discovery check-in.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_dsktol
       implicit none
@@ -10376,168 +9536,143 @@ contains
       end associate
       end procedure dskgtl
 
+      !> ## Detailed Input
+      !>
+      !>     KEYWRD   is an integer code specifying the parameter to
+      !>              set. See the include file dsktol.inc for
+      !>              a description of the possible keywords.
+      !>
+      !>     DPVAL    is the new value of the parameter specified by KEYWRD.
+      !>              This value will be retrieved by future calls to
+      !>              to DSKGTL made to retrieve the specified parameter.
+      !>
+      !>              <<< Use extreme caution. This routine performs no
+      !>              checks on DPVAL. >>>
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !>     This routine operates by side effects.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file
+      !>
+      !>        dsktol.inc
+      !>
+      !>     for descriptions and values of the tolerance or margin parameters
+      !>     accessed by this routine, and of the keyword parameters used to
+      !>     refer to them.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input keyword is not recognized, the error
+      !>         SPICE(INDEXOUTOFRANGE) is signaled.
+      !>
+      !>     2)  If an attempt is made to modify a fixed parameter,
+      !>         the error SPICE(IMMUTABLEVALUE) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The routines in this package serve to centralize numeric
+      !>     tolerance and margin values used by the DSK subsystem.
+      !>     The subsystem retrieves values from this package to use
+      !>     at run time.
+      !>
+      !>     The entry points of this routine are
+      !>
+      !>        DSKGTL {DSK, get tolerance value}
+      !>        DSKSTL {DSK, set tolerance value}
+      !>
+      !>     To minimize run time overhead, the "keywords" used by
+      !>     these routines to identify parameters are actually
+      !>     integer codes.
+      !>
+      !>     SPICE users may override certain values maintained by
+      !>     this package; others values are fixed. It is recommended
+      !>     that any change to the tolerance values made at run
+      !>     time be performed only by expert SPICE users.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Obtain, display, and update the DSK type 2 plate expansion
+      !>        fraction.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DSKSTL_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Include files
+      !>        C
+      !>              INCLUDE 'dsktol.inc'
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              DOUBLE PRECISION      DPVAL
+      !>
+      !>              CALL DSKGTL ( KEYXFR, DPVAL )
+      !>
+      !>              WRITE(*,*) 'Default plate expansion fraction = ', DPVAL
+      !>
+      !>        C
+      !>        C     Update the parameter.
+      !>        C
+      !>              CALL DSKSTL ( KEYXFR, 1.D-8 )
+      !>
+      !>        C
+      !>        C     Verify the update.
+      !>        C
+      !>              CALL DSKGTL ( KEYXFR, DPVAL )
+      !>
+      !>              WRITE(*,*) 'New plate expansion fraction     = ', DPVAL
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Default plate expansion fraction =    1.0000000000000000E-010
+      !>         New plate expansion fraction     =    1.0000000000000000E-008
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  The default settings used by the DSK subsystem should
+      !>         be overridden only by expert SPICE users.
+      !>
+      !>     2)  This routine does not check the  validity of new parameter
+      !>         values supplied by the calling application.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
+      !>
+      !>        Updated the header to comply with NAIF standard. Added
+      !>        complete example code.
+      !>
+      !>-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
       module procedure dskstl
-!! ## Abstract
-!!
-!!     Set the value of a specified DSK tolerance or margin parameter.
-!!
-!! ## Required Reading
-!!
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DSK
-!!     MARGIN
-!!     NUMERIC
-!!     TOLERANCE
-!!
-!! ## Declarations
-!!
-!!     INTEGER               KEYWRD
-!!     DOUBLE PRECISION      DPVAL
-!!
-!! ## Detailed Input
-!!
-!!     KEYWRD   is an integer code specifying the parameter to
-!!              set. See the include file dsktol.inc for
-!!              a description of the possible keywords.
-!!
-!!     DPVAL    is the new value of the parameter specified by KEYWRD.
-!!              This value will be retrieved by future calls to
-!!              to DSKGTL made to retrieve the specified parameter.
-!!
-!!              <<< Use extreme caution. This routine performs no
-!!              checks on DPVAL. >>>
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!!     This routine operates by side effects.
-!!
-!! ## Parameters
-!!
-!!     See the include file
-!!
-!!        dsktol.inc
-!!
-!!     for descriptions and values of the tolerance or margin parameters
-!!     accessed by this routine, and of the keyword parameters used to
-!!     refer to them.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the input keyword is not recognized, the error
-!!         SPICE(INDEXOUTOFRANGE) is signaled.
-!!
-!!     2)  If an attempt is made to modify a fixed parameter,
-!!         the error SPICE(IMMUTABLEVALUE) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     The routines in this package serve to centralize numeric
-!!     tolerance and margin values used by the DSK subsystem.
-!!     The subsystem retrieves values from this package to use
-!!     at run time.
-!!
-!!     The entry points of this routine are
-!!
-!!        DSKGTL {DSK, get tolerance value}
-!!        DSKSTL {DSK, set tolerance value}
-!!
-!!     To minimize run time overhead, the "keywords" used by
-!!     these routines to identify parameters are actually
-!!     integer codes.
-!!
-!!     SPICE users may override certain values maintained by
-!!     this package; others values are fixed. It is recommended
-!!     that any change to the tolerance values made at run
-!!     time be performed only by expert SPICE users.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Obtain, display, and update the DSK type 2 plate expansion
-!!        fraction.
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DSKSTL_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Include files
-!!        C
-!!              INCLUDE 'dsktol.inc'
-!!
-!!        C
-!!        C     Local variables
-!!        C
-!!              DOUBLE PRECISION      DPVAL
-!!
-!!              CALL DSKGTL ( KEYXFR, DPVAL )
-!!
-!!              WRITE(*,*) 'Default plate expansion fraction = ', DPVAL
-!!
-!!        C
-!!        C     Update the parameter.
-!!        C
-!!              CALL DSKSTL ( KEYXFR, 1.D-8 )
-!!
-!!        C
-!!        C     Verify the update.
-!!        C
-!!              CALL DSKGTL ( KEYXFR, DPVAL )
-!!
-!!              WRITE(*,*) 'New plate expansion fraction     = ', DPVAL
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!         Default plate expansion fraction =    1.0000000000000000E-010
-!!         New plate expansion fraction     =    1.0000000000000000E-008
-!!
-!! ## Restrictions
-!!
-!!     1)  The default settings used by the DSK subsystem should
-!!         be overridden only by expert SPICE users.
-!!
-!!     2)  This routine does not check the  validity of new parameter
-!!         values supplied by the calling application.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
-!!
-!!        Updated the header to comply with NAIF standard. Added
-!!        complete example code.
-!!
-!!-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
-!!
-!! ## Index Entries
-!!
-!!     set DSK tolerance or margin parameters
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_dsktol
       implicit none
@@ -10581,565 +9716,526 @@ contains
       end associate
       end procedure dskstl
 
-!$Procedure DSKGD ( DSK, return DSK segment descriptor  )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DSK file that is open for
+      !>              read access.
+      !>
+      !>     DLADSC   is the DLA segment descriptor corresponding to
+      !>              a DSK segment.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     DSKDSC   is the DSK segment descriptor of the segment
+      !>              designated by the input handle and DLA descriptor.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file
+      !>
+      !>        dla.inc
+      !>
+      !>     for declarations of DLA descriptor sizes and documentation of the
+      !>     contents of DLA descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dskdsc.inc
+      !>
+      !>     for declarations of DSK descriptor sizes and documentation of the
+      !>     contents of DSK descriptors.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the size of the double precision component of the
+      !>         segment is smaller than that of a DSK descriptor, the
+      !>         error SPICE(INVALIDFORMAT) is signaled.
+      !>
+      !>     2)  If the input handle is invalid, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     3)  If the input DLA descriptor is invalid, the effect of this
+      !>         routine is undefined. The error *may* be diagnosed by
+      !>         routines in the call tree of this routine, but there are no
+      !>         guarantees.
+      !>
+      !>     4)  If any DAS read error is detected, the error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     See input argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     This is a convenience routine intended for use by low-level
+      !>     routines that read DSK segments. This routine may also be called
+      !>     by user applications that must access DSK files at the segment
+      !>     level.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for these examples may differ across
+      !>     platforms. The results depend on the SPICE kernels used as input,
+      !>     the compiler and supporting libraries, and the machine specific
+      !>     arithmetic implementation.
+      !>
+      !>     1) Dump the DSK descriptors of a DSK file.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DSKGD_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>              INCLUDE 'dskdsc.inc'
+      !>              INCLUDE 'dsk02.inc'
+      !>
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>              CHARACTER*(FILSIZ)    DSK
+      !>
+      !>              DOUBLE PRECISION      DSKDSC ( DSKDSZ )
+      !>
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               NXTDSC ( DLADSZ )
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>        C
+      !>        C     Open the DSK file and begin a forward search
+      !>        C     for segments.
+      !>        C
+      !>              CALL DASOPR ( DSK, HANDLE )
+      !>
+      !>              CALL DLABFS ( HANDLE, NXTDSC, FOUND )
+      !>
+      !>              DO WHILE ( FOUND )
+      !>        C
+      !>        C        Make the DLA descriptor we just fetched
+      !>        C        the current one.
+      !>        C
+      !>                 CALL MOVEI ( NXTDSC, DLADSZ, DLADSC )
+      !>
+      !>                 CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
+      !>
+      !>                 WRITE (*,*) 'DSK descriptor contents: '
+      !>
+      !>                 DO I = 1, DSKDSZ
+      !>                    WRITE (*,*) DSKDSC(I)
+      !>                 END DO
+      !>        C
+      !>        C        Find the next segment, if it exists.
+      !>        C
+      !>                 CALL DLAFNS ( HANDLE, DLADSC, NXTDSC, FOUND )
+      !>
+      !>              END DO
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds, the output
+      !>        was:
+      !>
+      !>        Enter DSK name > phobos512.bds
+      !>         DSK descriptor contents:
+      !>           401.00000000000000
+      !>           401.00000000000000
+      !>           1.0000000000000000
+      !>           2.0000000000000000
+      !>           10021.000000000000
+      !>           1.0000000000000000
+      !>           0.0000000000000000
+      !>           0.0000000000000000
+      !>           0.0000000000000000
+      !>           0.0000000000000000
+      !>           0.0000000000000000
+      !>           0.0000000000000000
+      !>           0.0000000000000000
+      !>           0.0000000000000000
+      !>           0.0000000000000000
+      !>           0.0000000000000000
+      !>          -3.1415926535897931
+      !>           3.1415926535897931
+      !>          -1.5707963267948966
+      !>           1.5707963267948966
+      !>           8.0496322487215526
+      !>           13.940939832123945
+      !>          -1577879958.8160586
+      !>           1577880066.1839132
+      !>
+      !>     2) Again, dump the DSK descriptors of a DSK file, this time
+      !>        interpreting the descriptor information and displaying
+      !>        it in a user-friendly form. This display is a simplified
+      !>        version of that created by the utility DSKBRIEF.
+      !>
+      !>        This program requests the name of an optional meta-kernel.
+      !>        The meta-kernel can be used to define surface name-ID
+      !>        associations. If no meta-kernel is needed, the user can
+      !>        enter a carriage return at the prompt for this file.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DSKGD_EX2
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>              INCLUDE 'dskdsc.inc'
+      !>              INCLUDE 'dsk02.inc'
+      !>              INCLUDE 'srftrn.inc'
+      !>
+      !>        C
+      !>        C     SPICELIB functions
+      !>        C
+      !>              DOUBLE PRECISION      DPR
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              CHARACTER*(*)         FMT1
+      !>              PARAMETER           ( FMT1 = '(A,2(F19.12))' )
+      !>
+      !>              CHARACTER*(*)         FMT2
+      !>              PARAMETER           ( FMT2 = '(A,I3)' )
+      !>
+      !>              INTEGER               BDNMLN
+      !>              PARAMETER           ( BDNMLN = 36 )
+      !>
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>              INTEGER               FRNMLN
+      !>              PARAMETER           ( FRNMLN = 32 )
+      !>
+      !>              INTEGER               NAMLEN
+      !>              PARAMETER           ( NAMLEN = 30 )
+      !>
+      !>              INTEGER               TIMLEN
+      !>              PARAMETER           ( TIMLEN = 40 )
+      !>
+      !>              INTEGER               NSYS
+      !>              PARAMETER           ( NSYS   = 4 )
+      !>
+      !>              INTEGER               NCLASS
+      !>              PARAMETER           ( NCLASS = 2 )
+      !>
+      !>              INTEGER               CLNMLN
+      !>              PARAMETER           ( CLNMLN = 25 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(BDNMLN)    BODNAM
+      !>              CHARACTER*(TIMLEN)    BTIME
+      !>              CHARACTER*(CLNMLN)    CLSNMS ( NCLASS )
+      !>              CHARACTER*(FILSIZ)    DSK
+      !>              CHARACTER*(TIMLEN)    ETIME
+      !>              CHARACTER*(FRNMLN)    FRAME
+      !>              CHARACTER*(FILSIZ)    META
+      !>              CHARACTER*(SFNMLN)    SRFNAM
+      !>              CHARACTER*(NAMLEN)    SYSNAM
+      !>              CHARACTER*(NAMLEN)    SYSNMS ( NSYS )
+      !>
+      !>              DOUBLE PRECISION      DSKDSC ( DSKDSZ )
+      !>              DOUBLE PRECISION      F
+      !>              DOUBLE PRECISION      RE
+      !>              DOUBLE PRECISION      RP
+      !>
+      !>              INTEGER               BODYID
+      !>              INTEGER               CORSYS
+      !>              INTEGER               DCLASS
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               DTYPE
+      !>              INTEGER               FRAMID
+      !>              INTEGER               HANDLE
+      !>              INTEGER               NXTDSC ( DLADSZ )
+      !>              INTEGER               SEGNO
+      !>              INTEGER               SURFID
+      !>
+      !>              LOGICAL               FOUND
+      !>              LOGICAL               ISNAME
+      !>
+      !>        C
+      !>        C     Initial values
+      !>        C
+      !>              DATA                  CLSNMS / 'Single-valued surface',
+      !>             .                               'General surface'       /
+      !>
+      !>              DATA                  SYSNMS / 'Latitudinal',
+      !>             .                               'Cylindrical',
+      !>             .                               'Rectangular',
+      !>             .                               'Planetodetic' /
+      !>
+      !>              CALL PROMPT ( 'Enter DSK name         > ', DSK  )
+      !>              CALL PROMPT ( 'Enter meta-kernel name > ', META )
+      !>
+      !>              IF ( META .NE. ' ' ) THEN
+      !>                 CALL FURNSH ( META )
+      !>              END IF
+      !>
+      !>        C
+      !>        C     Open the DLA file and begin a forward search
+      !>        C     for segments.
+      !>        C
+      !>              CALL DASOPR ( DSK, HANDLE )
+      !>
+      !>              SEGNO = 0
+      !>
+      !>              CALL DLABFS ( HANDLE, NXTDSC, FOUND )
+      !>
+      !>              DO WHILE ( FOUND )
+      !>
+      !>                 SEGNO = SEGNO + 1
+      !>        C
+      !>        C        Make the DLA descriptor we just fetched
+      !>        C        the current one.
+      !>        C
+      !>                 CALL MOVEI ( NXTDSC, DLADSZ, DLADSC )
+      !>
+      !>                 CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
+      !>
+      !>                 BODYID = NINT( DSKDSC(CTRIDX) )
+      !>                 SURFID = NINT( DSKDSC(SRFIDX) )
+      !>                 FRAMID = NINT( DSKDSC(FRMIDX) )
+      !>                 DTYPE  = NINT( DSKDSC(TYPIDX) )
+      !>                 DCLASS = NINT( DSKDSC(CLSIDX) )
+      !>
+      !>                 CALL BODC2S ( BODYID, BODNAM )
+      !>                 CALL SRFC2S ( SURFID, BODYID, SRFNAM, ISNAME )
+      !>                 CALL FRMNAM ( FRAMID, FRAME  )
+      !>
+      !>                 IF ( FRAME .EQ. ' ' ) THEN
+      !>                    CALL INTSTR ( FRAMID, FRAME )
+      !>                 END IF
+      !>
+      !>                 CALL ETCAL ( DSKDSC(BTMIDX), BTIME )
+      !>                 CALL ETCAL ( DSKDSC(ETMIDX), ETIME )
+      !>
+      !>                 CORSYS = NINT( DSKDSC(SYSIDX) )
+      !>
+      !>                 SYSNAM = SYSNMS( CORSYS )
+      !>
+      !>                 WRITE (*,*)    '===================================='
+      !>                 WRITE (*,FMT2) ' DSK descriptor for segment ',
+      !>             .                  SEGNO
+      !>                 WRITE (*,*)    '  Body:              ', BODNAM
+      !>                 WRITE (*,*)    '  Surface:           ', SRFNAM
+      !>                 WRITE (*,*)    '  Frame:             ', FRAME
+      !>                 WRITE (*,*)    '  Start time (TDB):  ', BTIME
+      !>                 WRITE (*,*)    '  Stop time  (TDB):  ', ETIME
+      !>                 WRITE (*,*)    '  Data type:         ', DTYPE
+      !>                 WRITE (*,*)    '  Data class:        ', DCLASS, ' ',
+      !>             .                                        CLSNMS(DCLASS)
+      !>                 WRITE (*,*)    '  Coordinate system: ', SYSNAM
+      !>
+      !>                 IF ( CORSYS .EQ. PDTSYS ) THEN
+      !>
+      !>                    RE = DSKDSC(PARIDX  )
+      !>                    F  = DSKDSC(PARIDX+1)
+      !>                    RP = RE * ( 1.D0 - F )
+      !>
+      !>                    WRITE (*,*) '     Equatorial radius (km): ', RE
+      !>                    WRITE (*,*) '     Polar radius      (km): ', RP
+      !>
+      !>                 END IF
+      !>
+      !>                 WRITE (*,*) '  Segment boundaries:'
+      !>
+      !>                 IF ( CORSYS .EQ. LATSYS ) THEN
+      !>
+      !>                    WRITE (*,FMT1) '    Longitude (deg):   ',
+      !>             .                  DPR() * DSKDSC(MN1IDX),
+      !>             .                  DPR() * DSKDSC(MX1IDX)
+      !>                    WRITE (*,FMT1) '    Latitude  (deg):   ',
+      !>             .                  DPR() * DSKDSC(MN2IDX),
+      !>             .                  DPR() * DSKDSC(MX2IDX)
+      !>                    WRITE (*,FMT1) '    Radius     (km):   ',
+      !>             .                          DSKDSC(MN3IDX),
+      !>             .                          DSKDSC(MX3IDX)
+      !>
+      !>                 ELSE IF ( CORSYS .EQ. CYLSYS ) THEN
+      !>
+      !>                    CALL SETMSG ( 'Coordinate system was '
+      !>             .      //            'Cylindrical'           )
+      !>                    CALL SIGERR ( 'SPICE(NOTSUPPORTED)'   )
+      !>
+      !>                 ELSE IF ( CORSYS .EQ. RECSYS ) THEN
+      !>
+      !>                    WRITE (*,FMT1) '    X-coordinate (km): ',
+      !>             .                          DSKDSC(MN1IDX),
+      !>             .                          DSKDSC(MX1IDX)
+      !>                    WRITE (*,FMT1) '    Y-coordinate (km): ',
+      !>             .                          DSKDSC(MN2IDX),
+      !>             .                          DSKDSC(MX2IDX)
+      !>                    WRITE (*,FMT1) '    Z-coordinate (km): ',
+      !>             .                          DSKDSC(MN3IDX),
+      !>             .                          DSKDSC(MX3IDX)
+      !>
+      !>                 ELSE IF ( CORSYS .EQ. PDTSYS ) THEN
+      !>
+      !>                    WRITE (*,FMT1) '    Longitude (deg):   ',
+      !>             .                  DPR() * DSKDSC(MN1IDX),
+      !>             .                  DPR() * DSKDSC(MX1IDX)
+      !>                    WRITE (*,FMT1) '    Latitude  (deg):   ',
+      !>             .                  DPR() * DSKDSC(MN2IDX),
+      !>             .                  DPR() * DSKDSC(MX2IDX)
+      !>                    WRITE (*,FMT1) '    Altitude   (km):   ',
+      !>             .                          DSKDSC(MN3IDX),
+      !>             .                          DSKDSC(MX3IDX)
+      !>                 END IF
+      !>        C
+      !>        C        Find the next segment, if it exists.
+      !>        C
+      !>                 CALL DLAFNS ( HANDLE, DLADSC, NXTDSC, FOUND )
+      !>
+      !>              END DO
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds and an empty
+      !>        string instead of the meta-kernel name, the output was:
+      !>
+      !>        Enter DSK name         > phobos512.bds
+      !>        Enter meta-kernel name >
+      !>         ====================================
+      !>         DSK descriptor for segment   1
+      !>           Body:              PHOBOS
+      !>           Surface:           401
+      !>           Frame:             IAU_PHOBOS
+      !>           Start time (TDB):  1950 JAN 01 00:00:41.183
+      !>           Stop time  (TDB):  2050 JAN 01 00:01:06.183
+      !>           Data type:                    2
+      !>           Data class:                   1  Single-valued surface
+      !>           Coordinate system: Latitudinal
+      !>           Segment boundaries:
+      !>            Longitude (deg):     -180.000000000000   180.000000000000
+      !>            Latitude  (deg):      -90.000000000000    90.000000000000
+      !>            Radius     (km):        8.049632248722    13.940939832124
+      !>
+      !>     3) Again, dump the DSK descriptors of a DSK file, using the
+      !>        program from example 2, but this time reading the DSK file
+      !>
+      !>           phobos_3_3_3seg.bds
+      !>
+      !>        which can be created by running an example program from
+      !>        DSKW02. Use the meta-kernel shown below to demonstrate surface
+      !>        name-ID mapping.
+      !>
+      !>           KPL/MK
+      !>
+      !>           File: dskgd_ex3.tm
+      !>
+      !>           This meta-kernel is intended to support operation of SPICE
+      !>           example programs. The file contents shown here should not be
+      !>           assumed to contain adequate or correct versions of data
+      !>           required by SPICE-based user applications.
+      !>
+      !>           \begindata
+      !>
+      !>           NAIF_SURFACE_NAME += ( 'Phobos example surface 1',
+      !>                                  'Phobos example surface 2',
+      !>                                  'Phobos example surface 3' )
+      !>           NAIF_SURFACE_CODE += (   1,   2,   3 )
+      !>           NAIF_SURFACE_BODY += ( 401, 401, 401 )
+      !>
+      !>           \begintext
+      !>
+      !>           End of meta-kernel
+      !>
+      !>        When Example #2 was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos_3_3_3seg.bds and the
+      !>        meta-kernel dskgd_ex3.tm, the output was:
+      !>
+      !>        Enter DSK name         > phobos_3_3_3seg.bds
+      !>        Enter meta-kernel name > dskgd_ex3.tm
+      !>         ====================================
+      !>         DSK descriptor for segment   1
+      !>           Body:              PHOBOS
+      !>           Surface:           Phobos example surface 1
+      !>           Frame:             IAU_PHOBOS
+      !>           Start time (TDB):  1950 JAN 01 00:00:00.000
+      !>           Stop time  (TDB):  2050 JAN 01 00:00:00.000
+      !>           Data type:                    2
+      !>           Data class:                   2  General surface
+      !>           Coordinate system: Latitudinal
+      !>           Segment boundaries:
+      !>            Longitude (deg):     -180.000000000000   180.000000000000
+      !>            Latitude  (deg):      -90.000000000000    90.000000000000
+      !>            Radius     (km):        8.225298075974    14.011768145626
+      !>         ====================================
+      !>         DSK descriptor for segment   2
+      !>           Body:              PHOBOS
+      !>           Surface:           Phobos example surface 2
+      !>           Frame:             IAU_PHOBOS
+      !>           Start time (TDB):  1950 JAN 01 00:00:00.000
+      !>           Stop time  (TDB):  2050 JAN 01 00:00:00.000
+      !>           Data type:                    2
+      !>           Data class:                   2  General surface
+      !>           Coordinate system: Rectangular
+      !>           Segment boundaries:
+      !>            X-coordinate (km):     -1.300000000000     1.310000000000
+      !>            Y-coordinate (km):     -1.210000000000     1.200000000000
+      !>            Z-coordinate (km):     -9.452932357788     9.638179779053
+      !>         ====================================
+      !>         DSK descriptor for segment   3
+      !>           Body:              PHOBOS
+      !>           Surface:           Phobos example surface 3
+      !>           Frame:             IAU_PHOBOS
+      !>           Start time (TDB):  1950 JAN 01 00:00:00.000
+      !>           Stop time  (TDB):  2050 JAN 01 00:00:00.000
+      !>           Data type:                    2
+      !>           Data class:                   2  General surface
+      !>           Coordinate system: Planetodetic
+      !>              Equatorial radius (km):    13.000000000000000
+      !>              Polar radius      (km):    9.0999999999999996
+      !>           Segment boundaries:
+      !>            Longitude (deg):     -180.000000000000   180.000000000000
+      !>            Latitude  (deg):      -90.000000000000    90.000000000000
+      !>            Altitude   (km):       -3.728668683604     1.372015791081
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  See Exception #3.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR) (BVS)
+      !>
+      !>        Edited the header to comply with NAIF standard. Extended the
+      !>        $Exceptions section and updated the $Restrictions.
+      !>
+      !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
+      !>
+      !>        Updated version info.
+      !>
+      !>        22-JAN-2016 (NJB)
+      !>
+      !>           Added new header example programs and updated existing
+      !>           example program. Made minor changes to code to enhance
+      !>           readability. Corrected header typo.
+      !>
+      !>        09-OCT-2009 (NJB)
       module procedure dskgd
-!! ## Abstract
-!!
-!!     Return the DSK descriptor from a DSK segment identified
-!!     by a DAS handle and DLA descriptor.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DSK
-!!     NAIF_IDS
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DSK
-!!     FILES
-!!     TOPOGRAPHY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
 
-
-! $ Detailed_Input
-!
-!     HANDLE   is the handle of a DSK file that is open for
-!              read access.
-!
-!     DLADSC   is the DLA segment descriptor corresponding to
-!              a DSK segment.
-!
-! $ Detailed_Output
-!
-!     DSKDSC   is the DSK segment descriptor of the segment
-!              designated by the input handle and DLA descriptor.
-!
-! $ Parameters
-!
-!     See the include file
-!
-!        dla.inc
-!
-!     for declarations of DLA descriptor sizes and documentation of the
-!     contents of DLA descriptors.
-!
-!     See the include file
-!
-!        dskdsc.inc
-!
-!     for declarations of DSK descriptor sizes and documentation of the
-!     contents of DSK descriptors.
-!
-! $ Exceptions
-!
-!     1)  If the size of the double precision component of the
-!         segment is smaller than that of a DSK descriptor, the
-!         error SPICE(INVALIDFORMAT) is signaled.
-!
-!     2)  If the input handle is invalid, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     3)  If the input DLA descriptor is invalid, the effect of this
-!         routine is undefined. The error *may* be diagnosed by
-!         routines in the call tree of this routine, but there are no
-!         guarantees.
-!
-!     4)  If any DAS read error is detected, the error is signaled by a
-!         routine in the call tree of this routine.
-!
-! $ Files
-!
-!     See input argument HANDLE.
-!
-! $ Particulars
-!
-!     This is a convenience routine intended for use by low-level
-!     routines that read DSK segments. This routine may also be called
-!     by user applications that must access DSK files at the segment
-!     level.
-!
-! $ Examples
-!
-!     The numerical results shown for these examples may differ across
-!     platforms. The results depend on the SPICE kernels used as input,
-!     the compiler and supporting libraries, and the machine specific
-!     arithmetic implementation.
-!
-!     1) Dump the DSK descriptors of a DSK file.
-!
-!        Example code begins here.
-!
-!              PROGRAM DSKGD_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!              INCLUDE 'dskdsc.inc'
-!              INCLUDE 'dsk02.inc'
-!
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!              CHARACTER*(FILSIZ)    DSK
-!
-!              DOUBLE PRECISION      DSKDSC ( DSKDSZ )
-!
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               NXTDSC ( DLADSZ )
-!
-!              LOGICAL               FOUND
-!
-!              CALL PROMPT ( 'Enter DSK name > ', DSK )
-!        C
-!        C     Open the DSK file and begin a forward search
-!        C     for segments.
-!        C
-!              CALL DASOPR ( DSK, HANDLE )
-!
-!              CALL DLABFS ( HANDLE, NXTDSC, FOUND )
-!
-!              DO WHILE ( FOUND )
-!        C
-!        C        Make the DLA descriptor we just fetched
-!        C        the current one.
-!        C
-!                 CALL MOVEI ( NXTDSC, DLADSZ, DLADSC )
-!
-!                 CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
-!
-!                 WRITE (*,*) 'DSK descriptor contents: '
-!
-!                 DO I = 1, DSKDSZ
-!                    WRITE (*,*) DSKDSC(I)
-!                 END DO
-!        C
-!        C        Find the next segment, if it exists.
-!        C
-!                 CALL DLAFNS ( HANDLE, DLADSC, NXTDSC, FOUND )
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds, the output
-!        was:
-!
-!        Enter DSK name > phobos512.bds
-!         DSK descriptor contents:
-!           401.00000000000000
-!           401.00000000000000
-!           1.0000000000000000
-!           2.0000000000000000
-!           10021.000000000000
-!           1.0000000000000000
-!           0.0000000000000000
-!           0.0000000000000000
-!           0.0000000000000000
-!           0.0000000000000000
-!           0.0000000000000000
-!           0.0000000000000000
-!           0.0000000000000000
-!           0.0000000000000000
-!           0.0000000000000000
-!           0.0000000000000000
-!          -3.1415926535897931
-!           3.1415926535897931
-!          -1.5707963267948966
-!           1.5707963267948966
-!           8.0496322487215526
-!           13.940939832123945
-!          -1577879958.8160586
-!           1577880066.1839132
-!
-!     2) Again, dump the DSK descriptors of a DSK file, this time
-!        interpreting the descriptor information and displaying
-!        it in a user-friendly form. This display is a simplified
-!        version of that created by the utility DSKBRIEF.
-!
-!        This program requests the name of an optional meta-kernel.
-!        The meta-kernel can be used to define surface name-ID
-!        associations. If no meta-kernel is needed, the user can
-!        enter a carriage return at the prompt for this file.
-!
-!        Example code begins here.
-!
-!              PROGRAM DSKGD_EX2
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!              INCLUDE 'dskdsc.inc'
-!              INCLUDE 'dsk02.inc'
-!              INCLUDE 'srftrn.inc'
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              DOUBLE PRECISION      DPR
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         FMT1
-!              PARAMETER           ( FMT1 = '(A,2(F19.12))' )
-!
-!              CHARACTER*(*)         FMT2
-!              PARAMETER           ( FMT2 = '(A,I3)' )
-!
-!              INTEGER               BDNMLN
-!              PARAMETER           ( BDNMLN = 36 )
-!
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!              INTEGER               FRNMLN
-!              PARAMETER           ( FRNMLN = 32 )
-!
-!              INTEGER               NAMLEN
-!              PARAMETER           ( NAMLEN = 30 )
-!
-!              INTEGER               TIMLEN
-!              PARAMETER           ( TIMLEN = 40 )
-!
-!              INTEGER               NSYS
-!              PARAMETER           ( NSYS   = 4 )
-!
-!              INTEGER               NCLASS
-!              PARAMETER           ( NCLASS = 2 )
-!
-!              INTEGER               CLNMLN
-!              PARAMETER           ( CLNMLN = 25 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(BDNMLN)    BODNAM
-!              CHARACTER*(TIMLEN)    BTIME
-!              CHARACTER*(CLNMLN)    CLSNMS ( NCLASS )
-!              CHARACTER*(FILSIZ)    DSK
-!              CHARACTER*(TIMLEN)    ETIME
-!              CHARACTER*(FRNMLN)    FRAME
-!              CHARACTER*(FILSIZ)    META
-!              CHARACTER*(SFNMLN)    SRFNAM
-!              CHARACTER*(NAMLEN)    SYSNAM
-!              CHARACTER*(NAMLEN)    SYSNMS ( NSYS )
-!
-!              DOUBLE PRECISION      DSKDSC ( DSKDSZ )
-!              DOUBLE PRECISION      F
-!              DOUBLE PRECISION      RE
-!              DOUBLE PRECISION      RP
-!
-!              INTEGER               BODYID
-!              INTEGER               CORSYS
-!              INTEGER               DCLASS
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               DTYPE
-!              INTEGER               FRAMID
-!              INTEGER               HANDLE
-!              INTEGER               NXTDSC ( DLADSZ )
-!              INTEGER               SEGNO
-!              INTEGER               SURFID
-!
-!              LOGICAL               FOUND
-!              LOGICAL               ISNAME
-!
-!        C
-!        C     Initial values
-!        C
-!              DATA                  CLSNMS / 'Single-valued surface',
-!             .                               'General surface'       /
-!
-!              DATA                  SYSNMS / 'Latitudinal',
-!             .                               'Cylindrical',
-!             .                               'Rectangular',
-!             .                               'Planetodetic' /
-!
-!              CALL PROMPT ( 'Enter DSK name         > ', DSK  )
-!              CALL PROMPT ( 'Enter meta-kernel name > ', META )
-!
-!              IF ( META .NE. ' ' ) THEN
-!                 CALL FURNSH ( META )
-!              END IF
-!
-!        C
-!        C     Open the DLA file and begin a forward search
-!        C     for segments.
-!        C
-!              CALL DASOPR ( DSK, HANDLE )
-!
-!              SEGNO = 0
-!
-!              CALL DLABFS ( HANDLE, NXTDSC, FOUND )
-!
-!              DO WHILE ( FOUND )
-!
-!                 SEGNO = SEGNO + 1
-!        C
-!        C        Make the DLA descriptor we just fetched
-!        C        the current one.
-!        C
-!                 CALL MOVEI ( NXTDSC, DLADSZ, DLADSC )
-!
-!                 CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
-!
-!                 BODYID = NINT( DSKDSC(CTRIDX) )
-!                 SURFID = NINT( DSKDSC(SRFIDX) )
-!                 FRAMID = NINT( DSKDSC(FRMIDX) )
-!                 DTYPE  = NINT( DSKDSC(TYPIDX) )
-!                 DCLASS = NINT( DSKDSC(CLSIDX) )
-!
-!                 CALL BODC2S ( BODYID, BODNAM )
-!                 CALL SRFC2S ( SURFID, BODYID, SRFNAM, ISNAME )
-!                 CALL FRMNAM ( FRAMID, FRAME  )
-!
-!                 IF ( FRAME .EQ. ' ' ) THEN
-!                    CALL INTSTR ( FRAMID, FRAME )
-!                 END IF
-!
-!                 CALL ETCAL ( DSKDSC(BTMIDX), BTIME )
-!                 CALL ETCAL ( DSKDSC(ETMIDX), ETIME )
-!
-!                 CORSYS = NINT( DSKDSC(SYSIDX) )
-!
-!                 SYSNAM = SYSNMS( CORSYS )
-!
-!                 WRITE (*,*)    '===================================='
-!                 WRITE (*,FMT2) ' DSK descriptor for segment ',
-!             .                  SEGNO
-!                 WRITE (*,*)    '  Body:              ', BODNAM
-!                 WRITE (*,*)    '  Surface:           ', SRFNAM
-!                 WRITE (*,*)    '  Frame:             ', FRAME
-!                 WRITE (*,*)    '  Start time (TDB):  ', BTIME
-!                 WRITE (*,*)    '  Stop time  (TDB):  ', ETIME
-!                 WRITE (*,*)    '  Data type:         ', DTYPE
-!                 WRITE (*,*)    '  Data class:        ', DCLASS, ' ',
-!             .                                        CLSNMS(DCLASS)
-!                 WRITE (*,*)    '  Coordinate system: ', SYSNAM
-!
-!                 IF ( CORSYS .EQ. PDTSYS ) THEN
-!
-!                    RE = DSKDSC(PARIDX  )
-!                    F  = DSKDSC(PARIDX+1)
-!                    RP = RE * ( 1.D0 - F )
-!
-!                    WRITE (*,*) '     Equatorial radius (km): ', RE
-!                    WRITE (*,*) '     Polar radius      (km): ', RP
-!
-!                 END IF
-!
-!                 WRITE (*,*) '  Segment boundaries:'
-!
-!                 IF ( CORSYS .EQ. LATSYS ) THEN
-!
-!                    WRITE (*,FMT1) '    Longitude (deg):   ',
-!             .                  DPR() * DSKDSC(MN1IDX),
-!             .                  DPR() * DSKDSC(MX1IDX)
-!                    WRITE (*,FMT1) '    Latitude  (deg):   ',
-!             .                  DPR() * DSKDSC(MN2IDX),
-!             .                  DPR() * DSKDSC(MX2IDX)
-!                    WRITE (*,FMT1) '    Radius     (km):   ',
-!             .                          DSKDSC(MN3IDX),
-!             .                          DSKDSC(MX3IDX)
-!
-!                 ELSE IF ( CORSYS .EQ. CYLSYS ) THEN
-!
-!                    CALL SETMSG ( 'Coordinate system was '
-!             .      //            'Cylindrical'           )
-!                    CALL SIGERR ( 'SPICE(NOTSUPPORTED)'   )
-!
-!                 ELSE IF ( CORSYS .EQ. RECSYS ) THEN
-!
-!                    WRITE (*,FMT1) '    X-coordinate (km): ',
-!             .                          DSKDSC(MN1IDX),
-!             .                          DSKDSC(MX1IDX)
-!                    WRITE (*,FMT1) '    Y-coordinate (km): ',
-!             .                          DSKDSC(MN2IDX),
-!             .                          DSKDSC(MX2IDX)
-!                    WRITE (*,FMT1) '    Z-coordinate (km): ',
-!             .                          DSKDSC(MN3IDX),
-!             .                          DSKDSC(MX3IDX)
-!
-!                 ELSE IF ( CORSYS .EQ. PDTSYS ) THEN
-!
-!                    WRITE (*,FMT1) '    Longitude (deg):   ',
-!             .                  DPR() * DSKDSC(MN1IDX),
-!             .                  DPR() * DSKDSC(MX1IDX)
-!                    WRITE (*,FMT1) '    Latitude  (deg):   ',
-!             .                  DPR() * DSKDSC(MN2IDX),
-!             .                  DPR() * DSKDSC(MX2IDX)
-!                    WRITE (*,FMT1) '    Altitude   (km):   ',
-!             .                          DSKDSC(MN3IDX),
-!             .                          DSKDSC(MX3IDX)
-!                 END IF
-!        C
-!        C        Find the next segment, if it exists.
-!        C
-!                 CALL DLAFNS ( HANDLE, DLADSC, NXTDSC, FOUND )
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds and an empty
-!        string instead of the meta-kernel name, the output was:
-!
-!        Enter DSK name         > phobos512.bds
-!        Enter meta-kernel name >
-!         ====================================
-!         DSK descriptor for segment   1
-!           Body:              PHOBOS
-!           Surface:           401
-!           Frame:             IAU_PHOBOS
-!           Start time (TDB):  1950 JAN 01 00:00:41.183
-!           Stop time  (TDB):  2050 JAN 01 00:01:06.183
-!           Data type:                    2
-!           Data class:                   1  Single-valued surface
-!           Coordinate system: Latitudinal
-!           Segment boundaries:
-!            Longitude (deg):     -180.000000000000   180.000000000000
-!            Latitude  (deg):      -90.000000000000    90.000000000000
-!            Radius     (km):        8.049632248722    13.940939832124
-!
-!     3) Again, dump the DSK descriptors of a DSK file, using the
-!        program from example 2, but this time reading the DSK file
-!
-!           phobos_3_3_3seg.bds
-!
-!        which can be created by running an example program from
-!        DSKW02. Use the meta-kernel shown below to demonstrate surface
-!        name-ID mapping.
-!
-!           KPL/MK
-!
-!           File: dskgd_ex3.tm
-!
-!           This meta-kernel is intended to support operation of SPICE
-!           example programs. The file contents shown here should not be
-!           assumed to contain adequate or correct versions of data
-!           required by SPICE-based user applications.
-!
-!           \begindata
-!
-!           NAIF_SURFACE_NAME += ( 'Phobos example surface 1',
-!                                  'Phobos example surface 2',
-!                                  'Phobos example surface 3' )
-!           NAIF_SURFACE_CODE += (   1,   2,   3 )
-!           NAIF_SURFACE_BODY += ( 401, 401, 401 )
-!
-!           \begintext
-!
-!           End of meta-kernel
-!
-!        When Example #2 was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos_3_3_3seg.bds and the
-!        meta-kernel dskgd_ex3.tm, the output was:
-!
-!        Enter DSK name         > phobos_3_3_3seg.bds
-!        Enter meta-kernel name > dskgd_ex3.tm
-!         ====================================
-!         DSK descriptor for segment   1
-!           Body:              PHOBOS
-!           Surface:           Phobos example surface 1
-!           Frame:             IAU_PHOBOS
-!           Start time (TDB):  1950 JAN 01 00:00:00.000
-!           Stop time  (TDB):  2050 JAN 01 00:00:00.000
-!           Data type:                    2
-!           Data class:                   2  General surface
-!           Coordinate system: Latitudinal
-!           Segment boundaries:
-!            Longitude (deg):     -180.000000000000   180.000000000000
-!            Latitude  (deg):      -90.000000000000    90.000000000000
-!            Radius     (km):        8.225298075974    14.011768145626
-!         ====================================
-!         DSK descriptor for segment   2
-!           Body:              PHOBOS
-!           Surface:           Phobos example surface 2
-!           Frame:             IAU_PHOBOS
-!           Start time (TDB):  1950 JAN 01 00:00:00.000
-!           Stop time  (TDB):  2050 JAN 01 00:00:00.000
-!           Data type:                    2
-!           Data class:                   2  General surface
-!           Coordinate system: Rectangular
-!           Segment boundaries:
-!            X-coordinate (km):     -1.300000000000     1.310000000000
-!            Y-coordinate (km):     -1.210000000000     1.200000000000
-!            Z-coordinate (km):     -9.452932357788     9.638179779053
-!         ====================================
-!         DSK descriptor for segment   3
-!           Body:              PHOBOS
-!           Surface:           Phobos example surface 3
-!           Frame:             IAU_PHOBOS
-!           Start time (TDB):  1950 JAN 01 00:00:00.000
-!           Stop time  (TDB):  2050 JAN 01 00:00:00.000
-!           Data type:                    2
-!           Data class:                   2  General surface
-!           Coordinate system: Planetodetic
-!              Equatorial radius (km):    13.000000000000000
-!              Polar radius      (km):    9.0999999999999996
-!           Segment boundaries:
-!            Longitude (deg):     -180.000000000000   180.000000000000
-!            Latitude  (deg):      -90.000000000000    90.000000000000
-!            Altitude   (km):       -3.728668683604     1.372015791081
-!
-! $ Restrictions
-!
-!     1)  See Exception #3.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR) (BVS)
-!
-!        Edited the header to comply with NAIF standard. Extended the
-!        $Exceptions section and updated the $Restrictions.
-!
-!-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
-!
-!        Updated version info.
-!
-!        22-JAN-2016 (NJB)
-!
-!           Added new header example programs and updated existing
-!           example program. Made minor changes to code to enhance
-!           readability. Corrected header typo.
-!
-!        09-OCT-2009 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     return DSK segment descriptor
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           dpbase
       integer(ip)           dpsize
 
@@ -11176,316 +10272,277 @@ contains
       return
       end procedure dskgd
 
-!$Procedure DSKB02 ( DSK, fetch type 2 bookkeeping data )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DSK file containing a type 2
+      !>              segment from which data are to be fetched.
+      !>
+      !>     DLADSC   is the DLA descriptor associated with the segment
+      !>              from which data are to be fetched.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NV       is the number of vertices in model.
+      !>
+      !>     NP       is the number of plates in model.
+      !>
+      !>     NVXTOT   is the total number of voxels in fine grid.
+      !>
+      !>     VTXBDS   are the vertex bounds. This is an array of six values
+      !>              giving the minimum and maximum values of each component
+      !>              of the vertex set. VTXBDS has dimensions ( 2, 3 ).
+      !>              Units are km.
+      !>
+      !>     VOXSIZ   is the fine grid voxel size. DSK voxels are cubes; the
+      !>              edge length of each cube is given by the voxel size.
+      !>              This size applies to the fine voxel grid. Units are km.
+      !>
+      !>     VOXORI   is the voxel grid origin. This is the location of the
+      !>              voxel grid origin in the body-fixed frame associated
+      !>              with the target body. Units are km.
+      !>
+      !>     VGREXT   is the voxel grid extent. This extent is an array of
+      !>              three integers indicating the number of voxels in the
+      !>              X, Y, and Z directions in the fine voxel grid.
+      !>
+      !>     CGSCAL   is the coarse voxel grid scale. The extent of the fine
+      !>              voxel grid is related to the extent of the coarse voxel
+      !>              grid by this scale factor.
+      !>
+      !>     VTXNPL   is the vertex-plate correspondence list size.
+      !>
+      !>     VOXNPT   is the size of the voxel-to-plate pointer list.
+      !>
+      !>     VOXNPL   is the voxel-plate correspondence list size.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file
+      !>
+      !>        dla.inc
+      !>
+      !>     for declarations of DLA descriptor sizes and documentation of the
+      !>     contents of DLA descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dskdsc.inc
+      !>
+      !>     for declarations of DSK descriptor sizes and documentation of the
+      !>     contents of DSK descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dsk02.inc
+      !>
+      !>     for declarations of DSK data type 2 (plate model) parameters.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input handle is invalid, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     2)  If a file read error occurs, the error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     3)  If the input DLA descriptor is invalid, the effect of this
+      !>         routine is undefined. The error *may* be diagnosed by
+      !>         routines in the call tree of this routine, but there are no
+      !>         guarantees.
+      !>
+      !> ## Files
+      !>
+      !>     See input argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine supports computations involving bookkeeping
+      !>     information stored in DSK type 2 segments. User applications
+      !>     typically will not need to call this routine.
+      !>
+      !>     DSK files are built using the DLA low-level format and
+      !>     the DAS architecture; DLA files are a specialized type of DAS
+      !>     file in which data are organized as a doubly linked list of
+      !>     segments. Each segment's data belong to contiguous components of
+      !>     character, double precision, and integer type.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Dump several parameters from the first DLA segment of
+      !>        a DSK file. The segment is assumed to be of type 2.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DSKB02_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>              INCLUDE 'dskdsc.inc'
+      !>              INCLUDE 'dsk02.inc'
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>              INTEGER               LNSIZE
+      !>              PARAMETER           ( LNSIZE = 80 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(FILSIZ)    DSK
+      !>              CHARACTER*(LNSIZE)    OUTLIN
+      !>
+      !>              DOUBLE PRECISION      VOXORI ( 3 )
+      !>              DOUBLE PRECISION      VOXSIZ
+      !>              DOUBLE PRECISION      VTXBDS ( 2, 3 )
+      !>
+      !>              INTEGER               CGSCAL
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               NP
+      !>              INTEGER               NV
+      !>              INTEGER               NVXTOT
+      !>              INTEGER               VGREXT ( 3 )
+      !>              INTEGER               VOXNPL
+      !>              INTEGER               VOXNPT
+      !>              INTEGER               VTXNPL
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Prompt for the name of the DSK to read.
+      !>        C
+      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>        C
+      !>        C     Open the DSK file for read access.
+      !>        C     We use the DAS-level interface for
+      !>        C     this function.
+      !>        C
+      !>              CALL DASOPR ( DSK, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a forward search through the
+      !>        C     kernel, treating the file as a DLA.
+      !>        C     In this example, it's a very short
+      !>        C     search.
+      !>        C
+      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>
+      !>              IF ( .NOT. FOUND ) THEN
+      !>        C
+      !>        C        We arrive here only if the kernel
+      !>        C        contains no segments.  This is
+      !>        C        unexpected, but we're prepared for it.
+      !>        C
+      !>                 CALL SETMSG ( 'No segments found '
+      !>             .   //            'in DSK file #.'    )
+      !>                 CALL ERRCH  ( '#',  DSK           )
+      !>                 CALL SIGERR ( 'SPICE(NODATA)'     )
+      !>
+      !>              END IF
+      !>
+      !>        C
+      !>        C     If we made it this far, DLADSC is the
+      !>        C     DLA descriptor of the first segment.
+      !>        C
+      !>        C     Read and display type 2 bookkeeping data.
+      !>        C
+      !>              CALL DSKB02 ( HANDLE, DLADSC, NV,     NP,     NVXTOT,
+      !>             .              VTXBDS, VOXSIZ, VOXORI, VGREXT, CGSCAL,
+      !>             .              VTXNPL, VOXNPT, VOXNPL                 )
+      !>
+      !>        C
+      !>        C     Show vertex and plate counts.
+      !>        C
+      !>              OUTLIN = 'Number of vertices:                 #'
+      !>              CALL REPMI  ( OUTLIN, '#', NV, OUTLIN )
+      !>              CALL TOSTDO ( OUTLIN )
+      !>
+      !>              OUTLIN = 'Number of plates:                   #'
+      !>              CALL REPMI  ( OUTLIN, '#', NP, OUTLIN )
+      !>              CALL TOSTDO ( OUTLIN )
+      !>
+      !>              OUTLIN = 'Voxel edge length (km):             #'
+      !>              CALL REPMF  ( OUTLIN, '#', VOXSIZ, 6, 'E', OUTLIN )
+      !>              CALL TOSTDO ( OUTLIN )
+      !>
+      !>              OUTLIN = 'Number of voxels:                   #'
+      !>              CALL REPMI  ( OUTLIN, '#', NVXTOT, OUTLIN )
+      !>              CALL TOSTDO ( OUTLIN )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds, the output
+      !>        was:
+      !>
+      !>        Enter DSK name > phobos512.bds
+      !>        Number of vertices:                 1579014
+      !>        Number of plates:                   3145728
+      !>        Voxel edge length (km):             1.04248E-01
+      !>        Number of voxels:                   11914500
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  The caller must verify that the segment associated with
+      !>         the input DLA descriptor is a DSK type 2 segment.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 02-JUL-2021 (JDR) (BVS)
+      !>
+      !>        Edited the header to comply with NAIF standard. Added
+      !>        solution for code example.
+      !>
+      !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
+      !>
+      !>        Updated version info.
+      !>
+      !>        23-JAN-2016 (NJB)
+      !>
+      !>           Removed references to unneeded variables.
+      !>           Updated header comments.
+      !>
+      !>        DSKLIB Version 2.0.0, 05-MAY-2010 (NJB)
+      !>
+      !>           Renamed routine from DSKP02 to DSKB02.
+      !>
+      !>        DSKLIB Version 1.0.1, 08-OCT-2009 (NJB)
+      !>
+      !>           Updated header.
+      !>
+      !>        Beta Version 1.0.0, 30-OCT-2006 (NJB)
       module procedure dskb02
-!! ## Abstract
-!!
-!!     Return bookkeeping data from a DSK type 2 segment.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DSK
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
 
-
-! $ Detailed_Input
-!
-!     HANDLE   is the handle of a DSK file containing a type 2
-!              segment from which data are to be fetched.
-!
-!     DLADSC   is the DLA descriptor associated with the segment
-!              from which data are to be fetched.
-!
-! $ Detailed_Output
-!
-!     NV       is the number of vertices in model.
-!
-!     NP       is the number of plates in model.
-!
-!     NVXTOT   is the total number of voxels in fine grid.
-!
-!     VTXBDS   are the vertex bounds. This is an array of six values
-!              giving the minimum and maximum values of each component
-!              of the vertex set. VTXBDS has dimensions ( 2, 3 ).
-!              Units are km.
-!
-!     VOXSIZ   is the fine grid voxel size. DSK voxels are cubes; the
-!              edge length of each cube is given by the voxel size.
-!              This size applies to the fine voxel grid. Units are km.
-!
-!     VOXORI   is the voxel grid origin. This is the location of the
-!              voxel grid origin in the body-fixed frame associated
-!              with the target body. Units are km.
-!
-!     VGREXT   is the voxel grid extent. This extent is an array of
-!              three integers indicating the number of voxels in the
-!              X, Y, and Z directions in the fine voxel grid.
-!
-!     CGSCAL   is the coarse voxel grid scale. The extent of the fine
-!              voxel grid is related to the extent of the coarse voxel
-!              grid by this scale factor.
-!
-!     VTXNPL   is the vertex-plate correspondence list size.
-!
-!     VOXNPT   is the size of the voxel-to-plate pointer list.
-!
-!     VOXNPL   is the voxel-plate correspondence list size.
-!
-! $ Parameters
-!
-!     See the include file
-!
-!        dla.inc
-!
-!     for declarations of DLA descriptor sizes and documentation of the
-!     contents of DLA descriptors.
-!
-!     See the include file
-!
-!        dskdsc.inc
-!
-!     for declarations of DSK descriptor sizes and documentation of the
-!     contents of DSK descriptors.
-!
-!     See the include file
-!
-!        dsk02.inc
-!
-!     for declarations of DSK data type 2 (plate model) parameters.
-!
-! $ Exceptions
-!
-!     1)  If the input handle is invalid, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     2)  If a file read error occurs, the error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     3)  If the input DLA descriptor is invalid, the effect of this
-!         routine is undefined. The error *may* be diagnosed by
-!         routines in the call tree of this routine, but there are no
-!         guarantees.
-!
-! $ Files
-!
-!     See input argument HANDLE.
-!
-! $ Particulars
-!
-!     This routine supports computations involving bookkeeping
-!     information stored in DSK type 2 segments. User applications
-!     typically will not need to call this routine.
-!
-!     DSK files are built using the DLA low-level format and
-!     the DAS architecture; DLA files are a specialized type of DAS
-!     file in which data are organized as a doubly linked list of
-!     segments. Each segment's data belong to contiguous components of
-!     character, double precision, and integer type.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Dump several parameters from the first DLA segment of
-!        a DSK file. The segment is assumed to be of type 2.
-!
-!        Example code begins here.
-!
-!              PROGRAM DSKB02_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!              INCLUDE 'dskdsc.inc'
-!              INCLUDE 'dsk02.inc'
-!
-!        C
-!        C     Local parameters
-!        C
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!              INTEGER               LNSIZE
-!              PARAMETER           ( LNSIZE = 80 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(FILSIZ)    DSK
-!              CHARACTER*(LNSIZE)    OUTLIN
-!
-!              DOUBLE PRECISION      VOXORI ( 3 )
-!              DOUBLE PRECISION      VOXSIZ
-!              DOUBLE PRECISION      VTXBDS ( 2, 3 )
-!
-!              INTEGER               CGSCAL
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               NP
-!              INTEGER               NV
-!              INTEGER               NVXTOT
-!              INTEGER               VGREXT ( 3 )
-!              INTEGER               VOXNPL
-!              INTEGER               VOXNPT
-!              INTEGER               VTXNPL
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Prompt for the name of the DSK to read.
-!        C
-!              CALL PROMPT ( 'Enter DSK name > ', DSK )
-!        C
-!        C     Open the DSK file for read access.
-!        C     We use the DAS-level interface for
-!        C     this function.
-!        C
-!              CALL DASOPR ( DSK, HANDLE )
-!
-!        C
-!        C     Begin a forward search through the
-!        C     kernel, treating the file as a DLA.
-!        C     In this example, it's a very short
-!        C     search.
-!        C
-!              CALL DLABFS ( HANDLE, DLADSC, FOUND )
-!
-!              IF ( .NOT. FOUND ) THEN
-!        C
-!        C        We arrive here only if the kernel
-!        C        contains no segments.  This is
-!        C        unexpected, but we're prepared for it.
-!        C
-!                 CALL SETMSG ( 'No segments found '
-!             .   //            'in DSK file #.'    )
-!                 CALL ERRCH  ( '#',  DSK           )
-!                 CALL SIGERR ( 'SPICE(NODATA)'     )
-!
-!              END IF
-!
-!        C
-!        C     If we made it this far, DLADSC is the
-!        C     DLA descriptor of the first segment.
-!        C
-!        C     Read and display type 2 bookkeeping data.
-!        C
-!              CALL DSKB02 ( HANDLE, DLADSC, NV,     NP,     NVXTOT,
-!             .              VTXBDS, VOXSIZ, VOXORI, VGREXT, CGSCAL,
-!             .              VTXNPL, VOXNPT, VOXNPL                 )
-!
-!        C
-!        C     Show vertex and plate counts.
-!        C
-!              OUTLIN = 'Number of vertices:                 #'
-!              CALL REPMI  ( OUTLIN, '#', NV, OUTLIN )
-!              CALL TOSTDO ( OUTLIN )
-!
-!              OUTLIN = 'Number of plates:                   #'
-!              CALL REPMI  ( OUTLIN, '#', NP, OUTLIN )
-!              CALL TOSTDO ( OUTLIN )
-!
-!              OUTLIN = 'Voxel edge length (km):             #'
-!              CALL REPMF  ( OUTLIN, '#', VOXSIZ, 6, 'E', OUTLIN )
-!              CALL TOSTDO ( OUTLIN )
-!
-!              OUTLIN = 'Number of voxels:                   #'
-!              CALL REPMI  ( OUTLIN, '#', NVXTOT, OUTLIN )
-!              CALL TOSTDO ( OUTLIN )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds, the output
-!        was:
-!
-!        Enter DSK name > phobos512.bds
-!        Number of vertices:                 1579014
-!        Number of plates:                   3145728
-!        Voxel edge length (km):             1.04248E-01
-!        Number of voxels:                   11914500
-!
-! $ Restrictions
-!
-!     1)  The caller must verify that the segment associated with
-!         the input DLA descriptor is a DSK type 2 segment.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 02-JUL-2021 (JDR) (BVS)
-!
-!        Edited the header to comply with NAIF standard. Added
-!        solution for code example.
-!
-!-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
-!
-!        Updated version info.
-!
-!        23-JAN-2016 (NJB)
-!
-!           Removed references to unneeded variables.
-!           Updated header comments.
-!
-!        DSKLIB Version 2.0.0, 05-MAY-2010 (NJB)
-!
-!           Renamed routine from DSKP02 to DSKB02.
-!
-!        DSKLIB Version 1.0.1, 08-OCT-2009 (NJB)
-!
-!           Updated header.
-!
-!        Beta Version 1.0.0, 30-OCT-2006 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     fetch parameters from a type 2 DSK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
       integer(ip), parameter :: dbfsiz = 10
 
       integer(ip), parameter :: ibfsiz = 10
 
       integer(ip), parameter :: vtbsiz = 6
 
-!
-!     Local variables
-!
       real(wp)              dbuff  ( dbfsiz )
 
       integer(ip)           b
@@ -11531,418 +10588,382 @@ contains
       return
       end procedure dskb02
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DSK file containing a type 2
+      !>              segment from which data are to be fetched.
+      !>
+      !>     DLADSC   is the DLA descriptor associated with the segment
+      !>              from which data are to be fetched.
+      !>
+      !>     ITEM     is an integer "keyword" parameter designating the
+      !>              item to fetch. In the descriptions below, note
+      !>              that "model" refers to the model represented by
+      !>              the designated segment. This model may be a
+      !>              subset of a larger model.
+      !>
+      !>              Names and meanings of parameters supported by this
+      !>              routine are:
+      !>
+      !>                 KWDSC      DSK descriptor of segment. See the
+      !>                            INCLUDE file dskdsc.inc for a
+      !>                            discussion of the contents of DSK
+      !>                            descriptors. Note that DSK
+      !>                            descriptors are not to be confused
+      !>                            with DLA descriptors, which contain
+      !>                            segment component base address and
+      !>                            size information.
+      !>
+      !>                 KWVTBD     Vertex bounds. This is an array of
+      !>                            six values giving the minimum and
+      !>                            maximum values of each component of
+      !>                            the vertex set.
+      !>
+      !>                 KWVXOR     Voxel grid origin. This is the
+      !>                            location of the voxel grid origin in
+      !>                            the body-fixed frame associated with
+      !>                            the target body.
+      !>
+      !>                 KWVXSZ     Voxel size. DSK voxels are cubes;
+      !>                            the edge length of each cube is
+      !>                            given by the voxel size. This
+      !>                            size applies to the fine voxel grid.
+      !>                            Units are km.
+      !>
+      !>     START    is the start index within specified data item from
+      !>              which data are to be fetched. The index of the
+      !>              first element of each data item is 1.
+      !>
+      !>     ROOM     is the amount of room in the output array. It
+      !>              is permissible to provide an output array
+      !>              that has too little room to fetch an item in
+      !>              one call.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     N        is the number of elements fetched to the output
+      !>              array VALUES. N is normally in the range
+      !>              1:ROOM; if an error occurs on the call, N is
+      !>              undefined.
+      !>
+      !>     VALUES   is a contiguous set of elements of the item
+      !>              designated by ITEM. The correspondence of
+      !>              VALUES with the elements of the data item is:
+      !>
+      !>                 VALUES(1)      ITEM(START)
+      !>                   ...             ...
+      !>                 VALUES(N)      ITEM(START+N-1)
+      !>
+      !>              If an error occurs on the call, VALUES is
+      !>              undefined.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file
+      !>
+      !>        dla.inc
+      !>
+      !>     for declarations of DLA descriptor sizes and documentation of the
+      !>     contents of DLA descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dskdsc.inc
+      !>
+      !>     for declarations of DSK descriptor sizes and documentation of the
+      !>     contents of DSK descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dsk02.inc
+      !>
+      !>     for declarations of DSK data type 2 (plate model) parameters.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input handle is invalid, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     2)  If a file read error occurs, the error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     3)  If the input DLA descriptor is invalid, the effect of this
+      !>         routine is undefined. The error *may* be diagnosed by
+      !>         routines in the call tree of this routine, but there are no
+      !>         guarantees.
+      !>
+      !>     4)  If ROOM is non-positive, the error SPICE(VALUEOUTOFRANGE)
+      !>         is signaled.
+      !>
+      !>     5)  If the coarse voxel scale read from the designated segment
+      !>         is less than 1, the error SPICE(VALUEOUTOFRANGE) is signaled.
+      !>
+      !>     6)  If the input keyword parameter is not recognized, the error
+      !>         SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     7)  If START is less than 1 or greater than the size of the
+      !>         item to be fetched, the error SPICE(INDEXOUTOFRANGE) is
+      !>         signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See input argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     Most SPICE applications will not need to call this routine. The
+      !>     routines DSKV02, DSKP02, and DSKZ02 provide a higher-level
+      !>     interface for fetching DSK type 2 vertex and plate data.
+      !>
+      !>     DSK files are built using the DLA low-level format and
+      !>     the DAS architecture; DLA files are a specialized type of DAS
+      !>     file in which data are organized as a doubly linked list of
+      !>     segments. Each segment's data belong to contiguous components of
+      !>     character, double precision, and integer type.
+      !>
+      !>     Note that the DSK descriptor for the segment is not needed by
+      !>     this routine; the DLA descriptor contains the base address and
+      !>     size information for the integer, double precision, and character
+      !>     components of the segment, and these suffice for the purpose of
+      !>     fetching data.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Look up all the vertices associated with each plate
+      !>        of the model contained in a specified type 2 segment.
+      !>        For this example, we'll show the context of this look-up:
+      !>        opening the DSK file for read access, traversing a trivial,
+      !>        one-segment list to obtain the segment of interest.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DSKD02_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>              INCLUDE 'dskdsc.inc'
+      !>              INCLUDE 'dsk02.inc'
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              CHARACTER*(*)         FMT
+      !>              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
+      !>
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(FILSIZ)    DSK
+      !>
+      !>              DOUBLE PRECISION      VRTCES ( 3, 3 )
+      !>
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               J
+      !>              INTEGER               K
+      !>              INTEGER               N
+      !>              INTEGER               NP
+      !>              INTEGER               START
+      !>              INTEGER               VRTIDS ( 3 )
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Prompt for the name of the DSK to read.
+      !>        C
+      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>        C
+      !>        C     Open the DSK file for read access.
+      !>        C     We use the DAS-level interface for
+      !>        C     this function.
+      !>        C
+      !>              CALL DASOPR ( DSK, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a forward search through the
+      !>        C     kernel, treating the file as a DLA.
+      !>        C     In this example, it's a very short
+      !>        C     search.
+      !>        C
+      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>
+      !>              IF ( .NOT. FOUND ) THEN
+      !>        C
+      !>        C        We arrive here only if the kernel
+      !>        C        contains no segments.  This is
+      !>        C        unexpected, but we're prepared for it.
+      !>        C
+      !>                 CALL SETMSG ( 'No segments found '
+      !>             .   //            'in DSK file #.'    )
+      !>                 CALL ERRCH  ( '#',  DSK           )
+      !>                 CALL SIGERR ( 'SPICE(NODATA)'     )
+      !>
+      !>              END IF
+      !>
+      !>        C
+      !>        C     If we made it this far, DLADSC is the
+      !>        C     DLA descriptor of the first segment.
+      !>        C
+      !>        C     Find the number of plates in the model.
+      !>        C
+      !>              CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP )
+      !>              WRITE (*,*) 'Number of plates: ', NP
+      !>
+      !>        C
+      !>        C     For the first 5 plates, look up the desired data.
+      !>        C
+      !>              K = MIN(5, NP)
+      !>              DO I = 1, K
+      !>        C
+      !>        C        For the Ith plate, find the associated
+      !>        C        vertex IDs.  We must take into account
+      !>        C        the fact that each plate has three
+      !>        C        vertices when we compute the start
+      !>        C        index.
+      !>        C
+      !>                 START = 3*(I-1)+1
+      !>
+      !>                 CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, START,
+      !>             .                 3,      N,      VRTIDS        )
+      !>
+      !>                 DO J = 1, 3
+      !>        C
+      !>        C            Fetch the vertex associated with
+      !>        C            the Jth vertex ID.  Again, each
+      !>        C            vertex is a 3-vector.  Note that
+      !>        C            the vertices are double-precision
+      !>        C            data, so we fetch them using
+      !>        C            DSKD02.
+      !>        C
+      !>                     START = 3*( VRTIDS(J) - 1 ) + 1
+      !>
+      !>                     CALL DSKD02 ( HANDLE, DLADSC, KWVERT,  START,
+      !>             .                     3,      N,      VRTCES(1,J)    )
+      !>                 END DO
+      !>
+      !>        C
+      !>        C        Display the vertices of the Ith plate:
+      !>        C
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) 'Plate number: ', I
+      !>                 WRITE (*,FMT) '   Vertex 1: ', (VRTCES(J,1), J=1,3)
+      !>                 WRITE (*,FMT) '   Vertex 2: ', (VRTCES(J,2), J=1,3)
+      !>                 WRITE (*,FMT) '   Vertex 3: ', (VRTCES(J,3), J=1,3)
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Close the kernel.  This isn't necessary in a stand-
+      !>        C     alone program, but it's good practice in subroutines
+      !>        C     because it frees program and system resources.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds, the output
+      !>        was:
+      !>
+      !>        Enter DSK name > phobos512.bds
+      !>         Number of plates:      3145728
+      !>
+      !>         Plate number:            1
+      !>            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+      !>            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
+      !>
+      !>         Plate number:            2
+      !>            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+      !>            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>
+      !>         Plate number:            3
+      !>            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>
+      !>         Plate number:            4
+      !>            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+      !>            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>
+      !>         Plate number:            5
+      !>            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+      !>            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
+      !>            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>
+      !>        Note that only the vertex information for first 5 plates is
+      !>        provided.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine uses discovery check-in to boost
+      !>         execution speed. However, this routine is in
+      !>         violation of NAIF standards for use of discovery
+      !>         check-in:  routines called from this routine may
+      !>         signal errors. If errors are signaled in called
+      !>         routines, this routine's name will be missing
+      !>         from the traceback message.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 13-AUG-2021 (JDR) (BVS)
+      !>
+      !>        Edited the header to comply with NAIF standard. Modified code
+      !>        example to reduce the output.
+      !>
+      !>-    SPICELIB Version 1.0.0, 04-FEB-2017 (NJB)
+      !>
+      !>        Fixed typo in version description.
+      !>
+      !>        23-AUG-2016
+      !>
+      !>           Now saves NV and updates it only when the current
+      !>           segment changes.
+      !>
+      !>        15-JAN-2016 (NJB)
+      !>
+      !>           Removed code involving parameter NP.
+      !>           Updated header $Examples section.
+      !>
+      !>        DSKLIB Version 3.0.0, 13-MAY-2010 (NJB)
+      !>
+      !>           Updated for compatibility with new DSK type 2
+      !>           segment design.
+      !>
+      !>        DSKLIB Version 2.1.0, 20-APR-2010 (NJB)
+      !>
+      !>           Bug fix: changed declaration of output argument
+      !>           VALUES to double precision.
+      !>
+      !>        DSKLIB Version 2.0.0, 27-DEC-2006 (NJB)
+      !>
+      !>           Updated to remove support for min, max radius
+      !>           lookup. These values are now stored in DSK
+      !>           descriptors.
+      !>
+      !>        DSKLIB Version 1.0.0, 27-OCT-2006 (NJB)
       module procedure dskd02
-!! ## Abstract
-!!
-!!     Fetch double precision data from a type 2 DSK segment.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DSK
-!!     FILES
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle of a DSK file containing a type 2
-!!              segment from which data are to be fetched.
-!!
-!!     DLADSC   is the DLA descriptor associated with the segment
-!!              from which data are to be fetched.
-!!
-!!     ITEM     is an integer "keyword" parameter designating the
-!!              item to fetch. In the descriptions below, note
-!!              that "model" refers to the model represented by
-!!              the designated segment. This model may be a
-!!              subset of a larger model.
-!!
-!!              Names and meanings of parameters supported by this
-!!              routine are:
-!!
-!!                 KWDSC      DSK descriptor of segment. See the
-!!                            INCLUDE file dskdsc.inc for a
-!!                            discussion of the contents of DSK
-!!                            descriptors. Note that DSK
-!!                            descriptors are not to be confused
-!!                            with DLA descriptors, which contain
-!!                            segment component base address and
-!!                            size information.
-!!
-!!                 KWVTBD     Vertex bounds. This is an array of
-!!                            six values giving the minimum and
-!!                            maximum values of each component of
-!!                            the vertex set.
-!!
-!!                 KWVXOR     Voxel grid origin. This is the
-!!                            location of the voxel grid origin in
-!!                            the body-fixed frame associated with
-!!                            the target body.
-!!
-!!                 KWVXSZ     Voxel size. DSK voxels are cubes;
-!!                            the edge length of each cube is
-!!                            given by the voxel size. This
-!!                            size applies to the fine voxel grid.
-!!                            Units are km.
-!!
-!!     START    is the start index within specified data item from
-!!              which data are to be fetched. The index of the
-!!              first element of each data item is 1.
-!!
-!!     ROOM     is the amount of room in the output array. It
-!!              is permissible to provide an output array
-!!              that has too little room to fetch an item in
-!!              one call.
-!!
-!! ## Detailed Output
-!!
-!!     N        is the number of elements fetched to the output
-!!              array VALUES. N is normally in the range
-!!              1:ROOM; if an error occurs on the call, N is
-!!              undefined.
-!!
-!!     VALUES   is a contiguous set of elements of the item
-!!              designated by ITEM. The correspondence of
-!!              VALUES with the elements of the data item is:
-!!
-!!                 VALUES(1)      ITEM(START)
-!!                   ...             ...
-!!                 VALUES(N)      ITEM(START+N-1)
-!!
-!!              If an error occurs on the call, VALUES is
-!!              undefined.
-!!
-!! ## Parameters
-!!
-!!     See the include file
-!!
-!!        dla.inc
-!!
-!!     for declarations of DLA descriptor sizes and documentation of the
-!!     contents of DLA descriptors.
-!!
-!!     See the include file
-!!
-!!        dskdsc.inc
-!!
-!!     for declarations of DSK descriptor sizes and documentation of the
-!!     contents of DSK descriptors.
-!!
-!!     See the include file
-!!
-!!        dsk02.inc
-!!
-!!     for declarations of DSK data type 2 (plate model) parameters.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the input handle is invalid, an error is signaled by a
-!!         routine in the call tree of this routine.
-!!
-!!     2)  If a file read error occurs, the error is signaled by a
-!!         routine in the call tree of this routine.
-!!
-!!     3)  If the input DLA descriptor is invalid, the effect of this
-!!         routine is undefined. The error *may* be diagnosed by
-!!         routines in the call tree of this routine, but there are no
-!!         guarantees.
-!!
-!!     4)  If ROOM is non-positive, the error SPICE(VALUEOUTOFRANGE)
-!!         is signaled.
-!!
-!!     5)  If the coarse voxel scale read from the designated segment
-!!         is less than 1, the error SPICE(VALUEOUTOFRANGE) is signaled.
-!!
-!!     6)  If the input keyword parameter is not recognized, the error
-!!         SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     7)  If START is less than 1 or greater than the size of the
-!!         item to be fetched, the error SPICE(INDEXOUTOFRANGE) is
-!!         signaled.
-!!
-!! ## Files
-!!
-!!     See input argument HANDLE.
-!!
-!! ## Particulars
-!!
-!!     Most SPICE applications will not need to call this routine. The
-!!     routines DSKV02, DSKP02, and DSKZ02 provide a higher-level
-!!     interface for fetching DSK type 2 vertex and plate data.
-!!
-!!     DSK files are built using the DLA low-level format and
-!!     the DAS architecture; DLA files are a specialized type of DAS
-!!     file in which data are organized as a doubly linked list of
-!!     segments. Each segment's data belong to contiguous components of
-!!     character, double precision, and integer type.
-!!
-!!     Note that the DSK descriptor for the segment is not needed by
-!!     this routine; the DLA descriptor contains the base address and
-!!     size information for the integer, double precision, and character
-!!     components of the segment, and these suffice for the purpose of
-!!     fetching data.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Look up all the vertices associated with each plate
-!!        of the model contained in a specified type 2 segment.
-!!        For this example, we'll show the context of this look-up:
-!!        opening the DSK file for read access, traversing a trivial,
-!!        one-segment list to obtain the segment of interest.
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DSKD02_EX1
-!!              IMPLICIT NONE
-!!
-!!              INCLUDE 'dla.inc'
-!!              INCLUDE 'dskdsc.inc'
-!!              INCLUDE 'dsk02.inc'
-!!
-!!        C
-!!        C     Local parameters
-!!        C
-!!              CHARACTER*(*)         FMT
-!!              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
-!!
-!!              INTEGER               FILSIZ
-!!              PARAMETER           ( FILSIZ = 255 )
-!!
-!!        C
-!!        C     Local variables
-!!        C
-!!              CHARACTER*(FILSIZ)    DSK
-!!
-!!              DOUBLE PRECISION      VRTCES ( 3, 3 )
-!!
-!!              INTEGER               DLADSC ( DLADSZ )
-!!              INTEGER               HANDLE
-!!              INTEGER               I
-!!              INTEGER               J
-!!              INTEGER               K
-!!              INTEGER               N
-!!              INTEGER               NP
-!!              INTEGER               START
-!!              INTEGER               VRTIDS ( 3 )
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Prompt for the name of the DSK to read.
-!!        C
-!!              CALL PROMPT ( 'Enter DSK name > ', DSK )
-!!        C
-!!        C     Open the DSK file for read access.
-!!        C     We use the DAS-level interface for
-!!        C     this function.
-!!        C
-!!              CALL DASOPR ( DSK, HANDLE )
-!!
-!!        C
-!!        C     Begin a forward search through the
-!!        C     kernel, treating the file as a DLA.
-!!        C     In this example, it's a very short
-!!        C     search.
-!!        C
-!!              CALL DLABFS ( HANDLE, DLADSC, FOUND )
-!!
-!!              IF ( .NOT. FOUND ) THEN
-!!        C
-!!        C        We arrive here only if the kernel
-!!        C        contains no segments.  This is
-!!        C        unexpected, but we're prepared for it.
-!!        C
-!!                 CALL SETMSG ( 'No segments found '
-!!             .   //            'in DSK file #.'    )
-!!                 CALL ERRCH  ( '#',  DSK           )
-!!                 CALL SIGERR ( 'SPICE(NODATA)'     )
-!!
-!!              END IF
-!!
-!!        C
-!!        C     If we made it this far, DLADSC is the
-!!        C     DLA descriptor of the first segment.
-!!        C
-!!        C     Find the number of plates in the model.
-!!        C
-!!              CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP )
-!!              WRITE (*,*) 'Number of plates: ', NP
-!!
-!!        C
-!!        C     For the first 5 plates, look up the desired data.
-!!        C
-!!              K = MIN(5, NP)
-!!              DO I = 1, K
-!!        C
-!!        C        For the Ith plate, find the associated
-!!        C        vertex IDs.  We must take into account
-!!        C        the fact that each plate has three
-!!        C        vertices when we compute the start
-!!        C        index.
-!!        C
-!!                 START = 3*(I-1)+1
-!!
-!!                 CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, START,
-!!             .                 3,      N,      VRTIDS        )
-!!
-!!                 DO J = 1, 3
-!!        C
-!!        C            Fetch the vertex associated with
-!!        C            the Jth vertex ID.  Again, each
-!!        C            vertex is a 3-vector.  Note that
-!!        C            the vertices are double-precision
-!!        C            data, so we fetch them using
-!!        C            DSKD02.
-!!        C
-!!                     START = 3*( VRTIDS(J) - 1 ) + 1
-!!
-!!                     CALL DSKD02 ( HANDLE, DLADSC, KWVERT,  START,
-!!             .                     3,      N,      VRTCES(1,J)    )
-!!                 END DO
-!!
-!!        C
-!!        C        Display the vertices of the Ith plate:
-!!        C
-!!                 WRITE (*,*) ' '
-!!                 WRITE (*,*) 'Plate number: ', I
-!!                 WRITE (*,FMT) '   Vertex 1: ', (VRTCES(J,1), J=1,3)
-!!                 WRITE (*,FMT) '   Vertex 2: ', (VRTCES(J,2), J=1,3)
-!!                 WRITE (*,FMT) '   Vertex 3: ', (VRTCES(J,3), J=1,3)
-!!
-!!              END DO
-!!
-!!        C
-!!        C     Close the kernel.  This isn't necessary in a stand-
-!!        C     alone program, but it's good practice in subroutines
-!!        C     because it frees program and system resources.
-!!        C
-!!              CALL DASCLS ( HANDLE )
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, using the DSK file named phobos512.bds, the output
-!!        was:
-!!
-!!        Enter DSK name > phobos512.bds
-!!         Number of plates:      3145728
-!!
-!!         Plate number:            1
-!!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!!            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!!            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
-!!
-!!         Plate number:            2
-!!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!!            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!!
-!!         Plate number:            3
-!!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!!            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!!
-!!         Plate number:            4
-!!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!!            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!!
-!!         Plate number:            5
-!!            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!!            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
-!!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!!
-!!        Note that only the vertex information for first 5 plates is
-!!        provided.
-!!
-!! ## Restrictions
-!!
-!!     1)  This routine uses discovery check-in to boost
-!!         execution speed. However, this routine is in
-!!         violation of NAIF standards for use of discovery
-!!         check-in:  routines called from this routine may
-!!         signal errors. If errors are signaled in called
-!!         routines, this routine's name will be missing
-!!         from the traceback message.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.1, 13-AUG-2021 (JDR) (BVS)
-!!
-!!        Edited the header to comply with NAIF standard. Modified code
-!!        example to reduce the output.
-!!
-!!-    SPICELIB Version 1.0.0, 04-FEB-2017 (NJB)
-!!
-!!        Fixed typo in version description.
-!!
-!!        23-AUG-2016
-!!
-!!           Now saves NV and updates it only when the current
-!!           segment changes.
-!!
-!!        15-JAN-2016 (NJB)
-!!
-!!           Removed code involving parameter NP.
-!!           Updated header $Examples section.
-!!
-!!        DSKLIB Version 3.0.0, 13-MAY-2010 (NJB)
-!!
-!!           Updated for compatibility with new DSK type 2
-!!           segment design.
-!!
-!!        DSKLIB Version 2.1.0, 20-APR-2010 (NJB)
-!!
-!!           Bug fix: changed declaration of output argument
-!!           VALUES to double precision.
-!!
-!!        DSKLIB Version 2.0.0, 27-DEC-2006 (NJB)
-!!
-!!           Updated to remove support for min, max radius
-!!           lookup. These values are now stored in DSK
-!!           descriptors.
-!!
-!!        DSKLIB Version 1.0.0, 27-OCT-2006 (NJB)
-!!
-!! ## Index Entries
-!!
-!!     fetch d.p. data from a type 2 DSK segment
-!!
-!!     SPICELIB functions
-!!
-!!     Local parameters
-!!
-!!     Local variables
-!!
-!!     Saved variables
-!!
-!!     Initial values
-!!
-!!  This is done for efficiency; note
-!!     however that this routine does not meet SPICE standards for
-!!     discovery check-in eligibility.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
@@ -12105,471 +11126,431 @@ contains
       end associate
       end procedure dskd02
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DSK file containing a type 2
+      !>              segment from which data are to be fetched.
+      !>
+      !>     DLADSC   is the DLA descriptor associated with the segment
+      !>              from which data are to be fetched.
+      !>
+      !>     ITEM     is an integer "keyword" parameter designating the
+      !>              item to fetch. In the descriptions below, note
+      !>              that "model" refers to the model represented by
+      !>              the designated segment. This model may be a
+      !>              subset of a larger model.
+      !>
+      !>              Names and meanings of parameters supported by this
+      !>              routine are:
+      !>
+      !>                 KWNV       Number of vertices in model.
+      !>
+      !>                 KWNP       Number of plates in model.
+      !>
+      !>                 KWNVXT     Total number of voxels in fine grid.
+      !>
+      !>                 KWVGRX     Voxel grid extent. This extent is
+      !>                            an array of three integers
+      !>                            indicating the number of voxels in
+      !>                            the X, Y, and Z directions in the
+      !>                            fine voxel grid.
+      !>
+      !>                 KWCGSC     Coarse voxel grid scale. The extent
+      !>                            of the fine voxel grid is related to
+      !>                            the extent of the coarse voxel grid
+      !>                            by this scale factor.
+      !>
+      !>                 KWVXPS     Size of the voxel-to-plate pointer
+      !>                            list.
+      !>
+      !>                 KWVXLS     Voxel-plate correspondence list size.
+      !>
+      !>                 KWVTLS     Vertex-plate correspondence list
+      !>                            size.
+      !>
+      !>                 KWPLAT     Plate array. For each plate, this
+      !>                            array contains the indices of the
+      !>                            plate's three vertices. The ordering
+      !>                            of the array members is:
+      !>
+      !>                               Plate 1 vertex index 1
+      !>                               Plate 1 vertex index 2
+      !>                               Plate 1 vertex index 3
+      !>                               Plate 2 vertex index 1
+      !>                                       ...
+      !>
+      !>                 KWVXPT     Voxel-plate pointer list. This list
+      !>                            contains pointers that map fine
+      !>                            voxels to lists of plates that
+      !>                            intersect those voxels. Note that
+      !>                            only fine voxels belonging to
+      !>                            non-empty coarse voxels are in the
+      !>                            domain of this mapping.
+      !>
+      !>                 KWVXPL     Voxel-plate correspondence list.
+      !>                            This list contains lists of plates
+      !>                            that intersect fine voxels. (This
+      !>                            list is the data structure into
+      !>                            which the voxel-to-plate pointers
+      !>                            point.) This list can contain
+      !>                            empty lists.
+      !>
+      !>                 KWVTPT     Vertex-plate pointer list. This list
+      !>                            contains pointers that map vertices
+      !>                            to lists of plates to which those
+      !>                            vertices belong.
+      !>
+      !>                            Note that the size of this list is
+      !>                            always NV, the number of vertices.
+      !>                            Hence there's no need for a separate
+      !>                            keyword for the size of this list.
+      !>
+      !>                 KWVTPL     Vertex-plate correspondence list.
+      !>                            This list contains, for each vertex,
+      !>                            the indices of the plates to which
+      !>                            that vertex belongs.
+      !>
+      !>                 KWCGPT     Coarse voxel grid pointers. This is
+      !>                            an array of pointers mapping coarse
+      !>                            voxels to lists of pointers in the
+      !>                            voxel-plate pointer list. Each
+      !>                            non-empty coarse voxel maps to a
+      !>                            list of pointers; every fine voxel
+      !>                            contained in a non-empty coarse voxel
+      !>                            has its own pointers. Grid elements
+      !>                            corresponding to empty coarse voxels
+      !>                            have null (non-positive) pointers.
+      !>
+      !>              See the INCLUDE file dsk.inc for values
+      !>              associated with the keyword parameters.
+      !>
+      !>     START    is the start index within the specified data item
+      !>              from which data are to be fetched. The index of
+      !>              the first element of each data item is 1. START
+      !>              has units of integers; for example, the start
+      !>              index of the second plate is 4, since each plate
+      !>              occupies three integers.
+      !>
+      !>     ROOM     is the amount of room in the output array. It is
+      !>              permissible to provide an output array that has
+      !>              too little room to fetch an item in one call. ROOM
+      !>              has units of integers: for example, the room
+      !>              required to fetch one plate is 3.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     N        is the number of elements fetched to the output
+      !>              array VALUES. N is normally in the range
+      !>              1:ROOM; if an error occurs on the call, N is
+      !>              undefined.
+      !>
+      !>     VALUES   is a contiguous set of elements of the item
+      !>              designated by ITEM. The correspondence of
+      !>              VALUES with the elements of the data item is:
+      !>
+      !>                 VALUES(1)      ITEM(START)
+      !>                   ...             ...
+      !>                 VALUES(N)      ITEM(START+N-1)
+      !>
+      !>              If an error occurs on the call, VALUES is
+      !>              undefined.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file
+      !>
+      !>        dla.inc
+      !>
+      !>     for declarations of DLA descriptor sizes and documentation of the
+      !>     contents of DLA descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dskdsc.inc
+      !>
+      !>     for declarations of DSK descriptor sizes and documentation of the
+      !>     contents of DSK descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dsk02.inc
+      !>
+      !>     for declarations of DSK data type 2 (plate model) parameters.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input handle is invalid, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     2)  If a file read error occurs, the error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     3)  If the input DLA descriptor is invalid, the effect of this
+      !>         routine is undefined. The error *may* be diagnosed by
+      !>         routines in the call tree of this routine, but there are no
+      !>         guarantees.
+      !>
+      !>     4)  If ROOM is non-positive, the error SPICE(VALUEOUTOFRANGE)
+      !>         is signaled.
+      !>
+      !>     5)  If the coarse voxel scale read from the designated segment
+      !>         is less than 1, the error SPICE(VALUEOUTOFRANGE) is signaled.
+      !>
+      !>     6)  If the input keyword parameter is not recognized, the error
+      !>         SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     7)  If START is less than 1 or greater than the size of the
+      !>         item to be fetched, the error SPICE(INDEXOUTOFRANGE) is
+      !>         signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See input argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     Most SPICE applications will not need to call this routine. The
+      !>     routines DSKV02, DSKP02, and DSKZ02 provide a higher-level
+      !>     interface for fetching DSK type 2 vertex and plate data.
+      !>
+      !>     DSK files are built using the DLA low-level format and
+      !>     the DAS architecture; DLA files are a specialized type of DAS
+      !>     file in which data are organized as a doubly linked list of
+      !>     segments. Each segment's data belong to contiguous components of
+      !>     character, double precision, and integer type.
+      !>
+      !>     Note that the DSK descriptor for the segment is not needed by
+      !>     this routine; the DLA descriptor contains the base address and
+      !>     size information for the integer, double precision, and character
+      !>     components of the segment, and these suffice for the purpose of
+      !>     fetching data.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Look up all the vertices associated with each plate
+      !>        of the model contained in a specified type 2 segment.
+      !>        For this example, we'll show the context of this look-up:
+      !>        opening the DSK file for read access, traversing a trivial,
+      !>        one-segment list to obtain the segment of interest.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DSKI02_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>              INCLUDE 'dskdsc.inc'
+      !>              INCLUDE 'dsk02.inc'
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              CHARACTER*(*)         FMT
+      !>              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
+      !>
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(FILSIZ)    DSK
+      !>
+      !>              DOUBLE PRECISION      VRTCES ( 3, 3 )
+      !>
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               J
+      !>              INTEGER               K
+      !>              INTEGER               N
+      !>              INTEGER               NP
+      !>              INTEGER               START
+      !>              INTEGER               VRTIDS ( 3 )
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Prompt for the name of the DSK to read.
+      !>        C
+      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>        C
+      !>        C     Open the DSK file for read access.
+      !>        C     We use the DAS-level interface for
+      !>        C     this function.
+      !>        C
+      !>              CALL DASOPR ( DSK, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a forward search through the
+      !>        C     kernel, treating the file as a DLA.
+      !>        C     In this example, it's a very short
+      !>        C     search.
+      !>        C
+      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>
+      !>              IF ( .NOT. FOUND ) THEN
+      !>        C
+      !>        C        We arrive here only if the kernel
+      !>        C        contains no segments.  This is
+      !>        C        unexpected, but we're prepared for it.
+      !>        C
+      !>                 CALL SETMSG ( 'No segments found '
+      !>             .   //            'in DSK file #.'    )
+      !>                 CALL ERRCH  ( '#',  DSK           )
+      !>                 CALL SIGERR ( 'SPICE(NODATA)'     )
+      !>
+      !>              END IF
+      !>
+      !>        C
+      !>        C     If we made it this far, DLADSC is the
+      !>        C     DLA descriptor of the first segment.
+      !>        C
+      !>        C     Find the number of plates in the model.
+      !>        C
+      !>              CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP )
+      !>              WRITE (*,*) 'Number of plates: ', NP
+      !>
+      !>        C
+      !>        C     For the first 5 plates, look up the desired data.
+      !>        C
+      !>              K = MIN(5, NP)
+      !>              DO I = 1, K
+      !>        C
+      !>        C        For the Ith plate, find the associated
+      !>        C        vertex IDs.  We must take into account
+      !>        C        the fact that each plate has three
+      !>        C        vertices when we compute the start
+      !>        C        index.
+      !>        C
+      !>                 START = 3*(I-1)+1
+      !>
+      !>                 CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, START,
+      !>             .                 3,      N,      VRTIDS        )
+      !>
+      !>                 DO J = 1, 3
+      !>        C
+      !>        C            Fetch the vertex associated with
+      !>        C            the Jth vertex ID.  Again, each
+      !>        C            vertex is a 3-vector.  Note that
+      !>        C            the vertices are double-precision
+      !>        C            data, so we fetch them using
+      !>        C            DSKD02.
+      !>        C
+      !>                     START = 3*( VRTIDS(J) - 1 ) + 1
+      !>
+      !>                     CALL DSKD02 ( HANDLE, DLADSC, KWVERT,  START,
+      !>             .                     3,      N,      VRTCES(1,J)    )
+      !>                 END DO
+      !>
+      !>        C
+      !>        C        Display the vertices of the Ith plate:
+      !>        C
+      !>                 WRITE (*,*)   ' '
+      !>                 WRITE (*,*)   'Plate number: ', I
+      !>                 WRITE (*,FMT) '   Vertex 1: ', (VRTCES(J,1), J=1,3)
+      !>                 WRITE (*,FMT) '   Vertex 2: ', (VRTCES(J,2), J=1,3)
+      !>                 WRITE (*,FMT) '   Vertex 3: ', (VRTCES(J,3), J=1,3)
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Close the kernel.  This isn't necessary in a stand-
+      !>        C     alone program, but it's good practice in subroutines
+      !>        C     because it frees program and system resources.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds, the output
+      !>        was:
+      !>
+      !>        Enter DSK name > phobos512.bds
+      !>         Number of plates:      3145728
+      !>
+      !>         Plate number:            1
+      !>            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+      !>            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
+      !>
+      !>         Plate number:            2
+      !>            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+      !>            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>
+      !>         Plate number:            3
+      !>            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>
+      !>         Plate number:            4
+      !>            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+      !>            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>
+      !>         Plate number:            5
+      !>            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+      !>            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
+      !>            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>
+      !>        Note that only the vertex information for first 5 plates is
+      !>        provided.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine uses discovery check-in to boost
+      !>         execution speed. However, this routine is in
+      !>         violation of NAIF standards for use of discovery
+      !>         check-in:  routines called from this routine may
+      !>         signal errors. If errors are signaled in called
+      !>         routines, this routine's name will be missing
+      !>         from the traceback message.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 02-JUL-2021 (JDR) (BVS)
+      !>
+      !>        Edited the header to comply with NAIF standard. Extended the
+      !>        $Keywords section. Modified code example to reduce the output.
+      !>
+      !>-    SPICELIB Version 1.0.0, 22-NOV-2016 (NJB)
+      !>
+      !>        Added FAILED check after segment attribute fetch calls.
+      !>        Re-ordered code so that values are saved only after
+      !>        all error checks have passed. Simplified base address
+      !>        comparisons.
+      !>
+      !>        15-JAN-2016 (NJB)
+      !>
+      !>           Updated header $Examples and $Particulars sections.
+      !>
+      !>        DSKLIB Version 1.0.2, 11-JUL-2014 (NJB)
+      !>
+      !>           Fixed a trivial header comment typo.
+      !>
+      !>        DSKLIB Version 1.0.1, 13-MAY-2010 (NJB)
+      !>
+      !>           Updated header.
+      !>
+      !>        DSKLIB Version 1.0.0, 27-OCT-2006 (NJB)
       module procedure dski02
-!! ## Abstract
-!!
-!!     Fetch integer data from a type 2 DSK segment.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DSK
-!!     FILES
-!!     TOPOGRAPHY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle of a DSK file containing a type 2
-!!              segment from which data are to be fetched.
-!!
-!!     DLADSC   is the DLA descriptor associated with the segment
-!!              from which data are to be fetched.
-!!
-!!     ITEM     is an integer "keyword" parameter designating the
-!!              item to fetch. In the descriptions below, note
-!!              that "model" refers to the model represented by
-!!              the designated segment. This model may be a
-!!              subset of a larger model.
-!!
-!!              Names and meanings of parameters supported by this
-!!              routine are:
-!!
-!!                 KWNV       Number of vertices in model.
-!!
-!!                 KWNP       Number of plates in model.
-!!
-!!                 KWNVXT     Total number of voxels in fine grid.
-!!
-!!                 KWVGRX     Voxel grid extent. This extent is
-!!                            an array of three integers
-!!                            indicating the number of voxels in
-!!                            the X, Y, and Z directions in the
-!!                            fine voxel grid.
-!!
-!!                 KWCGSC     Coarse voxel grid scale. The extent
-!!                            of the fine voxel grid is related to
-!!                            the extent of the coarse voxel grid
-!!                            by this scale factor.
-!!
-!!                 KWVXPS     Size of the voxel-to-plate pointer
-!!                            list.
-!!
-!!                 KWVXLS     Voxel-plate correspondence list size.
-!!
-!!                 KWVTLS     Vertex-plate correspondence list
-!!                            size.
-!!
-!!                 KWPLAT     Plate array. For each plate, this
-!!                            array contains the indices of the
-!!                            plate's three vertices. The ordering
-!!                            of the array members is:
-!!
-!!                               Plate 1 vertex index 1
-!!                               Plate 1 vertex index 2
-!!                               Plate 1 vertex index 3
-!!                               Plate 2 vertex index 1
-!!                                       ...
-!!
-!!                 KWVXPT     Voxel-plate pointer list. This list
-!!                            contains pointers that map fine
-!!                            voxels to lists of plates that
-!!                            intersect those voxels. Note that
-!!                            only fine voxels belonging to
-!!                            non-empty coarse voxels are in the
-!!                            domain of this mapping.
-!!
-!!                 KWVXPL     Voxel-plate correspondence list.
-!!                            This list contains lists of plates
-!!                            that intersect fine voxels. (This
-!!                            list is the data structure into
-!!                            which the voxel-to-plate pointers
-!!                            point.) This list can contain
-!!                            empty lists.
-!!
-!!                 KWVTPT     Vertex-plate pointer list. This list
-!!                            contains pointers that map vertices
-!!                            to lists of plates to which those
-!!                            vertices belong.
-!!
-!!                            Note that the size of this list is
-!!                            always NV, the number of vertices.
-!!                            Hence there's no need for a separate
-!!                            keyword for the size of this list.
-!!
-!!                 KWVTPL     Vertex-plate correspondence list.
-!!                            This list contains, for each vertex,
-!!                            the indices of the plates to which
-!!                            that vertex belongs.
-!!
-!!                 KWCGPT     Coarse voxel grid pointers. This is
-!!                            an array of pointers mapping coarse
-!!                            voxels to lists of pointers in the
-!!                            voxel-plate pointer list. Each
-!!                            non-empty coarse voxel maps to a
-!!                            list of pointers; every fine voxel
-!!                            contained in a non-empty coarse voxel
-!!                            has its own pointers. Grid elements
-!!                            corresponding to empty coarse voxels
-!!                            have null (non-positive) pointers.
-!!
-!!              See the INCLUDE file dsk.inc for values
-!!              associated with the keyword parameters.
-!!
-!!     START    is the start index within the specified data item
-!!              from which data are to be fetched. The index of
-!!              the first element of each data item is 1. START
-!!              has units of integers; for example, the start
-!!              index of the second plate is 4, since each plate
-!!              occupies three integers.
-!!
-!!     ROOM     is the amount of room in the output array. It is
-!!              permissible to provide an output array that has
-!!              too little room to fetch an item in one call. ROOM
-!!              has units of integers: for example, the room
-!!              required to fetch one plate is 3.
-!!
-!! ## Detailed Output
-!!
-!!     N        is the number of elements fetched to the output
-!!              array VALUES. N is normally in the range
-!!              1:ROOM; if an error occurs on the call, N is
-!!              undefined.
-!!
-!!     VALUES   is a contiguous set of elements of the item
-!!              designated by ITEM. The correspondence of
-!!              VALUES with the elements of the data item is:
-!!
-!!                 VALUES(1)      ITEM(START)
-!!                   ...             ...
-!!                 VALUES(N)      ITEM(START+N-1)
-!!
-!!              If an error occurs on the call, VALUES is
-!!              undefined.
-!!
-!! ## Parameters
-!!
-!!     See the include file
-!!
-!!        dla.inc
-!!
-!!     for declarations of DLA descriptor sizes and documentation of the
-!!     contents of DLA descriptors.
-!!
-!!     See the include file
-!!
-!!        dskdsc.inc
-!!
-!!     for declarations of DSK descriptor sizes and documentation of the
-!!     contents of DSK descriptors.
-!!
-!!     See the include file
-!!
-!!        dsk02.inc
-!!
-!!     for declarations of DSK data type 2 (plate model) parameters.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the input handle is invalid, an error is signaled by a
-!!         routine in the call tree of this routine.
-!!
-!!     2)  If a file read error occurs, the error is signaled by a
-!!         routine in the call tree of this routine.
-!!
-!!     3)  If the input DLA descriptor is invalid, the effect of this
-!!         routine is undefined. The error *may* be diagnosed by
-!!         routines in the call tree of this routine, but there are no
-!!         guarantees.
-!!
-!!     4)  If ROOM is non-positive, the error SPICE(VALUEOUTOFRANGE)
-!!         is signaled.
-!!
-!!     5)  If the coarse voxel scale read from the designated segment
-!!         is less than 1, the error SPICE(VALUEOUTOFRANGE) is signaled.
-!!
-!!     6)  If the input keyword parameter is not recognized, the error
-!!         SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     7)  If START is less than 1 or greater than the size of the
-!!         item to be fetched, the error SPICE(INDEXOUTOFRANGE) is
-!!         signaled.
-!!
-!! ## Files
-!!
-!!     See input argument HANDLE.
-!!
-!! ## Particulars
-!!
-!!     Most SPICE applications will not need to call this routine. The
-!!     routines DSKV02, DSKP02, and DSKZ02 provide a higher-level
-!!     interface for fetching DSK type 2 vertex and plate data.
-!!
-!!     DSK files are built using the DLA low-level format and
-!!     the DAS architecture; DLA files are a specialized type of DAS
-!!     file in which data are organized as a doubly linked list of
-!!     segments. Each segment's data belong to contiguous components of
-!!     character, double precision, and integer type.
-!!
-!!     Note that the DSK descriptor for the segment is not needed by
-!!     this routine; the DLA descriptor contains the base address and
-!!     size information for the integer, double precision, and character
-!!     components of the segment, and these suffice for the purpose of
-!!     fetching data.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Look up all the vertices associated with each plate
-!!        of the model contained in a specified type 2 segment.
-!!        For this example, we'll show the context of this look-up:
-!!        opening the DSK file for read access, traversing a trivial,
-!!        one-segment list to obtain the segment of interest.
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DSKI02_EX1
-!!              IMPLICIT NONE
-!!
-!!              INCLUDE 'dla.inc'
-!!              INCLUDE 'dskdsc.inc'
-!!              INCLUDE 'dsk02.inc'
-!!
-!!        C
-!!        C     Local parameters
-!!        C
-!!              CHARACTER*(*)         FMT
-!!              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
-!!
-!!              INTEGER               FILSIZ
-!!              PARAMETER           ( FILSIZ = 255 )
-!!
-!!        C
-!!        C     Local variables
-!!        C
-!!              CHARACTER*(FILSIZ)    DSK
-!!
-!!              DOUBLE PRECISION      VRTCES ( 3, 3 )
-!!
-!!              INTEGER               DLADSC ( DLADSZ )
-!!              INTEGER               HANDLE
-!!              INTEGER               I
-!!              INTEGER               J
-!!              INTEGER               K
-!!              INTEGER               N
-!!              INTEGER               NP
-!!              INTEGER               START
-!!              INTEGER               VRTIDS ( 3 )
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Prompt for the name of the DSK to read.
-!!        C
-!!              CALL PROMPT ( 'Enter DSK name > ', DSK )
-!!        C
-!!        C     Open the DSK file for read access.
-!!        C     We use the DAS-level interface for
-!!        C     this function.
-!!        C
-!!              CALL DASOPR ( DSK, HANDLE )
-!!
-!!        C
-!!        C     Begin a forward search through the
-!!        C     kernel, treating the file as a DLA.
-!!        C     In this example, it's a very short
-!!        C     search.
-!!        C
-!!              CALL DLABFS ( HANDLE, DLADSC, FOUND )
-!!
-!!              IF ( .NOT. FOUND ) THEN
-!!        C
-!!        C        We arrive here only if the kernel
-!!        C        contains no segments.  This is
-!!        C        unexpected, but we're prepared for it.
-!!        C
-!!                 CALL SETMSG ( 'No segments found '
-!!             .   //            'in DSK file #.'    )
-!!                 CALL ERRCH  ( '#',  DSK           )
-!!                 CALL SIGERR ( 'SPICE(NODATA)'     )
-!!
-!!              END IF
-!!
-!!        C
-!!        C     If we made it this far, DLADSC is the
-!!        C     DLA descriptor of the first segment.
-!!        C
-!!        C     Find the number of plates in the model.
-!!        C
-!!              CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP )
-!!              WRITE (*,*) 'Number of plates: ', NP
-!!
-!!        C
-!!        C     For the first 5 plates, look up the desired data.
-!!        C
-!!              K = MIN(5, NP)
-!!              DO I = 1, K
-!!        C
-!!        C        For the Ith plate, find the associated
-!!        C        vertex IDs.  We must take into account
-!!        C        the fact that each plate has three
-!!        C        vertices when we compute the start
-!!        C        index.
-!!        C
-!!                 START = 3*(I-1)+1
-!!
-!!                 CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, START,
-!!             .                 3,      N,      VRTIDS        )
-!!
-!!                 DO J = 1, 3
-!!        C
-!!        C            Fetch the vertex associated with
-!!        C            the Jth vertex ID.  Again, each
-!!        C            vertex is a 3-vector.  Note that
-!!        C            the vertices are double-precision
-!!        C            data, so we fetch them using
-!!        C            DSKD02.
-!!        C
-!!                     START = 3*( VRTIDS(J) - 1 ) + 1
-!!
-!!                     CALL DSKD02 ( HANDLE, DLADSC, KWVERT,  START,
-!!             .                     3,      N,      VRTCES(1,J)    )
-!!                 END DO
-!!
-!!        C
-!!        C        Display the vertices of the Ith plate:
-!!        C
-!!                 WRITE (*,*)   ' '
-!!                 WRITE (*,*)   'Plate number: ', I
-!!                 WRITE (*,FMT) '   Vertex 1: ', (VRTCES(J,1), J=1,3)
-!!                 WRITE (*,FMT) '   Vertex 2: ', (VRTCES(J,2), J=1,3)
-!!                 WRITE (*,FMT) '   Vertex 3: ', (VRTCES(J,3), J=1,3)
-!!
-!!              END DO
-!!
-!!        C
-!!        C     Close the kernel.  This isn't necessary in a stand-
-!!        C     alone program, but it's good practice in subroutines
-!!        C     because it frees program and system resources.
-!!        C
-!!              CALL DASCLS ( HANDLE )
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, using the DSK file named phobos512.bds, the output
-!!        was:
-!!
-!!        Enter DSK name > phobos512.bds
-!!         Number of plates:      3145728
-!!
-!!         Plate number:            1
-!!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!!            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!!            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
-!!
-!!         Plate number:            2
-!!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!!            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!!
-!!         Plate number:            3
-!!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!!            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!!
-!!         Plate number:            4
-!!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!!            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!!
-!!         Plate number:            5
-!!            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!!            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
-!!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!!
-!!        Note that only the vertex information for first 5 plates is
-!!        provided.
-!!
-!! ## Restrictions
-!!
-!!     1)  This routine uses discovery check-in to boost
-!!         execution speed. However, this routine is in
-!!         violation of NAIF standards for use of discovery
-!!         check-in:  routines called from this routine may
-!!         signal errors. If errors are signaled in called
-!!         routines, this routine's name will be missing
-!!         from the traceback message.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.1, 02-JUL-2021 (JDR) (BVS)
-!!
-!!        Edited the header to comply with NAIF standard. Extended the
-!!        $Keywords section. Modified code example to reduce the output.
-!!
-!!-    SPICELIB Version 1.0.0, 22-NOV-2016 (NJB)
-!!
-!!        Added FAILED check after segment attribute fetch calls.
-!!        Re-ordered code so that values are saved only after
-!!        all error checks have passed. Simplified base address
-!!        comparisons.
-!!
-!!        15-JAN-2016 (NJB)
-!!
-!!           Updated header $Examples and $Particulars sections.
-!!
-!!        DSKLIB Version 1.0.2, 11-JUL-2014 (NJB)
-!!
-!!           Fixed a trivial header comment typo.
-!!
-!!        DSKLIB Version 1.0.1, 13-MAY-2010 (NJB)
-!!
-!!           Updated header.
-!!
-!!        DSKLIB Version 1.0.0, 27-OCT-2006 (NJB)
-!!
-!! ## Index Entries
-!!
-!!     fetch integer data from a type 2 DSK segment
-!!
-!!     SPICELIB functions
-!!
-!!     Local parameters
-!!
-!!     IBFSIZ is the size of an integer buffer used to
-!!     read parameters from the segment.
-!!
-!!     Local variables
-!!
-!!     Saved variables
-!!
-!!     Initial values
-!!
-!!  This is done for efficiency; note
-!!     however that this routine does not meet SPICE standards for
-!!     discovery check-in eligibility.
-!!
       use pepper_kinds, only: ip
       use pepper_inc_dla
       use pepper_inc_dskdsc
@@ -12865,27 +11846,305 @@ contains
       end associate
       end procedure dski02
 
-!$Procedure DSKN02 ( DSK, type 2, compute normal vector for plate )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DSK file containing a type 2
+      !>              segment from which data are to be fetched.
+      !>
+      !>     DLADSC   is the DLA descriptor associated with the segment
+      !>              from which data are to be fetched.
+      !>
+      !>     PLID     is the plate ID. Plate IDs range from 1 to NP
+      !>              (the number of plates).
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NORMAL   is the normal vector associated with the plate
+      !>              designated by PLID. The direction of NORMAL is
+      !>              determined by the order of the plate's vertices;
+      !>              the vertices are presumed to be ordered in the
+      !>              right-handed (counterclockwise) sense about the
+      !>              normal direction. If the plate's vertices are
+      !>              V1, V2, V3, then NORMAL points in the direction
+      !>
+      !>                 (V2 - V1) x ( V3 - V2 )
+      !>
+      !>              where "x" represents the cross product operator.
+      !>
+      !>              The vector NORMAL is expressed in the body-fixed
+      !>              reference frame of the segment designated by DLADSC.
+      !>              The center of this frame is the origin of the cartesian
+      !>              coordinate system in which the vertices are expressed.
+      !>              Note that the frame center need not coincide with the
+      !>              central body of the segment. Units are km.
+      !>
+      !>              The vector has magnitude 1.
+      !>
+      !>              If an error occurs on the call, NORMAL is undefined.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file
+      !>
+      !>        dla.inc
+      !>
+      !>     for declarations of DLA descriptor sizes and documentation of the
+      !>     contents of DLA descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dskdsc.inc
+      !>
+      !>     for declarations of DSK descriptor sizes and documentation of the
+      !>     contents of DSK descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dsk02.inc
+      !>
+      !>     for declarations of DSK data type 2 (plate model) parameters.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input handle is invalid, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     2)  If a file read error occurs, the error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     3)  If the input DLA descriptor is invalid, the effect of this
+      !>         routine is undefined. The error *may* be diagnosed by
+      !>         routines in the call tree of this routine, but there are no
+      !>         guarantees.
+      !>
+      !>     4)  If PLID is less than 1 or greater than the number of plates
+      !>         in the segment, the error SPICE(INDEXOUTOFRANGE) is signaled.
+      !>
+      !>     5)  This routine does not check for linear independence of the
+      !>         plate's edges. The plate model is assumed to be geometrically
+      !>         valid.
+      !>
+      !> ## Files
+      !>
+      !>     See input argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     None.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Look up all the vertices associated with each plate
+      !>        of the model contained in a specified type 2 segment. For each
+      !>        of the first 5 plates, display the plate's vertices and normal
+      !>        vector.
+      !>
+      !>        For this example, we'll show the context of this look-up:
+      !>        opening the DSK file for read access, traversing a trivial,
+      !>        one-segment list to obtain the segment of interest.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DSKN02_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>              INCLUDE 'dsk02.inc'
+      !>
+      !>              CHARACTER*(*)         FMT
+      !>              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
+      !>
+      !>              INTEGER               BUFSIZ
+      !>              PARAMETER           ( BUFSIZ = 10000 )
+      !>
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>              CHARACTER*(FILSIZ)    DSK
+      !>
+      !>              DOUBLE PRECISION      NORMAL ( 3 )
+      !>              DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
+      !>
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               J
+      !>              INTEGER               N
+      !>              INTEGER               NNORM
+      !>              INTEGER               NP
+      !>              INTEGER               NREAD
+      !>              INTEGER               NV
+      !>              INTEGER               NVTX
+      !>              INTEGER               PLATES  ( 3, BUFSIZ )
+      !>              INTEGER               PLIX
+      !>              INTEGER               REMAIN
+      !>              INTEGER               START
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Prompt for name of DSK and open file for reading.
+      !>        C
+      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>
+      !>              CALL DASOPR ( DSK, HANDLE )
+      !>
+      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>
+      !>              IF ( .NOT. FOUND ) THEN
+      !>
+      !>                 CALL SETMSG ( 'No segment found in file #.' )
+      !>                 CALL ERRCH  ( '#',  DSK                     )
+      !>                 CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
+      !>
+      !>              END IF
+      !>
+      !>        C
+      !>        C     Get segment vertex and plate counts.
+      !>        C
+      !>              CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
+      !>
+      !>              WRITE (*,*) ' '
+      !>              WRITE (*,*) 'Number of vertices: ', NV
+      !>              WRITE (*,*) 'Number of plates:   ', NP
+      !>        C
+      !>        C     Display the vertices of the first 5 plates.
+      !>        C
+      !>              REMAIN = MIN(5, NP)
+      !>              START  = 1
+      !>
+      !>              DO WHILE ( REMAIN .GT. 0 )
+      !>        C
+      !>        C        NREAD is the number of plates we'll read on this
+      !>        C        loop pass.
+      !>        C
+      !>                 NREAD  = MIN ( BUFSIZ, REMAIN )
+      !>
+      !>                 CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
+      !>             .                 PLATES                          )
+      !>
+      !>                 DO I = 1, N
+      !>
+      !>                    PLIX = START + I - 1
+      !>        C
+      !>        C           Read the vertices of the current plate.
+      !>        C
+      !>                    DO J = 1, 3
+      !>                       CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
+      !>             .                       1,      NVTX,   VERTS (1,J)  )
+      !>                    END DO
+      !>        C
+      !>        C           Display the vertices of the current plate:
+      !>        C
+      !>                    WRITE (*,*  ) ' '
+      !>                    WRITE (*,*  ) 'Plate number: ', PLIX
+      !>                    WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
+      !>                    WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
+      !>                    WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
+      !>
+      !>        C
+      !>        C           Display the normal vector of the current plate:
+      !>        C
+      !>                    CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
+      !>
+      !>                    WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
+      !>
+      !>                 END DO
+      !>
+      !>                 START  = START  + NREAD
+      !>                 REMAIN = REMAIN - NREAD
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Close the kernel.  This isn't necessary in a stand-
+      !>        C     alone program, but it's good practice in subroutines
+      !>        C     because it frees program and system resources.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds, the output
+      !>        was:
+      !>
+      !>        Enter DSK name > phobos512.bds
+      !>
+      !>         Number of vertices:      1579014
+      !>         Number of plates:        3145728
+      !>
+      !>         Plate number:            1
+      !>            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+      !>            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
+      !>            Normal:    -0.58197377E+00  0.32128561E+00  0.74704892E+00
+      !>
+      !>         Plate number:            2
+      !>            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+      !>            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>            Normal:    -0.58145695E+00  0.32198831E+00  0.74714881E+00
+      !>
+      !>         Plate number:            3
+      !>            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>            Normal:    -0.58159707E+00  0.32264196E+00  0.74675767E+00
+      !>
+      !>         Plate number:            4
+      !>            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+      !>            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>            Normal:    -0.58312901E+00  0.32056070E+00  0.74645924E+00
+      !>
+      !>         Plate number:            5
+      !>            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+      !>            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
+      !>            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>            Normal:    -0.58366405E+00  0.32306020E+00  0.74496200E+00
+      !>
+      !>        Note that only the vertex information for first 5 plates is
+      !>        provided.
+      !>
+      !> ## Restrictions
+      !>
+      !>     See $Exceptions section.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR) (BVS)
+      !>
+      !>        Edited the header to comply with NAIF standard. Modified code
+      !>        example to reduce the output.
+      !>
+      !>        Extended detailed description of NORMAL output argument and
+      !>        added an additional record to $Index_Entries.
+      !>
+      !>-    SPICELIB Version 1.0.0, 17-MAR-2016 (NJB)
+      !>
+      !>        Now calls ZZDDHHLU.
+      !>
+      !>        Deleted references to unused parameter. Updated
+      !>        $Examples section.
+      !>
+      !>        DSKLIB Version 1.0.0, 02-JUN-2010 (NJB)
       module procedure dskn02
-!! ## Abstract
-!!
-!!     Compute the unit normal vector for a specified plate from a type
-!!     2 DSK segment.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DSK
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ucrss
       use pepper_inc_dla
@@ -12893,318 +12152,6 @@ contains
       use pepper_inc_dsk02
       implicit none
 
-
-! $ Detailed_Input
-!
-!     HANDLE   is the handle of a DSK file containing a type 2
-!              segment from which data are to be fetched.
-!
-!     DLADSC   is the DLA descriptor associated with the segment
-!              from which data are to be fetched.
-!
-!     PLID     is the plate ID. Plate IDs range from 1 to NP
-!              (the number of plates).
-!
-! $ Detailed_Output
-!
-!     NORMAL   is the normal vector associated with the plate
-!              designated by PLID. The direction of NORMAL is
-!              determined by the order of the plate's vertices;
-!              the vertices are presumed to be ordered in the
-!              right-handed (counterclockwise) sense about the
-!              normal direction. If the plate's vertices are
-!              V1, V2, V3, then NORMAL points in the direction
-!
-!                 (V2 - V1) x ( V3 - V2 )
-!
-!              where "x" represents the cross product operator.
-!
-!              The vector NORMAL is expressed in the body-fixed
-!              reference frame of the segment designated by DLADSC.
-!              The center of this frame is the origin of the cartesian
-!              coordinate system in which the vertices are expressed.
-!              Note that the frame center need not coincide with the
-!              central body of the segment. Units are km.
-!
-!              The vector has magnitude 1.
-!
-!              If an error occurs on the call, NORMAL is undefined.
-!
-! $ Parameters
-!
-!     See the include file
-!
-!        dla.inc
-!
-!     for declarations of DLA descriptor sizes and documentation of the
-!     contents of DLA descriptors.
-!
-!     See the include file
-!
-!        dskdsc.inc
-!
-!     for declarations of DSK descriptor sizes and documentation of the
-!     contents of DSK descriptors.
-!
-!     See the include file
-!
-!        dsk02.inc
-!
-!     for declarations of DSK data type 2 (plate model) parameters.
-!
-! $ Exceptions
-!
-!     1)  If the input handle is invalid, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     2)  If a file read error occurs, the error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     3)  If the input DLA descriptor is invalid, the effect of this
-!         routine is undefined. The error *may* be diagnosed by
-!         routines in the call tree of this routine, but there are no
-!         guarantees.
-!
-!     4)  If PLID is less than 1 or greater than the number of plates
-!         in the segment, the error SPICE(INDEXOUTOFRANGE) is signaled.
-!
-!     5)  This routine does not check for linear independence of the
-!         plate's edges. The plate model is assumed to be geometrically
-!         valid.
-!
-! $ Files
-!
-!     See input argument HANDLE.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Look up all the vertices associated with each plate
-!        of the model contained in a specified type 2 segment. For each
-!        of the first 5 plates, display the plate's vertices and normal
-!        vector.
-!
-!        For this example, we'll show the context of this look-up:
-!        opening the DSK file for read access, traversing a trivial,
-!        one-segment list to obtain the segment of interest.
-!
-!        Example code begins here.
-!
-!              PROGRAM DSKN02_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!              INCLUDE 'dsk02.inc'
-!
-!              CHARACTER*(*)         FMT
-!              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
-!
-!              INTEGER               BUFSIZ
-!              PARAMETER           ( BUFSIZ = 10000 )
-!
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!              CHARACTER*(FILSIZ)    DSK
-!
-!              DOUBLE PRECISION      NORMAL ( 3 )
-!              DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
-!
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               J
-!              INTEGER               N
-!              INTEGER               NNORM
-!              INTEGER               NP
-!              INTEGER               NREAD
-!              INTEGER               NV
-!              INTEGER               NVTX
-!              INTEGER               PLATES  ( 3, BUFSIZ )
-!              INTEGER               PLIX
-!              INTEGER               REMAIN
-!              INTEGER               START
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Prompt for name of DSK and open file for reading.
-!        C
-!              CALL PROMPT ( 'Enter DSK name > ', DSK )
-!
-!              CALL DASOPR ( DSK, HANDLE )
-!
-!              CALL DLABFS ( HANDLE, DLADSC, FOUND )
-!
-!              IF ( .NOT. FOUND ) THEN
-!
-!                 CALL SETMSG ( 'No segment found in file #.' )
-!                 CALL ERRCH  ( '#',  DSK                     )
-!                 CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
-!
-!              END IF
-!
-!        C
-!        C     Get segment vertex and plate counts.
-!        C
-!              CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
-!
-!              WRITE (*,*) ' '
-!              WRITE (*,*) 'Number of vertices: ', NV
-!              WRITE (*,*) 'Number of plates:   ', NP
-!        C
-!        C     Display the vertices of the first 5 plates.
-!        C
-!              REMAIN = MIN(5, NP)
-!              START  = 1
-!
-!              DO WHILE ( REMAIN .GT. 0 )
-!        C
-!        C        NREAD is the number of plates we'll read on this
-!        C        loop pass.
-!        C
-!                 NREAD  = MIN ( BUFSIZ, REMAIN )
-!
-!                 CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
-!             .                 PLATES                          )
-!
-!                 DO I = 1, N
-!
-!                    PLIX = START + I - 1
-!        C
-!        C           Read the vertices of the current plate.
-!        C
-!                    DO J = 1, 3
-!                       CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
-!             .                       1,      NVTX,   VERTS (1,J)  )
-!                    END DO
-!        C
-!        C           Display the vertices of the current plate:
-!        C
-!                    WRITE (*,*  ) ' '
-!                    WRITE (*,*  ) 'Plate number: ', PLIX
-!                    WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
-!                    WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
-!                    WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
-!
-!        C
-!        C           Display the normal vector of the current plate:
-!        C
-!                    CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
-!
-!                    WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
-!
-!                 END DO
-!
-!                 START  = START  + NREAD
-!                 REMAIN = REMAIN - NREAD
-!
-!              END DO
-!
-!        C
-!        C     Close the kernel.  This isn't necessary in a stand-
-!        C     alone program, but it's good practice in subroutines
-!        C     because it frees program and system resources.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds, the output
-!        was:
-!
-!        Enter DSK name > phobos512.bds
-!
-!         Number of vertices:      1579014
-!         Number of plates:        3145728
-!
-!         Plate number:            1
-!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
-!            Normal:    -0.58197377E+00  0.32128561E+00  0.74704892E+00
-!
-!         Plate number:            2
-!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!            Normal:    -0.58145695E+00  0.32198831E+00  0.74714881E+00
-!
-!         Plate number:            3
-!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!            Normal:    -0.58159707E+00  0.32264196E+00  0.74675767E+00
-!
-!         Plate number:            4
-!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!            Normal:    -0.58312901E+00  0.32056070E+00  0.74645924E+00
-!
-!         Plate number:            5
-!            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
-!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!            Normal:    -0.58366405E+00  0.32306020E+00  0.74496200E+00
-!
-!        Note that only the vertex information for first 5 plates is
-!        provided.
-!
-! $ Restrictions
-!
-!     See $Exceptions section.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR) (BVS)
-!
-!        Edited the header to comply with NAIF standard. Modified code
-!        example to reduce the output.
-!
-!        Extended detailed description of NORMAL output argument and
-!        added an additional record to $Index_Entries.
-!
-!-    SPICELIB Version 1.0.0, 17-MAR-2016 (NJB)
-!
-!        Now calls ZZDDHHLU.
-!
-!        Deleted references to unused parameter. Updated
-!        $Examples section.
-!
-!        DSKLIB Version 1.0.0, 02-JUN-2010 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     compute normal vector for a type 2 DSK plate
-!     compute normal vector from DSK type 2 plate id
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 !     Local variables
 !
       real(wp)              dskdsc ( dskdsz )
@@ -13287,365 +12234,329 @@ contains
       return
       end procedure dskn02
 
-!$Procedure DSKP02 ( DSK, fetch type 2 plate data )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DSK file containing a type 2
+      !>              segment from which data are to be fetched.
+      !>
+      !>     DLADSC   is the DLA descriptor associated with the segment
+      !>              from which data are to be fetched.
+      !>
+      !>     START    is the ID of the first plate to be fetched from the
+      !>              segment designated by HANDLE and DLADSC. The ID
+      !>              of a plate is its ordinal position within the
+      !>              segment. Plate IDs range from 1 to NP, where NP is
+      !>              the number of plates in the segment.
+      !>
+      !>     ROOM     is the number of plates that can fit in the output
+      !>              PLATES array: the output array must be large enough
+      !>              to hold at least 3*ROOM integer values.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     N        is the number of plates fetched to the output
+      !>              array PLATES. N is normally in the range
+      !>
+      !>                 1 : MIN( NP, ROOM )
+      !>
+      !>              If an error occurs on the call, N is undefined.
+      !>
+      !>     PLATES   is a contiguous set of plates. The returned
+      !>              plates are arranged in order of increasing plate
+      !>              ID. The IDs of the returned plates range from
+      !>
+      !>                 START
+      !>
+      !>              to
+      !>
+      !>                 START + N - 1
+      !>
+      !>              Each plate consists of three vertex indices. The
+      !>              correspondence of elements of PLATES with the
+      !>              elements of the set of plates contained in the
+      !>              segment is:
+      !>
+      !>                 PLATES(1,1)      plate_set(1, START)
+      !>                 PLATES(2,1)      plate_set(2, START)
+      !>                 PLATES(3,1)      plate_set(3, START)
+      !>                   ...             ...
+      !>                 PLATES(1,N)      plate_set(1, START+N-1)
+      !>                 PLATES(2,N)      plate_set(2, START+N-1)
+      !>                 PLATES(3,N)      plate_set(3, START+N-1)
+      !>
+      !>              If an error occurs on the call, PLATES is
+      !>              undefined.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file
+      !>
+      !>        dla.inc
+      !>
+      !>     for declarations of DLA descriptor sizes and documentation of the
+      !>     contents of DLA descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dskdsc.inc
+      !>
+      !>     for declarations of DSK descriptor sizes and documentation of the
+      !>     contents of DSK descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dsk02.inc
+      !>
+      !>     for declarations of DSK data type 2 (plate model) parameters.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input handle is invalid, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     2)  If a file read error occurs, the error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     3)  If the input DLA descriptor is invalid, the effect of this
+      !>         routine is undefined. The error *may* be diagnosed by
+      !>         routines in the call tree of this routine, but there are no
+      !>         guarantees.
+      !>
+      !>     4)  If ROOM is non-positive, the error SPICE(VALUEOUTOFRANGE)
+      !>         is signaled.
+      !>
+      !>     5)  If START is less than 1 or greater than the number of plates
+      !>         in the segment, the error SPICE(INDEXOUTOFRANGE) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See input argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine enables SPICE-based user applications to rapidly
+      !>     fetch the plate data from a specified type 2 DSK segment. Using
+      !>     a large output array generally improves efficiency.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Look up all the vertices associated with each plate
+      !>        of the model contained in a specified type 2 segment. For each
+      !>        plate, display the plate's vertices and normal vector.
+      !>
+      !>        For this example, we'll show the context of this look-up:
+      !>        opening the DSK file for read access, traversing a trivial,
+      !>        one-segment list to obtain the segment of interest.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DSKP02_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>              INCLUDE 'dsk02.inc'
+      !>
+      !>              CHARACTER*(*)         FMT
+      !>              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
+      !>
+      !>              INTEGER               BUFSIZ
+      !>              PARAMETER           ( BUFSIZ = 10000 )
+      !>
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>              CHARACTER*(FILSIZ)    DSK
+      !>
+      !>              DOUBLE PRECISION      NORMAL ( 3 )
+      !>              DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
+      !>
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               J
+      !>              INTEGER               N
+      !>              INTEGER               NNORM
+      !>              INTEGER               NP
+      !>              INTEGER               NREAD
+      !>              INTEGER               NV
+      !>              INTEGER               NVTX
+      !>              INTEGER               PLATES  ( 3, BUFSIZ )
+      !>              INTEGER               PLIX
+      !>              INTEGER               REMAIN
+      !>              INTEGER               START
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Prompt for name of DSK and open file for reading.
+      !>        C
+      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>
+      !>              CALL DASOPR ( DSK, HANDLE )
+      !>
+      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>
+      !>              IF ( .NOT. FOUND ) THEN
+      !>
+      !>                 CALL SETMSG ( 'No segment found in file #.' )
+      !>                 CALL ERRCH  ( '#',  DSK                     )
+      !>                 CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
+      !>
+      !>              END IF
+      !>
+      !>        C
+      !>        C     Get segment vertex and plate counts.
+      !>        C
+      !>              CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
+      !>
+      !>              WRITE (*,*) ' '
+      !>              WRITE (*,*) 'Number of vertices: ', NV
+      !>              WRITE (*,*) 'Number of plates:   ', NP
+      !>        C
+      !>        C     Display the vertices of the first 5 plates.
+      !>        C
+      !>              REMAIN = MIN(5, NP)
+      !>              START  = 1
+      !>
+      !>              DO WHILE ( REMAIN .GT. 0 )
+      !>        C
+      !>        C        NREAD is the number of plates we'll read on this
+      !>        C        loop pass.
+      !>        C
+      !>                 NREAD  = MIN ( BUFSIZ, REMAIN )
+      !>
+      !>                 CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
+      !>             .                 PLATES                          )
+      !>
+      !>                 DO I = 1, N
+      !>
+      !>                    PLIX = START + I - 1
+      !>        C
+      !>        C           Read the vertices of the current plate.
+      !>        C
+      !>                    DO J = 1, 3
+      !>                       CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
+      !>             .                       1,      NVTX,   VERTS (1,J)  )
+      !>                    END DO
+      !>        C
+      !>        C           Display the vertices of the current plate:
+      !>        C
+      !>                    WRITE (*,*  ) ' '
+      !>                    WRITE (*,*  ) 'Plate number: ', PLIX
+      !>                    WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
+      !>                    WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
+      !>                    WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
+      !>
+      !>        C
+      !>        C           Display the normal vector of the current plate:
+      !>        C
+      !>                    CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
+      !>
+      !>                    WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
+      !>
+      !>                 END DO
+      !>
+      !>                 START  = START  + NREAD
+      !>                 REMAIN = REMAIN - NREAD
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Close the kernel.  This isn't necessary in a stand-
+      !>        C     alone program, but it's good practice in subroutines
+      !>        C     because it frees program and system resources.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds, the output
+      !>        was:
+      !>
+      !>        Enter DSK name > phobos512.bds
+      !>
+      !>         Number of vertices:      1579014
+      !>         Number of plates:        3145728
+      !>
+      !>         Plate number:            1
+      !>            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+      !>            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
+      !>            Normal:    -0.58197377E+00  0.32128561E+00  0.74704892E+00
+      !>
+      !>         Plate number:            2
+      !>            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+      !>            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>            Normal:    -0.58145695E+00  0.32198831E+00  0.74714881E+00
+      !>
+      !>         Plate number:            3
+      !>            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>            Normal:    -0.58159707E+00  0.32264196E+00  0.74675767E+00
+      !>
+      !>         Plate number:            4
+      !>            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+      !>            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>            Normal:    -0.58312901E+00  0.32056070E+00  0.74645924E+00
+      !>
+      !>         Plate number:            5
+      !>            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+      !>            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
+      !>            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>            Normal:    -0.58366405E+00  0.32306020E+00  0.74496200E+00
+      !>
+      !>        Note that only the vertex information for first 5 plates is
+      !>        provided.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR) (BVS)
+      !>
+      !>        Edited the header to comply with NAIF standard. Modified code
+      !>        example to reduce the output.
+      !>
+      !>-    SPICELIB Version 1.0.0, 04-APR-2017 (NJB)
+      !>
+      !>        Now calls ZZDDHHLU.
+      !>
+      !>        Made trivial change to code example.
+      !>
+      !>        DSKLIB Version 1.0.1, 22-APR-2014 (NJB)
+      !>
+      !>           The diagram in the $Detailed_Output header section showing
+      !>           the contents of the output PLATES array has been corrected.
+      !>
+      !>        DSKLIB Version 1.0.0, 02-JUN-2010 (NJB)
       module procedure dskp02
-!! ## Abstract
-!!
-!!     Fetch triangular plates from a type 2 DSK segment.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DSK
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
 
-
-! $ Detailed_Input
-!
-!     HANDLE   is the handle of a DSK file containing a type 2
-!              segment from which data are to be fetched.
-!
-!     DLADSC   is the DLA descriptor associated with the segment
-!              from which data are to be fetched.
-!
-!     START    is the ID of the first plate to be fetched from the
-!              segment designated by HANDLE and DLADSC. The ID
-!              of a plate is its ordinal position within the
-!              segment. Plate IDs range from 1 to NP, where NP is
-!              the number of plates in the segment.
-!
-!     ROOM     is the number of plates that can fit in the output
-!              PLATES array: the output array must be large enough
-!              to hold at least 3*ROOM integer values.
-!
-! $ Detailed_Output
-!
-!     N        is the number of plates fetched to the output
-!              array PLATES. N is normally in the range
-!
-!                 1 : MIN( NP, ROOM )
-!
-!              If an error occurs on the call, N is undefined.
-!
-!     PLATES   is a contiguous set of plates. The returned
-!              plates are arranged in order of increasing plate
-!              ID. The IDs of the returned plates range from
-!
-!                 START
-!
-!              to
-!
-!                 START + N - 1
-!
-!              Each plate consists of three vertex indices. The
-!              correspondence of elements of PLATES with the
-!              elements of the set of plates contained in the
-!              segment is:
-!
-!                 PLATES(1,1)      plate_set(1, START)
-!                 PLATES(2,1)      plate_set(2, START)
-!                 PLATES(3,1)      plate_set(3, START)
-!                   ...             ...
-!                 PLATES(1,N)      plate_set(1, START+N-1)
-!                 PLATES(2,N)      plate_set(2, START+N-1)
-!                 PLATES(3,N)      plate_set(3, START+N-1)
-!
-!              If an error occurs on the call, PLATES is
-!              undefined.
-!
-! $ Parameters
-!
-!     See the include file
-!
-!        dla.inc
-!
-!     for declarations of DLA descriptor sizes and documentation of the
-!     contents of DLA descriptors.
-!
-!     See the include file
-!
-!        dskdsc.inc
-!
-!     for declarations of DSK descriptor sizes and documentation of the
-!     contents of DSK descriptors.
-!
-!     See the include file
-!
-!        dsk02.inc
-!
-!     for declarations of DSK data type 2 (plate model) parameters.
-!
-! $ Exceptions
-!
-!     1)  If the input handle is invalid, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     2)  If a file read error occurs, the error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     3)  If the input DLA descriptor is invalid, the effect of this
-!         routine is undefined. The error *may* be diagnosed by
-!         routines in the call tree of this routine, but there are no
-!         guarantees.
-!
-!     4)  If ROOM is non-positive, the error SPICE(VALUEOUTOFRANGE)
-!         is signaled.
-!
-!     5)  If START is less than 1 or greater than the number of plates
-!         in the segment, the error SPICE(INDEXOUTOFRANGE) is signaled.
-!
-! $ Files
-!
-!     See input argument HANDLE.
-!
-! $ Particulars
-!
-!     This routine enables SPICE-based user applications to rapidly
-!     fetch the plate data from a specified type 2 DSK segment. Using
-!     a large output array generally improves efficiency.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Look up all the vertices associated with each plate
-!        of the model contained in a specified type 2 segment. For each
-!        plate, display the plate's vertices and normal vector.
-!
-!        For this example, we'll show the context of this look-up:
-!        opening the DSK file for read access, traversing a trivial,
-!        one-segment list to obtain the segment of interest.
-!
-!        Example code begins here.
-!
-!              PROGRAM DSKP02_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!              INCLUDE 'dsk02.inc'
-!
-!              CHARACTER*(*)         FMT
-!              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
-!
-!              INTEGER               BUFSIZ
-!              PARAMETER           ( BUFSIZ = 10000 )
-!
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!              CHARACTER*(FILSIZ)    DSK
-!
-!              DOUBLE PRECISION      NORMAL ( 3 )
-!              DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
-!
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               J
-!              INTEGER               N
-!              INTEGER               NNORM
-!              INTEGER               NP
-!              INTEGER               NREAD
-!              INTEGER               NV
-!              INTEGER               NVTX
-!              INTEGER               PLATES  ( 3, BUFSIZ )
-!              INTEGER               PLIX
-!              INTEGER               REMAIN
-!              INTEGER               START
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Prompt for name of DSK and open file for reading.
-!        C
-!              CALL PROMPT ( 'Enter DSK name > ', DSK )
-!
-!              CALL DASOPR ( DSK, HANDLE )
-!
-!              CALL DLABFS ( HANDLE, DLADSC, FOUND )
-!
-!              IF ( .NOT. FOUND ) THEN
-!
-!                 CALL SETMSG ( 'No segment found in file #.' )
-!                 CALL ERRCH  ( '#',  DSK                     )
-!                 CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
-!
-!              END IF
-!
-!        C
-!        C     Get segment vertex and plate counts.
-!        C
-!              CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
-!
-!              WRITE (*,*) ' '
-!              WRITE (*,*) 'Number of vertices: ', NV
-!              WRITE (*,*) 'Number of plates:   ', NP
-!        C
-!        C     Display the vertices of the first 5 plates.
-!        C
-!              REMAIN = MIN(5, NP)
-!              START  = 1
-!
-!              DO WHILE ( REMAIN .GT. 0 )
-!        C
-!        C        NREAD is the number of plates we'll read on this
-!        C        loop pass.
-!        C
-!                 NREAD  = MIN ( BUFSIZ, REMAIN )
-!
-!                 CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
-!             .                 PLATES                          )
-!
-!                 DO I = 1, N
-!
-!                    PLIX = START + I - 1
-!        C
-!        C           Read the vertices of the current plate.
-!        C
-!                    DO J = 1, 3
-!                       CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
-!             .                       1,      NVTX,   VERTS (1,J)  )
-!                    END DO
-!        C
-!        C           Display the vertices of the current plate:
-!        C
-!                    WRITE (*,*  ) ' '
-!                    WRITE (*,*  ) 'Plate number: ', PLIX
-!                    WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
-!                    WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
-!                    WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
-!
-!        C
-!        C           Display the normal vector of the current plate:
-!        C
-!                    CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
-!
-!                    WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
-!
-!                 END DO
-!
-!                 START  = START  + NREAD
-!                 REMAIN = REMAIN - NREAD
-!
-!              END DO
-!
-!        C
-!        C     Close the kernel.  This isn't necessary in a stand-
-!        C     alone program, but it's good practice in subroutines
-!        C     because it frees program and system resources.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds, the output
-!        was:
-!
-!        Enter DSK name > phobos512.bds
-!
-!         Number of vertices:      1579014
-!         Number of plates:        3145728
-!
-!         Plate number:            1
-!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
-!            Normal:    -0.58197377E+00  0.32128561E+00  0.74704892E+00
-!
-!         Plate number:            2
-!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!            Normal:    -0.58145695E+00  0.32198831E+00  0.74714881E+00
-!
-!         Plate number:            3
-!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!            Normal:    -0.58159707E+00  0.32264196E+00  0.74675767E+00
-!
-!         Plate number:            4
-!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!            Normal:    -0.58312901E+00  0.32056070E+00  0.74645924E+00
-!
-!         Plate number:            5
-!            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
-!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!            Normal:    -0.58366405E+00  0.32306020E+00  0.74496200E+00
-!
-!        Note that only the vertex information for first 5 plates is
-!        provided.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR) (BVS)
-!
-!        Edited the header to comply with NAIF standard. Modified code
-!        example to reduce the output.
-!
-!-    SPICELIB Version 1.0.0, 04-APR-2017 (NJB)
-!
-!        Now calls ZZDDHHLU.
-!
-!        Made trivial change to code example.
-!
-!        DSKLIB Version 1.0.1, 22-APR-2014 (NJB)
-!
-!           The diagram in the $Detailed_Output header section showing
-!           the contents of the output PLATES array has been corrected.
-!
-!        DSKLIB Version 1.0.0, 02-JUN-2010 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     fetch plate data from a type 2 DSK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       real(wp)              dskdsc ( dskdsz )
 
       integer(ip)           lcroom
@@ -13712,375 +12623,339 @@ contains
       return
       end procedure dskp02
 
-!$Procedure DSKV02 ( DSK, fetch type 2 vertex data )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DSK file containing a type 2
+      !>              segment from which data are to be fetched.
+      !>
+      !>     DLADSC   is the DLA descriptor associated with the segment
+      !>              from which data are to be fetched.
+      !>
+      !>     START    is the ID of the first vertex to be fetched from
+      !>              the segment designated by HANDLE and DLADSC. The
+      !>              ID of a vertex is its ordinal position within the
+      !>              segment. Vertex IDs range from 1 to NV, where NV
+      !>              is the number of vertices in the segment.
+      !>
+      !>     ROOM     is the number of vertices that can fit in the
+      !>              output VRTCES array: the output array must be
+      !>              large enough to hold at least 3*ROOM double
+      !>              precision values.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     N        is the number of vertices fetched to the output
+      !>              array VRTCES. N is normally in the range
+      !>
+      !>                  1 : MIN( NV, ROOM )
+      !>
+      !>              If an error occurs on the call, N is undefined.
+      !>
+      !>     VRTCES   is a contiguous set of vertices. The returned
+      !>              vertices are arranged in order of increasing vertex
+      !>              ID. The IDs of the returned vertices range from
+      !>
+      !>                 START
+      !>
+      !>              to
+      !>
+      !>                 START + N - 1
+      !>
+      !>              Each vertex is a 3-vector. The correspondence of
+      !>              elements of VRTCES with the elements of the set of
+      !>              vertices contained in the segment is:
+      !>
+      !>                 VRTCES(1,1)      vertex_set(1, START)
+      !>                 VRTCES(2,1)      vertex_set(2, START)
+      !>                 VRTCES(3,1)      vertex_set(3, START)
+      !>                   ...             ...
+      !>                 VRTCES(1,N)      vertex_set(1, START+N-1)
+      !>                 VRTCES(2,N)      vertex_set(2, START+N-1)
+      !>                 VRTCES(3,N)      vertex_set(3, START+N-1)
+      !>
+      !>              The vertices are expressed in the body-fixed
+      !>              reference frame of the segment designated by
+      !>              HANDLE and DLADSC. The center of this frame is the
+      !>              origin of the Cartesian coordinate system in which
+      !>              the vertices are expressed. Note that the frame
+      !>              center need not coincide with the central body of
+      !>              the segment. Units are km.
+      !>
+      !>              If an error occurs on the call, VRTCES is
+      !>              undefined.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file
+      !>
+      !>        dla.inc
+      !>
+      !>     for declarations of DLA descriptor sizes and documentation of the
+      !>     contents of DLA descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dskdsc.inc
+      !>
+      !>     for declarations of DSK descriptor sizes and documentation of the
+      !>     contents of DSK descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dsk02.inc
+      !>
+      !>     for declarations of DSK data type 2 (plate model) parameters.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input handle is invalid, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     2)  If a file read error occurs, the error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     3)  If the input DLA descriptor is invalid, the effect of this
+      !>         routine is undefined. The error *may* be diagnosed by
+      !>         routines in the call tree of this routine, but there are no
+      !>         guarantees.
+      !>
+      !>     4)  If ROOM is non-positive, the error SPICE(VALUEOUTOFRANGE)
+      !>         is signaled.
+      !>
+      !>     5)  If START is less than 1 or greater than the number of
+      !>         vertices in the segment, the error SPICE(INDEXOUTOFRANGE) is
+      !>         signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See input argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine enables SPICE-based user applications to rapidly
+      !>     fetch the vertex data from a specified type 2 DSK segment. Using
+      !>     a large output array generally improves efficiency.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Look up all the vertices associated with each plate
+      !>        of the model contained in a specified type 2 segment. For each
+      !>        plate, display the plate's vertices and normal vector.
+      !>
+      !>        For this example, we'll show the context of this look-up:
+      !>        opening the DSK file for read access, traversing a trivial,
+      !>        one-segment list to obtain the segment of interest.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DSKV02_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>              INCLUDE 'dsk02.inc'
+      !>
+      !>              CHARACTER*(*)         FMT
+      !>              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
+      !>
+      !>              INTEGER               BUFSIZ
+      !>              PARAMETER           ( BUFSIZ = 10000 )
+      !>
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>              CHARACTER*(FILSIZ)    DSK
+      !>
+      !>              DOUBLE PRECISION      NORMAL ( 3 )
+      !>              DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
+      !>
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               J
+      !>              INTEGER               N
+      !>              INTEGER               NNORM
+      !>              INTEGER               NP
+      !>              INTEGER               NREAD
+      !>              INTEGER               NV
+      !>              INTEGER               NVTX
+      !>              INTEGER               PLATES  ( 3, BUFSIZ )
+      !>              INTEGER               PLIX
+      !>              INTEGER               REMAIN
+      !>              INTEGER               START
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Prompt for name of DSK and open file for reading.
+      !>        C
+      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>
+      !>              CALL DASOPR ( DSK, HANDLE )
+      !>
+      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>
+      !>              IF ( .NOT. FOUND ) THEN
+      !>
+      !>                 CALL SETMSG ( 'No segment found in file #.' )
+      !>                 CALL ERRCH  ( '#',  DSK                     )
+      !>                 CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
+      !>
+      !>              END IF
+      !>
+      !>        C
+      !>        C     Get segment vertex and plate counts.
+      !>        C
+      !>              CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
+      !>
+      !>              WRITE (*,*) ' '
+      !>              WRITE (*,*) 'Number of vertices: ', NV
+      !>              WRITE (*,*) 'Number of plates:   ', NP
+      !>        C
+      !>        C     Display the vertices of the first 5 plates.
+      !>        C
+      !>              REMAIN = MIN(5, NP)
+      !>              START  = 1
+      !>
+      !>              DO WHILE ( REMAIN .GT. 0 )
+      !>        C
+      !>        C        NREAD is the number of plates we'll read on this
+      !>        C        loop pass.
+      !>        C
+      !>                 NREAD  = MIN ( BUFSIZ, REMAIN )
+      !>
+      !>                 CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
+      !>             .                 PLATES                          )
+      !>
+      !>                 DO I = 1, N
+      !>
+      !>                    PLIX = START + I - 1
+      !>        C
+      !>        C           Read the vertices of the current plate.
+      !>        C
+      !>                    DO J = 1, 3
+      !>                       CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
+      !>             .                       1,      NVTX,   VERTS (1,J)  )
+      !>                    END DO
+      !>        C
+      !>        C           Display the vertices of the current plate:
+      !>        C
+      !>                    WRITE (*,*  ) ' '
+      !>                    WRITE (*,*  ) 'Plate number: ', PLIX
+      !>                    WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
+      !>                    WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
+      !>                    WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
+      !>
+      !>        C
+      !>        C           Display the normal vector of the current plate:
+      !>        C
+      !>                    CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
+      !>
+      !>                    WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
+      !>
+      !>                 END DO
+      !>
+      !>                 START  = START  + NREAD
+      !>                 REMAIN = REMAIN - NREAD
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Close the kernel.  This isn't necessary in a stand-
+      !>        C     alone program, but it's good practice in subroutines
+      !>        C     because it frees program and system resources.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds, the output
+      !>        was:
+      !>
+      !>        Enter DSK name > phobos512.bds
+      !>
+      !>         Number of vertices:      1579014
+      !>         Number of plates:        3145728
+      !>
+      !>         Plate number:            1
+      !>            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+      !>            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
+      !>            Normal:    -0.58197377E+00  0.32128561E+00  0.74704892E+00
+      !>
+      !>         Plate number:            2
+      !>            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+      !>            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>            Normal:    -0.58145695E+00  0.32198831E+00  0.74714881E+00
+      !>
+      !>         Plate number:            3
+      !>            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>            Normal:    -0.58159707E+00  0.32264196E+00  0.74675767E+00
+      !>
+      !>         Plate number:            4
+      !>            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+      !>            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>            Normal:    -0.58312901E+00  0.32056070E+00  0.74645924E+00
+      !>
+      !>         Plate number:            5
+      !>            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+      !>            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
+      !>            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>            Normal:    -0.58366405E+00  0.32306020E+00  0.74496200E+00
+      !>
+      !>        Note that only the vertex information for first 5 plates is
+      !>        provided.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR) (BVS)
+      !>
+      !>        Edited the header to comply with NAIF standard. Modified code
+      !>        example to reduce the output.
+      !>
+      !>-    SPICELIB Version 1.0.0, 04-APR-2017 (NJB)
+      !>
+      !>        Now calls ZZDDHHLU.
+      !>
+      !>        Updated detailed description of VRTCES. Updated comments
+      !>        in $Examples.
+      !>
+      !>        DSKLIB Version 1.0.1, 21-APR-2014 (NJB)
+      !>
+      !>           The diagram in the $Detailed_Output header section showing
+      !>           the contents of the output VRTCES array has been corrected.
+      !>
+      !>        DSKLIB Version 1.0.0, 02-JUN-2010 (NJB)
       module procedure dskv02
-!! ## Abstract
-!!
-!!     Fetch vertices from a type 2 DSK segment.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DSK
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
 
-
-! $ Detailed_Input
-!
-!     HANDLE   is the handle of a DSK file containing a type 2
-!              segment from which data are to be fetched.
-!
-!     DLADSC   is the DLA descriptor associated with the segment
-!              from which data are to be fetched.
-!
-!     START    is the ID of the first vertex to be fetched from
-!              the segment designated by HANDLE and DLADSC. The
-!              ID of a vertex is its ordinal position within the
-!              segment. Vertex IDs range from 1 to NV, where NV
-!              is the number of vertices in the segment.
-!
-!     ROOM     is the number of vertices that can fit in the
-!              output VRTCES array: the output array must be
-!              large enough to hold at least 3*ROOM double
-!              precision values.
-!
-! $ Detailed_Output
-!
-!     N        is the number of vertices fetched to the output
-!              array VRTCES. N is normally in the range
-!
-!                  1 : MIN( NV, ROOM )
-!
-!              If an error occurs on the call, N is undefined.
-!
-!     VRTCES   is a contiguous set of vertices. The returned
-!              vertices are arranged in order of increasing vertex
-!              ID. The IDs of the returned vertices range from
-!
-!                 START
-!
-!              to
-!
-!                 START + N - 1
-!
-!              Each vertex is a 3-vector. The correspondence of
-!              elements of VRTCES with the elements of the set of
-!              vertices contained in the segment is:
-!
-!                 VRTCES(1,1)      vertex_set(1, START)
-!                 VRTCES(2,1)      vertex_set(2, START)
-!                 VRTCES(3,1)      vertex_set(3, START)
-!                   ...             ...
-!                 VRTCES(1,N)      vertex_set(1, START+N-1)
-!                 VRTCES(2,N)      vertex_set(2, START+N-1)
-!                 VRTCES(3,N)      vertex_set(3, START+N-1)
-!
-!              The vertices are expressed in the body-fixed
-!              reference frame of the segment designated by
-!              HANDLE and DLADSC. The center of this frame is the
-!              origin of the Cartesian coordinate system in which
-!              the vertices are expressed. Note that the frame
-!              center need not coincide with the central body of
-!              the segment. Units are km.
-!
-!              If an error occurs on the call, VRTCES is
-!              undefined.
-!
-! $ Parameters
-!
-!     See the include file
-!
-!        dla.inc
-!
-!     for declarations of DLA descriptor sizes and documentation of the
-!     contents of DLA descriptors.
-!
-!     See the include file
-!
-!        dskdsc.inc
-!
-!     for declarations of DSK descriptor sizes and documentation of the
-!     contents of DSK descriptors.
-!
-!     See the include file
-!
-!        dsk02.inc
-!
-!     for declarations of DSK data type 2 (plate model) parameters.
-!
-! $ Exceptions
-!
-!     1)  If the input handle is invalid, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     2)  If a file read error occurs, the error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     3)  If the input DLA descriptor is invalid, the effect of this
-!         routine is undefined. The error *may* be diagnosed by
-!         routines in the call tree of this routine, but there are no
-!         guarantees.
-!
-!     4)  If ROOM is non-positive, the error SPICE(VALUEOUTOFRANGE)
-!         is signaled.
-!
-!     5)  If START is less than 1 or greater than the number of
-!         vertices in the segment, the error SPICE(INDEXOUTOFRANGE) is
-!         signaled.
-!
-! $ Files
-!
-!     See input argument HANDLE.
-!
-! $ Particulars
-!
-!     This routine enables SPICE-based user applications to rapidly
-!     fetch the vertex data from a specified type 2 DSK segment. Using
-!     a large output array generally improves efficiency.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Look up all the vertices associated with each plate
-!        of the model contained in a specified type 2 segment. For each
-!        plate, display the plate's vertices and normal vector.
-!
-!        For this example, we'll show the context of this look-up:
-!        opening the DSK file for read access, traversing a trivial,
-!        one-segment list to obtain the segment of interest.
-!
-!        Example code begins here.
-!
-!              PROGRAM DSKV02_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!              INCLUDE 'dsk02.inc'
-!
-!              CHARACTER*(*)         FMT
-!              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
-!
-!              INTEGER               BUFSIZ
-!              PARAMETER           ( BUFSIZ = 10000 )
-!
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!              CHARACTER*(FILSIZ)    DSK
-!
-!              DOUBLE PRECISION      NORMAL ( 3 )
-!              DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
-!
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               J
-!              INTEGER               N
-!              INTEGER               NNORM
-!              INTEGER               NP
-!              INTEGER               NREAD
-!              INTEGER               NV
-!              INTEGER               NVTX
-!              INTEGER               PLATES  ( 3, BUFSIZ )
-!              INTEGER               PLIX
-!              INTEGER               REMAIN
-!              INTEGER               START
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Prompt for name of DSK and open file for reading.
-!        C
-!              CALL PROMPT ( 'Enter DSK name > ', DSK )
-!
-!              CALL DASOPR ( DSK, HANDLE )
-!
-!              CALL DLABFS ( HANDLE, DLADSC, FOUND )
-!
-!              IF ( .NOT. FOUND ) THEN
-!
-!                 CALL SETMSG ( 'No segment found in file #.' )
-!                 CALL ERRCH  ( '#',  DSK                     )
-!                 CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
-!
-!              END IF
-!
-!        C
-!        C     Get segment vertex and plate counts.
-!        C
-!              CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
-!
-!              WRITE (*,*) ' '
-!              WRITE (*,*) 'Number of vertices: ', NV
-!              WRITE (*,*) 'Number of plates:   ', NP
-!        C
-!        C     Display the vertices of the first 5 plates.
-!        C
-!              REMAIN = MIN(5, NP)
-!              START  = 1
-!
-!              DO WHILE ( REMAIN .GT. 0 )
-!        C
-!        C        NREAD is the number of plates we'll read on this
-!        C        loop pass.
-!        C
-!                 NREAD  = MIN ( BUFSIZ, REMAIN )
-!
-!                 CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
-!             .                 PLATES                          )
-!
-!                 DO I = 1, N
-!
-!                    PLIX = START + I - 1
-!        C
-!        C           Read the vertices of the current plate.
-!        C
-!                    DO J = 1, 3
-!                       CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
-!             .                       1,      NVTX,   VERTS (1,J)  )
-!                    END DO
-!        C
-!        C           Display the vertices of the current plate:
-!        C
-!                    WRITE (*,*  ) ' '
-!                    WRITE (*,*  ) 'Plate number: ', PLIX
-!                    WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
-!                    WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
-!                    WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
-!
-!        C
-!        C           Display the normal vector of the current plate:
-!        C
-!                    CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
-!
-!                    WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
-!
-!                 END DO
-!
-!                 START  = START  + NREAD
-!                 REMAIN = REMAIN - NREAD
-!
-!              END DO
-!
-!        C
-!        C     Close the kernel.  This isn't necessary in a stand-
-!        C     alone program, but it's good practice in subroutines
-!        C     because it frees program and system resources.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds, the output
-!        was:
-!
-!        Enter DSK name > phobos512.bds
-!
-!         Number of vertices:      1579014
-!         Number of plates:        3145728
-!
-!         Plate number:            1
-!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
-!            Normal:    -0.58197377E+00  0.32128561E+00  0.74704892E+00
-!
-!         Plate number:            2
-!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!            Normal:    -0.58145695E+00  0.32198831E+00  0.74714881E+00
-!
-!         Plate number:            3
-!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!            Normal:    -0.58159707E+00  0.32264196E+00  0.74675767E+00
-!
-!         Plate number:            4
-!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!            Normal:    -0.58312901E+00  0.32056070E+00  0.74645924E+00
-!
-!         Plate number:            5
-!            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
-!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!            Normal:    -0.58366405E+00  0.32306020E+00  0.74496200E+00
-!
-!        Note that only the vertex information for first 5 plates is
-!        provided.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR) (BVS)
-!
-!        Edited the header to comply with NAIF standard. Modified code
-!        example to reduce the output.
-!
-!-    SPICELIB Version 1.0.0, 04-APR-2017 (NJB)
-!
-!        Now calls ZZDDHHLU.
-!
-!        Updated detailed description of VRTCES. Updated comments
-!        in $Examples.
-!
-!        DSKLIB Version 1.0.1, 21-APR-2014 (NJB)
-!
-!           The diagram in the $Detailed_Output header section showing
-!           the contents of the output VRTCES array has been corrected.
-!
-!        DSKLIB Version 1.0.0, 02-JUN-2010 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     return specified vertices from type 2 DSK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       real(wp)              dskdsc ( dskdsz )
 
       integer(ip)           lcroom
@@ -14148,27 +13023,270 @@ contains
       return
       end procedure dskv02
 
-!$Procedure DSKZ02 ( DSK, fetch type 2 model size parameters )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DSK file containing a type 2
+      !>              segment from which data are to be fetched.
+      !>
+      !>     DLADSC   is the DLA descriptor associated with the segment
+      !>              from which data are to be fetched.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NV       is the number of vertices belonging to
+      !>              the specified plate model.
+      !>
+      !>     NP       is the number of plates belonging to the
+      !>              specified plate model.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file
+      !>
+      !>        dla.inc
+      !>
+      !>     for declarations of DLA descriptor sizes and documentation of the
+      !>     contents of DLA descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dskdsc.inc
+      !>
+      !>     for declarations of DSK descriptor sizes and documentation of the
+      !>     contents of DSK descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dsk02.inc
+      !>
+      !>     for declarations of DSK data type 2 (plate model) parameters.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input handle is invalid, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     2)  If a file read error occurs, the error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     3)  If the input DLA descriptor is invalid, the effect of this
+      !>         routine is undefined. The error *may* be diagnosed by
+      !>         routines in the call tree of this routine, but there are no
+      !>         guarantees.
+      !>
+      !> ## Files
+      !>
+      !>     See input argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine enables SPICE-based user applications to
+      !>     conveniently fetch the plate and vertex counts of a type 2 DSK
+      !>     segment.
+      !>
+      !>     See the routine DSKB02 (DSK, fetch type 2 bookkeeping data)
+      !>     for an interface that returns all type 2 DSK segment
+      !>     bookkeeping data in a single call.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Look up all the vertices associated with each plate
+      !>        of the model contained in a specified type 2 segment. For each
+      !>        plate, display the plate's vertices and normal vector.
+      !>
+      !>        For this example, we'll show the context of this look-up:
+      !>        opening the DSK file for read access, traversing a trivial,
+      !>        one-segment list to obtain the segment of interest.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DSKZ02_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>              INCLUDE 'dsk02.inc'
+      !>
+      !>              CHARACTER*(*)         FMT
+      !>              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
+      !>
+      !>              INTEGER               BUFSIZ
+      !>              PARAMETER           ( BUFSIZ = 10000 )
+      !>
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>              CHARACTER*(FILSIZ)    DSK
+      !>
+      !>              DOUBLE PRECISION      NORMAL ( 3 )
+      !>              DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
+      !>
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               J
+      !>              INTEGER               N
+      !>              INTEGER               NNORM
+      !>              INTEGER               NP
+      !>              INTEGER               NREAD
+      !>              INTEGER               NV
+      !>              INTEGER               NVTX
+      !>              INTEGER               PLATES  ( 3, BUFSIZ )
+      !>              INTEGER               PLIX
+      !>              INTEGER               REMAIN
+      !>              INTEGER               START
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Prompt for name of DSK and open file for reading.
+      !>        C
+      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>
+      !>              CALL DASOPR ( DSK, HANDLE )
+      !>
+      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>
+      !>              IF ( .NOT. FOUND ) THEN
+      !>
+      !>                 CALL SETMSG ( 'No segment found in file #.' )
+      !>                 CALL ERRCH  ( '#',  DSK                     )
+      !>                 CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
+      !>
+      !>              END IF
+      !>
+      !>        C
+      !>        C     Get segment vertex and plate counts.
+      !>        C
+      !>              CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
+      !>
+      !>              WRITE (*,*) ' '
+      !>              WRITE (*,*) 'Number of vertices: ', NV
+      !>              WRITE (*,*) 'Number of plates:   ', NP
+      !>        C
+      !>        C     Display the vertices of the first 5 plates.
+      !>        C
+      !>              REMAIN = MIN(5, NP)
+      !>              START  = 1
+      !>
+      !>              DO WHILE ( REMAIN .GT. 0 )
+      !>        C
+      !>        C        NREAD is the number of plates we'll read on this
+      !>        C        loop pass.
+      !>        C
+      !>                 NREAD  = MIN ( BUFSIZ, REMAIN )
+      !>
+      !>                 CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
+      !>             .                 PLATES                          )
+      !>
+      !>                 DO I = 1, N
+      !>
+      !>                    PLIX = START + I - 1
+      !>        C
+      !>        C           Read the vertices of the current plate.
+      !>        C
+      !>                    DO J = 1, 3
+      !>                       CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
+      !>             .                       1,      NVTX,   VERTS (1,J)  )
+      !>                    END DO
+      !>        C
+      !>        C           Display the vertices of the current plate:
+      !>        C
+      !>                    WRITE (*,*  ) ' '
+      !>                    WRITE (*,*  ) 'Plate number: ', PLIX
+      !>                    WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
+      !>                    WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
+      !>                    WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
+      !>
+      !>        C
+      !>        C           Display the normal vector of the current plate:
+      !>        C
+      !>                    CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
+      !>
+      !>                    WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
+      !>
+      !>                 END DO
+      !>
+      !>                 START  = START  + NREAD
+      !>                 REMAIN = REMAIN - NREAD
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Close the kernel.  This isn't necessary in a stand-
+      !>        C     alone program, but it's good practice in subroutines
+      !>        C     because it frees program and system resources.
+      !>        C
+      !>              CALL DASCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds, the output
+      !>        was:
+      !>
+      !>        Enter DSK name > phobos512.bds
+      !>
+      !>         Number of vertices:      1579014
+      !>         Number of plates:        3145728
+      !>
+      !>         Plate number:            1
+      !>            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+      !>            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
+      !>            Normal:    -0.58197377E+00  0.32128561E+00  0.74704892E+00
+      !>
+      !>         Plate number:            2
+      !>            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
+      !>            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>            Normal:    -0.58145695E+00  0.32198831E+00  0.74714881E+00
+      !>
+      !>         Plate number:            3
+      !>            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
+      !>            Normal:    -0.58159707E+00  0.32264196E+00  0.74675767E+00
+      !>
+      !>         Plate number:            4
+      !>            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
+      !>            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+      !>            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>            Normal:    -0.58312901E+00  0.32056070E+00  0.74645924E+00
+      !>
+      !>         Plate number:            5
+      !>            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
+      !>            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
+      !>            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
+      !>            Normal:    -0.58366405E+00  0.32306020E+00  0.74496200E+00
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR) (BVS)
+      !>
+      !>        Edited the header to comply with NAIF standard. Modified code
+      !>        example to reduce the output.
+      !>
+      !>-    SPICELIB Version 1.0.0, 02-JUN-2010 (NJB)
       module procedure dskz02
-!! ## Abstract
-!!
-!!     Return plate model size parameters---plate count and
-!!     vertex count---for a type 2 DSK segment.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DSK
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_dla
       use pepper_inc_dskdsc
@@ -14177,286 +13295,6 @@ contains
       integer(ip) :: np_1(1)  !! one-element copy of np (array argument)
       integer(ip) :: nv_1(1)  !! one-element copy of nv (array argument)
 
-
-! $ Detailed_Input
-!
-!     HANDLE   is the handle of a DSK file containing a type 2
-!              segment from which data are to be fetched.
-!
-!     DLADSC   is the DLA descriptor associated with the segment
-!              from which data are to be fetched.
-!
-! $ Detailed_Output
-!
-!     NV       is the number of vertices belonging to
-!              the specified plate model.
-!
-!     NP       is the number of plates belonging to the
-!              specified plate model.
-!
-! $ Parameters
-!
-!     See the include file
-!
-!        dla.inc
-!
-!     for declarations of DLA descriptor sizes and documentation of the
-!     contents of DLA descriptors.
-!
-!     See the include file
-!
-!        dskdsc.inc
-!
-!     for declarations of DSK descriptor sizes and documentation of the
-!     contents of DSK descriptors.
-!
-!     See the include file
-!
-!        dsk02.inc
-!
-!     for declarations of DSK data type 2 (plate model) parameters.
-!
-! $ Exceptions
-!
-!     1)  If the input handle is invalid, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     2)  If a file read error occurs, the error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     3)  If the input DLA descriptor is invalid, the effect of this
-!         routine is undefined. The error *may* be diagnosed by
-!         routines in the call tree of this routine, but there are no
-!         guarantees.
-!
-! $ Files
-!
-!     See input argument HANDLE.
-!
-! $ Particulars
-!
-!     This routine enables SPICE-based user applications to
-!     conveniently fetch the plate and vertex counts of a type 2 DSK
-!     segment.
-!
-!     See the routine DSKB02 (DSK, fetch type 2 bookkeeping data)
-!     for an interface that returns all type 2 DSK segment
-!     bookkeeping data in a single call.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Look up all the vertices associated with each plate
-!        of the model contained in a specified type 2 segment. For each
-!        plate, display the plate's vertices and normal vector.
-!
-!        For this example, we'll show the context of this look-up:
-!        opening the DSK file for read access, traversing a trivial,
-!        one-segment list to obtain the segment of interest.
-!
-!        Example code begins here.
-!
-!              PROGRAM DSKZ02_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!              INCLUDE 'dsk02.inc'
-!
-!              CHARACTER*(*)         FMT
-!              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
-!
-!              INTEGER               BUFSIZ
-!              PARAMETER           ( BUFSIZ = 10000 )
-!
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!              CHARACTER*(FILSIZ)    DSK
-!
-!              DOUBLE PRECISION      NORMAL ( 3 )
-!              DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
-!
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               J
-!              INTEGER               N
-!              INTEGER               NNORM
-!              INTEGER               NP
-!              INTEGER               NREAD
-!              INTEGER               NV
-!              INTEGER               NVTX
-!              INTEGER               PLATES  ( 3, BUFSIZ )
-!              INTEGER               PLIX
-!              INTEGER               REMAIN
-!              INTEGER               START
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Prompt for name of DSK and open file for reading.
-!        C
-!              CALL PROMPT ( 'Enter DSK name > ', DSK )
-!
-!              CALL DASOPR ( DSK, HANDLE )
-!
-!              CALL DLABFS ( HANDLE, DLADSC, FOUND )
-!
-!              IF ( .NOT. FOUND ) THEN
-!
-!                 CALL SETMSG ( 'No segment found in file #.' )
-!                 CALL ERRCH  ( '#',  DSK                     )
-!                 CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
-!
-!              END IF
-!
-!        C
-!        C     Get segment vertex and plate counts.
-!        C
-!              CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
-!
-!              WRITE (*,*) ' '
-!              WRITE (*,*) 'Number of vertices: ', NV
-!              WRITE (*,*) 'Number of plates:   ', NP
-!        C
-!        C     Display the vertices of the first 5 plates.
-!        C
-!              REMAIN = MIN(5, NP)
-!              START  = 1
-!
-!              DO WHILE ( REMAIN .GT. 0 )
-!        C
-!        C        NREAD is the number of plates we'll read on this
-!        C        loop pass.
-!        C
-!                 NREAD  = MIN ( BUFSIZ, REMAIN )
-!
-!                 CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
-!             .                 PLATES                          )
-!
-!                 DO I = 1, N
-!
-!                    PLIX = START + I - 1
-!        C
-!        C           Read the vertices of the current plate.
-!        C
-!                    DO J = 1, 3
-!                       CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
-!             .                       1,      NVTX,   VERTS (1,J)  )
-!                    END DO
-!        C
-!        C           Display the vertices of the current plate:
-!        C
-!                    WRITE (*,*  ) ' '
-!                    WRITE (*,*  ) 'Plate number: ', PLIX
-!                    WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
-!                    WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
-!                    WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
-!
-!        C
-!        C           Display the normal vector of the current plate:
-!        C
-!                    CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
-!
-!                    WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
-!
-!                 END DO
-!
-!                 START  = START  + NREAD
-!                 REMAIN = REMAIN - NREAD
-!
-!              END DO
-!
-!        C
-!        C     Close the kernel.  This isn't necessary in a stand-
-!        C     alone program, but it's good practice in subroutines
-!        C     because it frees program and system resources.
-!        C
-!              CALL DASCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds, the output
-!        was:
-!
-!        Enter DSK name > phobos512.bds
-!
-!         Number of vertices:      1579014
-!         Number of plates:        3145728
-!
-!         Plate number:            1
-!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!            Vertex 2:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!            Vertex 3:  -0.67571000E+01  0.62775400E+01  0.60209600E+01
-!            Normal:    -0.58197377E+00  0.32128561E+00  0.74704892E+00
-!
-!         Plate number:            2
-!            Vertex 1:  -0.67744400E+01  0.62681500E+01  0.60114900E+01
-!            Vertex 2:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!            Normal:    -0.58145695E+00  0.32198831E+00  0.74714881E+00
-!
-!         Plate number:            3
-!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 2:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!            Vertex 3:  -0.67623800E+01  0.62572800E+01  0.60255600E+01
-!            Normal:    -0.58159707E+00  0.32264196E+00  0.74675767E+00
-!
-!         Plate number:            4
-!            Vertex 1:  -0.67797300E+01  0.62479000E+01  0.60161000E+01
-!            Vertex 2:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!            Normal:    -0.58312901E+00  0.32056070E+00  0.74645924E+00
-!
-!         Plate number:            5
-!            Vertex 1:  -0.67849900E+01  0.62276200E+01  0.60207000E+01
-!            Vertex 2:  -0.67729900E+01  0.62167400E+01  0.60348200E+01
-!            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
-!            Normal:    -0.58366405E+00  0.32306020E+00  0.74496200E+00
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR) (BVS)
-!
-!        Edited the header to comply with NAIF standard. Modified code
-!        example to reduce the output.
-!
-!-    SPICELIB Version 1.0.0, 02-JUN-2010 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     fetch model size parameters from a type 2 DSK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           n
 
       if ( ctx%failed() ) return
@@ -14469,715 +13307,670 @@ contains
       return
       end procedure dskz02
 
-!$Procedure DSKMI2 ( DSK, make spatial index for type 2 segment )
-
+      !> ## Detailed Input
+      !>
+      !>     NV       is the number of vertices belonging to the input
+      !>              set of plates.
+      !>
+      !>     VRTCES   is an array of coordinates of the vertices. The Ith
+      !>              vertex occupies elements (1:3,I) of this array.
+      !>
+      !>     NP       is the number of plates in the input plate set.
+      !>
+      !>     PLATES   is an array representing the triangular plates of a
+      !>              shape model. The elements of PLATES are vertex
+      !>              indices; vertex indices are 1-based. The vertex
+      !>              indices of the Ith plate occupy elements (1:3,I) of
+      !>              this array.
+      !>
+      !>     FINSCL   is the fine voxel scale. This scale determines the
+      !>              edge length of the cubical voxels comprising the fine
+      !>              voxel grid: the edge length VOXSIZ is approximately
+      !>
+      !>                  FINSCL * {average plate extent}
+      !>
+      !>              where the extents of a plate are the respective
+      !>              differences between the maximum and minimum
+      !>              coordinate values of the plate's vertices.
+      !>
+      !>              The relationship between VOXSIZ and the average plate
+      !>              extent is approximate because the VOXSIZ is adjusted
+      !>              so that each dimension of the fine voxel grid is an
+      !>              integer multiple of the coarse voxel scale.
+      !>
+      !>              See the $Particulars section below for further
+      !>              information on voxel scales.
+      !>
+      !>     CORSCL   is the coarse voxel scale. This integer scale is the
+      !>              ratio of the edge length of coarse voxels to
+      !>              that of fine voxels. The coarse scale must be
+      !>              large enough so that the total number of coarse
+      !>              voxels does not exceed MAXCGR (see the $Parameters
+      !>              section below).
+      !>
+      !>     WORKSZ   is the second dimension of the workspace array WORK.
+      !>              WORKSZ must be at least as large as the greater of
+      !>
+      !>                 - the number of fine voxel-plate associations
+      !>
+      !>                   This number is equal to
+      !>
+      !>                      NP * {average number of fine voxels
+      !>                            intersected by each plate}
+      !>
+      !>                 - the number of vertex-plate associations, if
+      !>                   the vertex-plate mapping is constructed.
+      !>
+      !>                   This number is equal to
+      !>
+      !>                      NV + ( 3 * NP )
+      !>
+      !>     VOXPSZ   is the size of the fine voxel-plate pointer array.
+      !>              This array maps fine voxels to lists of plates that
+      !>              intersect those voxels. VOXPSZ must be at least as
+      !>              large as
+      !>
+      !>                       3
+      !>                 CORSCL  * {number of non-empty coarse voxels}
+      !>
+      !>     VOXLSZ   is the size of the fine voxel-plate list array. This
+      !>              array contains, for each non-empty fine voxel, the
+      !>              count of plates that intersect that voxel and the
+      !>              IDs of those plates. VOXLSZ must be at least as large
+      !>              as
+      !>
+      !>                      NP * {average number of fine voxels
+      !>                            intersected by each plate}
+      !>
+      !>                  +   {number of non-empty fine voxels}
+      !>
+      !>     MAKVTL   is a logical flag that, when set to .TRUE., indicates
+      !>              that a  vertex-plate association list is to be
+      !>              constructed.
+      !>
+      !>              The amount of workspace that is needed may depend on
+      !>              whether a vertex-plate association list is
+      !>              constructed. When this list is constructed, the size
+      !>              of the integer component of the spatial index is
+      !>              increased by the size of the list and the size of a
+      !>              vertex-plate pointer array; the total of these sizes
+      !>              is
+      !>
+      !>                 ( 2 * NV ) + ( 3 * NP )
+      !>
+      !>     SPXISZ   is the declared size of the output array SPAIXI. This
+      !>              size must be at least as large as the sum of
+      !>
+      !>                 - the fixed-size part of the integer component of
+      !>                   the index, which includes the coarse voxel grid;
+      !>                   this value is
+      !>
+      !>                      IXIFIX
+      !>
+      !>                 - the size VOXPSZ of the voxel-plate pointer array
+      !>
+      !>                 - the size VOXLSZ of the voxel-plate association
+      !>                   list
+      !>
+      !>              plus, if the vertex-plate association list is
+      !>              constructed,
+      !>
+      !>                 - the size NV of the vertex-plate pointer array
+      !>
+      !>                 - the size of the vertex-plate association list;
+      !>                   this size is
+      !>
+      !>                      NV + ( 3 * NP )
+      !>
+      !>     WORK     is the workspace array. The array should be declared
+      !>              with dimensions
+      !>
+      !>                 (2, WORKSZ)
+      !>
+      !>              See the description of WORKSZ above.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     WORK     is the workspace array, modified by the operations
+      !>              performed by this routine.
+      !>
+      !>     SPAIXD,
+      !>     SPAIXI   are, respectively, the double precision and integer
+      !>              components of the spatial index of the segment.
+      !>
+      !>              SPAIXD must be declared with size at least IXDFIX.
+      !>              SPAIXI must be declared with size at least SPXISZ.
+      !>
+      !> ## Parameters
+      !>
+      !>     IXDFIX   is the size of the double precision component of
+      !>              the spatial index.
+      !>
+      !>     IXIFIX   is the size of the fixed-size portion of the integer
+      !>              component of the spatial index.
+      !>
+      !>     See the include file
+      !>
+      !>        dsk02.inc
+      !>
+      !>     for declarations of DSK data type 2 (plate model) parameters.
+      !>
+      !>     See the include file
+      !>
+      !>        dla.inc
+      !>
+      !>     for declarations of DLA descriptor sizes and documentation of the
+      !>     contents of DLA descriptors.
+      !>
+      !>     See the include file
+      !>
+      !>        dskdsc.inc
+      !>
+      !>     for declarations of DSK descriptor sizes and documentation of the
+      !>     contents of DSK descriptors.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the fine voxel scale is non-positive, the error
+      !>         SPICE(BADFINEVOXELSCALE) is signaled.
+      !>
+      !>     2)  If the coarse voxel scale is less than 1, the error
+      !>         SPICE(BADCOARSEVOXSCALE) is signaled.
+      !>
+      !>     3)  If NV is less than 3 or greater than MAXVRT, the error
+      !>         SPICE(BADVERTEXCOUNT) is signaled.
+      !>
+      !>     4)  If NP is less than 1 or greater than MAXPLT, the error
+      !>         SPICE(BADPLATECOUNT) is signaled.
+      !>
+      !>     5)  If the workspace size WORKSZ is less than NP+1, the error
+      !>         SPICE(WORKSPACETOOSMALL) is signaled. This is merely a
+      !>         sanity check; normally the workspace will need to be
+      !>         substantially larger than this reference value. See the
+      !>         description of WORKSZ in the header section $Detailed_Input
+      !>         above.
+      !>
+      !>     6)  If the voxel-plate pointer array size VOXPSZ is less than 1,
+      !>         the error SPICE(PTRARRAYTOOSMALL) is signaled. This is merely
+      !>         a sanity check; normally this pointer array will need to be
+      !>         substantially larger than this reference value. See the
+      !>         description of VOXPSZ in the header section $Detailed_Input
+      !>         above.
+      !>
+      !>     7)  If the voxel-plate list array size VOXLSZ is less than NP+1,
+      !>         the error SPICE(PLATELISTTOOSMALL) is signaled. This is
+      !>         merely a sanity check; normally this array will need to be
+      !>         substantially larger than this reference value. See the
+      !>         description of VOXLSZ in the header section $Detailed_Input
+      !>         above.
+      !>
+      !>     8)  If the size SPXISZ of the integer array SPAIXI is too small
+      !>         to contain its constituent structures, where the sizes
+      !>         of these structures are derived from the inputs
+      !>
+      !>             NV, NP, VOXPSZ, VOXLSZ
+      !>
+      !>         the error SPICE(INTINDEXTOOSMALL) is signaled.
+      !>
+      !>     9)  If there is insufficient room to create any of the data
+      !>         structures contained in the spatial index, an error is
+      !>         signaled by a routine in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Users planning to create DSK files should consider whether the
+      !>     SPICE DSK creation utility MKDSK may be suitable for their needs.
+      !>
+      !>     This routine supports use of the DSK type 2 segment writer DSKW02
+      !>     by creating the "spatial index" arrays required as inputs to that
+      !>     routine.
+      !>
+      !>     A spatial index is a group of data structures that facilitates
+      !>     rapid high-level computations involving sets of plates. The data
+      !>     structures created by this routine are aggregated into arrays
+      !>     of type INTEGER and type DOUBLE PRECISION.
+      !>
+      !>     Voxel grids
+      !>     ===========
+      !>
+      !>     A key geometric computation---probably the most important, as it
+      !>     serves as a foundation for other high-level computations---is
+      !>     finding the intersection of a ray with the plate set. DSK type 2
+      !>     segments use data structures called "voxel grids" as part of
+      !>     their indexing mechanism. There is a "coarse grid": a box that
+      !>     completely encloses a DSK type 2 segment's plate set, and which
+      !>     is composed of identically-sized cubes called "coarse voxels."
+      !>     Each coarse voxel in composed of smaller cubes called "fine
+      !>     voxels." When the term "voxel" is used without qualification, it
+      !>     refers to fine voxels.
+      !>
+      !>     Type 2 DSK segments contain data structures that associate plates
+      !>     with the fine voxels intersected by those plates. These
+      !>     structures enable the type 2 DSK software to rapidly find plates
+      !>     in a given region of space.
+      !>
+      !>     Voxel scales
+      !>     ============
+      !>
+      !>     There are two voxel scales:
+      !>
+      !>     -  The coarse voxel scale is the integer ratio of the
+      !>        edge length of a coarse voxel to the edge length of
+      !>        a fine voxel
+      !>
+      !>     -  The fine voxel scale is the double precision ratio
+      !>        of the edge length of a fine voxel to the average
+      !>        extent of the plates in the input plate set. "Extents"
+      !>        of a plate are the absolute values of the differences
+      !>        between the respective maximum and minimum X, Y, and Z
+      !>        coordinates of the plate's vertices.
+      !>
+      !>     Voxel scales determine the resolution of the voxel grid.
+      !>     Voxel scales must be chosen to satisfy size constraints and
+      !>     provide reasonable plate lookup performance.
+      !>
+      !>     The following considerations apply to spatial indexes of
+      !>     type 2 DSK segments:
+      !>
+      !>        1)  The maximum number of coarse voxels is fixed at MAXCGR
+      !>            (declared in dsk02.inc).
+      !>
+      !>        2)  If there are too few fine voxels, the average number of
+      !>            plates per fine voxel will be very large. This largely
+      !>            negates the performance improvement afforded by having an
+      !>            index. Also, the number of plates per voxel may exceed
+      !>            limits imposed by DSK subroutines that use static arrays.
+      !>
+      !>        3)  If there are too many fine voxels, the average number of
+      !>            voxels intersected by a given plate may be too large for
+      !>            all the plate-voxel associations to be stored. In
+      !>            addition, the time needed to examine the plate lists for
+      !>            each voxel (including the empty ones) may become quite
+      !>            large, again negating the value of the index.
+      !>
+      !>     In many cases, voxel scales yielding optimum performance must be
+      !>     determined by experiment. However, the following heuristics can
+      !>     provide reasonable starting values:
+      !>
+      !>        Let NP be the number of plates. Let FS be the fine voxel
+      !>        scale. Then a reasonable value of FS may be
+      !>
+      !>                   (0.25D0)
+      !>           FS =  NP       / 8.D0
+      !>
+      !>        In general, FS should not smaller than 1.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Create a three-segment DSK file using plate model data for
+      !>        Phobos. Use latitudinal, rectangular, and planetodetic
+      !>        coordinates in the respective segments. This is not a
+      !>        realistic example, but it serves to demonstrate use of
+      !>        the supported coordinate systems.
+      !>
+      !>        Use the DSK kernel below to provide, for simplicity, the
+      !>        input plate and vertex data. The selected input file has one
+      !>        segment.
+      !>
+      !>           phobos_3_3.bds
+      !>
+      !>        Example code begins here.
+      !>
+      !>        C
+      !>        C     Example program for DSKW02, DSKMI2, and DSKRB2
+      !>        C
+      !>        C        Create a three-segment DSK file using plate model
+      !>        C        data for Phobos. Use latitudinal, rectangular, and
+      !>        C        planetodetic coordinates in the respective segments.
+      !>        C
+      !>        C        For simplicity, use an existing DSK file to provide
+      !>        C        the input plate and vertex data. The selected input
+      !>        C        file has one segment.
+      !>        C
+      !>        C           Version 1.0.0 22-JAN-2016 (NJB)
+      !>        C
+      !>              PROGRAM DSKMI2_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>              INCLUDE 'dskdsc.inc'
+      !>              INCLUDE 'dsk02.inc'
+      !>
+      !>        C
+      !>        C     SPICELIB functions
+      !>        C
+      !>              DOUBLE PRECISION      JYEAR
+      !>              DOUBLE PRECISION      PI
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              INTEGER               FRNMLN
+      !>              PARAMETER           ( FRNMLN = 32 )
+      !>
+      !>              INTEGER               NSEG
+      !>              PARAMETER           ( NSEG   = 3 )
+      !>
+      !>              INTEGER               NAMLEN
+      !>              PARAMETER           ( NAMLEN = 20 )
+      !>
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>              INTEGER               LNSIZE
+      !>              PARAMETER           ( LNSIZE = 80 )
+      !>
+      !>              INTEGER               NCOR
+      !>              PARAMETER           ( NCOR   = 4 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(NAMLEN)    CORNAM ( NCOR )
+      !>              CHARACTER*(FILSIZ)    DSK
+      !>              CHARACTER*(FRNMLN)    FRAME
+      !>              CHARACTER*(FILSIZ)    INDSK
+      !>              CHARACTER*(LNSIZE)    LINE
+      !>        C
+      !>        C     Note: the values of MAXVRT and MAXPLT declared
+      !>        C     in dsk02.inc, and the integer spatial index
+      !>        C     dimension SPAISZ are very large. Smaller buffers
+      !>        C     can be used for most applications.
+      !>        C
+      !>              DOUBLE PRECISION      CORPAR ( NSYPAR )
+      !>              DOUBLE PRECISION      F
+      !>              DOUBLE PRECISION      FINSCL
+      !>              DOUBLE PRECISION      FIRST
+      !>              DOUBLE PRECISION      LAST
+      !>              DOUBLE PRECISION      MNCOR1
+      !>              DOUBLE PRECISION      MNCOR2
+      !>              DOUBLE PRECISION      MNCOR3
+      !>              DOUBLE PRECISION      MXCOR1
+      !>              DOUBLE PRECISION      MXCOR2
+      !>              DOUBLE PRECISION      MXCOR3
+      !>              DOUBLE PRECISION      RE
+      !>              DOUBLE PRECISION      RP
+      !>              DOUBLE PRECISION      SPAIXD ( IXDFIX )
+      !>              DOUBLE PRECISION      VRTCES ( 3, MAXVRT )
+      !>
+      !>              INTEGER               CENTER
+      !>              INTEGER               CORSCL
+      !>              INTEGER               CORSYS
+      !>              INTEGER               DCLASS
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               INHAN
+      !>              INTEGER               NP
+      !>              INTEGER               NV
+      !>              INTEGER               PLATES ( 3, MAXPLT )
+      !>              INTEGER               SEGNO
+      !>              INTEGER               SPAIXI ( SPAISZ )
+      !>              INTEGER               SURFID
+      !>              INTEGER               VOXPSZ
+      !>              INTEGER               VOXLSZ
+      !>              INTEGER               WORK   ( 2, MAXCEL )
+      !>              INTEGER               WORKSZ
+      !>
+      !>              LOGICAL               FOUND
+      !>        C
+      !>        C     Saved variables
+      !>        C
+      !>        C     Save all large arrays to avoid stack problems.
+      !>        C
+      !>              SAVE
+      !>        C
+      !>        C     Initial values
+      !>        C
+      !>              DATA                  CORNAM / 'radius',
+      !>             .                               'Z-coordinate',
+      !>             .                               'Z-coordinate',
+      !>             .                               'altitude'     /
+      !>
+      !>        C
+      !>        C     Assign names of input and output DSK files.
+      !>        C
+      !>              INDSK = 'phobos_3_3.bds'
+      !>              DSK   = 'phobos_3_3_3seg.bds'
+      !>        C
+      !>        C     Open input DSK for read access; find first segment.
+      !>        C
+      !>              CALL DASOPR ( INDSK, INHAN )
+      !>              CALL DLABFS ( INHAN, DLADSC, FOUND )
+      !>        C
+      !>        C     Fetch vertices and plates from input DSK file.
+      !>        C
+      !>              WRITE (*,*) 'Reading input data...'
+      !>
+      !>              CALL DSKV02 ( INHAN, DLADSC, 1, MAXVRT, NV, VRTCES )
+      !>              CALL DSKP02 ( INHAN, DLADSC, 1, MAXPLT, NP, PLATES )
+      !>
+      !>              WRITE (*,*) 'Done.'
+      !>        C
+      !>        C     Set input array sizes required by DSKMI2.
+      !>        C
+      !>              VOXPSZ = MAXVXP
+      !>              VOXLSZ = MXNVLS
+      !>              WORKSZ = MAXCEL
+      !>        C
+      !>        C     Set fine and coarse voxel scales. (These usually
+      !>        C     need to determined by experimentation.)
+      !>        C
+      !>              FINSCL = 5.D0
+      !>              CORSCL = 4
+      !>        C
+      !>        C     Open a new DSK file.
+      !>        C
+      !>              CALL DSKOPN ( DSK, DSK, 0, HANDLE )
+      !>        C
+      !>        C     Create three segments and add them to the file.
+      !>        C
+      !>              DO SEGNO = 1, NSEG
+      !>        C
+      !>        C        Create spatial index.
+      !>        C
+      !>                 WRITE (*,*) 'Creating segment ', SEGNO
+      !>                 WRITE (*,*) 'Creating spatial index...'
+      !>
+      !>                 CALL DSKMI2 ( NV,     VRTCES, NP,     PLATES, FINSCL,
+      !>             .                 CORSCL, WORKSZ, VOXPSZ, VOXLSZ, .TRUE.,
+      !>             .                 SPAISZ, WORK,   SPAIXD, SPAIXI        )
+      !>
+      !>                 WRITE (*,*) 'Done.'
+      !>        C
+      !>        C        Set up inputs describing segment attributes:
+      !>        C
+      !>        C        - Central body: Phobos
+      !>        C        - Surface ID code: user's choice.
+      !>        C          We use the segment number here.
+      !>        C        - Data class: general (arbitrary) shape
+      !>        C        - Body-fixed reference frame
+      !>        C        - Time coverage bounds (TBD)
+      !>        C
+      !>                 CENTER = 401
+      !>                 SURFID = SEGNO
+      !>                 DCLASS = GENCLS
+      !>                 FRAME  = 'IAU_PHOBOS'
+      !>
+      !>                 FIRST = -50 * JYEAR()
+      !>                 LAST  =  50 * JYEAR()
+      !>        C
+      !>        C        Set the coordinate system and coordinate system
+      !>        C        bounds based on the segment index.
+      !>        C
+      !>        C        Zero out the coordinate parameters to start.
+      !>        C
+      !>                 CALL CLEARD ( NSYPAR, CORPAR )
+      !>
+      !>                 IF ( SEGNO .EQ. 1 ) THEN
+      !>        C
+      !>        C           Use planetocentric latitudinal coordinates. Set
+      !>        C           the longitude and latitude bounds.
+      !>        C
+      !>                    CORSYS = LATSYS
+      !>
+      !>                    MNCOR1 = -PI()
+      !>                    MXCOR1 =  PI()
+      !>                    MNCOR2 = -PI()/2
+      !>                    MXCOR2 =  PI()/2
+      !>
+      !>                 ELSE IF ( SEGNO .EQ. 2 ) THEN
+      !>        C
+      !>        C           Use rectangular coordinates. Set the
+      !>        C           X and Y bounds.
+      !>        C
+      !>        C           The bounds shown here were derived from
+      !>        C           the plate data. They lie slightly outside
+      !>        C           of the range spanned by the plates.
+      !>        C
+      !>                    CORSYS = RECSYS
+      !>
+      !>                    MNCOR1 = -1.3D0
+      !>                    MXCOR1 =  1.31D0
+      !>                    MNCOR2 = -1.21D0
+      !>                    MXCOR2 =  1.2D0
+      !>
+      !>                 ELSE
+      !>        C
+      !>        C           Set the coordinate system to planetodetic.
+      !>        C
+      !>                    CORSYS    = PDTSYS
+      !>
+      !>                    MNCOR1    = -PI()
+      !>                    MXCOR1    =  PI()
+      !>                    MNCOR2    = -PI()/2
+      !>                    MXCOR2    =  PI()/2
+      !>        C
+      !>        C           We'll use equatorial and polar radii from
+      !>        C           pck00010.tpc. These normally would be fetched
+      !>        C           at run time, but for simplicity, we'll use
+      !>        C           hard-coded values.
+      !>
+      !>                    RE        = 13.0D0
+      !>                    RP        =  9.1D0
+      !>                    F         = ( RE - RP ) / RE
+      !>
+      !>                    CORPAR(1) = RE
+      !>                    CORPAR(2) = F
+      !>
+      !>                 END IF
+      !>        C
+      !>        C        Compute plate model radius bounds.
+      !>        C
+      !>                 LINE = 'Computing # bounds of plate set...'
+      !>
+      !>                 CALL REPMC ( LINE, '#', CORNAM(CORSYS), LINE )
+      !>                 WRITE (*,*) LINE
+      !>
+      !>                 CALL DSKRB2 ( NV,     VRTCES, NP,     PLATES,
+      !>             .                 CORSYS, CORPAR, MNCOR3, MXCOR3 )
+      !>
+      !>                 WRITE (*,*) 'Done.'
+      !>        C
+      !>        C        Write the segment to the file.
+      !>        C
+      !>                 WRITE (*,*) 'Writing segment...'
+      !>
+      !>                 CALL DSKW02 ( HANDLE,
+      !>             .                 CENTER, SURFID, DCLASS, FRAME,  CORSYS,
+      !>             .                 CORPAR, MNCOR1, MXCOR1, MNCOR2, MXCOR2,
+      !>             .                 MNCOR3, MXCOR3, FIRST,  LAST,   NV,
+      !>             .                 VRTCES, NP,     PLATES, SPAIXD, SPAIXI )
+      !>
+      !>                 WRITE (*,*) 'Done.'
+      !>
+      !>              END DO
+      !>        C
+      !>        C     Segregate the data records in the DSK file and
+      !>        C     close the file.
+      !>        C
+      !>              WRITE (*,*) 'Segregating and closing DSK file...'
+      !>
+      !>              CALL DSKCLS ( HANDLE, .TRUE. )
+      !>
+      !>              WRITE (*,*) 'Done.'
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Reading input data...
+      !>         Done.
+      !>         Creating segment            1
+      !>         Creating spatial index...
+      !>         Done.
+      !>         Computing radius bounds of plate set...
+      !>         Done.
+      !>         Writing segment...
+      !>         Done.
+      !>         Creating segment            2
+      !>         Creating spatial index...
+      !>         Done.
+      !>         Computing Z-coordinate bounds of plate set...
+      !>         Done.
+      !>         Writing segment...
+      !>         Done.
+      !>         Creating segment            3
+      !>         Creating spatial index...
+      !>         Done.
+      !>         Computing altitude bounds of plate set...
+      !>         Done.
+      !>         Writing segment...
+      !>         Done.
+      !>         Segregating and closing DSK file...
+      !>         Done.
+      !>
+      !>        Note that after run completion, a new DSK exists in the output
+      !>        directory.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 03-JUN-2021 (JDR) (BVS)
+      !>
+      !>        Edited the header to comply with NAIF standard. Fixed I/O type
+      !>        of arguments WORK, SPAIXD and SPAIXI in $Brief_I/O table.
+      !>
+      !>        Added solution to code example.
+      !>
+      !>-    SPICELIB Version 1.0.0, 13-DEC-2016 (NJB)
+      !>
+      !>        Updated check on NV.
+      !>
+      !>        16-MAR-2016 (NJB)
+      !>
+      !>           Now zeros out the size of the vertex-plate list
+      !>           when the list is not created.
+      !>
+      !>        23-JAN-2016 (NJB)
+      !>
+      !>           Original version.
       module procedure dskmi2
-!! ## Abstract
-!!
-!!     Make spatial index for a DSK type 2 segment. The index is
-!!     returned as a pair of arrays, one of type INTEGER and one of type
-!!     DOUBLE PRECISION. These arrays are suitable for use with the DSK
-!!     type 2 writer DSKW02.
-!!
-!! ## Required Reading
-!!
-!!     DAS
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DSK
-!!     FILES
-!!     PLATE
-!!     TOPOGRAPHY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
 
-
-! $ Detailed_Input
-!
-!     NV       is the number of vertices belonging to the input
-!              set of plates.
-!
-!     VRTCES   is an array of coordinates of the vertices. The Ith
-!              vertex occupies elements (1:3,I) of this array.
-!
-!     NP       is the number of plates in the input plate set.
-!
-!     PLATES   is an array representing the triangular plates of a
-!              shape model. The elements of PLATES are vertex
-!              indices; vertex indices are 1-based. The vertex
-!              indices of the Ith plate occupy elements (1:3,I) of
-!              this array.
-!
-!     FINSCL   is the fine voxel scale. This scale determines the
-!              edge length of the cubical voxels comprising the fine
-!              voxel grid: the edge length VOXSIZ is approximately
-!
-!                  FINSCL * {average plate extent}
-!
-!              where the extents of a plate are the respective
-!              differences between the maximum and minimum
-!              coordinate values of the plate's vertices.
-!
-!              The relationship between VOXSIZ and the average plate
-!              extent is approximate because the VOXSIZ is adjusted
-!              so that each dimension of the fine voxel grid is an
-!              integer multiple of the coarse voxel scale.
-!
-!              See the $Particulars section below for further
-!              information on voxel scales.
-!
-!     CORSCL   is the coarse voxel scale. This integer scale is the
-!              ratio of the edge length of coarse voxels to
-!              that of fine voxels. The coarse scale must be
-!              large enough so that the total number of coarse
-!              voxels does not exceed MAXCGR (see the $Parameters
-!              section below).
-!
-!     WORKSZ   is the second dimension of the workspace array WORK.
-!              WORKSZ must be at least as large as the greater of
-!
-!                 - the number of fine voxel-plate associations
-!
-!                   This number is equal to
-!
-!                      NP * {average number of fine voxels
-!                            intersected by each plate}
-!
-!                 - the number of vertex-plate associations, if
-!                   the vertex-plate mapping is constructed.
-!
-!                   This number is equal to
-!
-!                      NV + ( 3 * NP )
-!
-!     VOXPSZ   is the size of the fine voxel-plate pointer array.
-!              This array maps fine voxels to lists of plates that
-!              intersect those voxels. VOXPSZ must be at least as
-!              large as
-!
-!                       3
-!                 CORSCL  * {number of non-empty coarse voxels}
-!
-!     VOXLSZ   is the size of the fine voxel-plate list array. This
-!              array contains, for each non-empty fine voxel, the
-!              count of plates that intersect that voxel and the
-!              IDs of those plates. VOXLSZ must be at least as large
-!              as
-!
-!                      NP * {average number of fine voxels
-!                            intersected by each plate}
-!
-!                  +   {number of non-empty fine voxels}
-!
-!     MAKVTL   is a logical flag that, when set to .TRUE., indicates
-!              that a  vertex-plate association list is to be
-!              constructed.
-!
-!              The amount of workspace that is needed may depend on
-!              whether a vertex-plate association list is
-!              constructed. When this list is constructed, the size
-!              of the integer component of the spatial index is
-!              increased by the size of the list and the size of a
-!              vertex-plate pointer array; the total of these sizes
-!              is
-!
-!                 ( 2 * NV ) + ( 3 * NP )
-!
-!     SPXISZ   is the declared size of the output array SPAIXI. This
-!              size must be at least as large as the sum of
-!
-!                 - the fixed-size part of the integer component of
-!                   the index, which includes the coarse voxel grid;
-!                   this value is
-!
-!                      IXIFIX
-!
-!                 - the size VOXPSZ of the voxel-plate pointer array
-!
-!                 - the size VOXLSZ of the voxel-plate association
-!                   list
-!
-!              plus, if the vertex-plate association list is
-!              constructed,
-!
-!                 - the size NV of the vertex-plate pointer array
-!
-!                 - the size of the vertex-plate association list;
-!                   this size is
-!
-!                      NV + ( 3 * NP )
-!
-!     WORK     is the workspace array. The array should be declared
-!              with dimensions
-!
-!                 (2, WORKSZ)
-!
-!              See the description of WORKSZ above.
-!
-! $ Detailed_Output
-!
-!     WORK     is the workspace array, modified by the operations
-!              performed by this routine.
-!
-!     SPAIXD,
-!     SPAIXI   are, respectively, the double precision and integer
-!              components of the spatial index of the segment.
-!
-!              SPAIXD must be declared with size at least IXDFIX.
-!              SPAIXI must be declared with size at least SPXISZ.
-!
-! $ Parameters
-!
-!     IXDFIX   is the size of the double precision component of
-!              the spatial index.
-!
-!     IXIFIX   is the size of the fixed-size portion of the integer
-!              component of the spatial index.
-!
-!     See the include file
-!
-!        dsk02.inc
-!
-!     for declarations of DSK data type 2 (plate model) parameters.
-!
-!     See the include file
-!
-!        dla.inc
-!
-!     for declarations of DLA descriptor sizes and documentation of the
-!     contents of DLA descriptors.
-!
-!     See the include file
-!
-!        dskdsc.inc
-!
-!     for declarations of DSK descriptor sizes and documentation of the
-!     contents of DSK descriptors.
-!
-! $ Exceptions
-!
-!     1)  If the fine voxel scale is non-positive, the error
-!         SPICE(BADFINEVOXELSCALE) is signaled.
-!
-!     2)  If the coarse voxel scale is less than 1, the error
-!         SPICE(BADCOARSEVOXSCALE) is signaled.
-!
-!     3)  If NV is less than 3 or greater than MAXVRT, the error
-!         SPICE(BADVERTEXCOUNT) is signaled.
-!
-!     4)  If NP is less than 1 or greater than MAXPLT, the error
-!         SPICE(BADPLATECOUNT) is signaled.
-!
-!     5)  If the workspace size WORKSZ is less than NP+1, the error
-!         SPICE(WORKSPACETOOSMALL) is signaled. This is merely a
-!         sanity check; normally the workspace will need to be
-!         substantially larger than this reference value. See the
-!         description of WORKSZ in the header section $Detailed_Input
-!         above.
-!
-!     6)  If the voxel-plate pointer array size VOXPSZ is less than 1,
-!         the error SPICE(PTRARRAYTOOSMALL) is signaled. This is merely
-!         a sanity check; normally this pointer array will need to be
-!         substantially larger than this reference value. See the
-!         description of VOXPSZ in the header section $Detailed_Input
-!         above.
-!
-!     7)  If the voxel-plate list array size VOXLSZ is less than NP+1,
-!         the error SPICE(PLATELISTTOOSMALL) is signaled. This is
-!         merely a sanity check; normally this array will need to be
-!         substantially larger than this reference value. See the
-!         description of VOXLSZ in the header section $Detailed_Input
-!         above.
-!
-!     8)  If the size SPXISZ of the integer array SPAIXI is too small
-!         to contain its constituent structures, where the sizes
-!         of these structures are derived from the inputs
-!
-!             NV, NP, VOXPSZ, VOXLSZ
-!
-!         the error SPICE(INTINDEXTOOSMALL) is signaled.
-!
-!     9)  If there is insufficient room to create any of the data
-!         structures contained in the spatial index, an error is
-!         signaled by a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     Users planning to create DSK files should consider whether the
-!     SPICE DSK creation utility MKDSK may be suitable for their needs.
-!
-!     This routine supports use of the DSK type 2 segment writer DSKW02
-!     by creating the "spatial index" arrays required as inputs to that
-!     routine.
-!
-!     A spatial index is a group of data structures that facilitates
-!     rapid high-level computations involving sets of plates. The data
-!     structures created by this routine are aggregated into arrays
-!     of type INTEGER and type DOUBLE PRECISION.
-!
-!     Voxel grids
-!     ===========
-!
-!     A key geometric computation---probably the most important, as it
-!     serves as a foundation for other high-level computations---is
-!     finding the intersection of a ray with the plate set. DSK type 2
-!     segments use data structures called "voxel grids" as part of
-!     their indexing mechanism. There is a "coarse grid": a box that
-!     completely encloses a DSK type 2 segment's plate set, and which
-!     is composed of identically-sized cubes called "coarse voxels."
-!     Each coarse voxel in composed of smaller cubes called "fine
-!     voxels." When the term "voxel" is used without qualification, it
-!     refers to fine voxels.
-!
-!     Type 2 DSK segments contain data structures that associate plates
-!     with the fine voxels intersected by those plates. These
-!     structures enable the type 2 DSK software to rapidly find plates
-!     in a given region of space.
-!
-!     Voxel scales
-!     ============
-!
-!     There are two voxel scales:
-!
-!     -  The coarse voxel scale is the integer ratio of the
-!        edge length of a coarse voxel to the edge length of
-!        a fine voxel
-!
-!     -  The fine voxel scale is the double precision ratio
-!        of the edge length of a fine voxel to the average
-!        extent of the plates in the input plate set. "Extents"
-!        of a plate are the absolute values of the differences
-!        between the respective maximum and minimum X, Y, and Z
-!        coordinates of the plate's vertices.
-!
-!     Voxel scales determine the resolution of the voxel grid.
-!     Voxel scales must be chosen to satisfy size constraints and
-!     provide reasonable plate lookup performance.
-!
-!     The following considerations apply to spatial indexes of
-!     type 2 DSK segments:
-!
-!        1)  The maximum number of coarse voxels is fixed at MAXCGR
-!            (declared in dsk02.inc).
-!
-!        2)  If there are too few fine voxels, the average number of
-!            plates per fine voxel will be very large. This largely
-!            negates the performance improvement afforded by having an
-!            index. Also, the number of plates per voxel may exceed
-!            limits imposed by DSK subroutines that use static arrays.
-!
-!        3)  If there are too many fine voxels, the average number of
-!            voxels intersected by a given plate may be too large for
-!            all the plate-voxel associations to be stored. In
-!            addition, the time needed to examine the plate lists for
-!            each voxel (including the empty ones) may become quite
-!            large, again negating the value of the index.
-!
-!     In many cases, voxel scales yielding optimum performance must be
-!     determined by experiment. However, the following heuristics can
-!     provide reasonable starting values:
-!
-!        Let NP be the number of plates. Let FS be the fine voxel
-!        scale. Then a reasonable value of FS may be
-!
-!                   (0.25D0)
-!           FS =  NP       / 8.D0
-!
-!        In general, FS should not smaller than 1.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Create a three-segment DSK file using plate model data for
-!        Phobos. Use latitudinal, rectangular, and planetodetic
-!        coordinates in the respective segments. This is not a
-!        realistic example, but it serves to demonstrate use of
-!        the supported coordinate systems.
-!
-!        Use the DSK kernel below to provide, for simplicity, the
-!        input plate and vertex data. The selected input file has one
-!        segment.
-!
-!           phobos_3_3.bds
-!
-!        Example code begins here.
-!
-!        C
-!        C     Example program for DSKW02, DSKMI2, and DSKRB2
-!        C
-!        C        Create a three-segment DSK file using plate model
-!        C        data for Phobos. Use latitudinal, rectangular, and
-!        C        planetodetic coordinates in the respective segments.
-!        C
-!        C        For simplicity, use an existing DSK file to provide
-!        C        the input plate and vertex data. The selected input
-!        C        file has one segment.
-!        C
-!        C           Version 1.0.0 22-JAN-2016 (NJB)
-!        C
-!              PROGRAM DSKMI2_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!              INCLUDE 'dskdsc.inc'
-!              INCLUDE 'dsk02.inc'
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              DOUBLE PRECISION      JYEAR
-!              DOUBLE PRECISION      PI
-!        C
-!        C     Local parameters
-!        C
-!              INTEGER               FRNMLN
-!              PARAMETER           ( FRNMLN = 32 )
-!
-!              INTEGER               NSEG
-!              PARAMETER           ( NSEG   = 3 )
-!
-!              INTEGER               NAMLEN
-!              PARAMETER           ( NAMLEN = 20 )
-!
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!              INTEGER               LNSIZE
-!              PARAMETER           ( LNSIZE = 80 )
-!
-!              INTEGER               NCOR
-!              PARAMETER           ( NCOR   = 4 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(NAMLEN)    CORNAM ( NCOR )
-!              CHARACTER*(FILSIZ)    DSK
-!              CHARACTER*(FRNMLN)    FRAME
-!              CHARACTER*(FILSIZ)    INDSK
-!              CHARACTER*(LNSIZE)    LINE
-!        C
-!        C     Note: the values of MAXVRT and MAXPLT declared
-!        C     in dsk02.inc, and the integer spatial index
-!        C     dimension SPAISZ are very large. Smaller buffers
-!        C     can be used for most applications.
-!        C
-!              DOUBLE PRECISION      CORPAR ( NSYPAR )
-!              DOUBLE PRECISION      F
-!              DOUBLE PRECISION      FINSCL
-!              DOUBLE PRECISION      FIRST
-!              DOUBLE PRECISION      LAST
-!              DOUBLE PRECISION      MNCOR1
-!              DOUBLE PRECISION      MNCOR2
-!              DOUBLE PRECISION      MNCOR3
-!              DOUBLE PRECISION      MXCOR1
-!              DOUBLE PRECISION      MXCOR2
-!              DOUBLE PRECISION      MXCOR3
-!              DOUBLE PRECISION      RE
-!              DOUBLE PRECISION      RP
-!              DOUBLE PRECISION      SPAIXD ( IXDFIX )
-!              DOUBLE PRECISION      VRTCES ( 3, MAXVRT )
-!
-!              INTEGER               CENTER
-!              INTEGER               CORSCL
-!              INTEGER               CORSYS
-!              INTEGER               DCLASS
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               INHAN
-!              INTEGER               NP
-!              INTEGER               NV
-!              INTEGER               PLATES ( 3, MAXPLT )
-!              INTEGER               SEGNO
-!              INTEGER               SPAIXI ( SPAISZ )
-!              INTEGER               SURFID
-!              INTEGER               VOXPSZ
-!              INTEGER               VOXLSZ
-!              INTEGER               WORK   ( 2, MAXCEL )
-!              INTEGER               WORKSZ
-!
-!              LOGICAL               FOUND
-!        C
-!        C     Saved variables
-!        C
-!        C     Save all large arrays to avoid stack problems.
-!        C
-!              SAVE
-!        C
-!        C     Initial values
-!        C
-!              DATA                  CORNAM / 'radius',
-!             .                               'Z-coordinate',
-!             .                               'Z-coordinate',
-!             .                               'altitude'     /
-!
-!        C
-!        C     Assign names of input and output DSK files.
-!        C
-!              INDSK = 'phobos_3_3.bds'
-!              DSK   = 'phobos_3_3_3seg.bds'
-!        C
-!        C     Open input DSK for read access; find first segment.
-!        C
-!              CALL DASOPR ( INDSK, INHAN )
-!              CALL DLABFS ( INHAN, DLADSC, FOUND )
-!        C
-!        C     Fetch vertices and plates from input DSK file.
-!        C
-!              WRITE (*,*) 'Reading input data...'
-!
-!              CALL DSKV02 ( INHAN, DLADSC, 1, MAXVRT, NV, VRTCES )
-!              CALL DSKP02 ( INHAN, DLADSC, 1, MAXPLT, NP, PLATES )
-!
-!              WRITE (*,*) 'Done.'
-!        C
-!        C     Set input array sizes required by DSKMI2.
-!        C
-!              VOXPSZ = MAXVXP
-!              VOXLSZ = MXNVLS
-!              WORKSZ = MAXCEL
-!        C
-!        C     Set fine and coarse voxel scales. (These usually
-!        C     need to determined by experimentation.)
-!        C
-!              FINSCL = 5.D0
-!              CORSCL = 4
-!        C
-!        C     Open a new DSK file.
-!        C
-!              CALL DSKOPN ( DSK, DSK, 0, HANDLE )
-!        C
-!        C     Create three segments and add them to the file.
-!        C
-!              DO SEGNO = 1, NSEG
-!        C
-!        C        Create spatial index.
-!        C
-!                 WRITE (*,*) 'Creating segment ', SEGNO
-!                 WRITE (*,*) 'Creating spatial index...'
-!
-!                 CALL DSKMI2 ( NV,     VRTCES, NP,     PLATES, FINSCL,
-!             .                 CORSCL, WORKSZ, VOXPSZ, VOXLSZ, .TRUE.,
-!             .                 SPAISZ, WORK,   SPAIXD, SPAIXI        )
-!
-!                 WRITE (*,*) 'Done.'
-!        C
-!        C        Set up inputs describing segment attributes:
-!        C
-!        C        - Central body: Phobos
-!        C        - Surface ID code: user's choice.
-!        C          We use the segment number here.
-!        C        - Data class: general (arbitrary) shape
-!        C        - Body-fixed reference frame
-!        C        - Time coverage bounds (TBD)
-!        C
-!                 CENTER = 401
-!                 SURFID = SEGNO
-!                 DCLASS = GENCLS
-!                 FRAME  = 'IAU_PHOBOS'
-!
-!                 FIRST = -50 * JYEAR()
-!                 LAST  =  50 * JYEAR()
-!        C
-!        C        Set the coordinate system and coordinate system
-!        C        bounds based on the segment index.
-!        C
-!        C        Zero out the coordinate parameters to start.
-!        C
-!                 CALL CLEARD ( NSYPAR, CORPAR )
-!
-!                 IF ( SEGNO .EQ. 1 ) THEN
-!        C
-!        C           Use planetocentric latitudinal coordinates. Set
-!        C           the longitude and latitude bounds.
-!        C
-!                    CORSYS = LATSYS
-!
-!                    MNCOR1 = -PI()
-!                    MXCOR1 =  PI()
-!                    MNCOR2 = -PI()/2
-!                    MXCOR2 =  PI()/2
-!
-!                 ELSE IF ( SEGNO .EQ. 2 ) THEN
-!        C
-!        C           Use rectangular coordinates. Set the
-!        C           X and Y bounds.
-!        C
-!        C           The bounds shown here were derived from
-!        C           the plate data. They lie slightly outside
-!        C           of the range spanned by the plates.
-!        C
-!                    CORSYS = RECSYS
-!
-!                    MNCOR1 = -1.3D0
-!                    MXCOR1 =  1.31D0
-!                    MNCOR2 = -1.21D0
-!                    MXCOR2 =  1.2D0
-!
-!                 ELSE
-!        C
-!        C           Set the coordinate system to planetodetic.
-!        C
-!                    CORSYS    = PDTSYS
-!
-!                    MNCOR1    = -PI()
-!                    MXCOR1    =  PI()
-!                    MNCOR2    = -PI()/2
-!                    MXCOR2    =  PI()/2
-!        C
-!        C           We'll use equatorial and polar radii from
-!        C           pck00010.tpc. These normally would be fetched
-!        C           at run time, but for simplicity, we'll use
-!        C           hard-coded values.
-!
-!                    RE        = 13.0D0
-!                    RP        =  9.1D0
-!                    F         = ( RE - RP ) / RE
-!
-!                    CORPAR(1) = RE
-!                    CORPAR(2) = F
-!
-!                 END IF
-!        C
-!        C        Compute plate model radius bounds.
-!        C
-!                 LINE = 'Computing # bounds of plate set...'
-!
-!                 CALL REPMC ( LINE, '#', CORNAM(CORSYS), LINE )
-!                 WRITE (*,*) LINE
-!
-!                 CALL DSKRB2 ( NV,     VRTCES, NP,     PLATES,
-!             .                 CORSYS, CORPAR, MNCOR3, MXCOR3 )
-!
-!                 WRITE (*,*) 'Done.'
-!        C
-!        C        Write the segment to the file.
-!        C
-!                 WRITE (*,*) 'Writing segment...'
-!
-!                 CALL DSKW02 ( HANDLE,
-!             .                 CENTER, SURFID, DCLASS, FRAME,  CORSYS,
-!             .                 CORPAR, MNCOR1, MXCOR1, MNCOR2, MXCOR2,
-!             .                 MNCOR3, MXCOR3, FIRST,  LAST,   NV,
-!             .                 VRTCES, NP,     PLATES, SPAIXD, SPAIXI )
-!
-!                 WRITE (*,*) 'Done.'
-!
-!              END DO
-!        C
-!        C     Segregate the data records in the DSK file and
-!        C     close the file.
-!        C
-!              WRITE (*,*) 'Segregating and closing DSK file...'
-!
-!              CALL DSKCLS ( HANDLE, .TRUE. )
-!
-!              WRITE (*,*) 'Done.'
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Reading input data...
-!         Done.
-!         Creating segment            1
-!         Creating spatial index...
-!         Done.
-!         Computing radius bounds of plate set...
-!         Done.
-!         Writing segment...
-!         Done.
-!         Creating segment            2
-!         Creating spatial index...
-!         Done.
-!         Computing Z-coordinate bounds of plate set...
-!         Done.
-!         Writing segment...
-!         Done.
-!         Creating segment            3
-!         Creating spatial index...
-!         Done.
-!         Computing altitude bounds of plate set...
-!         Done.
-!         Writing segment...
-!         Done.
-!         Segregating and closing DSK file...
-!         Done.
-!
-!        Note that after run completion, a new DSK exists in the output
-!        directory.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 03-JUN-2021 (JDR) (BVS)
-!
-!        Edited the header to comply with NAIF standard. Fixed I/O type
-!        of arguments WORK, SPAIXD and SPAIXI in $Brief_I/O table.
-!
-!        Added solution to code example.
-!
-!-    SPICELIB Version 1.0.0, 13-DEC-2016 (NJB)
-!
-!        Updated check on NV.
-!
-!        16-MAR-2016 (NJB)
-!
-!           Now zeros out the size of the vertex-plate list
-!           when the list is not created.
-!
-!        23-JAN-2016 (NJB)
-!
-!           Original version.
-!
-!-&
-
-! $ Index_Entries
-!
-!     make spatial index for type 2 DSK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Local variables
-!
       integer(ip)           i
       integer(ip)           j
       integer(ip)           nshift
@@ -15414,492 +14207,451 @@ contains
       return
       end procedure dskmi2
 
-!$Procedure DSKRB2 ( DSK, determine range bounds for plate set )
-
+      !> ## Detailed Input
+      !>
+      !>     NV       is the number of vertices belonging to the input
+      !>              set of plates.
+      !>
+      !>     VRTCES   is an array of coordinates of the vertices. The Ith
+      !>              vertex occupies elements (1:3,I) of this array.
+      !>
+      !>     NP       is the number of plates in the input plate set.
+      !>
+      !>     PLATES   is an array representing the triangular plates of a
+      !>              shape model. The elements of PLATES are vertex
+      !>              indices; vertex indices are 1-based. The vertex
+      !>              indices of the Ith plate occupy elements (1:3,I) of
+      !>              this array.
+      !>
+      !>     CORSYS   is an integer parameter identifying the coordinate
+      !>              system in which the bounds are to be computed. The
+      !>              bounds apply to the third coordinate in each system:
+      !>
+      !>                 Latitudinal:           radius
+      !>                 Planetodetic:          altitude
+      !>                 Rectangular:           Z
+      !>
+      !>     CORPAR   is an array of parameters associated with the
+      !>                coordinate system. Currently the only supported system
+      !>                that has associated parameters is the planetodetic
+      !>                system. For planetodetic coordinates,
+      !>
+      !>                CORPAR(1) is the equatorial radius
+      !>
+      !>                CORPAR(2) is the flattening coefficient. Let RE and
+      !>                RP represent, respectively, the equatorial and
+      !>                polar radii of the reference ellipsoid of the
+      !>                system. Then
+      !>
+      !>                    CORPAR(2) = ( RE - RP ) / RE
+      !>
+      !> ## Detailed Output
+      !>
+      !>     MNCOR3   is a lower bound on the range of the third coordinate
+      !>              of the system identified by CORSYS and CORPAR, taken
+      !>              over all plates.
+      !>
+      !>              For latitudinal and rectangular coordinates, MNCOR3
+      !>              is the greatest lower bound of the third coordinate.
+      !>
+      !>              For planetodetic coordinates, MNCOR3 is an
+      !>              approximation: it is less than or equal to the greatest
+      !>              lower bound.
+      !>
+      !>     MXCOR3   is the least upper bound on the range of the third
+      !>              coordinate of the system identified by CORSYS and
+      !>              CORPAR, taken over all plates.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file dskdsc.inc for declarations of the public DSK
+      !>     type 2 parameters used by this routine.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input coordinate system is not recognized, the
+      !>         error SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     2)  If a conversion from rectangular to planetodetic coordinates
+      !>         fails, an error is signaled by a routine in the call
+      !>         tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Users planning to create DSK files should consider whether the
+      !>     SPICE DSK creation utility MKDSK may be suitable for their needs.
+      !>
+      !>     This routine supports use of the DSK type 2 segment writer DSKW02
+      !>     by computing bounds on the range of the third coordinates of
+      !>     the input plate set.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Create a three-segment DSK file using plate model data for
+      !>        Phobos. Use latitudinal, rectangular, and planetodetic
+      !>        coordinates in the respective segments. This is not a
+      !>        realistic example, but it serves to demonstrate use of
+      !>        the supported coordinate systems.
+      !>
+      !>        Use the DSK kernel below to provide, for simplicity, the
+      !>        input plate and vertex data. The selected input file has one
+      !>        segment.
+      !>
+      !>           phobos_3_3.bds
+      !>
+      !>        Example code begins here.
+      !>
+      !>        C
+      !>        C     Example program for DSKW02, DSKMI2, and DSKRB2
+      !>        C
+      !>        C        Create a three-segment DSK file using plate model
+      !>        C        data for Phobos. Use latitudinal, rectangular, and
+      !>        C        planetodetic coordinates in the respective segments.
+      !>        C
+      !>        C        For simplicity, use an existing DSK file to provide
+      !>        C        the input plate and vertex data. The selected input
+      !>        C        file has one segment.
+      !>        C
+      !>        C           Version 1.0.0 22-JAN-2016 (NJB)
+      !>        C
+      !>              PROGRAM DSKRB2_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>              INCLUDE 'dla.inc'
+      !>              INCLUDE 'dskdsc.inc'
+      !>              INCLUDE 'dsk02.inc'
+      !>
+      !>        C
+      !>        C     SPICELIB functions
+      !>        C
+      !>              DOUBLE PRECISION      JYEAR
+      !>              DOUBLE PRECISION      PI
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              INTEGER               FRNMLN
+      !>              PARAMETER           ( FRNMLN = 32 )
+      !>
+      !>              INTEGER               NSEG
+      !>              PARAMETER           ( NSEG   = 3 )
+      !>
+      !>              INTEGER               NAMLEN
+      !>              PARAMETER           ( NAMLEN = 20 )
+      !>
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>              INTEGER               LNSIZE
+      !>              PARAMETER           ( LNSIZE = 80 )
+      !>
+      !>              INTEGER               NCOR
+      !>              PARAMETER           ( NCOR   = 4 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(NAMLEN)    CORNAM ( NCOR )
+      !>              CHARACTER*(FILSIZ)    DSK
+      !>              CHARACTER*(FRNMLN)    FRAME
+      !>              CHARACTER*(FILSIZ)    INDSK
+      !>              CHARACTER*(LNSIZE)    LINE
+      !>        C
+      !>        C     Note: the values of MAXVRT and MAXPLT declared
+      !>        C     in dsk02.inc, and the integer spatial index
+      !>        C     dimension SPAISZ are very large. Smaller buffers
+      !>        C     can be used for most applications.
+      !>        C
+      !>              DOUBLE PRECISION      CORPAR ( NSYPAR )
+      !>              DOUBLE PRECISION      F
+      !>              DOUBLE PRECISION      FINSCL
+      !>              DOUBLE PRECISION      FIRST
+      !>              DOUBLE PRECISION      LAST
+      !>              DOUBLE PRECISION      MNCOR1
+      !>              DOUBLE PRECISION      MNCOR2
+      !>              DOUBLE PRECISION      MNCOR3
+      !>              DOUBLE PRECISION      MXCOR1
+      !>              DOUBLE PRECISION      MXCOR2
+      !>              DOUBLE PRECISION      MXCOR3
+      !>              DOUBLE PRECISION      RE
+      !>              DOUBLE PRECISION      RP
+      !>              DOUBLE PRECISION      SPAIXD ( IXDFIX )
+      !>              DOUBLE PRECISION      VRTCES ( 3, MAXVRT )
+      !>
+      !>              INTEGER               CENTER
+      !>              INTEGER               CORSCL
+      !>              INTEGER               CORSYS
+      !>              INTEGER               DCLASS
+      !>              INTEGER               DLADSC ( DLADSZ )
+      !>              INTEGER               HANDLE
+      !>              INTEGER               INHAN
+      !>              INTEGER               NP
+      !>              INTEGER               NV
+      !>              INTEGER               PLATES ( 3, MAXPLT )
+      !>              INTEGER               SEGNO
+      !>              INTEGER               SPAIXI ( SPAISZ )
+      !>              INTEGER               SURFID
+      !>              INTEGER               VOXPSZ
+      !>              INTEGER               VOXLSZ
+      !>              INTEGER               WORK   ( 2, MAXCEL )
+      !>              INTEGER               WORKSZ
+      !>
+      !>              LOGICAL               FOUND
+      !>        C
+      !>        C     Saved variables
+      !>        C
+      !>        C     Save all large arrays to avoid stack problems.
+      !>        C
+      !>              SAVE
+      !>        C
+      !>        C     Initial values
+      !>        C
+      !>              DATA                  CORNAM / 'radius',
+      !>             .                               'Z-coordinate',
+      !>             .                               'Z-coordinate',
+      !>             .                               'altitude'     /
+      !>
+      !>        C
+      !>        C     Assign names of input and output DSK files.
+      !>        C
+      !>              INDSK = 'phobos_3_3.bds'
+      !>              DSK   = 'phobos_3_3_3seg.bds'
+      !>        C
+      !>        C     Open input DSK for read access; find first segment.
+      !>        C
+      !>              CALL DASOPR ( INDSK, INHAN )
+      !>              CALL DLABFS ( INHAN, DLADSC, FOUND )
+      !>        C
+      !>        C     Fetch vertices and plates from input DSK file.
+      !>        C
+      !>              WRITE (*,*) 'Reading input data...'
+      !>
+      !>              CALL DSKV02 ( INHAN, DLADSC, 1, MAXVRT, NV, VRTCES )
+      !>              CALL DSKP02 ( INHAN, DLADSC, 1, MAXPLT, NP, PLATES )
+      !>
+      !>              WRITE (*,*) 'Done.'
+      !>        C
+      !>        C     Set input array sizes required by DSKMI2.
+      !>        C
+      !>              VOXPSZ = MAXVXP
+      !>              VOXLSZ = MXNVLS
+      !>              WORKSZ = MAXCEL
+      !>        C
+      !>        C     Set fine and coarse voxel scales. (These usually
+      !>        C     need to determined by experimentation.)
+      !>        C
+      !>              FINSCL = 5.D0
+      !>              CORSCL = 4
+      !>        C
+      !>        C     Open a new DSK file.
+      !>        C
+      !>              CALL DSKOPN ( DSK, DSK, 0, HANDLE )
+      !>        C
+      !>        C     Create three segments and add them to the file.
+      !>        C
+      !>              DO SEGNO = 1, NSEG
+      !>        C
+      !>        C        Create spatial index.
+      !>        C
+      !>                 WRITE (*,*) 'Creating segment ', SEGNO
+      !>                 WRITE (*,*) 'Creating spatial index...'
+      !>
+      !>                 CALL DSKMI2 ( NV,     VRTCES, NP,     PLATES, FINSCL,
+      !>             .                 CORSCL, WORKSZ, VOXPSZ, VOXLSZ, .TRUE.,
+      !>             .                 SPAISZ, WORK,   SPAIXD, SPAIXI        )
+      !>
+      !>                 WRITE (*,*) 'Done.'
+      !>        C
+      !>        C        Set up inputs describing segment attributes:
+      !>        C
+      !>        C        - Central body: Phobos
+      !>        C        - Surface ID code: user's choice.
+      !>        C          We use the segment number here.
+      !>        C        - Data class: general (arbitrary) shape
+      !>        C        - Body-fixed reference frame
+      !>        C        - Time coverage bounds (TBD)
+      !>        C
+      !>                 CENTER = 401
+      !>                 SURFID = SEGNO
+      !>                 DCLASS = GENCLS
+      !>                 FRAME  = 'IAU_PHOBOS'
+      !>
+      !>                 FIRST = -50 * JYEAR()
+      !>                 LAST  =  50 * JYEAR()
+      !>        C
+      !>        C        Set the coordinate system and coordinate system
+      !>        C        bounds based on the segment index.
+      !>        C
+      !>        C        Zero out the coordinate parameters to start.
+      !>        C
+      !>                 CALL CLEARD ( NSYPAR, CORPAR )
+      !>
+      !>                 IF ( SEGNO .EQ. 1 ) THEN
+      !>        C
+      !>        C           Use planetocentric latitudinal coordinates. Set
+      !>        C           the longitude and latitude bounds.
+      !>        C
+      !>                    CORSYS = LATSYS
+      !>
+      !>                    MNCOR1 = -PI()
+      !>                    MXCOR1 =  PI()
+      !>                    MNCOR2 = -PI()/2
+      !>                    MXCOR2 =  PI()/2
+      !>
+      !>                 ELSE IF ( SEGNO .EQ. 2 ) THEN
+      !>        C
+      !>        C           Use rectangular coordinates. Set the
+      !>        C           X and Y bounds.
+      !>        C
+      !>        C           The bounds shown here were derived from
+      !>        C           the plate data. They lie slightly outside
+      !>        C           of the range spanned by the plates.
+      !>        C
+      !>                    CORSYS = RECSYS
+      !>
+      !>                    MNCOR1 = -1.3D0
+      !>                    MXCOR1 =  1.31D0
+      !>                    MNCOR2 = -1.21D0
+      !>                    MXCOR2 =  1.2D0
+      !>
+      !>                 ELSE
+      !>        C
+      !>        C           Set the coordinate system to planetodetic.
+      !>        C
+      !>                    CORSYS    = PDTSYS
+      !>
+      !>                    MNCOR1    = -PI()
+      !>                    MXCOR1    =  PI()
+      !>                    MNCOR2    = -PI()/2
+      !>                    MXCOR2    =  PI()/2
+      !>        C
+      !>        C           We'll use equatorial and polar radii from
+      !>        C           pck00010.tpc. These normally would be fetched
+      !>        C           at run time, but for simplicity, we'll use
+      !>        C           hard-coded values.
+      !>
+      !>                    RE        = 13.0D0
+      !>                    RP        =  9.1D0
+      !>                    F         = ( RE - RP ) / RE
+      !>
+      !>                    CORPAR(1) = RE
+      !>                    CORPAR(2) = F
+      !>
+      !>                 END IF
+      !>        C
+      !>        C        Compute plate model radius bounds.
+      !>        C
+      !>                 LINE = 'Computing # bounds of plate set...'
+      !>
+      !>                 CALL REPMC ( LINE, '#', CORNAM(CORSYS), LINE )
+      !>                 WRITE (*,*) LINE
+      !>
+      !>                 CALL DSKRB2 ( NV,     VRTCES, NP,     PLATES,
+      !>             .                 CORSYS, CORPAR, MNCOR3, MXCOR3 )
+      !>
+      !>                 WRITE (*,*) 'Done.'
+      !>        C
+      !>        C        Write the segment to the file.
+      !>        C
+      !>                 WRITE (*,*) 'Writing segment...'
+      !>
+      !>                 CALL DSKW02 ( HANDLE,
+      !>             .                 CENTER, SURFID, DCLASS, FRAME,  CORSYS,
+      !>             .                 CORPAR, MNCOR1, MXCOR1, MNCOR2, MXCOR2,
+      !>             .                 MNCOR3, MXCOR3, FIRST,  LAST,   NV,
+      !>             .                 VRTCES, NP,     PLATES, SPAIXD, SPAIXI )
+      !>
+      !>                 WRITE (*,*) 'Done.'
+      !>
+      !>              END DO
+      !>        C
+      !>        C     Segregate the data records in the DSK file and
+      !>        C     close the file.
+      !>        C
+      !>              WRITE (*,*) 'Segregating and closing DSK file...'
+      !>
+      !>              CALL DSKCLS ( HANDLE, .TRUE. )
+      !>
+      !>              WRITE (*,*) 'Done.'
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Reading input data...
+      !>         Done.
+      !>         Creating segment            1
+      !>         Creating spatial index...
+      !>         Done.
+      !>         Computing radius bounds of plate set...
+      !>         Done.
+      !>         Writing segment...
+      !>         Done.
+      !>         Creating segment            2
+      !>         Creating spatial index...
+      !>         Done.
+      !>         Computing Z-coordinate bounds of plate set...
+      !>         Done.
+      !>         Writing segment...
+      !>         Done.
+      !>         Creating segment            3
+      !>         Creating spatial index...
+      !>         Done.
+      !>         Computing altitude bounds of plate set...
+      !>         Done.
+      !>         Writing segment...
+      !>         Done.
+      !>         Segregating and closing DSK file...
+      !>         Done.
+      !>
+      !>        Note that after run completion, a new DSK exists in the output
+      !>        directory.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  For planetodetic coordinates, the computation of the lower
+      !>         altitude bound requires that the surface at altitude MNCOR3 be
+      !>         convex. This is the case for realistic geometries, but can
+      !>         be false if a plate is very large compared to the overall
+      !>         shape model.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Added solution to code example.
+      !>
+      !>-    SPICELIB Version 1.0.0, 04-APR-2017 (NJB)
+      !>
+      !>        22-JAN-2016 (NJB)
+      !>
+      !>         Original version.
       module procedure dskrb2
-!! ## Abstract
-!!
-!!     Determine range bounds for a set of triangular plates to
-!!     be stored in a type 2 DSK segment.
-!!
-!! ## Required Reading
-!!
-!!     DSK
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DSK
-!!     FILES
-!!     PLATE
-!!     TOPOGRAPHY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
       use pepper_math, only: vdist, vnorm
       use pepper_inc_dskdsc
       implicit none
 
-
-! $ Detailed_Input
-!
-!     NV       is the number of vertices belonging to the input
-!              set of plates.
-!
-!     VRTCES   is an array of coordinates of the vertices. The Ith
-!              vertex occupies elements (1:3,I) of this array.
-!
-!     NP       is the number of plates in the input plate set.
-!
-!     PLATES   is an array representing the triangular plates of a
-!              shape model. The elements of PLATES are vertex
-!              indices; vertex indices are 1-based. The vertex
-!              indices of the Ith plate occupy elements (1:3,I) of
-!              this array.
-!
-!     CORSYS   is an integer parameter identifying the coordinate
-!              system in which the bounds are to be computed. The
-!              bounds apply to the third coordinate in each system:
-!
-!                 Latitudinal:           radius
-!                 Planetodetic:          altitude
-!                 Rectangular:           Z
-!
-!     CORPAR   is an array of parameters associated with the
-!                coordinate system. Currently the only supported system
-!                that has associated parameters is the planetodetic
-!                system. For planetodetic coordinates,
-!
-!                CORPAR(1) is the equatorial radius
-!
-!                CORPAR(2) is the flattening coefficient. Let RE and
-!                RP represent, respectively, the equatorial and
-!                polar radii of the reference ellipsoid of the
-!                system. Then
-!
-!                    CORPAR(2) = ( RE - RP ) / RE
-!
-! $ Detailed_Output
-!
-!     MNCOR3   is a lower bound on the range of the third coordinate
-!              of the system identified by CORSYS and CORPAR, taken
-!              over all plates.
-!
-!              For latitudinal and rectangular coordinates, MNCOR3
-!              is the greatest lower bound of the third coordinate.
-!
-!              For planetodetic coordinates, MNCOR3 is an
-!              approximation: it is less than or equal to the greatest
-!              lower bound.
-!
-!     MXCOR3   is the least upper bound on the range of the third
-!              coordinate of the system identified by CORSYS and
-!              CORPAR, taken over all plates.
-!
-! $ Parameters
-!
-!     See the include file dskdsc.inc for declarations of the public DSK
-!     type 2 parameters used by this routine.
-!
-! $ Exceptions
-!
-!     1)  If the input coordinate system is not recognized, the
-!         error SPICE(NOTSUPPORTED) is signaled.
-!
-!     2)  If a conversion from rectangular to planetodetic coordinates
-!         fails, an error is signaled by a routine in the call
-!         tree of this routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     Users planning to create DSK files should consider whether the
-!     SPICE DSK creation utility MKDSK may be suitable for their needs.
-!
-!     This routine supports use of the DSK type 2 segment writer DSKW02
-!     by computing bounds on the range of the third coordinates of
-!     the input plate set.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Create a three-segment DSK file using plate model data for
-!        Phobos. Use latitudinal, rectangular, and planetodetic
-!        coordinates in the respective segments. This is not a
-!        realistic example, but it serves to demonstrate use of
-!        the supported coordinate systems.
-!
-!        Use the DSK kernel below to provide, for simplicity, the
-!        input plate and vertex data. The selected input file has one
-!        segment.
-!
-!           phobos_3_3.bds
-!
-!        Example code begins here.
-!
-!        C
-!        C     Example program for DSKW02, DSKMI2, and DSKRB2
-!        C
-!        C        Create a three-segment DSK file using plate model
-!        C        data for Phobos. Use latitudinal, rectangular, and
-!        C        planetodetic coordinates in the respective segments.
-!        C
-!        C        For simplicity, use an existing DSK file to provide
-!        C        the input plate and vertex data. The selected input
-!        C        file has one segment.
-!        C
-!        C           Version 1.0.0 22-JAN-2016 (NJB)
-!        C
-!              PROGRAM DSKRB2_EX1
-!              IMPLICIT NONE
-!
-!              INCLUDE 'dla.inc'
-!              INCLUDE 'dskdsc.inc'
-!              INCLUDE 'dsk02.inc'
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              DOUBLE PRECISION      JYEAR
-!              DOUBLE PRECISION      PI
-!        C
-!        C     Local parameters
-!        C
-!              INTEGER               FRNMLN
-!              PARAMETER           ( FRNMLN = 32 )
-!
-!              INTEGER               NSEG
-!              PARAMETER           ( NSEG   = 3 )
-!
-!              INTEGER               NAMLEN
-!              PARAMETER           ( NAMLEN = 20 )
-!
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!              INTEGER               LNSIZE
-!              PARAMETER           ( LNSIZE = 80 )
-!
-!              INTEGER               NCOR
-!              PARAMETER           ( NCOR   = 4 )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(NAMLEN)    CORNAM ( NCOR )
-!              CHARACTER*(FILSIZ)    DSK
-!              CHARACTER*(FRNMLN)    FRAME
-!              CHARACTER*(FILSIZ)    INDSK
-!              CHARACTER*(LNSIZE)    LINE
-!        C
-!        C     Note: the values of MAXVRT and MAXPLT declared
-!        C     in dsk02.inc, and the integer spatial index
-!        C     dimension SPAISZ are very large. Smaller buffers
-!        C     can be used for most applications.
-!        C
-!              DOUBLE PRECISION      CORPAR ( NSYPAR )
-!              DOUBLE PRECISION      F
-!              DOUBLE PRECISION      FINSCL
-!              DOUBLE PRECISION      FIRST
-!              DOUBLE PRECISION      LAST
-!              DOUBLE PRECISION      MNCOR1
-!              DOUBLE PRECISION      MNCOR2
-!              DOUBLE PRECISION      MNCOR3
-!              DOUBLE PRECISION      MXCOR1
-!              DOUBLE PRECISION      MXCOR2
-!              DOUBLE PRECISION      MXCOR3
-!              DOUBLE PRECISION      RE
-!              DOUBLE PRECISION      RP
-!              DOUBLE PRECISION      SPAIXD ( IXDFIX )
-!              DOUBLE PRECISION      VRTCES ( 3, MAXVRT )
-!
-!              INTEGER               CENTER
-!              INTEGER               CORSCL
-!              INTEGER               CORSYS
-!              INTEGER               DCLASS
-!              INTEGER               DLADSC ( DLADSZ )
-!              INTEGER               HANDLE
-!              INTEGER               INHAN
-!              INTEGER               NP
-!              INTEGER               NV
-!              INTEGER               PLATES ( 3, MAXPLT )
-!              INTEGER               SEGNO
-!              INTEGER               SPAIXI ( SPAISZ )
-!              INTEGER               SURFID
-!              INTEGER               VOXPSZ
-!              INTEGER               VOXLSZ
-!              INTEGER               WORK   ( 2, MAXCEL )
-!              INTEGER               WORKSZ
-!
-!              LOGICAL               FOUND
-!        C
-!        C     Saved variables
-!        C
-!        C     Save all large arrays to avoid stack problems.
-!        C
-!              SAVE
-!        C
-!        C     Initial values
-!        C
-!              DATA                  CORNAM / 'radius',
-!             .                               'Z-coordinate',
-!             .                               'Z-coordinate',
-!             .                               'altitude'     /
-!
-!        C
-!        C     Assign names of input and output DSK files.
-!        C
-!              INDSK = 'phobos_3_3.bds'
-!              DSK   = 'phobos_3_3_3seg.bds'
-!        C
-!        C     Open input DSK for read access; find first segment.
-!        C
-!              CALL DASOPR ( INDSK, INHAN )
-!              CALL DLABFS ( INHAN, DLADSC, FOUND )
-!        C
-!        C     Fetch vertices and plates from input DSK file.
-!        C
-!              WRITE (*,*) 'Reading input data...'
-!
-!              CALL DSKV02 ( INHAN, DLADSC, 1, MAXVRT, NV, VRTCES )
-!              CALL DSKP02 ( INHAN, DLADSC, 1, MAXPLT, NP, PLATES )
-!
-!              WRITE (*,*) 'Done.'
-!        C
-!        C     Set input array sizes required by DSKMI2.
-!        C
-!              VOXPSZ = MAXVXP
-!              VOXLSZ = MXNVLS
-!              WORKSZ = MAXCEL
-!        C
-!        C     Set fine and coarse voxel scales. (These usually
-!        C     need to determined by experimentation.)
-!        C
-!              FINSCL = 5.D0
-!              CORSCL = 4
-!        C
-!        C     Open a new DSK file.
-!        C
-!              CALL DSKOPN ( DSK, DSK, 0, HANDLE )
-!        C
-!        C     Create three segments and add them to the file.
-!        C
-!              DO SEGNO = 1, NSEG
-!        C
-!        C        Create spatial index.
-!        C
-!                 WRITE (*,*) 'Creating segment ', SEGNO
-!                 WRITE (*,*) 'Creating spatial index...'
-!
-!                 CALL DSKMI2 ( NV,     VRTCES, NP,     PLATES, FINSCL,
-!             .                 CORSCL, WORKSZ, VOXPSZ, VOXLSZ, .TRUE.,
-!             .                 SPAISZ, WORK,   SPAIXD, SPAIXI        )
-!
-!                 WRITE (*,*) 'Done.'
-!        C
-!        C        Set up inputs describing segment attributes:
-!        C
-!        C        - Central body: Phobos
-!        C        - Surface ID code: user's choice.
-!        C          We use the segment number here.
-!        C        - Data class: general (arbitrary) shape
-!        C        - Body-fixed reference frame
-!        C        - Time coverage bounds (TBD)
-!        C
-!                 CENTER = 401
-!                 SURFID = SEGNO
-!                 DCLASS = GENCLS
-!                 FRAME  = 'IAU_PHOBOS'
-!
-!                 FIRST = -50 * JYEAR()
-!                 LAST  =  50 * JYEAR()
-!        C
-!        C        Set the coordinate system and coordinate system
-!        C        bounds based on the segment index.
-!        C
-!        C        Zero out the coordinate parameters to start.
-!        C
-!                 CALL CLEARD ( NSYPAR, CORPAR )
-!
-!                 IF ( SEGNO .EQ. 1 ) THEN
-!        C
-!        C           Use planetocentric latitudinal coordinates. Set
-!        C           the longitude and latitude bounds.
-!        C
-!                    CORSYS = LATSYS
-!
-!                    MNCOR1 = -PI()
-!                    MXCOR1 =  PI()
-!                    MNCOR2 = -PI()/2
-!                    MXCOR2 =  PI()/2
-!
-!                 ELSE IF ( SEGNO .EQ. 2 ) THEN
-!        C
-!        C           Use rectangular coordinates. Set the
-!        C           X and Y bounds.
-!        C
-!        C           The bounds shown here were derived from
-!        C           the plate data. They lie slightly outside
-!        C           of the range spanned by the plates.
-!        C
-!                    CORSYS = RECSYS
-!
-!                    MNCOR1 = -1.3D0
-!                    MXCOR1 =  1.31D0
-!                    MNCOR2 = -1.21D0
-!                    MXCOR2 =  1.2D0
-!
-!                 ELSE
-!        C
-!        C           Set the coordinate system to planetodetic.
-!        C
-!                    CORSYS    = PDTSYS
-!
-!                    MNCOR1    = -PI()
-!                    MXCOR1    =  PI()
-!                    MNCOR2    = -PI()/2
-!                    MXCOR2    =  PI()/2
-!        C
-!        C           We'll use equatorial and polar radii from
-!        C           pck00010.tpc. These normally would be fetched
-!        C           at run time, but for simplicity, we'll use
-!        C           hard-coded values.
-!
-!                    RE        = 13.0D0
-!                    RP        =  9.1D0
-!                    F         = ( RE - RP ) / RE
-!
-!                    CORPAR(1) = RE
-!                    CORPAR(2) = F
-!
-!                 END IF
-!        C
-!        C        Compute plate model radius bounds.
-!        C
-!                 LINE = 'Computing # bounds of plate set...'
-!
-!                 CALL REPMC ( LINE, '#', CORNAM(CORSYS), LINE )
-!                 WRITE (*,*) LINE
-!
-!                 CALL DSKRB2 ( NV,     VRTCES, NP,     PLATES,
-!             .                 CORSYS, CORPAR, MNCOR3, MXCOR3 )
-!
-!                 WRITE (*,*) 'Done.'
-!        C
-!        C        Write the segment to the file.
-!        C
-!                 WRITE (*,*) 'Writing segment...'
-!
-!                 CALL DSKW02 ( HANDLE,
-!             .                 CENTER, SURFID, DCLASS, FRAME,  CORSYS,
-!             .                 CORPAR, MNCOR1, MXCOR1, MNCOR2, MXCOR2,
-!             .                 MNCOR3, MXCOR3, FIRST,  LAST,   NV,
-!             .                 VRTCES, NP,     PLATES, SPAIXD, SPAIXI )
-!
-!                 WRITE (*,*) 'Done.'
-!
-!              END DO
-!        C
-!        C     Segregate the data records in the DSK file and
-!        C     close the file.
-!        C
-!              WRITE (*,*) 'Segregating and closing DSK file...'
-!
-!              CALL DSKCLS ( HANDLE, .TRUE. )
-!
-!              WRITE (*,*) 'Done.'
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Reading input data...
-!         Done.
-!         Creating segment            1
-!         Creating spatial index...
-!         Done.
-!         Computing radius bounds of plate set...
-!         Done.
-!         Writing segment...
-!         Done.
-!         Creating segment            2
-!         Creating spatial index...
-!         Done.
-!         Computing Z-coordinate bounds of plate set...
-!         Done.
-!         Writing segment...
-!         Done.
-!         Creating segment            3
-!         Creating spatial index...
-!         Done.
-!         Computing altitude bounds of plate set...
-!         Done.
-!         Writing segment...
-!         Done.
-!         Segregating and closing DSK file...
-!         Done.
-!
-!        Note that after run completion, a new DSK exists in the output
-!        directory.
-!
-! $ Restrictions
-!
-!     1)  For planetodetic coordinates, the computation of the lower
-!         altitude bound requires that the surface at altitude MNCOR3 be
-!         convex. This is the case for realistic geometries, but can
-!         be false if a plate is very large compared to the overall
-!         shape model.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!        Added solution to code example.
-!
-!-    SPICELIB Version 1.0.0, 04-APR-2017 (NJB)
-!
-!        22-JAN-2016 (NJB)
-!
-!         Original version.
-!
-!-&
-
-! $ Index_Entries
-!
-!     compute range bounds for type 2 DSK segment
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
       real(wp), parameter :: third = 1.0_wp/3.0_wp
-!
-!     Local variables
-!
       real(wp)              alt
       real(wp)              center ( 3 )
       real(wp)              dist
@@ -15913,14 +14665,6 @@ contains
       real(wp)              re
 
       integer(ip)           i
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
 
       if ( ctx%failed() ) return
 
@@ -16033,240 +14777,197 @@ contains
       return
       end procedure dskrb2
 
-!$Procedure DSKOBJ ( DSK, get object IDs )
-
+      !> ## Detailed Input
+      !>
+      !>     DSKFNM   is the name of a DSK file. This file will be opened for
+      !>              read access by this routine.
+      !>
+      !>     BODIDS   is an initialized SPICE set data structure.
+      !>
+      !>              BODIDS optionally may contain a set of body ID codes on
+      !>              input; on output, the data already present in BODIDS will
+      !>              be combined with ID code set found for the file DSKFNM.
+      !>
+      !>              If BODIDS contains no data on input, its size and
+      !>              cardinality still must be initialized.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     BODIDS   is a SPICE set data structure that contains the union
+      !>              of its contents upon input with the set of body ID codes
+      !>              of segments in the indicated DSK file.
+      !>
+      !>              The elements of SPICE sets are unique; each ID code in
+      !>              BODIDS appears only once, even if the DSK file contains
+      !>              multiple segments for that ID code.
+      !>
+      !>              See the $Examples section below for a complete example
+      !>              program showing how to retrieve the body and surface ID
+      !>              codes from a DSK file.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input file has transfer format, the error
+      !>         SPICE(INVALIDFORMAT) is signaled.
+      !>
+      !>     2)  If the input file is not a transfer file but has architecture
+      !>         other than DAS, the error SPICE(INVALIDARCHTYPE) is signaled.
+      !>
+      !>     3)  If the input file is a binary DAS file of type other than DSK,
+      !>         the error SPICE(INVALIDFILETYPE) is signaled.
+      !>
+      !>     4)  If the DSK file cannot be opened or read, an error is signaled
+      !>         by a routine in the call tree of this routine.
+      !>
+      !>     5)  If the size of the output set argument BODIDS is insufficient
+      !>         to contain the actual number of ID codes of objects covered by
+      !>         the indicated DSK file, the error SPICE(CELLTOOSMALL) is
+      !>         signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See the description of the argument DSKFNM above.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine provides an API via which applications can determine
+      !>     the set of objects for which there are topographic data in a
+      !>     specified DSK file.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Display the coverage for each object in a specified DSK file.
+      !>        Find the set of objects in the file. Loop over the contents
+      !>        of the ID code set: find the surface ID for each item in the
+      !>        set and display the surface ID.
+      !>
+      !>        Example code begins here.
+      !>
+      !>        C
+      !>        C     Examine a DSK file and identify the set of
+      !>        C     central bodies associated with the segments
+      !>        C     in the file. For each body, find the
+      !>        C     set of surfaces associated with that body.
+      !>        C
+      !>              PROGRAM DSKOBJ_EX1
+      !>              IMPLICIT NONE
+      !>        C
+      !>        C     SPICELIB functions
+      !>        C
+      !>              INTEGER               CARDI
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              INTEGER               LBCELL
+      !>              PARAMETER           ( LBCELL = -5 )
+      !>
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>              INTEGER               MAXID
+      !>              PARAMETER           ( MAXID  = 10000 )
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(FILSIZ)    DSKFNM
+      !>
+      !>              INTEGER               BODIDS ( LBCELL : MAXID )
+      !>              INTEGER               I
+      !>              INTEGER               J
+      !>              INTEGER               SRFIDS ( LBCELL : MAXID )
+      !>
+      !>        C
+      !>        C     Initialize body ID and surface ID cells.
+      !>        C
+      !>              CALL SSIZEI ( MAXID, BODIDS )
+      !>              CALL SSIZEI ( MAXID, SRFIDS )
+      !>
+      !>        C
+      !>        C     Prompt for the name of a DSK file.
+      !>        C
+      !>              CALL PROMPT ( 'Enter name of DSK file > ', DSKFNM )
+      !>
+      !>        C
+      !>        C     Obtain body ID set for the DSK.
+      !>        C
+      !>              CALL DSKOBJ ( DSKFNM, BODIDS )
+      !>
+      !>              DO I = 1, CARDI( BODIDS )
+      !>
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) 'Body ID:     ', BODIDS(I)
+      !>        C
+      !>        C        Get the surface IDs for the Ith body.
+      !>        C
+      !>                 CALL DSKSRF ( DSKFNM, BODIDS(I), SRFIDS )
+      !>
+      !>                 DO J = 1, CARDI( SRFIDS )
+      !>                    WRITE (*,*) '   Surface ID: ', SRFIDS(J)
+      !>                 END DO
+      !>
+      !>              END DO
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds, the output
+      !>        was:
+      !>
+      !>        Enter name of DSK file > phobos512.bds
+      !>
+      !>         Body ID:              401
+      !>            Surface ID:          401
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  If an error occurs while this routine is updating the set
+      !>         BODIDS, the set may be corrupted.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 08-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Changed input argument name "DSK" to "DSKFNM" for consistency
+      !>        with other routines.
+      !>
+      !>        Bug fix: added call to FAILED after call to GETFAT.
+      !>
+      !>        Edited the header comments to comply with NAIF standard.
+      !>        Changed the DKS file used in the code example's solution.
+      !>        Added NAIF_IDS to the $Required_Reading section.
+      !>
+      !>        Corrected short error message in entries #2, #3 and #5 in
+      !>        $Exceptions section.
+      !>
+      !>-    SPICELIB Version 1.0.0, 22-AUG-2016 (NJB)
       module procedure dskobj
-!! ## Abstract
-!!
-!!     Find the set of body ID codes of all objects for which
-!!     topographic data are provided in a specified DSK file.
-!!
-!! ## Required Reading
-!!
-!!     CELLS
-!!     DAS
-!!     DSK
-!!     SETS
-!!     NAIF_IDS
-!!
-!! ## Keywords
-!!
-!!     COVERAGE
-!!     TOPOGRAPHY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
 
-
       integer(ip), parameter :: lbcell = -5
 
-! $ Detailed_Input
-!
-!     DSKFNM   is the name of a DSK file. This file will be opened for
-!              read access by this routine.
-!
-!     BODIDS   is an initialized SPICE set data structure.
-!
-!              BODIDS optionally may contain a set of body ID codes on
-!              input; on output, the data already present in BODIDS will
-!              be combined with ID code set found for the file DSKFNM.
-!
-!              If BODIDS contains no data on input, its size and
-!              cardinality still must be initialized.
-!
-! $ Detailed_Output
-!
-!     BODIDS   is a SPICE set data structure that contains the union
-!              of its contents upon input with the set of body ID codes
-!              of segments in the indicated DSK file.
-!
-!              The elements of SPICE sets are unique; each ID code in
-!              BODIDS appears only once, even if the DSK file contains
-!              multiple segments for that ID code.
-!
-!              See the $Examples section below for a complete example
-!              program showing how to retrieve the body and surface ID
-!              codes from a DSK file.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input file has transfer format, the error
-!         SPICE(INVALIDFORMAT) is signaled.
-!
-!     2)  If the input file is not a transfer file but has architecture
-!         other than DAS, the error SPICE(INVALIDARCHTYPE) is signaled.
-!
-!     3)  If the input file is a binary DAS file of type other than DSK,
-!         the error SPICE(INVALIDFILETYPE) is signaled.
-!
-!     4)  If the DSK file cannot be opened or read, an error is signaled
-!         by a routine in the call tree of this routine.
-!
-!     5)  If the size of the output set argument BODIDS is insufficient
-!         to contain the actual number of ID codes of objects covered by
-!         the indicated DSK file, the error SPICE(CELLTOOSMALL) is
-!         signaled.
-!
-! $ Files
-!
-!     See the description of the argument DSKFNM above.
-!
-! $ Particulars
-!
-!     This routine provides an API via which applications can determine
-!     the set of objects for which there are topographic data in a
-!     specified DSK file.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Display the coverage for each object in a specified DSK file.
-!        Find the set of objects in the file. Loop over the contents
-!        of the ID code set: find the surface ID for each item in the
-!        set and display the surface ID.
-!
-!        Example code begins here.
-!
-!        C
-!        C     Examine a DSK file and identify the set of
-!        C     central bodies associated with the segments
-!        C     in the file. For each body, find the
-!        C     set of surfaces associated with that body.
-!        C
-!              PROGRAM DSKOBJ_EX1
-!              IMPLICIT NONE
-!        C
-!        C     SPICELIB functions
-!        C
-!              INTEGER               CARDI
-!        C
-!        C     Local parameters
-!        C
-!              INTEGER               LBCELL
-!              PARAMETER           ( LBCELL = -5 )
-!
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!              INTEGER               MAXID
-!              PARAMETER           ( MAXID  = 10000 )
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(FILSIZ)    DSKFNM
-!
-!              INTEGER               BODIDS ( LBCELL : MAXID )
-!              INTEGER               I
-!              INTEGER               J
-!              INTEGER               SRFIDS ( LBCELL : MAXID )
-!
-!        C
-!        C     Initialize body ID and surface ID cells.
-!        C
-!              CALL SSIZEI ( MAXID, BODIDS )
-!              CALL SSIZEI ( MAXID, SRFIDS )
-!
-!        C
-!        C     Prompt for the name of a DSK file.
-!        C
-!              CALL PROMPT ( 'Enter name of DSK file > ', DSKFNM )
-!
-!        C
-!        C     Obtain body ID set for the DSK.
-!        C
-!              CALL DSKOBJ ( DSKFNM, BODIDS )
-!
-!              DO I = 1, CARDI( BODIDS )
-!
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) 'Body ID:     ', BODIDS(I)
-!        C
-!        C        Get the surface IDs for the Ith body.
-!        C
-!                 CALL DSKSRF ( DSKFNM, BODIDS(I), SRFIDS )
-!
-!                 DO J = 1, CARDI( SRFIDS )
-!                    WRITE (*,*) '   Surface ID: ', SRFIDS(J)
-!                 END DO
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds, the output
-!        was:
-!
-!        Enter name of DSK file > phobos512.bds
-!
-!         Body ID:              401
-!            Surface ID:          401
-!
-! $ Restrictions
-!
-!     1)  If an error occurs while this routine is updating the set
-!         BODIDS, the set may be corrupted.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 08-OCT-2021 (JDR) (NJB)
-!
-!        Changed input argument name "DSK" to "DSKFNM" for consistency
-!        with other routines.
-!
-!        Bug fix: added call to FAILED after call to GETFAT.
-!
-!        Edited the header comments to comply with NAIF standard.
-!        Changed the DKS file used in the code example's solution.
-!        Added NAIF_IDS to the $Required_Reading section.
-!
-!        Corrected short error message in entries #2, #3 and #5 in
-!        $Exceptions section.
-!
-!-    SPICELIB Version 1.0.0, 22-AUG-2016 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     find id codes of ephemeris objects in DSK file
-!     find id codes of bodies in DSK file
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
       integer(ip), parameter :: toklen = 4
 
-!
-!     Local variables
-!
       character(toklen)     arch
       character(toklen)     kertyp
 
@@ -16396,242 +15097,199 @@ contains
       return
       end procedure dskobj
 
-!$Procedure DSKSRF ( DSK, get surface IDs for body )
-
+      !> ## Detailed Input
+      !>
+      !>     DSKFNM   is the name of a DSK file. This file will be opened for
+      !>              read access by this routine.
+      !>
+      !>     BODYID   is the integer ID code of a body for which topographic
+      !>              data are present in the specified DSK file.
+      !>
+      !>     SRFIDS   is an initialized SPICE set data structure.
+      !>
+      !>              SRFIDS optionally may contain a set of surface ID codes
+      !>              on input; on output, the ID codes already present in
+      !>              SRFIDS will be combined with surface ID code set found
+      !>              for the body designated by BODYID in the file DSKFNM.
+      !>
+      !>              If SRFIDS contains no data on input, its size and
+      !>              cardinality still must be initialized.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     SRFIDS   is a SPICE set data structure that contains the union
+      !>              of its contents upon input with the set of ID codes of
+      !>              the surfaces associated with the body designated by
+      !>              BODYID, for which segments were found in the indicated
+      !>              DSK file.
+      !>
+      !>              The elements of SPICE sets are unique; each ID code in
+      !>              SRFIDS appears only once, even if the DSK file contains
+      !>              multiple segments for that ID code.
+      !>
+      !>              See the $Examples section below for a complete example
+      !>              program showing how to retrieve body and surface ID codes
+      !>              from a DSK file.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input file has transfer format, the error
+      !>         SPICE(INVALIDFORMAT) is signaled.
+      !>
+      !>     2)  If the input file is not a transfer file but has architecture
+      !>         other than DAS, the error SPICE(INVALIDARCHTYPE) is signaled.
+      !>
+      !>     3)  If the input file is a binary DAS file of type other than DSK,
+      !>         the error SPICE(INVALIDFILETYPE) is signaled.
+      !>
+      !>     4)  If the DSK file cannot be opened or read, an error is signaled
+      !>         by a routine in the call tree of this routine.
+      !>
+      !>     5)  If the size of the output set argument SRFIDS is insufficient
+      !>         to contain the actual number of ID codes of surfaces covered
+      !>         by the indicated DSK file, the error SPICE(CELLTOOSMALL) is
+      !>         signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See the description of the argument DSKFNM above.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine provides an API via which applications can determine
+      !>     the set of surfaces associated with a given body in a specified
+      !>     DSK file. This routine is normally used together with DSKOBJ.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Examine a DSK file and identify the set of central bodies
+      !>        associated with the segments in the file. For each body, find
+      !>        the set of surfaces associated with that body.
+      !>
+      !>        Example code begins here.
+      !>
+      !>        C
+      !>        C     Examine a DSK file and identify the set of
+      !>        C     central bodies associated with the segments
+      !>        C     in the file. For each body, find the
+      !>        C     set of surfaces associated with that body.
+      !>        C
+      !>              PROGRAM DSKSRF_EX1
+      !>              IMPLICIT NONE
+      !>        C
+      !>        C     SPICELIB functions
+      !>        C
+      !>              INTEGER               CARDI
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              INTEGER               LBCELL
+      !>              PARAMETER           ( LBCELL = -5 )
+      !>
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>              INTEGER               MAXID
+      !>              PARAMETER           ( MAXID  = 10000 )
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(FILSIZ)    DSKFNM
+      !>
+      !>              INTEGER               BODIDS ( LBCELL : MAXID )
+      !>              INTEGER               I
+      !>              INTEGER               J
+      !>              INTEGER               SRFIDS ( LBCELL : MAXID )
+      !>
+      !>        C
+      !>        C     Initialize body ID and surface ID cells.
+      !>        C
+      !>              CALL SSIZEI ( MAXID, BODIDS )
+      !>              CALL SSIZEI ( MAXID, SRFIDS )
+      !>
+      !>        C
+      !>        C     Prompt for the name of a DSK file.
+      !>        C
+      !>              CALL PROMPT ( 'Enter name of DSK file > ', DSKFNM )
+      !>
+      !>        C
+      !>        C     Obtain body ID set for the DSK.
+      !>        C
+      !>              CALL DSKOBJ ( DSKFNM, BODIDS )
+      !>
+      !>              DO I = 1, CARDI( BODIDS )
+      !>
+      !>                 WRITE (*,*) ' '
+      !>                 WRITE (*,*) 'Body ID:     ', BODIDS(I)
+      !>        C
+      !>        C        Get the surface IDs for the Ith body.
+      !>        C
+      !>                 CALL DSKSRF ( DSKFNM, BODIDS(I), SRFIDS )
+      !>
+      !>                 DO J = 1, CARDI( SRFIDS )
+      !>                    WRITE (*,*) '   Surface ID: ', SRFIDS(J)
+      !>                 END DO
+      !>
+      !>              END DO
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the DSK file named phobos512.bds, the output
+      !>        was:
+      !>
+      !>        Enter name of DSK file > phobos512.bds
+      !>
+      !>         Body ID:              401
+      !>            Surface ID:          401
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  If an error occurs while this routine is updating the set
+      !>         SRFIDS, the set may be corrupted.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 08-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Changed input argument name "DSK" to "DSKFNM" for consistency
+      !>        with other routines.
+      !>
+      !>        Bug fix: added call to FAILED after call to GETFAT.
+      !>
+      !>        Edited the header to comply with NAIF standard. Update problem
+      !>        statement in $Examples section. Corrected short error message
+      !>        in entries #2, #3 and #5 in $Exceptions section.
+      !>
+      !>-    SPICELIB Version 1.0.0, 22-AUG-2016 (NJB)
       module procedure dsksrf
-!! ## Abstract
-!!
-!!     Find the set of surface ID codes for all surfaces associated with
-!!     a given body in a specified DSK file.
-!!
-!! ## Required Reading
-!!
-!!     CELLS
-!!     DAS
-!!     DSK
-!!     NAIF_IDS
-!!     SETS
-!!
-!! ## Keywords
-!!
-!!     COVERAGE
-!!     SURFACE
-!!     TOPOGRAPHY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
 
-
       integer(ip), parameter :: lbcell = -5
 
-! $ Detailed_Input
-!
-!     DSKFNM   is the name of a DSK file. This file will be opened for
-!              read access by this routine.
-!
-!     BODYID   is the integer ID code of a body for which topographic
-!              data are present in the specified DSK file.
-!
-!     SRFIDS   is an initialized SPICE set data structure.
-!
-!              SRFIDS optionally may contain a set of surface ID codes
-!              on input; on output, the ID codes already present in
-!              SRFIDS will be combined with surface ID code set found
-!              for the body designated by BODYID in the file DSKFNM.
-!
-!              If SRFIDS contains no data on input, its size and
-!              cardinality still must be initialized.
-!
-! $ Detailed_Output
-!
-!     SRFIDS   is a SPICE set data structure that contains the union
-!              of its contents upon input with the set of ID codes of
-!              the surfaces associated with the body designated by
-!              BODYID, for which segments were found in the indicated
-!              DSK file.
-!
-!              The elements of SPICE sets are unique; each ID code in
-!              SRFIDS appears only once, even if the DSK file contains
-!              multiple segments for that ID code.
-!
-!              See the $Examples section below for a complete example
-!              program showing how to retrieve body and surface ID codes
-!              from a DSK file.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input file has transfer format, the error
-!         SPICE(INVALIDFORMAT) is signaled.
-!
-!     2)  If the input file is not a transfer file but has architecture
-!         other than DAS, the error SPICE(INVALIDARCHTYPE) is signaled.
-!
-!     3)  If the input file is a binary DAS file of type other than DSK,
-!         the error SPICE(INVALIDFILETYPE) is signaled.
-!
-!     4)  If the DSK file cannot be opened or read, an error is signaled
-!         by a routine in the call tree of this routine.
-!
-!     5)  If the size of the output set argument SRFIDS is insufficient
-!         to contain the actual number of ID codes of surfaces covered
-!         by the indicated DSK file, the error SPICE(CELLTOOSMALL) is
-!         signaled.
-!
-! $ Files
-!
-!     See the description of the argument DSKFNM above.
-!
-! $ Particulars
-!
-!     This routine provides an API via which applications can determine
-!     the set of surfaces associated with a given body in a specified
-!     DSK file. This routine is normally used together with DSKOBJ.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Examine a DSK file and identify the set of central bodies
-!        associated with the segments in the file. For each body, find
-!        the set of surfaces associated with that body.
-!
-!        Example code begins here.
-!
-!        C
-!        C     Examine a DSK file and identify the set of
-!        C     central bodies associated with the segments
-!        C     in the file. For each body, find the
-!        C     set of surfaces associated with that body.
-!        C
-!              PROGRAM DSKSRF_EX1
-!              IMPLICIT NONE
-!        C
-!        C     SPICELIB functions
-!        C
-!              INTEGER               CARDI
-!        C
-!        C     Local parameters
-!        C
-!              INTEGER               LBCELL
-!              PARAMETER           ( LBCELL = -5 )
-!
-!              INTEGER               FILSIZ
-!              PARAMETER           ( FILSIZ = 255 )
-!
-!              INTEGER               MAXID
-!              PARAMETER           ( MAXID  = 10000 )
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(FILSIZ)    DSKFNM
-!
-!              INTEGER               BODIDS ( LBCELL : MAXID )
-!              INTEGER               I
-!              INTEGER               J
-!              INTEGER               SRFIDS ( LBCELL : MAXID )
-!
-!        C
-!        C     Initialize body ID and surface ID cells.
-!        C
-!              CALL SSIZEI ( MAXID, BODIDS )
-!              CALL SSIZEI ( MAXID, SRFIDS )
-!
-!        C
-!        C     Prompt for the name of a DSK file.
-!        C
-!              CALL PROMPT ( 'Enter name of DSK file > ', DSKFNM )
-!
-!        C
-!        C     Obtain body ID set for the DSK.
-!        C
-!              CALL DSKOBJ ( DSKFNM, BODIDS )
-!
-!              DO I = 1, CARDI( BODIDS )
-!
-!                 WRITE (*,*) ' '
-!                 WRITE (*,*) 'Body ID:     ', BODIDS(I)
-!        C
-!        C        Get the surface IDs for the Ith body.
-!        C
-!                 CALL DSKSRF ( DSKFNM, BODIDS(I), SRFIDS )
-!
-!                 DO J = 1, CARDI( SRFIDS )
-!                    WRITE (*,*) '   Surface ID: ', SRFIDS(J)
-!                 END DO
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, using the DSK file named phobos512.bds, the output
-!        was:
-!
-!        Enter name of DSK file > phobos512.bds
-!
-!         Body ID:              401
-!            Surface ID:          401
-!
-! $ Restrictions
-!
-!     1)  If an error occurs while this routine is updating the set
-!         SRFIDS, the set may be corrupted.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 08-OCT-2021 (JDR) (NJB)
-!
-!        Changed input argument name "DSK" to "DSKFNM" for consistency
-!        with other routines.
-!
-!        Bug fix: added call to FAILED after call to GETFAT.
-!
-!        Edited the header to comply with NAIF standard. Update problem
-!        statement in $Examples section. Corrected short error message
-!        in entries #2, #3 and #5 in $Exceptions section.
-!
-!-    SPICELIB Version 1.0.0, 22-AUG-2016 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     find id codes of surfaces in DSK file
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
       integer(ip), parameter :: toklen = 4
 
-!
-!     Local variables
-!
       character(toklen)     arch
       character(toklen)     kertyp
 

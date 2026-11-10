@@ -172,8 +172,6 @@ module pepper_inc_dskdsc
    integer               dskdsz
    parameter           ( dskdsz = etmidx )
 
-
-
 !
 !     Data class values:
 !
@@ -212,7 +210,6 @@ module pepper_inc_dskdsc
    integer               latsys
    parameter           ( latsys = 1 )
 
-
 !
 !        Code 2 refers to the cylindrical system.
 !
@@ -223,7 +220,6 @@ module pepper_inc_dskdsc
 !
    integer               cylsys
    parameter           ( cylsys = 2 )
-
 
 !
 !        Code 3 refers to the rectangular system.
@@ -236,7 +232,6 @@ module pepper_inc_dskdsc
    integer               recsys
    parameter           ( recsys = 3 )
 
-
 !
 !        Code 4 refers to the planetodetic/geodetic system.
 !
@@ -247,8 +242,6 @@ module pepper_inc_dskdsc
 !
    integer               pdtsys
    parameter           ( pdtsys = 4 )
-
-
 
 !
 !     End of include file dskdsc.inc

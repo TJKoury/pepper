@@ -11,217 +11,201 @@ submodule (pepper_instance) pepper_frames
 
 contains
 
-!$Procedure ZZDYNBID ( Fetch body ID kernel variable )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Look up a frame definition kernel variable whose associated value
+      !>     is a body name or body ID code.  The returned value is always an
+      !>     ID code.  The frame name or frame ID may be used as part of the
+      !>     variable's name.
+      !>
+      !>     If the kernel variable is not present, or if the variable
+      !>     is not a body name or a numeric value, signal an error.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     FRNAME         is the name of the reference frame with which
+      !>                    the requested variable is associated.
+      !>
+      !>     FRCODE         is the frame ID code of the reference frame with
+      !>                    which the requested variable is associated.
+      !>
+      !>     ITEM           is a string identifying the specific datum
+      !>                    to be fetched.  The kernel variable name
+      !>                    has the form
+      !>
+      !>                       FRAME_<frame ID code>_<ITEM>
+      !>
+      !>                    or
+      !>
+      !>                       FRAME_<frame name>_<ITEM>
+      !>
+      !>                    The former of the two names takes precedence:
+      !>                    this routine will look for a numeric variable
+      !>                    of that name first.
+      !>
+      !>                    The value associated with the kernel variable
+      !>                    must be one of
+      !>
+      !>                       - a nbody ID code
+      !>
+      !>                       - a string representation of an integer,
+      !>                         for example '5'
+      !>
+      !>                       - a body frame name
+      !>
+      !> ## Detailed Output
+      !>
+      !>     IDCODE         is the requested body ID code.
+      !>
+      !>                    The kernel variable name of the form
+      !>
+      !>                       FRAME_<frame ID code>_<ITEM>
+      !>
+      !>                    will be looked up first; if this variable
+      !>                    is found and has numeric type, the associated
+      !>                    value will be returned.  If this variable is
+      !>                    found and has character type, the value will
+      !>                    be converted to a body ID code, and that
+      !>                    code will be returned.
+      !>
+      !>                    If this variable is not found, the variable
+      !>
+      !>                       FRAME_<frame name>_<ITEM>
+      !>
+      !>                    will be looked up.  If this variable is found and
+      !>                    has numeric type, the associated value will be
+      !>                    returned.  If this variable is found and has
+      !>                    character type, the value will be converted to a
+      !>                    body ID code, and that code will be returned.
+      !>
+      !>                    If a numeric value associated with the selected
+      !>                    kernel variable is not integral, it will be
+      !>                    rounded to the closest integer.
+      !>
+      !> ## Parameters
+      !>
+      !>     See zzdyn.inc for definition of KVNMLN.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If neither the frame-ID-based or frame-name-based form of the
+      !>        requested kernel variable name matches a kernel variable
+      !>        present in the kernel pool, the error SPICE(KERNELVARNOTFOUND)
+      !>        will be signaled.
+      !>
+      !>     2) If either the frame-ID-based or frame-name-based form of the
+      !>        requested kernel variable name has length greater than KVNMLN,
+      !>        that variable will not be searched for.
+      !>
+      !>     3) If both the frame-ID-based and frame-name-based forms of the
+      !>        requested kernel variable name have length greater than KVNMLN,
+      !>        the error SPICE(VARNAMETOOLONG) will be signaled.
+      !>
+      !>     4) If kernel variable matching one form of the requested kernel
+      !>        variable names is found, but that variable has more than 1
+      !>        associated value, the error SPICE(BADVARIABLESIZE) will be
+      !>        signaled.
+      !>
+      !>     5) If a name match is found for a character kernel variable, but
+      !>        the value associated with the variable cannot be mapped to a
+      !>        body ID code, the error SPICE(NOTRANSLATION) will be
+      !>        signaled.
+      !>
+      !>     6) If a name match is found for a numeric kernel variable,
+      !>        but that variable has a value that cannot be rounded to an
+      !>        integer representable on the host platform, an error will
+      !>        be signaled by a routine in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     1) Kernel variables fetched by this routine are normally
+      !>        introduced into the kernel pool by loading one or more
+      !>        frame kernels.  See the Frames Required Reading for
+      !>        details.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine centralizes logic for kernel variable lookups that
+      !>     must be performed by the SPICELIB frame subsystem. Part of the
+      !>     functionality of this routine consists of handling error
+      !>     conditions such as the unavailability of required kernel
+      !>     variables; hence no "found" flag is returned to the caller.
+      !>
+      !>     As indicated above, the requested kernel variable may have a name
+      !>     of the form
+      !>
+      !>        FRAME_<frame ID code>_<ITEM>
+      !>
+      !>     or
+      !>
+      !>        FRAME_<frame name>_<ITEM>
+      !>
+      !>     Because most frame definition keywords have the first form, this
+      !>     routine looks for a name of that form first.
+      !>
+      !>     Note that although this routine considers the two forms of the
+      !>     names to be synonymous, from the point of view of the kernel pool
+      !>     access routines, these names are distinct.  Hence kernel
+      !>     variables having names of both forms, but having possibly
+      !>     different attributes, can be simultaneously present in the kernel
+      !>     pool. Intentional use of this kernel pool feature is discouraged.
+      !>
+      !> ## Examples
+      !>
+      !>     1) See ZZDYNFRM.
+      !>
+      !>     2) Applications of this routine include finding ID codes of
+      !>        observer or target bodies serving to define two-vector dynamic
+      !>        frames.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) This is a SPICE private routine; the routine is subject
+      !>        to change without notice.  User applications should not
+      !>        call this routine.
+      !>
+      !>     2) An array-valued kernel variable matching the "ID code form"
+      !>        of the requested kernel variable name could potentially
+      !>        mask a scalar-valued kernel variable matching the "name
+      !>        form" of the requested name.  This problem can be prevented
+      !>        by sensible frame kernel design.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.0.0, 05-AUG-2005 (NJB)
+      !>
+      !>        References to parameterized dynamic frames in long error
+      !>        messages were changed to references to "reference frames."
+      !>        This change was made to enable this utility to support
+      !>        kernel variable look-ups for non-dynamic frames.
+      !>
+      !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 2.0.0, 05-AUG-2005 (NJB)
+      !>
+      !>        References to parameterized dynamic frames in long error
+      !>        messages were changed to references to "reference frames."
+      !>        This change was made to enable this utility to support
+      !>        kernel variable look-ups for non-dynamic frames.
+      !>
+      !>     SPICELIB functions
+      !>
+      !>     Local parameters
       module procedure zzdynbid
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Look up a frame definition kernel variable whose associated value
-!!     is a body name or body ID code.  The returned value is always an
-!!     ID code.  The frame name or frame ID may be used as part of the
-!!     variable's name.
-!!
-!!     If the kernel variable is not present, or if the variable
-!!     is not a body name or a numeric value, signal an error.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     FRAMES
-!!     KERNEL
-!!     PRIVATE
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     FRNAME         is the name of the reference frame with which
-!!                    the requested variable is associated.
-!!
-!!     FRCODE         is the frame ID code of the reference frame with
-!!                    which the requested variable is associated.
-!!
-!!     ITEM           is a string identifying the specific datum
-!!                    to be fetched.  The kernel variable name
-!!                    has the form
-!!
-!!                       FRAME_<frame ID code>_<ITEM>
-!!
-!!                    or
-!!
-!!                       FRAME_<frame name>_<ITEM>
-!!
-!!                    The former of the two names takes precedence:
-!!                    this routine will look for a numeric variable
-!!                    of that name first.
-!!
-!!                    The value associated with the kernel variable
-!!                    must be one of
-!!
-!!                       - a nbody ID code
-!!
-!!                       - a string representation of an integer,
-!!                         for example '5'
-!!
-!!                       - a body frame name
-!!
-!! ## Detailed Output
-!!
-!!     IDCODE         is the requested body ID code.
-!!
-!!                    The kernel variable name of the form
-!!
-!!                       FRAME_<frame ID code>_<ITEM>
-!!
-!!                    will be looked up first; if this variable
-!!                    is found and has numeric type, the associated
-!!                    value will be returned.  If this variable is
-!!                    found and has character type, the value will
-!!                    be converted to a body ID code, and that
-!!                    code will be returned.
-!!
-!!                    If this variable is not found, the variable
-!!
-!!                       FRAME_<frame name>_<ITEM>
-!!
-!!                    will be looked up.  If this variable is found and
-!!                    has numeric type, the associated value will be
-!!                    returned.  If this variable is found and has
-!!                    character type, the value will be converted to a
-!!                    body ID code, and that code will be returned.
-!!
-!!                    If a numeric value associated with the selected
-!!                    kernel variable is not integral, it will be
-!!                    rounded to the closest integer.
-!!
-!! ## Parameters
-!!
-!!     See zzdyn.inc for definition of KVNMLN.
-!!
-!! ## Exceptions
-!!
-!!     1) If neither the frame-ID-based or frame-name-based form of the
-!!        requested kernel variable name matches a kernel variable
-!!        present in the kernel pool, the error SPICE(KERNELVARNOTFOUND)
-!!        will be signaled.
-!!
-!!     2) If either the frame-ID-based or frame-name-based form of the
-!!        requested kernel variable name has length greater than KVNMLN,
-!!        that variable will not be searched for.
-!!
-!!     3) If both the frame-ID-based and frame-name-based forms of the
-!!        requested kernel variable name have length greater than KVNMLN,
-!!        the error SPICE(VARNAMETOOLONG) will be signaled.
-!!
-!!     4) If kernel variable matching one form of the requested kernel
-!!        variable names is found, but that variable has more than 1
-!!        associated value, the error SPICE(BADVARIABLESIZE) will be
-!!        signaled.
-!!
-!!     5) If a name match is found for a character kernel variable, but
-!!        the value associated with the variable cannot be mapped to a
-!!        body ID code, the error SPICE(NOTRANSLATION) will be
-!!        signaled.
-!!
-!!     6) If a name match is found for a numeric kernel variable,
-!!        but that variable has a value that cannot be rounded to an
-!!        integer representable on the host platform, an error will
-!!        be signaled by a routine in the call tree of this routine.
-!!
-!! ## Files
-!!
-!!     1) Kernel variables fetched by this routine are normally
-!!        introduced into the kernel pool by loading one or more
-!!        frame kernels.  See the Frames Required Reading for
-!!        details.
-!!
-!! ## Particulars
-!!
-!!     This routine centralizes logic for kernel variable lookups that
-!!     must be performed by the SPICELIB frame subsystem. Part of the
-!!     functionality of this routine consists of handling error
-!!     conditions such as the unavailability of required kernel
-!!     variables; hence no "found" flag is returned to the caller.
-!!
-!!     As indicated above, the requested kernel variable may have a name
-!!     of the form
-!!
-!!        FRAME_<frame ID code>_<ITEM>
-!!
-!!     or
-!!
-!!        FRAME_<frame name>_<ITEM>
-!!
-!!     Because most frame definition keywords have the first form, this
-!!     routine looks for a name of that form first.
-!!
-!!     Note that although this routine considers the two forms of the
-!!     names to be synonymous, from the point of view of the kernel pool
-!!     access routines, these names are distinct.  Hence kernel
-!!     variables having names of both forms, but having possibly
-!!     different attributes, can be simultaneously present in the kernel
-!!     pool. Intentional use of this kernel pool feature is discouraged.
-!!
-!! ## Examples
-!!
-!!     1) See ZZDYNFRM.
-!!
-!!     2) Applications of this routine include finding ID codes of
-!!        observer or target bodies serving to define two-vector dynamic
-!!        frames.
-!!
-!! ## Restrictions
-!!
-!!     1) This is a SPICE private routine; the routine is subject
-!!        to change without notice.  User applications should not
-!!        call this routine.
-!!
-!!     2) An array-valued kernel variable matching the "ID code form"
-!!        of the requested kernel variable name could potentially
-!!        mask a scalar-valued kernel variable matching the "name
-!!        form" of the requested name.  This problem can be prevented
-!!        by sensible frame kernel design.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman    (JPL)
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.0.0, 05-AUG-2005 (NJB)
-!!
-!!        References to parameterized dynamic frames in long error
-!!        messages were changed to references to "reference frames."
-!!        This change was made to enable this utility to support
-!!        kernel variable look-ups for non-dynamic frames.
-!!
-!!-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 2.0.0, 05-AUG-2005 (NJB)
-!!
-!!        References to parameterized dynamic frames in long error
-!!        messages were changed to references to "reference frames."
-!!        This change was made to enable this utility to support
-!!        kernel variable look-ups for non-dynamic frames.
-!!
-!!     SPICELIB functions
-!!
-!!     Local parameters
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzbodtrn
@@ -234,9 +218,6 @@ contains
 !     the sum of the lengths of the two substitution markers ('#').
 !
 
-!
-!     Local variables
-!
       character(:), allocatable :: bodnam
       character(1)          dtype
       character(:), allocatable :: kvname
@@ -359,179 +340,163 @@ contains
       return
       end procedure zzdynbid
 
-!$Procedure ZZDYNVAI ( Fetch array, integer frame kernel variable )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Look up array-valued integer frame kernel variable. The frame
+      !>     name or frame ID may be used as part of the variable's name.
+      !>
+      !>     If the kernel variable is not present, or if the variable
+      !>     has the wrong data type, signal an error.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     FRNAME         is the name of the reference frame with which
+      !>                    the requested variable is associated.
+      !>
+      !>     FRCODE         is the frame ID code of the reference frame with
+      !>                    which the requested variable is associated.
+      !>
+      !>     ITEM           is a string identifying the specific datum
+      !>                    to be fetched.  The kernel variable name
+      !>                    has the form
+      !>
+      !>                       FRAME_<frame ID code>_<ITEM>
+      !>
+      !>                    or
+      !>
+      !>                       FRAME_<frame name>_<ITEM>
+      !>
+      !>                    The former of the two names takes precedence:
+      !>                    this routine will look for a numeric variable
+      !>                    of that name first.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     N              is the number of values returned in the array
+      !>                    VALUES.
+      !>
+      !>     VALUES         are the values associated with the requested
+      !>                    array-valued, integer kernel variable. The kernel
+      !>                    variable name of the form
+      !>
+      !>                       FRAME_<frame ID code>_<ITEM>
+      !>
+      !>                    will be looked up first; if this variable
+      !>                    is found and has numeric type, the associated
+      !>                    values will be returned.  If this variable is
+      !>                    not found, the variable
+      !>
+      !>                       FRAME_<frame name>_<ITEM>
+      !>
+      !>                    will be looked up.  If a numeric variable
+      !>                    having that name is found, the associated
+      !>                    values will be returned.
+      !>
+      !> ## Parameters
+      !>
+      !>     See zzdyn.inc.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If neither the frame-ID-based or frame-name-based form of the
+      !>        requested kernel variable name matches a kernel variable
+      !>        present in the kernel pool, the error SPICE(KERNELVARNOTFOUND)
+      !>        will be signaled.
+      !>
+      !>     2) If either the frame-ID-based or frame-name-based form of the
+      !>        requested kernel variable name has length greater than KVNMLN,
+      !>        the excessively long name will not be searched for. A search
+      !>        will still be done using the alternative form of the name if
+      !>        that form has length less than or equal to KVNMLN.
+      !>
+      !>     3) If both the frame-ID-based and frame-name-based forms of the
+      !>        requested kernel variable name have length greater than KVNMLN,
+      !>        the error SPICE(VARNAMETOOLONG) will be signaled.
+      !>
+      !>     4) If kernel variable matching one form of the requested kernel
+      !>        variable names is found, but that variable has character data
+      !>        type, the error SPICE(BADVARIABLETYPE) will be signaled.
+      !>
+      !>     5) If kernel variable matching one form of the requested kernel
+      !>        variable names is found, but that variable has more than MAXN
+      !>        associated values, the error SPICE(BADVARIABLESIZE) will be
+      !>        signaled.
+      !>
+      !>     6) If a name match is found for a numeric kernel variable,
+      !>        but that variable has a value that cannot be rounded to an
+      !>        integer representable on the host platform, an error will
+      !>        be signaled by a routine in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     1) Kernel variables fetched by this routine are normally
+      !>        introduced into the kernel pool by loading one or more
+      !>        frame kernels.  See the Frames Required Reading for
+      !>        details.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine centralizes logic for kernel variable lookups that
+      !>     must be performed by the SPICELIB frame subsystem. Part of the
+      !>     functionality of this routine consists of handling error
+      !>     conditions such as the unavailability of required kernel
+      !>     variables; hence no "found" flag is returned to the caller.
+      !>
+      !>     As indicated above, the requested kernel variable may have a name
+      !>     of the form
+      !>
+      !>        FRAME_<frame ID code>_<ITEM>
+      !>
+      !>     or
+      !>
+      !>        FRAME_<frame name>_<ITEM>
+      !>
+      !>     Because most frame definition keywords have the first form, this
+      !>     routine looks for a name of that form first.
+      !>
+      !>     Note that although this routine considers the two forms of the
+      !>     names to be synonymous, from the point of view of the kernel pool
+      !>     data structure, these names are distinct.  Hence kernel variables
+      !>     having names of both forms, but having possibly different
+      !>     attributes, can be simultaneously present in the kernel pool.
+      !>     Intentional use of this kernel pool feature is discouraged.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDYNFRM.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) This is a SPICE private routine; the routine is subject
+      !>        to change without notice.  User applications should not
+      !>        call this routine.
+      !>
+      !>     2) A scalar-valued kernel variable matching the "ID code form"
+      !>        of the requested kernel variable name could potentially
+      !>        mask an array-valued kernel variable matching the "name
+      !>        form" of the requested name.  This problem can be prevented
+      !>        by sensible frame kernel design.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
+      !>
+      !>     SPICELIB functions
+      !>
+      !>     Local Parameters
       module procedure zzdynvai
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Look up array-valued integer frame kernel variable. The frame
-!!     name or frame ID may be used as part of the variable's name.
-!!
-!!     If the kernel variable is not present, or if the variable
-!!     has the wrong data type, signal an error.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     FRAMES
-!!     KERNEL
-!!     PRIVATE
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     FRNAME         is the name of the reference frame with which
-!!                    the requested variable is associated.
-!!
-!!     FRCODE         is the frame ID code of the reference frame with
-!!                    which the requested variable is associated.
-!!
-!!     ITEM           is a string identifying the specific datum
-!!                    to be fetched.  The kernel variable name
-!!                    has the form
-!!
-!!                       FRAME_<frame ID code>_<ITEM>
-!!
-!!                    or
-!!
-!!                       FRAME_<frame name>_<ITEM>
-!!
-!!                    The former of the two names takes precedence:
-!!                    this routine will look for a numeric variable
-!!                    of that name first.
-!!
-!! ## Detailed Output
-!!
-!!     N              is the number of values returned in the array
-!!                    VALUES.
-!!
-!!     VALUES         are the values associated with the requested
-!!                    array-valued, integer kernel variable. The kernel
-!!                    variable name of the form
-!!
-!!                       FRAME_<frame ID code>_<ITEM>
-!!
-!!                    will be looked up first; if this variable
-!!                    is found and has numeric type, the associated
-!!                    values will be returned.  If this variable is
-!!                    not found, the variable
-!!
-!!                       FRAME_<frame name>_<ITEM>
-!!
-!!                    will be looked up.  If a numeric variable
-!!                    having that name is found, the associated
-!!                    values will be returned.
-!!
-!! ## Parameters
-!!
-!!     See zzdyn.inc.
-!!
-!! ## Exceptions
-!!
-!!     1) If neither the frame-ID-based or frame-name-based form of the
-!!        requested kernel variable name matches a kernel variable
-!!        present in the kernel pool, the error SPICE(KERNELVARNOTFOUND)
-!!        will be signaled.
-!!
-!!     2) If either the frame-ID-based or frame-name-based form of the
-!!        requested kernel variable name has length greater than KVNMLN,
-!!        the excessively long name will not be searched for. A search
-!!        will still be done using the alternative form of the name if
-!!        that form has length less than or equal to KVNMLN.
-!!
-!!     3) If both the frame-ID-based and frame-name-based forms of the
-!!        requested kernel variable name have length greater than KVNMLN,
-!!        the error SPICE(VARNAMETOOLONG) will be signaled.
-!!
-!!     4) If kernel variable matching one form of the requested kernel
-!!        variable names is found, but that variable has character data
-!!        type, the error SPICE(BADVARIABLETYPE) will be signaled.
-!!
-!!     5) If kernel variable matching one form of the requested kernel
-!!        variable names is found, but that variable has more than MAXN
-!!        associated values, the error SPICE(BADVARIABLESIZE) will be
-!!        signaled.
-!!
-!!     6) If a name match is found for a numeric kernel variable,
-!!        but that variable has a value that cannot be rounded to an
-!!        integer representable on the host platform, an error will
-!!        be signaled by a routine in the call tree of this routine.
-!!
-!! ## Files
-!!
-!!     1) Kernel variables fetched by this routine are normally
-!!        introduced into the kernel pool by loading one or more
-!!        frame kernels.  See the Frames Required Reading for
-!!        details.
-!!
-!! ## Particulars
-!!
-!!     This routine centralizes logic for kernel variable lookups that
-!!     must be performed by the SPICELIB frame subsystem. Part of the
-!!     functionality of this routine consists of handling error
-!!     conditions such as the unavailability of required kernel
-!!     variables; hence no "found" flag is returned to the caller.
-!!
-!!     As indicated above, the requested kernel variable may have a name
-!!     of the form
-!!
-!!        FRAME_<frame ID code>_<ITEM>
-!!
-!!     or
-!!
-!!        FRAME_<frame name>_<ITEM>
-!!
-!!     Because most frame definition keywords have the first form, this
-!!     routine looks for a name of that form first.
-!!
-!!     Note that although this routine considers the two forms of the
-!!     names to be synonymous, from the point of view of the kernel pool
-!!     data structure, these names are distinct.  Hence kernel variables
-!!     having names of both forms, but having possibly different
-!!     attributes, can be simultaneously present in the kernel pool.
-!!     Intentional use of this kernel pool feature is discouraged.
-!!
-!! ## Examples
-!!
-!!     See ZZDYNFRM.
-!!
-!! ## Restrictions
-!!
-!!     1) This is a SPICE private routine; the routine is subject
-!!        to change without notice.  User applications should not
-!!        call this routine.
-!!
-!!     2) A scalar-valued kernel variable matching the "ID code form"
-!!        of the requested kernel variable name could potentially
-!!        mask an array-valued kernel variable matching the "name
-!!        form" of the requested name.  This problem can be prevented
-!!        by sensible frame kernel design.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman    (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-!!
-!!     SPICELIB functions
-!!
-!!     Local Parameters
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzdyn
@@ -542,12 +507,8 @@ contains
 !     the sum of the lengths of the two substitution markers ('#').
 !
 
-!
-!     Local Variables
-!
       character(1)          dtype
       character(:), allocatable :: kvname
-
 
       logical               found
 
@@ -629,178 +590,162 @@ contains
       return
       end procedure zzdynvai
 
-!$Procedure ZZDYNOAC ( Fetch optional array, character frame variable )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Look up optional array-valued character frame kernel variable.
+      !>     The frame name or frame ID may be used as part of the variable's
+      !>     name.
+      !>
+      !>     If the kernel variable is not present, or if the variable
+      !>     has the wrong data type or size, set the FOUND flag to .FALSE.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     FRNAME         is the name of the reference frame with which
+      !>                    the requested variable is associated.
+      !>
+      !>     FRCODE         is the frame ID code of the reference frame with
+      !>                    which the requested variable is associated.
+      !>
+      !>     ITEM           is a string identifying the specific datum
+      !>                    to be fetched.  The kernel variable name
+      !>                    has the form
+      !>
+      !>                       FRAME_<frame ID code>_<ITEM>
+      !>
+      !>                    or
+      !>
+      !>                       FRAME_<frame name>_<ITEM>
+      !>
+      !>                    The former of the two names takes precedence:
+      !>                    this routine will look for a character variable
+      !>                    of that name first.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     N              is the number of values returned in the array
+      !>                    VALUES.
+      !>
+      !>     VALUES         are the values associated with the requested
+      !>                    array-valued, character kernel variable. The
+      !>                    kernel variable name of the form
+      !>
+      !>                       FRAME_<frame ID code>_<ITEM>
+      !>
+      !>                    will be looked up first; if this variable
+      !>                    is found and has character type, the associated
+      !>                    values will be returned.  If this variable is
+      !>                    not found, the variable
+      !>
+      !>                       FRAME_<frame name>_<ITEM>
+      !>
+      !>                    will be looked up.  If a character variable
+      !>                    having that name is found, the associated
+      !>                    values will be returned.
+      !>
+      !>                    VALUES is not defined if the requested kernel
+      !>                    variable is not found.
+      !>
+      !>     FOUND          is a logical flag indicating whether the requested
+      !>                    kernel variable was found.  If the search described
+      !>                    above (in the detailed description of the output
+      !>                    argument VALUES) is successful, FOUND is set to
+      !>                    .TRUE.; otherwise FOUND is set to .FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     See zzdyn.inc.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If both the frame-ID-based and frame-name-based forms of the
+      !>        requested kernel variable name have length greater than KVNMLN,
+      !>        the error SPICE(VARNAMETOOLONG) will be signaled.
+      !>
+      !>     2) If kernel variable matching one form of the requested kernel
+      !>        variable names is found, but that variable has numeric data
+      !>        type, the error SPICE(BADVARIABLETYPE) will be signaled.
+      !>
+      !>     3) If kernel variable matching one form of the requested kernel
+      !>        variable names is found, but that variable has more than MAXN
+      !>        associated values, the error SPICE(BADVARIABLESIZE) will be
+      !>        signaled.
+      !>
+      !>     4) If kernel variable matching one form of the requested kernel
+      !>        variable names is found, but that variable has more than MAXN
+      !>        associated values, the error SPICE(BADVARIABLESIZE) will be
+      !>        signaled.
+      !>
+      !> ## Files
+      !>
+      !>     1) Kernel variables fetched by this routine are normally
+      !>        introduced into the kernel pool by loading one or more
+      !>        frame kernels.  See the Frames Required Reading for
+      !>        details.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine centralizes logic for kernel variable lookups that
+      !>     must be performed by the SPICELIB frame subsystem.  This routine
+      !>     is meant to look up array-valued character variables whose
+      !>     presence is optional.  For required array character variables,
+      !>     use ZZDYNVAC.
+      !>
+      !>     As indicated above, the requested kernel variable may have a name
+      !>     of the form
+      !>
+      !>        FRAME_<frame ID code>_<ITEM>
+      !>
+      !>     or
+      !>
+      !>        FRAME_<frame name>_<ITEM>
+      !>
+      !>     Because most frame definition keywords have the first form, this
+      !>     routine looks for a name of that form first.
+      !>
+      !>     Note that although this routine considers the two forms of the
+      !>     names to be synonymous, from the point of view of the kernel pool
+      !>     data structure, these names are distinct.  Hence kernel variables
+      !>     having names of both forms, but having possibly different
+      !>     attributes, can be simultaneously present in the kernel pool.
+      !>     Intentional use of this kernel pool feature is discouraged.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDYNFRM.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) This is a SPICE private routine; the routine is subject
+      !>        to change without notice.  User applications should not
+      !>        call this routine.
+      !>
+      !>     2) A scalar-valued kernel variable matching the "ID code form"
+      !>        of the requested kernel variable name could potentially mask a
+      !>        array-valued kernel variable matching the "name form" of the
+      !>        requested name.  This problem can be prevented by sensible
+      !>        frame kernel design.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
+      !>
+      !>     SPICELIB functions
+      !>
+      !>     Local Parameters
       module procedure zzdynoac
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Look up optional array-valued character frame kernel variable.
-!!     The frame name or frame ID may be used as part of the variable's
-!!     name.
-!!
-!!     If the kernel variable is not present, or if the variable
-!!     has the wrong data type or size, set the FOUND flag to .FALSE.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     FRAMES
-!!     KERNEL
-!!     PRIVATE
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     FRNAME         is the name of the reference frame with which
-!!                    the requested variable is associated.
-!!
-!!     FRCODE         is the frame ID code of the reference frame with
-!!                    which the requested variable is associated.
-!!
-!!     ITEM           is a string identifying the specific datum
-!!                    to be fetched.  The kernel variable name
-!!                    has the form
-!!
-!!                       FRAME_<frame ID code>_<ITEM>
-!!
-!!                    or
-!!
-!!                       FRAME_<frame name>_<ITEM>
-!!
-!!                    The former of the two names takes precedence:
-!!                    this routine will look for a character variable
-!!                    of that name first.
-!!
-!! ## Detailed Output
-!!
-!!     N              is the number of values returned in the array
-!!                    VALUES.
-!!
-!!     VALUES         are the values associated with the requested
-!!                    array-valued, character kernel variable. The
-!!                    kernel variable name of the form
-!!
-!!                       FRAME_<frame ID code>_<ITEM>
-!!
-!!                    will be looked up first; if this variable
-!!                    is found and has character type, the associated
-!!                    values will be returned.  If this variable is
-!!                    not found, the variable
-!!
-!!                       FRAME_<frame name>_<ITEM>
-!!
-!!                    will be looked up.  If a character variable
-!!                    having that name is found, the associated
-!!                    values will be returned.
-!!
-!!                    VALUES is not defined if the requested kernel
-!!                    variable is not found.
-!!
-!!     FOUND          is a logical flag indicating whether the requested
-!!                    kernel variable was found.  If the search described
-!!                    above (in the detailed description of the output
-!!                    argument VALUES) is successful, FOUND is set to
-!!                    .TRUE.; otherwise FOUND is set to .FALSE.
-!!
-!! ## Parameters
-!!
-!!     See zzdyn.inc.
-!!
-!! ## Exceptions
-!!
-!!     1) If both the frame-ID-based and frame-name-based forms of the
-!!        requested kernel variable name have length greater than KVNMLN,
-!!        the error SPICE(VARNAMETOOLONG) will be signaled.
-!!
-!!     2) If kernel variable matching one form of the requested kernel
-!!        variable names is found, but that variable has numeric data
-!!        type, the error SPICE(BADVARIABLETYPE) will be signaled.
-!!
-!!     3) If kernel variable matching one form of the requested kernel
-!!        variable names is found, but that variable has more than MAXN
-!!        associated values, the error SPICE(BADVARIABLESIZE) will be
-!!        signaled.
-!!
-!!     4) If kernel variable matching one form of the requested kernel
-!!        variable names is found, but that variable has more than MAXN
-!!        associated values, the error SPICE(BADVARIABLESIZE) will be
-!!        signaled.
-!!
-!! ## Files
-!!
-!!     1) Kernel variables fetched by this routine are normally
-!!        introduced into the kernel pool by loading one or more
-!!        frame kernels.  See the Frames Required Reading for
-!!        details.
-!!
-!! ## Particulars
-!!
-!!     This routine centralizes logic for kernel variable lookups that
-!!     must be performed by the SPICELIB frame subsystem.  This routine
-!!     is meant to look up array-valued character variables whose
-!!     presence is optional.  For required array character variables,
-!!     use ZZDYNVAC.
-!!
-!!     As indicated above, the requested kernel variable may have a name
-!!     of the form
-!!
-!!        FRAME_<frame ID code>_<ITEM>
-!!
-!!     or
-!!
-!!        FRAME_<frame name>_<ITEM>
-!!
-!!     Because most frame definition keywords have the first form, this
-!!     routine looks for a name of that form first.
-!!
-!!     Note that although this routine considers the two forms of the
-!!     names to be synonymous, from the point of view of the kernel pool
-!!     data structure, these names are distinct.  Hence kernel variables
-!!     having names of both forms, but having possibly different
-!!     attributes, can be simultaneously present in the kernel pool.
-!!     Intentional use of this kernel pool feature is discouraged.
-!!
-!! ## Examples
-!!
-!!     See ZZDYNFRM.
-!!
-!! ## Restrictions
-!!
-!!     1) This is a SPICE private routine; the routine is subject
-!!        to change without notice.  User applications should not
-!!        call this routine.
-!!
-!!     2) A scalar-valued kernel variable matching the "ID code form"
-!!        of the requested kernel variable name could potentially mask a
-!!        array-valued kernel variable matching the "name form" of the
-!!        requested name.  This problem can be prevented by sensible
-!!        frame kernel design.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman    (JPL)
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-!!
-!!     SPICELIB functions
-!!
-!!     Local Parameters
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzdyn
@@ -811,12 +756,8 @@ contains
 !     the sum of the lengths of the two substitution markers ('#').
 !
 
-!
-!     Local Variables
-!
       character(1)          dtype
       character(:), allocatable :: kvname
-
 
 !
 !     Standard SPICE error handling
@@ -902,178 +843,162 @@ contains
       return
       end procedure zzdynoac
 
-!$Procedure ZZDYNOAD ( Fetch optional array, d.p. frame variable )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Look up optional array-valued double precision frame kernel
+      !>     variable. The frame name or frame ID may be used as part of the
+      !>     variable's name.
+      !>
+      !>     If the kernel variable is not present, or if the variable
+      !>     has the wrong data type, set the FOUND flag to .FALSE.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     FRNAME         is the name of the reference frame with which
+      !>                    the requested variable is associated.
+      !>
+      !>     FRCODE         is the frame ID code of the reference frame with
+      !>                    which the requested variable is associated.
+      !>
+      !>     ITEM           is a string identifying the specific datum
+      !>                    to be fetched.  The kernel variable name
+      !>                    has the form
+      !>
+      !>                       FRAME_<frame ID code>_<ITEM>
+      !>
+      !>                    or
+      !>
+      !>                       FRAME_<frame name>_<ITEM>
+      !>
+      !>                    The former of the two names takes precedence:
+      !>                    this routine will look for a numeric variable
+      !>                    of that name first.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     N              is the number of values returned in the array
+      !>                    VALUES.
+      !>
+      !>     VALUES         are the values associated with the requested
+      !>                    array-valued, double precision kernel variable.
+      !>                    The kernel variable name of the form
+      !>
+      !>                       FRAME_<frame ID code>_<ITEM>
+      !>
+      !>                    will be looked up first; if this variable
+      !>                    is found and has numeric type, the associated
+      !>                    values will be returned.  If this variable is
+      !>                    not found, the variable
+      !>
+      !>                       FRAME_<frame name>_<ITEM>
+      !>
+      !>                    will be looked up.  If a numeric variable
+      !>                    having that name is found, the associated
+      !>                    values will be returned.
+      !>
+      !>                    VALUES is not defined if the requested kernel
+      !>                    variable is not found.
+      !>
+      !>     FOUND          is a logical flag indicating whether the requested
+      !>                    kernel variable was found.  If the search described
+      !>                    above (in the detailed description of the output
+      !>                    argument VALUES) is successful, FOUND is set to
+      !>                    .TRUE.; otherwise FOUND is set to .FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     See zzdyn.inc.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If both the frame-ID-based and frame-name-based forms of the
+      !>        requested kernel variable name have length greater than KVNMLN,
+      !>        the error SPICE(VARNAMETOOLONG) will be signaled.
+      !>
+      !>     2) If either the frame-ID-based or frame-name-based form of the
+      !>        requested kernel variable name has length greater than KVNMLN,
+      !>        the excessively long name will not be searched for. A search
+      !>        will still be done using the alternative form of the name if
+      !>        that form has length less than or equal to KVNMLN.
+      !>
+      !>     3) If kernel variable matching one form of the requested kernel
+      !>        variable names is found, but that variable has character data
+      !>        type, the error SPICE(BADVARIABLETYPE) will be signaled.
+      !>
+      !>     4) If kernel variable matching one form of the requested kernel
+      !>        variable names is found, but that variable has more than MAXN
+      !>        associated values, the error SPICE(BADVARIABLESIZE) will be
+      !>        signaled.
+      !>
+      !> ## Files
+      !>
+      !>     1) Kernel variables fetched by this routine are normally
+      !>        introduced into the kernel pool by loading one or more
+      !>        frame kernels.  See the Frames Required Reading for
+      !>        details.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine centralizes logic for kernel variable lookups that
+      !>     must be performed by the SPICELIB frame subsystem. This routine
+      !>     is meant to look up array-valued double precision variables whose
+      !>     presence is optional.
+      !>
+      !>     As indicated above, the requested kernel variable may have a name
+      !>     of the form
+      !>
+      !>        FRAME_<frame ID code>_<ITEM>
+      !>
+      !>     or
+      !>
+      !>        FRAME_<frame name>_<ITEM>
+      !>
+      !>     Because most frame definition keywords have the first form, this
+      !>     routine looks for a name of that form first.
+      !>
+      !>     Note that although this routine considers the two forms of the
+      !>     names to be synonymous, from the point of view of the kernel pool
+      !>     data structure, these names are distinct.  Hence kernel
+      !>     variables having names of both forms, but having possibly
+      !>     different attributes, can be simultaneously present in the kernel
+      !>     pool. Intentional use of this kernel pool feature is discouraged.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDYNFRM.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) This is a SPICE private routine; the routine is subject
+      !>        to change without notice.  User applications should not
+      !>        call this routine.
+      !>
+      !>     2) A scalar-valued kernel variable matching the "ID code form"
+      !>        of the requested kernel variable name could potentially
+      !>        mask an array-valued kernel variable matching the "name
+      !>        form" of the requested name.  This problem can be prevented
+      !>        by sensible frame kernel design.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 16-DEC-2004 (NJB)
+      !>
+      !>     SPICELIB functions
+      !>
+      !>     Local Parameters
       module procedure zzdynoad
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Look up optional array-valued double precision frame kernel
-!!     variable. The frame name or frame ID may be used as part of the
-!!     variable's name.
-!!
-!!     If the kernel variable is not present, or if the variable
-!!     has the wrong data type, set the FOUND flag to .FALSE.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     FRAMES
-!!     KERNEL
-!!     PRIVATE
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     FRNAME         is the name of the reference frame with which
-!!                    the requested variable is associated.
-!!
-!!     FRCODE         is the frame ID code of the reference frame with
-!!                    which the requested variable is associated.
-!!
-!!     ITEM           is a string identifying the specific datum
-!!                    to be fetched.  The kernel variable name
-!!                    has the form
-!!
-!!                       FRAME_<frame ID code>_<ITEM>
-!!
-!!                    or
-!!
-!!                       FRAME_<frame name>_<ITEM>
-!!
-!!                    The former of the two names takes precedence:
-!!                    this routine will look for a numeric variable
-!!                    of that name first.
-!!
-!! ## Detailed Output
-!!
-!!     N              is the number of values returned in the array
-!!                    VALUES.
-!!
-!!     VALUES         are the values associated with the requested
-!!                    array-valued, double precision kernel variable.
-!!                    The kernel variable name of the form
-!!
-!!                       FRAME_<frame ID code>_<ITEM>
-!!
-!!                    will be looked up first; if this variable
-!!                    is found and has numeric type, the associated
-!!                    values will be returned.  If this variable is
-!!                    not found, the variable
-!!
-!!                       FRAME_<frame name>_<ITEM>
-!!
-!!                    will be looked up.  If a numeric variable
-!!                    having that name is found, the associated
-!!                    values will be returned.
-!!
-!!                    VALUES is not defined if the requested kernel
-!!                    variable is not found.
-!!
-!!     FOUND          is a logical flag indicating whether the requested
-!!                    kernel variable was found.  If the search described
-!!                    above (in the detailed description of the output
-!!                    argument VALUES) is successful, FOUND is set to
-!!                    .TRUE.; otherwise FOUND is set to .FALSE.
-!!
-!! ## Parameters
-!!
-!!     See zzdyn.inc.
-!!
-!! ## Exceptions
-!!
-!!     1) If both the frame-ID-based and frame-name-based forms of the
-!!        requested kernel variable name have length greater than KVNMLN,
-!!        the error SPICE(VARNAMETOOLONG) will be signaled.
-!!
-!!     2) If either the frame-ID-based or frame-name-based form of the
-!!        requested kernel variable name has length greater than KVNMLN,
-!!        the excessively long name will not be searched for. A search
-!!        will still be done using the alternative form of the name if
-!!        that form has length less than or equal to KVNMLN.
-!!
-!!     3) If kernel variable matching one form of the requested kernel
-!!        variable names is found, but that variable has character data
-!!        type, the error SPICE(BADVARIABLETYPE) will be signaled.
-!!
-!!     4) If kernel variable matching one form of the requested kernel
-!!        variable names is found, but that variable has more than MAXN
-!!        associated values, the error SPICE(BADVARIABLESIZE) will be
-!!        signaled.
-!!
-!! ## Files
-!!
-!!     1) Kernel variables fetched by this routine are normally
-!!        introduced into the kernel pool by loading one or more
-!!        frame kernels.  See the Frames Required Reading for
-!!        details.
-!!
-!! ## Particulars
-!!
-!!     This routine centralizes logic for kernel variable lookups that
-!!     must be performed by the SPICELIB frame subsystem. This routine
-!!     is meant to look up array-valued double precision variables whose
-!!     presence is optional.
-!!
-!!     As indicated above, the requested kernel variable may have a name
-!!     of the form
-!!
-!!        FRAME_<frame ID code>_<ITEM>
-!!
-!!     or
-!!
-!!        FRAME_<frame name>_<ITEM>
-!!
-!!     Because most frame definition keywords have the first form, this
-!!     routine looks for a name of that form first.
-!!
-!!     Note that although this routine considers the two forms of the
-!!     names to be synonymous, from the point of view of the kernel pool
-!!     data structure, these names are distinct.  Hence kernel
-!!     variables having names of both forms, but having possibly
-!!     different attributes, can be simultaneously present in the kernel
-!!     pool. Intentional use of this kernel pool feature is discouraged.
-!!
-!! ## Examples
-!!
-!!     See ZZDYNFRM.
-!!
-!! ## Restrictions
-!!
-!!     1) This is a SPICE private routine; the routine is subject
-!!        to change without notice.  User applications should not
-!!        call this routine.
-!!
-!!     2) A scalar-valued kernel variable matching the "ID code form"
-!!        of the requested kernel variable name could potentially
-!!        mask an array-valued kernel variable matching the "name
-!!        form" of the requested name.  This problem can be prevented
-!!        by sensible frame kernel design.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman    (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 16-DEC-2004 (NJB)
-!!
-!!     SPICELIB functions
-!!
-!!     Local Parameters
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzbodtrn
@@ -1085,12 +1010,8 @@ contains
 !     the sum of the lengths of the two substitution markers ('#').
 !
 
-!
-!     Local Variables
-!
       character(1)          dtype
       character(:), allocatable :: kvname
-
 
 !
 !     Standard SPICE error handling
@@ -1176,174 +1097,158 @@ contains
       return
       end procedure zzdynoad
 
-!$Procedure ZZDYNVAC ( Fetch array, character frame kernel variable )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Look up array-valued character frame kernel variable.  The frame
+      !>     name or frame ID may be used as part of the variable's name.
+      !>
+      !>     If the kernel variable is not present, or if the variable
+      !>     has the wrong data type, signal an error.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     FRNAME         is the name of the reference frame with which
+      !>                    the requested variable is associated.
+      !>
+      !>     FRCODE         is the frame ID code of the reference frame with
+      !>                    which the requested variable is associated.
+      !>
+      !>     ITEM           is a string identifying the specific datum
+      !>                    to be fetched.  The kernel variable name
+      !>                    has the form
+      !>
+      !>                       FRAME_<frame ID code>_<ITEM>
+      !>
+      !>                    or
+      !>
+      !>                       FRAME_<frame name>_<ITEM>
+      !>
+      !>                    The former of the two names takes precedence:
+      !>                    this routine will look for a character variable
+      !>                    of that name first.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     N              is the number of values returned in the array
+      !>                    VALUES.
+      !>
+      !>     VALUES         are the values associated with the requested
+      !>                    array-valued, character kernel variable. The
+      !>                    kernel variable name of the form
+      !>
+      !>                       FRAME_<frame ID code>_<ITEM>
+      !>
+      !>                    will be looked up first; if this variable
+      !>                    is found and has character type, the associated
+      !>                    values will be returned.  If this variable is
+      !>                    not found, the variable
+      !>
+      !>                       FRAME_<frame name>_<ITEM>
+      !>
+      !>                    will be looked up.  If a character variable
+      !>                    having that name is found, the associated
+      !>                    values will be returned.
+      !>
+      !> ## Parameters
+      !>
+      !>     See zzdyn.inc.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If neither the frame-ID-based or frame-name-based form of the
+      !>        requested kernel variable name matches a kernel variable
+      !>        present in the kernel pool, the error SPICE(KERNELVARNOTFOUND)
+      !>        will be signaled.
+      !>
+      !>     2) If either the frame-ID-based or frame-name-based form of the
+      !>        requested kernel variable name has length greater than KVNMLN,
+      !>        the excessively long name will not be searched for. A search
+      !>        will still be done using the alternative form of the name if
+      !>        that form has length less than or equal to KVNMLN.
+      !>
+      !>     3) If both the frame-ID-based and frame-name-based forms of the
+      !>        requested kernel variable name have length greater than KVNMLN,
+      !>        the error SPICE(VARNAMETOOLONG) will be signaled.
+      !>
+      !>     4) If kernel variable matching one form of the requested kernel
+      !>        variable names is found, but that variable has numeric data
+      !>        type, the error SPICE(BADVARIABLETYPE) will be signaled.
+      !>
+      !>     5) If kernel variable matching one form of the requested kernel
+      !>        variable names is found, but that variable has more than MAXN
+      !>        associated values, the error SPICE(BADVARIABLESIZE) will be
+      !>        signaled.
+      !>
+      !> ## Files
+      !>
+      !>     1) Kernel variables fetched by this routine are normally
+      !>        introduced into the kernel pool by loading one or more
+      !>        frame kernels.  See the Frames Required Reading for
+      !>        details.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine centralizes logic for kernel variable lookups that
+      !>     must be performed by the SPICELIB frame subsystem. Part of the
+      !>     functionality of this routine consists of handling error
+      !>     conditions such as the unavailability of required kernel
+      !>     variables; hence no "found" flag is returned to the caller.
+      !>
+      !>     As indicated above, the requested kernel variable may have a name
+      !>     of the form
+      !>
+      !>        FRAME_<frame ID code>_<ITEM>
+      !>
+      !>     or
+      !>
+      !>        FRAME_<frame name>_<ITEM>
+      !>
+      !>     Because most frame definition keywords have the first form, this
+      !>     routine looks for a name of that form first.
+      !>
+      !>     Note that although this routine considers the two forms of the
+      !>     names to be synonymous, from the point of view of the kernel pool
+      !>     data structure, these names are distinct.  Hence kernel variables
+      !>     having names of both forms, but having possibly different
+      !>     attributes, can be simultaneously present in the kernel pool.
+      !>     Intentional use of this kernel pool feature is discouraged.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDYNFRM.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) This is a SPICE private routine; the routine is subject
+      !>        to change without notice.  User applications should not
+      !>        call this routine.
+      !>
+      !>     2) A scalar-valued kernel variable matching the "ID code form"
+      !>        of the requested kernel variable name could potentially
+      !>        mask an array-valued kernel variable matching the "name
+      !>        form" of the requested name.  This problem can be prevented
+      !>        by sensible frame kernel design.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
+      !>
+      !>     SPICELIB functions
+      !>
+      !>     Local Parameters
       module procedure zzdynvac
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Look up array-valued character frame kernel variable.  The frame
-!!     name or frame ID may be used as part of the variable's name.
-!!
-!!     If the kernel variable is not present, or if the variable
-!!     has the wrong data type, signal an error.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     FRAMES
-!!     KERNEL
-!!     PRIVATE
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     FRNAME         is the name of the reference frame with which
-!!                    the requested variable is associated.
-!!
-!!     FRCODE         is the frame ID code of the reference frame with
-!!                    which the requested variable is associated.
-!!
-!!     ITEM           is a string identifying the specific datum
-!!                    to be fetched.  The kernel variable name
-!!                    has the form
-!!
-!!                       FRAME_<frame ID code>_<ITEM>
-!!
-!!                    or
-!!
-!!                       FRAME_<frame name>_<ITEM>
-!!
-!!                    The former of the two names takes precedence:
-!!                    this routine will look for a character variable
-!!                    of that name first.
-!!
-!! ## Detailed Output
-!!
-!!     N              is the number of values returned in the array
-!!                    VALUES.
-!!
-!!     VALUES         are the values associated with the requested
-!!                    array-valued, character kernel variable. The
-!!                    kernel variable name of the form
-!!
-!!                       FRAME_<frame ID code>_<ITEM>
-!!
-!!                    will be looked up first; if this variable
-!!                    is found and has character type, the associated
-!!                    values will be returned.  If this variable is
-!!                    not found, the variable
-!!
-!!                       FRAME_<frame name>_<ITEM>
-!!
-!!                    will be looked up.  If a character variable
-!!                    having that name is found, the associated
-!!                    values will be returned.
-!!
-!! ## Parameters
-!!
-!!     See zzdyn.inc.
-!!
-!! ## Exceptions
-!!
-!!     1) If neither the frame-ID-based or frame-name-based form of the
-!!        requested kernel variable name matches a kernel variable
-!!        present in the kernel pool, the error SPICE(KERNELVARNOTFOUND)
-!!        will be signaled.
-!!
-!!     2) If either the frame-ID-based or frame-name-based form of the
-!!        requested kernel variable name has length greater than KVNMLN,
-!!        the excessively long name will not be searched for. A search
-!!        will still be done using the alternative form of the name if
-!!        that form has length less than or equal to KVNMLN.
-!!
-!!     3) If both the frame-ID-based and frame-name-based forms of the
-!!        requested kernel variable name have length greater than KVNMLN,
-!!        the error SPICE(VARNAMETOOLONG) will be signaled.
-!!
-!!     4) If kernel variable matching one form of the requested kernel
-!!        variable names is found, but that variable has numeric data
-!!        type, the error SPICE(BADVARIABLETYPE) will be signaled.
-!!
-!!     5) If kernel variable matching one form of the requested kernel
-!!        variable names is found, but that variable has more than MAXN
-!!        associated values, the error SPICE(BADVARIABLESIZE) will be
-!!        signaled.
-!!
-!! ## Files
-!!
-!!     1) Kernel variables fetched by this routine are normally
-!!        introduced into the kernel pool by loading one or more
-!!        frame kernels.  See the Frames Required Reading for
-!!        details.
-!!
-!! ## Particulars
-!!
-!!     This routine centralizes logic for kernel variable lookups that
-!!     must be performed by the SPICELIB frame subsystem. Part of the
-!!     functionality of this routine consists of handling error
-!!     conditions such as the unavailability of required kernel
-!!     variables; hence no "found" flag is returned to the caller.
-!!
-!!     As indicated above, the requested kernel variable may have a name
-!!     of the form
-!!
-!!        FRAME_<frame ID code>_<ITEM>
-!!
-!!     or
-!!
-!!        FRAME_<frame name>_<ITEM>
-!!
-!!     Because most frame definition keywords have the first form, this
-!!     routine looks for a name of that form first.
-!!
-!!     Note that although this routine considers the two forms of the
-!!     names to be synonymous, from the point of view of the kernel pool
-!!     data structure, these names are distinct.  Hence kernel variables
-!!     having names of both forms, but having possibly different
-!!     attributes, can be simultaneously present in the kernel pool.
-!!     Intentional use of this kernel pool feature is discouraged.
-!!
-!! ## Examples
-!!
-!!     See ZZDYNFRM.
-!!
-!! ## Restrictions
-!!
-!!     1) This is a SPICE private routine; the routine is subject
-!!        to change without notice.  User applications should not
-!!        call this routine.
-!!
-!!     2) A scalar-valued kernel variable matching the "ID code form"
-!!        of the requested kernel variable name could potentially
-!!        mask an array-valued kernel variable matching the "name
-!!        form" of the requested name.  This problem can be prevented
-!!        by sensible frame kernel design.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman    (JPL)
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-!!
-!!     SPICELIB functions
-!!
-!!     Local Parameters
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzdyn
@@ -1363,175 +1268,159 @@ contains
       return
       end procedure zzdynvac
 
-!$Procedure ZZDYNVAD ( Fetch array, d.p. frame kernel variable )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Look up array-valued double precision frame kernel variable.
+      !>     The frame name or frame ID may be used as part of the variable's
+      !>     name.
+      !>
+      !>     If the kernel variable is not present, or if the variable
+      !>     has the wrong data type, signal an error.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     FRNAME         is the name of the reference frame with which
+      !>                    the requested variable is associated.
+      !>
+      !>     FRCODE         is the frame ID code of the reference frame with
+      !>                    which the requested variable is associated.
+      !>
+      !>     ITEM           is a string identifying the specific datum
+      !>                    to be fetched.  The kernel variable name
+      !>                    has the form
+      !>
+      !>                       FRAME_<frame ID code>_<ITEM>
+      !>
+      !>                    or
+      !>
+      !>                       FRAME_<frame name>_<ITEM>
+      !>
+      !>                    The former of the two names takes precedence:
+      !>                    this routine will look for a numeric variable
+      !>                    of that name first.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     N              is the number of values returned in the array
+      !>                    VALUES.
+      !>
+      !>     VALUES         are the values associated with the requested
+      !>                    array-valued, double precision kernel variable.
+      !>                    The kernel variable name of the form
+      !>
+      !>                       FRAME_<frame ID code>_<ITEM>
+      !>
+      !>                    will be looked up first; if this variable
+      !>                    is found and has numeric type, the associated
+      !>                    values will be returned.  If this variable is
+      !>                    not found, the variable
+      !>
+      !>                       FRAME_<frame name>_<ITEM>
+      !>
+      !>                    will be looked up.  If a numeric variable
+      !>                    having that name is found, the associated
+      !>                    values will be returned.
+      !>
+      !> ## Parameters
+      !>
+      !>     See zzdyn.inc.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If neither the frame-ID-based or frame-name-based form of the
+      !>        requested kernel variable name matches a kernel variable
+      !>        present in the kernel pool, the error SPICE(KERNELVARNOTFOUND)
+      !>        will be signaled.
+      !>
+      !>     2) If either the frame-ID-based or frame-name-based form of the
+      !>        requested kernel variable name has length greater than KVNMLN,
+      !>        the excessively long name will not be searched for. A search
+      !>        will still be done using the alternative form of the name if
+      !>        that form has length less than or equal to KVNMLN.
+      !>
+      !>     3) If both the frame-ID-based and frame-name-based forms of the
+      !>        requested kernel variable name have length greater than KVNMLN,
+      !>        the error SPICE(VARNAMETOOLONG) will be signaled.
+      !>
+      !>     4) If kernel variable matching one form of the requested kernel
+      !>        variable names is found, but that variable has character data
+      !>        type, the error SPICE(BADVARIABLETYPE) will be signaled.
+      !>
+      !>     5) If kernel variable matching one form of the requested kernel
+      !>        variable names is found, but that variable has more than MAXN
+      !>        associated values, the error SPICE(BADVARIABLESIZE) will be
+      !>        signaled.
+      !>
+      !> ## Files
+      !>
+      !>     1) Kernel variables fetched by this routine are normally
+      !>        introduced into the kernel pool by loading one or more
+      !>        frame kernels.  See the Frames Required Reading for
+      !>        details.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine centralizes logic for kernel variable lookups that
+      !>     must be performed by the SPICELIB frame subsystem. Part of the
+      !>     functionality of this routine consists of handling error
+      !>     conditions such as the unavailability of required kernel
+      !>     variables; hence no "found" flag is returned to the caller.
+      !>
+      !>     As indicated above, the requested kernel variable may have a name
+      !>     of the form
+      !>
+      !>        FRAME_<frame ID code>_<ITEM>
+      !>
+      !>     or
+      !>
+      !>        FRAME_<frame name>_<ITEM>
+      !>
+      !>     Because most frame definition keywords have the first form, this
+      !>     routine looks for a name of that form first.
+      !>
+      !>     Note that although this routine considers the two forms of the
+      !>     names to be synonymous, from the point of view of the kernel pool
+      !>     data structure, these names are distinct.  Hence kernel variables
+      !>     having names of both forms, but having possibly different
+      !>     attributes, can be simultaneously present in the kernel pool.
+      !>     Intentional use of this kernel pool feature is discouraged.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDYNFRM.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) This is a SPICE private routine; the routine is subject
+      !>        to change without notice.  User applications should not
+      !>        call this routine.
+      !>
+      !>     2) A scalar-valued kernel variable matching the "ID code form"
+      !>        of the requested kernel variable name could potentially
+      !>        mask an array-valued kernel variable matching the "name
+      !>        form" of the requested name.  This problem can be prevented
+      !>        by sensible frame kernel design.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
+      !>
+      !>     SPICELIB functions
+      !>
+      !>     Local Parameters
       module procedure zzdynvad
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Look up array-valued double precision frame kernel variable.
-!!     The frame name or frame ID may be used as part of the variable's
-!!     name.
-!!
-!!     If the kernel variable is not present, or if the variable
-!!     has the wrong data type, signal an error.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     FRAMES
-!!     KERNEL
-!!     PRIVATE
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     FRNAME         is the name of the reference frame with which
-!!                    the requested variable is associated.
-!!
-!!     FRCODE         is the frame ID code of the reference frame with
-!!                    which the requested variable is associated.
-!!
-!!     ITEM           is a string identifying the specific datum
-!!                    to be fetched.  The kernel variable name
-!!                    has the form
-!!
-!!                       FRAME_<frame ID code>_<ITEM>
-!!
-!!                    or
-!!
-!!                       FRAME_<frame name>_<ITEM>
-!!
-!!                    The former of the two names takes precedence:
-!!                    this routine will look for a numeric variable
-!!                    of that name first.
-!!
-!! ## Detailed Output
-!!
-!!     N              is the number of values returned in the array
-!!                    VALUES.
-!!
-!!     VALUES         are the values associated with the requested
-!!                    array-valued, double precision kernel variable.
-!!                    The kernel variable name of the form
-!!
-!!                       FRAME_<frame ID code>_<ITEM>
-!!
-!!                    will be looked up first; if this variable
-!!                    is found and has numeric type, the associated
-!!                    values will be returned.  If this variable is
-!!                    not found, the variable
-!!
-!!                       FRAME_<frame name>_<ITEM>
-!!
-!!                    will be looked up.  If a numeric variable
-!!                    having that name is found, the associated
-!!                    values will be returned.
-!!
-!! ## Parameters
-!!
-!!     See zzdyn.inc.
-!!
-!! ## Exceptions
-!!
-!!     1) If neither the frame-ID-based or frame-name-based form of the
-!!        requested kernel variable name matches a kernel variable
-!!        present in the kernel pool, the error SPICE(KERNELVARNOTFOUND)
-!!        will be signaled.
-!!
-!!     2) If either the frame-ID-based or frame-name-based form of the
-!!        requested kernel variable name has length greater than KVNMLN,
-!!        the excessively long name will not be searched for. A search
-!!        will still be done using the alternative form of the name if
-!!        that form has length less than or equal to KVNMLN.
-!!
-!!     3) If both the frame-ID-based and frame-name-based forms of the
-!!        requested kernel variable name have length greater than KVNMLN,
-!!        the error SPICE(VARNAMETOOLONG) will be signaled.
-!!
-!!     4) If kernel variable matching one form of the requested kernel
-!!        variable names is found, but that variable has character data
-!!        type, the error SPICE(BADVARIABLETYPE) will be signaled.
-!!
-!!     5) If kernel variable matching one form of the requested kernel
-!!        variable names is found, but that variable has more than MAXN
-!!        associated values, the error SPICE(BADVARIABLESIZE) will be
-!!        signaled.
-!!
-!! ## Files
-!!
-!!     1) Kernel variables fetched by this routine are normally
-!!        introduced into the kernel pool by loading one or more
-!!        frame kernels.  See the Frames Required Reading for
-!!        details.
-!!
-!! ## Particulars
-!!
-!!     This routine centralizes logic for kernel variable lookups that
-!!     must be performed by the SPICELIB frame subsystem. Part of the
-!!     functionality of this routine consists of handling error
-!!     conditions such as the unavailability of required kernel
-!!     variables; hence no "found" flag is returned to the caller.
-!!
-!!     As indicated above, the requested kernel variable may have a name
-!!     of the form
-!!
-!!        FRAME_<frame ID code>_<ITEM>
-!!
-!!     or
-!!
-!!        FRAME_<frame name>_<ITEM>
-!!
-!!     Because most frame definition keywords have the first form, this
-!!     routine looks for a name of that form first.
-!!
-!!     Note that although this routine considers the two forms of the
-!!     names to be synonymous, from the point of view of the kernel pool
-!!     data structure, these names are distinct.  Hence kernel variables
-!!     having names of both forms, but having possibly different
-!!     attributes, can be simultaneously present in the kernel pool.
-!!     Intentional use of this kernel pool feature is discouraged.
-!!
-!! ## Examples
-!!
-!!     See ZZDYNFRM.
-!!
-!! ## Restrictions
-!!
-!!     1) This is a SPICE private routine; the routine is subject
-!!        to change without notice.  User applications should not
-!!        call this routine.
-!!
-!!     2) A scalar-valued kernel variable matching the "ID code form"
-!!        of the requested kernel variable name could potentially
-!!        mask an array-valued kernel variable matching the "name
-!!        form" of the requested name.  This problem can be prevented
-!!        by sensible frame kernel design.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman    (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-!!
-!!     SPICELIB functions
-!!
-!!     Local Parameters
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzdyn
@@ -1542,12 +1431,8 @@ contains
 !     the sum of the lengths of the two substitution markers ('#').
 !
 
-!
-!     Local Variables
-!
       character(1)          dtype
       character(:), allocatable :: kvname
-
 
       logical               found
 
@@ -1629,105 +1514,79 @@ contains
       return
       end procedure zzdynvad
 
-!$Procedure ZZSWFCLN ( Private, switch frame clean up )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines. Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Perform partial data structure clean up in response to failures
+      !>     detected in the switch frame data fetch routine ZZSWFFET.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HDFRAM      is the initialized head node array.
+      !>
+      !>     FRPOOL      is the initialized hash collision list pool.
+      !>
+      !>     BASBEG      is the initialized base frame start index list.
+      !>
+      !>     FRAMAT      is the initialized frame ID index. This index is
+      !>                 set to zero, which is never valid.
+      !>
+      !> ## Parameters
+      !>
+      !>     LBSNGL      is the lower bound of a singly linked list pool
+      !>                 managed by the integer hash subsystem.
+      !>
+      !>     See the include file zzswtchf.inc for SPICE-private parameters
+      !>     defining sizes of buffers used by the switch frame subsystem.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If integer hash initialization fails, the error will be
+      !>         signaled by a routine in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine is essentially a macro that centralizes
+      !>     initialization of bookkeeping data structures maintained by
+      !>     ZZSWFFET. Only those initializations that are required by
+      !>     ZZSWFFET are performed. See ZZSWFINI for the complete set of
+      !>     initialization actions.
+      !>
+      !> ## Examples
+      !>
+      !>     None. See usage in ZZSWFFET.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine is SPICE-private. User applications must not
+      !>         call it.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman   (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 15-DEC-2021 (NJB)
       module procedure zzswfcln
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Perform partial data structure clean up in response to failures
-!!     detected in the switch frame data fetch routine ZZSWFFET.
-!!
-!! ## Required Reading
-!!
-!!     FRAMES
-!!     KERNEL
-!!     NAIF_IDS
-!!     TIME
-!!
-!! ## Keywords
-!!
-!!     Private
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_zzswtchf
       implicit none
-
-
-
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     HDFRAM      is the initialized head node array.
-!
-!     FRPOOL      is the initialized hash collision list pool.
-!
-!     BASBEG      is the initialized base frame start index list.
-!
-!     FRAMAT      is the initialized frame ID index. This index is
-!                 set to zero, which is never valid.
-!
-! $ Parameters
-!
-!     LBSNGL      is the lower bound of a singly linked list pool
-!                 managed by the integer hash subsystem.
-!
-!     See the include file zzswtchf.inc for SPICE-private parameters
-!     defining sizes of buffers used by the switch frame subsystem.
-!
-! $ Exceptions
-!
-!     1)  If integer hash initialization fails, the error will be
-!         signaled by a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is essentially a macro that centralizes
-!     initialization of bookkeeping data structures maintained by
-!     ZZSWFFET. Only those initializations that are required by
-!     ZZSWFFET are performed. See ZZSWFINI for the complete set of
-!     initialization actions.
-!
-! $ Examples
-!
-!     None. See usage in ZZSWFFET.
-!
-! $ Restrictions
-!
-!     1)  This routine is SPICE-private. User applications must not
-!         call it.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 15-DEC-2021 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     perform switch frame clean up
-!
-!-&
 
 !
 !     This routine must perform its function after an error has been
@@ -1747,119 +1606,89 @@ contains
       return
       end procedure zzswfcln
 
-!$Procedure ZZSWFINI ( Private, switch frame initialization )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines. Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Initialize switch frame bookkeeping data structures.
+      !>
+      !>     Arrays of base frame attributes are not initialized by this
+      !>     routine.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HDFRAM      is the initialized head node array.
+      !>
+      !>     FRPOOL      is the initialized hash collision list pool.
+      !>
+      !>     FIDLST      is the initialized switch frame ID list.
+      !>
+      !>     BASBEG      is the initialized base frame start index list.
+      !>
+      !>     FREE        is the common index of the first free entries in the
+      !>                 arrays of base frame attributes. The index is set to
+      !>                 1.
+      !>
+      !>     PRVAT       is the index of the previous ZZSWFXFM input frame
+      !>                 in the frame list.
+      !>
+      !>     PRVFRM      is the frame ID of the previous ZZSWFXFM input frame.
+      !>
+      !>     SAMFRM      is a logical flag indicating whether the current
+      !>                 ZZSWFXFM input frame matches the previous one.
+      !>
+      !> ## Parameters
+      !>
+      !>     LBSNGL      is the lower bound of a singly linked list pool
+      !>                 managed by the integer hash subsystem.
+      !>
+      !>     See the include file zzswtchf.inc for SPICE-private parameters
+      !>     defining sizes of buffers used by the switch frame subsystem.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If integer hash initialization fails, the error is signaled
+      !>         by a routine in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine centralizes initialization of bookkeeping data
+      !>     structures maintained by ZZSWFXFM.
+      !>
+      !> ## Examples
+      !>
+      !>     None. See usage in ZZSWFXFM.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine is SPICE-private. User applications must not
+      !>         call it.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman   (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 15-DEC-2021 (NJB)
       module procedure zzswfini
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Initialize switch frame bookkeeping data structures.
-!!
-!!     Arrays of base frame attributes are not initialized by this
-!!     routine.
-!!
-!! ## Required Reading
-!!
-!!     FRAMES
-!!     KERNEL
-!!     NAIF_IDS
-!!     TIME
-!!
-!! ## Keywords
-!!
-!!     Private
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_zzswtchf
       implicit none
-
-
-
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     HDFRAM      is the initialized head node array.
-!
-!     FRPOOL      is the initialized hash collision list pool.
-!
-!     FIDLST      is the initialized switch frame ID list.
-!
-!     BASBEG      is the initialized base frame start index list.
-!
-!     FREE        is the common index of the first free entries in the
-!                 arrays of base frame attributes. The index is set to
-!                 1.
-!
-!     PRVAT       is the index of the previous ZZSWFXFM input frame
-!                 in the frame list.
-!
-!     PRVFRM      is the frame ID of the previous ZZSWFXFM input frame.
-!
-!     SAMFRM      is a logical flag indicating whether the current
-!                 ZZSWFXFM input frame matches the previous one.
-!
-! $ Parameters
-!
-!     LBSNGL      is the lower bound of a singly linked list pool
-!                 managed by the integer hash subsystem.
-!
-!     See the include file zzswtchf.inc for SPICE-private parameters
-!     defining sizes of buffers used by the switch frame subsystem.
-!
-! $ Exceptions
-!
-!     1)  If integer hash initialization fails, the error is signaled
-!         by a routine in the call tree of this routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine centralizes initialization of bookkeeping data
-!     structures maintained by ZZSWFXFM.
-!
-! $ Examples
-!
-!     None. See usage in ZZSWFXFM.
-!
-! $ Restrictions
-!
-!     1)  This routine is SPICE-private. User applications must not
-!         call it.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 15-DEC-2021 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     initialize switch frame bookkeeping data structures
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 
       if ( ctx%failed() ) return
 
@@ -1894,137 +1723,102 @@ contains
       return
       end procedure zzswfini
 
-!$Procedure ZZGFTREB ( Geometry finder: return body axes )
-
+      !> ## Detailed Input
+      !>
+      !>     BODY     is the NAIF ID code of the body for which the axes are
+      !>              requested. Bodies are numbered according to the
+      !>              standard NAIF numbering scheme described in the
+      !>              required reading (naif_ids.req) document.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     AXES     are the lengths of the axes of the body, in km.
+      !>
+      !>                    AXES(1)  is the longest equatorial radius of
+      !>                             the body. For satellites, this axis is
+      !>                             typically pointed toward the primary
+      !>                             planet.
+      !>
+      !>                    AXES(2)  is the shortest equatorial radius of
+      !>                             the body.
+      !>
+      !>                    AXES(3)  is the polar radius of the body.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the RADII kernel pool data for body specified does not have
+      !>         exactly 3 axes defined, the error SPICE(INVALIDCOUNT) is
+      !>         signaled.
+      !>
+      !>     2)  If the RADII kernel pool data for body specified contains any
+      !>         zero or negative values, the error SPICE(BADAXISLENGTH) is
+      !>         signaled.
+      !>
+      !> ## Files
+      !>
+      !>     PCK data: triaxial radii for the target body must be loaded
+      !>     into the kernel pool. Typically this is done by loading a
+      !>     text PCK file via LDPOOL or a general kernel loader
+      !>     such as FURNSH.
+      !>
+      !> ## Particulars
+      !>
+      !>     ZZGFTREB returns the lengths of the axes of BODY. It serves
+      !>     as a wrapper to the kernel data access call, the confirms
+      !>     return of reasonable values.
+      !>
+      !>     Appropriate SPK and PCK data must be available to the calling
+      !>     program before this routine is called.for missing kernel data
+      !>     or non physical values.
+      !>
+      !> ## Examples
+      !>
+      !>     The call
+      !>
+      !>         CALL ZZGFTREB ( 399,  VALUE )
+      !>
+      !>     returns the values associated with the variable 'BODY399_RADII',
+      !>     for example,
+      !>
+      !>          VALUE(1) = 6378.140
+      !>          VALUE(2) = 6378.140
+      !>          VALUE(3) = 6356.755
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     [1]  "Report of the IAU/IAG/COSPAR Working Group on Cartographic
+      !>          Coordinates and Rotational Elements of the Planets and
+      !>          Satellites: 1991", March 3, 1992.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 11-SEP-2021 (EDW) (JDR)
+      !>
+      !>        Corrected short error messages token string. Axes length
+      !>        error is signaled on less-than or equal-to zero.
+      !>
+      !>        Edited the header to comply with NAIF standard. Moved SPK
+      !>        required reading from $Literature_References to
+      !>        $Required_Reading section.
+      !>
+      !>-    SPICELIB Version 1.0.0, 05-MAR-2003 (EDW)
       module procedure zzgftreb
-!! ## Abstract
-!!
-!!     Return the values of the triaxial radii for any body in the
-!!     kernel pool.
-!!
-!! ## Required Reading
-!!
-!!     NAIF_IDS
-!!     SPK
-!!
-!! ## Keywords
-!!
-!!     CONSTANTS
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       implicit none
 
-
-! $ Detailed_Input
-!
-!     BODY     is the NAIF ID code of the body for which the axes are
-!              requested. Bodies are numbered according to the
-!              standard NAIF numbering scheme described in the
-!              required reading (naif_ids.req) document.
-!
-! $ Detailed_Output
-!
-!     AXES     are the lengths of the axes of the body, in km.
-!
-!                    AXES(1)  is the longest equatorial radius of
-!                             the body. For satellites, this axis is
-!                             typically pointed toward the primary
-!                             planet.
-!
-!                    AXES(2)  is the shortest equatorial radius of
-!                             the body.
-!
-!                    AXES(3)  is the polar radius of the body.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the RADII kernel pool data for body specified does not have
-!         exactly 3 axes defined, the error SPICE(INVALIDCOUNT) is
-!         signaled.
-!
-!     2)  If the RADII kernel pool data for body specified contains any
-!         zero or negative values, the error SPICE(BADAXISLENGTH) is
-!         signaled.
-!
-! $ Files
-!
-!     PCK data: triaxial radii for the target body must be loaded
-!     into the kernel pool. Typically this is done by loading a
-!     text PCK file via LDPOOL or a general kernel loader
-!     such as FURNSH.
-!
-! $ Particulars
-!
-!     ZZGFTREB returns the lengths of the axes of BODY. It serves
-!     as a wrapper to the kernel data access call, the confirms
-!     return of reasonable values.
-!
-!     Appropriate SPK and PCK data must be available to the calling
-!     program before this routine is called.for missing kernel data
-!     or non physical values.
-!
-! $ Examples
-!
-!     The call
-!
-!         CALL ZZGFTREB ( 399,  VALUE )
-!
-!     returns the values associated with the variable 'BODY399_RADII',
-!     for example,
-!
-!          VALUE(1) = 6378.140
-!          VALUE(2) = 6378.140
-!          VALUE(3) = 6356.755
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     [1]  "Report of the IAU/IAG/COSPAR Working Group on Cartographic
-!          Coordinates and Rotational Elements of the Planets and
-!          Satellites: 1991", March 3, 1992.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 11-SEP-2021 (EDW) (JDR)
-!
-!        Corrected short error messages token string. Axes length
-!        error is signaled on less-than or equal-to zero.
-!
-!        Edited the header to comply with NAIF standard. Moved SPK
-!        required reading from $Literature_References to
-!        $Required_Reading section.
-!
-!-    SPICELIB Version 1.0.0, 05-MAR-2003 (EDW)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Return the values of the triaxial radii
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           i
       integer(ip)           n
 
@@ -2077,29 +1871,275 @@ contains
       return
       end procedure zzgftreb
 
-!$Procedure ZZFDAT ( Initialize built-in frame names and ID codes )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines. Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Initialize the table of built-in frame names and their ID codes
+      !>     and hashes and order arrays providing efficient access to these
+      !>     tables.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     NCOUNT   is the number of names that the calling routine
+      !>              expects to receive. It should have the value of
+      !>              NNAMES which is given below for NNAMES. If this is
+      !>              not the case then the error SPICE(VERSIONMISMATCH1)
+      !>              is signaled.
+      !>
+      !>     MAXBFR   is the build-in frame hash size. It should have a
+      !>              value greater than or equal to the value of NNAMES.
+      !>              If this is not the case then the error
+      !>              SPICE(VERSIONMISMATCH2) is signaled.
+      !>
+      !>              If everything has been properly called, compiled and
+      !>              linked these errors should never be signaled. If
+      !>              either is signaled, it indicates that either a
+      !>              calling sequence, or version mismatch has occurred.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     The six arrays described below (NAME...CORDER) should be declared
+      !>     with the same dimensions --- NCOUNT.
+      !>
+      !>     NAME     is an array of the official SPICE names for the
+      !>              recognized frames (both inertial and non-inertial)
+      !>
+      !>     IDCODE   is an array parallel to NAME of SPICE ID codes for
+      !>              the various frames.
+      !>
+      !>     CENTER   is an array parallel to NAME of body ID codes for
+      !>              the centers of frames.
+      !>
+      !>     TYPE     is an array parallel to NAME of inertial frame types
+      !>              for the various frames. These include INERTL, PCK,
+      !>              CK, etc.
+      !>
+      !>     TYPID    is an array parallel to NAME of the ID code for the
+      !>              frame within the TYPE of the frame. Once the class
+      !>              of the frame has been identified by TYPE, TYPID is
+      !>              used to access the information specific about this
+      !>              frame.
+      !>
+      !>     CENTRD   is an order vector for the array CENTER. The value
+      !>              CENTER(CORDER(I)) is the I'th IDCODE when ordered
+      !>              from smallest to largest.
+      !>
+      !>     The eight hash array below (BMM*, BID*) should be declared with
+      !>     the same upper dimensions --- MAXBFR.
+      !>
+      !>     BNMLST,
+      !>     BNMPOL,
+      !>     BNMNMS   are the frame name-based hash head node pointer, node
+      !>              collision, and item lists. Together they return the
+      !>              index of the element in the BNMIDX index storage
+      !>              array corresponding to a given built-in frame name.
+      !>
+      !>     BNMIDX   is the frame name-based hash index storage array
+      !>              containing at the index determined by the hash for a
+      !>              given name the index corresponding to the same name
+      !>              in the NAME, IDCODE, CENTER, TYPE, and TYPID arrays.
+      !>
+      !>     BIDLST,
+      !>     BIDPOL,
+      !>     BIDIDS   are the frame ID-based hash head node pointer, node
+      !>              collision, and item lists. Together they return the
+      !>              index of the element in the BNMIDX index storage
+      !>              array corresponding to a given built-in frame ID.
+      !>
+      !>     BIDIDX   is the frame ID-based hash index storage array
+      !>              containing at the index determined by the hash for a
+      !>              given ID the index corresponding to the same ID
+      !>              in the NAME, IDCODE, CENTER, TYPE, and TYPID arrays.
+      !>
+      !> ## Parameters
+      !>
+      !>     See include files.
+      !>
+      !> ## Exceptions
+      !>
+      !>     If everything has been properly called, compiled and linked these
+      !>     errors should never be signaled. If either is signaled, it
+      !>     indicates that either a calling sequence, or version mismatch has
+      !>     occurred.
+      !>
+      !>     1)  If the input number of frames NCOUNT is not equal to the
+      !>         number of frames determined from include files, the error
+      !>         SPICE(BUG) is signaled.
+      !>
+      !>     2)  If the input hash size MAXBFR is not greater or equal to the
+      !>         number of frames determined from include files, the error
+      !>         SPICE(BUG2) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine establishes the built-in SPICE reference frames and
+      !>     their ID-codes. In addition it returns the order vector for the
+      !>     frame center IDs and hashes for the frame names and IDs.
+      !>
+      !>     This is a private routine intended solely as a support routine
+      !>     for the SPICE routine FRAMEX.
+      !>
+      !> ## Examples
+      !>
+      !>     This routine should typically be called as part of an
+      !>     initialization portion of FRAMEX entry points.
+      !>
+      !>        LOGICAL               FIRST
+      !>        SAVE                  FIRST
+      !>
+      !>        DATA                  FIRST / .TRUE. /
+      !>
+      !>        IF ( FIRST ) THEN
+      !>
+      !>           FIRST = .FALSE.
+      !>           CALL ZZFDAT ( NCOUNT, MAXBFR, NAME,   IDCODE,
+      !>       .                 CENTER, TYPE,   TYPID,  CENTRD,
+      !>       .                 BNMLST, BNMPOL, BNMNMS, BNMIDX,
+      !>       .                 BIDLST, BIDPOL, BIDIDS, BIDIDX )
+      !>
+      !>        END IF
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 5.2.0, 07-SEP-2021 (BVS) (JDR)
+      !>
+      !>        Added the following PCK frames:
+      !>
+      !>           IAU_52_EUROPA
+      !>           IAU_NIX
+      !>           IAU_HYDRA
+      !>           IAU_RYUGU
+      !>           IAU_ARROKOTH
+      !>           IAU_DIDYMOS_BARYCENTER
+      !>           IAU_DIDYMOS
+      !>           IAU_DIMORPHOS
+      !>           IAU_DONALDJOHANSON
+      !>           IAU_EURYBATES
+      !>           IAU_EURYBATES_BARYCENTER
+      !>           IAU_QUETA
+      !>           IAU_POLYMELE
+      !>           IAU_LEUCUS
+      !>           IAU_ORUS
+      !>           IAU_PATROCLUS_BARYCENTER
+      !>           IAU_PATROCLUS
+      !>           IAU_MENOETIUS
+      !>
+      !>        Corrected frame name spelling:
+      !>
+      !>           IAU_MAGACLITE -> IAU_MEGACLITE
+      !>
+      !>        Edited the header to comply with NAIF standard. Added
+      !>        $Index_Entries.
+      !>
+      !>-    SPICELIB Version 5.1.0, 30-OCT-2014 (BVS)
+      !>
+      !>        Added the following PCK frame:
+      !>
+      !>           IAU_BENNU
+      !>
+      !>-    SPICELIB Version 5.0.0, 08-AUG-2013 (BVS)
+      !>
+      !>        Changed routine's calling sequence by dropping name and ID
+      !>        order vectors and adding name- and ID-based hashes and
+      !>        modified it to initialize hashes instead of the order arrays.
+      !>
+      !>-    SPICELIB Version 4.3.0, 11-OCT-2011 (BVS)
+      !>
+      !>        Added the following PCK frames:
+      !>
+      !>           IAU_CERES
+      !>           IAU_PALLAS
+      !>           IAU_LUTETIA
+      !>           IAU_DAVIDA
+      !>           IAU_STEINS
+      !>
+      !>-    SPICELIB Version 4.2.0, 11-MAY-2010 (BVS)
+      !>
+      !>        Added the following PCK frames:
+      !>
+      !>           IAU_BORRELLY
+      !>           IAU_TEMPEL_1
+      !>           IAU_VESTA
+      !>           IAU_ITOKAWA
+      !>
+      !>-    SPICELIB Version 4.1.0, 12-DEC-2002 (BVS)
+      !>
+      !>        Added PCK frames for new Jovian satellites:
+      !>
+      !>           IAU_CALLIRRHOE
+      !>           IAU_THEMISTO
+      !>           IAU_MAGACLITE
+      !>           IAU_TAYGETE
+      !>           IAU_CHALDENE
+      !>           IAU_HARPALYKE
+      !>           IAU_KALYKE
+      !>           IAU_IOCASTE
+      !>           IAU_ERINOME
+      !>           IAU_ISONOE
+      !>           IAU_PRAXIDIKE
+      !>
+      !>-    SPICELIB Version 4.0.1, 18-OCT-2002 (EDW)
+      !>
+      !>        Corrected the erroneous frame values for IAU_PAN.
+      !>        Minor edits to the header.
+      !>
+      !>-    SPICELIB Version 4.0.0, 02-AUG-2002 (FST)
+      !>
+      !>        The frames IAU_PAN, IAU_GASPRA, IAU_IDA, and IAU_EROS
+      !>        were added to the list of recognized frames.
+      !>
+      !>-    SPICELIB Version 3.1.1, 20-APR-1999 (WLT)
+      !>
+      !>        Changed the variable name TYPEID to TYPID in the calling
+      !>        sequence to avoid having to take special measures in the f2c
+      !>        conversion process.
+      !>
+      !>-    SPICELIB Version 3.1.0, 11-SEP-1997 (WLT)
+      !>
+      !>        The error condition check early in the routine
+      !>        did not use the exception handling subsystem correctly.
+      !>        This has been fixed.
+      !>
+      !>-    SPICELIB Version 3.0.0, 02-JUN-1997 (WLT)
+      !>
+      !>        The calling sequence changed. ZZFDAT now also returns
+      !>        an order vector for the CENTERs of the frames.
+      !>
+      !>-    SPICELIB Version 2.0.0, 03-APR-1997 (WLT)
+      !>
+      !>        The frames ITRF93 and EARTH_FIXED were added to the
+      !>        list of recognized frames.
+      !>
+      !>-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
+      !>
+      !>        Changed declarations so that the variables NINERT and
+      !>        NNINRT are included instead of being declared locally.
+      !>
+      !>-    SPICELIB Version 1.0.0, 19-SEP-1995 (WLT)
       module procedure zzfdat
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Initialize the table of built-in frame names and their ID codes
-!!     and hashes and order arrays providing efficient access to these
-!!     tables.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: orderi
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
@@ -2107,276 +2147,7 @@ contains
       use pepper_inc_nninrt
       implicit none
 
-
       integer(ip), parameter :: lbpool = -5
-
-
-! $ Detailed_Input
-!
-!     NCOUNT   is the number of names that the calling routine
-!              expects to receive. It should have the value of
-!              NNAMES which is given below for NNAMES. If this is
-!              not the case then the error SPICE(VERSIONMISMATCH1)
-!              is signaled.
-!
-!     MAXBFR   is the build-in frame hash size. It should have a
-!              value greater than or equal to the value of NNAMES.
-!              If this is not the case then the error
-!              SPICE(VERSIONMISMATCH2) is signaled.
-!
-!              If everything has been properly called, compiled and
-!              linked these errors should never be signaled. If
-!              either is signaled, it indicates that either a
-!              calling sequence, or version mismatch has occurred.
-!
-! $ Detailed_Output
-!
-!     The six arrays described below (NAME...CORDER) should be declared
-!     with the same dimensions --- NCOUNT.
-!
-!     NAME     is an array of the official SPICE names for the
-!              recognized frames (both inertial and non-inertial)
-!
-!     IDCODE   is an array parallel to NAME of SPICE ID codes for
-!              the various frames.
-!
-!     CENTER   is an array parallel to NAME of body ID codes for
-!              the centers of frames.
-!
-!     TYPE     is an array parallel to NAME of inertial frame types
-!              for the various frames. These include INERTL, PCK,
-!              CK, etc.
-!
-!     TYPID    is an array parallel to NAME of the ID code for the
-!              frame within the TYPE of the frame. Once the class
-!              of the frame has been identified by TYPE, TYPID is
-!              used to access the information specific about this
-!              frame.
-!
-!     CENTRD   is an order vector for the array CENTER. The value
-!              CENTER(CORDER(I)) is the I'th IDCODE when ordered
-!              from smallest to largest.
-!
-!     The eight hash array below (BMM*, BID*) should be declared with
-!     the same upper dimensions --- MAXBFR.
-!
-!     BNMLST,
-!     BNMPOL,
-!     BNMNMS   are the frame name-based hash head node pointer, node
-!              collision, and item lists. Together they return the
-!              index of the element in the BNMIDX index storage
-!              array corresponding to a given built-in frame name.
-!
-!     BNMIDX   is the frame name-based hash index storage array
-!              containing at the index determined by the hash for a
-!              given name the index corresponding to the same name
-!              in the NAME, IDCODE, CENTER, TYPE, and TYPID arrays.
-!
-!     BIDLST,
-!     BIDPOL,
-!     BIDIDS   are the frame ID-based hash head node pointer, node
-!              collision, and item lists. Together they return the
-!              index of the element in the BNMIDX index storage
-!              array corresponding to a given built-in frame ID.
-!
-!     BIDIDX   is the frame ID-based hash index storage array
-!              containing at the index determined by the hash for a
-!              given ID the index corresponding to the same ID
-!              in the NAME, IDCODE, CENTER, TYPE, and TYPID arrays.
-!
-! $ Parameters
-!
-!     See include files.
-!
-! $ Exceptions
-!
-!     If everything has been properly called, compiled and linked these
-!     errors should never be signaled. If either is signaled, it
-!     indicates that either a calling sequence, or version mismatch has
-!     occurred.
-!
-!     1)  If the input number of frames NCOUNT is not equal to the
-!         number of frames determined from include files, the error
-!         SPICE(BUG) is signaled.
-!
-!     2)  If the input hash size MAXBFR is not greater or equal to the
-!         number of frames determined from include files, the error
-!         SPICE(BUG2) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine establishes the built-in SPICE reference frames and
-!     their ID-codes. In addition it returns the order vector for the
-!     frame center IDs and hashes for the frame names and IDs.
-!
-!     This is a private routine intended solely as a support routine
-!     for the SPICE routine FRAMEX.
-!
-! $ Examples
-!
-!     This routine should typically be called as part of an
-!     initialization portion of FRAMEX entry points.
-!
-!        LOGICAL               FIRST
-!        SAVE                  FIRST
-!
-!        DATA                  FIRST / .TRUE. /
-!
-!        IF ( FIRST ) THEN
-!
-!           FIRST = .FALSE.
-!           CALL ZZFDAT ( NCOUNT, MAXBFR, NAME,   IDCODE,
-!       .                 CENTER, TYPE,   TYPID,  CENTRD,
-!       .                 BNMLST, BNMPOL, BNMNMS, BNMIDX,
-!       .                 BIDLST, BIDPOL, BIDIDS, BIDIDX )
-!
-!        END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.2.0, 07-SEP-2021 (BVS) (JDR)
-!
-!        Added the following PCK frames:
-!
-!           IAU_52_EUROPA
-!           IAU_NIX
-!           IAU_HYDRA
-!           IAU_RYUGU
-!           IAU_ARROKOTH
-!           IAU_DIDYMOS_BARYCENTER
-!           IAU_DIDYMOS
-!           IAU_DIMORPHOS
-!           IAU_DONALDJOHANSON
-!           IAU_EURYBATES
-!           IAU_EURYBATES_BARYCENTER
-!           IAU_QUETA
-!           IAU_POLYMELE
-!           IAU_LEUCUS
-!           IAU_ORUS
-!           IAU_PATROCLUS_BARYCENTER
-!           IAU_PATROCLUS
-!           IAU_MENOETIUS
-!
-!        Corrected frame name spelling:
-!
-!           IAU_MAGACLITE -> IAU_MEGACLITE
-!
-!        Edited the header to comply with NAIF standard. Added
-!        $Index_Entries.
-!
-!-    SPICELIB Version 5.1.0, 30-OCT-2014 (BVS)
-!
-!        Added the following PCK frame:
-!
-!           IAU_BENNU
-!
-!-    SPICELIB Version 5.0.0, 08-AUG-2013 (BVS)
-!
-!        Changed routine's calling sequence by dropping name and ID
-!        order vectors and adding name- and ID-based hashes and
-!        modified it to initialize hashes instead of the order arrays.
-!
-!-    SPICELIB Version 4.3.0, 11-OCT-2011 (BVS)
-!
-!        Added the following PCK frames:
-!
-!           IAU_CERES
-!           IAU_PALLAS
-!           IAU_LUTETIA
-!           IAU_DAVIDA
-!           IAU_STEINS
-!
-!-    SPICELIB Version 4.2.0, 11-MAY-2010 (BVS)
-!
-!        Added the following PCK frames:
-!
-!           IAU_BORRELLY
-!           IAU_TEMPEL_1
-!           IAU_VESTA
-!           IAU_ITOKAWA
-!
-!-    SPICELIB Version 4.1.0, 12-DEC-2002 (BVS)
-!
-!        Added PCK frames for new Jovian satellites:
-!
-!           IAU_CALLIRRHOE
-!           IAU_THEMISTO
-!           IAU_MAGACLITE
-!           IAU_TAYGETE
-!           IAU_CHALDENE
-!           IAU_HARPALYKE
-!           IAU_KALYKE
-!           IAU_IOCASTE
-!           IAU_ERINOME
-!           IAU_ISONOE
-!           IAU_PRAXIDIKE
-!
-!-    SPICELIB Version 4.0.1, 18-OCT-2002 (EDW)
-!
-!        Corrected the erroneous frame values for IAU_PAN.
-!        Minor edits to the header.
-!
-!-    SPICELIB Version 4.0.0, 02-AUG-2002 (FST)
-!
-!        The frames IAU_PAN, IAU_GASPRA, IAU_IDA, and IAU_EROS
-!        were added to the list of recognized frames.
-!
-!-    SPICELIB Version 3.1.1, 20-APR-1999 (WLT)
-!
-!        Changed the variable name TYPEID to TYPID in the calling
-!        sequence to avoid having to take special measures in the f2c
-!        conversion process.
-!
-!-    SPICELIB Version 3.1.0, 11-SEP-1997 (WLT)
-!
-!        The error condition check early in the routine
-!        did not use the exception handling subsystem correctly.
-!        This has been fixed.
-!
-!-    SPICELIB Version 3.0.0, 02-JUN-1997 (WLT)
-!
-!        The calling sequence changed. ZZFDAT now also returns
-!        an order vector for the CENTERs of the frames.
-!
-!-    SPICELIB Version 2.0.0, 03-APR-1997 (WLT)
-!
-!        The frames ITRF93 and EARTH_FIXED were added to the
-!        list of recognized frames.
-!
-!-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
-!
-!        Changed declarations so that the variables NINERT and
-!        NNINRT are included instead of being declared locally.
-!
-!-    SPICELIB Version 1.0.0, 19-SEP-1995 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     initialize built-in frame names and ID codes
-!
-!-&
 
       integer(ip), parameter :: non = nninrt
 
@@ -3306,26 +3077,12 @@ contains
 !     variables are in pepper_state_framex. Its documentation follows.
 !
 
-
 ! $ Abstract
 !
 !     This is an umbrella routine for the entry points available for
 !     manipulating different reference frames. It should not be called
 !     directly.
 !
-! $ Required_Reading
-!
-!     FRAMES
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
-
-
-
 ! $ Detailed_Input
 !
 !     See individual entry points for details concerning inputs.
@@ -3541,25 +3298,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
 !
-!-&
-
-! $ Index_Entries
-!
-!     Frame Transformation
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-
-!
-!     Local parameters
-!
-
-
-
 
 !
 !     Body name length. The value BDNMLN used here must be the
@@ -3581,16 +3319,6 @@ contains
 !
 !     Kernel variable buffer size.
 !
-
-!
-!     Local Variables
-!
-
-
-
-
-
-
 
 !
 !     POOL state counter.
@@ -3624,8 +3352,6 @@ contains
 !     with a given ID are stored.
 !
 
-
-
 !
 !     The size of hashes for built-in frames.
 !
@@ -3653,9 +3379,6 @@ contains
 !     CENTER, TYPE, and TYPEID.
 !
 
-!
-!     Saved variables
-!
 !     Because we need to save almost everything we save everything
 !     rather than taking a chance and accidentally leaving something
 !     off the list.
@@ -3664,161 +3387,139 @@ contains
 !
 !     Initial values
 
+      !> ## Detailed Input
+      !>
+      !>     FRNAME   is a character string that stands for some
+      !>              reference frame (either inertial or non-inertial).
+      !>
+      !>              Leading blanks in FRNAME are ignored. And the
+      !>              case of the letters in FRNAME are insignificant.
+      !>
+      !>              Note that all legitimate frame names contain
+      !>              26 or fewer characters.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     FRCODE   is the SPICE integer code used for internal
+      !>              representation of the named reference frame.
+      !>
+      !>              If the name input through FRNAME is not recognized
+      !>              FRCODE will be returned with a value of zero.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input name is not recognized, FRCODE will be
+      !>         returned with a value of 0.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This is a low level interface routine intended primarily for
+      !>     use within the SPK and CK systems to assist in the transformation
+      !>     to user specified reference frames.
+      !>
+      !>     The routine first consults a stored list of reference frame
+      !>     names in an attempt to determine the appropriate reference
+      !>     frame code.
+      !>
+      !>     If this search is unsuccessful, the routine then examines the
+      !>     kernel pool to determine whether or not a variable of the
+      !>     form
+      !>
+      !>        'FRAME_' // FRNAME
+      !>
+      !>        (where leading blanks of FRNAME are ignored)
+      !>
+      !>     is present. If it is and the number of values associated with the
+      !>     name is 1, this value is taken to be the frame ID code.
+      !>
+      !>     Note: It is NOT possible to override the default names and
+      !>     ID codes stored locally in this routine by placing an
+      !>     appropriately variable in the kernel pool with a different
+      !>     ID code. The predefined values always take precedence.
+      !>
+      !>     Consult the FRAMES required reading document for more details
+      !>     about constructing your own frame definitions.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose that you needed to find the SPICE ID code for the
+      !>     bodyfixed reference frame for Mars as modeled by the
+      !>     IAU cartographic working group. Use the following code
+      !>     to perform this task.
+      !>
+      !>        CALL NAMFRM ( 'IAU_MARS', FRCODE )
+      !>
+      !>        WRITE (*,*) 'The SPICE code for the Mars bodyfixed frame is: ',
+      !>       .             FRCODE.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.1.1, 02-AUG-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 3.1.0, 08-AUG-2012 (BVS)
+      !>
+      !>        The routine was updated to be more efficient by using hashes
+      !>        instead kernel POOL look-ups for kernel POOL frames and by
+      !>        using hashes instead of ordered array searches for built-in
+      !>        frames.
+      !>
+      !>-    SPICELIB Version 3.0.2, 17-MAR-2009 (EDW)
+      !>
+      !>        Typo correction in $Required_Reading, changed FRAME to FRAMES.
+      !>
+      !>-    SPICELIB Version 3.0.1, 25-JUN-1999 (WLT)
+      !>
+      !>        Extended documentation of entry point CNMFRM and
+      !>        corrected example for that entry point.
+      !>
+      !>-    SPICELIB Version 3.0.0, 03-JUN-1997 (WLT)
+      !>
+      !>        The entry points CIDFRM and CNMFRM were added so that
+      !>        user's may determine the frame-id and name to associated
+      !>        with a planetary object.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-APR-1997 (WLT)
+      !>
+      !>        The routine was upgraded to reflect that a block of
+      !>        frame ID codes have been reserved for use by the DSN.
+      !>        ID codes 13001 to 13999 have been set aside for DSN
+      !>        models for the orientation of the earth. These frames
+      !>        are all PCK frames. Moreover, the PCK ID code to
+      !>        use with these frames is simply the Frame-Code minus 10000.
+      !>        All of these frames are centered at the earth (body 399).
+      !>
+      !>-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
+      !>
+      !>        The values NINERT and NNINRT are included instead of
+      !>        being declared locally.
+      !>
+      !>-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
       module procedure namfrm
-!! ## Abstract
-!!
-!!     Look up the frame ID code associated with a string.
-!!
-!! ## Required Reading
-!!
-!!     FRAMES
-!!
-!! ## Keywords
-!!
-!!     FRAMES
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         FRNAME
-!!     INTEGER               FRCODE
-!!
-!! ## Detailed Input
-!!
-!!     FRNAME   is a character string that stands for some
-!!              reference frame (either inertial or non-inertial).
-!!
-!!              Leading blanks in FRNAME are ignored. And the
-!!              case of the letters in FRNAME are insignificant.
-!!
-!!              Note that all legitimate frame names contain
-!!              26 or fewer characters.
-!!
-!! ## Detailed Output
-!!
-!!     FRCODE   is the SPICE integer code used for internal
-!!              representation of the named reference frame.
-!!
-!!              If the name input through FRNAME is not recognized
-!!              FRCODE will be returned with a value of zero.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the input name is not recognized, FRCODE will be
-!!         returned with a value of 0.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This is a low level interface routine intended primarily for
-!!     use within the SPK and CK systems to assist in the transformation
-!!     to user specified reference frames.
-!!
-!!     The routine first consults a stored list of reference frame
-!!     names in an attempt to determine the appropriate reference
-!!     frame code.
-!!
-!!     If this search is unsuccessful, the routine then examines the
-!!     kernel pool to determine whether or not a variable of the
-!!     form
-!!
-!!        'FRAME_' // FRNAME
-!!
-!!        (where leading blanks of FRNAME are ignored)
-!!
-!!     is present. If it is and the number of values associated with the
-!!     name is 1, this value is taken to be the frame ID code.
-!!
-!!     Note: It is NOT possible to override the default names and
-!!     ID codes stored locally in this routine by placing an
-!!     appropriately variable in the kernel pool with a different
-!!     ID code. The predefined values always take precedence.
-!!
-!!     Consult the FRAMES required reading document for more details
-!!     about constructing your own frame definitions.
-!!
-!! ## Examples
-!!
-!!     Suppose that you needed to find the SPICE ID code for the
-!!     bodyfixed reference frame for Mars as modeled by the
-!!     IAU cartographic working group. Use the following code
-!!     to perform this task.
-!!
-!!        CALL NAMFRM ( 'IAU_MARS', FRCODE )
-!!
-!!        WRITE (*,*) 'The SPICE code for the Mars bodyfixed frame is: ',
-!!       .             FRCODE.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!     W.L. Taber         (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 3.1.1, 02-AUG-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 3.1.0, 08-AUG-2012 (BVS)
-!!
-!!        The routine was updated to be more efficient by using hashes
-!!        instead kernel POOL look-ups for kernel POOL frames and by
-!!        using hashes instead of ordered array searches for built-in
-!!        frames.
-!!
-!!-    SPICELIB Version 3.0.2, 17-MAR-2009 (EDW)
-!!
-!!        Typo correction in $Required_Reading, changed FRAME to FRAMES.
-!!
-!!-    SPICELIB Version 3.0.1, 25-JUN-1999 (WLT)
-!!
-!!        Extended documentation of entry point CNMFRM and
-!!        corrected example for that entry point.
-!!
-!!-    SPICELIB Version 3.0.0, 03-JUN-1997 (WLT)
-!!
-!!        The entry points CIDFRM and CNMFRM were added so that
-!!        user's may determine the frame-id and name to associated
-!!        with a planetary object.
-!!
-!!-    SPICELIB Version 2.0.0, 04-APR-1997 (WLT)
-!!
-!!        The routine was upgraded to reflect that a block of
-!!        frame ID codes have been reserved for use by the DSN.
-!!        ID codes 13001 to 13999 have been set aside for DSN
-!!        models for the orientation of the earth. These frames
-!!        are all PCK frames. Moreover, the PCK ID code to
-!!        use with these frames is simply the Frame-Code minus 10000.
-!!        All of these frames are centered at the earth (body 399).
-!!
-!!-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
-!!
-!!        The values NINERT and NNINRT are included instead of
-!!        being declared locally.
-!!
-!!-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Frame name to frame ID code translation
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: prefix, ucase
       use pepper_inc_ninert
@@ -3850,170 +3551,145 @@ contains
       return
       end procedure namfrm
 
+      !> ## Detailed Input
+      !>
+      !>     FRCODE   is an integer code for a reference frame.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     FRNAME   is the name associated with the reference frame. It will
+      !>              be returned left justified.
+      !>
+      !>              If FRCODE is not recognized as the name of a known
+      !>              reference frame, FRNAME will be returned as a blank.
+      !>
+      !>              If FRNAME is not sufficiently long to hold the name, it
+      !>              will be truncated on the right.
+      !>
+      !>              All reference frame names are 26 or fewer characters in
+      !>              length. Thus declaring FRNAME to be CHARACTER*(26) will
+      !>              ensure that the returned name will not be truncated.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If FRCODE is not recognized as the name of a known reference
+      !>         frame, FRNAME will be returned as a blank.
+      !>
+      !>     2)  If FRNAME is not sufficiently long to hold the name, it will
+      !>         be truncated on the right.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine retrieves the name of a reference frame associated
+      !>     with a SPICE frame ID code.
+      !>
+      !>     The ID codes stored locally are scanned for a match with FRCODE.
+      !>     If a match is found, the name stored locally will be returned
+      !>     as the name for the frame.
+      !>
+      !>     If FRCODE is not a member of the list of internally stored
+      !>     ID codes, the kernel pool will be examined to see if the
+      !>     variable
+      !>
+      !>        FRAME_idcode_NAME
+      !>
+      !>     is present (where idcode is the decimal character equivalent
+      !>     of FRCODE). If the variable is located and it has both
+      !>     character type and dimension 1, the string value of the
+      !>     kernel pool variable is returned as the name of the reference
+      !>     frame.
+      !>
+      !>     Note that because the local information is always examined
+      !>     first and searches of the kernel pool are performed only
+      !>     after exhausting local information, it is not possible to
+      !>     override the local name for any reference frame that is
+      !>     known by this routine.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose you needed to create a message concerning a reference
+      !>     frame and wish to use the name of the frame in the message.
+      !>     Suppose further that you have only the frame ID code at your
+      !>     disposal. You can capture the frame name using this routine
+      !>     as shown here.
+      !>
+      !>        CHARACTER*(32)        FRNAME
+      !>
+      !>        CALL FRMNAM ( FRCODE, FRNAME )
+      !>
+      !>        IF ( FRNAME .EQ. ' ' ) THEN
+      !>           CALL INTSTR ( FRCODE, FRNAME )
+      !>        END IF
+      !>
+      !>        WRITE (*,*) 'Concerning reference frame:', FRNAME
+      !>
+      !>        print the rest of your message.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.1.1, 02-AUG-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard. Updated maximum
+      !>        frame name length in detailed description of FRNAME argument
+      !>        and changed frame name length from 26 to 32 in example code.
+      !>
+      !>-    SPICELIB Version 3.1.0, 08-AUG-2012 (BVS)
+      !>
+      !>        The routine was updated to be more efficient by using hashes
+      !>        instead kernel POOL look-ups for kernel POOL frames and by
+      !>        using hashes instead of ordered array searches for built-in
+      !>        frames.
+      !>
+      !>-    SPICELIB Version 3.0.1, 25-JUN-1999 (WLT)
+      !>
+      !>        Extended documentation of entry point CNMFRM and
+      !>        corrected example for that entry point.
+      !>
+      !>-    SPICELIB Version 3.0.0, 03-JUN-1997 (WLT)
+      !>
+      !>        The entry points CIDFRM and CNMFRM were added so that
+      !>        user's may determine the frame-id and name to associated
+      !>        with a planetary object.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-APR-1997 (WLT)
+      !>
+      !>        The routine was upgraded to reflect that a block of
+      !>        frame ID codes have been reserved for use by the DSN.
+      !>        ID codes 13001 to 13999 have been set aside for DSN
+      !>        models for the orientation of the earth. These frames
+      !>        are all PCK frames. Moreover, the PCK ID code to
+      !>        use with these frames is simply the Frame-Code minus 10000.
+      !>        All of these frames are centered at the earth (body 399).
+      !>
+      !>-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
+      !>
+      !>        The values NINERT and NNINRT are included instead of
+      !>        being declared locally.
+      !>
+      !>-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
       module procedure frmnam
-!! ## Abstract
-!!
-!!     Retrieve the name of a reference frame associated with a SPICE ID
-!!     code.
-!!
-!! ## Required Reading
-!!
-!!     FRAMES
-!!
-!! ## Keywords
-!!
-!!     FRAMES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               FRCODE
-!!     CHARACTER*(*)         FRNAME
-!!
-!! ## Detailed Input
-!!
-!!     FRCODE   is an integer code for a reference frame.
-!!
-!! ## Detailed Output
-!!
-!!     FRNAME   is the name associated with the reference frame. It will
-!!              be returned left justified.
-!!
-!!              If FRCODE is not recognized as the name of a known
-!!              reference frame, FRNAME will be returned as a blank.
-!!
-!!              If FRNAME is not sufficiently long to hold the name, it
-!!              will be truncated on the right.
-!!
-!!              All reference frame names are 26 or fewer characters in
-!!              length. Thus declaring FRNAME to be CHARACTER*(26) will
-!!              ensure that the returned name will not be truncated.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If FRCODE is not recognized as the name of a known reference
-!!         frame, FRNAME will be returned as a blank.
-!!
-!!     2)  If FRNAME is not sufficiently long to hold the name, it will
-!!         be truncated on the right.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine retrieves the name of a reference frame associated
-!!     with a SPICE frame ID code.
-!!
-!!     The ID codes stored locally are scanned for a match with FRCODE.
-!!     If a match is found, the name stored locally will be returned
-!!     as the name for the frame.
-!!
-!!     If FRCODE is not a member of the list of internally stored
-!!     ID codes, the kernel pool will be examined to see if the
-!!     variable
-!!
-!!        FRAME_idcode_NAME
-!!
-!!     is present (where idcode is the decimal character equivalent
-!!     of FRCODE). If the variable is located and it has both
-!!     character type and dimension 1, the string value of the
-!!     kernel pool variable is returned as the name of the reference
-!!     frame.
-!!
-!!     Note that because the local information is always examined
-!!     first and searches of the kernel pool are performed only
-!!     after exhausting local information, it is not possible to
-!!     override the local name for any reference frame that is
-!!     known by this routine.
-!!
-!! ## Examples
-!!
-!!     Suppose you needed to create a message concerning a reference
-!!     frame and wish to use the name of the frame in the message.
-!!     Suppose further that you have only the frame ID code at your
-!!     disposal. You can capture the frame name using this routine
-!!     as shown here.
-!!
-!!        CHARACTER*(32)        FRNAME
-!!
-!!        CALL FRMNAM ( FRCODE, FRNAME )
-!!
-!!        IF ( FRNAME .EQ. ' ' ) THEN
-!!           CALL INTSTR ( FRCODE, FRNAME )
-!!        END IF
-!!
-!!        WRITE (*,*) 'Concerning reference frame:', FRNAME
-!!
-!!        print the rest of your message.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!     W.L. Taber         (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 3.1.1, 02-AUG-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard. Updated maximum
-!!        frame name length in detailed description of FRNAME argument
-!!        and changed frame name length from 26 to 32 in example code.
-!!
-!!-    SPICELIB Version 3.1.0, 08-AUG-2012 (BVS)
-!!
-!!        The routine was updated to be more efficient by using hashes
-!!        instead kernel POOL look-ups for kernel POOL frames and by
-!!        using hashes instead of ordered array searches for built-in
-!!        frames.
-!!
-!!-    SPICELIB Version 3.0.1, 25-JUN-1999 (WLT)
-!!
-!!        Extended documentation of entry point CNMFRM and
-!!        corrected example for that entry point.
-!!
-!!-    SPICELIB Version 3.0.0, 03-JUN-1997 (WLT)
-!!
-!!        The entry points CIDFRM and CNMFRM were added so that
-!!        user's may determine the frame-id and name to associated
-!!        with a planetary object.
-!!
-!!-    SPICELIB Version 2.0.0, 04-APR-1997 (WLT)
-!!
-!!        The routine was upgraded to reflect that a block of
-!!        frame ID codes have been reserved for use by the DSN.
-!!        ID codes 13001 to 13999 have been set aside for DSN
-!!        models for the orientation of the earth. These frames
-!!        are all PCK frames. Moreover, the PCK ID code to
-!!        use with these frames is simply the Frame-Code minus 10000.
-!!        All of these frames are centered at the earth (body 399).
-!!
-!!-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
-!!
-!!        The values NINERT and NNINRT are included instead of
-!!        being declared locally.
-!!
-!!-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Frame ID code to frame name translation
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip
       use pepper_inc_ninert
       use pepper_inc_nninrt
@@ -4027,242 +3703,212 @@ contains
       return
       end procedure frmnam
 
+      !> ## Detailed Input
+      !>
+      !>     FRCODE   is the ID code for some reference frame.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     CENT     is the body ID code for the center of the reference
+      !>              frame (if such an ID code is appropriate).
+      !>
+      !>     FRCLSS   is the class or type of the frame. This identifies
+      !>              which subsystem will be used to perform frame
+      !>              transformations.
+      !>
+      !>     CLSSID   is the ID code used for the frame within its class.
+      !>              This may be different from the frame ID code.
+      !>
+      !>     FOUND    is .TRUE. if CENT, FRCLSS and CCODE are available.
+      !>              Otherwise, FOUND is returned with the value .FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If a frame definition is encountered that does not define a
+      !>         central body for the frame, an error is signaled by a routine
+      !>         in the call tree of this routine.
+      !>
+      !>     2)  If a frame definition is encountered that does not define
+      !>         a class for the frame, an error is signaled by a routine
+      !>         in the call tree of this routine.
+      !>
+      !>     3)  If a frame definition is encountered that does not define a
+      !>         class ID for the frame, an error is signaled by a routine in
+      !>         the call tree of this routine.
+      !>
+      !>     4)  If a kernel variable defining a frame name is found, but
+      !>         that variable has dimension greater than 1, the error
+      !>         SPICE(INVALIDDIMENSION) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This is a low level routine needed by state transformation
+      !>     software to transform states and attitudes between different
+      !>     reference frames.
+      !>
+      !>     The routine first examines local "hard-coded" information about
+      !>     reference frames to see if the requested frame belongs to this
+      !>     set. If it does that information is returned.
+      !>
+      !>     If the requested information is not stored locally, the routine
+      !>     then examines the kernel pool to see if the requested information
+      !>     is stored there. If it is and has the expected format, the data
+      !>     is retrieved and returned.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Given a frame ID, retrieve the SPICE body ID associated with
+      !>        the frame's center, the frame class (or type of the frame),
+      !>        and the ID used for the frame within its class.
+      !>
+      !>          Example code begins here.
+      !>
+      !>                PROGRAM FRINFO_EX1
+      !>                IMPLICIT NONE
+      !>
+      !>          C
+      !>          C     Local parameters.
+      !>          C
+      !>                INTEGER               FRCODE
+      !>                PARAMETER           ( FRCODE = 13000 )
+      !>
+      !>          C
+      !>          C     Local variables.
+      !>          C
+      !>                INTEGER               CENTER
+      !>                INTEGER               CLSSID
+      !>                INTEGER               FRCLSS
+      !>
+      !>                LOGICAL               FOUND
+      !>
+      !>          C
+      !>          C     Retrieve the information for frame ID 13000.
+      !>          C
+      !>                CALL FRINFO ( FRCODE, CENTER, FRCLSS, CLSSID, FOUND )
+      !>
+      !>                IF ( FOUND ) THEN
+      !>
+      !>                   WRITE(*,'(A,I6)') 'Frame center  : ', CENTER
+      !>                   WRITE(*,'(A,I6)') 'Frame class   : ', FRCLSS
+      !>                   WRITE(*,'(A,I6)') 'Frame class ID: ', CLSSID
+      !>
+      !>                ELSE
+      !>
+      !>                   WRITE (*,'(A,I6)') 'There is insufficient data '
+      !>               .                   // 'for frame ', FRCODE
+      !>
+      !>                END IF
+      !>
+      !>                END
+      !>
+      !>          When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>          platform, the output was:
+      !>
+      !>        Frame center  :    399
+      !>        Frame class   :      2
+      !>        Frame class ID:   3000
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 4.2.0, 02-AUG-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Added complete code example from existing fragments.
+      !>
+      !>        Changed the output argument name CLASS to FRCLSS for
+      !>        consistency with other routines.
+      !>
+      !>-    SPICELIB Version 4.1.0, 08-AUG-2012 (BVS)
+      !>
+      !>        The routine was updated to be more efficient by using hashes
+      !>        instead kernel POOL look-ups for kernel POOL frames and by
+      !>        using hashes instead of ordered array searches for built-in
+      !>        frames.
+      !>
+      !>-    SPICELIB Version 4.0.0, 12-SEP-2005 (NJB)
+      !>
+      !>        Entry point FRINFO is no longer error-free. The following
+      !>        errors are now diagnosed:
+      !>
+      !>           - Invalid dimension of frame name variable
+      !>
+      !>           - If a valid frame name assignment is present:
+      !>
+      !>              + Missing frame ID code assignment
+      !>              + Missing class assignment
+      !>              + Missing class ID assignment
+      !>
+      !>        Specification of frame center by name or ID is now supported.
+      !>        Previously only ID codes could be used to identify frame
+      !>        centers. Various frame definition errors that were previously
+      !>        ignored are now diagnosed.
+      !>
+      !>-    SPICELIB Version 3.1.0, 20-DEC-2004 (BVS)
+      !>
+      !>        Removed special handling of the frame IDs less than -999. If
+      !>        they cannot be ``resolved'' using kernel pool keywords, the
+      !>        frame is NOT declared CK-based with center ID derived by
+      !>        dividing frame ID by a 1000 and class ID assigned the frame ID
+      !>        anymore. In the current practice with multitude of TK frames
+      !>        with IDs set instrument IDs this default behavior is simply
+      !>        not valid.
+      !>
+      !>-    SPICELIB Version 3.0.1, 25-JUN-1999 (WLT)
+      !>
+      !>        Extended documentation of entry point CNMFRM and
+      !>        corrected example for that entry point.
+      !>
+      !>-    SPICELIB Version 3.0.0, 03-JUN-1997 (WLT)
+      !>
+      !>        The entry points CIDFRM and CNMFRM were added so that
+      !>        user's may determine the frame-id and name to associated
+      !>        with a planetary object.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-APR-1997 (WLT)
+      !>
+      !>        The routine was upgraded to reflect that a block of
+      !>        frame ID codes have been reserved for use by the DSN.
+      !>        ID codes 13001 to 13999 have been set aside for DSN
+      !>        models for the orientation of the earth. These frames
+      !>        are all PCK frames. Moreover, the PCK ID code to
+      !>        use with these frames is simply the Frame-Code minus 10000.
+      !>        All of these frames are centered at the earth (body 399).
+      !>
+      !>-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
+      !>
+      !>        The values NINERT and NNINRT are included instead of
+      !>        being declared locally.
+      !>
+      !>-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
       module procedure frinfo
-!! ## Abstract
-!!
-!!     Retrieve the minimal attributes associated with a frame
-!!     needed for converting transformations to and from it.
-!!
-!! ## Required Reading
-!!
-!!     FRAMES
-!!
-!! ## Keywords
-!!
-!!     FRAMES
-!!
-!! ## Declarations
-!!
-!!     IMPLICIT NONE
-!!
-!!     INTEGER               FRCODE
-!!     INTEGER               CENT
-!!     INTEGER               FRCLSS
-!!     INTEGER               CLSSID
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     FRCODE   is the ID code for some reference frame.
-!!
-!! ## Detailed Output
-!!
-!!     CENT     is the body ID code for the center of the reference
-!!              frame (if such an ID code is appropriate).
-!!
-!!     FRCLSS   is the class or type of the frame. This identifies
-!!              which subsystem will be used to perform frame
-!!              transformations.
-!!
-!!     CLSSID   is the ID code used for the frame within its class.
-!!              This may be different from the frame ID code.
-!!
-!!     FOUND    is .TRUE. if CENT, FRCLSS and CCODE are available.
-!!              Otherwise, FOUND is returned with the value .FALSE.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If a frame definition is encountered that does not define a
-!!         central body for the frame, an error is signaled by a routine
-!!         in the call tree of this routine.
-!!
-!!     2)  If a frame definition is encountered that does not define
-!!         a class for the frame, an error is signaled by a routine
-!!         in the call tree of this routine.
-!!
-!!     3)  If a frame definition is encountered that does not define a
-!!         class ID for the frame, an error is signaled by a routine in
-!!         the call tree of this routine.
-!!
-!!     4)  If a kernel variable defining a frame name is found, but
-!!         that variable has dimension greater than 1, the error
-!!         SPICE(INVALIDDIMENSION) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This is a low level routine needed by state transformation
-!!     software to transform states and attitudes between different
-!!     reference frames.
-!!
-!!     The routine first examines local "hard-coded" information about
-!!     reference frames to see if the requested frame belongs to this
-!!     set. If it does that information is returned.
-!!
-!!     If the requested information is not stored locally, the routine
-!!     then examines the kernel pool to see if the requested information
-!!     is stored there. If it is and has the expected format, the data
-!!     is retrieved and returned.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Given a frame ID, retrieve the SPICE body ID associated with
-!!        the frame's center, the frame class (or type of the frame),
-!!        and the ID used for the frame within its class.
-!!
-!!          Example code begins here.
-!!
-!!                PROGRAM FRINFO_EX1
-!!                IMPLICIT NONE
-!!
-!!          C
-!!          C     Local parameters.
-!!          C
-!!                INTEGER               FRCODE
-!!                PARAMETER           ( FRCODE = 13000 )
-!!
-!!          C
-!!          C     Local variables.
-!!          C
-!!                INTEGER               CENTER
-!!                INTEGER               CLSSID
-!!                INTEGER               FRCLSS
-!!
-!!                LOGICAL               FOUND
-!!
-!!          C
-!!          C     Retrieve the information for frame ID 13000.
-!!          C
-!!                CALL FRINFO ( FRCODE, CENTER, FRCLSS, CLSSID, FOUND )
-!!
-!!                IF ( FOUND ) THEN
-!!
-!!                   WRITE(*,'(A,I6)') 'Frame center  : ', CENTER
-!!                   WRITE(*,'(A,I6)') 'Frame class   : ', FRCLSS
-!!                   WRITE(*,'(A,I6)') 'Frame class ID: ', CLSSID
-!!
-!!                ELSE
-!!
-!!                   WRITE (*,'(A,I6)') 'There is insufficient data '
-!!               .                   // 'for frame ', FRCODE
-!!
-!!                END IF
-!!
-!!                END
-!!
-!!          When this program was executed on a Mac/Intel/gfortran/64-bit
-!!          platform, the output was:
-!!
-!!        Frame center  :    399
-!!        Frame class   :      2
-!!        Frame class ID:   3000
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!     W.L. Taber         (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 4.2.0, 02-AUG-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Added complete code example from existing fragments.
-!!
-!!        Changed the output argument name CLASS to FRCLSS for
-!!        consistency with other routines.
-!!
-!!-    SPICELIB Version 4.1.0, 08-AUG-2012 (BVS)
-!!
-!!        The routine was updated to be more efficient by using hashes
-!!        instead kernel POOL look-ups for kernel POOL frames and by
-!!        using hashes instead of ordered array searches for built-in
-!!        frames.
-!!
-!!-    SPICELIB Version 4.0.0, 12-SEP-2005 (NJB)
-!!
-!!        Entry point FRINFO is no longer error-free. The following
-!!        errors are now diagnosed:
-!!
-!!           - Invalid dimension of frame name variable
-!!
-!!           - If a valid frame name assignment is present:
-!!
-!!              + Missing frame ID code assignment
-!!              + Missing class assignment
-!!              + Missing class ID assignment
-!!
-!!        Specification of frame center by name or ID is now supported.
-!!        Previously only ID codes could be used to identify frame
-!!        centers. Various frame definition errors that were previously
-!!        ignored are now diagnosed.
-!!
-!!-    SPICELIB Version 3.1.0, 20-DEC-2004 (BVS)
-!!
-!!        Removed special handling of the frame IDs less than -999. If
-!!        they cannot be ``resolved'' using kernel pool keywords, the
-!!        frame is NOT declared CK-based with center ID derived by
-!!        dividing frame ID by a 1000 and class ID assigned the frame ID
-!!        anymore. In the current practice with multitude of TK frames
-!!        with IDs set instrument IDs this default behavior is simply
-!!        not valid.
-!!
-!!-    SPICELIB Version 3.0.1, 25-JUN-1999 (WLT)
-!!
-!!        Extended documentation of entry point CNMFRM and
-!!        corrected example for that entry point.
-!!
-!!-    SPICELIB Version 3.0.0, 03-JUN-1997 (WLT)
-!!
-!!        The entry points CIDFRM and CNMFRM were added so that
-!!        user's may determine the frame-id and name to associated
-!!        with a planetary object.
-!!
-!!-    SPICELIB Version 2.0.0, 04-APR-1997 (WLT)
-!!
-!!        The routine was upgraded to reflect that a block of
-!!        frame ID codes have been reserved for use by the DSN.
-!!        ID codes 13001 to 13999 have been set aside for DSN
-!!        models for the orientation of the earth. These frames
-!!        are all PCK frames. Moreover, the PCK ID code to
-!!        use with these frames is simply the Frame-Code minus 10000.
-!!        All of these frames are centered at the earth (body 399).
-!!
-!!-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
-!!
-!!        The values NINERT and NNINRT are included instead of
-!!        being declared locally.
-!!
-!!-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Fetch reference frame attributes
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip
       use pepper_inc_ninert
       use pepper_inc_nninrt
@@ -4507,170 +4153,143 @@ contains
       end associate
       end procedure frinfo
 
+      !> ## Detailed Input
+      !>
+      !>     CENT     is the ID code for object for which there is a
+      !>              preferred reference frame.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     FRCODE   is the frame ID code to associate with the object
+      !>              specified by CENT.
+      !>
+      !>     FRNAME   is the name of the frame that should be associated
+      !>              with the object specified by CENT. FRNAME should be
+      !>              declared as CHARACTER*(32) to ensure that it can
+      !>              contain the full name of the frame. If FRNAME does
+      !>              not have enough room to hold the full name of the
+      !>              frame, the name will be truncated on the right.
+      !>
+      !>     FOUND    is .TRUE. if the appropriate frame ID code and frame
+      !>              name can be determined. Otherwise FOUND is returned
+      !>              with the value .FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If FRNAME does not have enough room to contain the frame name,
+      !>         the name will be truncated on the right. (Declaring FRNAME to
+      !>         be CHARACTER*(32) will ensure that the name will not be
+      !>         truncated).
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine allows the user to determine the frame that should
+      !>     be associated with a particular object. For example, if you
+      !>     need the frame to associate with the Io, you can call CIDFRM
+      !>     to determine the frame name and ID code for the bodyfixed frame
+      !>     of Io.
+      !>
+      !>     The preferred frame to use with an object is specified via one
+      !>     of the kernel pool variables:
+      !>
+      !>         OBJECT_<cent>_FRAME
+      !>
+      !>     where <cent> is the decimal representation of the integer CENT.
+      !>
+      !>     For those PCK objects that have "built-in" frame names this
+      !>     routine returns the corresponding "IAU" frame and frame ID code.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose that you want to determine the state of a target
+      !>     in the preferred reference frame of some observer. This
+      !>     routine can be used in conjunction with SPKEZ to compute
+      !>     the state.
+      !>
+      !>        CALL CIDFRM ( OBS, FRCODE, FRNAME, FOUND )
+      !>
+      !>        IF ( .NOT. FOUND ) THEN
+      !>
+      !>           WRITE (*,*) 'The bodyfixed frame for object ', OBS
+      !>           WRITE (*,*) 'could not be identified.'
+      !>           STOP
+      !>
+      !>        END IF
+      !>
+      !>        CALL SPKEZ ( TARG, ET, FRNAME, ABCORR, OBS, STATE, LT )
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.2.1, 13-AUG-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Updated maximum frame name length from 26 to 32 in
+      !>        $Detailed_Output and $Exceptions section.
+      !>
+      !>-    SPICELIB Version 3.2.0, 08-AUG-2012 (BVS)
+      !>
+      !>        The routine was updated to be more efficient by using hashes
+      !>        instead kernel POOL look-ups for kernel POOL frames and by
+      !>        using hashes instead of ordered array searches for built-in
+      !>        frames.
+      !>
+      !>-    SPICELIB Version 3.1.1, 09-FEB-2011 (NJB)
+      !>
+      !>        Bug fix: corrected logic for object-frame association for case
+      !>        where the assigned frame value is denoted by a frame code.
+      !>
+      !>-    SPICELIB Version 3.0.1, 25-JUN-1999 (WLT)
+      !>
+      !>        Extended documentation of entry point CNMFRM and
+      !>        corrected example for that entry point.
+      !>
+      !>-    SPICELIB Version 3.0.0, 03-JUN-1997 (WLT)
+      !>
+      !>        The entry points CIDFRM and CNMFRM were added so that
+      !>        user's may determine the frame-id and name to associated
+      !>        with a planetary object.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-APR-1997 (WLT)
+      !>
+      !>        The routine was upgraded to reflect that a block of
+      !>        frame ID codes have been reserved for use by the DSN.
+      !>        ID codes 13001 to 13999 have been set aside for DSN
+      !>        models for the orientation of the earth. These frames
+      !>        are all PCK frames. Moreover, the PCK ID code to
+      !>        use with these frames is simply the Frame-Code minus 10000.
+      !>        All of these frames are centered at the earth (body 399).
+      !>
+      !>-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
+      !>
+      !>        The values NINERT and NNINRT are included instead of
+      !>        being declared locally.
+      !>
+      !>-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
       module procedure cidfrm
-!! ## Abstract
-!!
-!!     Retrieve frame ID code and name to associate with a frame center.
-!!
-!! ## Required Reading
-!!
-!!     FRAMES
-!!
-!! ## Keywords
-!!
-!!     FRAMES
-!!
-!! ## Declarations
-!!
-!!     IMPLICIT NONE
-!!     INTEGER               CENT
-!!     INTEGER               FRCODE
-!!     CHARACTER*(*)         FRNAME
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     CENT     is the ID code for object for which there is a
-!!              preferred reference frame.
-!!
-!! ## Detailed Output
-!!
-!!     FRCODE   is the frame ID code to associate with the object
-!!              specified by CENT.
-!!
-!!     FRNAME   is the name of the frame that should be associated
-!!              with the object specified by CENT. FRNAME should be
-!!              declared as CHARACTER*(32) to ensure that it can
-!!              contain the full name of the frame. If FRNAME does
-!!              not have enough room to hold the full name of the
-!!              frame, the name will be truncated on the right.
-!!
-!!     FOUND    is .TRUE. if the appropriate frame ID code and frame
-!!              name can be determined. Otherwise FOUND is returned
-!!              with the value .FALSE.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If FRNAME does not have enough room to contain the frame name,
-!!         the name will be truncated on the right. (Declaring FRNAME to
-!!         be CHARACTER*(32) will ensure that the name will not be
-!!         truncated).
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine allows the user to determine the frame that should
-!!     be associated with a particular object. For example, if you
-!!     need the frame to associate with the Io, you can call CIDFRM
-!!     to determine the frame name and ID code for the bodyfixed frame
-!!     of Io.
-!!
-!!     The preferred frame to use with an object is specified via one
-!!     of the kernel pool variables:
-!!
-!!         OBJECT_<cent>_FRAME
-!!
-!!     where <cent> is the decimal representation of the integer CENT.
-!!
-!!     For those PCK objects that have "built-in" frame names this
-!!     routine returns the corresponding "IAU" frame and frame ID code.
-!!
-!! ## Examples
-!!
-!!     Suppose that you want to determine the state of a target
-!!     in the preferred reference frame of some observer. This
-!!     routine can be used in conjunction with SPKEZ to compute
-!!     the state.
-!!
-!!        CALL CIDFRM ( OBS, FRCODE, FRNAME, FOUND )
-!!
-!!        IF ( .NOT. FOUND ) THEN
-!!
-!!           WRITE (*,*) 'The bodyfixed frame for object ', OBS
-!!           WRITE (*,*) 'could not be identified.'
-!!           STOP
-!!
-!!        END IF
-!!
-!!        CALL SPKEZ ( TARG, ET, FRNAME, ABCORR, OBS, STATE, LT )
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!     W.L. Taber         (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 3.2.1, 13-AUG-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!        Updated maximum frame name length from 26 to 32 in
-!!        $Detailed_Output and $Exceptions section.
-!!
-!!-    SPICELIB Version 3.2.0, 08-AUG-2012 (BVS)
-!!
-!!        The routine was updated to be more efficient by using hashes
-!!        instead kernel POOL look-ups for kernel POOL frames and by
-!!        using hashes instead of ordered array searches for built-in
-!!        frames.
-!!
-!!-    SPICELIB Version 3.1.1, 09-FEB-2011 (NJB)
-!!
-!!        Bug fix: corrected logic for object-frame association for case
-!!        where the assigned frame value is denoted by a frame code.
-!!
-!!-    SPICELIB Version 3.0.1, 25-JUN-1999 (WLT)
-!!
-!!        Extended documentation of entry point CNMFRM and
-!!        corrected example for that entry point.
-!!
-!!-    SPICELIB Version 3.0.0, 03-JUN-1997 (WLT)
-!!
-!!        The entry points CIDFRM and CNMFRM were added so that
-!!        user's may determine the frame-id and name to associated
-!!        with a planetary object.
-!!
-!!-    SPICELIB Version 2.0.0, 04-APR-1997 (WLT)
-!!
-!!        The routine was upgraded to reflect that a block of
-!!        frame ID codes have been reserved for use by the DSN.
-!!        ID codes 13001 to 13999 have been set aside for DSN
-!!        models for the orientation of the earth. These frames
-!!        are all PCK frames. Moreover, the PCK ID code to
-!!        use with these frames is simply the Frame-Code minus 10000.
-!!        All of these frames are centered at the earth (body 399).
-!!
-!!-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
-!!
-!!        The values NINERT and NNINRT are included instead of
-!!        being declared locally.
-!!
-!!-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Find the bodyfixed frame associated with an object
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: bschoi
       use pepper_strings, only: prefix, repmc, ucase
@@ -4685,172 +4304,145 @@ contains
       return
       end procedure cidfrm
 
+      !> ## Detailed Input
+      !>
+      !>     CNAME    is the name for object for which there is a
+      !>              preferred reference frame
+      !>
+      !> ## Detailed Output
+      !>
+      !>     FRCODE   is the frame ID code to associate with a the object
+      !>              specified by CNAME.
+      !>
+      !>     FRNAME   is the name of the frame that should be associated
+      !>              with the object specified by CNAME. FRNAME should be
+      !>              declared as CHARACTER*(32) to ensure that it can
+      !>              contain the full name of the frame. If FRNAME does
+      !>              not have enough room to hold the full name of the
+      !>              frame, the name will be truncated on the right.
+      !>
+      !>     FOUND    is .TRUE. if the appropriate frame ID code and frame
+      !>              name can be determined. Otherwise FOUND is returned
+      !>              with the value .FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If FRNAME does not have enough room to contain the frame name,
+      !>         the name will be truncated on the right. (Declaring FRNAME to
+      !>         be CHARACTER*(32) will ensure that the name will not be
+      !>         truncated).
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine allows the user to determine the frame that should
+      !>     be associated with a particular object. For example, if you
+      !>     need the frame to associate with the Io, you can call CNMFRM
+      !>     to determine the frame name and ID code for the bodyfixed frame
+      !>     of Io.
+      !>
+      !>     The preferred frame to use with an object is specified via one
+      !>     of the kernel pool variables:
+      !>
+      !>         OBJECT_<cname>_FRAME
+      !>
+      !>     where <cname> is the non-blank portion of the string CNAME.
+      !>
+      !>     For those PCK objects that have "built-in" frame names this
+      !>     routine returns the corresponding "IAU" frame and frame ID code.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose that you want to determine the state of a target
+      !>     in the preferred reference frame of some observer. This
+      !>     routine can be used in conjunction with SPKEZR to compute
+      !>     the state.
+      !>
+      !>        CALL CNMFRM ( OBSNAM, FRCODE, FRNAME, FOUND )
+      !>
+      !>        IF ( .NOT. FOUND ) THEN
+      !>
+      !>           WRITE (*,*) 'The bodyfixed frame for object ', OBSNAM
+      !>           WRITE (*,*) 'could not be identified.'
+      !>           STOP
+      !>
+      !>        END IF
+      !>
+      !>        CALL SPKEZR ( TARGET, ET, FRNAME, ABCORR, OBSNAM, STATE, LT )
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.2.1, 02-AUG-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Updated maximum frame name length from 26 to 32 in
+      !>        $Detailed_Output and $Exceptions section.
+      !>
+      !>-    SPICELIB Version 3.2.0, 08-AUG-2012 (BVS)
+      !>
+      !>        The routine was updated to be more efficient by using hashes
+      !>        instead kernel POOL look-ups for kernel POOL frames and by
+      !>        using hashes instead of ordered array searches for built-in
+      !>        frames.
+      !>
+      !>-    SPICELIB Version 3.1.0, 28-NOV-2002 (NJB)
+      !>
+      !>        Bug fix: updated this routine so a TK frame specified by name
+      !>        and designated as an object's preferred frame via kernel pool
+      !>        assignments is found, and so that the correct name of this
+      !>        frame is returned.
+      !>
+      !>-    SPICELIB Version 3.0.1, 25-JUN-1999 (WLT)
+      !>
+      !>        Extended documentation of entry point CNMFRM and
+      !>        corrected example for that entry point.
+      !>
+      !>-    SPICELIB Version 3.0.0, 03-JUN-1997 (WLT)
+      !>
+      !>        The entry points CIDFRM and CNMFRM were added so that
+      !>        user's may determine the frame-id and name to associated
+      !>        with a planetary object.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-APR-1997 (WLT)
+      !>
+      !>        The routine was upgraded to reflect that a block of
+      !>        frame ID codes have been reserved for use by the DSN.
+      !>        ID codes 13001 to 13999 have been set aside for DSN
+      !>        models for the orientation of the earth. These frames
+      !>        are all PCK frames. Moreover, the PCK ID code to
+      !>        use with these frames is simply the Frame-Code minus 10000.
+      !>        All of these frames are centered at the earth (body 399).
+      !>
+      !>-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
+      !>
+      !>        The values NINERT and NNINRT are included instead of
+      !>        being declared locally.
+      !>
+      !>-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
       module procedure cnmfrm
-!! ## Abstract
-!!
-!!     Retrieve frame ID code and name to associate with an object.
-!!
-!! ## Required Reading
-!!
-!!     FRAMES
-!!
-!! ## Keywords
-!!
-!!     FRAMES
-!!
-!! ## Declarations
-!!
-!!     IMPLICIT NONE
-!!     CHARACTER*(*)         CNAME
-!!     INTEGER               FRCODE
-!!     CHARACTER*(*)         FRNAME
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     CNAME    is the name for object for which there is a
-!!              preferred reference frame
-!!
-!! ## Detailed Output
-!!
-!!     FRCODE   is the frame ID code to associate with a the object
-!!              specified by CNAME.
-!!
-!!     FRNAME   is the name of the frame that should be associated
-!!              with the object specified by CNAME. FRNAME should be
-!!              declared as CHARACTER*(32) to ensure that it can
-!!              contain the full name of the frame. If FRNAME does
-!!              not have enough room to hold the full name of the
-!!              frame, the name will be truncated on the right.
-!!
-!!     FOUND    is .TRUE. if the appropriate frame ID code and frame
-!!              name can be determined. Otherwise FOUND is returned
-!!              with the value .FALSE.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If FRNAME does not have enough room to contain the frame name,
-!!         the name will be truncated on the right. (Declaring FRNAME to
-!!         be CHARACTER*(32) will ensure that the name will not be
-!!         truncated).
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine allows the user to determine the frame that should
-!!     be associated with a particular object. For example, if you
-!!     need the frame to associate with the Io, you can call CNMFRM
-!!     to determine the frame name and ID code for the bodyfixed frame
-!!     of Io.
-!!
-!!     The preferred frame to use with an object is specified via one
-!!     of the kernel pool variables:
-!!
-!!         OBJECT_<cname>_FRAME
-!!
-!!     where <cname> is the non-blank portion of the string CNAME.
-!!
-!!     For those PCK objects that have "built-in" frame names this
-!!     routine returns the corresponding "IAU" frame and frame ID code.
-!!
-!! ## Examples
-!!
-!!     Suppose that you want to determine the state of a target
-!!     in the preferred reference frame of some observer. This
-!!     routine can be used in conjunction with SPKEZR to compute
-!!     the state.
-!!
-!!        CALL CNMFRM ( OBSNAM, FRCODE, FRNAME, FOUND )
-!!
-!!        IF ( .NOT. FOUND ) THEN
-!!
-!!           WRITE (*,*) 'The bodyfixed frame for object ', OBSNAM
-!!           WRITE (*,*) 'could not be identified.'
-!!           STOP
-!!
-!!        END IF
-!!
-!!        CALL SPKEZR ( TARGET, ET, FRNAME, ABCORR, OBSNAM, STATE, LT )
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!     W.L. Taber         (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 3.2.1, 02-AUG-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!        Updated maximum frame name length from 26 to 32 in
-!!        $Detailed_Output and $Exceptions section.
-!!
-!!-    SPICELIB Version 3.2.0, 08-AUG-2012 (BVS)
-!!
-!!        The routine was updated to be more efficient by using hashes
-!!        instead kernel POOL look-ups for kernel POOL frames and by
-!!        using hashes instead of ordered array searches for built-in
-!!        frames.
-!!
-!!-    SPICELIB Version 3.1.0, 28-NOV-2002 (NJB)
-!!
-!!        Bug fix: updated this routine so a TK frame specified by name
-!!        and designated as an object's preferred frame via kernel pool
-!!        assignments is found, and so that the correct name of this
-!!        frame is returned.
-!!
-!!-    SPICELIB Version 3.0.1, 25-JUN-1999 (WLT)
-!!
-!!        Extended documentation of entry point CNMFRM and
-!!        corrected example for that entry point.
-!!
-!!-    SPICELIB Version 3.0.0, 03-JUN-1997 (WLT)
-!!
-!!        The entry points CIDFRM and CNMFRM were added so that
-!!        user's may determine the frame-id and name to associated
-!!        with a planetary object.
-!!
-!!-    SPICELIB Version 2.0.0, 04-APR-1997 (WLT)
-!!
-!!        The routine was upgraded to reflect that a block of
-!!        frame ID codes have been reserved for use by the DSN.
-!!        ID codes 13001 to 13999 have been set aside for DSN
-!!        models for the orientation of the earth. These frames
-!!        are all PCK frames. Moreover, the PCK ID code to
-!!        use with these frames is simply the Frame-Code minus 10000.
-!!        All of these frames are centered at the earth (body 399).
-!!
-!!-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
-!!
-!!        The values NINERT and NNINRT are included instead of
-!!        being declared locally.
-!!
-!!-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Find the bodyfixed frame associated with an object
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: prefix, repmc, ucase
       use pepper_inc_ninert
@@ -4914,257 +4506,226 @@ contains
       return
       end procedure cnmfrm
 
+      !> ## Detailed Input
+      !>
+      !>     FRCLSS   is the class or type of the frame. This identifies
+      !>              which subsystem will be used to perform frame
+      !>              transformations.
+      !>
+      !>     CLSSID   is the ID code used for the frame within its class.
+      !>              This may be different from the frame ID code.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     FRCODE   is the frame ID code for the reference frame
+      !>              identified by FRCLSS and CLSSID.
+      !>
+      !>     FRNAME   is the name of the frame identified by FRCLSS and
+      !>              CLSSID. FRNAME should be declared as CHARACTER*(32)
+      !>              to ensure that it can contain the full name of the
+      !>              frame. If FRNAME does not have enough room to hold
+      !>              the full name of the frame, the name will be
+      !>              truncated on the right.
+      !>
+      !>     CENT     is the body ID code for the center of the reference
+      !>              frame identified by FRCLSS and CLSSID.
+      !>
+      !>     FOUND    is .TRUE. if FRCODE, FRNAME, and CENT are available.
+      !>              Otherwise, FOUND is returned with the value .FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  This routine assumes that the first frame found with matching
+      !>         class and class ID is the correct one. SPICE's frame system
+      !>         does not diagnose the situation where there are multiple,
+      !>         distinct frames with matching classes and class ID codes, but
+      !>         this situation could occur if such conflicting frame
+      !>         specifications are loaded via one or more frame kernels. The
+      !>         user is responsible for avoiding such frame specification
+      !>         conflicts.
+      !>
+      !>     2)  If FRNAME does not have room to contain the frame name, the
+      !>         name will be truncated on the right. (Declaring FRNAME to be
+      !>         CHARACTER*(32) will ensure that the name will not be
+      !>         truncated).
+      !>
+      !>     3)  If a frame class assignment is found that associates a
+      !>         string (as opposed to numeric) value with a frame class
+      !>         keyword, the error SPICE(INVALIDFRAMEDEF) is signaled.
+      !>
+      !>     4)  If a frame class assignment is found that matches the input
+      !>         class, but a corresponding class ID assignment is not
+      !>         found in the kernel pool, the error SPICE(INVALIDFRAMEDEF)
+      !>         is signaled.
+      !>
+      !>     5)  If a frame specification is found in the kernel pool with
+      !>         matching frame class and class ID, but either the frame name
+      !>         or frame ID code are not found, the error
+      !>         SPICE(INVALIDFRAMEDEF) is signaled.
+      !>
+      !>     6)  If a frame specification is found in the kernel pool with
+      !>         matching frame class and class ID, but the frame center
+      !>         is not found, an error is signaled by a routine
+      !>         in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine allows the user to determine the frame associated
+      !>     with a given frame class and class ID code. The built-in frame
+      !>     list is searched first for a matching frame; if no match is
+      !>     found, then the kernel POOL is searched.
+      !>
+      !>     Since the neither the frame class nor the class ID are primary
+      !>     keys, searching for matching frames is a linear (and therefore
+      !>     typically slow) process.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) The following code example demonstrates how to find the frame
+      !>        information about a frame by its ID using FRINFO and
+      !>        by its class and class ID using CCIFRM.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM CCIFRM_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local parameters.
+      !>        C
+      !>              INTEGER               FRNLEN
+      !>              PARAMETER           ( FRNLEN = 32 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(FRNLEN)    FRNAME
+      !>
+      !>              INTEGER               CENTR1
+      !>              INTEGER               CENTR2
+      !>              INTEGER               CLSS
+      !>              INTEGER               CLSSID
+      !>              INTEGER               FRCOD1
+      !>              INTEGER               FRCOD2
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Find the frame code associated with ITRF93
+      !>        C
+      !>              FRNAME = 'ITRF93'
+      !>              CALL NAMFRM ( FRNAME, FRCOD1 )
+      !>
+      !>        C
+      !>        C     Get the frame information.
+      !>        C
+      !>              CALL FRINFO ( FRCOD1, CENTR1, CLSS, CLSSID, FOUND )
+      !>
+      !>              IF ( .NOT. FOUND ) THEN
+      !>
+      !>                    WRITE(*,*) 'No info found for frame ', FRCOD1
+      !>                    STOP
+      !>
+      !>              END IF
+      !>
+      !>              WRITE(*,'(A)')    'Frame ITRF93 info:'
+      !>              WRITE(*,'(A,I6)') '   Frame Code: ', FRCOD1
+      !>              WRITE(*,'(A,I6)') '   Center ID : ', CENTR1
+      !>              WRITE(*,'(A,I6)') '   Class     : ', CLSS
+      !>              WRITE(*,'(A,I6)') '   Class ID  : ', CLSSID
+      !>
+      !>        C
+      !>        C     Return the frame name, frame ID, and center associated
+      !>        C     with the frame CLSS and CLSSID.
+      !>        C
+      !>              CALL CCIFRM ( CLSS,   CLSSID, FRCOD2,
+      !>             .              FRNAME, CENTR2, FOUND  )
+      !>
+      !>              IF ( .NOT. FOUND ) THEN
+      !>
+      !>                    WRITE(*,*) 'No info found for type ', CLSS,
+      !>             .                 ' frame ', CLSSID
+      !>                    STOP
+      !>
+      !>              END IF
+      !>
+      !>              WRITE(*,'(A,I3,A,I6,A)') 'Type', CLSS, ' frame', CLSSID,
+      !>             .                         ' info:'
+      !>              WRITE(*,'(2A)')   '   Frame name: ', FRNAME
+      !>              WRITE(*,'(A,I6)') '   Frame Code: ', FRCOD2
+      !>              WRITE(*,'(A,I6)') '   Center ID : ', CENTR2
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>        Frame ITRF93 info:
+      !>           Frame Code:  13000
+      !>           Center ID :    399
+      !>           Class     :      2
+      !>           Class ID  :   3000
+      !>        Type  2 frame  3000 info:
+      !>           Frame name: ITRF93
+      !>           Frame Code:  13000
+      !>           Center ID :    399
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  See item (1) in the $Exceptions section above.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.2.0, 01-OCT-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Added complete code example from existing fragments.
+      !>
+      !>        Changed the input argument name CLASS to FRCLSS for
+      !>        consistency with other routines.
+      !>
+      !>        Updated maximum frame name length from 26 to 32 in
+      !>        $Detailed_Output and $Exceptions section.
+      !>
+      !>-    SPICELIB Version 1.1.1, 02-FEB-2017 (BVS)
+      !>
+      !>        Shortened one of permuted index entries.
+      !>
+      !>-    SPICELIB Version 1.1.0, 08-AUG-2012 (BVS)
+      !>
+      !>        The routine was updated to be more efficient by using hashes
+      !>        instead kernel POOL look-ups for kernel POOL frames and by
+      !>        using hashes instead of ordered array searches for built-in
+      !>        frames.
+      !>
+      !>        Bug fix: CCIFRM logic was corrected to examine the built-in
+      !>        frames before looking at the kernel POOL frames.
+      !>
+      !>-    SPICELIB Version 1.0.0, 05-NOV-2007 (NJB)
       module procedure ccifrm
-!! ## Abstract
-!!
-!!     Return the frame name, frame ID, and center associated with
-!!     a given frame class and class ID.
-!!
-!! ## Required Reading
-!!
-!!     FRAMES
-!!
-!! ## Keywords
-!!
-!!     FRAMES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               FRCLSS
-!!     INTEGER               CLSSID
-!!     INTEGER               FRCODE
-!!     CHARACTER*(*)         FRNAME
-!!     INTEGER               CENT
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     FRCLSS   is the class or type of the frame. This identifies
-!!              which subsystem will be used to perform frame
-!!              transformations.
-!!
-!!     CLSSID   is the ID code used for the frame within its class.
-!!              This may be different from the frame ID code.
-!!
-!! ## Detailed Output
-!!
-!!     FRCODE   is the frame ID code for the reference frame
-!!              identified by FRCLSS and CLSSID.
-!!
-!!     FRNAME   is the name of the frame identified by FRCLSS and
-!!              CLSSID. FRNAME should be declared as CHARACTER*(32)
-!!              to ensure that it can contain the full name of the
-!!              frame. If FRNAME does not have enough room to hold
-!!              the full name of the frame, the name will be
-!!              truncated on the right.
-!!
-!!     CENT     is the body ID code for the center of the reference
-!!              frame identified by FRCLSS and CLSSID.
-!!
-!!     FOUND    is .TRUE. if FRCODE, FRNAME, and CENT are available.
-!!              Otherwise, FOUND is returned with the value .FALSE.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  This routine assumes that the first frame found with matching
-!!         class and class ID is the correct one. SPICE's frame system
-!!         does not diagnose the situation where there are multiple,
-!!         distinct frames with matching classes and class ID codes, but
-!!         this situation could occur if such conflicting frame
-!!         specifications are loaded via one or more frame kernels. The
-!!         user is responsible for avoiding such frame specification
-!!         conflicts.
-!!
-!!     2)  If FRNAME does not have room to contain the frame name, the
-!!         name will be truncated on the right. (Declaring FRNAME to be
-!!         CHARACTER*(32) will ensure that the name will not be
-!!         truncated).
-!!
-!!     3)  If a frame class assignment is found that associates a
-!!         string (as opposed to numeric) value with a frame class
-!!         keyword, the error SPICE(INVALIDFRAMEDEF) is signaled.
-!!
-!!     4)  If a frame class assignment is found that matches the input
-!!         class, but a corresponding class ID assignment is not
-!!         found in the kernel pool, the error SPICE(INVALIDFRAMEDEF)
-!!         is signaled.
-!!
-!!     5)  If a frame specification is found in the kernel pool with
-!!         matching frame class and class ID, but either the frame name
-!!         or frame ID code are not found, the error
-!!         SPICE(INVALIDFRAMEDEF) is signaled.
-!!
-!!     6)  If a frame specification is found in the kernel pool with
-!!         matching frame class and class ID, but the frame center
-!!         is not found, an error is signaled by a routine
-!!         in the call tree of this routine.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine allows the user to determine the frame associated
-!!     with a given frame class and class ID code. The built-in frame
-!!     list is searched first for a matching frame; if no match is
-!!     found, then the kernel POOL is searched.
-!!
-!!     Since the neither the frame class nor the class ID are primary
-!!     keys, searching for matching frames is a linear (and therefore
-!!     typically slow) process.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) The following code example demonstrates how to find the frame
-!!        information about a frame by its ID using FRINFO and
-!!        by its class and class ID using CCIFRM.
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM CCIFRM_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Local parameters.
-!!        C
-!!              INTEGER               FRNLEN
-!!              PARAMETER           ( FRNLEN = 32 )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(FRNLEN)    FRNAME
-!!
-!!              INTEGER               CENTR1
-!!              INTEGER               CENTR2
-!!              INTEGER               CLSS
-!!              INTEGER               CLSSID
-!!              INTEGER               FRCOD1
-!!              INTEGER               FRCOD2
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Find the frame code associated with ITRF93
-!!        C
-!!              FRNAME = 'ITRF93'
-!!              CALL NAMFRM ( FRNAME, FRCOD1 )
-!!
-!!        C
-!!        C     Get the frame information.
-!!        C
-!!              CALL FRINFO ( FRCOD1, CENTR1, CLSS, CLSSID, FOUND )
-!!
-!!              IF ( .NOT. FOUND ) THEN
-!!
-!!                    WRITE(*,*) 'No info found for frame ', FRCOD1
-!!                    STOP
-!!
-!!              END IF
-!!
-!!              WRITE(*,'(A)')    'Frame ITRF93 info:'
-!!              WRITE(*,'(A,I6)') '   Frame Code: ', FRCOD1
-!!              WRITE(*,'(A,I6)') '   Center ID : ', CENTR1
-!!              WRITE(*,'(A,I6)') '   Class     : ', CLSS
-!!              WRITE(*,'(A,I6)') '   Class ID  : ', CLSSID
-!!
-!!        C
-!!        C     Return the frame name, frame ID, and center associated
-!!        C     with the frame CLSS and CLSSID.
-!!        C
-!!              CALL CCIFRM ( CLSS,   CLSSID, FRCOD2,
-!!             .              FRNAME, CENTR2, FOUND  )
-!!
-!!              IF ( .NOT. FOUND ) THEN
-!!
-!!                    WRITE(*,*) 'No info found for type ', CLSS,
-!!             .                 ' frame ', CLSSID
-!!                    STOP
-!!
-!!              END IF
-!!
-!!              WRITE(*,'(A,I3,A,I6,A)') 'Type', CLSS, ' frame', CLSSID,
-!!             .                         ' info:'
-!!              WRITE(*,'(2A)')   '   Frame name: ', FRNAME
-!!              WRITE(*,'(A,I6)') '   Frame Code: ', FRCOD2
-!!              WRITE(*,'(A,I6)') '   Center ID : ', CENTR2
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!        Frame ITRF93 info:
-!!           Frame Code:  13000
-!!           Center ID :    399
-!!           Class     :      2
-!!           Class ID  :   3000
-!!        Type  2 frame  3000 info:
-!!           Frame name: ITRF93
-!!           Frame Code:  13000
-!!           Center ID :    399
-!!
-!! ## Restrictions
-!!
-!!     1)  See item (1) in the $Exceptions section above.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.2.0, 01-OCT-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Added complete code example from existing fragments.
-!!
-!!        Changed the input argument name CLASS to FRCLSS for
-!!        consistency with other routines.
-!!
-!!        Updated maximum frame name length from 26 to 32 in
-!!        $Detailed_Output and $Exceptions section.
-!!
-!!-    SPICELIB Version 1.1.1, 02-FEB-2017 (BVS)
-!!
-!!        Shortened one of permuted index entries.
-!!
-!!-    SPICELIB Version 1.1.0, 08-AUG-2012 (BVS)
-!!
-!!        The routine was updated to be more efficient by using hashes
-!!        instead kernel POOL look-ups for kernel POOL frames and by
-!!        using hashes instead of ordered array searches for built-in
-!!        frames.
-!!
-!!        Bug fix: CCIFRM logic was corrected to examine the built-in
-!!        frames before looking at the kernel POOL frames.
-!!
-!!-    SPICELIB Version 1.0.0, 05-NOV-2007 (NJB)
-!!
-!! ## Index Entries
-!!
-!!     Find info associated with a frame class and class id
-!!     Map frame class and class ID to frame info
-!!     Map frame class and class ID to frame name, id, center
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: prefix, repmc, suffix
       use pepper_inc_ninert
@@ -5177,7 +4738,6 @@ contains
       frname = name
       return
       end procedure ccifrm
-
 
 !> PEPPER: find the kernel variable that defines an item of a frame:
 !> FRAME_<ID code>_<item>, or else FRAME_<name>_<item>. The lookup shared
@@ -5327,7 +4887,6 @@ contains
       end associate
       end procedure frame_name_of
 
-
 !> PEPPER: the frame associated with an object, its name of any length
 !> (the body of CIDFRM).
       module procedure frame_of_center
@@ -5391,7 +4950,6 @@ contains
       end associate
       return
       end procedure frame_of_center
-
 
 !> PEPPER: the frame of a class and class ID, its name of any length
 !> (the body of CCIFRM).

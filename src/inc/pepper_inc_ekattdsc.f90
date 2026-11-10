@@ -23,7 +23,6 @@ module pepper_inc_ekattdsc
    integer               adscsz
    parameter           ( adscsz = 6 )
 
-
 !
 !     Indices of various pieces of attribute descriptors:
 !

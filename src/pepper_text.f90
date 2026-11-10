@@ -12,148 +12,113 @@ submodule (pepper_instance) pepper_text
 
 contains
 
-!$Procedure CYCLEC ( Cycle a character string )
-
+      !> ## Detailed Input
+      !>
+      !>     DIR      is the direction in which the characters in the
+      !>              string are to be cycled.
+      !>
+      !>                    'L' or 'l'  to cycle left.
+      !>                    'R' or 'r'  to cycle right.
+      !>
+      !>     NCYCLE   is the number of times the characters in the string
+      !>              are to be cycled.
+      !>
+      !>     INSTR    is the string to be cycled.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     OUTSTR   is the input string after it has been cycled.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the direction flag is not one of the acceptable values
+      !>         'r', 'R', 'l', 'L',  the error SPICE(INVALIDDIRECTION) is
+      !>         signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     A string is cycled when its contents are shifted to the left
+      !>     or right by one place. A character pushed off one end of the
+      !>     string is brought around to the other end of the string instead
+      !>     of disappearing.
+      !>
+      !>     Leading and trailing blanks are treated just like any other
+      !>     characters.
+      !>
+      !>     If the output string is not large enough to contain the input
+      !>     string, the cycled string is truncated on the right.
+      !>
+      !> ## Examples
+      !>
+      !>     'abcde'   cycled left twice becomes               'cdeab'
+      !>     'abcde '  cycled left twice becomes               'cde ab'
+      !>     'abcde'   cycled right once becomes               'eabcd'
+      !>     'Apple '  cycled left six times becomes           'Apple '
+      !>     'Apple '  cycled right twenty-four times becomes  'Apple '
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  The memory used for the output string must be identical to
+      !>         that used for the input string or be disjoint from the input
+      !>         string memory.
+      !>
+      !>         That is:
+      !>
+      !>            CALL CYCLEN ( STRING, DIR, NCYCLE, STRING )
+      !>
+      !>         will produce correct results with output overwriting input.
+      !>
+      !>            CALL CYCLEN ( STRING(4:20), DIR, NCYCLE, STRING(2:18) )
+      !>
+      !>         will produce garbage results.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.2.0, 12-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.1.0, 18-JUN-1999 (WLT)
+      !>
+      !>        Fixed problem with unbalanced CHKIN/CHKOUT calls.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (WLT)
+      !>
+      !> ## Revisions
+      !>
+      !>-     Beta Version 1.1.0, 6-FEB-1989 (WLT)
+      !>
+      !>      Error handling for bad direction flag added.
       module procedure cyclec
-!! ## Abstract
-!!
-!!     Cycle the contents of a character string to the left or right.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CHARACTER
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_math, only: gcd
       implicit none
 
-! $ Detailed_Input
-!
-!     DIR      is the direction in which the characters in the
-!              string are to be cycled.
-!
-!                    'L' or 'l'  to cycle left.
-!                    'R' or 'r'  to cycle right.
-!
-!     NCYCLE   is the number of times the characters in the string
-!              are to be cycled.
-!
-!     INSTR    is the string to be cycled.
-!
-! $ Detailed_Output
-!
-!     OUTSTR   is the input string after it has been cycled.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the direction flag is not one of the acceptable values
-!         'r', 'R', 'l', 'L',  the error SPICE(INVALIDDIRECTION) is
-!         signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     A string is cycled when its contents are shifted to the left
-!     or right by one place. A character pushed off one end of the
-!     string is brought around to the other end of the string instead
-!     of disappearing.
-!
-!     Leading and trailing blanks are treated just like any other
-!     characters.
-!
-!     If the output string is not large enough to contain the input
-!     string, the cycled string is truncated on the right.
-!
-! $ Examples
-!
-!     'abcde'   cycled left twice becomes               'cdeab'
-!     'abcde '  cycled left twice becomes               'cde ab'
-!     'abcde'   cycled right once becomes               'eabcd'
-!     'Apple '  cycled left six times becomes           'Apple '
-!     'Apple '  cycled right twenty-four times becomes  'Apple '
-!
-! $ Restrictions
-!
-!     1)  The memory used for the output string must be identical to
-!         that used for the input string or be disjoint from the input
-!         string memory.
-!
-!         That is:
-!
-!            CALL CYCLEN ( STRING, DIR, NCYCLE, STRING )
-!
-!         will produce correct results with output overwriting input.
-!
-!            CALL CYCLEN ( STRING(4:20), DIR, NCYCLE, STRING(2:18) )
-!
-!         will produce garbage results.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 12-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.1.0, 18-JUN-1999 (WLT)
-!
-!        Fixed problem with unbalanced CHKIN/CHKOUT calls.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     cycle a character_string
-!
-!-&
-
-! $ Revisions
-!
-!-     Beta Version 1.1.0, 6-FEB-1989 (WLT)
-!
-!      Error handling for bad direction flag added.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       character(1)     last
       character(1)     temp
 
@@ -323,275 +288,241 @@ contains
       return
       end procedure cyclec
 
-!$Procedure REPMD  ( Replace marker with double precision number )
-
+      !> ## Detailed Input
+      !>
+      !>     IN       is an arbitrary character string.
+      !>
+      !>     MARKER   is an arbitrary character string. The first occurrence of
+      !>              MARKER in the input string is to be replaced by VALUE.
+      !>
+      !>              Leading and trailing blanks in MARKER are NOT
+      !>              significant. In particular, no substitution is performed
+      !>              if MARKER is blank.
+      !>
+      !>     VALUE    is an arbitrary double precision number.
+      !>
+      !>     SIGDIG   is the number of significant digits with which VALUE is
+      !>              to be represented. SIGDIG must be greater than zero and
+      !>              less than 15.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     OUT      is the string obtained by substituting the text
+      !>              representation of VALUE for the first occurrence of
+      !>              MARKER in the input string.
+      !>
+      !>              The text representation of VALUE is in scientific
+      !>              notation, having the number of significant digits
+      !>              specified by SIGDIG. The representation of VALUE is
+      !>              produced by the SPICELIB routine DPSTR; see that routine
+      !>              for details concerning the representation of double
+      !>              precision numbers.
+      !>
+      !>              OUT and IN must be identical or disjoint.
+      !>
+      !> ## Parameters
+      !>
+      !>     MAXLDP   is the maximum expected length of the text representation
+      !>              of a double precision number. 23 characters are
+      !>              sufficient to hold any result returned by the SPICELIB
+      !>              routine DPSTR. (See $Restrictions)
+      !>
+      !>              This routine assumes that the input d.p. value is such
+      !>              that its string representation contains no more than
+      !>              MAXLDP characters.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If OUT does not have sufficient length to accommodate the
+      !>         result of the substitution, the result will be truncated on
+      !>         the right.
+      !>
+      !>     2)  If MARKER is blank, or if MARKER is not a substring of IN,
+      !>         no substitution is performed. (OUT and IN are identical.)
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This is one of a family of related routines for inserting values
+      !>     into strings. They are typically to construct messages that
+      !>     are partly fixed, and partly determined at run time. For example,
+      !>     a message like
+      !>
+      !>        'Fifty-one pictures were found in directory [USER.DATA].'
+      !>
+      !>     might be constructed from the fixed string
+      !>
+      !>        '#1 pictures were found in directory #2.'
+      !>
+      !>     by the calls
+      !>
+      !>        CALL REPMCT ( STRING, '#1',  51,           'C', STRING )
+      !>        CALL REPMC  ( STRING, '#2', '[USER.DATA]',      STRING )
+      !>
+      !>     which substitute the cardinal text 'Fifty-one' and the character
+      !>     string '[USER.DATA]' for the markers '#1' and '#2' respectively.
+      !>
+      !>     The complete list of routines is shown below.
+      !>
+      !>        REPMC    ( Replace marker with character string value )
+      !>        REPMD    ( Replace marker with double precision value )
+      !>        REPMF    ( Replace marker with formatted d.p. value   )
+      !>        REPMI    ( Replace marker with integer value          )
+      !>        REPML    ( Replace marker with logical value          )
+      !>        REPMCT   ( Replace marker with cardinal text          )
+      !>        REPMOT   ( Replace marker with ordinal text           )
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) The following example illustrate the use of REPMD to
+      !>        replace a marker within a string with the text representation
+      !>        of a double precision value.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM REPMD_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local parameters.
+      !>        C
+      !>              INTEGER                 STRLEN
+      !>              PARAMETER             ( STRLEN = 80 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(STRLEN)      INSTR
+      !>              CHARACTER*(STRLEN)      MARKER
+      !>              CHARACTER*(STRLEN)      OUTSTR
+      !>
+      !>        C
+      !>        C     1. Single marker, two significant digits.
+      !>        C
+      !>              MARKER = '#'
+      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>
+      !>              CALL REPMD ( INSTR, MARKER, 5.0D1, 2, OUTSTR )
+      !>
+      !>              WRITE(*,*) 'Case 1: Single marker, two significant '
+      !>             .        // 'digits.'
+      !>              WRITE(*,*) '   Input : ', INSTR
+      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>              WRITE(*,*)
+      !>
+      !>        C
+      !>        C     2. Multiple markers, three significant digits.
+      !>        C
+      !>              MARKER = ' XX '
+      !>              INSTR  = 'Left > Right endpoint. Left: XX; Right: XX'
+      !>
+      !>              CALL REPMD ( INSTR, MARKER, -5.2D-9, 3, OUTSTR )
+      !>
+      !>              WRITE(*,*) 'Case 2: Multiple markers, three '
+      !>             .        // 'significant digits.'
+      !>              WRITE(*,*) '   Input : ', INSTR
+      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>              WRITE(*,*)
+      !>
+      !>        C
+      !>        C     3. Excessive significant digits.
+      !>        C
+      !>              MARKER = '#'
+      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>
+      !>              CALL REPMD ( INSTR, MARKER, 5.0D1, 100, OUTSTR )
+      !>
+      !>              WRITE(*,*) 'Case 3: Excessive significant digits.'
+      !>              WRITE(*,*) '   Input : ', INSTR
+      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>              WRITE(*,*)
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Case 1: Single marker, two significant digits.
+      !>            Input : Invalid value. The value was:  #
+      !>            Output: Invalid value. The value was:  5.0E+01
+      !>
+      !>         Case 2: Multiple markers, three significant digits.
+      !>            Input : Left > Right endpoint. Left: XX; Right: XX
+      !>            Output: Left > Right endpoint. Left: -5.20E-09; Right: XX
+      !>
+      !>         Case 3: Excessive significant digits.
+      !>            Input : Invalid value. The value was:  #
+      !>            Output: Invalid value. The value was:  5.0000000000000E+01
+      !>
+      !>        Note that, in Case #3 even though 100 digits of precision were
+      !>        requested, only 14 were returned.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  The maximum number of significant digits returned is 14.
+      !>
+      !>     2)  This routine makes explicit use of the format of the string
+      !>         returned by the SPICELIB routine DPSTR; should that routine
+      !>         change, substantial work may be required to bring this routine
+      !>         back up to snuff.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.3.0, 03-OCT-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Added complete
+      !>        code example based on existing fragments.
+      !>
+      !>        Added REPML to the list of available replace marker routines in
+      !>        $Particulars and extended the description of MAXLDP in
+      !>        $Parameters.
+      !>
+      !>-    SPICELIB Version 1.2.0, 23-SEP-2013 (BVS)
+      !>
+      !>        Minor efficiency update: the routine now looks up the first
+      !>        and last non-blank characters only once.
+      !>
+      !>-    SPICELIB Version 1.1.0, 15-AUG-2002 (WLT)
+      !>
+      !>        The routine is now error free.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
       module procedure repmd
-!! ## Abstract
-!!
-!!     Replace a marker with a double precision number.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CHARACTER
-!!     CONVERSION
-!!     STRING
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: dpstr, zzrepsub
       implicit none
 
       integer(ip), parameter :: maxldp = 23
 
-! $ Detailed_Input
-!
-!     IN       is an arbitrary character string.
-!
-!     MARKER   is an arbitrary character string. The first occurrence of
-!              MARKER in the input string is to be replaced by VALUE.
-!
-!              Leading and trailing blanks in MARKER are NOT
-!              significant. In particular, no substitution is performed
-!              if MARKER is blank.
-!
-!     VALUE    is an arbitrary double precision number.
-!
-!     SIGDIG   is the number of significant digits with which VALUE is
-!              to be represented. SIGDIG must be greater than zero and
-!              less than 15.
-!
-! $ Detailed_Output
-!
-!     OUT      is the string obtained by substituting the text
-!              representation of VALUE for the first occurrence of
-!              MARKER in the input string.
-!
-!              The text representation of VALUE is in scientific
-!              notation, having the number of significant digits
-!              specified by SIGDIG. The representation of VALUE is
-!              produced by the SPICELIB routine DPSTR; see that routine
-!              for details concerning the representation of double
-!              precision numbers.
-!
-!              OUT and IN must be identical or disjoint.
-!
-! $ Parameters
-!
-!     MAXLDP   is the maximum expected length of the text representation
-!              of a double precision number. 23 characters are
-!              sufficient to hold any result returned by the SPICELIB
-!              routine DPSTR. (See $Restrictions)
-!
-!              This routine assumes that the input d.p. value is such
-!              that its string representation contains no more than
-!              MAXLDP characters.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  If OUT does not have sufficient length to accommodate the
-!         result of the substitution, the result will be truncated on
-!         the right.
-!
-!     2)  If MARKER is blank, or if MARKER is not a substring of IN,
-!         no substitution is performed. (OUT and IN are identical.)
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This is one of a family of related routines for inserting values
-!     into strings. They are typically to construct messages that
-!     are partly fixed, and partly determined at run time. For example,
-!     a message like
-!
-!        'Fifty-one pictures were found in directory [USER.DATA].'
-!
-!     might be constructed from the fixed string
-!
-!        '#1 pictures were found in directory #2.'
-!
-!     by the calls
-!
-!        CALL REPMCT ( STRING, '#1',  51,           'C', STRING )
-!        CALL REPMC  ( STRING, '#2', '[USER.DATA]',      STRING )
-!
-!     which substitute the cardinal text 'Fifty-one' and the character
-!     string '[USER.DATA]' for the markers '#1' and '#2' respectively.
-!
-!     The complete list of routines is shown below.
-!
-!        REPMC    ( Replace marker with character string value )
-!        REPMD    ( Replace marker with double precision value )
-!        REPMF    ( Replace marker with formatted d.p. value   )
-!        REPMI    ( Replace marker with integer value          )
-!        REPML    ( Replace marker with logical value          )
-!        REPMCT   ( Replace marker with cardinal text          )
-!        REPMOT   ( Replace marker with ordinal text           )
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) The following example illustrate the use of REPMD to
-!        replace a marker within a string with the text representation
-!        of a double precision value.
-!
-!        Example code begins here.
-!
-!              PROGRAM REPMD_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER                 STRLEN
-!              PARAMETER             ( STRLEN = 80 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(STRLEN)      INSTR
-!              CHARACTER*(STRLEN)      MARKER
-!              CHARACTER*(STRLEN)      OUTSTR
-!
-!        C
-!        C     1. Single marker, two significant digits.
-!        C
-!              MARKER = '#'
-!              INSTR  = 'Invalid value. The value was:  #'
-!
-!              CALL REPMD ( INSTR, MARKER, 5.0D1, 2, OUTSTR )
-!
-!              WRITE(*,*) 'Case 1: Single marker, two significant '
-!             .        // 'digits.'
-!              WRITE(*,*) '   Input : ', INSTR
-!              WRITE(*,*) '   Output: ', OUTSTR
-!              WRITE(*,*)
-!
-!        C
-!        C     2. Multiple markers, three significant digits.
-!        C
-!              MARKER = ' XX '
-!              INSTR  = 'Left > Right endpoint. Left: XX; Right: XX'
-!
-!              CALL REPMD ( INSTR, MARKER, -5.2D-9, 3, OUTSTR )
-!
-!              WRITE(*,*) 'Case 2: Multiple markers, three '
-!             .        // 'significant digits.'
-!              WRITE(*,*) '   Input : ', INSTR
-!              WRITE(*,*) '   Output: ', OUTSTR
-!              WRITE(*,*)
-!
-!        C
-!        C     3. Excessive significant digits.
-!        C
-!              MARKER = '#'
-!              INSTR  = 'Invalid value. The value was:  #'
-!
-!              CALL REPMD ( INSTR, MARKER, 5.0D1, 100, OUTSTR )
-!
-!              WRITE(*,*) 'Case 3: Excessive significant digits.'
-!              WRITE(*,*) '   Input : ', INSTR
-!              WRITE(*,*) '   Output: ', OUTSTR
-!              WRITE(*,*)
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Case 1: Single marker, two significant digits.
-!            Input : Invalid value. The value was:  #
-!            Output: Invalid value. The value was:  5.0E+01
-!
-!         Case 2: Multiple markers, three significant digits.
-!            Input : Left > Right endpoint. Left: XX; Right: XX
-!            Output: Left > Right endpoint. Left: -5.20E-09; Right: XX
-!
-!         Case 3: Excessive significant digits.
-!            Input : Invalid value. The value was:  #
-!            Output: Invalid value. The value was:  5.0000000000000E+01
-!
-!        Note that, in Case #3 even though 100 digits of precision were
-!        requested, only 14 were returned.
-!
-! $ Restrictions
-!
-!     1)  The maximum number of significant digits returned is 14.
-!
-!     2)  This routine makes explicit use of the format of the string
-!         returned by the SPICELIB routine DPSTR; should that routine
-!         change, substantial work may be required to bring this routine
-!         back up to snuff.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.3.0, 03-OCT-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example based on existing fragments.
-!
-!        Added REPML to the list of available replace marker routines in
-!        $Particulars and extended the description of MAXLDP in
-!        $Parameters.
-!
-!-    SPICELIB Version 1.2.0, 23-SEP-2013 (BVS)
-!
-!        Minor efficiency update: the routine now looks up the first
-!        and last non-blank characters only once.
-!
-!-    SPICELIB Version 1.1.0, 15-AUG-2002 (WLT)
-!
-!        The routine is now error free.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     replace marker with d.p. number
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       character(maxldp)     substr
 
       integer(ip)           mrknbf
@@ -654,236 +585,202 @@ contains
       return
       end procedure repmd
 
-!$Procedure REPMI  ( Replace marker with integer )
-
+      !> ## Detailed Input
+      !>
+      !>     IN       is an arbitrary character string.
+      !>
+      !>     MARKER   is an arbitrary character string. The first occurrence of
+      !>              MARKER in the input string is to be replaced by VALUE.
+      !>
+      !>              Leading and trailing blanks in MARKER are NOT
+      !>              significant. In particular, no substitution is performed
+      !>              if MARKER is blank.
+      !>
+      !>     VALUE    is an arbitrary integer.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     OUT      is the string obtained by substituting the text
+      !>              representation of VALUE for the first occurrence of
+      !>              MARKER in the input string.
+      !>
+      !>              OUT and IN must be identical or disjoint.
+      !>
+      !> ## Parameters
+      !>
+      !>     MAXLI    is the maximum expected length of the text representation
+      !>              of an integer. 11 characters are sufficient to hold any
+      !>              integer whose absolute value is less than 10 billion.
+      !>
+      !>              This routine assumes that the input integer is such that
+      !>              its string representation contains no more than MAXLI
+      !>              characters.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If OUT does not have sufficient length to accommodate the
+      !>         result of the substitution, the result will be truncated on
+      !>         the right.
+      !>
+      !>     2)  If MARKER is blank, or if MARKER is not a substring of IN,
+      !>         no substitution is performed. (OUT and IN are identical.)
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This is one of a family of related routines for inserting values
+      !>     into strings. They are typically to construct messages that
+      !>     are partly fixed, and partly determined at run time. For example,
+      !>     a message like
+      !>
+      !>        'Fifty-one pictures were found in directory [USER.DATA].'
+      !>
+      !>     might be constructed from the fixed string
+      !>
+      !>        '#1 pictures were found in directory #2.'
+      !>
+      !>     by the calls
+      !>
+      !>        CALL REPMCT ( STRING, '#1',  51,           'C', STRING )
+      !>        CALL REPMC  ( STRING, '#2', '[USER.DATA]',      STRING )
+      !>
+      !>     which substitute the cardinal text 'Fifty-one' and the character
+      !>     string '[USER.DATA]' for the markers '#1' and '#2' respectively.
+      !>
+      !>     The complete list of routines is shown below.
+      !>
+      !>        REPMC    ( Replace marker with character string value )
+      !>        REPMD    ( Replace marker with double precision value )
+      !>        REPMF    ( Replace marker with formatted d.p. value   )
+      !>        REPMI    ( Replace marker with integer value          )
+      !>        REPML    ( Replace marker with logical value          )
+      !>        REPMCT   ( Replace marker with cardinal text          )
+      !>        REPMOT   ( Replace marker with ordinal text           )
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) The following example illustrate the use of REPMI to
+      !>        replace a marker within a string with the text representation
+      !>        of an integer value.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM REPMI_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local parameters.
+      !>        C
+      !>              INTEGER                 STRLEN
+      !>              PARAMETER             ( STRLEN = 80 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(STRLEN)      INSTR
+      !>              CHARACTER*(STRLEN)      MARKER
+      !>              CHARACTER*(STRLEN)      OUTSTR
+      !>
+      !>        C
+      !>        C     1. Single marker
+      !>        C
+      !>              MARKER = '#'
+      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>
+      !>              CALL REPMI ( INSTR, MARKER, 75, OUTSTR )
+      !>
+      !>              WRITE(*,*) 'Case 1: Single marker.'
+      !>              WRITE(*,*) '   Input : ', INSTR
+      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>              WRITE(*,*)
+      !>
+      !>        C
+      !>        C     2. Multiple markers
+      !>        C
+      !>              MARKER = ' XX '
+      !>              INSTR  = 'Left > Right endpoint. Left: XX; Right: XX'
+      !>
+      !>              CALL REPMI ( INSTR, MARKER, 2035, OUTSTR )
+      !>
+      !>              WRITE(*,*) 'Case 2: Multiple markers.'
+      !>              WRITE(*,*) '   Input : ', INSTR
+      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>              WRITE(*,*)
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Case 1: Single marker.
+      !>            Input : Invalid value. The value was:  #
+      !>            Output: Invalid value. The value was:  75
+      !>
+      !>         Case 2: Multiple markers.
+      !>            Input : Left > Right endpoint. Left: XX; Right: XX
+      !>            Output: Left > Right endpoint. Left: 2035; Right: XX
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.3.0, 21-AUG-2020 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Added complete
+      !>        code example based on existing fragments.
+      !>
+      !>        Added REPML to the list of available replace marker routines in
+      !>        $Particulars and extended MAXLI parameter description in
+      !>        $Parameters.
+      !>
+      !>-    SPICELIB Version 1.2.0, 21-SEP-2013 (BVS)
+      !>
+      !>        Minor efficiency update: the routine now looks up the first
+      !>        and last non-blank characters only once.
+      !>
+      !>-    SPICELIB Version 1.1.0, 15-AUG-2002 (WLT)
+      !>
+      !>        The routine is now error free.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
       module procedure repmi
-!! ## Abstract
-!!
-!!     Replace a marker with an integer.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CHARACTER
-!!     CONVERSION
-!!     STRING
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, zzrepsub
       implicit none
 
       integer(ip), parameter :: maxli = 11
 
-! $ Detailed_Input
-!
-!     IN       is an arbitrary character string.
-!
-!     MARKER   is an arbitrary character string. The first occurrence of
-!              MARKER in the input string is to be replaced by VALUE.
-!
-!              Leading and trailing blanks in MARKER are NOT
-!              significant. In particular, no substitution is performed
-!              if MARKER is blank.
-!
-!     VALUE    is an arbitrary integer.
-!
-! $ Detailed_Output
-!
-!     OUT      is the string obtained by substituting the text
-!              representation of VALUE for the first occurrence of
-!              MARKER in the input string.
-!
-!              OUT and IN must be identical or disjoint.
-!
-! $ Parameters
-!
-!     MAXLI    is the maximum expected length of the text representation
-!              of an integer. 11 characters are sufficient to hold any
-!              integer whose absolute value is less than 10 billion.
-!
-!              This routine assumes that the input integer is such that
-!              its string representation contains no more than MAXLI
-!              characters.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  If OUT does not have sufficient length to accommodate the
-!         result of the substitution, the result will be truncated on
-!         the right.
-!
-!     2)  If MARKER is blank, or if MARKER is not a substring of IN,
-!         no substitution is performed. (OUT and IN are identical.)
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This is one of a family of related routines for inserting values
-!     into strings. They are typically to construct messages that
-!     are partly fixed, and partly determined at run time. For example,
-!     a message like
-!
-!        'Fifty-one pictures were found in directory [USER.DATA].'
-!
-!     might be constructed from the fixed string
-!
-!        '#1 pictures were found in directory #2.'
-!
-!     by the calls
-!
-!        CALL REPMCT ( STRING, '#1',  51,           'C', STRING )
-!        CALL REPMC  ( STRING, '#2', '[USER.DATA]',      STRING )
-!
-!     which substitute the cardinal text 'Fifty-one' and the character
-!     string '[USER.DATA]' for the markers '#1' and '#2' respectively.
-!
-!     The complete list of routines is shown below.
-!
-!        REPMC    ( Replace marker with character string value )
-!        REPMD    ( Replace marker with double precision value )
-!        REPMF    ( Replace marker with formatted d.p. value   )
-!        REPMI    ( Replace marker with integer value          )
-!        REPML    ( Replace marker with logical value          )
-!        REPMCT   ( Replace marker with cardinal text          )
-!        REPMOT   ( Replace marker with ordinal text           )
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) The following example illustrate the use of REPMI to
-!        replace a marker within a string with the text representation
-!        of an integer value.
-!
-!        Example code begins here.
-!
-!              PROGRAM REPMI_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER                 STRLEN
-!              PARAMETER             ( STRLEN = 80 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(STRLEN)      INSTR
-!              CHARACTER*(STRLEN)      MARKER
-!              CHARACTER*(STRLEN)      OUTSTR
-!
-!        C
-!        C     1. Single marker
-!        C
-!              MARKER = '#'
-!              INSTR  = 'Invalid value. The value was:  #'
-!
-!              CALL REPMI ( INSTR, MARKER, 75, OUTSTR )
-!
-!              WRITE(*,*) 'Case 1: Single marker.'
-!              WRITE(*,*) '   Input : ', INSTR
-!              WRITE(*,*) '   Output: ', OUTSTR
-!              WRITE(*,*)
-!
-!        C
-!        C     2. Multiple markers
-!        C
-!              MARKER = ' XX '
-!              INSTR  = 'Left > Right endpoint. Left: XX; Right: XX'
-!
-!              CALL REPMI ( INSTR, MARKER, 2035, OUTSTR )
-!
-!              WRITE(*,*) 'Case 2: Multiple markers.'
-!              WRITE(*,*) '   Input : ', INSTR
-!              WRITE(*,*) '   Output: ', OUTSTR
-!              WRITE(*,*)
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Case 1: Single marker.
-!            Input : Invalid value. The value was:  #
-!            Output: Invalid value. The value was:  75
-!
-!         Case 2: Multiple markers.
-!            Input : Left > Right endpoint. Left: XX; Right: XX
-!            Output: Left > Right endpoint. Left: 2035; Right: XX
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.3.0, 21-AUG-2020 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example based on existing fragments.
-!
-!        Added REPML to the list of available replace marker routines in
-!        $Particulars and extended MAXLI parameter description in
-!        $Parameters.
-!
-!-    SPICELIB Version 1.2.0, 21-SEP-2013 (BVS)
-!
-!        Minor efficiency update: the routine now looks up the first
-!        and last non-blank characters only once.
-!
-!-    SPICELIB Version 1.1.0, 15-AUG-2002 (WLT)
-!
-!        The routine is now error free.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     replace marker with integer
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       character(maxli)      substr
 
       integer(ip)           mrknbf
@@ -932,171 +829,137 @@ contains
       return
       end procedure repmi
 
-!$Procedure REPSUB ( Replace one substring with another )
-
+      !> ## Detailed Input
+      !>
+      !>     IN       is an arbitrary character string.
+      !>
+      !>     LEFT,
+      !>     RIGHT    are the ends of the substring to be replaced.
+      !>              Legitimate substrings satisfy the following
+      !>              conditions
+      !>
+      !>                  RIGHT > LEFT - 2
+      !>                  LEFT  > 1
+      !>                  RIGHT < LEN(STRING) + 1
+      !>
+      !>              This allows users to refer to zero-length substrings
+      !>              (null substrings) of IN.
+      !>
+      !>     STRING   is the replacement string. Essentially, the
+      !>              substring (LEFT:RIGHT) is removed from the
+      !>              input string, and STRING is inserted at the
+      !>              point of removal.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     OUT      is the resulting string. OUT may overwrite IN.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If RIGHT is one less than LEFT, the substring to
+      !>         replace will be the null substring. In this case,
+      !>         STRING will be inserted between IN(:RIGHT) and IN(LEFT:).
+      !>
+      !>     2)  If LEFT is smaller than one, the error SPICE(BEFOREBEGSTR)
+      !>         is signaled.
+      !>
+      !>     3)  If RIGHT is greater than the length of the input string,
+      !>         the error SPICE(PASTENDSTR) is signaled.
+      !>
+      !>     4)  If RIGHT is less than LEFT-1, the error SPICE(BADSUBSTR)
+      !>         is signaled.
+      !>
+      !>     5)  Whenever the output string is too small to hold the result,
+      !>         the result is truncated on the right.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Ideally, replacement could be done with simple concatenation,
+      !>
+      !>        OUT = IN(1:LEFT-1) // STRING // IN(RIGHT+1: )
+      !>
+      !>     but the Fortran 77 standard makes this illegal for strings of
+      !>     unknown length.
+      !>
+      !> ## Examples
+      !>
+      !>     A typical use for this routine might be to replace all
+      !>     occurrences of one word in a string with another word.
+      !>     For example, the following code fragment replaces every
+      !>     occurrence of the word 'AND' with the word 'OR' in the
+      !>     character string LINE.
+      !>
+      !>        LEFT = WDINDX ( LINE, 'AND' )
+      !>
+      !>        DO WHILE ( LEFT .NE. 0 )
+      !>           CALL   REPSUB ( LINE, LEFT, LEFT+2, 'OR', LINE )
+      !>           LEFT = WDINDX ( LINE, 'AND' )
+      !>        END DO
+      !>
+      !>     This routine can also be used to insert substring between
+      !>     two characters. Consider the string:
+      !>
+      !>         IN   = 'The defendant,, was found innocent.'
+      !>
+      !>     to insert ' Imelda Marcos' between the first and second commas
+      !>     determine the location of the pair ',,'
+      !>
+      !>        RIGHT = POS ( IN, ',,', 1 )
+      !>        LEFT  = RIGHT + 1
+      !>
+      !>     then
+      !>
+      !>        CALL REPSUB ( IN, LEFT, RIGHT, ' Imelda Marcos', OUT )
+      !>
+      !>     The output (OUT) will have the value:
+      !>
+      !>        'The defendant, Imelda Marcos, was found innocent.'
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  The memory used by STRING and OUT must be disjoint. The memory
+      !>         used by IN and OUT must be identical or disjoint.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.2, 17-JUN-1999 (WLT)
+      !>
+      !>        Fixed example code fragment.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 24-AUG-1990 (WLT) (IMU)
       module procedure repsub
-!! ## Abstract
-!!
-!!     Replace the substring (LEFT:RIGHT) with a string of any length.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ASSIGNMENT
-!!     CHARACTER
-!!     STRING
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     IN       is an arbitrary character string.
-!
-!     LEFT,
-!     RIGHT    are the ends of the substring to be replaced.
-!              Legitimate substrings satisfy the following
-!              conditions
-!
-!                  RIGHT > LEFT - 2
-!                  LEFT  > 1
-!                  RIGHT < LEN(STRING) + 1
-!
-!              This allows users to refer to zero-length substrings
-!              (null substrings) of IN.
-!
-!     STRING   is the replacement string. Essentially, the
-!              substring (LEFT:RIGHT) is removed from the
-!              input string, and STRING is inserted at the
-!              point of removal.
-!
-! $ Detailed_Output
-!
-!     OUT      is the resulting string. OUT may overwrite IN.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If RIGHT is one less than LEFT, the substring to
-!         replace will be the null substring. In this case,
-!         STRING will be inserted between IN(:RIGHT) and IN(LEFT:).
-!
-!     2)  If LEFT is smaller than one, the error SPICE(BEFOREBEGSTR)
-!         is signaled.
-!
-!     3)  If RIGHT is greater than the length of the input string,
-!         the error SPICE(PASTENDSTR) is signaled.
-!
-!     4)  If RIGHT is less than LEFT-1, the error SPICE(BADSUBSTR)
-!         is signaled.
-!
-!     5)  Whenever the output string is too small to hold the result,
-!         the result is truncated on the right.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     Ideally, replacement could be done with simple concatenation,
-!
-!        OUT = IN(1:LEFT-1) // STRING // IN(RIGHT+1: )
-!
-!     but the Fortran 77 standard makes this illegal for strings of
-!     unknown length.
-!
-! $ Examples
-!
-!     A typical use for this routine might be to replace all
-!     occurrences of one word in a string with another word.
-!     For example, the following code fragment replaces every
-!     occurrence of the word 'AND' with the word 'OR' in the
-!     character string LINE.
-!
-!        LEFT = WDINDX ( LINE, 'AND' )
-!
-!        DO WHILE ( LEFT .NE. 0 )
-!           CALL   REPSUB ( LINE, LEFT, LEFT+2, 'OR', LINE )
-!           LEFT = WDINDX ( LINE, 'AND' )
-!        END DO
-!
-!     This routine can also be used to insert substring between
-!     two characters. Consider the string:
-!
-!         IN   = 'The defendant,, was found innocent.'
-!
-!     to insert ' Imelda Marcos' between the first and second commas
-!     determine the location of the pair ',,'
-!
-!        RIGHT = POS ( IN, ',,', 1 )
-!        LEFT  = RIGHT + 1
-!
-!     then
-!
-!        CALL REPSUB ( IN, LEFT, RIGHT, ' Imelda Marcos', OUT )
-!
-!     The output (OUT) will have the value:
-!
-!        'The defendant, Imelda Marcos, was found innocent.'
-!
-! $ Restrictions
-!
-!     1)  The memory used by STRING and OUT must be disjoint. The memory
-!         used by IN and OUT must be identical or disjoint.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.2, 17-JUN-1999 (WLT)
-!
-!        Fixed example code fragment.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 24-AUG-1990 (WLT) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     replace one substring with another substring
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           inlen
       integer(ip)           strlen
       integer(ip)           outlen
@@ -1225,147 +1088,111 @@ contains
       return
       end procedure repsub
 
-!$Procedure REMSUB ( Remove a substring )
-
+      !> ## Detailed Input
+      !>
+      !>     IN       is an input character string, from which a substring
+      !>              is to be removed.
+      !>
+      !>     LEFT,
+      !>     RIGHT    are the ends of the substring to be removed.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     OUT      is the output string. This is equivalent to the
+      !>              string that would be created by the concatenation
+      !>
+      !>                    OUT = IN(1 : LEFT-1) // IN(RIGHT+1 : )
+      !>
+      !>              If the string is too long to fit into OUT, it is
+      !>              truncated on the right.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If LEFT > RIGHT, RIGHT < 1, LEFT < 1, RIGHT > LEN(IN), or
+      !>         LEFT > LEN(IN), the error SPICE(INVALIDINDEX) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Move the characters, beginning with RIGHT, one at a time to the
+      !>     positions immediately following LEFT. This has the same effect
+      !>     as the concatenation
+      !>
+      !>           OUT = IN(1 : LEFT-1) // IN(RIGHT+1 : )
+      !>
+      !>     Because this operation is not standard for strings of length (*),
+      !>     this routine does not use concatenation.
+      !>
+      !> ## Examples
+      !>
+      !>     The following examples illustrate the use of REMSUB.
+      !>
+      !>     IN                 LEFT  RIGHT        OUT
+      !>     -----------------  ----  -----        ------------------------
+      !>     'ABCDEFGHIJ'          3      5        'ABFGHIJ'
+      !>     'The best rabbit'     5      8        'The  rabbit'
+      !>     'The other woman'     1      4        'other woman'
+      !>     'An Apple a day'      2      2        'A apple a day'
+      !>     'An Apple a day'      5      2         An error is signaled.
+      !>     'An Apple a day'      0      0         An error is signaled.
+      !>     'An Apple a day'     -3      3         An error is signaled.
+      !>
+      !>     Whenever an error has been signaled, the contents of OUT are
+      !>     unpredictable.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
+      !>
+      !> ## Revisions
+      !>
+      !>-     Beta Version 2.0.0, 05-JAN-1989 (HAN)
+      !>
+      !>         Error handling was added to detect invalid character
+      !>         positions. If LEFT > RIGHT, RIGHT < 1, LEFT < 1,
+      !>         RIGHT > LEN(IN), or LEFT > LEN(IN), an error is signaled.
       module procedure remsub
-!! ## Abstract
-!!
-!!     Remove the substring (LEFT:RIGHT) from a character string.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ASSIGNMENT
-!!     CHARACTER
-!!     STRING
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
-
-! $ Detailed_Input
-!
-!     IN       is an input character string, from which a substring
-!              is to be removed.
-!
-!     LEFT,
-!     RIGHT    are the ends of the substring to be removed.
-!
-! $ Detailed_Output
-!
-!     OUT      is the output string. This is equivalent to the
-!              string that would be created by the concatenation
-!
-!                    OUT = IN(1 : LEFT-1) // IN(RIGHT+1 : )
-!
-!              If the string is too long to fit into OUT, it is
-!              truncated on the right.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If LEFT > RIGHT, RIGHT < 1, LEFT < 1, RIGHT > LEN(IN), or
-!         LEFT > LEN(IN), the error SPICE(INVALIDINDEX) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     Move the characters, beginning with RIGHT, one at a time to the
-!     positions immediately following LEFT. This has the same effect
-!     as the concatenation
-!
-!           OUT = IN(1 : LEFT-1) // IN(RIGHT+1 : )
-!
-!     Because this operation is not standard for strings of length (*),
-!     this routine does not use concatenation.
-!
-! $ Examples
-!
-!     The following examples illustrate the use of REMSUB.
-!
-!     IN                 LEFT  RIGHT        OUT
-!     -----------------  ----  -----        ------------------------
-!     'ABCDEFGHIJ'          3      5        'ABFGHIJ'
-!     'The best rabbit'     5      8        'The  rabbit'
-!     'The other woman'     1      4        'other woman'
-!     'An Apple a day'      2      2        'A apple a day'
-!     'An Apple a day'      5      2         An error is signaled.
-!     'An Apple a day'      0      0         An error is signaled.
-!     'An Apple a day'     -3      3         An error is signaled.
-!
-!     Whenever an error has been signaled, the contents of OUT are
-!     unpredictable.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     H.A. Neilan        (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
-!
-!-&
-
-! $ Index_Entries
-!
-!     remove a substring
-!
-!-&
-
-! $ Revisions
-!
-!-     Beta Version 2.0.0, 05-JAN-1989 (HAN)
-!
-!         Error handling was added to detect invalid character
-!         positions. If LEFT > RIGHT, RIGHT < 1, LEFT < 1,
-!         RIGHT > LEN(IN), or LEFT > LEN(IN), an error is signaled.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 
 !
 !     Other functions
 !
       integer(ip)      len
 
-!
-!     Local variables
-!
       integer(ip)      inlen
       integer(ip)      outlen
 
@@ -1445,219 +1272,186 @@ contains
       return
       end procedure remsub
 
-!$Procedure INSSUB ( Insert a substring )
-
+      !> ## Detailed Input
+      !>
+      !>     IN       is an input character string, into which a substring
+      !>              is to be inserted.
+      !>
+      !>     SUB      is the substring to be inserted. Leading and trailing
+      !>              blanks are significant.
+      !>
+      !>     LOC      is the index in the input string at which the substring
+      !>              is to be inserted. The range of LOC is 1:LEN(IN). To
+      !>              append to the string, set LOC equal to LEN(IN)+1.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     OUT      is the output string. This is equivalent to the
+      !>              string that would be created by the concatenation
+      !>
+      !>                 OUT = IN(1:LOC-1) // SUB // IN(LOC: )
+      !>
+      !>              If the output string is too long, it is truncated
+      !>              on the right.
+      !>
+      !>              OUT may overwrite IN. OUT may NOT overwrite SUB.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If LOC is not in the interval [1, LEN(IN)+1], the error
+      !>         SPICE(INVALIDINDEX) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Shift the end of the input string, beginning with LOC, to the
+      !>     right, leaving space for the substring. Then insert the substring
+      !>     into the vacated space in the middle of the string. This has
+      !>     the same effect as the concatenation
+      !>
+      !>        OUT = IN(1:LOC-1) // SUB // IN(LOC: )
+      !>
+      !>     Because this operation is not standard for strings of length (*),
+      !>     this routine does not use concatenation.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for these examples may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) The following table illustrates the use of INSSUB.
+      !>
+      !>           IN                SUB      LOC    OUT
+      !>           ----------------- -------  ---    ------------------------
+      !>           'ABCDEFGHIJ'      ' YXZ '    3    'AB XYZ CDEFGHIJ'
+      !>           'The rabbit'      'best '    5    'The best rabbit'
+      !>           ' other woman'    'The'      1    'The other woman'
+      !>           'An Apple a day'  ' keeps'  15    'An Apple a day keeps'
+      !>           'Apple a day'     'An '      0     An error is signaled.
+      !>           'Apple a day'     'An '     -3     An error is signaled.
+      !>           'An Apple a day'  ' keeps'  16     An error is signaled.
+      !>
+      !>     2) INSSUB could be used to insert substrings at any position
+      !>        within the declared length of the input string. Use it to
+      !>        add an ascii arrow (--->) at the end of the string.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM INSSUB_EX2
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local parameters.
+      !>        C
+      !>              INTEGER               STRSZ
+      !>              PARAMETER           ( STRSZ = 20 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(STRSZ)     STRIN
+      !>              CHARACTER*(STRSZ)     STROUT
+      !>
+      !>        C
+      !>        C     Assign the input string.
+      !>        C
+      !>              DATA                  STRIN / '0123456789         .' /
+      !>
+      !>        C
+      !>        C     Insert a substring at index 17. This should leave 5
+      !>        C     blanks after the sequence of numbers. Note that the
+      !>        C     resulting string is truncated.
+      !>        C
+      !>              CALL INSSUB ( STRIN, '--->', 17, STROUT )
+      !>
+      !>              WRITE(*,*) 'Input string:  ', STRIN
+      !>              WRITE(*,*) 'Output string: ', STROUT
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Input string:  0123456789         .
+      !>         Output string: 0123456789      --->
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.2.0, 01-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Updated long error message for LOC out of range check,
+      !>        providing valid range of values.
+      !>
+      !>        Edited the header to comply with NAIF standard. Added complete
+      !>        code example.
+      !>
+      !>-    SPICELIB Version 1.1.0, 24-OCT-1994 (NJB)
+      !>
+      !>        Bug fixes made. Now does discovery check-in. Header sections
+      !>        re-arranged. Some clean-up of header format done.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 1.1.0, 24-OCT-1994 (NJB)
+      !>
+      !>        Bug fix: case where insertion location follows end of
+      !>        input string is now handled correctly. Formerly, an
+      !>        out-of-range substring bound violation was incurred in this
+      !>        case.
+      !>
+      !>        Bug fix: use of SHIFTC routine in old implementation
+      !>        resulted in output string being truncated at length
+      !>        LEN(IN), which is not consistent with the routine's
+      !>        specification.
+      !>
+      !>        Now does discovery check-in. Header sections re-arranged.
+      !>        Some clean-up of header format done.
+      !>
+      !>-    Beta Version 2.0.0, 04-JAN-1989 (HAN)
+      !>
+      !>        If the location at which the substring is to be inserted is
+      !>        not in the interval [1, LEN(IN)+1], an error is signaled.
+      !>        Locations not within that interval refer to non-existent
+      !>        characters positions. (To append to the string, set the
+      !>        location equal to LEN(IN)+1.)
       module procedure inssub
-!! ## Abstract
-!!
-!!     Insert a substring into a character string at a specified
-!!     location.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ASSIGNMENT
-!!     CHARACTER
-!!     STRING
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     IN       is an input character string, into which a substring
-!              is to be inserted.
-!
-!     SUB      is the substring to be inserted. Leading and trailing
-!              blanks are significant.
-!
-!     LOC      is the index in the input string at which the substring
-!              is to be inserted. The range of LOC is 1:LEN(IN). To
-!              append to the string, set LOC equal to LEN(IN)+1.
-!
-! $ Detailed_Output
-!
-!     OUT      is the output string. This is equivalent to the
-!              string that would be created by the concatenation
-!
-!                 OUT = IN(1:LOC-1) // SUB // IN(LOC: )
-!
-!              If the output string is too long, it is truncated
-!              on the right.
-!
-!              OUT may overwrite IN. OUT may NOT overwrite SUB.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If LOC is not in the interval [1, LEN(IN)+1], the error
-!         SPICE(INVALIDINDEX) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     Shift the end of the input string, beginning with LOC, to the
-!     right, leaving space for the substring. Then insert the substring
-!     into the vacated space in the middle of the string. This has
-!     the same effect as the concatenation
-!
-!        OUT = IN(1:LOC-1) // SUB // IN(LOC: )
-!
-!     Because this operation is not standard for strings of length (*),
-!     this routine does not use concatenation.
-!
-! $ Examples
-!
-!     The numerical results shown for these examples may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) The following table illustrates the use of INSSUB.
-!
-!           IN                SUB      LOC    OUT
-!           ----------------- -------  ---    ------------------------
-!           'ABCDEFGHIJ'      ' YXZ '    3    'AB XYZ CDEFGHIJ'
-!           'The rabbit'      'best '    5    'The best rabbit'
-!           ' other woman'    'The'      1    'The other woman'
-!           'An Apple a day'  ' keeps'  15    'An Apple a day keeps'
-!           'Apple a day'     'An '      0     An error is signaled.
-!           'Apple a day'     'An '     -3     An error is signaled.
-!           'An Apple a day'  ' keeps'  16     An error is signaled.
-!
-!     2) INSSUB could be used to insert substrings at any position
-!        within the declared length of the input string. Use it to
-!        add an ascii arrow (--->) at the end of the string.
-!
-!        Example code begins here.
-!
-!              PROGRAM INSSUB_EX2
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER               STRSZ
-!              PARAMETER           ( STRSZ = 20 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(STRSZ)     STRIN
-!              CHARACTER*(STRSZ)     STROUT
-!
-!        C
-!        C     Assign the input string.
-!        C
-!              DATA                  STRIN / '0123456789         .' /
-!
-!        C
-!        C     Insert a substring at index 17. This should leave 5
-!        C     blanks after the sequence of numbers. Note that the
-!        C     resulting string is truncated.
-!        C
-!              CALL INSSUB ( STRIN, '--->', 17, STROUT )
-!
-!              WRITE(*,*) 'Input string:  ', STRIN
-!              WRITE(*,*) 'Output string: ', STROUT
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Input string:  0123456789         .
-!         Output string: 0123456789      --->
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     H.A. Neilan        (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 01-OCT-2021 (JDR) (NJB)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Updated long error message for LOC out of range check,
-!        providing valid range of values.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example.
-!
-!-    SPICELIB Version 1.1.0, 24-OCT-1994 (NJB)
-!
-!        Bug fixes made. Now does discovery check-in. Header sections
-!        re-arranged. Some clean-up of header format done.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-!
-!-&
-
-! $ Index_Entries
-!
-!     insert a substring
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 24-OCT-1994 (NJB)
-!
-!        Bug fix: case where insertion location follows end of
-!        input string is now handled correctly. Formerly, an
-!        out-of-range substring bound violation was incurred in this
-!        case.
-!
-!        Bug fix: use of SHIFTC routine in old implementation
-!        resulted in output string being truncated at length
-!        LEN(IN), which is not consistent with the routine's
-!        specification.
-!
-!        Now does discovery check-in. Header sections re-arranged.
-!        Some clean-up of header format done.
-!
-!-    Beta Version 2.0.0, 04-JAN-1989 (HAN)
-!
-!        If the location at which the substring is to be inserted is
-!        not in the interval [1, LEN(IN)+1], an error is signaled.
-!        Locations not within that interval refer to non-existent
-!        characters positions. (To append to the string, set the
-!        location equal to LEN(IN)+1.)
-!
-!-&
-
-!
-!     Local Variables
-!
       character(1)          chr
 
       integer(ip)           from
@@ -1787,143 +1581,109 @@ contains
       return
       end procedure inssub
 
-!$Procedure SHIFTC ( Shift a character string )
-
+      !> ## Detailed Input
+      !>
+      !>     IN       is the input character string.
+      !>
+      !>     DIR      is the direction in which the characters in the
+      !>              string are to be shifted.
+      !>
+      !>                    'L' or 'l'  to shift left.
+      !>                    'R' or 'r'  to shift right.
+      !>
+      !>     NSHIFT   is the number of times the string is to be
+      !>              shifted.
+      !>
+      !>     FILLC    is the character with which spaces left vacant by
+      !>              the shift are to be filled.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     OUT      is the output string. This is the input string,
+      !>              shifted N times, filled with FILLC.
+      !>
+      !>              OUT may overwrite IN.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  A negative shift in one direction is equal to a positive
+      !>         shift in the other.
+      !>
+      !>     2)  If a legal direction ('L', 'l', 'R', 'r') is not supplied,
+      !>         the error SPICE(ILLEGSHIFTDIR) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The first NSHIFT characters of the output string are filled
+      !>     with the fill character, and the input string is appended.
+      !>
+      !> ## Examples
+      !>
+      !>     If FILLC = ' '
+      !>
+      !>            'abcde'   shifted left twice becomes     'cde  '
+      !>            'abcde'   shifted right once becomes     ' abcd'
+      !>
+      !>     If FILLC = '.'
+      !>
+      !>            '12345 '  shifted right once becomes     '.12345'
+      !>            'Apple '  shifted left ten times becomes '......'
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  SHIFTC is being maintained for historical reasons only.
+      !>         To avoid the overhead imposed by the error handling in this
+      !>         routine, use the equivalent routines SHIFTL and SHIFTR.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    Beta Version 1.1.0, 17-OCT-1988 (IMU)
+      !>
+      !>        Dick Simpson reported that the statement
+      !>
+      !>           OUT(N+1: ) = IN
+      !>
+      !>        which began the right-shift section failed on his Data
+      !>        General, presumably because it requires temporary buffering
+      !>        of characters. The new version seems to work for all cases.
+      !>        It has been tested on the VAX and on the Sun (f77 compiler).
       module procedure shiftc
-!! ## Abstract
-!!
-!!     Shift the contents of a character string to the left or right.
-!!     Characters moved past the beginning or end of the string are
-!!     lost. Vacant spaces are filled with a specified character.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CHARACTER
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: shiftl, shiftr
       implicit none
-
-! $ Detailed_Input
-!
-!     IN       is the input character string.
-!
-!     DIR      is the direction in which the characters in the
-!              string are to be shifted.
-!
-!                    'L' or 'l'  to shift left.
-!                    'R' or 'r'  to shift right.
-!
-!     NSHIFT   is the number of times the string is to be
-!              shifted.
-!
-!     FILLC    is the character with which spaces left vacant by
-!              the shift are to be filled.
-!
-! $ Detailed_Output
-!
-!     OUT      is the output string. This is the input string,
-!              shifted N times, filled with FILLC.
-!
-!              OUT may overwrite IN.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  A negative shift in one direction is equal to a positive
-!         shift in the other.
-!
-!     2)  If a legal direction ('L', 'l', 'R', 'r') is not supplied,
-!         the error SPICE(ILLEGSHIFTDIR) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The first NSHIFT characters of the output string are filled
-!     with the fill character, and the input string is appended.
-!
-! $ Examples
-!
-!     If FILLC = ' '
-!
-!            'abcde'   shifted left twice becomes     'cde  '
-!            'abcde'   shifted right once becomes     ' abcd'
-!
-!     If FILLC = '.'
-!
-!            '12345 '  shifted right once becomes     '.12345'
-!            'Apple '  shifted left ten times becomes '......'
-!
-! $ Restrictions
-!
-!     1)  SHIFTC is being maintained for historical reasons only.
-!         To avoid the overhead imposed by the error handling in this
-!         routine, use the equivalent routines SHIFTL and SHIFTR.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     shift a character_string
-!
-!-&
-
-! $ Revisions
-!
-!-    Beta Version 1.1.0, 17-OCT-1988 (IMU)
-!
-!        Dick Simpson reported that the statement
-!
-!           OUT(N+1: ) = IN
-!
-!        which began the right-shift section failed on his Data
-!        General, presumably because it requires temporary buffering
-!        of characters. The new version seems to work for all cases.
-!        It has been tested on the VAX and on the Sun (f77 compiler).
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 
 !
 !     Standard SPICE error handling.
@@ -1961,163 +1721,128 @@ contains
       return
       end procedure shiftc
 
-!$Procedure CHCKID ( Check ID string )
-
+      !> ## Detailed Input
+      !>
+      !>     CLASS    is a descriptive string indicating the type of
+      !>              object represented by ID. Examples are
+      !>              'SPK segment identifier', 'DAF internal file name',
+      !>              or 'EK table name'.
+      !>
+      !>              If the input ID is found to be invalid, CLASS is
+      !>              used in the error message generated by this
+      !>              routine.
+      !>
+      !>     MAXLEN   is the maximum allowed non-blank length of the
+      !>              input ID string. If ID has any non-blank
+      !>              characters at positions greater than MAXLEN,
+      !>              an error will be signaled.
+      !>
+      !>     ID       is the input ID string to be checked. In order
+      !>              to be considered valid, ID must contain only
+      !>              printing characters and must satisfy the condition
+      !>
+      !>                 LASTNB( ID )  <  MAXLEN
+      !>                               -
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None. See $Particulars for a description of the effect of this
+      !>     routine.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If ID contains any nonprintable characters, the error
+      !>         SPICE(NONPRINTABLECHARS) is signaled.
+      !>
+      !>     2)  If MAXLEN is non-positive, the error SPICE(INVALIDCOUNT) is
+      !>          signaled.
+      !>
+      !>     3)  If ID contains any non-blank characters past position
+      !>         MAXLEN, the error SPICE(IDSTRINGTOOLONG) is signaled.
+      !>
+      !>     4)  If CLASS contains any non-printing characters, the error
+      !>         SPICE(NONPRINTABLECHARS) is signaled.
+      !>
+      !>     5)  CLASS is allowed to be blank. The word 'ID' is used in
+      !>         place of the class string in any error messages in this
+      !>         case.
+      !>
+      !>     6)  The error messages output by this routine have a maximum
+      !>         length of 320 characters. If substitution of CLASS and
+      !>         ID into the long messages causes overflow, the messages
+      !>         will be truncated on the right.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine operates by side effects: it validates an ID string
+      !>     and signals an error if the ID has either of the following
+      !>     problems:
+      !>
+      !>     -  There are non-printing characters in the ID string.
+      !>
+      !>     -  The last non-blank character in the string occurs at a
+      !>        location having index higher than a specified value.
+      !>
+      !>     The error message signaled by this routine contains the offending
+      !>     ID string and indicates the class of item to which ID belongs.
+      !>     The form of the message is:
+      !>
+      !>         The <CLASS> <'ID'> is invalid; <reason>
+      !>
+      !> ## Examples
+      !>
+      !>     1)  If
+      !>
+      !>            CLASS  = 'segment identifier'
+      !>            MAXLEN =  40
+      !>
+      !>         and
+      !>
+      !>            ID = 'Example EK created on March 28, 1995 by NJB/NAIF'
+      !>
+      !>         the error message
+      !>
+      !>            The segment identifier 'Example EK created on March 28,
+      !>            1995 by NJB/NAIF' is invalid; the last non-blank character
+      !>            is located at position 48.
+      !>
+      !>         will be signaled.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 02-JUN-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.0, 16-JUN-1995 (NJB)
       module procedure chckid
-!! ## Abstract
-!!
-!!     Validate an ID string: check for non-printing characters
-!!     or excessive non-blank length.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     STRING
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: frstnp
       implicit none
 
-! $ Detailed_Input
-!
-!     CLASS    is a descriptive string indicating the type of
-!              object represented by ID. Examples are
-!              'SPK segment identifier', 'DAF internal file name',
-!              or 'EK table name'.
-!
-!              If the input ID is found to be invalid, CLASS is
-!              used in the error message generated by this
-!              routine.
-!
-!     MAXLEN   is the maximum allowed non-blank length of the
-!              input ID string. If ID has any non-blank
-!              characters at positions greater than MAXLEN,
-!              an error will be signaled.
-!
-!     ID       is the input ID string to be checked. In order
-!              to be considered valid, ID must contain only
-!              printing characters and must satisfy the condition
-!
-!                 LASTNB( ID )  <  MAXLEN
-!                               -
-!
-! $ Detailed_Output
-!
-!     None. See $Particulars for a description of the effect of this
-!     routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If ID contains any nonprintable characters, the error
-!         SPICE(NONPRINTABLECHARS) is signaled.
-!
-!     2)  If MAXLEN is non-positive, the error SPICE(INVALIDCOUNT) is
-!          signaled.
-!
-!     3)  If ID contains any non-blank characters past position
-!         MAXLEN, the error SPICE(IDSTRINGTOOLONG) is signaled.
-!
-!     4)  If CLASS contains any non-printing characters, the error
-!         SPICE(NONPRINTABLECHARS) is signaled.
-!
-!     5)  CLASS is allowed to be blank. The word 'ID' is used in
-!         place of the class string in any error messages in this
-!         case.
-!
-!     6)  The error messages output by this routine have a maximum
-!         length of 320 characters. If substitution of CLASS and
-!         ID into the long messages causes overflow, the messages
-!         will be truncated on the right.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine operates by side effects: it validates an ID string
-!     and signals an error if the ID has either of the following
-!     problems:
-!
-!     -  There are non-printing characters in the ID string.
-!
-!     -  The last non-blank character in the string occurs at a
-!        location having index higher than a specified value.
-!
-!     The error message signaled by this routine contains the offending
-!     ID string and indicates the class of item to which ID belongs.
-!     The form of the message is:
-!
-!         The <CLASS> <'ID'> is invalid; <reason>
-!
-! $ Examples
-!
-!     1)  If
-!
-!            CLASS  = 'segment identifier'
-!            MAXLEN =  40
-!
-!         and
-!
-!            ID = 'Example EK created on March 28, 1995 by NJB/NAIF'
-!
-!         the error message
-!
-!            The segment identifier 'Example EK created on March 28,
-!            1995 by NJB/NAIF' is invalid; the last non-blank character
-!            is located at position 48.
-!
-!         will be signaled.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 02-JUN-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 16-JUN-1995 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     check an ID string
-!     validate an ID string
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           chrcod
       integer(ip)           i
       integer(ip)           l
@@ -2215,156 +1940,123 @@ contains
       return
       end procedure chckid
 
-!$Procedure COUNTC ( Count characters in a text file )
-
+      !> ## Detailed Input
+      !>
+      !>     UNIT     is a logical unit that has been connected to a
+      !>              text file by the calling program. Use the routine
+      !>              TXTOPR to open the file for read access and get its
+      !>              logical unit. A text file is a formatted,
+      !>              sequential file that contains only printable
+      !>              characters:  ASCII 32-126.
+      !>
+      !>     BLINE,
+      !>     ELINE    are line numbers in the text file. BLINE is
+      !>              the line where the count will begin, and ELINE
+      !>              is the line where the count will end. The
+      !>              number of characters in the beginning and ending
+      !>              lines are included in the total count.
+      !>
+      !>              By convention, line 1 is the first line of the file.
+      !>
+      !>     LINE     on input, is an arbitrary character string whose
+      !>              contents are ignored. LINE is used to read lines
+      !>              from the file connected to UNIT; its function
+      !>              is to determine the maximum length of the lines
+      !>              that can be read from the file. Lines longer
+      !>              than the declared length of LINE are truncated
+      !>              as they are read.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     LINE     on output, is undefined.
+      !>
+      !>     The function returns the number of characters in the group of
+      !>     lines in the text file beginning with BLINE and ending with ELINE.
+      !>     Trailing blanks on a line are not included in the count.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If an error occurs while reading from the input file,
+      !>         the error SPICE(FILEREADFAILED) is signaled.
+      !>
+      !>     2)  If a non-printing ASCII character is encountered during
+      !>         the count, the error SPICE(INVALIDTEXT) is signaled.
+      !>
+      !>     3)  If BLINE is greater than ELINE or if the file does not
+      !>         contain both of this lines, the error SPICE(CANNOTFINDGRP)
+      !>         is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See argument UNIT. COUNTC rewinds the text file connected to
+      !>     UNIT and then steps through the file. The next read statement
+      !>     after calling COUNTC would return the line after ELINE.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine counts characters in a group of lines in a text
+      !>     file. Using COUNTC, you can determine in advance how much space
+      !>     is required to store those characters.
+      !>
+      !> ## Examples
+      !>
+      !>     The following code fragment opens an existing text file for
+      !>     read access and counts the characters that it contains in
+      !>     the first five lines. We'll assume that the longest line
+      !>     in the file is 80 characters.
+      !>
+      !>        INTEGER               COUNTC
+      !>        INTEGER               UNIT
+      !>        INTEGER               N
+      !>        CHARACTER*(80)        LINE
+      !>
+      !>        CALL TXTOPR ( 'DATA.TXT', UNIT )
+      !>
+      !>        N = COUNTC ( UNIT, 1, 5, LINE )
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     J.E. McLean        (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.2.0, 18-MAR-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.1.0, 17-MAY-1994 (HAN)
+      !>
+      !>        Set the default function value to either 0, 0.0D0, .FALSE.,
+      !>        or blank depending on the type of the function.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
       module procedure countc
-!! ## Abstract
-!!
-!!     Count the characters in a group of lines in a text file.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CHARACTERS
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: astrip
       implicit none
 
-! $ Detailed_Input
-!
-!     UNIT     is a logical unit that has been connected to a
-!              text file by the calling program. Use the routine
-!              TXTOPR to open the file for read access and get its
-!              logical unit. A text file is a formatted,
-!              sequential file that contains only printable
-!              characters:  ASCII 32-126.
-!
-!     BLINE,
-!     ELINE    are line numbers in the text file. BLINE is
-!              the line where the count will begin, and ELINE
-!              is the line where the count will end. The
-!              number of characters in the beginning and ending
-!              lines are included in the total count.
-!
-!              By convention, line 1 is the first line of the file.
-!
-!     LINE     on input, is an arbitrary character string whose
-!              contents are ignored. LINE is used to read lines
-!              from the file connected to UNIT; its function
-!              is to determine the maximum length of the lines
-!              that can be read from the file. Lines longer
-!              than the declared length of LINE are truncated
-!              as they are read.
-!
-! $ Detailed_Output
-!
-!     LINE     on output, is undefined.
-!
-!     The function returns the number of characters in the group of
-!     lines in the text file beginning with BLINE and ending with ELINE.
-!     Trailing blanks on a line are not included in the count.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If an error occurs while reading from the input file,
-!         the error SPICE(FILEREADFAILED) is signaled.
-!
-!     2)  If a non-printing ASCII character is encountered during
-!         the count, the error SPICE(INVALIDTEXT) is signaled.
-!
-!     3)  If BLINE is greater than ELINE or if the file does not
-!         contain both of this lines, the error SPICE(CANNOTFINDGRP)
-!         is signaled.
-!
-! $ Files
-!
-!     See argument UNIT. COUNTC rewinds the text file connected to
-!     UNIT and then steps through the file. The next read statement
-!     after calling COUNTC would return the line after ELINE.
-!
-! $ Particulars
-!
-!     This routine counts characters in a group of lines in a text
-!     file. Using COUNTC, you can determine in advance how much space
-!     is required to store those characters.
-!
-! $ Examples
-!
-!     The following code fragment opens an existing text file for
-!     read access and counts the characters that it contains in
-!     the first five lines. We'll assume that the longest line
-!     in the file is 80 characters.
-!
-!        INTEGER               COUNTC
-!        INTEGER               UNIT
-!        INTEGER               N
-!        CHARACTER*(80)        LINE
-!
-!        CALL TXTOPR ( 'DATA.TXT', UNIT )
-!
-!        N = COUNTC ( UNIT, 1, 5, LINE )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     J.E. McLean        (JPL)
-!     H.A. Neilan        (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 18-MAR-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.1.0, 17-MAY-1994 (HAN)
-!
-!        Set the default function value to either 0, 0.0D0, .FALSE.,
-!        or blank depending on the type of the function.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-!
-!-&
-
-! $ Index_Entries
-!
-!     count characters in a text file
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           chars
       integer(ip)           iostat
       integer(ip)           linect
@@ -2486,275 +2178,254 @@ contains
       return
       end procedure countc
 
-!$Procedure HX2INT  ( Signed hexadecimal string to integer )
-
+      !> ## Detailed Input
+      !>
+      !>     STRING   is the hexadecimal string to be converted to an integer.
+      !>
+      !>              The following table describes the character set used
+      !>              to represent the hexadecimal digits and their
+      !>              corresponding values.
+      !>
+      !>              Character    Value           Character    Value
+      !>              ---------    -----           ---------    -----
+      !>                '0'          0                '8'          8
+      !>                '1'          1                '9'          9
+      !>                '2'          2              'A','a'       10
+      !>                '3'          3              'B','b'       11
+      !>                '4'          4              'C','c'       12
+      !>                '5'          5              'D','d'       13
+      !>                '6'          6              'E','e'       14
+      !>                '7'          7              'F','f'       15
+      !>
+      !>             The plus sign, '+', and the minus sign, '-', are used as
+      !>             well, and they have their usual meanings.
+      !>
+      !>             A hexadecimal character string parsed by this routine
+      !>             should consist of a sign, '+' or '-' (the plus sign is
+      !>             optional for nonnegative numbers), followed immediately
+      !>             by a contiguous sequence of hexadecimal digits, e.g.:
+      !>
+      !>                (1)   +h h ... h
+      !>                        1 2     n
+      !>
+      !>                (2)   -h h ... h
+      !>                        1 2     n
+      !>
+      !>                (3)   h h ... h
+      !>                       1 2     n
+      !>
+      !>             where h  represents an hexadecimal digit.
+      !>                    i
+      !>
+      !>             STRING may have leading and trailing blanks, but blanks
+      !>             embedded within the significant portion of the character
+      !>             string are not allowed. This includes any blanks which
+      !>             appear between the sign character and the first
+      !>             hexadecimal digit.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NUMBER   is the integer value to be returned. The value of this
+      !>              variable is not changed if an error occurs while parsing
+      !>              the hexadecimal character string.
+      !>
+      !>     ERROR    is a logical flag which indicates whether an error
+      !>              occurred while attempting to parse NUMBER from the
+      !>              hexadecimal character string STRING. ERROR will have the
+      !>              value .TRUE. if an error occurs. It will have the value
+      !>              .FALSE. otherwise.
+      !>
+      !>     ERRMSG   contains a descriptive error message if an error
+      !>              occurs while attempting to parse NUMBER from the
+      !>              hexadecimal character string STRING, blank otherwise.
+      !>              The error message will be left justified.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If an unexpected character is encountered while parsing the
+      !>         hexadecimal character string, an appropriate error message
+      !>         will be set, and the routine will exit. The value of NUMBER
+      !>         will be unchanged.
+      !>
+      !>     2)  If the string represents a number that is larger than
+      !>         the maximum representable integer an appropriate error
+      !>         message will be set, and the routine will exit. The value
+      !>         of NUMBER will be unchanged.
+      !>
+      !>     3)  If the string represents a number that is smaller than
+      !>         the minimum representable integer, an appropriate error
+      !>         message will be set, and the routine will exit. The value
+      !>         of NUMBER will be unchanged.
+      !>
+      !>     4)  If the input string is blank, an appropriate error message
+      !>         will be set, and the routine will exit. The value of NUMBER
+      !>         will be unchanged.
+      !>
+      !>     5)  If the error message string is not long enough to contain
+      !>         the entire error message, the error message will be
+      !>         truncated on the right.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine will convert a signed hexadecimal character string
+      !>     representation of an integer into its equivalent integer. This
+      !>     provides a machine independent mechanism for storing or porting
+      !>     integer values. This routine is used by the routine HX2DP which
+      !>     converts a character string representation of a double precision
+      !>     into its equivalent double precision value.
+      !>
+      !>     This routine is one of a pair of routines which are used to
+      !>     perform conversions between integers and equivalent signed
+      !>     hexadecimal character strings:
+      !>
+      !>           INT2HX -- Convert an integer into a signed hexadecimal
+      !>                     character string.
+      !>
+      !>           HX2INT -- Convert a signed hexadecimal character string
+      !>                     into an integer.
+      !>
+      !> ## Examples
+      !>
+      !>     All of the values shown are for a two's complement 32 bit
+      !>     representation for signed integers.
+      !>
+      !>     The following argument values illustrate the action of HX2INT for
+      !>     various input values.
+      !>
+      !>         STRING                 NUMBER        ERROR   ERRMSG
+      !>         ---------------------  ------------  ------  ------
+      !>          '1'                    1            .FALSE.   ' '
+      !>          '-1'                  -1            .FALSE.   ' '
+      !>          'DF'                   223          .FALSE.   ' '
+      !>          'Df'                   223          .FALSE.   ' '
+      !>          '+3ABC'                15036        .FALSE.   ' '
+      !>          'ff'                   255          .FALSE.   ' '
+      !>          '-20'                 -32           .FALSE.   ' '
+      !>          '0'                    0            .FALSE.   ' '
+      !>
+      !>          '7FFFFFFF'             2147483647   .FALSE.   ' '
+      !>          (Maximum 32 bit integer)
+      !>
+      !>          '-7FFFFFFF'           -2147483647   .FALSE.   ' '
+      !>          (Minimum 32 bit integer + 1)
+      !>
+      !>          '-80000000'           -2147483648   .FALSE.   ' '
+      !>          (Minimum 32 bit integer)
+      !>
+      !>          STRING = ' '
+      !>          NUMBER = ( Not defined )
+      !>          ERROR  = .TRUE.
+      !>          ERRMSG = 'ERROR: A blank input string is not allowed.'
+      !>
+      !>          STRING = '-AB238Q'
+      !>          NUMBER = ( Not defined )
+      !>          ERROR  = .TRUE.
+      !>          ERRMSG = 'ERROR: Illegal character ''Q'' encountered.'
+      !>
+      !>          STRING = '- AAA'
+      !>          NUMBER = ( Not defined )
+      !>          ERROR  = .TRUE.
+      !>          ERRMSG = 'ERROR: Illegal character '' '' encountered.'
+      !>
+      !>          STRING = '80000000'
+      !>          NUMBER = ( Not defined )
+      !>          ERROR  = .TRUE.
+      !>          ERRMSG = 'ERROR: Integer too large to be represented.'
+      !>
+      !>          STRING = '-800F0000'
+      !>          NUMBER = ( Not defined )
+      !>          ERROR  = .TRUE.
+      !>          ERRMSG = 'ERROR: Integer too small to be represented.'
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.1, 20-AUG-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.1.0, 10-MAR-1994 (KRG)
+      !>
+      !>        Changed an IF test operand from .LE. to .LT. so that
+      !>        the ELSE IF clause could be reached. This change has
+      !>        NO effect on the execution of the routine because it
+      !>        makes use of a base that is a power of 2 (16), so the
+      !>        ELSE IF clause never needs to be reached. The algorithm
+      !>        was meant to be as general as possible, however, so that
+      !>        only the base and digits would need to be changed in order to
+      !>        implement a different number base.
+      !>
+      !>-    SPICELIB Version 1.0.0, 22-OCT-1992 (KRG)
+      !>
+      !> ## Revisions
+      !>
+      !>-     SPICELIB Version 1.1.0, 10-MAR-1994 (KRG)
+      !>
+      !>         Changed an IF test operand from .LE. to .LT. so that
+      !>         the ELSE IF clause could be reached. This change has
+      !>         NO effect on the execution of the routine because it
+      !>         makes use of a base that is a power of 2 (16), so the
+      !>         ELSE IF clause never needs to be reached. The algorithm
+      !>         was meant to be as general as possible, however, so that
+      !>         only the base and digits would need to be changed in order to
+      !>         implement a different number base.
+      !>
+      !>         Old code was:
+      !>
+      !>            IF ( TMPNUM .LE. MAXI ) THEN
+      !>
+      !>               TMPNUM = TMPNUM * BASE + IDIGIT
+      !>               POS    = POS + 1
+      !>
+      !>            ELSE IF ( ( TMPNUM .EQ. MAXI   ) .AND.
+      !>     .                ( IDIGIT .LE. MAXMOD ) ) THEN
+      !>
+      !>               TMPNUM = TMPNUM * BASE + IDIGIT
+      !>               POS    = POS + 1
+      !>
+      !>            ELSE ...
+      !>
+      !>         New code:
+      !>
+      !>            IF ( TMPNUM .LT. MAXI ) THEN
+      !>
+      !>               TMPNUM = TMPNUM * BASE + IDIGIT
+      !>               POS    = POS + 1
+      !>
+      !>            ELSE IF ( ( TMPNUM .EQ. MAXI   ) .AND.
+      !>     .                ( IDIGIT .LE. MAXMOD ) ) THEN
+      !>
+      !>               TMPNUM = TMPNUM * BASE + IDIGIT
+      !>               POS    = POS + 1
+      !>
+      !>            ELSE ...
+      !>
+      !>     SPICELIB functions
+      !>
+      !>     Local Parameters
       module procedure hx2int
-!! ## Abstract
-!!
-!!     Convert a signed hexadecimal string representation of an integer
-!!     to its equivalent integer.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ALPHANUMERIC
-!!     CONVERSION
-!!
-!! ## Detailed Input
-!!
-!!     STRING   is the hexadecimal string to be converted to an integer.
-!!
-!!              The following table describes the character set used
-!!              to represent the hexadecimal digits and their
-!!              corresponding values.
-!!
-!!              Character    Value           Character    Value
-!!              ---------    -----           ---------    -----
-!!                '0'          0                '8'          8
-!!                '1'          1                '9'          9
-!!                '2'          2              'A','a'       10
-!!                '3'          3              'B','b'       11
-!!                '4'          4              'C','c'       12
-!!                '5'          5              'D','d'       13
-!!                '6'          6              'E','e'       14
-!!                '7'          7              'F','f'       15
-!!
-!!             The plus sign, '+', and the minus sign, '-', are used as
-!!             well, and they have their usual meanings.
-!!
-!!             A hexadecimal character string parsed by this routine
-!!             should consist of a sign, '+' or '-' (the plus sign is
-!!             optional for nonnegative numbers), followed immediately
-!!             by a contiguous sequence of hexadecimal digits, e.g.:
-!!
-!!                (1)   +h h ... h
-!!                        1 2     n
-!!
-!!                (2)   -h h ... h
-!!                        1 2     n
-!!
-!!                (3)   h h ... h
-!!                       1 2     n
-!!
-!!             where h  represents an hexadecimal digit.
-!!                    i
-!!
-!!             STRING may have leading and trailing blanks, but blanks
-!!             embedded within the significant portion of the character
-!!             string are not allowed. This includes any blanks which
-!!             appear between the sign character and the first
-!!             hexadecimal digit.
-!!
-!! ## Detailed Output
-!!
-!!     NUMBER   is the integer value to be returned. The value of this
-!!              variable is not changed if an error occurs while parsing
-!!              the hexadecimal character string.
-!!
-!!     ERROR    is a logical flag which indicates whether an error
-!!              occurred while attempting to parse NUMBER from the
-!!              hexadecimal character string STRING. ERROR will have the
-!!              value .TRUE. if an error occurs. It will have the value
-!!              .FALSE. otherwise.
-!!
-!!     ERRMSG   contains a descriptive error message if an error
-!!              occurs while attempting to parse NUMBER from the
-!!              hexadecimal character string STRING, blank otherwise.
-!!              The error message will be left justified.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!!     1)  If an unexpected character is encountered while parsing the
-!!         hexadecimal character string, an appropriate error message
-!!         will be set, and the routine will exit. The value of NUMBER
-!!         will be unchanged.
-!!
-!!     2)  If the string represents a number that is larger than
-!!         the maximum representable integer an appropriate error
-!!         message will be set, and the routine will exit. The value
-!!         of NUMBER will be unchanged.
-!!
-!!     3)  If the string represents a number that is smaller than
-!!         the minimum representable integer, an appropriate error
-!!         message will be set, and the routine will exit. The value
-!!         of NUMBER will be unchanged.
-!!
-!!     4)  If the input string is blank, an appropriate error message
-!!         will be set, and the routine will exit. The value of NUMBER
-!!         will be unchanged.
-!!
-!!     5)  If the error message string is not long enough to contain
-!!         the entire error message, the error message will be
-!!         truncated on the right.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine will convert a signed hexadecimal character string
-!!     representation of an integer into its equivalent integer. This
-!!     provides a machine independent mechanism for storing or porting
-!!     integer values. This routine is used by the routine HX2DP which
-!!     converts a character string representation of a double precision
-!!     into its equivalent double precision value.
-!!
-!!     This routine is one of a pair of routines which are used to
-!!     perform conversions between integers and equivalent signed
-!!     hexadecimal character strings:
-!!
-!!           INT2HX -- Convert an integer into a signed hexadecimal
-!!                     character string.
-!!
-!!           HX2INT -- Convert a signed hexadecimal character string
-!!                     into an integer.
-!!
-!! ## Examples
-!!
-!!     All of the values shown are for a two's complement 32 bit
-!!     representation for signed integers.
-!!
-!!     The following argument values illustrate the action of HX2INT for
-!!     various input values.
-!!
-!!         STRING                 NUMBER        ERROR   ERRMSG
-!!         ---------------------  ------------  ------  ------
-!!          '1'                    1            .FALSE.   ' '
-!!          '-1'                  -1            .FALSE.   ' '
-!!          'DF'                   223          .FALSE.   ' '
-!!          'Df'                   223          .FALSE.   ' '
-!!          '+3ABC'                15036        .FALSE.   ' '
-!!          'ff'                   255          .FALSE.   ' '
-!!          '-20'                 -32           .FALSE.   ' '
-!!          '0'                    0            .FALSE.   ' '
-!!
-!!          '7FFFFFFF'             2147483647   .FALSE.   ' '
-!!          (Maximum 32 bit integer)
-!!
-!!          '-7FFFFFFF'           -2147483647   .FALSE.   ' '
-!!          (Minimum 32 bit integer + 1)
-!!
-!!          '-80000000'           -2147483648   .FALSE.   ' '
-!!          (Minimum 32 bit integer)
-!!
-!!          STRING = ' '
-!!          NUMBER = ( Not defined )
-!!          ERROR  = .TRUE.
-!!          ERRMSG = 'ERROR: A blank input string is not allowed.'
-!!
-!!          STRING = '-AB238Q'
-!!          NUMBER = ( Not defined )
-!!          ERROR  = .TRUE.
-!!          ERRMSG = 'ERROR: Illegal character ''Q'' encountered.'
-!!
-!!          STRING = '- AAA'
-!!          NUMBER = ( Not defined )
-!!          ERROR  = .TRUE.
-!!          ERRMSG = 'ERROR: Illegal character '' '' encountered.'
-!!
-!!          STRING = '80000000'
-!!          NUMBER = ( Not defined )
-!!          ERROR  = .TRUE.
-!!          ERRMSG = 'ERROR: Integer too large to be represented.'
-!!
-!!          STRING = '-800F0000'
-!!          NUMBER = ( Not defined )
-!!          ERROR  = .TRUE.
-!!          ERRMSG = 'ERROR: Integer too small to be represented.'
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.1.1, 20-AUG-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 1.1.0, 10-MAR-1994 (KRG)
-!!
-!!        Changed an IF test operand from .LE. to .LT. so that
-!!        the ELSE IF clause could be reached. This change has
-!!        NO effect on the execution of the routine because it
-!!        makes use of a base that is a power of 2 (16), so the
-!!        ELSE IF clause never needs to be reached. The algorithm
-!!        was meant to be as general as possible, however, so that
-!!        only the base and digits would need to be changed in order to
-!!        implement a different number base.
-!!
-!!-    SPICELIB Version 1.0.0, 22-OCT-1992 (KRG)
-!!
-!! ## Index Entries
-!!
-!!     convert signed hexadecimal string to integer
-!!
-!! ## Revisions
-!!
-!!-     SPICELIB Version 1.1.0, 10-MAR-1994 (KRG)
-!!
-!!         Changed an IF test operand from .LE. to .LT. so that
-!!         the ELSE IF clause could be reached. This change has
-!!         NO effect on the execution of the routine because it
-!!         makes use of a base that is a power of 2 (16), so the
-!!         ELSE IF clause never needs to be reached. The algorithm
-!!         was meant to be as general as possible, however, so that
-!!         only the base and digits would need to be changed in order to
-!!         implement a different number base.
-!!
-!!         Old code was:
-!!
-!!            IF ( TMPNUM .LE. MAXI ) THEN
-!!
-!!               TMPNUM = TMPNUM * BASE + IDIGIT
-!!               POS    = POS + 1
-!!
-!!            ELSE IF ( ( TMPNUM .EQ. MAXI   ) .AND.
-!!     .                ( IDIGIT .LE. MAXMOD ) ) THEN
-!!
-!!               TMPNUM = TMPNUM * BASE + IDIGIT
-!!               POS    = POS + 1
-!!
-!!            ELSE ...
-!!
-!!         New code:
-!!
-!!            IF ( TMPNUM .LT. MAXI ) THEN
-!!
-!!               TMPNUM = TMPNUM * BASE + IDIGIT
-!!               POS    = POS + 1
-!!
-!!            ELSE IF ( ( TMPNUM .EQ. MAXI   ) .AND.
-!!     .                ( IDIGIT .LE. MAXMOD ) ) THEN
-!!
-!!               TMPNUM = TMPNUM * BASE + IDIGIT
-!!               POS    = POS + 1
-!!
-!!            ELSE ...
-!!
-!!     SPICELIB functions
-!!
-!!     Local Parameters
-!!
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
       use pepper_strings, only: repmc
@@ -2776,9 +2447,6 @@ contains
       integer(ip), parameter :: minmod = base * mini - intmin
       integer(ip), parameter :: maxi   = intmax / base
       integer(ip), parameter :: maxmod = intmax - base * maxi
-!
-!     Local variables
-!
       integer(ip)           idigit
       integer(ip)           letter
       integer(ip)           pos
@@ -2788,13 +2456,6 @@ contains
 
       logical               more
       logical               negtiv
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
 
 !
 !     The input hexadecimal string is scanned from left to right, and
@@ -3031,277 +2692,244 @@ contains
       return
       end procedure hx2int
 
-!$Procedure LOCATI ( Locate an identifier in a list )
-
+      !> ## Detailed Input
+      !>
+      !>     ID       is an integer array that serves as an identifier
+      !>              for some object. For example it might be a SPICE
+      !>              id code for a planet or satellite; it might be the
+      !>              instrument id and mode of operation of an instrument.
+      !>              See the $Examples section for more details.
+      !>
+      !>     IDSZ     is the number of components in the array ID.
+      !>
+      !>     LIST     is an array containing several ID's. The array
+      !>              should be declared so as to have the same upper
+      !>              bound at least as large as the upper bound used
+      !>              in the declaration of POOL.
+      !>
+      !>     POOL     is a linked list pool that gives the search order
+      !>              for examining LIST to locate ID's. The declaration
+      !>              of POOL and LIST need to be compatible. Normally,
+      !>              the declaration should look like this:
+      !>
+      !>                 INTEGER   LIST (IDSZ,         LSTSIZ )
+      !>                 INTEGER   POOL (   2, LBPOOL: LSTSIZ )
+      !>
+      !>              If POOL is declared with the statement
+      !>
+      !>                 INTEGER   POOL (   2, LBPOOL: PSIZE  )
+      !>
+      !>              then you must make sure that PSIZE is less than
+      !>              or equal to LSTSIZ.
+      !>
+      !>              POOL should be initialized before the first
+      !>              call to this routine with the SPICE routine
+      !>              LNKINI.
+      !>
+      !>     AT       is a value that is set by this routine and that
+      !>              you should never reset yourself. It points
+      !>              to the head of the linked list used for
+      !>              searching LIST. Changing AT will destroy the
+      !>              link between POOL and LIST.
+      !>
+      !>              There is one exception to these restrictions.
+      !>              The first call to this routine that occurs after
+      !>              initializing POOL, AT may have any value. It will
+      !>              be set upon output and from that time on, you should
+      !>              not alter its value except by calling this routine
+      !>              to do so.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     AT       on output AT points to the location in LIST
+      !>              of ID.
+      !>
+      !>     PRESNT   is a logical flag. It indicates whether or not
+      !>              ID was already present in the LIST when this
+      !>              routine was called. If ID was already in LIST
+      !>              PRESNT is returned with the value .TRUE. Otherwise
+      !>              it is returned with the value .FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the value of AT is less than zero or greater than
+      !>         the declared size of POOL (except immediately after
+      !>         initializing or re-initializing POOL), the
+      !>         error SPICE(ADDRESSOUTOFBOUNDS) is signaled.
+      !>
+      !>     2)  If the linked list pool POOL is corrupted by a higher
+      !>         level routine, a diagnosis of the problem will be
+      !>         made by a routine called by this one.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine serves as a utility for managing the bookkeeping
+      !>     needed when using a local buffering scheme which removes
+      !>     the last used item when the local buffer becomes full.
+      !>
+      !>     It is primarily a programming utility. Unless you are dealing
+      !>     with a problem very similar to the one just described, you
+      !>     probably shouldn't be using this routine.
+      !>
+      !>     The example below illustrates the intended use of this
+      !>     routine.
+      !>
+      !> ## Examples
+      !>
+      !>     Consider the following programming situation.
+      !>
+      !>     Suppose that a routine is being written that will
+      !>     access large amounts of data stored in the SPICE
+      !>     kernel pool. Kernel pool access requires overhead that
+      !>     may be prohibitive under some circumstances. Buffering
+      !>     data locally and only fetching data from the kernel pool
+      !>     when it has not been buffered locally, may substantially
+      !>     improve the performance of the routine being written.
+      !>
+      !>     However, since FORTRAN does not allow dynamic memory allocation
+      !>     the local data storage must be set at compile time. As
+      !>     a result the local data buffer might become full during
+      !>     an execution of your program. If data for an item needs
+      !>     to be fetched from the kernel pool once the buffer has become
+      !>     full, you must either repeatedly call the kernel pool to fetch
+      !>     the new data or overwrite some of the data in your local buffer.
+      !>
+      !>     This routine helps with the decisions of which items to
+      !>     overwrite. In addition it always moves the last requested
+      !>     item to the head of the index used for searching the buffered
+      !>     ID's. In this way if the same item is needed many times
+      !>     in succession, there will be very little overhead associated
+      !>     with finding the item. Thus the routine spends its time
+      !>     in computing the desired quantities, not in looking up the
+      !>     parameters needed for the computation.
+      !>
+      !>     Below is a fragment of code that illustrates how this routine
+      !>     should be used. In the situation outlined above. We'll suppose
+      !>     that we are fetching MDLSIZ double precision numbers from the
+      !>     kernel pool that are associated with the item
+      !>
+      !>         'BODYid_MAGMODEL'
+      !>
+      !>     And that we are computing something with this model data.
+      !>
+      !>        INTEGER               MDLSIZ
+      !>        PARAMETER           ( MDLSIZ = xxxxxx )
+      !>
+      !>        We'll create room to buffer this data for 8 bodies.
+      !>
+      !>        INTEGER               PSIZE
+      !>        PARAMETER           ( PSIZE = 8 )
+      !>
+      !>        The ID's we shall be using are 1-dimensional. They are body
+      !>        ID's for planets or and their satellites.
+      !>
+      !>        INTEGER               IDSZ
+      !>        PARAMETER           ( IDSZ = 1 )
+      !>
+      !>        INTEGER               AT
+      !>        INTEGER               DIM
+      !>        INTEGER               LIST   (   IDSZ,  PSIZE        )
+      !>        INTEGER               POOL   (      2,  LBPOOL:PSIZE )
+      !>
+      !>        DOUBLE PRECISION      MAGMDL ( MDLSIZ,  PSIZE        )
+      !>        DOUBLE PRECISION      MODEL  ( MDLSIZ                )
+      !>
+      !>        LOGICAL               FIRST
+      !>        LOGICAL               PRESNT
+      !>
+      !>        SAVE
+      !>
+      !>        DATA                  FIRST / .TRUE. /
+      !>
+      !>        The block below handles initializing the linked list pool.
+      !>
+      !>        IF ( FIRST ) THEN
+      !>
+      !>           FIRST = .FALSE.
+      !>
+      !>           CALL LNKINI ( PSIZE, POOL )
+      !>
+      !>        END IF
+      !>
+      !>        See if the data associated with ID has already been
+      !>        buffered.
+      !>
+      !>        CALL LOCATI ( ID, IDSZ, LIST, POOL, AT, PRESNT )
+      !>
+      !>        IF ( .NOT. PRESNT ) THEN
+      !>
+      !>           The data has not yet been buffered, look it up. Normally
+      !>           you might want to check to see if the data exists and
+      !>           handle things appropriately if it doesn't but this is just
+      !>           to give you the idea...
+      !>
+      !>           CALL BODVCD ( ID, 'MAGMODEL', 3, DIM, MAGMDL ( 1, AT ) )
+      !>
+      !>        END IF
+      !>
+      !>        Put the model data into the array MODEL for ease of
+      !>        reading the rest of the code.
+      !>
+      !>        CALL MOVED ( MAGMDL(1,AT), MDLSIZ, MODEL )
+      !>
+      !>        Now do whatever processing is needed ....
+      !>
+      !>     There are a few things to note about the code fragment above.
+      !>     First the handling of the buffering of data was very easy.
+      !>     Second, if this routine is called again using the same ID,
+      !>     the buffer will already contain the needed model. Moreover
+      !>     the routine LOCATI will return very quickly because the
+      !>     ID will already be at the head of the list indexed by POOL.
+      !>
+      !>     You can also easily add an entry point to this routine that
+      !>     will force it to look up data from the kernel pool on the
+      !>     next call. All that needs to be done is re-initialize the
+      !>     linked list pool.
+      !>
+      !>        ENTRY DOLOOK
+      !>
+      !>        CALL LNKINI ( PSIZE, POOL )
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.2, 26-OCT-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard. Updated
+      !>        PRESNT short description in $Brief_I/O section.
+      !>
+      !>-    SPICELIB Version 1.0.1, 24-OCT-2005 (NJB)
+      !>
+      !>        Header update: changed reference to BODVAR to reference
+      !>        to BODVCD.
+      !>
+      !>-    SPICELIB Version 1.0.0, 09-APR-1997 (WLT)
       module procedure locati
-!! ## Abstract
-!!
-!!     Find a given identifier, which consists of an integer array,
-!!     within a list of such identifiers, or insert the identifier
-!!     into the list. Return the location of the identifier and a flag
-!!     indicating whether or not the identifier was already present.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
       integer(ip), parameter :: lbpool = -5
-
-! $ Detailed_Input
-!
-!     ID       is an integer array that serves as an identifier
-!              for some object. For example it might be a SPICE
-!              id code for a planet or satellite; it might be the
-!              instrument id and mode of operation of an instrument.
-!              See the $Examples section for more details.
-!
-!     IDSZ     is the number of components in the array ID.
-!
-!     LIST     is an array containing several ID's. The array
-!              should be declared so as to have the same upper
-!              bound at least as large as the upper bound used
-!              in the declaration of POOL.
-!
-!     POOL     is a linked list pool that gives the search order
-!              for examining LIST to locate ID's. The declaration
-!              of POOL and LIST need to be compatible. Normally,
-!              the declaration should look like this:
-!
-!                 INTEGER   LIST (IDSZ,         LSTSIZ )
-!                 INTEGER   POOL (   2, LBPOOL: LSTSIZ )
-!
-!              If POOL is declared with the statement
-!
-!                 INTEGER   POOL (   2, LBPOOL: PSIZE  )
-!
-!              then you must make sure that PSIZE is less than
-!              or equal to LSTSIZ.
-!
-!              POOL should be initialized before the first
-!              call to this routine with the SPICE routine
-!              LNKINI.
-!
-!     AT       is a value that is set by this routine and that
-!              you should never reset yourself. It points
-!              to the head of the linked list used for
-!              searching LIST. Changing AT will destroy the
-!              link between POOL and LIST.
-!
-!              There is one exception to these restrictions.
-!              The first call to this routine that occurs after
-!              initializing POOL, AT may have any value. It will
-!              be set upon output and from that time on, you should
-!              not alter its value except by calling this routine
-!              to do so.
-!
-! $ Detailed_Output
-!
-!     AT       on output AT points to the location in LIST
-!              of ID.
-!
-!     PRESNT   is a logical flag. It indicates whether or not
-!              ID was already present in the LIST when this
-!              routine was called. If ID was already in LIST
-!              PRESNT is returned with the value .TRUE. Otherwise
-!              it is returned with the value .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the value of AT is less than zero or greater than
-!         the declared size of POOL (except immediately after
-!         initializing or re-initializing POOL), the
-!         error SPICE(ADDRESSOUTOFBOUNDS) is signaled.
-!
-!     2)  If the linked list pool POOL is corrupted by a higher
-!         level routine, a diagnosis of the problem will be
-!         made by a routine called by this one.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine serves as a utility for managing the bookkeeping
-!     needed when using a local buffering scheme which removes
-!     the last used item when the local buffer becomes full.
-!
-!     It is primarily a programming utility. Unless you are dealing
-!     with a problem very similar to the one just described, you
-!     probably shouldn't be using this routine.
-!
-!     The example below illustrates the intended use of this
-!     routine.
-!
-! $ Examples
-!
-!     Consider the following programming situation.
-!
-!     Suppose that a routine is being written that will
-!     access large amounts of data stored in the SPICE
-!     kernel pool. Kernel pool access requires overhead that
-!     may be prohibitive under some circumstances. Buffering
-!     data locally and only fetching data from the kernel pool
-!     when it has not been buffered locally, may substantially
-!     improve the performance of the routine being written.
-!
-!     However, since FORTRAN does not allow dynamic memory allocation
-!     the local data storage must be set at compile time. As
-!     a result the local data buffer might become full during
-!     an execution of your program. If data for an item needs
-!     to be fetched from the kernel pool once the buffer has become
-!     full, you must either repeatedly call the kernel pool to fetch
-!     the new data or overwrite some of the data in your local buffer.
-!
-!     This routine helps with the decisions of which items to
-!     overwrite. In addition it always moves the last requested
-!     item to the head of the index used for searching the buffered
-!     ID's. In this way if the same item is needed many times
-!     in succession, there will be very little overhead associated
-!     with finding the item. Thus the routine spends its time
-!     in computing the desired quantities, not in looking up the
-!     parameters needed for the computation.
-!
-!     Below is a fragment of code that illustrates how this routine
-!     should be used. In the situation outlined above. We'll suppose
-!     that we are fetching MDLSIZ double precision numbers from the
-!     kernel pool that are associated with the item
-!
-!         'BODYid_MAGMODEL'
-!
-!     And that we are computing something with this model data.
-!
-!        INTEGER               MDLSIZ
-!        PARAMETER           ( MDLSIZ = xxxxxx )
-!
-!        We'll create room to buffer this data for 8 bodies.
-!
-!        INTEGER               PSIZE
-!        PARAMETER           ( PSIZE = 8 )
-!
-!        The ID's we shall be using are 1-dimensional. They are body
-!        ID's for planets or and their satellites.
-!
-!        INTEGER               IDSZ
-!        PARAMETER           ( IDSZ = 1 )
-!
-!        INTEGER               AT
-!        INTEGER               DIM
-!        INTEGER               LIST   (   IDSZ,  PSIZE        )
-!        INTEGER               POOL   (      2,  LBPOOL:PSIZE )
-!
-!        DOUBLE PRECISION      MAGMDL ( MDLSIZ,  PSIZE        )
-!        DOUBLE PRECISION      MODEL  ( MDLSIZ                )
-!
-!        LOGICAL               FIRST
-!        LOGICAL               PRESNT
-!
-!        SAVE
-!
-!        DATA                  FIRST / .TRUE. /
-!
-!        The block below handles initializing the linked list pool.
-!
-!        IF ( FIRST ) THEN
-!
-!           FIRST = .FALSE.
-!
-!           CALL LNKINI ( PSIZE, POOL )
-!
-!        END IF
-!
-!        See if the data associated with ID has already been
-!        buffered.
-!
-!        CALL LOCATI ( ID, IDSZ, LIST, POOL, AT, PRESNT )
-!
-!        IF ( .NOT. PRESNT ) THEN
-!
-!           The data has not yet been buffered, look it up. Normally
-!           you might want to check to see if the data exists and
-!           handle things appropriately if it doesn't but this is just
-!           to give you the idea...
-!
-!           CALL BODVCD ( ID, 'MAGMODEL', 3, DIM, MAGMDL ( 1, AT ) )
-!
-!        END IF
-!
-!        Put the model data into the array MODEL for ease of
-!        reading the rest of the code.
-!
-!        CALL MOVED ( MAGMDL(1,AT), MDLSIZ, MODEL )
-!
-!        Now do whatever processing is needed ....
-!
-!     There are a few things to note about the code fragment above.
-!     First the handling of the buffering of data was very easy.
-!     Second, if this routine is called again using the same ID,
-!     the buffer will already contain the needed model. Moreover
-!     the routine LOCATI will return very quickly because the
-!     ID will already be at the head of the list indexed by POOL.
-!
-!     You can also easily add an entry point to this routine that
-!     will force it to look up data from the kernel pool on the
-!     next call. All that needs to be done is re-initialize the
-!     linked list pool.
-!
-!        ENTRY DOLOOK
-!
-!        CALL LNKINI ( PSIZE, POOL )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.2, 26-OCT-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Updated
-!        PRESNT short description in $Brief_I/O section.
-!
-!-    SPICELIB Version 1.0.1, 24-OCT-2005 (NJB)
-!
-!        Header update: changed reference to BODVAR to reference
-!        to BODVCD.
-!
-!-    SPICELIB Version 1.0.0, 09-APR-1997 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Locate an item in a linked list indexed list of items
-!     Remove least recently used item buffering
-!
-!-&
-
-!
-!     Spicelib functions
-!
 
 !
 !     Linked list parameters
@@ -3522,402 +3150,368 @@ contains
 
       end procedure locati
 
-!$Procedure LOCLN ( Locate lines in a text file )
-
+      !> ## Detailed Input
+      !>
+      !>     UNIT     is a logical unit that has been connected to a
+      !>              text file by the calling program. Use the routine
+      !>              TXTOPR to open the file for read access and get its
+      !>              logical unit. The file pointer may be pointing to
+      !>              any line in the file due to previous read statements,
+      !>              for example, or due to previous calls to LOCLN.
+      !>
+      !>     BMARK,
+      !>     EMARK    are markers that delimit some group of lines in
+      !>              the part of the file following the current position
+      !>              of the file pointer. The group begins with the
+      !>              first line equivalent to BMARK and ends with the
+      !>              next line equivalent to EMARK, ignoring leading
+      !>              and trailing blanks.
+      !>
+      !>              If BMARK is blank, the group of lines begins with
+      !>              the first line following the current position of the
+      !>              file pointer; if EMARK is blank, the group of lines
+      !>              ends with the last line in the file.
+      !>
+      !>      LINE       on input, is an arbitrary character string whose
+      !>              contents are ignored. LINE is used to read lines
+      !>              from the file connected to UNIT; its function
+      !>              is to determine the maximum length of the lines
+      !>              that can be read from the file. Lines longer
+      !>              than the declared length of LINE are truncated
+      !>              as they are read.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     LINE     on output, is undefined.
+      !>
+      !>     BLINE,
+      !>     ELINE    are the line numbers of the first and last lines
+      !>              in the group delimited by BMARK and EMARK.
+      !>
+      !>              By convention, the first line read by the routine
+      !>              is line 1; the second line is line 2; and so on.
+      !>              If BMARK is blank, BLINE will be 1.
+      !>
+      !>     FOUND    is .TRUE. if a group of lines delimited by BMARK and
+      !>              EMARK is found, and is .FALSE. otherwise. ELINE is
+      !>              the last line read by LOCLN, so if FOUND is .TRUE.,
+      !>              the file pointer will be positioned on the line
+      !>              after ELINE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If FOUND is .FALSE., the values of BLINE and ELINE are not
+      !>         changed.
+      !>
+      !>     2)  If an error occurs while reading from the input file,
+      !>         the error SPICE(FILEREADFAILED) is signaled.
+      !>
+      !>     3)  Lines in the file that are longer than the declared length of
+      !>         LINE are truncated as they are read. If the truncation of
+      !>         line containing a marker causes truncation of that marker,
+      !>         it will not match the input value for that marker, so
+      !>         FOUND will be .FALSE.
+      !>
+      !> ## Files
+      !>
+      !>     See argument UNIT.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine locates delimited groups of lines in a text file.
+      !>     This allows files to be partitioned into sub-files; it also
+      !>     allows related inputs to be grouped together in a relatively
+      !>     free-format way.
+      !>
+      !> ## Examples
+      !>
+      !>     1) Let FILE.TXT be a text file that contains the following lines.
+      !>        (The lines are numbered for reference, but these numbers do
+      !>        not appear in the file).
+      !>
+      !>           1    BEGIN POEM
+      !>           2       Oh snail,
+      !>           3       Climb Mount Fuji,
+      !>           4       But slowly, slowly!
+      !>           5    END POEM
+      !>           6
+      !>           7    BEGIN PROSE
+      !>           8       Lady, one of us has this book open
+      !>           9       to the wrong page.
+      !>           10   END PROSE
+      !>           11
+      !>           12   BEGIN POEM
+      !>           13      John Keats, John Keats,
+      !>           14      John,
+      !>           15      Put your scarf on.
+      !>           16   END POEM
+      !>           17
+      !>           18   BEGIN QUOTE
+      !>           19      That's not writing. That's typing.
+      !>           20
+      !>           21               (Truman Capote on Jack Kerouac)
+      !>           22   END QUOTE
+      !>           23
+      !>           24   BEGIN POEM
+      !>           25      Twice five syllables
+      !>           26      Plus seven isn't much, but
+      !>           27      That's haiku for you.
+      !>           28   BEGIN POEM
+      !>           29
+      !>           30   BEGIN EQUATION
+      !>           31            2
+      !>           32      e = mc
+      !>           33   END EQUATION
+      !>
+      !>     Then the code fragment
+      !>
+      !>           CALL TXTOPR ( 'FILE.TXT', UNIT )
+      !>
+      !>           BMARK = 'BEGIN POEM'
+      !>           EMARK = 'END POEM'
+      !>
+      !>           CALL LOCLN ( UNIT, BMARK, EMARK, LINE, B, E, FOUND )
+      !>
+      !>           DO WHILE ( FOUND )
+      !>              WRITE (*,*) 'Found poem between lines ', B, ' and ', E
+      !>
+      !>              CALL LOCLN ( UNIT, BMARK, EMARK, LINE, B, E, FOUND )
+      !>           END DO
+      !>
+      !>     produces the following report:
+      !>
+      !>           Found poem between lines   1 and   5
+      !>           Found poem between lines   7 and  11
+      !>           Found poem between lines   8 and  12
+      !>
+      !>     Note that line numbers are returned relative to the position
+      !>     of the file pointer when LOCLN is called. The following code
+      !>     fragment generates the numbers relative to the start of the
+      !>     file.
+      !>
+      !>           REWIND ( UNIT )
+      !>
+      !>           OFFSET = 0
+      !>           CALL LOCLN ( UNIT, BMARK, EMARK, LINE, B, E, FOUND )
+      !>
+      !>           DO WHILE ( FOUND )
+      !>              WRITE (*,*) 'Found poem between lines ',
+      !>          .                OFFSET + B,
+      !>          .                ' and ',
+      !>          .                OFFSET + E
+      !>
+      !>              OFFSET = OFFSET + E
+      !>              CALL LOCLN ( UNIT, BMARK, EMARK, LINE, B, E, FOUND )
+      !>           END DO
+      !>
+      !>           CLOSE ( UNIT )
+      !>
+      !>     The following report is produced:
+      !>
+      !>           Found poem between lines   1 and   5
+      !>           Found poem between lines  12 and  16
+      !>           Found poem between lines  24 and  28
+      !>
+      !>     2) Given the same file, the code fragment
+      !>
+      !>           CALL TXTOPR ( 'FILE.TXT', UNIT )
+      !>
+      !>           CALL LOCLN ( UNIT,
+      !>          .             'begin poem',
+      !>          .             'end poem',
+      !>          .             LINE,
+      !>          .             B,
+      !>          .             E,
+      !>          .             FOUND )
+      !>
+      !>           CLOSE ( UNIT )
+      !>
+      !>     finds nothing because case is significant: FOUND is false,
+      !>     and B and E are unchanged.
+      !>
+      !>     3) This code fragment
+      !>
+      !>           CALL TXTOPR ( 'FILE.TXT', UNIT )
+      !>
+      !>           CALL LOCLN ( UNIT,
+      !>          .             ' ',
+      !>          .             'BEGIN PROSE',
+      !>          .             LINE,
+      !>          .             B,
+      !>          .             E,
+      !>          .             FOUND )
+      !>
+      !>           CLOSE ( UNIT )
+      !>
+      !>     when executed on the same file returns B = 1 and E = 7.
+      !>     In effect, a blank begin marker "matches" the first line
+      !>     that is read.
+      !>
+      !>     Similarly, a blank end marker "matches" the last line of
+      !>     the file, the code fragment
+      !>
+      !>           CALL TXTOPR ( 'FILE.TXT', UNIT )
+      !>
+      !>           CALL LOCLN ( UNIT,
+      !>          .             'BEGIN QUOTE',
+      !>          .             ' ',
+      !>          .             LINE,
+      !>          .             B,
+      !>          .             E,
+      !>          .             FOUND )
+      !>
+      !>           CLOSE ( UNIT )
+      !>
+      !>     when executed on the same file returns B = 18 and E = 33.
+      !>     If both markers are blank, LOCLN basically counts the lines
+      !>     in the file.
+      !>
+      !>     4) The code fragment
+      !>
+      !>           CALL TXTOPR ( 'FILE.TXT', UNIT )
+      !>
+      !>           MARK = 'BEGIN POEM'
+      !>
+      !>           CALL LOCLN ( UNIT, MARK, MARK, LINE, FIRST, SECOND, FOUND )
+      !>
+      !>           CLOSE ( UNIT )
+      !>
+      !>     returns FIRST = 1 and SECOND = 12 -- the first two lines that
+      !>     are equivalent to MARK.
+      !>
+      !>     5) Nesting is not supported. That is, if UNIT is connected to
+      !>     a file containing the following lines (ignoring line numbers),
+      !>
+      !>           1   Begin Object
+      !>           2     Begin Object
+      !>           3       Begin Object
+      !>           4         Just kidding!
+      !>           5       End Object
+      !>           6     End Object
+      !>           7   End Object
+      !>
+      !>           REWIND ( UNIT )
+      !>
+      !>           CALL LOCLN ( UNIT,
+      !>          .             'Begin Object'
+      !>          .             'End Object',
+      !>          .             LINE,
+      !>          .             B,
+      !>          .             E,
+      !>          .             FOUND )
+      !>
+      !>     returns B = 1 and E = 5, not E = 7.
+      !>
+      !>     6) Let UNIT be connected to a text file containing the
+      !>     following lines, again ignoring line numbers which are
+      !>     listed for easy reference.
+      !>
+      !>           1    The first case tests the capability of ...
+      !>           2
+      !>           3    NEW CASE
+      !>           4       TARGET = JUPITER
+      !>           5       EPOCH  = 21 JUN 1992 13:04
+      !>           6    END CASE
+      !>           7
+      !>           8    The next case uses a different target and a slightly
+      !>           9    longer exposure time...
+      !>           10
+      !>           11   NEW CASE
+      !>           12      TARGET   = IO
+      !>           13      EPOCH    = 21 JUN 1992 13:04
+      !>           14      EXPOSURE = 2.44 SECONDS
+      !>           15   END CASE
+      !>           16
+      !>           17   The next case changes targets in order to...
+      !>           18
+      !>           19   NEW CASE
+      !>           20      TARGET   = EUROPA
+      !>           21      EPOCH    = 21 JUN 1992 13:04
+      !>           22      EXPOSURE = 2.44 SECONDS
+      !>           23   END CASE
+      !>
+      !>     Then the code fragment
+      !>
+      !>           REWIND ( UNIT )
+      !>
+      !>           BMARK = 'NEW CASE'
+      !>           EMARK = 'END CASE'
+      !>
+      !>           CASES  = 0
+      !>           OFFSET = 0
+      !>           CALL LOCLN ( UNIT, BMARK, EMARK, LINE, B, E, FOUND )
+      !>
+      !>           DO WHILE ( FOUND )
+      !>              CASES      = CASES  + 1
+      !>              BEG(CASES) = OFFSET + B
+      !>              END(CASES) = OFFSET + E
+      !>
+      !>              OFFSET = OFFSET + E
+      !>              CALL LOCLN ( UNIT, BMARK, EMARK, LINE, B, E, FOUND )
+      !>           END DO
+      !>
+      !>     saves the locations of the various input cases (skipping past
+      !>     the intervening commentary) in the arrays BEG and END. After
+      !>     running the code, CASES, BEG, and END have the following values:
+      !>
+      !>           CASES = 3
+      !>           BEG   = 3,  11,  19
+      !>           END   = 6,  15,  23
+      !>
+      !>     The following code fragment retrieves the i'th case.
+      !>
+      !>           REWIND ( UNIT )
+      !>
+      !>           DO J = 1, BEG(I) - 1
+      !>              READ (UNIT,FMT='(A)') LINE
+      !>           END DO
+      !>
+      !>           DO J = BEG(I), END(I)
+      !>              READ (UNIT,FMT='(A)') LINE
+      !>               .
+      !>               .  Process the line
+      !>               .
+      !>           END DO
+      !>
+      !>     While this isn't an incredibly efficient way to process
+      !>     large files, it can be effective for smaller files.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     J.E. McLean        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
       module procedure locln
-!! ## Abstract
-!!
-!!     Locate a group of lines in a text file delimited by markers.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!     TEXT
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: ltrim
       implicit none
-
-! $ Detailed_Input
-!
-!     UNIT     is a logical unit that has been connected to a
-!              text file by the calling program. Use the routine
-!              TXTOPR to open the file for read access and get its
-!              logical unit. The file pointer may be pointing to
-!              any line in the file due to previous read statements,
-!              for example, or due to previous calls to LOCLN.
-!
-!     BMARK,
-!     EMARK    are markers that delimit some group of lines in
-!              the part of the file following the current position
-!              of the file pointer. The group begins with the
-!              first line equivalent to BMARK and ends with the
-!              next line equivalent to EMARK, ignoring leading
-!              and trailing blanks.
-!
-!              If BMARK is blank, the group of lines begins with
-!              the first line following the current position of the
-!              file pointer; if EMARK is blank, the group of lines
-!              ends with the last line in the file.
-!
-!      LINE       on input, is an arbitrary character string whose
-!              contents are ignored. LINE is used to read lines
-!              from the file connected to UNIT; its function
-!              is to determine the maximum length of the lines
-!              that can be read from the file. Lines longer
-!              than the declared length of LINE are truncated
-!              as they are read.
-!
-! $ Detailed_Output
-!
-!     LINE     on output, is undefined.
-!
-!     BLINE,
-!     ELINE    are the line numbers of the first and last lines
-!              in the group delimited by BMARK and EMARK.
-!
-!              By convention, the first line read by the routine
-!              is line 1; the second line is line 2; and so on.
-!              If BMARK is blank, BLINE will be 1.
-!
-!     FOUND    is .TRUE. if a group of lines delimited by BMARK and
-!              EMARK is found, and is .FALSE. otherwise. ELINE is
-!              the last line read by LOCLN, so if FOUND is .TRUE.,
-!              the file pointer will be positioned on the line
-!              after ELINE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If FOUND is .FALSE., the values of BLINE and ELINE are not
-!         changed.
-!
-!     2)  If an error occurs while reading from the input file,
-!         the error SPICE(FILEREADFAILED) is signaled.
-!
-!     3)  Lines in the file that are longer than the declared length of
-!         LINE are truncated as they are read. If the truncation of
-!         line containing a marker causes truncation of that marker,
-!         it will not match the input value for that marker, so
-!         FOUND will be .FALSE.
-!
-! $ Files
-!
-!     See argument UNIT.
-!
-! $ Particulars
-!
-!     This routine locates delimited groups of lines in a text file.
-!     This allows files to be partitioned into sub-files; it also
-!     allows related inputs to be grouped together in a relatively
-!     free-format way.
-!
-! $ Examples
-!
-!     1) Let FILE.TXT be a text file that contains the following lines.
-!        (The lines are numbered for reference, but these numbers do
-!        not appear in the file).
-!
-!           1    BEGIN POEM
-!           2       Oh snail,
-!           3       Climb Mount Fuji,
-!           4       But slowly, slowly!
-!           5    END POEM
-!           6
-!           7    BEGIN PROSE
-!           8       Lady, one of us has this book open
-!           9       to the wrong page.
-!           10   END PROSE
-!           11
-!           12   BEGIN POEM
-!           13      John Keats, John Keats,
-!           14      John,
-!           15      Put your scarf on.
-!           16   END POEM
-!           17
-!           18   BEGIN QUOTE
-!           19      That's not writing. That's typing.
-!           20
-!           21               (Truman Capote on Jack Kerouac)
-!           22   END QUOTE
-!           23
-!           24   BEGIN POEM
-!           25      Twice five syllables
-!           26      Plus seven isn't much, but
-!           27      That's haiku for you.
-!           28   BEGIN POEM
-!           29
-!           30   BEGIN EQUATION
-!           31            2
-!           32      e = mc
-!           33   END EQUATION
-!
-!     Then the code fragment
-!
-!           CALL TXTOPR ( 'FILE.TXT', UNIT )
-!
-!           BMARK = 'BEGIN POEM'
-!           EMARK = 'END POEM'
-!
-!           CALL LOCLN ( UNIT, BMARK, EMARK, LINE, B, E, FOUND )
-!
-!           DO WHILE ( FOUND )
-!              WRITE (*,*) 'Found poem between lines ', B, ' and ', E
-!
-!              CALL LOCLN ( UNIT, BMARK, EMARK, LINE, B, E, FOUND )
-!           END DO
-!
-!     produces the following report:
-!
-!           Found poem between lines   1 and   5
-!           Found poem between lines   7 and  11
-!           Found poem between lines   8 and  12
-!
-!     Note that line numbers are returned relative to the position
-!     of the file pointer when LOCLN is called. The following code
-!     fragment generates the numbers relative to the start of the
-!     file.
-!
-!           REWIND ( UNIT )
-!
-!           OFFSET = 0
-!           CALL LOCLN ( UNIT, BMARK, EMARK, LINE, B, E, FOUND )
-!
-!           DO WHILE ( FOUND )
-!              WRITE (*,*) 'Found poem between lines ',
-!          .                OFFSET + B,
-!          .                ' and ',
-!          .                OFFSET + E
-!
-!              OFFSET = OFFSET + E
-!              CALL LOCLN ( UNIT, BMARK, EMARK, LINE, B, E, FOUND )
-!           END DO
-!
-!           CLOSE ( UNIT )
-!
-!     The following report is produced:
-!
-!           Found poem between lines   1 and   5
-!           Found poem between lines  12 and  16
-!           Found poem between lines  24 and  28
-!
-!     2) Given the same file, the code fragment
-!
-!           CALL TXTOPR ( 'FILE.TXT', UNIT )
-!
-!           CALL LOCLN ( UNIT,
-!          .             'begin poem',
-!          .             'end poem',
-!          .             LINE,
-!          .             B,
-!          .             E,
-!          .             FOUND )
-!
-!           CLOSE ( UNIT )
-!
-!     finds nothing because case is significant: FOUND is false,
-!     and B and E are unchanged.
-!
-!     3) This code fragment
-!
-!           CALL TXTOPR ( 'FILE.TXT', UNIT )
-!
-!           CALL LOCLN ( UNIT,
-!          .             ' ',
-!          .             'BEGIN PROSE',
-!          .             LINE,
-!          .             B,
-!          .             E,
-!          .             FOUND )
-!
-!           CLOSE ( UNIT )
-!
-!     when executed on the same file returns B = 1 and E = 7.
-!     In effect, a blank begin marker "matches" the first line
-!     that is read.
-!
-!     Similarly, a blank end marker "matches" the last line of
-!     the file, the code fragment
-!
-!           CALL TXTOPR ( 'FILE.TXT', UNIT )
-!
-!           CALL LOCLN ( UNIT,
-!          .             'BEGIN QUOTE',
-!          .             ' ',
-!          .             LINE,
-!          .             B,
-!          .             E,
-!          .             FOUND )
-!
-!           CLOSE ( UNIT )
-!
-!     when executed on the same file returns B = 18 and E = 33.
-!     If both markers are blank, LOCLN basically counts the lines
-!     in the file.
-!
-!     4) The code fragment
-!
-!           CALL TXTOPR ( 'FILE.TXT', UNIT )
-!
-!           MARK = 'BEGIN POEM'
-!
-!           CALL LOCLN ( UNIT, MARK, MARK, LINE, FIRST, SECOND, FOUND )
-!
-!           CLOSE ( UNIT )
-!
-!     returns FIRST = 1 and SECOND = 12 -- the first two lines that
-!     are equivalent to MARK.
-!
-!     5) Nesting is not supported. That is, if UNIT is connected to
-!     a file containing the following lines (ignoring line numbers),
-!
-!           1   Begin Object
-!           2     Begin Object
-!           3       Begin Object
-!           4         Just kidding!
-!           5       End Object
-!           6     End Object
-!           7   End Object
-!
-!           REWIND ( UNIT )
-!
-!           CALL LOCLN ( UNIT,
-!          .             'Begin Object'
-!          .             'End Object',
-!          .             LINE,
-!          .             B,
-!          .             E,
-!          .             FOUND )
-!
-!     returns B = 1 and E = 5, not E = 7.
-!
-!     6) Let UNIT be connected to a text file containing the
-!     following lines, again ignoring line numbers which are
-!     listed for easy reference.
-!
-!           1    The first case tests the capability of ...
-!           2
-!           3    NEW CASE
-!           4       TARGET = JUPITER
-!           5       EPOCH  = 21 JUN 1992 13:04
-!           6    END CASE
-!           7
-!           8    The next case uses a different target and a slightly
-!           9    longer exposure time...
-!           10
-!           11   NEW CASE
-!           12      TARGET   = IO
-!           13      EPOCH    = 21 JUN 1992 13:04
-!           14      EXPOSURE = 2.44 SECONDS
-!           15   END CASE
-!           16
-!           17   The next case changes targets in order to...
-!           18
-!           19   NEW CASE
-!           20      TARGET   = EUROPA
-!           21      EPOCH    = 21 JUN 1992 13:04
-!           22      EXPOSURE = 2.44 SECONDS
-!           23   END CASE
-!
-!     Then the code fragment
-!
-!           REWIND ( UNIT )
-!
-!           BMARK = 'NEW CASE'
-!           EMARK = 'END CASE'
-!
-!           CASES  = 0
-!           OFFSET = 0
-!           CALL LOCLN ( UNIT, BMARK, EMARK, LINE, B, E, FOUND )
-!
-!           DO WHILE ( FOUND )
-!              CASES      = CASES  + 1
-!              BEG(CASES) = OFFSET + B
-!              END(CASES) = OFFSET + E
-!
-!              OFFSET = OFFSET + E
-!              CALL LOCLN ( UNIT, BMARK, EMARK, LINE, B, E, FOUND )
-!           END DO
-!
-!     saves the locations of the various input cases (skipping past
-!     the intervening commentary) in the arrays BEG and END. After
-!     running the code, CASES, BEG, and END have the following values:
-!
-!           CASES = 3
-!           BEG   = 3,  11,  19
-!           END   = 6,  15,  23
-!
-!     The following code fragment retrieves the i'th case.
-!
-!           REWIND ( UNIT )
-!
-!           DO J = 1, BEG(I) - 1
-!              READ (UNIT,FMT='(A)') LINE
-!           END DO
-!
-!           DO J = BEG(I), END(I)
-!              READ (UNIT,FMT='(A)') LINE
-!               .
-!               .  Process the line
-!               .
-!           END DO
-!
-!     While this isn't an incredibly efficient way to process
-!     large files, it can be effective for smaller files.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     J.E. McLean        (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-!
-!-&
-
-! $ Index_Entries
-!
-!     locate lines in a text file
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
 
       integer(ip)           bltemp
       integer(ip)           eltemp

@@ -15,18 +15,6 @@ module pepper_inc_zzholdd
 !     This file contains parameter declarations for the ZZHOLDD
 !     routine.
 !
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-!
-!     None.
-!
 ! $ Brief_I/O
 !
 !     None.
@@ -81,8 +69,6 @@ module pepper_inc_zzholdd
 !
 !-    SPICELIB Version 1.0.0  03-DEC-2013 (EDW)
 !
-!-&
-
 
 !
 !     OP codes. The values exist in the integer domain
@@ -102,7 +88,6 @@ module pepper_inc_zzholdd
 !
    integer               zznop
    parameter           ( zznop     =  3 )
-
 
 !
 !     ID codes. The values exist in the integer domain
@@ -140,7 +125,6 @@ module pepper_inc_zzholdd
 !
    integer               nid
    parameter           ( nid       = 4 )
-
 
 !
 !     End of file zzholdd.inc.

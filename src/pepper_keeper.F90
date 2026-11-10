@@ -11,144 +11,110 @@ submodule (pepper_instance) pepper_keeper
 
 contains
 
-!$Procedure INTTXT ( Convert an integer to text )
-
+      !> ## Detailed Input
+      !>
+      !>     N        is any integer (less than 10**12 in absolute value).
+      !>              If N is less than 0, -N must be a legitimate number.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     STRING   is the English cardinal equivalent of N. STRING will
+      !>              contain only upper case letters.
+      !>
+      !>              The longest possible output string contains 145
+      !>              characters. One such string is:
+      !>
+      !>                 'NEGATIVE '                                  //
+      !>                 'SEVEN HUNDRED SEVENTY-SEVEN BILLION '       //
+      !>                 'SEVEN HUNDRED SEVENTY-SEVEN MILLION '       //
+      !>                 'SEVEN HUNDRED SEVENTY-SEVEN THOUSAND '      //
+      !>                 'SEVEN HUNDRED SEVENTY-SEVEN'
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If the resulting text is longer than the output string,
+      !>         it will be truncated on the right, leaving only the most
+      !>         significant portion of the number.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine is used primarily for constructing error messages.
+      !>     For example, an overflow message might look like the following:
+      !>
+      !>        'An excess of seventy-four parameters was detected.'
+      !>
+      !>     A second use might be to write dollar amounts: it's much harder
+      !>     to tamper with a string like
+      !>
+      !>        'Two thousand four hundred seventy-one dollars'
+      !>
+      !>     than with the equivalent string
+      !>
+      !>        '$ 2471.00'
+      !>
+      !> ## Examples
+      !>
+      !>     N           STRING
+      !>     ------      ------------------------------------------
+      !>     -43         NEGATIVE FORTY-THREE
+      !>      1          ONE
+      !>      2          TWO
+      !>      3          THREE
+      !>      4          FOUR
+      !>      20         TWENTY
+      !>      21         TWENTY-ONE
+      !>      99         NINETY-NINE
+      !>      82131      EIGHTY-TWO THOUSAND ONE HUNDRED THIRTY-ONE
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine assumes that N will always be less than
+      !>         a trillion (10**12) in absolute value.
+      !>
+      !>     2)  In the event that N is less than zero, this routine assumes
+      !>         that -N is a legitimate integer on the host machine.
+      !>
+      !>     3)  This routine assumes that an integer as large as 10**9
+      !>         (one billion) is representable on the host machine.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 15-AUG-1990 (WLT)
       module procedure inttxt
-!! ## Abstract
-!!
-!!     Convert an integer to an equivalent written phrase.
-!!     For example, convert 121 to 'ONE HUNDRED TWENTY-ONE'.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     PARSING
-!!     STRING
-!!     UNITS
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: suffix
       implicit none
 
-
-! $ Detailed_Input
-!
-!     N        is any integer (less than 10**12 in absolute value).
-!              If N is less than 0, -N must be a legitimate number.
-!
-! $ Detailed_Output
-!
-!     STRING   is the English cardinal equivalent of N. STRING will
-!              contain only upper case letters.
-!
-!              The longest possible output string contains 145
-!              characters. One such string is:
-!
-!                 'NEGATIVE '                                  //
-!                 'SEVEN HUNDRED SEVENTY-SEVEN BILLION '       //
-!                 'SEVEN HUNDRED SEVENTY-SEVEN MILLION '       //
-!                 'SEVEN HUNDRED SEVENTY-SEVEN THOUSAND '      //
-!                 'SEVEN HUNDRED SEVENTY-SEVEN'
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  If the resulting text is longer than the output string,
-!         it will be truncated on the right, leaving only the most
-!         significant portion of the number.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is used primarily for constructing error messages.
-!     For example, an overflow message might look like the following:
-!
-!        'An excess of seventy-four parameters was detected.'
-!
-!     A second use might be to write dollar amounts: it's much harder
-!     to tamper with a string like
-!
-!        'Two thousand four hundred seventy-one dollars'
-!
-!     than with the equivalent string
-!
-!        '$ 2471.00'
-!
-! $ Examples
-!
-!     N           STRING
-!     ------      ------------------------------------------
-!     -43         NEGATIVE FORTY-THREE
-!      1          ONE
-!      2          TWO
-!      3          THREE
-!      4          FOUR
-!      20         TWENTY
-!      21         TWENTY-ONE
-!      99         NINETY-NINE
-!      82131      EIGHTY-TWO THOUSAND ONE HUNDRED THIRTY-ONE
-!
-! $ Restrictions
-!
-!     1)  This routine assumes that N will always be less than
-!         a trillion (10**12) in absolute value.
-!
-!     2)  In the event that N is less than zero, this routine assumes
-!         that -N is a legitimate integer on the host machine.
-!
-!     3)  This routine assumes that an integer as large as 10**9
-!         (one billion) is representable on the host machine.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 15-AUG-1990 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     convert an integer to text
-!
-!-&
-
-!
-!     Local variables
-!
       integer(ip), parameter :: lngest = 9
 
       character(lngest), parameter :: number (19) = &
@@ -166,16 +132,6 @@ contains
       integer(ip)           space
       integer(ip)           x
       integer(ip)           y
-
-!
-!     Saved variables
-!
-
-
-!
-!     Initial values
-!
-
 
 !
 !     Zero is easy.
@@ -301,145 +257,107 @@ contains
       return
       end procedure inttxt
 
-!$Procedure INTORD ( Convert an integer to ordinal text )
-
+      !> ## Detailed Input
+      !>
+      !>     N        is an integer (less than 10**12 in absolute value).
+      !>              Moreover, if N is less than zero, -N must be a
+      !>              a legitimate number on the host machine.
+      !>
+      !>              In the context of this routine N represents the
+      !>              ranking of some item within a group.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     STRING   is the English ordinal equivalent of N. STRING will
+      !>              contain only upper case letters.
+      !>
+      !> ## Parameters
+      !>
+      !>     MAXORD   is one more than the length of the longest ordinal
+      !>              string that can be produced by a call to this routine:
+      !>              One string of maximum length is:
+      !>
+      !>                 'NEGATIVE '                                  //
+      !>                 'SEVEN HUNDRED SEVENTY-SEVEN BILLION '       //
+      !>                 'SEVEN HUNDRED SEVENTY-SEVEN MILLION '       //
+      !>                 'SEVEN HUNDRED SEVENTY-SEVEN THOUSAND '      //
+      !>                 'SEVEN HUNDRED SEVENTY-SEVENTH'
+      !>
+      !>              It has 147 characters.
+      !>
+      !>              The parameter MAXORD is used to declare a local string
+      !>              of sufficient length to allow the construction of
+      !>              any ordinal string.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If the resulting ordinal is longer than the output string,
+      !>         it will be truncated on the right, leaving only the most
+      !>         significant portion of the ordinal.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This is used primarily for generating error messages. For example,
+      !>     if the third letter or token in a string is in error, it might
+      !>     be desirable to supply a message like the following:
+      !>
+      !>        'The third token of 31-JAN-198$ is not a valid year.'
+      !>
+      !> ## Examples
+      !>
+      !>     N           STRING
+      !>     ------      -------------------------------------------
+      !>     -6          NEGATIVE SIXTH
+      !>      1          FIRST
+      !>      2          SECOND
+      !>      3          THIRD
+      !>      4          FOURTH
+      !>      20         TWENTIETH
+      !>      21         TWENTY-FIRST
+      !>      99         NINETY-NINTH
+      !>      82131      EIGHTY-TWO THOUSAND ONE HUNDRED THIRTY-FIRST
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Whatever restrictions apply to INTTXT apply to this routine
+      !>         as well.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 15-AUG-1990 (WLT)
       module procedure intord
-!! ## Abstract
-!!
-!!     Convert an integer to an equivalent written ordinal phrase.
-!!     For example, convert 121 to 'ONE HUNDRED TWENTY-FIRST'.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     PARSING
-!!     STRING
-!!     UNITS
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: suffix
       implicit none
 
       integer(ip), parameter :: maxord = 148
 
-
-! $ Detailed_Input
-!
-!     N        is an integer (less than 10**12 in absolute value).
-!              Moreover, if N is less than zero, -N must be a
-!              a legitimate number on the host machine.
-!
-!              In the context of this routine N represents the
-!              ranking of some item within a group.
-!
-! $ Detailed_Output
-!
-!     STRING   is the English ordinal equivalent of N. STRING will
-!              contain only upper case letters.
-!
-! $ Parameters
-!
-!     MAXORD   is one more than the length of the longest ordinal
-!              string that can be produced by a call to this routine:
-!              One string of maximum length is:
-!
-!                 'NEGATIVE '                                  //
-!                 'SEVEN HUNDRED SEVENTY-SEVEN BILLION '       //
-!                 'SEVEN HUNDRED SEVENTY-SEVEN MILLION '       //
-!                 'SEVEN HUNDRED SEVENTY-SEVEN THOUSAND '      //
-!                 'SEVEN HUNDRED SEVENTY-SEVENTH'
-!
-!              It has 147 characters.
-!
-!              The parameter MAXORD is used to declare a local string
-!              of sufficient length to allow the construction of
-!              any ordinal string.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  If the resulting ordinal is longer than the output string,
-!         it will be truncated on the right, leaving only the most
-!         significant portion of the ordinal.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This is used primarily for generating error messages. For example,
-!     if the third letter or token in a string is in error, it might
-!     be desirable to supply a message like the following:
-!
-!        'The third token of 31-JAN-198$ is not a valid year.'
-!
-! $ Examples
-!
-!     N           STRING
-!     ------      -------------------------------------------
-!     -6          NEGATIVE SIXTH
-!      1          FIRST
-!      2          SECOND
-!      3          THIRD
-!      4          FOURTH
-!      20         TWENTIETH
-!      21         TWENTY-FIRST
-!      99         NINETY-NINTH
-!      82131      EIGHTY-TWO THOUSAND ONE HUNDRED THIRTY-FIRST
-!
-! $ Restrictions
-!
-!     1)  Whatever restrictions apply to INTTXT apply to this routine
-!         as well.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 15-AUG-1990 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     convert an integer to ordinal text
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           i
       integer(ip)           last
       character(maxord)     mystr
@@ -521,278 +439,242 @@ contains
       return
       end procedure intord
 
-!$Procedure REPMOT  ( Replace marker with ordinal text )
-
+      !> ## Detailed Input
+      !>
+      !>     IN       is an arbitrary character string.
+      !>
+      !>     MARKER   is an arbitrary character string. The first occurrence of
+      !>              MARKER in the input string is to be replaced by the text
+      !>              representation of the ordinal number VALUE.
+      !>
+      !>              Leading and trailing blanks in MARKER are NOT
+      !>              significant. In particular, no substitution is performed
+      !>              if MARKER is blank.
+      !>
+      !>     VALUE    is an arbitrary integer.
+      !>
+      !>     RTCASE   indicates the case of the replacement text. RTCASE may be
+      !>              any of the following:
+      !>
+      !>                 RTCASE   Meaning        Example
+      !>                 ------   -----------    -----------------------
+      !>                 U, u     Uppercase      ONE HUNDRED FIFTY-THIRD
+      !>
+      !>                 L, l     Lowercase      one hundred fifty-third
+      !>
+      !>                 C, c     Capitalized    One hundred fifty-third
+      !>
+      !> ## Detailed Output
+      !>
+      !>     OUT      is the string obtained by substituting the text
+      !>              representation of the ordinal number VALUE for the first
+      !>              occurrence of MARKER in the input string.
+      !>
+      !>              OUT and IN must be identical or disjoint.
+      !>
+      !> ## Parameters
+      !>
+      !>     MAXLON   is the maximum expected length of any ordinal text.
+      !>              147 characters are sufficient to hold the text
+      !>              representing any ordinal value whose corresponding
+      !>              ordinal value is in the range
+      !>
+      !>                ( -10**12, 10**12 )
+      !>
+      !>              An example of a number whose ordinal text representation
+      !>              is of maximum length is
+      !>
+      !>                 - 777 777 777 777
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If OUT does not have sufficient length to accommodate the
+      !>         result of the substitution, the result will be truncated on
+      !>         the right.
+      !>
+      !>     2)  If MARKER is blank, or if MARKER is not a substring of IN,
+      !>         no substitution is performed. (OUT and IN are identical.)
+      !>
+      !>     3)  If the value of RTCASE is not recognized, the error
+      !>         SPICE(INVALIDCASE) is signaled. OUT is not changed.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This is one of a family of related routines for inserting values
+      !>     into strings. They are typically to construct messages that
+      !>     are partly fixed, and partly determined at run time. For example,
+      !>     a message like
+      !>
+      !>        'The fifty-first picture was found in directory [USER.DATA].'
+      !>
+      !>     might be constructed from the fixed string
+      !>
+      !>        'The #1 picture was found in directory #2.'
+      !>
+      !>     by the calls
+      !>
+      !>        CALL REPMOT ( STRING, '#1',  51,           'L', STRING )
+      !>        CALL REPMC  ( STRING, '#2', '[USER.DATA]',      STRING )
+      !>
+      !>     which substitute the ordinal text 'fifty-first' and the character
+      !>     string '[USER.DATA]' for the markers '#1' and '#2' respectively.
+      !>
+      !>     The complete list of routines is shown below.
+      !>
+      !>        REPMC    ( Replace marker with character string value )
+      !>        REPMD    ( Replace marker with double precision value )
+      !>        REPMF    ( Replace marker with formatted d.p. value   )
+      !>        REPMI    ( Replace marker with integer value          )
+      !>        REPML    ( Replace marker with logical value          )
+      !>        REPMCT   ( Replace marker with cardinal text          )
+      !>        REPMOT   ( Replace marker with ordinal text           )
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) The following example illustrate the use of REPMOT to
+      !>        replace a marker within a string with the ordinal text
+      !>        corresponding to an integer.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM REPMOT_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local parameters.
+      !>        C
+      !>              INTEGER                 STRLEN
+      !>              PARAMETER             ( STRLEN = 80 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(STRLEN)      INSTR
+      !>              CHARACTER*(STRLEN)      MARKER
+      !>              CHARACTER*(STRLEN)      OUTSTR
+      !>
+      !>        C
+      !>        C     1. Uppercase
+      !>        C
+      !>              MARKER = '#'
+      !>              INSTR  = 'INVALID COMMAND. # WORD NOT RECOGNIZED.'
+      !>
+      !>              CALL REPMOT ( INSTR, MARKER, 5, 'U', OUTSTR )
+      !>
+      !>              WRITE(*,*) 'Case 1: Replacement text in uppercase.'
+      !>              WRITE(*,*) '   Input : ', INSTR
+      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>              WRITE(*,*) ' '
+      !>
+      !>        C
+      !>        C     2. Lowercase
+      !>        C
+      !>              MARKER = ' XX '
+      !>              INSTR  = 'The XX word of the XX sentence was ...'
+      !>
+      !>              CALL REPMOT ( INSTR, MARKER, 5, 'L', OUTSTR )
+      !>
+      !>              WRITE(*,*) 'Case 2: Replacement text in lowercase.'
+      !>              WRITE(*,*) '   Input : ', INSTR
+      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>              WRITE(*,*) ' '
+      !>
+      !>        C
+      !>        C     2. Capitalized
+      !>        C
+      !>              MARKER = ' XX '
+      !>              INSTR  = 'Name:  YY.  Rank:  XX.'
+      !>
+      !>              CALL REPMC  ( INSTR,  'YY',  'Moriarty', OUTSTR )
+      !>              CALL REPMOT ( OUTSTR, MARKER, 5,    'C', OUTSTR )
+      !>
+      !>              WRITE(*,*) 'Case 3: Replacement text capitalized.'
+      !>              WRITE(*,*) '   Input : ', INSTR
+      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Case 1: Replacement text in uppercase.
+      !>            Input : INVALID COMMAND. # WORD NOT RECOGNIZED.
+      !>            Output: INVALID COMMAND. FIFTH WORD NOT RECOGNIZED.
+      !>
+      !>         Case 2: Replacement text in lowercase.
+      !>            Input : The XX word of the XX sentence was ...
+      !>            Output: The fifth word of the XX sentence was ...
+      !>
+      !>         Case 3: Replacement text capitalized.
+      !>            Input : Name:  YY.  Rank:  XX.
+      !>            Output: Name:  Moriarty.  Rank:  Fifth.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  VALUE must be in the range accepted by the SPICELIB routine
+      !>         INTORD. This range is currently
+      !>
+      !>            ( -10**12, 10**12 )
+      !>
+      !>         Note that the endpoints of the interval are excluded.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.3.0, 06-JUL-2021 (JDR)
+      !>
+      !>        Changed input argument name CASE to RTCASE for consistency
+      !>        with other routines.
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Updated code to remove unnecessary lines of code in the
+      !>        Standard SPICE error handling CHKIN statements.
+      !>
+      !>        Edited the header to comply with NAIF standard. Added complete
+      !>        code example from existing fragments. Improved example in
+      !>        $Particulars section.
+      !>
+      !>        Added REPML to the list of available replace marker routines.
+      !>
+      !>-    SPICELIB Version 1.2.0, 21-SEP-2013 (BVS)
+      !>
+      !>        Minor efficiency update: the routine now looks up the first
+      !>        and last non-blank characters only once.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
       module procedure repmot
-!! ## Abstract
-!!
-!!     Replace a marker with the text representation of an ordinal
-!!     number.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CHARACTER
-!!     CONVERSION
-!!     STRING
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: lcase, ucase
       implicit none
 
-
       integer(ip), parameter :: maxlon = 147
 
-! $ Detailed_Input
-!
-!     IN       is an arbitrary character string.
-!
-!     MARKER   is an arbitrary character string. The first occurrence of
-!              MARKER in the input string is to be replaced by the text
-!              representation of the ordinal number VALUE.
-!
-!              Leading and trailing blanks in MARKER are NOT
-!              significant. In particular, no substitution is performed
-!              if MARKER is blank.
-!
-!     VALUE    is an arbitrary integer.
-!
-!     RTCASE   indicates the case of the replacement text. RTCASE may be
-!              any of the following:
-!
-!                 RTCASE   Meaning        Example
-!                 ------   -----------    -----------------------
-!                 U, u     Uppercase      ONE HUNDRED FIFTY-THIRD
-!
-!                 L, l     Lowercase      one hundred fifty-third
-!
-!                 C, c     Capitalized    One hundred fifty-third
-!
-! $ Detailed_Output
-!
-!     OUT      is the string obtained by substituting the text
-!              representation of the ordinal number VALUE for the first
-!              occurrence of MARKER in the input string.
-!
-!              OUT and IN must be identical or disjoint.
-!
-! $ Parameters
-!
-!     MAXLON   is the maximum expected length of any ordinal text.
-!              147 characters are sufficient to hold the text
-!              representing any ordinal value whose corresponding
-!              ordinal value is in the range
-!
-!                ( -10**12, 10**12 )
-!
-!              An example of a number whose ordinal text representation
-!              is of maximum length is
-!
-!                 - 777 777 777 777
-!
-! $ Exceptions
-!
-!     1)  If OUT does not have sufficient length to accommodate the
-!         result of the substitution, the result will be truncated on
-!         the right.
-!
-!     2)  If MARKER is blank, or if MARKER is not a substring of IN,
-!         no substitution is performed. (OUT and IN are identical.)
-!
-!     3)  If the value of RTCASE is not recognized, the error
-!         SPICE(INVALIDCASE) is signaled. OUT is not changed.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This is one of a family of related routines for inserting values
-!     into strings. They are typically to construct messages that
-!     are partly fixed, and partly determined at run time. For example,
-!     a message like
-!
-!        'The fifty-first picture was found in directory [USER.DATA].'
-!
-!     might be constructed from the fixed string
-!
-!        'The #1 picture was found in directory #2.'
-!
-!     by the calls
-!
-!        CALL REPMOT ( STRING, '#1',  51,           'L', STRING )
-!        CALL REPMC  ( STRING, '#2', '[USER.DATA]',      STRING )
-!
-!     which substitute the ordinal text 'fifty-first' and the character
-!     string '[USER.DATA]' for the markers '#1' and '#2' respectively.
-!
-!     The complete list of routines is shown below.
-!
-!        REPMC    ( Replace marker with character string value )
-!        REPMD    ( Replace marker with double precision value )
-!        REPMF    ( Replace marker with formatted d.p. value   )
-!        REPMI    ( Replace marker with integer value          )
-!        REPML    ( Replace marker with logical value          )
-!        REPMCT   ( Replace marker with cardinal text          )
-!        REPMOT   ( Replace marker with ordinal text           )
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) The following example illustrate the use of REPMOT to
-!        replace a marker within a string with the ordinal text
-!        corresponding to an integer.
-!
-!        Example code begins here.
-!
-!              PROGRAM REPMOT_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER                 STRLEN
-!              PARAMETER             ( STRLEN = 80 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(STRLEN)      INSTR
-!              CHARACTER*(STRLEN)      MARKER
-!              CHARACTER*(STRLEN)      OUTSTR
-!
-!        C
-!        C     1. Uppercase
-!        C
-!              MARKER = '#'
-!              INSTR  = 'INVALID COMMAND. # WORD NOT RECOGNIZED.'
-!
-!              CALL REPMOT ( INSTR, MARKER, 5, 'U', OUTSTR )
-!
-!              WRITE(*,*) 'Case 1: Replacement text in uppercase.'
-!              WRITE(*,*) '   Input : ', INSTR
-!              WRITE(*,*) '   Output: ', OUTSTR
-!              WRITE(*,*) ' '
-!
-!        C
-!        C     2. Lowercase
-!        C
-!              MARKER = ' XX '
-!              INSTR  = 'The XX word of the XX sentence was ...'
-!
-!              CALL REPMOT ( INSTR, MARKER, 5, 'L', OUTSTR )
-!
-!              WRITE(*,*) 'Case 2: Replacement text in lowercase.'
-!              WRITE(*,*) '   Input : ', INSTR
-!              WRITE(*,*) '   Output: ', OUTSTR
-!              WRITE(*,*) ' '
-!
-!        C
-!        C     2. Capitalized
-!        C
-!              MARKER = ' XX '
-!              INSTR  = 'Name:  YY.  Rank:  XX.'
-!
-!              CALL REPMC  ( INSTR,  'YY',  'Moriarty', OUTSTR )
-!              CALL REPMOT ( OUTSTR, MARKER, 5,    'C', OUTSTR )
-!
-!              WRITE(*,*) 'Case 3: Replacement text capitalized.'
-!              WRITE(*,*) '   Input : ', INSTR
-!              WRITE(*,*) '   Output: ', OUTSTR
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Case 1: Replacement text in uppercase.
-!            Input : INVALID COMMAND. # WORD NOT RECOGNIZED.
-!            Output: INVALID COMMAND. FIFTH WORD NOT RECOGNIZED.
-!
-!         Case 2: Replacement text in lowercase.
-!            Input : The XX word of the XX sentence was ...
-!            Output: The fifth word of the XX sentence was ...
-!
-!         Case 3: Replacement text capitalized.
-!            Input : Name:  YY.  Rank:  XX.
-!            Output: Name:  Moriarty.  Rank:  Fifth.
-!
-! $ Restrictions
-!
-!     1)  VALUE must be in the range accepted by the SPICELIB routine
-!         INTORD. This range is currently
-!
-!            ( -10**12, 10**12 )
-!
-!         Note that the endpoints of the interval are excluded.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.3.0, 06-JUL-2021 (JDR)
-!
-!        Changed input argument name CASE to RTCASE for consistency
-!        with other routines.
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Updated code to remove unnecessary lines of code in the
-!        Standard SPICE error handling CHKIN statements.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example from existing fragments. Improved example in
-!        $Particulars section.
-!
-!        Added REPML to the list of available replace marker routines.
-!
-!-    SPICELIB Version 1.2.0, 21-SEP-2013 (BVS)
-!
-!        Minor efficiency update: the routine now looks up the first
-!        and last non-blank characters only once.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     replace marker with ordinal text
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       character(maxlon)     ord
       character(1)          tmpcas
 
@@ -883,303 +765,275 @@ contains
       return
       end procedure repmot
 
-!$Procedure SEPOOL ( String from pool )
-
+      !> ## Detailed Input
+      !>
+      !>     ITEM     is the name of a kernel pool variable for which
+      !>              the caller wants to retrieve a full (potentially
+      !>              continued) string.
+      !>
+      !>     FIDX     is the index of the first component (the start) of
+      !>              the string in ITEM.
+      !>
+      !>     CONTIN   is a sequence of characters which (if they appear as
+      !>              the last non-blank sequence of characters in a
+      !>              component of a value of a kernel pool variable)
+      !>              indicate that the string associated with the
+      !>              component is continued into the next literal
+      !>              component of the kernel pool variable.
+      !>
+      !>              If CONTIN is blank, all of the components of ITEM
+      !>              will be retrieved as a single string.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     STRING   is the full string starting at the FIDX element of the
+      !>              kernel pool variable specified by ITEM.
+      !>
+      !>              Note that if STRING is not sufficiently long to hold
+      !>              the fully continued string, the value will be
+      !>              truncated. You can determine if STRING has been
+      !>              truncated by examining the variable SIZE.
+      !>
+      !>     SIZE     is the index of last non-blank character of
+      !>              continued string as it is represented in the
+      !>              kernel pool. This is the actual number of characters
+      !>              needed to hold the requested string. If STRING
+      !>              contains a truncated portion of the full string,
+      !>              RTRIM(STRING) will be less than SIZE.
+      !>
+      !>              If the value of STRING should be a blank, then
+      !>              SIZE will be set to 1.
+      !>
+      !>     LIDX     is the index of the last component (the end) of
+      !>              the retrieved string in ITEM.
+      !>
+      !>     FOUND    is a logical variable indicating success of the
+      !>              request to retrieve the string.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the variable specified by ITEM is not present in the
+      !>         kernel pool or is present but is not character valued, STRING
+      !>         will be returned as a blank, SIZE will be returned with the
+      !>         value 0 and FOUND will be set to .FALSE. In particular if NTH
+      !>         is less than 1, STRING will be returned as a blank, SIZE will
+      !>         be zero and FOUND will be .FALSE.
+      !>
+      !>     2)  If the variable specified has a blank string associated
+      !>         with its full string starting at FIDX, STRING will be blank,
+      !>         SIZE will be 1 and FOUND will be set to .TRUE.
+      !>
+      !>     3)  If STRING is not long enough to hold all of the characters
+      !>         associated with the NTH string, it will be truncated on the
+      !>         right.
+      !>
+      !>     4)  If the continuation character is a blank, every component
+      !>         of the variable specified by ITEM will be inserted into
+      !>         the output string.
+      !>
+      !>     5)  If the continuation character is blank, then a blank component
+      !>         of a variable is treated as a component with no letters.
+      !>         For example:
+      !>
+      !>            STRINGS = ( 'This is a variable'
+      !>                        'with a blank'
+      !>                        ' '
+      !>                        'component.' )
+      !>
+      !>         Is equivalent to
+      !>
+      !>            STRINGS = ( 'This is a variable'
+      !>                        'with a blank'
+      !>                        'component.' )
+      !>
+      !>         from the point of view of SEPOOL if CONTIN is set to the
+      !>         blank character.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>      The SPICE Kernel Pool provides a very convenient interface
+      !>      for supplying both numeric and textual data to user application
+      !>      programs. However, any particular component of a character
+      !>      valued component of a kernel pool variable is limited to 80
+      !>      or fewer characters in length.
+      !>
+      !>      This routine allows you to overcome this limitation by
+      !>      "continuing" a character component of a kernel pool variable.
+      !>      To do this you need to select a continuation sequence
+      !>      of characters and then insert this sequence as the last non-blank
+      !>      set of characters that make up the portion of the component
+      !>      that should be continued.
+      !>
+      !>      For example, you may decide to use the sequence '//' to indicate
+      !>      that a string should be continued to the next component of
+      !>      a kernel pool variable. Then set up the
+      !>      kernel pool variable as shown below
+      !>
+      !>      LONG_STRINGS = ( 'This is part of the first component //'
+      !>                       'that needs more than one line when //'
+      !>                       'inserting it into the kernel pool.'
+      !>                       'This is the second string that is split //'
+      !>                       'up as several components of a kernel pool //'
+      !>                       'variable.' )
+      !>
+      !>      When loaded into the kernel pool, the variable LONG_STRINGS
+      !>      will have six literal components:
+      !>
+      !>         COMPONENT (1) = 'This is part of the first component //'
+      !>         COMPONENT (2) = 'that needs more than one line when //'
+      !>         COMPONENT (3) = 'inserting it into the kernel pool.'
+      !>         COMPONENT (4) = 'This is the second string that is split //'
+      !>         COMPONENT (5) = 'up as several components of a kernel pool //'
+      !>         COMPONENT (6) = 'variable.'
+      !>
+      !>      These are the components that would be retrieved by the call
+      !>
+      !>         CALL GCPOOL ( 'LONG_STRINGS', 1, 6, N, COMPONENT, FOUND )
+      !>
+      !>      However, using the routine SEPOOL you can view the variable
+      !>      LONG_STRINGS as having two long components.
+      !>
+      !>         STRING (1) = 'This is part of the first component that '
+      !>     .   //           'needs more than one line when inserting '
+      !>     .   //           'it into the kernel pool. '
+      !>
+      !>         STRING (2) = 'This is the second string that is split '
+      !>     .   //           'up as several components of a kernel pool '
+      !>     .   //           'variable. '
+      !>
+      !>      These string components would be retrieved by the following two
+      !>      calls.
+      !>
+      !>         FIDX = 1
+      !>         CALL SEPOOL ( 'LONG_STRINGS', FIDX, '//',
+      !>        .                              STRING(1), SIZE, LIDX, FOUND )
+      !>         FIDX = LIDX+1
+      !>         CALL SEPOOL ( 'LONG_STRINGS', FIDX, '//',
+      !>        .                              STRING(2), SIZE, LIDX, FOUND )
+      !>
+      !> ## Examples
+      !>
+      !>     Example 1. Retrieving file names.
+      !>
+      !>      Suppose a you have used the kernel pool as a mechanism for
+      !>      specifying SPK files to load at startup but that the full
+      !>      names of the files are too long to be contained in a single
+      !>      text line of a kernel pool assignment.
+      !>
+      !>      By selecting an appropriate continuation character ('*' for
+      !>      example)  you can insert the full names of the SPK files
+      !>      into the kernel pool and then retrieve them using this
+      !>      routine.
+      !>
+      !>      First set up the kernel pool specification of the strings
+      !>      as shown here:
+      !>
+      !>            SPK_FILES = ( 'this_is_the_full_path_specification_*'
+      !>                          'of_a_file_with_a_long_name'
+      !>                          'this_is_the_full_path_specification_*'
+      !>                          'of_a_second_file_with_a_very_long_*'
+      !>                          'name' )
+      !>
+      !>      Now to retrieve and load the SPK_FILES one at a time,
+      !>      exercise the following loop.
+      !>
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>      CHARACTER*(FILSIZ)    FILE
+      !>      INTEGER               I
+      !>      INTEGER               LIDX
+      !>
+      !>      I = 1
+      !>
+      !>      CALL SEPOOL ( 'SPK_FILES', I, '*', FILE, SIZE, LIDX, FOUND )
+      !>
+      !>      DO WHILE ( FOUND .AND. RTRIM(FILE) .EQ. SIZE )
+      !>
+      !>         CALL SPKLEF ( FILE, HANDLE )
+      !>         I = LIDX + 1
+      !>         CALL SEPOOL ( 'SPK_FILES', I, '*', FILE, SIZE, LIDX, FOUND )
+      !>      END DO
+      !>
+      !>      IF ( FOUND .AND. RTRIM(FILE) .NE. SIZE ) THEN
+      !>         WRITE (*,*) 'The ', I, '''th file name was too long.'
+      !>      END IF
+      !>
+      !>      Example 2. Retrieving all components as a string.
+      !>
+      !>      Occasionally, it may be useful to retrieve the entire
+      !>      contents of a kernel pool variable as a single string. To
+      !>      do this you can use the blank character as the
+      !>      continuation character. For example if you place the
+      !>      following assignment in a text kernel
+      !>
+      !>          COMMENT = (  'This is a long note '
+      !>                       ' about the intended '
+      !>                       ' use of this text kernel that '
+      !>                       ' can be retrieved at run time.' )
+      !>
+      !>      you can retrieve COMMENT as single string via the call below.
+      !>
+      !>         CALL SEPOOL ( 'COMMENT', 1, ' ', COMMNT, SIZE, LIDX, FOUND )
+      !>
+      !>      The result will be that COMMNT will have the following value.
+      !>
+      !>         COMMNT = 'This is a long note about the intended use of '
+      !>     .   //       'this text kernel that can be retrieved at run '
+      !>     .   //       'time. '
+      !>
+      !>      Note that the leading blanks of each component of COMMENT are
+      !>      significant, trailing blanks are not significant.
+      !>
+      !>      If COMMENT had been set as
+      !>
+      !>          COMMENT = (  'This is a long note '
+      !>                       'about the intended '
+      !>                       'use of this text kernel that '
+      !>                       'can be retrieved at run time.' )
+      !>
+      !>      Then the call to SEPOOL above would have resulted in several
+      !>      words being run together as shown below.
+      !>
+      !>         COMMNT = 'This is a long noteabout the intendeduse of '
+      !>     .   //       'this text kernel thatcan be retrieved at run '
+      !>     .   //       'time. '
+      !>
+      !>      resulted in several words being run together as shown below.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.0, 12-APR-2012 (WLT) (BVS)
       module procedure sepool
-!! ## Abstract
-!!
-!!     Retrieve the string starting at the FIDX element of the kernel
-!!     pool variable, where the string may be continued across several
-!!     components of the kernel pool variable.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     POOL
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
-
-
-! $ Detailed_Input
-!
-!     ITEM     is the name of a kernel pool variable for which
-!              the caller wants to retrieve a full (potentially
-!              continued) string.
-!
-!     FIDX     is the index of the first component (the start) of
-!              the string in ITEM.
-!
-!     CONTIN   is a sequence of characters which (if they appear as
-!              the last non-blank sequence of characters in a
-!              component of a value of a kernel pool variable)
-!              indicate that the string associated with the
-!              component is continued into the next literal
-!              component of the kernel pool variable.
-!
-!              If CONTIN is blank, all of the components of ITEM
-!              will be retrieved as a single string.
-!
-! $ Detailed_Output
-!
-!     STRING   is the full string starting at the FIDX element of the
-!              kernel pool variable specified by ITEM.
-!
-!              Note that if STRING is not sufficiently long to hold
-!              the fully continued string, the value will be
-!              truncated. You can determine if STRING has been
-!              truncated by examining the variable SIZE.
-!
-!     SIZE     is the index of last non-blank character of
-!              continued string as it is represented in the
-!              kernel pool. This is the actual number of characters
-!              needed to hold the requested string. If STRING
-!              contains a truncated portion of the full string,
-!              RTRIM(STRING) will be less than SIZE.
-!
-!              If the value of STRING should be a blank, then
-!              SIZE will be set to 1.
-!
-!     LIDX     is the index of the last component (the end) of
-!              the retrieved string in ITEM.
-!
-!     FOUND    is a logical variable indicating success of the
-!              request to retrieve the string.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the variable specified by ITEM is not present in the
-!         kernel pool or is present but is not character valued, STRING
-!         will be returned as a blank, SIZE will be returned with the
-!         value 0 and FOUND will be set to .FALSE. In particular if NTH
-!         is less than 1, STRING will be returned as a blank, SIZE will
-!         be zero and FOUND will be .FALSE.
-!
-!     2)  If the variable specified has a blank string associated
-!         with its full string starting at FIDX, STRING will be blank,
-!         SIZE will be 1 and FOUND will be set to .TRUE.
-!
-!     3)  If STRING is not long enough to hold all of the characters
-!         associated with the NTH string, it will be truncated on the
-!         right.
-!
-!     4)  If the continuation character is a blank, every component
-!         of the variable specified by ITEM will be inserted into
-!         the output string.
-!
-!     5)  If the continuation character is blank, then a blank component
-!         of a variable is treated as a component with no letters.
-!         For example:
-!
-!            STRINGS = ( 'This is a variable'
-!                        'with a blank'
-!                        ' '
-!                        'component.' )
-!
-!         Is equivalent to
-!
-!            STRINGS = ( 'This is a variable'
-!                        'with a blank'
-!                        'component.' )
-!
-!         from the point of view of SEPOOL if CONTIN is set to the
-!         blank character.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!      The SPICE Kernel Pool provides a very convenient interface
-!      for supplying both numeric and textual data to user application
-!      programs. However, any particular component of a character
-!      valued component of a kernel pool variable is limited to 80
-!      or fewer characters in length.
-!
-!      This routine allows you to overcome this limitation by
-!      "continuing" a character component of a kernel pool variable.
-!      To do this you need to select a continuation sequence
-!      of characters and then insert this sequence as the last non-blank
-!      set of characters that make up the portion of the component
-!      that should be continued.
-!
-!      For example, you may decide to use the sequence '//' to indicate
-!      that a string should be continued to the next component of
-!      a kernel pool variable. Then set up the
-!      kernel pool variable as shown below
-!
-!      LONG_STRINGS = ( 'This is part of the first component //'
-!                       'that needs more than one line when //'
-!                       'inserting it into the kernel pool.'
-!                       'This is the second string that is split //'
-!                       'up as several components of a kernel pool //'
-!                       'variable.' )
-!
-!      When loaded into the kernel pool, the variable LONG_STRINGS
-!      will have six literal components:
-!
-!         COMPONENT (1) = 'This is part of the first component //'
-!         COMPONENT (2) = 'that needs more than one line when //'
-!         COMPONENT (3) = 'inserting it into the kernel pool.'
-!         COMPONENT (4) = 'This is the second string that is split //'
-!         COMPONENT (5) = 'up as several components of a kernel pool //'
-!         COMPONENT (6) = 'variable.'
-!
-!      These are the components that would be retrieved by the call
-!
-!         CALL GCPOOL ( 'LONG_STRINGS', 1, 6, N, COMPONENT, FOUND )
-!
-!      However, using the routine SEPOOL you can view the variable
-!      LONG_STRINGS as having two long components.
-!
-!         STRING (1) = 'This is part of the first component that '
-!     .   //           'needs more than one line when inserting '
-!     .   //           'it into the kernel pool. '
-!
-!         STRING (2) = 'This is the second string that is split '
-!     .   //           'up as several components of a kernel pool '
-!     .   //           'variable. '
-!
-!      These string components would be retrieved by the following two
-!      calls.
-!
-!         FIDX = 1
-!         CALL SEPOOL ( 'LONG_STRINGS', FIDX, '//',
-!        .                              STRING(1), SIZE, LIDX, FOUND )
-!         FIDX = LIDX+1
-!         CALL SEPOOL ( 'LONG_STRINGS', FIDX, '//',
-!        .                              STRING(2), SIZE, LIDX, FOUND )
-!
-! $ Examples
-!
-!     Example 1. Retrieving file names.
-!
-!      Suppose a you have used the kernel pool as a mechanism for
-!      specifying SPK files to load at startup but that the full
-!      names of the files are too long to be contained in a single
-!      text line of a kernel pool assignment.
-!
-!      By selecting an appropriate continuation character ('*' for
-!      example)  you can insert the full names of the SPK files
-!      into the kernel pool and then retrieve them using this
-!      routine.
-!
-!      First set up the kernel pool specification of the strings
-!      as shown here:
-!
-!            SPK_FILES = ( 'this_is_the_full_path_specification_*'
-!                          'of_a_file_with_a_long_name'
-!                          'this_is_the_full_path_specification_*'
-!                          'of_a_second_file_with_a_very_long_*'
-!                          'name' )
-!
-!      Now to retrieve and load the SPK_FILES one at a time,
-!      exercise the following loop.
-!
-!      INTEGER               FILSIZ
-!      PARAMETER           ( FILSIZ = 255 )
-!
-!      CHARACTER*(FILSIZ)    FILE
-!      INTEGER               I
-!      INTEGER               LIDX
-!
-!      I = 1
-!
-!      CALL SEPOOL ( 'SPK_FILES', I, '*', FILE, SIZE, LIDX, FOUND )
-!
-!      DO WHILE ( FOUND .AND. RTRIM(FILE) .EQ. SIZE )
-!
-!         CALL SPKLEF ( FILE, HANDLE )
-!         I = LIDX + 1
-!         CALL SEPOOL ( 'SPK_FILES', I, '*', FILE, SIZE, LIDX, FOUND )
-!      END DO
-!
-!      IF ( FOUND .AND. RTRIM(FILE) .NE. SIZE ) THEN
-!         WRITE (*,*) 'The ', I, '''th file name was too long.'
-!      END IF
-!
-!      Example 2. Retrieving all components as a string.
-!
-!      Occasionally, it may be useful to retrieve the entire
-!      contents of a kernel pool variable as a single string. To
-!      do this you can use the blank character as the
-!      continuation character. For example if you place the
-!      following assignment in a text kernel
-!
-!          COMMENT = (  'This is a long note '
-!                       ' about the intended '
-!                       ' use of this text kernel that '
-!                       ' can be retrieved at run time.' )
-!
-!      you can retrieve COMMENT as single string via the call below.
-!
-!         CALL SEPOOL ( 'COMMENT', 1, ' ', COMMNT, SIZE, LIDX, FOUND )
-!
-!      The result will be that COMMNT will have the following value.
-!
-!         COMMNT = 'This is a long note about the intended use of '
-!     .   //       'this text kernel that can be retrieved at run '
-!     .   //       'time. '
-!
-!      Note that the leading blanks of each component of COMMENT are
-!      significant, trailing blanks are not significant.
-!
-!      If COMMENT had been set as
-!
-!          COMMENT = (  'This is a long note '
-!                       'about the intended '
-!                       'use of this text kernel that '
-!                       'can be retrieved at run time.' )
-!
-!      Then the call to SEPOOL above would have resulted in several
-!      words being run together as shown below.
-!
-!         COMMNT = 'This is a long noteabout the intendeduse of '
-!     .   //       'this text kernel thatcan be retrieved at run '
-!     .   //       'time. '
-!
-!      resulted in several words being run together as shown below.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 12-APR-2012 (WLT) (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Retrieve a continued string value from the kernel pool
-!
-!-&
 
 !     SPICELIB Variables
 !
@@ -1301,302 +1155,274 @@ contains
       return
       end procedure sepool
 
-!$Procedure STPOOL ( String from pool )
-
+      !> ## Detailed Input
+      !>
+      !>     ITEM     is the name of a kernel pool variable for which
+      !>              the caller wants to retrieve a full (potentially
+      !>              continued) string component.
+      !>
+      !>     NTH      is the number of the string to retrieve from the kernel
+      !>              pool. The range of NTH is 1 to the number of full strings
+      !>              that are present.
+      !>
+      !>     CONTIN   is a sequence of characters which (if they appear as the
+      !>              last non-blank sequence of characters in a component of a
+      !>              value of a kernel pool variable) act as a continuation
+      !>              marker: the marker indicates that the string associated
+      !>              with the component is continued into the next literal
+      !>              component of the kernel pool variable.
+      !>
+      !>              If CONTIN is blank, all of the components of ITEM will be
+      !>              retrieved as a single string.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NTHSTR   is the NTH full string associated with the kernel pool
+      !>              variable specified by ITEM.
+      !>
+      !>              Note that if NTHSTR is not sufficiently long to hold the
+      !>              fully continued string, the value will be truncated. You
+      !>              can determine if NTHSTR has been truncated by examining
+      !>              the variable SIZE.
+      !>
+      !>     SIZE     is the index of last non-blank character of the continued
+      !>              string as it is represented in the kernel pool. This is
+      !>              the actual number of characters needed to hold the
+      !>              requested string. If NTHSTR contains a truncated portion
+      !>              of the full string, RTRIM(NTHSTR) will be less than SIZE.
+      !>
+      !>              If the value of NTHSTR should be a blank, then SIZE will
+      !>              be set to 1.
+      !>
+      !>     FOUND    is a logical variable indicating success of the request
+      !>              to retrieve the NTH string associated with ITEM. If an
+      !>              Nth string exists, FOUND will be set to .TRUE.;
+      !>              otherwise FOUND will be set to .FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the variable specified by ITEM is not present in the
+      !>         kernel pool or is present but is not character valued,
+      !>         NTHSTR will be returned as a blank, SIZE will be
+      !>         returned with the value 0 and FOUND will be set to .FALSE. In
+      !>         particular if NTH is less than 1, NTHSTR will be returned as a
+      !>         blank, SIZE will be zero and FOUND will be .FALSE.
+      !>
+      !>     2)  If the variable specified has a blank string associated
+      !>         with its NTH full string, NTHSTR will be blank, SIZE
+      !>         will be 1 and FOUND will be set to .TRUE.
+      !>
+      !>     3)  If NTHSTR is not long enough to hold all of the characters
+      !>         associated with the NTH string, it will be truncated on the
+      !>         right.
+      !>
+      !>     4)  If the continuation character is a blank, every component
+      !>         of the variable specified by ITEM will be inserted into
+      !>         the output string.
+      !>
+      !>     5)  If the continuation character is blank, then a blank component
+      !>         of a variable is treated as a component with no letters.
+      !>         For example:
+      !>
+      !>            STRINGS = ( 'This is a variable'
+      !>                        'with a blank'
+      !>                        ' '
+      !>                        'component.' )
+      !>
+      !>         Is equivalent to
+      !>
+      !>            STRINGS = ( 'This is a variable'
+      !>                        'with a blank'
+      !>                        'component.' )
+      !>
+      !>         from the point of view of STPOOL if CONTIN is set to the
+      !>         blank character.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The SPICE Kernel Pool provides a very convenient interface
+      !>     for supplying both numeric and textual data to user application
+      !>     programs. However, any particular component of a character
+      !>     valued component of a kernel pool variable is limited to 80
+      !>     or fewer characters in length.
+      !>
+      !>     This routine allows you to overcome this limitation by
+      !>     "continuing" a character component of a kernel pool variable.
+      !>     To do this you need to select a continuation sequence
+      !>     of characters and then insert this sequence as the last non-blank
+      !>     set of characters that make up the portion of the component
+      !>     that should be continued.
+      !>
+      !>     For example, you may decide to use the sequence '//' to indicate
+      !>     that a string should be continued to the next component of
+      !>     a kernel pool variable. Then set up the
+      !>     kernel pool variable as shown below
+      !>
+      !>        LONG_STRINGS = ( 'This is part of the first component //'
+      !>                         'that needs more than one line when //'
+      !>                         'inserting it into the kernel pool.'
+      !>                         'This is the second string that is split //'
+      !>                         'up as several components of a kernel pool //'
+      !>                         'variable.' )
+      !>
+      !>     When loaded into the kernel pool, the variable LONG_STRINGS
+      !>     will have six literal components:
+      !>
+      !>        COMPONENT (1) = 'This is part of the first component //'
+      !>        COMPONENT (2) = 'that needs more than one line when //'
+      !>        COMPONENT (3) = 'inserting it into the kernel pool.'
+      !>        COMPONENT (4) = 'This is the second string that is split //'
+      !>        COMPONENT (5) = 'up as several components of a kernel pool //'
+      !>        COMPONENT (6) = 'variable.'
+      !>
+      !>     These are the components that would be retrieved by the call
+      !>
+      !>        CALL GCPOOL ( 'LONG_STRINGS', 1, 6, N, COMPONENT, FOUND )
+      !>
+      !>     However, using the routine STPOOL you can view the variable
+      !>     LONG_STRINGS as having two long components.
+      !>
+      !>        STRGNA = 'This is part of the first component that '
+      !>       . //      'needs more than one line when inserting '
+      !>       . //      'it into the kernel pool. '
+      !>
+      !>        STRGNB = 'This is the second string that is split '
+      !>       . //      'up as several components of a kernel pool '
+      !>       . //      'variable. '
+      !>
+      !>     These string components would be retrieved by the following two
+      !>     calls.
+      !>
+      !>        CALL STPOOL ( 'LONG_STRINGS', 1, '//', STRGNA, SIZE, FOUND )
+      !>        CALL STPOOL ( 'LONG_STRINGS', 2, '//', STRGNB, SIZE, FOUND )
+      !>
+      !> ## Examples
+      !>
+      !>     Example 1. Retrieving file names.
+      !>
+      !>     Suppose a you have used the kernel pool as a mechanism for
+      !>     specifying SPK files to load at startup but that the full
+      !>     names of the files are too long to be contained in a single
+      !>     text line of a kernel pool assignment.
+      !>
+      !>     By selecting an appropriate continuation character ('*' for
+      !>     example)  you can insert the full names of the SPK files
+      !>     into the kernel pool and then retrieve them using this
+      !>     routine.
+      !>
+      !>     First set up the kernel pool specification of the strings
+      !>     as shown here:
+      !>
+      !>           SPK_FILES = ( 'this_is_the_full_path_specification_*'
+      !>                         'of_a_file_with_a_long_name'
+      !>                         'this_is_the_full_path_specification_*'
+      !>                         'of_a_second_file_with_a_very_long_*'
+      !>                         'name' )
+      !>
+      !>     Now to retrieve and load the SPK_FILES one at a time,
+      !>     exercise the following loop.
+      !>
+      !>     INTEGER               FILSIZ
+      !>     PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>     CHARACTER*(FILSIZ)    FILE
+      !>     INTEGER               I
+      !>
+      !>     I = 1
+      !>
+      !>     CALL STPOOL ( 'SPK_FILES', I, '*', FILE, SIZE, FOUND )
+      !>
+      !>     DO WHILE ( FOUND .AND. RTRIM(FILE) .EQ. SIZE )
+      !>
+      !>        CALL SPKLEF ( FILE, HANDLE )
+      !>        I = I + 1
+      !>        CALL STPOOL ( 'SPK_FILES', I, '*', FILE, SIZE, FOUND )
+      !>
+      !>     END DO
+      !>
+      !>     IF ( FOUND .AND. RTRIM(FILE) .NE. SIZE ) THEN
+      !>
+      !>        WRITE (*,*) 'The ', I, '''th file name was too long.'
+      !>
+      !>     END IF
+      !>
+      !>     Example 2. Retrieving all components as a string.
+      !>
+      !>     Occasionally, it may be useful to retrieve the entire
+      !>     contents of a kernel pool variable as a single string. To
+      !>     do this you can use the blank character as the
+      !>     continuation character. For example if you place the
+      !>     following assignment in a text kernel
+      !>
+      !>         COMMENT = (  'This is a long note '
+      !>                      ' about the intended '
+      !>                      ' use of this text kernel that '
+      !>                      ' can be retrieved at run time.' )
+      !>
+      !>     you can retrieve COMMENT as single string via the call below.
+      !>
+      !>        CALL STPOOL ( 'COMMENT', 1, ' ', COMMNT, SIZE, FOUND )
+      !>
+      !>     The result will be that COMMNT will have the following value.
+      !>
+      !>        COMMNT = 'This is a long note about the intended use of '
+      !>       . //      'this text kernel that can be retrieved at run '
+      !>       . //      'time. '
+      !>
+      !>     Note that the leading blanks of each component of COMMENT are
+      !>     significant, trailing blanks are not significant.
+      !>
+      !>     If COMMENT had been set as
+      !>
+      !>         COMMENT = (  'This is a long note '
+      !>                      'about the intended '
+      !>                      'use of this text kernel that '
+      !>                      'can be retrieved at run time.' )
+      !>
+      !>     Then the call to STPOOL above would have resulted in several
+      !>     words being run together as shown below.
+      !>
+      !>        COMMNT = 'This is a long noteabout the intendeduse of '
+      !>       . //      'this text kernel thatcan be retrieved at run '
+      !>       . //      'time. '
+      !>
+      !>     resulted in several words being run together as shown below.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
+      !>
+      !>        Changed the output argument name "STRING" to "NTHSTR" for
+      !>        consistency with other routines.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.0, 11-JUL-1997 (WLT)
       module procedure stpool
-!! ## Abstract
-!!
-!!     Retrieve the Nth string from a kernel pool variable, where the
-!!     string may be continued across several components of the kernel
-!!     pool variable.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     POOL
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
-
-
-! $ Detailed_Input
-!
-!     ITEM     is the name of a kernel pool variable for which
-!              the caller wants to retrieve a full (potentially
-!              continued) string component.
-!
-!     NTH      is the number of the string to retrieve from the kernel
-!              pool. The range of NTH is 1 to the number of full strings
-!              that are present.
-!
-!     CONTIN   is a sequence of characters which (if they appear as the
-!              last non-blank sequence of characters in a component of a
-!              value of a kernel pool variable) act as a continuation
-!              marker: the marker indicates that the string associated
-!              with the component is continued into the next literal
-!              component of the kernel pool variable.
-!
-!              If CONTIN is blank, all of the components of ITEM will be
-!              retrieved as a single string.
-!
-! $ Detailed_Output
-!
-!     NTHSTR   is the NTH full string associated with the kernel pool
-!              variable specified by ITEM.
-!
-!              Note that if NTHSTR is not sufficiently long to hold the
-!              fully continued string, the value will be truncated. You
-!              can determine if NTHSTR has been truncated by examining
-!              the variable SIZE.
-!
-!     SIZE     is the index of last non-blank character of the continued
-!              string as it is represented in the kernel pool. This is
-!              the actual number of characters needed to hold the
-!              requested string. If NTHSTR contains a truncated portion
-!              of the full string, RTRIM(NTHSTR) will be less than SIZE.
-!
-!              If the value of NTHSTR should be a blank, then SIZE will
-!              be set to 1.
-!
-!     FOUND    is a logical variable indicating success of the request
-!              to retrieve the NTH string associated with ITEM. If an
-!              Nth string exists, FOUND will be set to .TRUE.;
-!              otherwise FOUND will be set to .FALSE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the variable specified by ITEM is not present in the
-!         kernel pool or is present but is not character valued,
-!         NTHSTR will be returned as a blank, SIZE will be
-!         returned with the value 0 and FOUND will be set to .FALSE. In
-!         particular if NTH is less than 1, NTHSTR will be returned as a
-!         blank, SIZE will be zero and FOUND will be .FALSE.
-!
-!     2)  If the variable specified has a blank string associated
-!         with its NTH full string, NTHSTR will be blank, SIZE
-!         will be 1 and FOUND will be set to .TRUE.
-!
-!     3)  If NTHSTR is not long enough to hold all of the characters
-!         associated with the NTH string, it will be truncated on the
-!         right.
-!
-!     4)  If the continuation character is a blank, every component
-!         of the variable specified by ITEM will be inserted into
-!         the output string.
-!
-!     5)  If the continuation character is blank, then a blank component
-!         of a variable is treated as a component with no letters.
-!         For example:
-!
-!            STRINGS = ( 'This is a variable'
-!                        'with a blank'
-!                        ' '
-!                        'component.' )
-!
-!         Is equivalent to
-!
-!            STRINGS = ( 'This is a variable'
-!                        'with a blank'
-!                        'component.' )
-!
-!         from the point of view of STPOOL if CONTIN is set to the
-!         blank character.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The SPICE Kernel Pool provides a very convenient interface
-!     for supplying both numeric and textual data to user application
-!     programs. However, any particular component of a character
-!     valued component of a kernel pool variable is limited to 80
-!     or fewer characters in length.
-!
-!     This routine allows you to overcome this limitation by
-!     "continuing" a character component of a kernel pool variable.
-!     To do this you need to select a continuation sequence
-!     of characters and then insert this sequence as the last non-blank
-!     set of characters that make up the portion of the component
-!     that should be continued.
-!
-!     For example, you may decide to use the sequence '//' to indicate
-!     that a string should be continued to the next component of
-!     a kernel pool variable. Then set up the
-!     kernel pool variable as shown below
-!
-!        LONG_STRINGS = ( 'This is part of the first component //'
-!                         'that needs more than one line when //'
-!                         'inserting it into the kernel pool.'
-!                         'This is the second string that is split //'
-!                         'up as several components of a kernel pool //'
-!                         'variable.' )
-!
-!     When loaded into the kernel pool, the variable LONG_STRINGS
-!     will have six literal components:
-!
-!        COMPONENT (1) = 'This is part of the first component //'
-!        COMPONENT (2) = 'that needs more than one line when //'
-!        COMPONENT (3) = 'inserting it into the kernel pool.'
-!        COMPONENT (4) = 'This is the second string that is split //'
-!        COMPONENT (5) = 'up as several components of a kernel pool //'
-!        COMPONENT (6) = 'variable.'
-!
-!     These are the components that would be retrieved by the call
-!
-!        CALL GCPOOL ( 'LONG_STRINGS', 1, 6, N, COMPONENT, FOUND )
-!
-!     However, using the routine STPOOL you can view the variable
-!     LONG_STRINGS as having two long components.
-!
-!        STRGNA = 'This is part of the first component that '
-!       . //      'needs more than one line when inserting '
-!       . //      'it into the kernel pool. '
-!
-!        STRGNB = 'This is the second string that is split '
-!       . //      'up as several components of a kernel pool '
-!       . //      'variable. '
-!
-!     These string components would be retrieved by the following two
-!     calls.
-!
-!        CALL STPOOL ( 'LONG_STRINGS', 1, '//', STRGNA, SIZE, FOUND )
-!        CALL STPOOL ( 'LONG_STRINGS', 2, '//', STRGNB, SIZE, FOUND )
-!
-! $ Examples
-!
-!     Example 1. Retrieving file names.
-!
-!     Suppose a you have used the kernel pool as a mechanism for
-!     specifying SPK files to load at startup but that the full
-!     names of the files are too long to be contained in a single
-!     text line of a kernel pool assignment.
-!
-!     By selecting an appropriate continuation character ('*' for
-!     example)  you can insert the full names of the SPK files
-!     into the kernel pool and then retrieve them using this
-!     routine.
-!
-!     First set up the kernel pool specification of the strings
-!     as shown here:
-!
-!           SPK_FILES = ( 'this_is_the_full_path_specification_*'
-!                         'of_a_file_with_a_long_name'
-!                         'this_is_the_full_path_specification_*'
-!                         'of_a_second_file_with_a_very_long_*'
-!                         'name' )
-!
-!     Now to retrieve and load the SPK_FILES one at a time,
-!     exercise the following loop.
-!
-!     INTEGER               FILSIZ
-!     PARAMETER           ( FILSIZ = 255 )
-!
-!     CHARACTER*(FILSIZ)    FILE
-!     INTEGER               I
-!
-!     I = 1
-!
-!     CALL STPOOL ( 'SPK_FILES', I, '*', FILE, SIZE, FOUND )
-!
-!     DO WHILE ( FOUND .AND. RTRIM(FILE) .EQ. SIZE )
-!
-!        CALL SPKLEF ( FILE, HANDLE )
-!        I = I + 1
-!        CALL STPOOL ( 'SPK_FILES', I, '*', FILE, SIZE, FOUND )
-!
-!     END DO
-!
-!     IF ( FOUND .AND. RTRIM(FILE) .NE. SIZE ) THEN
-!
-!        WRITE (*,*) 'The ', I, '''th file name was too long.'
-!
-!     END IF
-!
-!     Example 2. Retrieving all components as a string.
-!
-!     Occasionally, it may be useful to retrieve the entire
-!     contents of a kernel pool variable as a single string. To
-!     do this you can use the blank character as the
-!     continuation character. For example if you place the
-!     following assignment in a text kernel
-!
-!         COMMENT = (  'This is a long note '
-!                      ' about the intended '
-!                      ' use of this text kernel that '
-!                      ' can be retrieved at run time.' )
-!
-!     you can retrieve COMMENT as single string via the call below.
-!
-!        CALL STPOOL ( 'COMMENT', 1, ' ', COMMNT, SIZE, FOUND )
-!
-!     The result will be that COMMNT will have the following value.
-!
-!        COMMNT = 'This is a long note about the intended use of '
-!       . //      'this text kernel that can be retrieved at run '
-!       . //      'time. '
-!
-!     Note that the leading blanks of each component of COMMENT are
-!     significant, trailing blanks are not significant.
-!
-!     If COMMENT had been set as
-!
-!         COMMENT = (  'This is a long note '
-!                      'about the intended '
-!                      'use of this text kernel that '
-!                      'can be retrieved at run time.' )
-!
-!     Then the call to STPOOL above would have resulted in several
-!     words being run together as shown below.
-!
-!        COMMNT = 'This is a long noteabout the intendeduse of '
-!       . //      'this text kernel thatcan be retrieved at run '
-!       . //      'time. '
-!
-!     resulted in several words being run together as shown below.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
-!
-!        Changed the output argument name "STRING" to "NTHSTR" for
-!        consistency with other routines.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 11-JUL-1997 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Retrieve a continued string value from the kernel pool
-!
-!-&
 
 !     SPICELIB Variables
 !
@@ -1730,257 +1556,226 @@ contains
       return
       end procedure stpool
 
-!$Procedure TKVRSN ( Toolkit version strings )
-
+      !> ## Detailed Input
+      !>
+      !>     ITEM     is the item for which a version string is to be returned.
+      !>              ITEM may be 'TOOLKIT', entry point names, or program
+      !>              names. ITEM is case insensitive.
+      !>
+      !>              Currently, the only ITEM supported is 'TOOLKIT' and it
+      !>              will return the toolkit version number.
+      !>
+      !>              Any other ITEM will return 'No version found.'
+      !>
+      !> ## Detailed Output
+      !>
+      !>     VERSTR   is the latest version string for the specified ITEM.
+      !>
+      !>              If ITEM is not one of the items having a version, the
+      !>              value 'No version found.' will be returned.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If the ITEM whose version string is requested is not
+      !>         recognized, the string 'No version found.' is returned.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     None.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose you want to find out the recent Toolkit configuration
+      !>     version number. Using the code fragment below:
+      !>
+      !>     CHARACTER*(80)        VERSN
+      !>
+      !>     CALL TKVRSN ( 'TOOLKIT', VERSN )
+      !>
+      !>     The variable VERSN would contain a string similar to the one
+      !>     shown below:
+      !>
+      !>        'N0035'
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.16.0, 31-DEC-2021 (WLT)
+      !>
+      !>        Version update, N0067
+      !>
+      !>-    SPICELIB Version 3.15.0, 20-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 3.14.0, 05-APR-2017 (BVS)
+      !>
+      !>        Version update, N0066
+      !>
+      !>-    SPICELIB Version 3.13.0, 15-JUL-2014 (BVS)
+      !>
+      !>        Version update, N0065
+      !>
+      !>-    SPICELIB Version 3.12.0, 09-JUN-2010 (BVS)
+      !>
+      !>        Version update, N0064
+      !>
+      !>-    SPICELIB Version 3.11.0, 15-APR-2009 (BVS)
+      !>
+      !>        Version update, N0063
+      !>
+      !>-    SPICELIB Version 3.10.0, 04-MAR-2008 (BVS)
+      !>
+      !>        Version update, N0062
+      !>
+      !>-    SPICELIB Version 3.9.0, 27-NOV-2006 (BVS)
+      !>
+      !>        Version update, N0061
+      !>
+      !>-    SPICELIB Version 3.8.0, 16-DEC-2005 (BVS)
+      !>
+      !>        Version update, N0060
+      !>
+      !>-    SPICELIB Version 3.7.0, 17-NOV-2005 (BVS)
+      !>
+      !>        Version update, N0059
+      !>
+      !>-    SPICELIB Version 3.6.0, 11-JAN-2005 (BVS)
+      !>
+      !>        Version update, N0058
+      !>
+      !>-    SPICELIB Version 3.5.0, 02-MAR-2004 (BVS)
+      !>
+      !>        Version update, N0057
+      !>
+      !>-    SPICELIB Version 3.4.0, 30-JUL-2003 (BVS)
+      !>
+      !>        Version update, N0056
+      !>
+      !>-    SPICELIB Version 3.3.0, 26-FEB-2003 (BVS)
+      !>
+      !>        Version update, N0055
+      !>
+      !>-    SPICELIB Version 3.2.0, 13-DEC-2002 (BVS)
+      !>
+      !>        Version update, N0054
+      !>
+      !>-    SPICELIB Version 3.1.0, 05-SEP-2002 (BVS)
+      !>
+      !>        Version update, N0053
+      !>
+      !>-    SPICELIB Version 3.0.0, 06-FEB-2002 (FST)
+      !>
+      !>        Version update, N0052a
+      !>
+      !>-    SPICELIB Version 2.9.0, 17-JAN-2002 (WLT)
+      !>
+      !>        Version update, N0052
+      !>
+      !>-    SPICELIB Version 2.8.0, 07-APR-2000 (WLT)
+      !>
+      !>        Version update, N0051
+      !>
+      !>-    SPICELIB Version 2.7.0, 06-OCT-1999 (WLT)
+      !>
+      !>        Version update, N0050
+      !>
+      !>-    SPICELIB Version 2.6.0, 04-SEP-1998 (WLT)
+      !>
+      !>        Version update, N0049
+      !>
+      !>-    SPICELIB Version 2.5.0, 01-MAY-1998 (WLT)
+      !>
+      !>        Version update, N0048
+      !>
+      !>-    SPICELIB Version 2.4.0, 31-JUL-1997 (WLT)
+      !>
+      !>        Version update, N0047
+      !>
+      !>-    SPICELIB Version 2.3.0, 27-JAN-1997 (WLT)
+      !>
+      !>        Version update, N0046
+      !>
+      !>-    SPICELIB Version 2.2.0, 15-OCT-1996 (WLT)
+      !>
+      !>        Version update, N0045
+      !>
+      !>-    SPICELIB Version 2.1.0, 26-AUG-1996 (WLT)
+      !>
+      !>        Version update, N0044
+      !>
+      !>-    SPICELIB Version 2.0.0, 09-MAY-1996 (KRG)
+      !>
+      !>        Removed the check of the SPICELIB function RETURN. This
+      !>        routine is called by the error handling after an error
+      !>        has been signaled to get the toolkit version, so it
+      !>        cannot return on entry after an error.
+      !>
+      !>        The calls to CHKIN and CHKOUT have also been removed to
+      !>        completely isolate this subroutine from the error handling.
+      !>
+      !>        Version update, N0043.
+      !>
+      !>-    SPICELIB Version 1.7.0, 02-JAN-1996 (WLT)
+      !>
+      !>        Version update, N0042.
+      !>
+      !>-    SPICELIB Version 1.6.0, 28-SEP-1995 (HAN)
+      !>
+      !>        Version update, N0041.
+      !>
+      !>-    SPICELIB Version 1.5.0, 19-AUG-1995 (HAN)
+      !>
+      !>        Version update, N0040.
+      !>
+      !>-    SPICELIB Version 1.4.0, 05-JUN-1995 (HAN)
+      !>
+      !>        Version update, N0039.
+      !>
+      !>-    SPICELIB Version 1.3.0, 28-MAR-1995 (HAN)
+      !>
+      !>        Version update, N0038.
+      !>
+      !>-    SPICELIB Version 1.2.0, 23-DEC-1994 (HAN)
+      !>
+      !>        Version update, N0037.
+      !>
+      !>-    SPICELIB Version 1.1.0, 31-OCT-1994 (HAN)
+      !>
+      !>        Version update, N0036.
+      !>
+      !>-    SPICELIB Version 1.0.0, 23-AUG-1994 (HAN)
       module procedure tkvrsn
-!! ## Abstract
-!!
-!!     Return the latest version string of a given item such as the
-!!     Toolkit or a routine name.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_strings, only: eqstr
       implicit none
-
-
-! $ Detailed_Input
-!
-!     ITEM     is the item for which a version string is to be returned.
-!              ITEM may be 'TOOLKIT', entry point names, or program
-!              names. ITEM is case insensitive.
-!
-!              Currently, the only ITEM supported is 'TOOLKIT' and it
-!              will return the toolkit version number.
-!
-!              Any other ITEM will return 'No version found.'
-!
-! $ Detailed_Output
-!
-!     VERSTR   is the latest version string for the specified ITEM.
-!
-!              If ITEM is not one of the items having a version, the
-!              value 'No version found.' will be returned.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  If the ITEM whose version string is requested is not
-!         recognized, the string 'No version found.' is returned.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     Suppose you want to find out the recent Toolkit configuration
-!     version number. Using the code fragment below:
-!
-!     CHARACTER*(80)        VERSN
-!
-!     CALL TKVRSN ( 'TOOLKIT', VERSN )
-!
-!     The variable VERSN would contain a string similar to the one
-!     shown below:
-!
-!        'N0035'
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     H.A. Neilan        (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.16.0, 31-DEC-2021 (WLT)
-!
-!        Version update, N0067
-!
-!-    SPICELIB Version 3.15.0, 20-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 3.14.0, 05-APR-2017 (BVS)
-!
-!        Version update, N0066
-!
-!-    SPICELIB Version 3.13.0, 15-JUL-2014 (BVS)
-!
-!        Version update, N0065
-!
-!-    SPICELIB Version 3.12.0, 09-JUN-2010 (BVS)
-!
-!        Version update, N0064
-!
-!-    SPICELIB Version 3.11.0, 15-APR-2009 (BVS)
-!
-!        Version update, N0063
-!
-!-    SPICELIB Version 3.10.0, 04-MAR-2008 (BVS)
-!
-!        Version update, N0062
-!
-!-    SPICELIB Version 3.9.0, 27-NOV-2006 (BVS)
-!
-!        Version update, N0061
-!
-!-    SPICELIB Version 3.8.0, 16-DEC-2005 (BVS)
-!
-!        Version update, N0060
-!
-!-    SPICELIB Version 3.7.0, 17-NOV-2005 (BVS)
-!
-!        Version update, N0059
-!
-!-    SPICELIB Version 3.6.0, 11-JAN-2005 (BVS)
-!
-!        Version update, N0058
-!
-!-    SPICELIB Version 3.5.0, 02-MAR-2004 (BVS)
-!
-!        Version update, N0057
-!
-!-    SPICELIB Version 3.4.0, 30-JUL-2003 (BVS)
-!
-!        Version update, N0056
-!
-!-    SPICELIB Version 3.3.0, 26-FEB-2003 (BVS)
-!
-!        Version update, N0055
-!
-!-    SPICELIB Version 3.2.0, 13-DEC-2002 (BVS)
-!
-!        Version update, N0054
-!
-!-    SPICELIB Version 3.1.0, 05-SEP-2002 (BVS)
-!
-!        Version update, N0053
-!
-!-    SPICELIB Version 3.0.0, 06-FEB-2002 (FST)
-!
-!        Version update, N0052a
-!
-!-    SPICELIB Version 2.9.0, 17-JAN-2002 (WLT)
-!
-!        Version update, N0052
-!
-!-    SPICELIB Version 2.8.0, 07-APR-2000 (WLT)
-!
-!        Version update, N0051
-!
-!-    SPICELIB Version 2.7.0, 06-OCT-1999 (WLT)
-!
-!        Version update, N0050
-!
-!-    SPICELIB Version 2.6.0, 04-SEP-1998 (WLT)
-!
-!        Version update, N0049
-!
-!-    SPICELIB Version 2.5.0, 01-MAY-1998 (WLT)
-!
-!        Version update, N0048
-!
-!-    SPICELIB Version 2.4.0, 31-JUL-1997 (WLT)
-!
-!        Version update, N0047
-!
-!-    SPICELIB Version 2.3.0, 27-JAN-1997 (WLT)
-!
-!        Version update, N0046
-!
-!-    SPICELIB Version 2.2.0, 15-OCT-1996 (WLT)
-!
-!        Version update, N0045
-!
-!-    SPICELIB Version 2.1.0, 26-AUG-1996 (WLT)
-!
-!        Version update, N0044
-!
-!-    SPICELIB Version 2.0.0, 09-MAY-1996 (KRG)
-!
-!        Removed the check of the SPICELIB function RETURN. This
-!        routine is called by the error handling after an error
-!        has been signaled to get the toolkit version, so it
-!        cannot return on entry after an error.
-!
-!        The calls to CHKIN and CHKOUT have also been removed to
-!        completely isolate this subroutine from the error handling.
-!
-!        Version update, N0043.
-!
-!-    SPICELIB Version 1.7.0, 02-JAN-1996 (WLT)
-!
-!        Version update, N0042.
-!
-!-    SPICELIB Version 1.6.0, 28-SEP-1995 (HAN)
-!
-!        Version update, N0041.
-!
-!-    SPICELIB Version 1.5.0, 19-AUG-1995 (HAN)
-!
-!        Version update, N0040.
-!
-!-    SPICELIB Version 1.4.0, 05-JUN-1995 (HAN)
-!
-!        Version update, N0039.
-!
-!-    SPICELIB Version 1.3.0, 28-MAR-1995 (HAN)
-!
-!        Version update, N0038.
-!
-!-    SPICELIB Version 1.2.0, 23-DEC-1994 (HAN)
-!
-!        Version update, N0037.
-!
-!-    SPICELIB Version 1.1.0, 31-OCT-1994 (HAN)
-!
-!        Version update, N0036.
-!
-!-    SPICELIB Version 1.0.0, 23-AUG-1994 (HAN)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Return version strings
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 
 !
 !     At the current time only the TOOLKIT version number is
@@ -1995,249 +1790,221 @@ contains
       return
       end procedure tkvrsn
 
-!$Procedure ZZASCII ( determine/verify EOL terminators in a text file )
-
+      !> ## Detailed Input
+      !>
+      !>     FILE       the name of the ASCII file to scan for a line
+      !>                terminator
+      !>
+      !>     LINE       a character string of sufficient length to perform the
+      !>                line reads from FILE.
+      !>
+      !>     CHECK      a logical flag that, if set to .TRUE., instructs this
+      !>                routine to check terminator that has been determined
+      !>                against the one that is native to the platform, on
+      !>                which the toolkit was compiled, and to generate error
+      !>                if it was not the case. If set to .FALSE., instructs
+      !>                the routine to bypass the check.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     TERMIN     the terminator ID extracted from FILE. The possible
+      !>                values:
+      !>
+      !>                'CR'    - carriage return (Mac classic)
+      !>                'LF'    - line feed (Unix)
+      !>                'CR-LF' - carriage return and line feed (DOS)
+      !>                '?'     - unable to determine, possibly
+      !>                          due to an error event
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) A SPICE(STRINGTOOSHORT) error signals if LINE has length less
+      !>        than 3.
+      !>
+      !>     2) A SPICE(FILEOPENFAILED) error signals if the file of interest
+      !>        fails to open, i.e. IOSTAT < 0.
+      !>
+      !>     3) A text kernel found to contain non-native line terminators
+      !>        and abort of the run was requested by causes this routine to
+      !>        signal the error SPICE(INCOMPATIBLEEOL).
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The function scans a string read from a text file to determine
+      !>     the native platform of the file. The functions response is
+      !>     unpredictable if it scans a binary file.
+      !>
+      !> ## Examples
+      !>
+      !>     To return EOL terminator for a given file:
+      !>
+      !>         CHARACTER*(5)    TERMIN
+      !>         CHARACTER*(64)   LINE
+      !>
+      !>          ... given a file name
+      !>          ... and a line long enough to hold a text string
+      !>              from FILE
+      !>
+      !>         CALL ZZASCII( FILE, LINE, .FALSE., TERMIN )
+      !>
+      !>         CALL TOSTDO( 'FOUND FILE TERMINATOR '//TERMIN )
+      !>
+      !>     To stop if EOL terminator for a given file, if detected
+      !>     successfully, is not native to this platform:
+      !>
+      !>         CHARACTER*(5)    TERMIN
+      !>         CHARACTER*(64)   LINE
+      !>
+      !>          ... given a file name
+      !>          ... and a line long enough to hold a text string
+      !>              from FILE
+      !>
+      !>         CALL ZZASCII( FILE, LINE, .TRUE., TERMIN )
+      !>
+      !>     If the EOL terminator was not native, the call will generate
+      !>     SPICE(INCOMPATIBLEEOL) error.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) The terminator detection is not performed if the read from
+      !>        the file fails because the file is smaller than the allocated
+      !>        LINE size or for any other reason.
+      !>
+      !>     2) The terminator detection is not possible if the length of the
+      !>        first text line in the file exceeds the length of the LINE
+      !>        work space.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     E.D. Wright      (JPL)
+      !>     B.V. Semenov     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.26.0, 28-NOV-2021 (BVS)
+      !>
+      !>        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+      !>
+      !>-    SPICELIB Version 1.25.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-INTEL.
+      !>
+      !>-    SPICELIB Version 1.24.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.23.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.22.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.21.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 1.20.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL.
+      !>
+      !>-    SPICELIB Version 1.19.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-CC_C.
+      !>
+      !>-    SPICELIB Version 1.18.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+      !>
+      !>-    SPICELIB Version 1.17.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+      !>
+      !>-    SPICELIB Version 1.16.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.15.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.14.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-64BIT-MS_C.
+      !>
+      !>-    SPICELIB Version 1.13.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-INTEL_C.
+      !>
+      !>-    SPICELIB Version 1.12.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.11.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.10.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for PC-LINUX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.9.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for MAC-OSX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.8.0, 19-FEB-2008 (BVS)
+      !>
+      !>        Updated for PC-LINUX-IFORT.
+      !>
+      !>-    SPICELIB Version 1.7.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 1.6.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-INTEL_C.
+      !>
+      !>-    SPICELIB Version 1.5.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-IFORT.
+      !>
+      !>-    SPICELIB Version 1.4.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-IFORT.
+      !>
+      !>-    SPICELIB Version 1.3.1, 26-OCT-2006 (EDW)
+      !>
+      !>        Expanded error message explanation the
+      !>        routine outputs when the file-of-interest
+      !>        includes non-native text line terminators.
+      !>
+      !>-    SPICELIB Version 1.3.0, 26-OCT-2005 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 1.2.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN_C.
+      !>
+      !>-    SPICELIB Version 1.1.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN.
+      !>
+      !>-    SPICELIB Version 1.0.0, 17-FEB-2004 (EDW) (BVS)
       module procedure zzascii
-!! ## Abstract
-!!
-!!     Returns a string indicating the line terminators of an ASCII file
-!!     and, if requested, stops execution if the terminator does match
-!!     the one that is native to the platform on which the toolkit was
-!!     compiled.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     FILE TYPE
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     FILE       the name of the ASCII file to scan for a line
-!!                terminator
-!!
-!!     LINE       a character string of sufficient length to perform the
-!!                line reads from FILE.
-!!
-!!     CHECK      a logical flag that, if set to .TRUE., instructs this
-!!                routine to check terminator that has been determined
-!!                against the one that is native to the platform, on
-!!                which the toolkit was compiled, and to generate error
-!!                if it was not the case. If set to .FALSE., instructs
-!!                the routine to bypass the check.
-!!
-!! ## Detailed Output
-!!
-!!     TERMIN     the terminator ID extracted from FILE. The possible
-!!                values:
-!!
-!!                'CR'    - carriage return (Mac classic)
-!!                'LF'    - line feed (Unix)
-!!                'CR-LF' - carriage return and line feed (DOS)
-!!                '?'     - unable to determine, possibly
-!!                          due to an error event
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1) A SPICE(STRINGTOOSHORT) error signals if LINE has length less
-!!        than 3.
-!!
-!!     2) A SPICE(FILEOPENFAILED) error signals if the file of interest
-!!        fails to open, i.e. IOSTAT < 0.
-!!
-!!     3) A text kernel found to contain non-native line terminators
-!!        and abort of the run was requested by causes this routine to
-!!        signal the error SPICE(INCOMPATIBLEEOL).
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     The function scans a string read from a text file to determine
-!!     the native platform of the file. The functions response is
-!!     unpredictable if it scans a binary file.
-!!
-!! ## Examples
-!!
-!!     To return EOL terminator for a given file:
-!!
-!!         CHARACTER*(5)    TERMIN
-!!         CHARACTER*(64)   LINE
-!!
-!!          ... given a file name
-!!          ... and a line long enough to hold a text string
-!!              from FILE
-!!
-!!         CALL ZZASCII( FILE, LINE, .FALSE., TERMIN )
-!!
-!!         CALL TOSTDO( 'FOUND FILE TERMINATOR '//TERMIN )
-!!
-!!     To stop if EOL terminator for a given file, if detected
-!!     successfully, is not native to this platform:
-!!
-!!         CHARACTER*(5)    TERMIN
-!!         CHARACTER*(64)   LINE
-!!
-!!          ... given a file name
-!!          ... and a line long enough to hold a text string
-!!              from FILE
-!!
-!!         CALL ZZASCII( FILE, LINE, .TRUE., TERMIN )
-!!
-!!     If the EOL terminator was not native, the call will generate
-!!     SPICE(INCOMPATIBLEEOL) error.
-!!
-!! ## Restrictions
-!!
-!!     1) The terminator detection is not performed if the read from
-!!        the file fails because the file is smaller than the allocated
-!!        LINE size or for any other reason.
-!!
-!!     2) The terminator detection is not possible if the length of the
-!!        first text line in the file exceeds the length of the LINE
-!!        work space.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     E.D. Wright      (JPL)
-!!     B.V. Semenov     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.26.0, 28-NOV-2021 (BVS)
-!!
-!!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
-!!
-!!-    SPICELIB Version 1.25.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-64BIT-INTEL.
-!!
-!!-    SPICELIB Version 1.24.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-LINUX-64BIT-IFORT.
-!!
-!!-    SPICELIB Version 1.23.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-CYGWIN-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.22.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.21.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-CYGWIN-64BIT-GCC_C.
-!!
-!!-    SPICELIB Version 1.20.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-INTEL.
-!!
-!!-    SPICELIB Version 1.19.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-INTEL-CC_C.
-!!
-!!-    SPICELIB Version 1.18.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
-!!
-!!-    SPICELIB Version 1.17.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
-!!
-!!-    SPICELIB Version 1.16.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for PC-WINDOWS-64BIT-IFORT.
-!!
-!!-    SPICELIB Version 1.15.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for PC-LINUX-64BIT-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.14.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for PC-64BIT-MS_C.
-!!
-!!-    SPICELIB Version 1.13.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for MAC-OSX-64BIT-INTEL_C.
-!!
-!!-    SPICELIB Version 1.12.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for MAC-OSX-64BIT-IFORT.
-!!
-!!-    SPICELIB Version 1.11.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for MAC-OSX-64BIT-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.10.0, 18-MAR-2009 (BVS)
-!!
-!!        Updated for PC-LINUX-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.9.0, 18-MAR-2009 (BVS)
-!!
-!!        Updated for MAC-OSX-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.8.0, 19-FEB-2008 (BVS)
-!!
-!!        Updated for PC-LINUX-IFORT.
-!!
-!!-    SPICELIB Version 1.7.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for PC-LINUX-64BIT-GCC_C.
-!!
-!!-    SPICELIB Version 1.6.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for MAC-OSX-INTEL_C.
-!!
-!!-    SPICELIB Version 1.5.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for MAC-OSX-IFORT.
-!!
-!!-    SPICELIB Version 1.4.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for PC-WINDOWS-IFORT.
-!!
-!!-    SPICELIB Version 1.3.1, 26-OCT-2006 (EDW)
-!!
-!!        Expanded error message explanation the
-!!        routine outputs when the file-of-interest
-!!        includes non-native text line terminators.
-!!
-!!-    SPICELIB Version 1.3.0, 26-OCT-2005 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-64BIT-GCC_C.
-!!
-!!-    SPICELIB Version 1.2.0, 03-JAN-2005 (BVS)
-!!
-!!        Updated for PC-CYGWIN_C.
-!!
-!!-    SPICELIB Version 1.1.0, 03-JAN-2005 (BVS)
-!!
-!!        Updated for PC-CYGWIN.
-!!
-!!-    SPICELIB Version 1.0.0, 17-FEB-2004 (EDW) (BVS)
-!!
-!! ## Index Entries
-!!
-!!     determine ascii text file end-of-line type
-!!
-!!     SPICELIB functions.
-!!
-!!     Local parameters.
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, rtrim
 
@@ -2513,221 +2280,186 @@ contains
       return
       end procedure zzascii
 
-!$Procedure EXISTS ( Does the file exist? )
-
+      !> ## Detailed Input
+      !>
+      !>     FNAME    is the name of the file in question. This may be any
+      !>              unambiguous file name valid on the user's computer, for
+      !>              example
+      !>
+      !>                 '/usr/dir1/dir2/DATA.DAT'
+      !>                 './DATA.DAT'
+      !>                 'c:\usr\dir1\dir2\data.dat'
+      !>
+      !>              Environment or shell variables may not be used.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     The function returns the value .TRUE. if the file exists, .FALSE.
+      !>     otherwise.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the filename is blank, the error SPICE(BLANKFILENAME) is
+      !>         signaled.
+      !>
+      !>     2)  If an I/O error occurs while checking the existence of the
+      !>         indicated file, the error SPICE(INQUIREFAILED) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Use the Fortran INQUIRE statement to determine the existence
+      !>     of FNAME.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Given two arbitrary files (one of them the actual code example
+      !>        source file), determine if they exists.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM EXISTS_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     SPICELIB functions.
+      !>        C
+      !>              LOGICAL                 EXISTS
+      !>              INTEGER                 RTRIM
+      !>
+      !>        C
+      !>        C     Local constants.
+      !>        C
+      !>              INTEGER                 FILEN
+      !>              PARAMETER             ( FILEN = 14 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(FILEN)       FNAME  ( 2 )
+      !>
+      !>              INTEGER                 I
+      !>
+      !>        C
+      !>        C     Define an array of file names.
+      !>        C
+      !>              DATA                    FNAME / 'exists_ex1.txt',
+      !>             .                                'exists_ex1.pgm' /
+      !>
+      !>              DO I = 1, 2
+      !>
+      !>                 IF ( EXISTS ( FNAME(I) ) ) THEN
+      !>
+      !>                    WRITE(*,*) 'The file ', FNAME(I)(:RTRIM(FNAME(I))),
+      !>             .                 ' exists.'
+      !>
+      !>                 ELSE
+      !>
+      !>                    WRITE(*,*) 'Cannot find the file ', FNAME(I)
+      !>
+      !>                 END IF
+      !>
+      !>              END DO
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Cannot find the file exists_ex1.txt
+      !>         The file exists_ex1.pgm exists.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.3.0, 17-JUN-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Added complete code example.
+      !>
+      !>        Changed input argument name FILE to FNAME for consistency with
+      !>        other routines.
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>-    SPICELIB Version 2.2.1, 01-JUL-2014 (NJB)
+      !>
+      !>        VAX examples were deleted from the header.
+      !>
+      !>-    SPICELIB Version 2.2.0, 09-DEC-1999 (WLT)
+      !>
+      !>        The input file name is now "trimmed" of trailing blanks
+      !>        before checking its existence.
+      !>
+      !>-    SPICELIB Version 2.1.0, 04-MAR-1996 (KRG)
+      !>
+      !>        Added a local logical variable that is used as temporary
+      !>        storage for the results from the INQUIRE statement rather
+      !>        than using the function name. This solved a problem on the
+      !>        macintosh.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-AUG-1994 (KRG)
+      !>
+      !>        Added a test to see if the filename was blank before the
+      !>        INQUIRE statement. This allows a meaningful error message to
+      !>        be presented.
+      !>
+      !>-    SPICELIB Version 1.1.0, 17-MAY-1994 (HAN)
+      !>
+      !>        If the value of the function RETURN is .TRUE. upon execution of
+      !>        this module, this function is assigned a default value of
+      !>        either 0, 0.0D0, .FALSE., or blank depending on the type of
+      !>        the function.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    Beta Version 2.0.0, 29-DEC-1988 (HAN)
+      !>
+      !>        The IOSTAT specifier was added to the INQUIRE statement.
+      !>        If the value of IOSTAT is not equal to zero, an error
+      !>        occurred during the execution of the INQUIRE statement.
+      !>        In this case, a SPICELIB error is signaled and the routine
+      !>        checks out.
       module procedure exists
-!! ## Abstract
-!!
-!!     Determine whether a file exists.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
 
-
-! $ Detailed_Input
-!
-!     FNAME    is the name of the file in question. This may be any
-!              unambiguous file name valid on the user's computer, for
-!              example
-!
-!                 '/usr/dir1/dir2/DATA.DAT'
-!                 './DATA.DAT'
-!                 'c:\usr\dir1\dir2\data.dat'
-!
-!              Environment or shell variables may not be used.
-!
-! $ Detailed_Output
-!
-!     The function returns the value .TRUE. if the file exists, .FALSE.
-!     otherwise.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the filename is blank, the error SPICE(BLANKFILENAME) is
-!         signaled.
-!
-!     2)  If an I/O error occurs while checking the existence of the
-!         indicated file, the error SPICE(INQUIREFAILED) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     Use the Fortran INQUIRE statement to determine the existence
-!     of FNAME.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Given two arbitrary files (one of them the actual code example
-!        source file), determine if they exists.
-!
-!        Example code begins here.
-!
-!              PROGRAM EXISTS_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     SPICELIB functions.
-!        C
-!              LOGICAL                 EXISTS
-!              INTEGER                 RTRIM
-!
-!        C
-!        C     Local constants.
-!        C
-!              INTEGER                 FILEN
-!              PARAMETER             ( FILEN = 14 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(FILEN)       FNAME  ( 2 )
-!
-!              INTEGER                 I
-!
-!        C
-!        C     Define an array of file names.
-!        C
-!              DATA                    FNAME / 'exists_ex1.txt',
-!             .                                'exists_ex1.pgm' /
-!
-!              DO I = 1, 2
-!
-!                 IF ( EXISTS ( FNAME(I) ) ) THEN
-!
-!                    WRITE(*,*) 'The file ', FNAME(I)(:RTRIM(FNAME(I))),
-!             .                 ' exists.'
-!
-!                 ELSE
-!
-!                    WRITE(*,*) 'Cannot find the file ', FNAME(I)
-!
-!                 END IF
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Cannot find the file exists_ex1.txt
-!         The file exists_ex1.pgm exists.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     H.A. Neilan        (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.3.0, 17-JUN-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!        Added complete code example.
-!
-!        Changed input argument name FILE to FNAME for consistency with
-!        other routines.
-!
-!        Added IMPLICIT NONE statement.
-!
-!-    SPICELIB Version 2.2.1, 01-JUL-2014 (NJB)
-!
-!        VAX examples were deleted from the header.
-!
-!-    SPICELIB Version 2.2.0, 09-DEC-1999 (WLT)
-!
-!        The input file name is now "trimmed" of trailing blanks
-!        before checking its existence.
-!
-!-    SPICELIB Version 2.1.0, 04-MAR-1996 (KRG)
-!
-!        Added a local logical variable that is used as temporary
-!        storage for the results from the INQUIRE statement rather
-!        than using the function name. This solved a problem on the
-!        macintosh.
-!
-!-    SPICELIB Version 2.0.0, 04-AUG-1994 (KRG)
-!
-!        Added a test to see if the filename was blank before the
-!        INQUIRE statement. This allows a meaningful error message to
-!        be presented.
-!
-!-    SPICELIB Version 1.1.0, 17-MAY-1994 (HAN)
-!
-!        If the value of the function RETURN is .TRUE. upon execution of
-!        this module, this function is assigned a default value of
-!        either 0, 0.0D0, .FALSE., or blank depending on the type of
-!        the function.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     does the file exist
-!
-!-&
-
-! $ Revisions
-!
-!-    Beta Version 2.0.0, 29-DEC-1988 (HAN)
-!
-!        The IOSTAT specifier was added to the INQUIRE statement.
-!        If the value of IOSTAT is not equal to zero, an error
-!        occurred during the execution of the INQUIRE statement.
-!        In this case, a SPICELIB error is signaled and the routine
-!        checks out.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           iostat
       integer(ip)           r
 
@@ -2780,219 +2512,201 @@ contains
       return
       end procedure exists
 
-!$Procedure ZZLDKER ( Load a kernel )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Determine the architecture and type of a file and load
+      !>     the file into the appropriate SPICE subsystem
+      !>
+      !> ## Detailed Input
+      !>
+      !>     FILE       is the name of a file that is anticipated to
+      !>                be a SPICE kernel.
+      !>
+      !>     NOFILE     is a template for the message that should be created
+      !>                with SETMSG if a problem is identified with FILE. The
+      !>                message should have the form: "[text] '#' [text] #" The
+      !>                first octothorpe ('#') will be replaced by the name of
+      !>                the file. The second by a descriptive message.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     FILTYP     is the type of the kernel as determined by the
+      !>                SPICE file record of the file or by various
+      !>                heuristics.  Possible return values are:
+      !>
+      !>                  TEXT   ---  if FILE is interpreted as a text kernel
+      !>                              suitable for loading via LDPOOL.  No
+      !>                              attempt is made to distinguish between
+      !>                              different types of text kernels.
+      !>                  SPK   |
+      !>                  CK    |
+      !>                  PCK   |---  if FILE is a binary PCK file.
+      !>                  DSK   |
+      !>                  EK    |
+      !>
+      !>                If a failure occurs during the attempt to load
+      !>                the FILE, FILTYP will be returned as the blank string.
+      !>
+      !>     HANDLE     is the DAF or DAS handle that is associated with the
+      !>                file.  If the FILTYP of the file is 'TEXT', HANDLE
+      !>                will be set to zero.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If the specified file does not exist, the error
+      !>        SPICE(NOSUCHFILE) will be signaled.
+      !>
+      !>     2) If the specified file can be identified as unloadable
+      !>        because it is a transfer format file, the error
+      !>        SPICE(TRANSFERFILE) will be signaled.
+      !>
+      !>     3) If the specified file can be identified as unloadable
+      !>        because it is an obsolete text E-kernel, the error
+      !>        SPICE(TYPE1TEXTEK) will be signaled.
+      !>
+      !>     4) If the specified file can be recognized as a DAF/DAS file
+      !>        but is not one of the currently recognized binary kernel
+      !>        types, the error SPICE(UNKNOWNKERNELTYPE) will be signaled.
+      !>
+      !>     5) FILTYP is not sufficiently long to hold the full text of the
+      !>        type of the kernel, the value returned will be the truncation
+      !>        of the value.  As currently implemented this truncated type is
+      !>        sufficient to distinguish between the various types of
+      !>        kernels.
+      !>
+      !>     6) If the FILE cannot be loaded, HANDLE will be set to zero.
+      !>
+      !>     7) All other problems associated with the loading of FILE
+      !>        are diagnosed by the routines called by this routine.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine is intended as a supporting routine for the
+      !>     SPICE routine FURNSH.  It handles the task of loading
+      !>     an arbitrary kernel without the caller having to specify
+      !>     the type of the kernel.
+      !>
+      !> ## Examples
+      !>
+      !>     None.  (After all it's a private routine)
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>     W.L. Taber      (JPL)
+      !>     E.D. Wright     (JPL)
+      !>     B.V. Semenov    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.0, 17-OCT-2021 (BVS)
+      !>
+      !>        Wrapped KERLIN and TERMIN declarations in FORTRAN environment
+      !>        block to silence declared-not-used complaints from f2c.
+      !>
+      !>-    SPICELIB Version 2.0.0, 20-JAN-2016 (NJB)
+      !>
+      !>        Added ability to load DSK files.
+      !>
+      !>-    SPICELIB Version 1.17.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-INTEL.
+      !>
+      !>-    SPICELIB Version 1.16.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.15.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.14.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.13.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL.
+      !>
+      !>-    SPICELIB Version 1.12.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.11.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.10.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.9.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.8.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for PC-LINUX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.7.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for MAC-OSX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.6.0, 19-FEB-2008 (BVS)
+      !>
+      !>        Updated for PC-LINUX-IFORT.
+      !>
+      !>-    SPICELIB Version 1.5.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-IFORT.
+      !>
+      !>-    SPICELIB Version 1.4.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-IFORT.
+      !>
+      !>-    SPICELIB Version 1.3.0, 03-OCT-2005 (EDW)
+      !>
+      !>        Source file zzldker.f converted to master file.
+      !>        Modification occurred to prevent f2c's versions
+      !>        from making the zzascii test. CSPICE now
+      !>        includes coed to allow reading of non native text files.
+      !>
+      !>-    SPICELIB Version 1.2.0, 17-FEB-2004 (EDW) (BVS)
+      !>
+      !>        Added the ZZASCII terminator test for text files. Used a
+      !>        working line length of 132 characters (maximum text kernel
+      !>        line size.)
+      !>
+      !>-    SPICELIB Version 1.1.0, 24-JUN-2002 (EDW)
+      !>
+      !>        Added a call to ZZBODKIK to run the
+      !>        NAIF_BODY_NAME/CODE read/check routine
+      !>        whenever a text kernel loads.
+      !>
+      !>-    SPICELIB Version 1.0.0, 04-JUN-1999 (WLT)
       module procedure zzldker
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Determine the architecture and type of a file and load
-!!     the file into the appropriate SPICE subsystem
-!!
-!! ## Required Reading
-!!
-!!      None.
-!!
-!! ## Keywords
-!!
-!!      PRIVATE
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
-
-! $ Detailed_Input
-!
-!     FILE       is the name of a file that is anticipated to
-!                be a SPICE kernel.
-!
-!     NOFILE     is a template for the message that should be created
-!                with SETMSG if a problem is identified with FILE. The
-!                message should have the form: "[text] '#' [text] #" The
-!                first octothorpe ('#') will be replaced by the name of
-!                the file. The second by a descriptive message.
-!
-! $ Detailed_Output
-!
-!     FILTYP     is the type of the kernel as determined by the
-!                SPICE file record of the file or by various
-!                heuristics.  Possible return values are:
-!
-!                  TEXT   ---  if FILE is interpreted as a text kernel
-!                              suitable for loading via LDPOOL.  No
-!                              attempt is made to distinguish between
-!                              different types of text kernels.
-!                  SPK   |
-!                  CK    |
-!                  PCK   |---  if FILE is a binary PCK file.
-!                  DSK   |
-!                  EK    |
-!
-!                If a failure occurs during the attempt to load
-!                the FILE, FILTYP will be returned as the blank string.
-!
-!     HANDLE     is the DAF or DAS handle that is associated with the
-!                file.  If the FILTYP of the file is 'TEXT', HANDLE
-!                will be set to zero.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If the specified file does not exist, the error
-!        SPICE(NOSUCHFILE) will be signaled.
-!
-!     2) If the specified file can be identified as unloadable
-!        because it is a transfer format file, the error
-!        SPICE(TRANSFERFILE) will be signaled.
-!
-!     3) If the specified file can be identified as unloadable
-!        because it is an obsolete text E-kernel, the error
-!        SPICE(TYPE1TEXTEK) will be signaled.
-!
-!     4) If the specified file can be recognized as a DAF/DAS file
-!        but is not one of the currently recognized binary kernel
-!        types, the error SPICE(UNKNOWNKERNELTYPE) will be signaled.
-!
-!     5) FILTYP is not sufficiently long to hold the full text of the
-!        type of the kernel, the value returned will be the truncation
-!        of the value.  As currently implemented this truncated type is
-!        sufficient to distinguish between the various types of
-!        kernels.
-!
-!     6) If the FILE cannot be loaded, HANDLE will be set to zero.
-!
-!     7) All other problems associated with the loading of FILE
-!        are diagnosed by the routines called by this routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is intended as a supporting routine for the
-!     SPICE routine FURNSH.  It handles the task of loading
-!     an arbitrary kernel without the caller having to specify
-!     the type of the kernel.
-!
-! $ Examples
-!
-!     None.  (After all it's a private routine)
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     W.L. Taber      (JPL)
-!     E.D. Wright     (JPL)
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 17-OCT-2021 (BVS)
-!
-!        Wrapped KERLIN and TERMIN declarations in FORTRAN environment
-!        block to silence declared-not-used complaints from f2c.
-!
-!-    SPICELIB Version 2.0.0, 20-JAN-2016 (NJB)
-!
-!        Added ability to load DSK files.
-!
-!-    SPICELIB Version 1.17.0, 10-MAR-2014 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-INTEL.
-!
-!-    SPICELIB Version 1.16.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-IFORT.
-!
-!-    SPICELIB Version 1.15.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-GFORTRAN.
-!
-!-    SPICELIB Version 1.14.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 1.13.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL.
-!
-!-    SPICELIB Version 1.12.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-WINDOWS-64BIT-IFORT.
-!
-!-    SPICELIB Version 1.11.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 1.10.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-IFORT.
-!
-!-    SPICELIB Version 1.9.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 1.8.0, 18-MAR-2009 (BVS)
-!
-!        Updated for PC-LINUX-GFORTRAN.
-!
-!-    SPICELIB Version 1.7.0, 18-MAR-2009 (BVS)
-!
-!        Updated for MAC-OSX-GFORTRAN.
-!
-!-    SPICELIB Version 1.6.0, 19-FEB-2008 (BVS)
-!
-!        Updated for PC-LINUX-IFORT.
-!
-!-    SPICELIB Version 1.5.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-IFORT.
-!
-!-    SPICELIB Version 1.4.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-WINDOWS-IFORT.
-!
-!-    SPICELIB Version 1.3.0, 03-OCT-2005 (EDW)
-!
-!        Source file zzldker.f converted to master file.
-!        Modification occurred to prevent f2c's versions
-!        from making the zzascii test. CSPICE now
-!        includes coed to allow reading of non native text files.
-!
-!-    SPICELIB Version 1.2.0, 17-FEB-2004 (EDW) (BVS)
-!
-!        Added the ZZASCII terminator test for text files. Used a
-!        working line length of 132 characters (maximum text kernel
-!        line size.)
-!
-!-    SPICELIB Version 1.1.0, 24-JUN-2002 (EDW)
-!
-!        Added a call to ZZBODKIK to run the
-!        NAIF_BODY_NAME/CODE read/check routine
-!        whenever a text kernel loads.
-!
-!-    SPICELIB Version 1.0.0, 04-JUN-1999 (WLT)
-!
-!-&
-!
-!     SPICELIB Functions
-!
 
 !
 !     Local Variables.
@@ -3167,29 +2881,12 @@ contains
 !     variables are in pepper_state_keeper. Its documentation follows.
 !
 
-
 ! $ Abstract
 !
 !     This routine is an umbrella for a collection of entry points
 !     that manage the loading and unloading of SPICE kernels from
 !     an application program.
 !
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     KERNEL
-!
-! $ Declarations
-
-
-
-
-
-
-
 ! $ Detailed_Input
 !
 !     See Individual Entry points.
@@ -3680,18 +3377,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
 !
-!-&
-
-! $ Index_Entries
-!
-!     Generic loading and unloading of SPICE kernels
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
 
 !
 !     Here we set up the database of loaded kernels
@@ -3716,595 +3401,568 @@ contains
 !     TYPES.
 !
 
-
 !
 !     The number of files loaded through this interfaces is kept in the
 !     integer LOADED.
 
+      !> ## Detailed Input
+      !>
+      !>     FILE     is a SPICE kernel file. The file may be either binary
+      !>              or text. If the file is a binary SPICE kernel it will
+      !>              be loaded into the appropriate SPICE subsystem. If
+      !>              FILE is a SPICE text kernel it will be loaded into the
+      !>              kernel pool. If FILE is a SPICE meta-kernel containing
+      !>              initialization instructions (through use of the
+      !>              correct kernel pool variables), the files specified in
+      !>              those variables will be loaded into the appropriate
+      !>              SPICE subsystem.
+      !>
+      !>              The SPICE text kernel format supports association of
+      !>              names and data values using a "keyword = value"
+      !>              format. The keyword-value pairs thus defined are
+      !>              called "kernel variables."
+      !>
+      !>              While any information can be placed in a text kernel
+      !>              file, the following string valued kernel variables are
+      !>              recognized by SPICE as meta-kernel keywords:
+      !>
+      !>                   KERNELS_TO_LOAD
+      !>                   PATH_SYMBOLS
+      !>                   PATH_VALUES
+      !>
+      !>              Each kernel variable is discussed below.
+      !>
+      !>              KERNELS_TO_LOAD   is a list of SPICE kernels to be
+      !>                                loaded into a program. If file
+      !>                                names do not fit within the kernel
+      !>                                pool 80 character limit, they may be
+      !>                                continued to subsequent array
+      !>                                elements by placing the continuation
+      !>                                character ('+') at the end of an
+      !>                                element and then placing the
+      !>                                remainder of the file name in the
+      !>                                next array element. (See the
+      !>                                examples below for an illustration
+      !>                                of this technique or consult the
+      !>                                routine STPOOL for further details.)
+      !>
+      !>                                You may use one or more PATH_SYMBOL
+      !>                                assignments (see below) to specify
+      !>                                strings to be substituted for some
+      !>                                part of a file name.
+      !>
+      !>              PATH_SYMBOLS      is a list of strings (without
+      !>                                embedded blanks) which if
+      !>                                encountered following the '$'
+      !>                                character will be replaced with the
+      !>                                corresponding PATH_VALUES string.
+      !>                                Note that PATH_SYMBOLS are
+      !>                                interpreted only in values
+      !>                                associated with the KERNELS_TO_LOAD
+      !>                                variable. There must be a one-to-one
+      !>                                correspondence between the values
+      !>                                supplied for PATH_SYMBOLS and
+      !>                                PATH_VALUES. For the purpose of
+      !>                                determining this correspondence, any
+      !>                                path value that is continued over
+      !>                                multiple array elements counts as a
+      !>                                single value.
+      !>
+      !>              PATH_VALUES       is a list of expansions to use when
+      !>                                PATH_SYMBOLS are encountered. If
+      !>                                path values do not fit within the
+      !>                                kernel pool 80 character limit, they
+      !>                                may be continued in the same way as
+      !>                                file names (see the KERNELS_TO_LOAD
+      !>                                description above).
+      !>
+      !>               These kernel pool variables persist within the kernel
+      !>               pool only until all kernels associated with the
+      !>               variable KERNELS_TO_LOAD have been loaded. Once all
+      !>               specified kernels have been loaded, the variables
+      !>               KERNELS_TO_LOAD, PATH_SYMBOLS and PATH_VALUES are
+      !>               removed from the kernel pool.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None. The routine loads various SPICE kernels for use by your
+      !>     application.
+      !>
+      !> ## Parameters
+      !>
+      !>     FILSIZ   is the maximum file name length that can be accommodated
+      !>              by the kernel pool.
+      !>
+      !>     MAXFIL   is the number of entries that can be stored in KEEPER's
+      !>              kernel database. In this version of the toolkit MAXFIL
+      !>              is set to 5300. Each time a kernel is loaded via
+      !>              FURNSH, a database entry is created for that kernel.
+      !>              If a meta-kernel is loaded, a database entry is created
+      !>              for the meta-kernel itself and for all files referenced
+      !>              in the meta-kernel's KERNELS_TO_LOAD specification.
+      !>              Unloading a kernel or meta-kernel deletes database
+      !>              entries created when the file was loaded.
+      !>
+      !>              The parameter MAXFIL is an upper bound on number of
+      !>              SPICE kernels that can be loaded at any time via the
+      !>              KEEPER interface, but the number of kernels that can be
+      !>              loaded may be smaller, since re-loading a loaded kernel
+      !>              or meta-kernel results in creation of additional
+      !>              database entries.
+      !>
+      !>              Kernels loaded into the KEEPER system are subject to
+      !>              constraints imposed by lower-level subsystems. The
+      !>              binary kernel systems (SPK, CK, binary PCK, and EK)
+      !>              have their own limits on the maximum number of kernels
+      !>              that may be loaded.
+      !>
+      !>              The total number of DAF-based kt%kernels(this set includes
+      !>              SPKs, CKs, and binary PCKs)%name and DAS-based kt%kernels(this
+      !>              set includes EKs and DSKs)%name that may be loaded at any
+      !>              time may not exceed 5000. This limit applies whether
+      !>              the files are loaded via FURNSH or lower-level loaders
+      !>              such as SPKLEF or DAFOPR. File access performance
+      !>              normally will degrade as the number of loaded kernels
+      !>              increases.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If a problem is encountered while trying to load FILE, an
+      !>         error is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !>     2)  If the input FILE is a meta-kernel and some file in the
+      !>         KERNELS_TO_LOAD assignment cannot be found, or if an error
+      !>         occurs while trying to load a file specified by this
+      !>         assignment, the error is signaled by a routine in the call
+      !>         tree of this routine, and this routine will return. Any files
+      !>         loaded prior to encountering the failure, including those
+      !>         referenced by the KERNELS_TO_LOAD assignment, will remain
+      !>         loaded.
+      !>
+      !>     3)  If an attempt to load a text kernel fails while the kernel is
+      !>         being parsed, any kernel variable assignments made before
+      !>         the failure occurred will be retained in the kernel pool.
+      !>
+      !>     4)  If a PATH_SYMBOLS assignment is specified without a
+      !>         corresponding PATH_VALUES assignment, the error
+      !>         SPICE(NOPATHVALUE) is signaled.
+      !>
+      !>     5)  If a meta-text kernel is supplied to FURNSH that contains
+      !>         instructions specifying that another meta-text kernel be
+      !>         loaded, the error SPICE(RECURSIVELOADING) is signaled.
+      !>
+      !>     6)  If the input file name has non-blank length exceeding FILSIZ
+      !>         characters, the error SPICE(FILENAMETOOLONG) is signaled.
+      !>
+      !>     7)  If the input file is a meta-kernel and some file in the
+      !>         KERNELS_TO_LOAD assignment has name length exceeding FILSIZ
+      !>         characters, the error SPICE(FILENAMETOOLONG) is signaled.
+      !>
+      !>     8)  If the input file is a meta-kernel and some value in the
+      !>         PATH_VALUES assignment has length exceeding FILSIZ
+      !>         characters, the error SPICE(PATHTOOLONG) is signaled.
+      !>
+      !>     9)  If the input file is a meta-kernel and some file in the
+      !>         KERNELS_TO_LOAD assignment has, after symbol substitution,
+      !>         combined name and path length exceeding FILSIZ characters,
+      !>         the error SPICE(FILENAMETOOLONG) is signaled.
+      !>
+      !>     10) If a kernel pool variable name length exceeds its maximum
+      !>         allowed length (see Kernel Required Reading, kernel.req), an
+      !>         error is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !> ## Files
+      !>
+      !>     The input FILE is examined and loaded into the appropriate SPICE
+      !>     subsystem. If the file is a meta-kernel, any kernels specified
+      !>     by the KERNELS_TO_LOAD keyword (and if present, the PATH_SYMBOLS
+      !>     and PATH_VALUES keywords) are loaded as well.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine provides a uniform interface to the SPICE kernel
+      !>     loading systems. It allows you to easily assemble a list of
+      !>     SPICE kernels required by your application and to modify that set
+      !>     without modifying the source code of programs that make use of
+      !>     these kernels.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for these examples may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Load the leapseconds kernel naif0007.tls and the planetary
+      !>        ephemeris SPK file de405s.bsp.
+      !>
+      !>           CALL FURNSH ( 'naif0007.tls' )
+      !>           CALL FURNSH ( 'de405s.bsp'   )
+      !>
+      !>     2) This example illustrates how you could create a meta-kernel
+      !>        file for a program that requires several text and binary
+      !>        kernels.
+      !>
+      !>        First create a list of the kernels you need in a text file as
+      !>        shown below.
+      !>
+      !>           KPL/MK
+      !>
+      !>           File name: furnsh_ex2.tm
+      !>
+      !>           Here are the SPICE kernels required for my application
+      !>           program.
+      !>
+      !>           Note that kernels are loaded in the order listed. Thus
+      !>           we need to list the highest priority kernel last.
+      !>
+      !>           \begindata
+      !>
+      !>           KERNELS_TO_LOAD = (
+      !>
+      !>              '/home/mydir/kernels/spk/lowest_priority.bsp',
+      !>              '/home/mydir/kernels/spk/next_priority.bsp',
+      !>              '/home/mydir/kernels/spk/highest_priority.bsp',
+      !>              '/home/mydir/kernels/text/leapsecond.ker',
+      !>              '/home/mydir/kernels+',
+      !>              '/custom+',
+      !>              '/kernel_data/constants.ker',
+      !>              '/home/mydir/kernels/text/sclk.tsc',
+      !>              '/home/mydir/kernels/ck/c-kernel.bc' )
+      !>
+      !>           \begintext
+      !>
+      !>           End of meta-kernel
+      !>
+      !>        Note that the file name
+      !>
+      !>           /home/mydir/kernels/custom/kernel_data/constants.ker
+      !>
+      !>        is continued across several lines in the right hand side of
+      !>        the assignment of the kernel variable KERNELS_TO_LOAD.
+      !>
+      !>        Once you've created your list of kernels, call FURNSH near the
+      !>        beginning of your application program to load the meta-kernel
+      !>        automatically at program start up.
+      !>
+      !>           CALL FURNSH ( 'furnsh_ex2.tm' )
+      !>
+      !>        This will cause each of the kernels listed in your meta-kernel
+      !>        to be loaded.
+      !>
+      !>     3) This example illustrates how you can simplify the previous
+      !>        kernel list by using PATH_SYMBOLS.
+      !>
+      !>           KPL/MK
+      !>
+      !>           File name: furnsh_ex3.tm
+      !>
+      !>           Here are the SPICE kernels required for my application
+      !>           program.
+      !>
+      !>           We are going to let A substitute for the directory that
+      !>           contains SPK files; B substitute for the directory that
+      !>           contains C-kernels; and C substitute for the directory that
+      !>           contains text kernels. And we'll let D substitute for
+      !>           a "custom" directory that contains a special planetary
+      !>           constants kernel made just for our mission.
+      !>
+      !>           Note that our PATH_VALUES and the corresponding
+      !>           PATH_SYMBOLS must be listed in the same order.
+      !>
+      !>           \begindata
+      !>
+      !>           PATH_VALUES  = ( '/home/mydir/kernels/spk',
+      !>                            '/home/mydir/kernels/ck',
+      !>                            '/home/mydir/kernels/text',
+      !>                            '/home/mydir/kernels/custom/kernel_data' )
+      !>
+      !>           PATH_SYMBOLS = ( 'A',
+      !>                            'B',
+      !>                            'C',
+      !>                            'D'  )
+      !>
+      !>           KERNELS_TO_LOAD = (  '$A/lowest_priority.bsp',
+      !>                                '$A/next_priority.bsp',
+      !>                                '$A/highest_priority.bsp',
+      !>                                '$C/leapsecond.ker',
+      !>                                '$D/constants.ker',
+      !>                                '$C/sclk.tsc',
+      !>                                '$B/c-kernel.bc'         )
+      !>
+      !>           \begintext
+      !>
+      !>           End of meta-kernel
+      !>
+      !>     4) This example illustrates continuation of path values. The
+      !>        meta-kernel shown here is a modified version of that from
+      !>        example 3.
+      !>
+      !>           KPL/MK
+      !>
+      !>           File name: furnsh_ex4.tm
+      !>
+      !>           Here are the SPICE kernels required for my application
+      !>           program.
+      !>
+      !>           We are going to let A substitute for the directory that
+      !>           contains SPK files; B substitute for the directory that
+      !>           contains C-kernels; and C substitute for the directory that
+      !>           contains text kernels. And we'll let D substitute for
+      !>           a "custom" directory that contains a special planetary
+      !>           constants kernel made just for our mission.
+      !>
+      !>           Note that our PATH_VALUES and the corresponding
+      !>           PATH_SYMBOLS must be listed in the same order.
+      !>
+      !>           The values for path symbols A and D are continued over
+      !>           multiple lines.
+      !>
+      !>           \begindata
+      !>
+      !>           PATH_VALUES  = ( '/very_long_top_level_path_name/mydir/+',
+      !>                            'kernels/spk',
+      !>                            '/home/mydir/kernels/ck',
+      !>                            '/home/mydir/kernels/text',
+      !>                            '/very_long_top_level_path_name+',
+      !>                            '/mydir/kernels/custom+',
+      !>                            '/kernel_data'                )
+      !>
+      !>           PATH_SYMBOLS = ( 'A',
+      !>                            'B',
+      !>                            'C',
+      !>                            'D'  )
+      !>
+      !>           KERNELS_TO_LOAD = (  '$A/lowest_priority.bsp',
+      !>                                '$A/next_priority.bsp',
+      !>                                '$A/highest_priority.bsp',
+      !>                                '$C/leapsecond.ker',
+      !>                                '$D/constants.ker',
+      !>                                '$C/sclk.tsc',
+      !>                                '$B/c-kernel.bc'         )
+      !>
+      !>           \begintext
+      !>
+      !>           End of meta-kernel
+      !>
+      !>     5) Load a meta-kernel containing three kernels, and separately,
+      !>        a text kernel and a binary PCK. Count the number of loaded
+      !>        files before and after calling KCLEAR.
+      !>
+      !>        Use the meta-kernel shown below to load the required SPICE
+      !>        kernels.
+      !>
+      !>           KPL/MK
+      !>
+      !>           File name: furnsh_ex5.tm
+      !>
+      !>           This meta-kernel is intended to support operation of SPICE
+      !>           example programs. The kernels shown here should not be
+      !>           assumed to contain adequate or correct versions of data
+      !>           required by SPICE-based user applications.
+      !>
+      !>           In order for an application to use this meta-kernel, the
+      !>           kernels referenced here must be present in the user's
+      !>           current working directory.
+      !>
+      !>           The names and contents of the kernels referenced
+      !>           by this meta-kernel are as follows:
+      !>
+      !>              File name                     Contents
+      !>              ---------                     --------
+      !>              de421.bsp                     Planetary ephemeris
+      !>              pck00009.tpc                  Planet orientation and
+      !>                                            radii
+      !>              naif0012.tls                  Leapseconds
+      !>
+      !>           \begindata
+      !>
+      !>              KERNELS_TO_LOAD = ( 'de421.bsp',
+      !>                                  'naif0012.tls',
+      !>                                  'pck00009.tpc' )
+      !>
+      !>           \begintext
+      !>
+      !>           End of meta-kernel
+      !>
+      !>        Use the PCK kernel below as the binary PCK required for the
+      !>        example.
+      !>
+      !>           earth_latest_high_prec.bpc
+      !>
+      !>        Use the FK kernel below as the text kernel required for the
+      !>        example.
+      !>
+      !>           RSSD0002.TF
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM FURNSH_EX5
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              INTEGER               COUNT
+      !>
+      !>        C
+      !>        C     Load several kernel files.
+      !>        C
+      !>              CALL FURNSH ( 'furnsh_ex5.tm'              )
+      !>              CALL FURNSH ( 'RSSD0002.TF'                )
+      !>              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
+      !>
+      !>        C
+      !>        C     Count the number of loaded kernel files.
+      !>        C
+      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>
+      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>             . //               'final FURNSH: ', COUNT
+      !>
+      !>        C
+      !>        C     Clear the KEEPER system, retrieve the number of loaded
+      !>        C     after the clear.
+      !>        C
+      !>              CALL KCLEAR()
+      !>
+      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>
+      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>             . //               'KCLEAR      : ', COUNT
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>        The total number of kernels after final FURNSH:  6
+      !>        The total number of kernels after KCLEAR      :  0
+      !>
+      !> ## Restrictions
+      !>
+      !>     PEPPER: a line of a text kernel or meta-kernel may have at most
+      !>     132 characters (NAIF's text kernel rule). A longer line is cut to
+      !>     132 characters without an error, as in SPICELIB: a value or name
+      !>     that continues past column 132 is lost or misread. Split long
+      !>     values over several lines.
+      !>
+      !>     1)  A meta-kernel cannot reference another meta-kernel.
+      !>
+      !>     2)  Failure during an attempt to load a text kernel or a
+      !>         meta-kernel can result in a subset of the intended kernel
+      !>         variables being set or a subset of the intended files
+      !>         being loaded. FURNSH does not "clean up" so as to undo the
+      !>         effects of a failed load operation.
+      !>
+      !>     3)  When a kernel is specified with a relative path, this path
+      !>         should be valid at the time when FURNSH is called and stay
+      !>         valid for the rest of the application run. This is required
+      !>         because SPICE stores kernel names as provided by the caller
+      !>         and uses them to open and close binary kernels as needed
+      !>         by the DAF/DAS handle manager subsystem (behind the scenes,
+      !>         to allow reading many more binary kernels than available
+      !>         logical units), and to automatically reload into the POOL
+      !>         the rest of text kernels that should stay loaded when a
+      !>         particular text kernel is unloaded.
+      !>
+      !>         Changing the working directory from within an application
+      !>         during an application run after calling FURNSH to load
+      !>         kernels specified using relative paths is likely to
+      !>         invalidate stored paths and prevent open/close and unload
+      !>         operations mentioned above. A simple workaround when this
+      !>         is needed is to specify kernels using absolute paths.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     C.H. Acton         (JPL)
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 5.0.1, 08-AUG-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Created complete code example from existing code fragments.
+      !>
+      !>        Added KERNEL to $Required_Reading section.
+      !>
+      !>        Added FILSIZ to the $Declarations section.
+      !>
+      !>        Added a restriction about specifying kernels using relative
+      !>        paths to the $Restrictions section.
+      !>
+      !>-    SPICELIB Version 5.0.0, 01-FEB-2017 (NJB) (BVS)
+      !>
+      !>        Updated to support use of DSKs.
+      !>
+      !>        Updated description of MAXFIL in the header.
+      !>
+      !>        Updated the $Author_and_Institution section.
+      !>
+      !>-    SPICELIB Version 4.1.0, 01-JUL-2014 (NJB) (BVS)
+      !>
+      !>        Updated discussion of partially completed kernel loading.
+      !>
+      !>     Last update was 12-APR-2012 (BVS)
+      !>
+      !>        Changed to use SEPOOL instead of STPOOL to reduce loading time
+      !>        for large meta-kernels due to n^2 delay in STPOOL.
+      !>
+      !>-    SPICELIB Version 4.0.1, 10-FEB-2010 (EDW)
+      !>
+      !>        Added mention of the restriction on kernel pool variable
+      !>        names to MAXLEN (defined in pool.f) characters or less.
+      !>
+      !>-    SPICELIB Version 4.0.0, 02-APR-2009 (NJB)
+      !>
+      !>        Continued path values are now supported. FURNSH now rejects
+      !>        file names longer than FILSIZ characters.
+      !>
+      !>-    SPICELIB Version 2.0.3, 27-APR-2007 (NJB)
+      !>
+      !>        Fixed header typo: added quotes to literal string
+      !>        input arguments in example FURNSH calls.
+      !>
+      !>-    SPICELIB Version 2.0.2, 15-NOV-2006 (NJB)
+      !>
+      !>        Added description of parameter MAXFIL to header.
+      !>
+      !>-    SPICELIB Version 2.0.1, 29-JUL-2003 (NJB) (CHA)
+      !>
+      !>        Numerous updates to improve clarity. Some corrections were
+      !>        made.
+      !>
+      !>-    SPICELIB Version 2.0.0, 23-AUG-2001 (WLT)
+      !>
+      !>        Added a call to CVPOOL in FURNSH so that watches that are
+      !>        triggered are triggered by loading Meta-kernels and not by
+      !>        some external interaction with the kernel pool.
+      !>
+      !>-    SPICELIB Version 1.1.0, 19-SEP-2000 (WLT)
+      !>
+      !>        Corrected the error message template used
+      !>        by ZZLDKER
+      !>
+      !>-    SPICELIB Version 1.0.1, 16-DEC-1999 (NJB)
+      !>
+      !>        Documentation fix: corrected second code example in the
+      !>        header of this entry point. The example previously used the
+      !>        kernel variable PATH_NAMES; that name has been replaced with
+      !>        the correct name PATH_VALUES.
+      !>
+      !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
       module procedure furnsh
-!! ## Abstract
-!!
-!!     Load one or more SPICE kernels into a program.
-!!
-!! ## Required Reading
-!!
-!!     KERNEL
-!!
-!! ## Keywords
-!!
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         FILE
-!!
-!!     INTEGER               FILSIZ
-!!     PARAMETER           ( FILSIZ = 255 )
-!!
-!! ## Detailed Input
-!!
-!!     FILE     is a SPICE kernel file. The file may be either binary
-!!              or text. If the file is a binary SPICE kernel it will
-!!              be loaded into the appropriate SPICE subsystem. If
-!!              FILE is a SPICE text kernel it will be loaded into the
-!!              kernel pool. If FILE is a SPICE meta-kernel containing
-!!              initialization instructions (through use of the
-!!              correct kernel pool variables), the files specified in
-!!              those variables will be loaded into the appropriate
-!!              SPICE subsystem.
-!!
-!!              The SPICE text kernel format supports association of
-!!              names and data values using a "keyword = value"
-!!              format. The keyword-value pairs thus defined are
-!!              called "kernel variables."
-!!
-!!              While any information can be placed in a text kernel
-!!              file, the following string valued kernel variables are
-!!              recognized by SPICE as meta-kernel keywords:
-!!
-!!                   KERNELS_TO_LOAD
-!!                   PATH_SYMBOLS
-!!                   PATH_VALUES
-!!
-!!              Each kernel variable is discussed below.
-!!
-!!              KERNELS_TO_LOAD   is a list of SPICE kernels to be
-!!                                loaded into a program. If file
-!!                                names do not fit within the kernel
-!!                                pool 80 character limit, they may be
-!!                                continued to subsequent array
-!!                                elements by placing the continuation
-!!                                character ('+') at the end of an
-!!                                element and then placing the
-!!                                remainder of the file name in the
-!!                                next array element. (See the
-!!                                examples below for an illustration
-!!                                of this technique or consult the
-!!                                routine STPOOL for further details.)
-!!
-!!                                You may use one or more PATH_SYMBOL
-!!                                assignments (see below) to specify
-!!                                strings to be substituted for some
-!!                                part of a file name.
-!!
-!!              PATH_SYMBOLS      is a list of strings (without
-!!                                embedded blanks) which if
-!!                                encountered following the '$'
-!!                                character will be replaced with the
-!!                                corresponding PATH_VALUES string.
-!!                                Note that PATH_SYMBOLS are
-!!                                interpreted only in values
-!!                                associated with the KERNELS_TO_LOAD
-!!                                variable. There must be a one-to-one
-!!                                correspondence between the values
-!!                                supplied for PATH_SYMBOLS and
-!!                                PATH_VALUES. For the purpose of
-!!                                determining this correspondence, any
-!!                                path value that is continued over
-!!                                multiple array elements counts as a
-!!                                single value.
-!!
-!!              PATH_VALUES       is a list of expansions to use when
-!!                                PATH_SYMBOLS are encountered. If
-!!                                path values do not fit within the
-!!                                kernel pool 80 character limit, they
-!!                                may be continued in the same way as
-!!                                file names (see the KERNELS_TO_LOAD
-!!                                description above).
-!!
-!!               These kernel pool variables persist within the kernel
-!!               pool only until all kernels associated with the
-!!               variable KERNELS_TO_LOAD have been loaded. Once all
-!!               specified kernels have been loaded, the variables
-!!               KERNELS_TO_LOAD, PATH_SYMBOLS and PATH_VALUES are
-!!               removed from the kernel pool.
-!!
-!! ## Detailed Output
-!!
-!!     None. The routine loads various SPICE kernels for use by your
-!!     application.
-!!
-!! ## Parameters
-!!
-!!     FILSIZ   is the maximum file name length that can be accommodated
-!!              by the kernel pool.
-!!
-!!     MAXFIL   is the number of entries that can be stored in KEEPER's
-!!              kernel database. In this version of the toolkit MAXFIL
-!!              is set to 5300. Each time a kernel is loaded via
-!!              FURNSH, a database entry is created for that kernel.
-!!              If a meta-kernel is loaded, a database entry is created
-!!              for the meta-kernel itself and for all files referenced
-!!              in the meta-kernel's KERNELS_TO_LOAD specification.
-!!              Unloading a kernel or meta-kernel deletes database
-!!              entries created when the file was loaded.
-!!
-!!              The parameter MAXFIL is an upper bound on number of
-!!              SPICE kernels that can be loaded at any time via the
-!!              KEEPER interface, but the number of kernels that can be
-!!              loaded may be smaller, since re-loading a loaded kernel
-!!              or meta-kernel results in creation of additional
-!!              database entries.
-!!
-!!              Kernels loaded into the KEEPER system are subject to
-!!              constraints imposed by lower-level subsystems. The
-!!              binary kernel systems (SPK, CK, binary PCK, and EK)
-!!              have their own limits on the maximum number of kernels
-!!              that may be loaded.
-!!
-!!              The total number of DAF-based kt%kernels(this set includes
-!!              SPKs, CKs, and binary PCKs)%name and DAS-based kt%kernels(this
-!!              set includes EKs and DSKs)%name that may be loaded at any
-!!              time may not exceed 5000. This limit applies whether
-!!              the files are loaded via FURNSH or lower-level loaders
-!!              such as SPKLEF or DAFOPR. File access performance
-!!              normally will degrade as the number of loaded kernels
-!!              increases.
-!!
-!! ## Exceptions
-!!
-!!     1)  If a problem is encountered while trying to load FILE, an
-!!         error is signaled by a routine in the call tree of this
-!!         routine.
-!!
-!!     2)  If the input FILE is a meta-kernel and some file in the
-!!         KERNELS_TO_LOAD assignment cannot be found, or if an error
-!!         occurs while trying to load a file specified by this
-!!         assignment, the error is signaled by a routine in the call
-!!         tree of this routine, and this routine will return. Any files
-!!         loaded prior to encountering the failure, including those
-!!         referenced by the KERNELS_TO_LOAD assignment, will remain
-!!         loaded.
-!!
-!!     3)  If an attempt to load a text kernel fails while the kernel is
-!!         being parsed, any kernel variable assignments made before
-!!         the failure occurred will be retained in the kernel pool.
-!!
-!!     4)  If a PATH_SYMBOLS assignment is specified without a
-!!         corresponding PATH_VALUES assignment, the error
-!!         SPICE(NOPATHVALUE) is signaled.
-!!
-!!     5)  If a meta-text kernel is supplied to FURNSH that contains
-!!         instructions specifying that another meta-text kernel be
-!!         loaded, the error SPICE(RECURSIVELOADING) is signaled.
-!!
-!!     6)  If the input file name has non-blank length exceeding FILSIZ
-!!         characters, the error SPICE(FILENAMETOOLONG) is signaled.
-!!
-!!     7)  If the input file is a meta-kernel and some file in the
-!!         KERNELS_TO_LOAD assignment has name length exceeding FILSIZ
-!!         characters, the error SPICE(FILENAMETOOLONG) is signaled.
-!!
-!!     8)  If the input file is a meta-kernel and some value in the
-!!         PATH_VALUES assignment has length exceeding FILSIZ
-!!         characters, the error SPICE(PATHTOOLONG) is signaled.
-!!
-!!     9)  If the input file is a meta-kernel and some file in the
-!!         KERNELS_TO_LOAD assignment has, after symbol substitution,
-!!         combined name and path length exceeding FILSIZ characters,
-!!         the error SPICE(FILENAMETOOLONG) is signaled.
-!!
-!!     10) If a kernel pool variable name length exceeds its maximum
-!!         allowed length (see Kernel Required Reading, kernel.req), an
-!!         error is signaled by a routine in the call tree of this
-!!         routine.
-!!
-!! ## Files
-!!
-!!     The input FILE is examined and loaded into the appropriate SPICE
-!!     subsystem. If the file is a meta-kernel, any kernels specified
-!!     by the KERNELS_TO_LOAD keyword (and if present, the PATH_SYMBOLS
-!!     and PATH_VALUES keywords) are loaded as well.
-!!
-!! ## Particulars
-!!
-!!     This routine provides a uniform interface to the SPICE kernel
-!!     loading systems. It allows you to easily assemble a list of
-!!     SPICE kernels required by your application and to modify that set
-!!     without modifying the source code of programs that make use of
-!!     these kernels.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for these examples may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Load the leapseconds kernel naif0007.tls and the planetary
-!!        ephemeris SPK file de405s.bsp.
-!!
-!!           CALL FURNSH ( 'naif0007.tls' )
-!!           CALL FURNSH ( 'de405s.bsp'   )
-!!
-!!     2) This example illustrates how you could create a meta-kernel
-!!        file for a program that requires several text and binary
-!!        kernels.
-!!
-!!        First create a list of the kernels you need in a text file as
-!!        shown below.
-!!
-!!           KPL/MK
-!!
-!!           File name: furnsh_ex2.tm
-!!
-!!           Here are the SPICE kernels required for my application
-!!           program.
-!!
-!!           Note that kernels are loaded in the order listed. Thus
-!!           we need to list the highest priority kernel last.
-!!
-!!           \begindata
-!!
-!!           KERNELS_TO_LOAD = (
-!!
-!!              '/home/mydir/kernels/spk/lowest_priority.bsp',
-!!              '/home/mydir/kernels/spk/next_priority.bsp',
-!!              '/home/mydir/kernels/spk/highest_priority.bsp',
-!!              '/home/mydir/kernels/text/leapsecond.ker',
-!!              '/home/mydir/kernels+',
-!!              '/custom+',
-!!              '/kernel_data/constants.ker',
-!!              '/home/mydir/kernels/text/sclk.tsc',
-!!              '/home/mydir/kernels/ck/c-kernel.bc' )
-!!
-!!           \begintext
-!!
-!!           End of meta-kernel
-!!
-!!        Note that the file name
-!!
-!!           /home/mydir/kernels/custom/kernel_data/constants.ker
-!!
-!!        is continued across several lines in the right hand side of
-!!        the assignment of the kernel variable KERNELS_TO_LOAD.
-!!
-!!        Once you've created your list of kernels, call FURNSH near the
-!!        beginning of your application program to load the meta-kernel
-!!        automatically at program start up.
-!!
-!!           CALL FURNSH ( 'furnsh_ex2.tm' )
-!!
-!!        This will cause each of the kernels listed in your meta-kernel
-!!        to be loaded.
-!!
-!!     3) This example illustrates how you can simplify the previous
-!!        kernel list by using PATH_SYMBOLS.
-!!
-!!           KPL/MK
-!!
-!!           File name: furnsh_ex3.tm
-!!
-!!           Here are the SPICE kernels required for my application
-!!           program.
-!!
-!!           We are going to let A substitute for the directory that
-!!           contains SPK files; B substitute for the directory that
-!!           contains C-kernels; and C substitute for the directory that
-!!           contains text kernels. And we'll let D substitute for
-!!           a "custom" directory that contains a special planetary
-!!           constants kernel made just for our mission.
-!!
-!!           Note that our PATH_VALUES and the corresponding
-!!           PATH_SYMBOLS must be listed in the same order.
-!!
-!!           \begindata
-!!
-!!           PATH_VALUES  = ( '/home/mydir/kernels/spk',
-!!                            '/home/mydir/kernels/ck',
-!!                            '/home/mydir/kernels/text',
-!!                            '/home/mydir/kernels/custom/kernel_data' )
-!!
-!!           PATH_SYMBOLS = ( 'A',
-!!                            'B',
-!!                            'C',
-!!                            'D'  )
-!!
-!!           KERNELS_TO_LOAD = (  '$A/lowest_priority.bsp',
-!!                                '$A/next_priority.bsp',
-!!                                '$A/highest_priority.bsp',
-!!                                '$C/leapsecond.ker',
-!!                                '$D/constants.ker',
-!!                                '$C/sclk.tsc',
-!!                                '$B/c-kernel.bc'         )
-!!
-!!           \begintext
-!!
-!!           End of meta-kernel
-!!
-!!     4) This example illustrates continuation of path values. The
-!!        meta-kernel shown here is a modified version of that from
-!!        example 3.
-!!
-!!           KPL/MK
-!!
-!!           File name: furnsh_ex4.tm
-!!
-!!           Here are the SPICE kernels required for my application
-!!           program.
-!!
-!!           We are going to let A substitute for the directory that
-!!           contains SPK files; B substitute for the directory that
-!!           contains C-kernels; and C substitute for the directory that
-!!           contains text kernels. And we'll let D substitute for
-!!           a "custom" directory that contains a special planetary
-!!           constants kernel made just for our mission.
-!!
-!!           Note that our PATH_VALUES and the corresponding
-!!           PATH_SYMBOLS must be listed in the same order.
-!!
-!!           The values for path symbols A and D are continued over
-!!           multiple lines.
-!!
-!!           \begindata
-!!
-!!           PATH_VALUES  = ( '/very_long_top_level_path_name/mydir/+',
-!!                            'kernels/spk',
-!!                            '/home/mydir/kernels/ck',
-!!                            '/home/mydir/kernels/text',
-!!                            '/very_long_top_level_path_name+',
-!!                            '/mydir/kernels/custom+',
-!!                            '/kernel_data'                )
-!!
-!!           PATH_SYMBOLS = ( 'A',
-!!                            'B',
-!!                            'C',
-!!                            'D'  )
-!!
-!!           KERNELS_TO_LOAD = (  '$A/lowest_priority.bsp',
-!!                                '$A/next_priority.bsp',
-!!                                '$A/highest_priority.bsp',
-!!                                '$C/leapsecond.ker',
-!!                                '$D/constants.ker',
-!!                                '$C/sclk.tsc',
-!!                                '$B/c-kernel.bc'         )
-!!
-!!           \begintext
-!!
-!!           End of meta-kernel
-!!
-!!     5) Load a meta-kernel containing three kernels, and separately,
-!!        a text kernel and a binary PCK. Count the number of loaded
-!!        files before and after calling KCLEAR.
-!!
-!!        Use the meta-kernel shown below to load the required SPICE
-!!        kernels.
-!!
-!!           KPL/MK
-!!
-!!           File name: furnsh_ex5.tm
-!!
-!!           This meta-kernel is intended to support operation of SPICE
-!!           example programs. The kernels shown here should not be
-!!           assumed to contain adequate or correct versions of data
-!!           required by SPICE-based user applications.
-!!
-!!           In order for an application to use this meta-kernel, the
-!!           kernels referenced here must be present in the user's
-!!           current working directory.
-!!
-!!           The names and contents of the kernels referenced
-!!           by this meta-kernel are as follows:
-!!
-!!              File name                     Contents
-!!              ---------                     --------
-!!              de421.bsp                     Planetary ephemeris
-!!              pck00009.tpc                  Planet orientation and
-!!                                            radii
-!!              naif0012.tls                  Leapseconds
-!!
-!!           \begindata
-!!
-!!              KERNELS_TO_LOAD = ( 'de421.bsp',
-!!                                  'naif0012.tls',
-!!                                  'pck00009.tpc' )
-!!
-!!           \begintext
-!!
-!!           End of meta-kernel
-!!
-!!        Use the PCK kernel below as the binary PCK required for the
-!!        example.
-!!
-!!           earth_latest_high_prec.bpc
-!!
-!!        Use the FK kernel below as the text kernel required for the
-!!        example.
-!!
-!!           RSSD0002.TF
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM FURNSH_EX5
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              INTEGER               COUNT
-!!
-!!        C
-!!        C     Load several kernel files.
-!!        C
-!!              CALL FURNSH ( 'furnsh_ex5.tm'              )
-!!              CALL FURNSH ( 'RSSD0002.TF'                )
-!!              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
-!!
-!!        C
-!!        C     Count the number of loaded kernel files.
-!!        C
-!!              CALL KTOTAL ( 'ALL', COUNT )
-!!
-!!              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!!             . //               'final FURNSH: ', COUNT
-!!
-!!        C
-!!        C     Clear the KEEPER system, retrieve the number of loaded
-!!        C     after the clear.
-!!        C
-!!              CALL KCLEAR()
-!!
-!!              CALL KTOTAL ( 'ALL', COUNT )
-!!
-!!              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!!             . //               'KCLEAR      : ', COUNT
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!        The total number of kernels after final FURNSH:  6
-!!        The total number of kernels after KCLEAR      :  0
-!!
-!! ## Restrictions
-!!
-!!     PEPPER: a line of a text kernel or meta-kernel may have at most
-!!     132 characters (NAIF's text kernel rule). A longer line is cut to
-!!     132 characters without an error, as in SPICELIB: a value or name
-!!     that continues past column 132 is lost or misread. Split long
-!!     values over several lines.
-!!
-!!     1)  A meta-kernel cannot reference another meta-kernel.
-!!
-!!     2)  Failure during an attempt to load a text kernel or a
-!!         meta-kernel can result in a subset of the intended kernel
-!!         variables being set or a subset of the intended files
-!!         being loaded. FURNSH does not "clean up" so as to undo the
-!!         effects of a failed load operation.
-!!
-!!     3)  When a kernel is specified with a relative path, this path
-!!         should be valid at the time when FURNSH is called and stay
-!!         valid for the rest of the application run. This is required
-!!         because SPICE stores kernel names as provided by the caller
-!!         and uses them to open and close binary kernels as needed
-!!         by the DAF/DAS handle manager subsystem (behind the scenes,
-!!         to allow reading many more binary kernels than available
-!!         logical units), and to automatically reload into the POOL
-!!         the rest of text kernels that should stay loaded when a
-!!         particular text kernel is unloaded.
-!!
-!!         Changing the working directory from within an application
-!!         during an application run after calling FURNSH to load
-!!         kernels specified using relative paths is likely to
-!!         invalidate stored paths and prevent open/close and unload
-!!         operations mentioned above. A simple workaround when this
-!!         is needed is to specify kernels using absolute paths.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     C.H. Acton         (JPL)
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!     W.L. Taber         (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 5.0.1, 08-AUG-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Created complete code example from existing code fragments.
-!!
-!!        Added KERNEL to $Required_Reading section.
-!!
-!!        Added FILSIZ to the $Declarations section.
-!!
-!!        Added a restriction about specifying kernels using relative
-!!        paths to the $Restrictions section.
-!!
-!!-    SPICELIB Version 5.0.0, 01-FEB-2017 (NJB) (BVS)
-!!
-!!        Updated to support use of DSKs.
-!!
-!!        Updated description of MAXFIL in the header.
-!!
-!!        Updated the $Author_and_Institution section.
-!!
-!!-    SPICELIB Version 4.1.0, 01-JUL-2014 (NJB) (BVS)
-!!
-!!        Updated discussion of partially completed kernel loading.
-!!
-!!     Last update was 12-APR-2012 (BVS)
-!!
-!!        Changed to use SEPOOL instead of STPOOL to reduce loading time
-!!        for large meta-kernels due to n^2 delay in STPOOL.
-!!
-!!-    SPICELIB Version 4.0.1, 10-FEB-2010 (EDW)
-!!
-!!        Added mention of the restriction on kernel pool variable
-!!        names to MAXLEN (defined in pool.f) characters or less.
-!!
-!!-    SPICELIB Version 4.0.0, 02-APR-2009 (NJB)
-!!
-!!        Continued path values are now supported. FURNSH now rejects
-!!        file names longer than FILSIZ characters.
-!!
-!!-    SPICELIB Version 2.0.3, 27-APR-2007 (NJB)
-!!
-!!        Fixed header typo: added quotes to literal string
-!!        input arguments in example FURNSH calls.
-!!
-!!-    SPICELIB Version 2.0.2, 15-NOV-2006 (NJB)
-!!
-!!        Added description of parameter MAXFIL to header.
-!!
-!!-    SPICELIB Version 2.0.1, 29-JUL-2003 (NJB) (CHA)
-!!
-!!        Numerous updates to improve clarity. Some corrections were
-!!        made.
-!!
-!!-    SPICELIB Version 2.0.0, 23-AUG-2001 (WLT)
-!!
-!!        Added a call to CVPOOL in FURNSH so that watches that are
-!!        triggered are triggered by loading Meta-kernels and not by
-!!        some external interaction with the kernel pool.
-!!
-!!-    SPICELIB Version 1.1.0, 19-SEP-2000 (WLT)
-!!
-!!        Corrected the error message template used
-!!        by ZZLDKER
-!!
-!!-    SPICELIB Version 1.0.1, 16-DEC-1999 (NJB)
-!!
-!!        Documentation fix: corrected second code example in the
-!!        header of this entry point. The example previously used the
-!!        kernel variable PATH_NAMES; that name has been replaced with
-!!        the correct name PATH_VALUES.
-!!
-!!-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Load SPICE kernels from a list of kernels
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: pos, repmc, rtrim, samsub
       implicit none
@@ -4681,261 +4339,238 @@ contains
          end subroutine get_file_name
       end procedure furnsh
 
+      !> ## Detailed Input
+      !>
+      !>     KIND     is a list of types of kernels to count when computing
+      !>              loaded kernels. KIND should consist of a list of words of
+      !>              kernels to examine. Recognized types are
+      !>
+      !>                 SPK  --- All SPK files are counted in the total.
+      !>                 CK   --- All CK files are counted in the total.
+      !>                 PCK  --- All binary PCK files are counted in the
+      !>                          total.
+      !>                 DSK  --- All DSK files are counted in the total.
+      !>                 EK   --- All EK files are counted in the total.
+      !>                 TEXT --- All text kernels that are not meta-text
+      !>                          kernels are included in the total.
+      !>                 META --- All meta-text kernels are counted in the
+      !>                          total.
+      !>                 ALL  --- Every type of kernel is counted in the
+      !>                          total.
+      !>
+      !>              KIND is case insensitive. If a word appears in KIND
+      !>              that is not one of those listed above, it is ignored.
+      !>
+      !>              When KIND consists of multiple words, the words must
+      !>              be separated by blanks. Examples of valid lists are the
+      !>              strings
+      !>
+      !>                 'SPK CK TEXT'
+      !>                 'SPK CK text'
+      !>                 'PCK DSK'
+      !>                 'CK'
+      !>                 'ALL'
+      !>
+      !>              See the $Examples section for illustrations of the
+      !>              use of KIND.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     COUNT    is the number of kernels loaded through FURNSH that
+      !>              belong to the list specified by KIND.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If a word on the list specified by KIND is not recognized,
+      !>         it is ignored.
+      !>
+      !>     2)  If KIND is blank, or none of the words in KIND is on the
+      !>         list specified above, COUNT will be returned as zero.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     KTOTAL allows you to easily determine the number of kernels
+      !>     loaded via the interface FURNSH that are of a type of interest.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Load a meta-kernel with a PCK, an LSK and an SPK, and
+      !>        separately, a text kernel and a binary PCK. Show the
+      !>        total number of kernels and meta-kernels loaded. Determine the
+      !>        number of text kernels loaded, and the number of binary
+      !>        kernels.
+      !>
+      !>        Unload all kernels and clear the kernel pool using
+      !>        KCLEAR, and check that no kernels are loaded.
+      !>
+      !>        Use the meta-kernel shown below to load the required SPICE
+      !>        kernels.
+      !>
+      !>           KPL/MK
+      !>
+      !>           File name: ktotal_ex1.tm
+      !>
+      !>           This meta-kernel is intended to support operation of SPICE
+      !>           example programs. The kernels shown here should not be
+      !>           assumed to contain adequate or correct versions of data
+      !>           required by SPICE-based user applications.
+      !>
+      !>           In order for an application to use this meta-kernel, the
+      !>           kernels referenced here must be present in the user's
+      !>           current working directory.
+      !>
+      !>           The names and contents of the kernels referenced
+      !>           by this meta-kernel are as follows:
+      !>
+      !>              File name                     Contents
+      !>              ---------                     --------
+      !>              de421.bsp                     Planetary ephemeris
+      !>              pck00009.tpc                  Planet orientation and
+      !>                                            radii
+      !>              naif0012.tls                  Leapseconds
+      !>
+      !>           \begindata
+      !>
+      !>              KERNELS_TO_LOAD = ( 'de421.bsp',
+      !>                                  'naif0012.tls',
+      !>                                  'pck00009.tpc' )
+      !>
+      !>           \begintext
+      !>
+      !>           End of meta-kernel
+      !>
+      !>        Use the PCK kernel below as the binary PCK required for the
+      !>        example.
+      !>
+      !>           earth_latest_high_prec.bpc
+      !>
+      !>        Use the FK kernel below as the text kernel required for the
+      !>        example.
+      !>
+      !>           RSSD0002.TF
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM KTOTAL_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              INTEGER               COUNT
+      !>
+      !>        C
+      !>        C     Load several kernel files.
+      !>        C
+      !>              CALL FURNSH ( 'ktotal_ex1.tm'              )
+      !>              CALL FURNSH ( 'RSSD0002.TF'                )
+      !>              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
+      !>
+      !>        C
+      !>        C     Count the number of loaded kernel files.
+      !>        C
+      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>
+      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>             . //               'final FURNSH: ', COUNT
+      !>
+      !>        C
+      !>        C     Count the number of meta-kernels.
+      !>        C
+      !>              CALL KTOTAL ( 'META', COUNT )
+      !>
+      !>              WRITE(*,'(A,I2)') 'The total number of meta-kernels  '
+      !>             . //               '            : ', COUNT
+      !>
+      !>        C
+      !>        C     Count the number of text kernels.
+      !>        C
+      !>              CALL KTOTAL ( 'TEXT', COUNT )
+      !>
+      !>              WRITE(*,'(A,I2)') 'The total number of text kernels  '
+      !>             . //               '            : ', COUNT
+      !>
+      !>        C
+      !>        C     Count the number of binary kernels. These kernels
+      !>        C     are of type CK, DSK, EK, PCK or SPK.
+      !>        C
+      !>              CALL KTOTAL ( 'CK DSK EK PCK SPK', COUNT )
+      !>              WRITE(*,'(A,I2)') 'The total number of binary kernels'
+      !>             . //               '            : ', COUNT
+      !>
+      !>        C
+      !>        C     Clear the KEEPER system, retrieve the number of loaded
+      !>        C     after the clear.
+      !>        C
+      !>              CALL KCLEAR()
+      !>
+      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>
+      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>             . //               'KCLEAR      : ', COUNT
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>        The total number of kernels after final FURNSH:  6
+      !>        The total number of meta-kernels              :  1
+      !>        The total number of text kernels              :  3
+      !>        The total number of binary kernels            :  2
+      !>        The total number of kernels after KCLEAR      :  0
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 5.0.1, 25-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Created complete code example from existing code fragments.
+      !>
+      !>        Updated $Detailed_Input description of input argument KIND to
+      !>        illustrate use of multi-word lists. Added KERNEL to the list
+      !>        of required readings.
+      !>
+      !>-    SPICELIB Version 5.0.0, 01-FEB-2017 (NJB) (BVS)
+      !>
+      !>        Updated to support use of DSKs.
+      !>
+      !>        Updated the $Author_and_Institution section.
+      !>
+      !>-    SPICELIB Version 1.1.0, 02-APR-2009 (NJB)
+      !>
+      !>        Deleted reference to unneeded variable DOALL.
+      !>
+      !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
       module procedure ktotal
-!! ## Abstract
-!!
-!!     Return the number of kernels of a specified type that are
-!!     currently loaded via the FURNSH interface.
-!!
-!! ## Required Reading
-!!
-!!     KERNEL
-!!
-!! ## Keywords
-!!
-!!     KERNEL
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         KIND
-!!     INTEGER               COUNT
-!!
-!! ## Detailed Input
-!!
-!!     KIND     is a list of types of kernels to count when computing
-!!              loaded kernels. KIND should consist of a list of words of
-!!              kernels to examine. Recognized types are
-!!
-!!                 SPK  --- All SPK files are counted in the total.
-!!                 CK   --- All CK files are counted in the total.
-!!                 PCK  --- All binary PCK files are counted in the
-!!                          total.
-!!                 DSK  --- All DSK files are counted in the total.
-!!                 EK   --- All EK files are counted in the total.
-!!                 TEXT --- All text kernels that are not meta-text
-!!                          kernels are included in the total.
-!!                 META --- All meta-text kernels are counted in the
-!!                          total.
-!!                 ALL  --- Every type of kernel is counted in the
-!!                          total.
-!!
-!!              KIND is case insensitive. If a word appears in KIND
-!!              that is not one of those listed above, it is ignored.
-!!
-!!              When KIND consists of multiple words, the words must
-!!              be separated by blanks. Examples of valid lists are the
-!!              strings
-!!
-!!                 'SPK CK TEXT'
-!!                 'SPK CK text'
-!!                 'PCK DSK'
-!!                 'CK'
-!!                 'ALL'
-!!
-!!              See the $Examples section for illustrations of the
-!!              use of KIND.
-!!
-!! ## Detailed Output
-!!
-!!     COUNT    is the number of kernels loaded through FURNSH that
-!!              belong to the list specified by KIND.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If a word on the list specified by KIND is not recognized,
-!!         it is ignored.
-!!
-!!     2)  If KIND is blank, or none of the words in KIND is on the
-!!         list specified above, COUNT will be returned as zero.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     KTOTAL allows you to easily determine the number of kernels
-!!     loaded via the interface FURNSH that are of a type of interest.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Load a meta-kernel with a PCK, an LSK and an SPK, and
-!!        separately, a text kernel and a binary PCK. Show the
-!!        total number of kernels and meta-kernels loaded. Determine the
-!!        number of text kernels loaded, and the number of binary
-!!        kernels.
-!!
-!!        Unload all kernels and clear the kernel pool using
-!!        KCLEAR, and check that no kernels are loaded.
-!!
-!!        Use the meta-kernel shown below to load the required SPICE
-!!        kernels.
-!!
-!!           KPL/MK
-!!
-!!           File name: ktotal_ex1.tm
-!!
-!!           This meta-kernel is intended to support operation of SPICE
-!!           example programs. The kernels shown here should not be
-!!           assumed to contain adequate or correct versions of data
-!!           required by SPICE-based user applications.
-!!
-!!           In order for an application to use this meta-kernel, the
-!!           kernels referenced here must be present in the user's
-!!           current working directory.
-!!
-!!           The names and contents of the kernels referenced
-!!           by this meta-kernel are as follows:
-!!
-!!              File name                     Contents
-!!              ---------                     --------
-!!              de421.bsp                     Planetary ephemeris
-!!              pck00009.tpc                  Planet orientation and
-!!                                            radii
-!!              naif0012.tls                  Leapseconds
-!!
-!!           \begindata
-!!
-!!              KERNELS_TO_LOAD = ( 'de421.bsp',
-!!                                  'naif0012.tls',
-!!                                  'pck00009.tpc' )
-!!
-!!           \begintext
-!!
-!!           End of meta-kernel
-!!
-!!        Use the PCK kernel below as the binary PCK required for the
-!!        example.
-!!
-!!           earth_latest_high_prec.bpc
-!!
-!!        Use the FK kernel below as the text kernel required for the
-!!        example.
-!!
-!!           RSSD0002.TF
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM KTOTAL_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              INTEGER               COUNT
-!!
-!!        C
-!!        C     Load several kernel files.
-!!        C
-!!              CALL FURNSH ( 'ktotal_ex1.tm'              )
-!!              CALL FURNSH ( 'RSSD0002.TF'                )
-!!              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
-!!
-!!        C
-!!        C     Count the number of loaded kernel files.
-!!        C
-!!              CALL KTOTAL ( 'ALL', COUNT )
-!!
-!!              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!!             . //               'final FURNSH: ', COUNT
-!!
-!!        C
-!!        C     Count the number of meta-kernels.
-!!        C
-!!              CALL KTOTAL ( 'META', COUNT )
-!!
-!!              WRITE(*,'(A,I2)') 'The total number of meta-kernels  '
-!!             . //               '            : ', COUNT
-!!
-!!        C
-!!        C     Count the number of text kernels.
-!!        C
-!!              CALL KTOTAL ( 'TEXT', COUNT )
-!!
-!!              WRITE(*,'(A,I2)') 'The total number of text kernels  '
-!!             . //               '            : ', COUNT
-!!
-!!        C
-!!        C     Count the number of binary kernels. These kernels
-!!        C     are of type CK, DSK, EK, PCK or SPK.
-!!        C
-!!              CALL KTOTAL ( 'CK DSK EK PCK SPK', COUNT )
-!!              WRITE(*,'(A,I2)') 'The total number of binary kernels'
-!!             . //               '            : ', COUNT
-!!
-!!        C
-!!        C     Clear the KEEPER system, retrieve the number of loaded
-!!        C     after the clear.
-!!        C
-!!              CALL KCLEAR()
-!!
-!!              CALL KTOTAL ( 'ALL', COUNT )
-!!
-!!              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!!             . //               'KCLEAR      : ', COUNT
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!        The total number of kernels after final FURNSH:  6
-!!        The total number of meta-kernels              :  1
-!!        The total number of text kernels              :  3
-!!        The total number of binary kernels            :  2
-!!        The total number of kernels after KCLEAR      :  0
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!     W.L. Taber         (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 5.0.1, 25-OCT-2021 (JDR) (NJB)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Created complete code example from existing code fragments.
-!!
-!!        Updated $Detailed_Input description of input argument KIND to
-!!        illustrate use of multi-word lists. Added KERNEL to the list
-!!        of required readings.
-!!
-!!-    SPICELIB Version 5.0.0, 01-FEB-2017 (NJB) (BVS)
-!!
-!!        Updated to support use of DSKs.
-!!
-!!        Updated the $Author_and_Institution section.
-!!
-!!-    SPICELIB Version 1.1.0, 02-APR-2009 (NJB)
-!!
-!!        Deleted reference to unneeded variable DOALL.
-!!
-!!-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Number of loaded kernels of a given type
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, fndnwd
       implicit none
@@ -5059,320 +4694,292 @@ contains
       end associate
       end procedure ktotal
 
+      !> ## Detailed Input
+      !>
+      !>     WHICH    is the number of the kernel to fetch (matching the type
+      !>              specified by KIND) from the list of kernels that have
+      !>              been loaded through the routine FURNSH but that have not
+      !>              been unloaded through the routine UNLOAD.
+      !>
+      !>              The range of WHICH is 1 to COUNT, where COUNT is the
+      !>              number of kernels loaded via FURNSH of type KIND. This
+      !>              count may be obtained by calling KTOTAL. See the
+      !>              $Examples section for an illustrative example.
+      !>
+      !>     KIND     is a list of types of kernels to be considered when
+      !>              fetching kernels from the list of loaded kernels. KIND
+      !>              should consist of words from list of kernel types
+      !>              given below.
+      !>
+      !>                 SPK  --- All SPK files are counted in the total.
+      !>                 CK   --- All CK files are counted in the total.
+      !>                 DSK  --- All DSK files are counted in the total.
+      !>                 PCK  --- All binary PCK files are counted in the
+      !>                          total.
+      !>                 EK   --- All EK files are counted in the total.
+      !>                 TEXT --- All text kernels that are not meta-text
+      !>                          kernels are included in the total.
+      !>                 META --- All meta-text kernels are counted in the
+      !>                          total.
+      !>                 ALL  --- Every type of kernel is counted in the
+      !>                          total.
+      !>
+      !>              KIND is case insensitive. If a word appears in KIND
+      !>              that is not one of those listed above, it is ignored.
+      !>
+      !>              When KIND consists of multiple words, the words must
+      !>              be separated by blanks. Examples of valid lists are the
+      !>              strings
+      !>
+      !>                 'SPK CK TEXT'
+      !>                 'SPK CK text'
+      !>                 'PCK DSK'
+      !>                 'CK'
+      !>                 'ALL'
+      !>
+      !>              See the routine KTOTAL for examples of the use of KIND.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     FILE     is the name of the file having index WHICH in the
+      !>              sequence of files of type KIND that is currently loaded
+      !>              via FURNSH. FILE will be blank if there is not such
+      !>              kernel loaded.
+      !>
+      !>     FILTYP   is the type of the kernel specified by FILE. FILE
+      !>              will be blank if there is no file matching the
+      !>              specification of WHICH and KIND.
+      !>
+      !>     SRCFIL   is the name of the source file that was used to
+      !>              specify FILE as one to load. If FILE was loaded
+      !>              directly via a call to FURNSH, SRCFIL will be blank.
+      !>              If there is no file matching the specification of
+      !>              WHICH and KIND, SRCFIL will be blank.
+      !>
+      !>     HANDLE   is the handle attached to FILE if it is a binary
+      !>              kernel. If FILE is a text kernel or meta-text kernel
+      !>              HANDLE will be zero. If there is no file matching
+      !>              the specification of WHICH and KIND, HANDLE will be
+      !>              set to zero.
+      !>
+      !>     FOUND    is returned .TRUE. if a FILE matching the specification
+      !>              of WHICH and KIND exists. If there is no such file,
+      !>              FOUND will be set to .FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If a file is not loaded matching the specification of WHICH
+      !>         and KIND, FOUND will be .FALSE., FILE, FILTYP, and SRCFIL will
+      !>         be blank and HANDLE will be set to zero.
+      !>
+      !>     2)  If any of FILE, FILTYP or SRCFIL output strings has length
+      !>         too short to contain the corresponding output string, the
+      !>         string is truncated on the right.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine allows you to determine which kernels have been
+      !>     loaded via FURNSH and to obtain information sufficient to directly
+      !>     query those files.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Load a meta-kernel with a PCK, an LSK and an SPK and loop over
+      !>        the loaded kernels, outputting file information for each of
+      !>        them.
+      !>
+      !>        Use the meta-kernel shown below to load the required SPICE
+      !>        kernels.
+      !>
+      !>           KPL/MK
+      !>
+      !>           File name: kdata_ex1.tm
+      !>
+      !>           This meta-kernel is intended to support operation of SPICE
+      !>           example programs. The kernels shown here should not be
+      !>           assumed to contain adequate or correct versions of data
+      !>           required by SPICE-based user applications.
+      !>
+      !>           In order for an application to use this meta-kernel, the
+      !>           kernels referenced here must be present in the user's
+      !>           current working directory.
+      !>
+      !>           The names and contents of the kernels referenced
+      !>           by this meta-kernel are as follows:
+      !>
+      !>              File name                     Contents
+      !>              ---------                     --------
+      !>              de421.bsp                     Planetary ephemeris
+      !>              pck00009.tpc                  Planet orientation and
+      !>                                            radii
+      !>              naif0009.tls                  Leapseconds
+      !>
+      !>           \begindata
+      !>
+      !>              KERNELS_TO_LOAD = ( 'de421.bsp',
+      !>                                  'pck00009.tpc',
+      !>                                  'naif0009.tls'  )
+      !>
+      !>           \begintext
+      !>
+      !>           End of meta-kernel
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM KDATA_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local constants.
+      !>        C
+      !>              INTEGER               FNAMLN
+      !>              PARAMETER           ( FNAMLN = 256 )
+      !>
+      !>              INTEGER               FTYPLN
+      !>              PARAMETER           ( FTYPLN = 33 )
+      !>
+      !>              INTEGER               SRCLEN
+      !>              PARAMETER           ( SRCLEN = 256 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(FNAMLN)    FILE
+      !>              CHARACTER*(FTYPLN)    FILTYP
+      !>              CHARACTER*(SRCLEN)    SRCFIL
+      !>
+      !>              INTEGER               COUNT
+      !>              INTEGER               HANDLE
+      !>              INTEGER               WHICH
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Load several kernel files.
+      !>        C
+      !>              CALL FURNSH ( 'kdata_ex1.tm' )
+      !>
+      !>        C
+      !>        C     Count the number of loaded kernel files.
+      !>        C
+      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>
+      !>              DO WHICH= 1, COUNT + 1
+      !>
+      !>                 CALL KDATA ( WHICH, 'ALL',   FILE, FILTYP,
+      !>             .                SRCFIL, HANDLE, FOUND        )
+      !>
+      !>                 IF ( FOUND ) THEN
+      !>
+      !>                    WRITE(*,*) 'Index : ', WHICH
+      !>                    WRITE(*,*) 'File  : ', FILE
+      !>                    WRITE(*,*) 'Type  : ', FILTYP
+      !>                    WRITE(*,*) 'Source: ', SRCFIL
+      !>                    WRITE(*,*) 'Handle: ', HANDLE
+      !>                    WRITE(*,*) ' '
+      !>
+      !>                 ELSE
+      !>
+      !>                    WRITE(*,*) 'No kernel found with index: ', WHICH
+      !>
+      !>                 END IF
+      !>
+      !>              END DO
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Index :            1
+      !>         File  : kdata_ex1.tm
+      !>         Type  : META
+      !>         Source:
+      !>         Handle:            0
+      !>
+      !>         Index :            2
+      !>         File  : de421.bsp
+      !>         Type  : SPK
+      !>         Source: kdata_ex1.tm
+      !>         Handle:            1
+      !>
+      !>         Index :            3
+      !>         File  : pck00009.tpc
+      !>         Type  : TEXT
+      !>         Source: kdata_ex1.tm
+      !>         Handle:            0
+      !>
+      !>         Index :            4
+      !>         File  : naif0009.tls
+      !>         Type  : TEXT
+      !>         Source: kdata_ex1.tm
+      !>         Handle:            0
+      !>
+      !>         No kernel found with index:            5
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 5.1.0, 08-AUG-2021 (JDR) (NJB)
+      !>
+      !>        Changed argument name SOURCE to SRCFIL for consistency with
+      !>        other routines.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Created complete code example from existing code fragments.
+      !>
+      !>        Updated $Detailed_Input description of input arguments KIND, to
+      !>        illustrate use of multi-word lists, and WHICH, to describe its
+      !>        range.
+      !>
+      !>        Added entry #2 to $Exceptions section. Added KERNEL to the list
+      !>        of required readings.
+      !>
+      !>-    SPICELIB Version 5.0.0, 01-FEB-2017 (NJB) (BVS)
+      !>
+      !>        Updated to support use of DSKs.
+      !>
+      !>        Updated the $Author_and_Institution section.
+      !>
+      !>-    SPICELIB Version 1.1.0, 02-APR-2009 (NJB)
+      !>
+      !>        Deleted reference to unneeded variable DOALL.
+      !>
+      !>-    SPICELIB Version 1.0.1, 06-DEC-2002 (NJB)
+      !>
+      !>        Typo in header example was corrected.
+      !>
+      !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
       module procedure kdata
-!! ## Abstract
-!!
-!!     Return data for the nth kernel that is among a list of specified
-!!     kernel types.
-!!
-!! ## Required Reading
-!!
-!!     KERNEL
-!!
-!! ## Keywords
-!!
-!!     KERNEL
-!!
-!! ## Declarations
-!!
-!!     INTEGER               WHICH
-!!     CHARACTER*(*)         KIND
-!!     CHARACTER*(*)         FILE
-!!     CHARACTER*(*)         FILTYP
-!!     CHARACTER*(*)         SRCFIL
-!!     INTEGER               HANDLE
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     WHICH    is the number of the kernel to fetch (matching the type
-!!              specified by KIND) from the list of kernels that have
-!!              been loaded through the routine FURNSH but that have not
-!!              been unloaded through the routine UNLOAD.
-!!
-!!              The range of WHICH is 1 to COUNT, where COUNT is the
-!!              number of kernels loaded via FURNSH of type KIND. This
-!!              count may be obtained by calling KTOTAL. See the
-!!              $Examples section for an illustrative example.
-!!
-!!     KIND     is a list of types of kernels to be considered when
-!!              fetching kernels from the list of loaded kernels. KIND
-!!              should consist of words from list of kernel types
-!!              given below.
-!!
-!!                 SPK  --- All SPK files are counted in the total.
-!!                 CK   --- All CK files are counted in the total.
-!!                 DSK  --- All DSK files are counted in the total.
-!!                 PCK  --- All binary PCK files are counted in the
-!!                          total.
-!!                 EK   --- All EK files are counted in the total.
-!!                 TEXT --- All text kernels that are not meta-text
-!!                          kernels are included in the total.
-!!                 META --- All meta-text kernels are counted in the
-!!                          total.
-!!                 ALL  --- Every type of kernel is counted in the
-!!                          total.
-!!
-!!              KIND is case insensitive. If a word appears in KIND
-!!              that is not one of those listed above, it is ignored.
-!!
-!!              When KIND consists of multiple words, the words must
-!!              be separated by blanks. Examples of valid lists are the
-!!              strings
-!!
-!!                 'SPK CK TEXT'
-!!                 'SPK CK text'
-!!                 'PCK DSK'
-!!                 'CK'
-!!                 'ALL'
-!!
-!!              See the routine KTOTAL for examples of the use of KIND.
-!!
-!! ## Detailed Output
-!!
-!!     FILE     is the name of the file having index WHICH in the
-!!              sequence of files of type KIND that is currently loaded
-!!              via FURNSH. FILE will be blank if there is not such
-!!              kernel loaded.
-!!
-!!     FILTYP   is the type of the kernel specified by FILE. FILE
-!!              will be blank if there is no file matching the
-!!              specification of WHICH and KIND.
-!!
-!!     SRCFIL   is the name of the source file that was used to
-!!              specify FILE as one to load. If FILE was loaded
-!!              directly via a call to FURNSH, SRCFIL will be blank.
-!!              If there is no file matching the specification of
-!!              WHICH and KIND, SRCFIL will be blank.
-!!
-!!     HANDLE   is the handle attached to FILE if it is a binary
-!!              kernel. If FILE is a text kernel or meta-text kernel
-!!              HANDLE will be zero. If there is no file matching
-!!              the specification of WHICH and KIND, HANDLE will be
-!!              set to zero.
-!!
-!!     FOUND    is returned .TRUE. if a FILE matching the specification
-!!              of WHICH and KIND exists. If there is no such file,
-!!              FOUND will be set to .FALSE.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!!     1)  If a file is not loaded matching the specification of WHICH
-!!         and KIND, FOUND will be .FALSE., FILE, FILTYP, and SRCFIL will
-!!         be blank and HANDLE will be set to zero.
-!!
-!!     2)  If any of FILE, FILTYP or SRCFIL output strings has length
-!!         too short to contain the corresponding output string, the
-!!         string is truncated on the right.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine allows you to determine which kernels have been
-!!     loaded via FURNSH and to obtain information sufficient to directly
-!!     query those files.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Load a meta-kernel with a PCK, an LSK and an SPK and loop over
-!!        the loaded kernels, outputting file information for each of
-!!        them.
-!!
-!!        Use the meta-kernel shown below to load the required SPICE
-!!        kernels.
-!!
-!!           KPL/MK
-!!
-!!           File name: kdata_ex1.tm
-!!
-!!           This meta-kernel is intended to support operation of SPICE
-!!           example programs. The kernels shown here should not be
-!!           assumed to contain adequate or correct versions of data
-!!           required by SPICE-based user applications.
-!!
-!!           In order for an application to use this meta-kernel, the
-!!           kernels referenced here must be present in the user's
-!!           current working directory.
-!!
-!!           The names and contents of the kernels referenced
-!!           by this meta-kernel are as follows:
-!!
-!!              File name                     Contents
-!!              ---------                     --------
-!!              de421.bsp                     Planetary ephemeris
-!!              pck00009.tpc                  Planet orientation and
-!!                                            radii
-!!              naif0009.tls                  Leapseconds
-!!
-!!           \begindata
-!!
-!!              KERNELS_TO_LOAD = ( 'de421.bsp',
-!!                                  'pck00009.tpc',
-!!                                  'naif0009.tls'  )
-!!
-!!           \begintext
-!!
-!!           End of meta-kernel
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM KDATA_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Local constants.
-!!        C
-!!              INTEGER               FNAMLN
-!!              PARAMETER           ( FNAMLN = 256 )
-!!
-!!              INTEGER               FTYPLN
-!!              PARAMETER           ( FTYPLN = 33 )
-!!
-!!              INTEGER               SRCLEN
-!!              PARAMETER           ( SRCLEN = 256 )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(FNAMLN)    FILE
-!!              CHARACTER*(FTYPLN)    FILTYP
-!!              CHARACTER*(SRCLEN)    SRCFIL
-!!
-!!              INTEGER               COUNT
-!!              INTEGER               HANDLE
-!!              INTEGER               WHICH
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Load several kernel files.
-!!        C
-!!              CALL FURNSH ( 'kdata_ex1.tm' )
-!!
-!!        C
-!!        C     Count the number of loaded kernel files.
-!!        C
-!!              CALL KTOTAL ( 'ALL', COUNT )
-!!
-!!              DO WHICH= 1, COUNT + 1
-!!
-!!                 CALL KDATA ( WHICH, 'ALL',   FILE, FILTYP,
-!!             .                SRCFIL, HANDLE, FOUND        )
-!!
-!!                 IF ( FOUND ) THEN
-!!
-!!                    WRITE(*,*) 'Index : ', WHICH
-!!                    WRITE(*,*) 'File  : ', FILE
-!!                    WRITE(*,*) 'Type  : ', FILTYP
-!!                    WRITE(*,*) 'Source: ', SRCFIL
-!!                    WRITE(*,*) 'Handle: ', HANDLE
-!!                    WRITE(*,*) ' '
-!!
-!!                 ELSE
-!!
-!!                    WRITE(*,*) 'No kernel found with index: ', WHICH
-!!
-!!                 END IF
-!!
-!!              END DO
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!         Index :            1
-!!         File  : kdata_ex1.tm
-!!         Type  : META
-!!         Source:
-!!         Handle:            0
-!!
-!!         Index :            2
-!!         File  : de421.bsp
-!!         Type  : SPK
-!!         Source: kdata_ex1.tm
-!!         Handle:            1
-!!
-!!         Index :            3
-!!         File  : pck00009.tpc
-!!         Type  : TEXT
-!!         Source: kdata_ex1.tm
-!!         Handle:            0
-!!
-!!         Index :            4
-!!         File  : naif0009.tls
-!!         Type  : TEXT
-!!         Source: kdata_ex1.tm
-!!         Handle:            0
-!!
-!!         No kernel found with index:            5
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!     W.L. Taber         (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 5.1.0, 08-AUG-2021 (JDR) (NJB)
-!!
-!!        Changed argument name SOURCE to SRCFIL for consistency with
-!!        other routines.
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Created complete code example from existing code fragments.
-!!
-!!        Updated $Detailed_Input description of input arguments KIND, to
-!!        illustrate use of multi-word lists, and WHICH, to describe its
-!!        range.
-!!
-!!        Added entry #2 to $Exceptions section. Added KERNEL to the list
-!!        of required readings.
-!!
-!!-    SPICELIB Version 5.0.0, 01-FEB-2017 (NJB) (BVS)
-!!
-!!        Updated to support use of DSKs.
-!!
-!!        Updated the $Author_and_Institution section.
-!!
-!!-    SPICELIB Version 1.1.0, 02-APR-2009 (NJB)
-!!
-!!        Deleted reference to unneeded variable DOALL.
-!!
-!!-    SPICELIB Version 1.0.1, 06-DEC-2002 (NJB)
-!!
-!!        Typo in header example was corrected.
-!!
-!!-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Retrieve information on loaded SPICE kernels
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, fndnwd
       implicit none
@@ -5530,276 +5137,251 @@ contains
       end associate
       end procedure kdata
 
+      !> ## Detailed Input
+      !>
+      !>     FILE     is the name of a kernel file for which KEEPER
+      !>              information is desired.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     FILTYP   is the type of the kernel specified by FILE.  FILE
+      !>              will be blank if FILE is not on the list of loaded
+      !>              kernels.
+      !>
+      !>     SRCFIL   is the name of the source file that was used to
+      !>              specify FILE as one to load. If FILE was loaded
+      !>              directly via a call to FURNSH, SRCFIL will be blank.
+      !>              If FILE is not on the list of loaded kernels, SRCFIL
+      !>              will be blank
+      !>
+      !>     HANDLE   is the handle attached to FILE if it is a binary
+      !>              kernel. If FILE is a text kernel or meta-text kernel
+      !>              HANDLE will be zero. If FILE is not on the list of
+      !>              loaded kernels, HANDLE will be set to zero.
+      !>
+      !>     FOUND    is returned .TRUE. if FILE is on the KEEPER list of
+      !>              loaded kernels. If there is no such file, FOUND will
+      !>              be set to .FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If the specified file is not on the list of files that are
+      !>         currently loaded via the interface FURNSH, FOUND will be
+      !>         .FALSE., HANDLE will be set to zero and FILTYP and SRCFIL will
+      !>         be set to blanks.
+      !>
+      !>     2)  If any of  FILTYP or SRCFIL output strings has length too
+      !>         short to contain the corresponding output string, the string
+      !>         is truncated on the right.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This entry point allows you to request information directly
+      !>     for a specific SPICE kernel.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Suppose you wish to determine the types of kernels loaded
+      !>        by a given meta-kernel. The following code example shows
+      !>        how you might use this routine to do this.
+      !>
+      !>        Use the meta-kernel shown below to load the required SPICE
+      !>        kernels.
+      !>
+      !>           KPL/MK
+      !>
+      !>           File name: kinfo_ex1.tm
+      !>
+      !>           This meta-kernel is intended to support operation of SPICE
+      !>           example programs. The kernels shown here should not be
+      !>           assumed to contain adequate or correct versions of data
+      !>           required by SPICE-based user applications.
+      !>
+      !>           In order for an application to use this meta-kernel, the
+      !>           kernels referenced here must be present in the user's
+      !>           current working directory.
+      !>
+      !>           The names and contents of the kernels referenced
+      !>           by this meta-kernel are as follows:
+      !>
+      !>              File name                     Contents
+      !>              ---------                     --------
+      !>              de421.bsp                     Planetary ephemeris
+      !>              pck00008.tpc                  Planet orientation and
+      !>                                            radii
+      !>              naif0009.tls                  Leapseconds
+      !>
+      !>           \begindata
+      !>
+      !>              KERNELS_TO_LOAD = ( 'de421.bsp',
+      !>                                  'pck00008.tpc',
+      !>                                  'naif0009.tls'  )
+      !>
+      !>           \begintext
+      !>
+      !>           End of meta-kernel
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM KINFO_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     SPICELIB functions
+      !>        C
+      !>              LOGICAL               EQSTR
+      !>
+      !>        C
+      !>        C     Local constants.
+      !>        C
+      !>              INTEGER               FILLEN
+      !>              PARAMETER           ( FILLEN = 32 )
+      !>
+      !>              INTEGER               TYPLEN
+      !>              PARAMETER           ( TYPLEN = 33 )
+      !>
+      !>              INTEGER               SRCLEN
+      !>              PARAMETER           ( SRCLEN = 256 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(FILLEN)    FILE
+      !>              CHARACTER*(TYPLEN)    FILTYP
+      !>              CHARACTER*(SRCLEN)    SRCFIL
+      !>
+      !>              INTEGER               COUNT
+      !>              INTEGER               HANDLE
+      !>              INTEGER               WHICH
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Load the meta-kernel.
+      !>        C
+      !>              CALL FURNSH ( 'kinfo_ex1.tm' )
+      !>
+      !>        C
+      !>        C     Find out the total number of kernels in the kernel pool.
+      !>        C
+      !>              CALL KTOTAL ( 'all', COUNT )
+      !>
+      !>              IF ( COUNT .EQ. 0 ) THEN
+      !>
+      !>                 WRITE(*,*) 'No files loaded at this time.'
+      !>
+      !>              ELSE
+      !>
+      !>                 WRITE(*,*) 'The loaded files files are: '
+      !>                 WRITE(*,*) ' '
+      !>
+      !>              END IF
+      !>
+      !>        C
+      !>        C     Find the file name, type and source for each of the
+      !>        C     kernels in the kernel pool and print its type.
+      !>        C
+      !>              DO WHICH= 1, COUNT
+      !>
+      !>                 CALL KDATA ( WHICH,  'all',  FILE, FILTYP,
+      !>             .                SRCFIL, HANDLE, FOUND        )
+      !>
+      !>                 CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
+      !>
+      !>                 IF ( EQSTR( FILTYP, "SPK" ) ) THEN
+      !>
+      !>                    WRITE(*,*) FILE, ' is an SPK file.'
+      !>
+      !>                 ELSE IF ( EQSTR( FILTYP, "CK" ) ) THEN
+      !>
+      !>                    WRITE(*,*) FILE, ' is a CK file.'
+      !>
+      !>                 ELSE IF ( EQSTR( FILTYP, "PCK" ) ) THEN
+      !>
+      !>                    WRITE(*,*) FILE, ' is a PCK file.'
+      !>
+      !>                 ELSE IF ( EQSTR( FILTYP, "DSK" ) ) THEN
+      !>
+      !>                    WRITE(*,*) FILE, ' is a DSK file.'
+      !>
+      !>                 ELSE IF ( EQSTR( FILTYP, "EK" ) ) THEN
+      !>
+      !>                    WRITE(*,*) FILE, ' is an EK file.'
+      !>
+      !>                 ELSE IF ( EQSTR( FILTYP, "META" ) ) THEN
+      !>
+      !>                    WRITE(*,*) FILE, ' is a meta-kernel file.'
+      !>
+      !>                 ELSE
+      !>
+      !>                    WRITE(*,*) FILE, ' is a text kernel.'
+      !>
+      !>                 END IF
+      !>
+      !>              END DO
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         The loaded files files are:
+      !>
+      !>         kinfo_ex1.tm                     is a meta-kernel file.
+      !>         de421.bsp                        is an SPK file.
+      !>         pck00008.tpc                     is a text kernel.
+      !>         naif0009.tls                     is a text kernel.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 5.1.0, 08-AUG-2021 (JDR)
+      !>
+      !>        Changed argument name SOURCE to SRCFIL for consistency with
+      !>        other routines.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Created complete code example from existing code fragments.
+      !>
+      !>        Added entry #2 to $Exceptions section.
+      !>
+      !>-    SPICELIB Version 5.0.0, 01-FEB-2017 (NJB) (BVS)
+      !>
+      !>        Updated to support use of DSKs.
+      !>
+      !>        Updated the $Author_and_Institution section.
+      !>
+      !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
       module procedure kinfo
-!! ## Abstract
-!!
-!!     Return information about a specific kernel
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     KERNEL
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         FILE
-!!     CHARACTER*(*)         FILTYP
-!!     CHARACTER*(*)         SRCFIL
-!!     INTEGER               HANDLE
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     FILE     is the name of a kernel file for which KEEPER
-!!              information is desired.
-!!
-!! ## Detailed Output
-!!
-!!     FILTYP   is the type of the kernel specified by FILE.  FILE
-!!              will be blank if FILE is not on the list of loaded
-!!              kernels.
-!!
-!!     SRCFIL   is the name of the source file that was used to
-!!              specify FILE as one to load. If FILE was loaded
-!!              directly via a call to FURNSH, SRCFIL will be blank.
-!!              If FILE is not on the list of loaded kernels, SRCFIL
-!!              will be blank
-!!
-!!     HANDLE   is the handle attached to FILE if it is a binary
-!!              kernel. If FILE is a text kernel or meta-text kernel
-!!              HANDLE will be zero. If FILE is not on the list of
-!!              loaded kernels, HANDLE will be set to zero.
-!!
-!!     FOUND    is returned .TRUE. if FILE is on the KEEPER list of
-!!              loaded kernels. If there is no such file, FOUND will
-!!              be set to .FALSE.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!!     1)  If the specified file is not on the list of files that are
-!!         currently loaded via the interface FURNSH, FOUND will be
-!!         .FALSE., HANDLE will be set to zero and FILTYP and SRCFIL will
-!!         be set to blanks.
-!!
-!!     2)  If any of  FILTYP or SRCFIL output strings has length too
-!!         short to contain the corresponding output string, the string
-!!         is truncated on the right.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This entry point allows you to request information directly
-!!     for a specific SPICE kernel.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Suppose you wish to determine the types of kernels loaded
-!!        by a given meta-kernel. The following code example shows
-!!        how you might use this routine to do this.
-!!
-!!        Use the meta-kernel shown below to load the required SPICE
-!!        kernels.
-!!
-!!           KPL/MK
-!!
-!!           File name: kinfo_ex1.tm
-!!
-!!           This meta-kernel is intended to support operation of SPICE
-!!           example programs. The kernels shown here should not be
-!!           assumed to contain adequate or correct versions of data
-!!           required by SPICE-based user applications.
-!!
-!!           In order for an application to use this meta-kernel, the
-!!           kernels referenced here must be present in the user's
-!!           current working directory.
-!!
-!!           The names and contents of the kernels referenced
-!!           by this meta-kernel are as follows:
-!!
-!!              File name                     Contents
-!!              ---------                     --------
-!!              de421.bsp                     Planetary ephemeris
-!!              pck00008.tpc                  Planet orientation and
-!!                                            radii
-!!              naif0009.tls                  Leapseconds
-!!
-!!           \begindata
-!!
-!!              KERNELS_TO_LOAD = ( 'de421.bsp',
-!!                                  'pck00008.tpc',
-!!                                  'naif0009.tls'  )
-!!
-!!           \begintext
-!!
-!!           End of meta-kernel
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM KINFO_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     SPICELIB functions
-!!        C
-!!              LOGICAL               EQSTR
-!!
-!!        C
-!!        C     Local constants.
-!!        C
-!!              INTEGER               FILLEN
-!!              PARAMETER           ( FILLEN = 32 )
-!!
-!!              INTEGER               TYPLEN
-!!              PARAMETER           ( TYPLEN = 33 )
-!!
-!!              INTEGER               SRCLEN
-!!              PARAMETER           ( SRCLEN = 256 )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(FILLEN)    FILE
-!!              CHARACTER*(TYPLEN)    FILTYP
-!!              CHARACTER*(SRCLEN)    SRCFIL
-!!
-!!              INTEGER               COUNT
-!!              INTEGER               HANDLE
-!!              INTEGER               WHICH
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Load the meta-kernel.
-!!        C
-!!              CALL FURNSH ( 'kinfo_ex1.tm' )
-!!
-!!        C
-!!        C     Find out the total number of kernels in the kernel pool.
-!!        C
-!!              CALL KTOTAL ( 'all', COUNT )
-!!
-!!              IF ( COUNT .EQ. 0 ) THEN
-!!
-!!                 WRITE(*,*) 'No files loaded at this time.'
-!!
-!!              ELSE
-!!
-!!                 WRITE(*,*) 'The loaded files files are: '
-!!                 WRITE(*,*) ' '
-!!
-!!              END IF
-!!
-!!        C
-!!        C     Find the file name, type and source for each of the
-!!        C     kernels in the kernel pool and print its type.
-!!        C
-!!              DO WHICH= 1, COUNT
-!!
-!!                 CALL KDATA ( WHICH,  'all',  FILE, FILTYP,
-!!             .                SRCFIL, HANDLE, FOUND        )
-!!
-!!                 CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
-!!
-!!                 IF ( EQSTR( FILTYP, "SPK" ) ) THEN
-!!
-!!                    WRITE(*,*) FILE, ' is an SPK file.'
-!!
-!!                 ELSE IF ( EQSTR( FILTYP, "CK" ) ) THEN
-!!
-!!                    WRITE(*,*) FILE, ' is a CK file.'
-!!
-!!                 ELSE IF ( EQSTR( FILTYP, "PCK" ) ) THEN
-!!
-!!                    WRITE(*,*) FILE, ' is a PCK file.'
-!!
-!!                 ELSE IF ( EQSTR( FILTYP, "DSK" ) ) THEN
-!!
-!!                    WRITE(*,*) FILE, ' is a DSK file.'
-!!
-!!                 ELSE IF ( EQSTR( FILTYP, "EK" ) ) THEN
-!!
-!!                    WRITE(*,*) FILE, ' is an EK file.'
-!!
-!!                 ELSE IF ( EQSTR( FILTYP, "META" ) ) THEN
-!!
-!!                    WRITE(*,*) FILE, ' is a meta-kernel file.'
-!!
-!!                 ELSE
-!!
-!!                    WRITE(*,*) FILE, ' is a text kernel.'
-!!
-!!                 END IF
-!!
-!!              END DO
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!         The loaded files files are:
-!!
-!!         kinfo_ex1.tm                     is a meta-kernel file.
-!!         de421.bsp                        is an SPK file.
-!!         pck00008.tpc                     is a text kernel.
-!!         naif0009.tls                     is a text kernel.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!     W.L. Taber         (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 5.1.0, 08-AUG-2021 (JDR)
-!!
-!!        Changed argument name SOURCE to SRCFIL for consistency with
-!!        other routines.
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Created complete code example from existing code fragments.
-!!
-!!        Added entry #2 to $Exceptions section.
-!!
-!!-    SPICELIB Version 5.0.0, 01-FEB-2017 (NJB) (BVS)
-!!
-!!        Updated to support use of DSKs.
-!!
-!!        Updated the $Author_and_Institution section.
-!!
-!!-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Fetch information about a loaded SPICE kernel
-!!
       use pepper_kinds, only: ip
       implicit none
       logical               return
@@ -5890,213 +5472,188 @@ contains
       end associate
       end procedure kinfo
 
+      !> ## Detailed Input
+      !>
+      !>     None. This routine operates by side effects. See $Particulars
+      !>     below.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If an error occurs when setting a kernel pool watch or
+      !>         checking watched variables, the error is signaled by a routine
+      !>         in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     See $Particulars.
+      !>
+      !> ## Particulars
+      !>
+      !>     This entry point allows you re-initialize the KEEPER system with
+      !>     a single call.
+      !>
+      !>     This routine unloads all kernels from their kernel-type-specific
+      !>     kernel management subsystems (SPKBSR, CKBSR, etc.), clears the
+      !>     kernel pool, clears KEEPER's internal file database, and re-sets
+      !>     the watch status for the kernel variables used to load kernels
+      !>     via meta-kernels. As a side effect of clearing the kernel pool,
+      !>     all watched variables are marked as updated. Note that clearing
+      !>     the kernel pool does not delete watches (aka "watchers"). Watches
+      !>     can be deleted by calling the POOL entry point DWPOOL.
+      !>
+      !>     This capability, though implemented in Fortran, is particularly
+      !>     relevant to SPICE implementations such as Icy, for which the
+      !>     state of the KEEPER system persists after any Icy-based IDL
+      !>     script is run. Successive runs of Icy-based scripts may perform
+      !>     in unexpected ways when scripts access data loaded during runs of
+      !>     previous scripts.
+      !>
+      !>     Cleaning up after such programs using explicit UNLOAD commands is
+      !>     tedious and error-prone. One call to this routine sets the
+      !>     KEEPER system to its initial state, preventing unintentional
+      !>     interaction between scripts via KEEPER's state.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Load a meta-kernel containing three kernels, and count the
+      !>        number of files in the kernel pool before and after calling
+      !>        KCLEAR.
+      !>
+      !>        Use the meta-kernel shown below to load the required SPICE
+      !>        kernels.
+      !>
+      !>           KPL/MK
+      !>
+      !>           File name: kclear_ex1.tm
+      !>
+      !>           This meta-kernel is intended to support operation of SPICE
+      !>           example programs. The kernels shown here should not be
+      !>           assumed to contain adequate or correct versions of data
+      !>           required by SPICE-based user applications.
+      !>
+      !>           In order for an application to use this meta-kernel, the
+      !>           kernels referenced here must be present in the user's
+      !>           current working directory.
+      !>
+      !>           The names and contents of the kernels referenced
+      !>           by this meta-kernel are as follows:
+      !>
+      !>              File name                     Contents
+      !>              ---------                     --------
+      !>              de421.bsp                     Planetary ephemeris
+      !>              pck00009.tpc                  Planet orientation and
+      !>                                            radii
+      !>              naif0012.tls                  Leapseconds
+      !>
+      !>           \begindata
+      !>
+      !>              KERNELS_TO_LOAD = ( 'de421.bsp',
+      !>                                  'naif0012.tls',
+      !>                                  'pck00009.tpc' )
+      !>
+      !>           \begintext
+      !>
+      !>           End of meta-kernel
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM KCLEAR_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              INTEGER               COUNT
+      !>
+      !>        C
+      !>        C     Load several kernel files.
+      !>        C
+      !>              CALL FURNSH ( 'kclear_ex1.tm' )
+      !>
+      !>        C
+      !>        C     Count the number of loaded kernel files.
+      !>        C
+      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>
+      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>             . //               'FURNSH: ', COUNT
+      !>
+      !>        C
+      !>        C     Clear the KEEPER system, retrieve the number of loaded
+      !>        C     after the clear.
+      !>        C
+      !>              CALL KCLEAR()
+      !>
+      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>
+      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>             . //               'KCLEAR: ', COUNT
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>        The total number of kernels after FURNSH:  4
+      !>        The total number of kernels after KCLEAR:  0
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Calling this routine will wipe out any kernel pool data
+      !>         inserted via the SPICELIB API routines to put data into the
+      !>         kernel pool (PCPOOL, PDPOOL and PIPOOL).
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 5.0.1, 08-AUG-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard. Added complete
+      !>        code example from existing code fragments.
+      !>
+      !>        Improved $Restrictions section.
+      !>
+      !>-    SPICELIB Version 5.0.0, 01-FEB-2017 (NJB) (BVS)
+      !>
+      !>        Updated to support use of DSKs.
+      !>
+      !>        Updated the $Author_and_Institution section.
+      !>
+      !>-    SPICELIB Version 1.0.1, 01-JUL-2014 (NJB) (EDW)
+      !>
+      !>        Updated the discussion of kernel variable watchers.
+      !>
+      !>     Last update was 13-APR-2011 (EDW)
+      !>
+      !>        Trivial edit to $Restrictions, replaced P*POOL with
+      !>        PXPOOL. The "*" character causes the HTML documentation
+      !>        script to create a link for the "POOL" substring.
+      !>
+      !>-    SPICELIB Version 1.0.0, 15-NOV-2006 (NJB)
       module procedure kclear
-!! ## Abstract
-!!
-!!     Clear the KEEPER subsystem: unload all kernels, clear the kernel
-!!     pool, and re-initialize the subsystem. Existing watches on kernel
-!!     variables are retained.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     KERNEL
-!!
-!! ## Declarations
-!!
-!!     None.
-!!
-!! ## Detailed Input
-!!
-!!     None. This routine operates by side effects. See $Particulars
-!!     below.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If an error occurs when setting a kernel pool watch or
-!!         checking watched variables, the error is signaled by a routine
-!!         in the call tree of this routine.
-!!
-!! ## Files
-!!
-!!     See $Particulars.
-!!
-!! ## Particulars
-!!
-!!     This entry point allows you re-initialize the KEEPER system with
-!!     a single call.
-!!
-!!     This routine unloads all kernels from their kernel-type-specific
-!!     kernel management subsystems (SPKBSR, CKBSR, etc.), clears the
-!!     kernel pool, clears KEEPER's internal file database, and re-sets
-!!     the watch status for the kernel variables used to load kernels
-!!     via meta-kernels. As a side effect of clearing the kernel pool,
-!!     all watched variables are marked as updated. Note that clearing
-!!     the kernel pool does not delete watches (aka "watchers"). Watches
-!!     can be deleted by calling the POOL entry point DWPOOL.
-!!
-!!     This capability, though implemented in Fortran, is particularly
-!!     relevant to SPICE implementations such as Icy, for which the
-!!     state of the KEEPER system persists after any Icy-based IDL
-!!     script is run. Successive runs of Icy-based scripts may perform
-!!     in unexpected ways when scripts access data loaded during runs of
-!!     previous scripts.
-!!
-!!     Cleaning up after such programs using explicit UNLOAD commands is
-!!     tedious and error-prone. One call to this routine sets the
-!!     KEEPER system to its initial state, preventing unintentional
-!!     interaction between scripts via KEEPER's state.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Load a meta-kernel containing three kernels, and count the
-!!        number of files in the kernel pool before and after calling
-!!        KCLEAR.
-!!
-!!        Use the meta-kernel shown below to load the required SPICE
-!!        kernels.
-!!
-!!           KPL/MK
-!!
-!!           File name: kclear_ex1.tm
-!!
-!!           This meta-kernel is intended to support operation of SPICE
-!!           example programs. The kernels shown here should not be
-!!           assumed to contain adequate or correct versions of data
-!!           required by SPICE-based user applications.
-!!
-!!           In order for an application to use this meta-kernel, the
-!!           kernels referenced here must be present in the user's
-!!           current working directory.
-!!
-!!           The names and contents of the kernels referenced
-!!           by this meta-kernel are as follows:
-!!
-!!              File name                     Contents
-!!              ---------                     --------
-!!              de421.bsp                     Planetary ephemeris
-!!              pck00009.tpc                  Planet orientation and
-!!                                            radii
-!!              naif0012.tls                  Leapseconds
-!!
-!!           \begindata
-!!
-!!              KERNELS_TO_LOAD = ( 'de421.bsp',
-!!                                  'naif0012.tls',
-!!                                  'pck00009.tpc' )
-!!
-!!           \begintext
-!!
-!!           End of meta-kernel
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM KCLEAR_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              INTEGER               COUNT
-!!
-!!        C
-!!        C     Load several kernel files.
-!!        C
-!!              CALL FURNSH ( 'kclear_ex1.tm' )
-!!
-!!        C
-!!        C     Count the number of loaded kernel files.
-!!        C
-!!              CALL KTOTAL ( 'ALL', COUNT )
-!!
-!!              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!!             . //               'FURNSH: ', COUNT
-!!
-!!        C
-!!        C     Clear the KEEPER system, retrieve the number of loaded
-!!        C     after the clear.
-!!        C
-!!              CALL KCLEAR()
-!!
-!!              CALL KTOTAL ( 'ALL', COUNT )
-!!
-!!              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!!             . //               'KCLEAR: ', COUNT
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!        The total number of kernels after FURNSH:  4
-!!        The total number of kernels after KCLEAR:  0
-!!
-!! ## Restrictions
-!!
-!!     1)  Calling this routine will wipe out any kernel pool data
-!!         inserted via the SPICELIB API routines to put data into the
-!!         kernel pool (PCPOOL, PDPOOL and PIPOOL).
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 5.0.1, 08-AUG-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard. Added complete
-!!        code example from existing code fragments.
-!!
-!!        Improved $Restrictions section.
-!!
-!!-    SPICELIB Version 5.0.0, 01-FEB-2017 (NJB) (BVS)
-!!
-!!        Updated to support use of DSKs.
-!!
-!!        Updated the $Author_and_Institution section.
-!!
-!!-    SPICELIB Version 1.0.1, 01-JUL-2014 (NJB) (EDW)
-!!
-!!        Updated the discussion of kernel variable watchers.
-!!
-!!     Last update was 13-APR-2011 (EDW)
-!!
-!!        Trivial edit to $Restrictions, replaced P*POOL with
-!!        PXPOOL. The "*" character causes the HTML documentation
-!!        script to create a link for the "POOL" substring.
-!!
-!!-    SPICELIB Version 1.0.0, 15-NOV-2006 (NJB)
-!!
-!! ## Index Entries
-!!
-!!     Re-initialize the keeper system
-!!     Clear the keeper system
-!!     Unload all kernels
-!!
       use pepper_kinds, only: ip
       implicit none
       integer(ip), parameter :: typlen = 8
@@ -6219,469 +5776,448 @@ contains
       end associate
       end procedure kclear
 
+      !> ## Detailed Input
+      !>
+      !>     FILE     is the name of a file to unload. This file
+      !>              should be one loaded through the interface FURNSH.
+      !>              If the file is not on the list of loaded kernels
+      !>              no action is taken.
+      !>
+      !>              Note that if FILE is a meta-text kernel, all of
+      !>              the files loaded as a result of loading the meta-text
+      !>              kernel will be unloaded.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If the specified kernel is not on the list of loaded kernels
+      !>         no action is taken.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The call
+      !>
+      !>        CALL UNLOAD ( FILE )
+      !>
+      !>     has the effect of "erasing" the last previous call:
+      !>
+      !>        CALL FURNSH ( FILE )
+      !>
+      !>     This interface allows you to unload binary and text kernels.
+      !>     Moreover, if you used a meta-text kernel to set up your
+      !>     working environment, you can unload all of the kernels loaded
+      !>     through the meta-kernel by unloading the meta-kernel.
+      !>
+      !>     The usual usage of FURNSH is to load each file needed by your
+      !>     program exactly one time. However, it is possible to load a
+      !>     kernel more than one time. (Usually, this is a result of loading
+      !>     meta-kernels without taking the care needed to ensure that the
+      !>     meta-kernels do not specify the same file more than once.) The
+      !>     effect of unloading a kernel that has been loaded more than once
+      !>     is to "undo" the last loading of the kernel. Depending upon the
+      !>     kernel and its relationship to other loaded kernels, this may
+      !>     have no visible effect on the working of your program. To
+      !>     illustrate this behavior suppose that you have a collection of
+      !>     files FILE1, FILE2, FILE3, FILE4, FILE5, FILE6, FILE7, FILE8,
+      !>     META1, META2  where FILE1 ... FILE8 are SPICE kernels and META1
+      !>     and META2 are meta-kernels with the specified kernels to load as
+      !>     shown below.
+      !>
+      !>         META1:
+      !>            KERNELS_TO_LOAD = ( FILE2,
+      !>                                FILE3,
+      !>                                FILE4,
+      !>                                FILE5 )
+      !>
+      !>         META2:
+      !>            KERNELS_TO_LOAD = ( FILE2,
+      !>                                FILE3,
+      !>                                FILE7,
+      !>                                FILE8 )
+      !>
+      !>      The following sequence of calls
+      !>
+      !>          CALL FURNSH ( FILE1 )
+      !>          CALL FURNSH ( FILE2 )
+      !>          CALL FURNSH ( FILE3 )
+      !>          CALL FURNSH ( META1 )
+      !>          CALL FURNSH ( FILE6 )
+      !>          CALL FURNSH ( META2 )
+      !>
+      !>      has the effect:
+      !>
+      !>          "Load" FILE1
+      !>          "Load" FILE2
+      !>          "Load" FILE3
+      !>          "Load" META1 as a text kernel and then...
+      !>                "Load" FILE2 (note that it was loaded from META1)
+      !>                "Load" FILE3 (note that it was loaded from META1)
+      !>                "Load" FILE4 (note that it was loaded from META1)
+      !>                "Load" FILE5 (note that it was loaded from META1)
+      !>          "Load" FILE6
+      !>          "Load" META2 as a text kernel and then...
+      !>                "Load" FILE2 (note that it was loaded from META2)
+      !>                "Load" FILE3 (note that it was loaded from META2) *
+      !>                "Load" FILE7 (note that it was loaded from META2)
+      !>                "Load" FILE8 (note that it was loaded from META2)
+      !>
+      !>      If we  UNLOAD FILE3
+      !>
+      !>         CALL UNLOAD ( FILE3 )
+      !>
+      !>      we locate the last time FILE3 was loaded (* above) and modify the
+      !>      state of loaded kernels so that it looks as if we had made the
+      !>      following sequence of "load" operations.
+      !>
+      !>          "Load" FILE1
+      !>          "Load" FILE2
+      !>          "Load" FILE3
+      !>          "Load" META1 as a text kernel and then...
+      !>                "Load" FILE2 (note that it was loaded from META1)
+      !>                "Load" FILE3 (note that it was loaded from META1)
+      !>                "Load" FILE4 (note that it was loaded from META1)
+      !>                "Load" FILE5 (note that it was loaded from META1)
+      !>          "Load" FILE6
+      !>          "Load" META2 as a text kernel and then...
+      !>                "Load" FILE2 (note that it was loaded from META2)
+      !>                "Load" FILE7 (note that it was loaded from META2)
+      !>                "Load" FILE8 (note that it was loaded from META2)
+      !>
+      !>      As you can see, the data from FILE3 is still available to the
+      !>      program. All that may have changed is the usage priority
+      !>      associated with that data.
+      !>
+      !>      If we unload META2 (or META1) we remove all remaining files that
+      !>      are noted as being loaded from META2 (or META1)
+      !>
+      !>          CALL UNLOAD ( META2 )
+      !>
+      !>      produces the following load state for the program:
+      !>
+      !>          "Load" FILE1
+      !>          "Load" FILE2
+      !>          "Load" FILE3
+      !>          "Load" META1 as a text kernel and then...
+      !>                "Load" FILE2 (note that it was loaded from META1)
+      !>                "Load" FILE3 (note that it was loaded from META1)
+      !>                "Load" FILE4 (note that it was loaded from META1)
+      !>                "Load" FILE5 (note that it was loaded from META1)
+      !>          "Load" FILE6
+      !>
+      !>      If we had unloaded META1 instead, we would have this load state.
+      !>
+      !>          "Load" FILE1
+      !>          "Load" FILE2
+      !>          "Load" FILE3
+      !>          "Load" FILE6
+      !>          "Load" META2 as a text kernel and then...
+      !>                "Load" FILE2 (note that it was loaded from META2)
+      !>                "Load" FILE7 (note that it was loaded from META2)
+      !>                "Load" FILE8 (note that it was loaded from META2)
+      !>
+      !>      So we see that unloading a file does not necessarily make its
+      !>      data unavailable to your program. Unloading modifies the
+      !>      precedence of the files loaded in your program. The data
+      !>      associated with an unloaded file becomes unavailable only when
+      !>      the file has been unloaded as many times as it was loaded.
+      !>
+      !>      When would you encounter such a scenario? The situation of
+      !>      loading a file more than once might appear if you were trying to
+      !>      contrast the results of computations performed with two
+      !>      different meta-kernels. In such a scenario you might load a
+      !>      "baseline" set of kernels early in your program and then load
+      !>      and unload meta-kernels to compare results between the two
+      !>      different sets of data.
+      !>
+      !>     Unloading Text Kernels or Meta-Kernels
+      !>     --------------------------------------
+      !>
+      !>     Part of the action of unloading text (or meta-kernels) is
+      !>     the clearing of the kernel pool and re-loading any kernels that
+      !>     were not in the specified set of kernels to unload. Since
+      !>     loading of text kernels is not a very fast process, unloading
+      !>     text kernels takes considerably longer than unloading binary
+      !>     kernels. Moreover, since the kernel pool is cleared, any kernel
+      !>     pool variables you have set from your program by using one of the
+      !>     interfaces PCPOOL, PDPOOL, PIPOOL, or LMPOOL will be removed from
+      !>     the kernel pool. For this reason, if you plan to use this
+      !>     feature in your program, together with one of the routines
+      !>     specified above, you will need to take special precautions to
+      !>     make sure kernel pool variables required by your program do not
+      !>     inadvertently disappear.
+      !>
+      !>     As a side effect of unloading a text kernel, all watched kernel
+      !>     variables are marked as updated. Note that unloading a text
+      !>     kernel does not delete watchers. Watchers can be deleted by
+      !>     calling the POOL entry point DWPOOL.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Load a meta-kernel with a PCK, an LSK and an SPK, and
+      !>        separately, a text kernel and a binary PCK. Loop over the
+      !>        loaded kernels, outputting file information for each of
+      !>        them.
+      !>
+      !>        Then unload the text kernels, check that they have been
+      !>        unloaded, and finally unload the meta-kernel.
+      !>
+      !>        Use the meta-kernel shown below to load the required SPICE
+      !>        kernels.
+      !>
+      !>           KPL/MK
+      !>
+      !>           File name: unload_ex1.tm
+      !>
+      !>           This meta-kernel is intended to support operation of SPICE
+      !>           example programs. The kernels shown here should not be
+      !>           assumed to contain adequate or correct versions of data
+      !>           required by SPICE-based user applications.
+      !>
+      !>           In order for an application to use this meta-kernel, the
+      !>           kernels referenced here must be present in the user's
+      !>           current working directory.
+      !>
+      !>           The names and contents of the kernels referenced
+      !>           by this meta-kernel are as follows:
+      !>
+      !>              File name                     Contents
+      !>              ---------                     --------
+      !>              de421.bsp                     Planetary ephemeris
+      !>              pck00009.tpc                  Planet orientation and
+      !>                                            radii
+      !>              naif0012.tls                  Leapseconds
+      !>
+      !>           \begindata
+      !>
+      !>              KERNELS_TO_LOAD = ( 'de421.bsp',
+      !>                                  'naif0012.tls',
+      !>                                  'pck00009.tpc' )
+      !>
+      !>           \begintext
+      !>
+      !>           End of meta-kernel
+      !>
+      !>        Use the PCK kernel below as the binary PCK required for the
+      !>        example.
+      !>
+      !>           earth_latest_high_prec.bpc
+      !>
+      !>        Use the FK kernel below as the text kernel required for the
+      !>        example.
+      !>
+      !>           RSSD0002.TF
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM UNLOAD_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local constants.
+      !>        C
+      !>              INTEGER               FNAMLN
+      !>              PARAMETER           ( FNAMLN = 256 )
+      !>
+      !>              INTEGER               FTYPLN
+      !>              PARAMETER           ( FTYPLN = 33 )
+      !>
+      !>              INTEGER               SRCLEN
+      !>              PARAMETER           ( SRCLEN = 256 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(FNAMLN)    FILE
+      !>              CHARACTER*(FTYPLN)    FILTYP
+      !>              CHARACTER*(SRCLEN)    SRCFIL
+      !>
+      !>              INTEGER               COUNT
+      !>              INTEGER               HANDLE
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Load several kernel files.
+      !>        C
+      !>              CALL FURNSH ( 'unload_ex1.tm'              )
+      !>              CALL FURNSH ( 'RSSD0002.TF'                )
+      !>              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
+      !>
+      !>        C
+      !>        C     Count the number of loaded kernel files.
+      !>        C
+      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>
+      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>             . //               'final FURNSH: ', COUNT
+      !>              WRITE(*,*) ' '
+      !>
+      !>        C
+      !>        C     Unload the text kernels.
+      !>        C
+      !>              CALL KTOTAL ( 'TEXT', COUNT )
+      !>
+      !>              WRITE(*,*) ' '
+      !>              WRITE(*,'(A,I2,A)') 'Unloading', COUNT,
+      !>             .                    ' text kernels...'
+      !>              WRITE(*,*) ' '
+      !>
+      !>              DO WHILE ( COUNT .NE. 0 )
+      !>
+      !>                 CALL KDATA (      1, 'TEXT',  FILE, FILTYP,
+      !>             .                SRCFIL, HANDLE, FOUND        )
+      !>
+      !>        C
+      !>        C        If the kernel is found in the pool, unload it.
+      !>        C
+      !>                 IF ( FOUND ) THEN
+      !>
+      !>                    CALL UNLOAD ( FILE )
+      !>
+      !>        C
+      !>        C           Check if the file has been unloaded.
+      !>        C
+      !>                    CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
+      !>
+      !>                    IF ( FOUND ) THEN
+      !>
+      !>                       WRITE(*,'(A)') '  Error unloading ' // FILE
+      !>
+      !>                    ELSE
+      !>
+      !>                       WRITE(*,'(A)') '  Success unloading ' // FILE
+      !>
+      !>                    END IF
+      !>
+      !>        C
+      !>        C        Something is not working. Inform NAIF.
+      !>        C
+      !>                 ELSE
+      !>
+      !>                    WRITE(*,*) ' ERROR: No kernel found but KTOTAL '
+      !>             .      //         'returns ', COUNT
+      !>
+      !>                 END IF
+      !>
+      !>        C
+      !>        C        Check if we have more text kernels to unload from
+      !>        C        the kernel pool. Note that unloading a text kernel
+      !>        C        or meta-kernel implies that the kernel pool is
+      !>        C        cleared, and any kernel(s) that were not to be
+      !>        C        unloaded are re-loaded. Therefore the COUNT value
+      !>        C        changes, and the indexing of the files within the
+      !>        C        kernel pool too.
+      !>        C
+      !>                 CALL KTOTAL ( 'TEXT', COUNT )
+      !>
+      !>              END DO
+      !>
+      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>
+      !>              WRITE(*,*) ' '
+      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>             . //               'UNLOAD calls: ', COUNT
+      !>
+      !>        C
+      !>        C     Unload the meta-kernel and retrieve the number of loaded
+      !>        C     after the clear.
+      !>        C
+      !>              CALL UNLOAD ( 'unload_ex1.tm' )
+      !>
+      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>
+      !>              WRITE(*,*) ' '
+      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>             . //               'final UNLOAD: ', COUNT
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>        The total number of kernels after final FURNSH:  6
+      !>
+      !>        Unloading 3 text kernels...
+      !>
+      !>          Success unloading naif0012.tls
+      !>          Success unloading pck00009.tpc
+      !>          Success unloading RSSD0002.TF
+      !>
+      !>        The total number of kernels after UNLOAD calls:  3
+      !>
+      !>        The total number of kernels after final UNLOAD:  1
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  See the note regarding the unloading of Text and meta-text
+      !>         Kernels.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 5.0.1, 08-AUG-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Created complete code example from existing code fragments.
+      !>
+      !>-    SPICELIB Version 5.0.0, 01-FEB-2017 (NJB) (BVS)
+      !>
+      !>        Updated to support use of DSKs.
+      !>
+      !>        Bug fix: now unloads binary kernels via low-level
+      !>        unload routines only when those kernels have just
+      !>        one entry in the KEEPER database.
+      !>
+      !>        Updated the $Author_and_Institution section.
+      !>
+      !>-    SPICELIB Version 3.0.1, 01-JUL-2014 (NJB)
+      !>
+      !>        Updated discussion of kernel variable watchers.
+      !>
+      !>-    SPICELIB Version 3.0.0, 15-NOV-2006 (NJB)
+      !>
+      !>        Bug fix: corrected update of source pointers when a
+      !>        meta-kernel is unloaded. Previously source pointers
+      !>        having higher indices than those of the files referenced
+      !>        by the meta kernel were not adjusted when the database
+      !>        was compressed.
+      !>
+      !>-    SPICELIB Version 2.0.0, 23-AUG-2001 (WLT)
+      !>
+      !>        Added code to make sure that UNLOAD has the effect of
+      !>        loading all remaining kernels in the order they were first
+      !>        introduced.
+      !>
+      !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
       module procedure unload
-!! ## Abstract
-!!
-!!     Unload a SPICE kernel.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     KERNEL
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         FILE
-!!
-!! ## Detailed Input
-!!
-!!     FILE     is the name of a file to unload. This file
-!!              should be one loaded through the interface FURNSH.
-!!              If the file is not on the list of loaded kernels
-!!              no action is taken.
-!!
-!!              Note that if FILE is a meta-text kernel, all of
-!!              the files loaded as a result of loading the meta-text
-!!              kernel will be unloaded.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!!     1)  If the specified kernel is not on the list of loaded kernels
-!!         no action is taken.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     The call
-!!
-!!        CALL UNLOAD ( FILE )
-!!
-!!     has the effect of "erasing" the last previous call:
-!!
-!!        CALL FURNSH ( FILE )
-!!
-!!     This interface allows you to unload binary and text kernels.
-!!     Moreover, if you used a meta-text kernel to set up your
-!!     working environment, you can unload all of the kernels loaded
-!!     through the meta-kernel by unloading the meta-kernel.
-!!
-!!     The usual usage of FURNSH is to load each file needed by your
-!!     program exactly one time. However, it is possible to load a
-!!     kernel more than one time. (Usually, this is a result of loading
-!!     meta-kernels without taking the care needed to ensure that the
-!!     meta-kernels do not specify the same file more than once.) The
-!!     effect of unloading a kernel that has been loaded more than once
-!!     is to "undo" the last loading of the kernel. Depending upon the
-!!     kernel and its relationship to other loaded kernels, this may
-!!     have no visible effect on the working of your program. To
-!!     illustrate this behavior suppose that you have a collection of
-!!     files FILE1, FILE2, FILE3, FILE4, FILE5, FILE6, FILE7, FILE8,
-!!     META1, META2  where FILE1 ... FILE8 are SPICE kernels and META1
-!!     and META2 are meta-kernels with the specified kernels to load as
-!!     shown below.
-!!
-!!         META1:
-!!            KERNELS_TO_LOAD = ( FILE2,
-!!                                FILE3,
-!!                                FILE4,
-!!                                FILE5 )
-!!
-!!         META2:
-!!            KERNELS_TO_LOAD = ( FILE2,
-!!                                FILE3,
-!!                                FILE7,
-!!                                FILE8 )
-!!
-!!      The following sequence of calls
-!!
-!!          CALL FURNSH ( FILE1 )
-!!          CALL FURNSH ( FILE2 )
-!!          CALL FURNSH ( FILE3 )
-!!          CALL FURNSH ( META1 )
-!!          CALL FURNSH ( FILE6 )
-!!          CALL FURNSH ( META2 )
-!!
-!!      has the effect:
-!!
-!!          "Load" FILE1
-!!          "Load" FILE2
-!!          "Load" FILE3
-!!          "Load" META1 as a text kernel and then...
-!!                "Load" FILE2 (note that it was loaded from META1)
-!!                "Load" FILE3 (note that it was loaded from META1)
-!!                "Load" FILE4 (note that it was loaded from META1)
-!!                "Load" FILE5 (note that it was loaded from META1)
-!!          "Load" FILE6
-!!          "Load" META2 as a text kernel and then...
-!!                "Load" FILE2 (note that it was loaded from META2)
-!!                "Load" FILE3 (note that it was loaded from META2) *
-!!                "Load" FILE7 (note that it was loaded from META2)
-!!                "Load" FILE8 (note that it was loaded from META2)
-!!
-!!      If we  UNLOAD FILE3
-!!
-!!         CALL UNLOAD ( FILE3 )
-!!
-!!      we locate the last time FILE3 was loaded (* above) and modify the
-!!      state of loaded kernels so that it looks as if we had made the
-!!      following sequence of "load" operations.
-!!
-!!          "Load" FILE1
-!!          "Load" FILE2
-!!          "Load" FILE3
-!!          "Load" META1 as a text kernel and then...
-!!                "Load" FILE2 (note that it was loaded from META1)
-!!                "Load" FILE3 (note that it was loaded from META1)
-!!                "Load" FILE4 (note that it was loaded from META1)
-!!                "Load" FILE5 (note that it was loaded from META1)
-!!          "Load" FILE6
-!!          "Load" META2 as a text kernel and then...
-!!                "Load" FILE2 (note that it was loaded from META2)
-!!                "Load" FILE7 (note that it was loaded from META2)
-!!                "Load" FILE8 (note that it was loaded from META2)
-!!
-!!      As you can see, the data from FILE3 is still available to the
-!!      program. All that may have changed is the usage priority
-!!      associated with that data.
-!!
-!!      If we unload META2 (or META1) we remove all remaining files that
-!!      are noted as being loaded from META2 (or META1)
-!!
-!!          CALL UNLOAD ( META2 )
-!!
-!!      produces the following load state for the program:
-!!
-!!          "Load" FILE1
-!!          "Load" FILE2
-!!          "Load" FILE3
-!!          "Load" META1 as a text kernel and then...
-!!                "Load" FILE2 (note that it was loaded from META1)
-!!                "Load" FILE3 (note that it was loaded from META1)
-!!                "Load" FILE4 (note that it was loaded from META1)
-!!                "Load" FILE5 (note that it was loaded from META1)
-!!          "Load" FILE6
-!!
-!!      If we had unloaded META1 instead, we would have this load state.
-!!
-!!          "Load" FILE1
-!!          "Load" FILE2
-!!          "Load" FILE3
-!!          "Load" FILE6
-!!          "Load" META2 as a text kernel and then...
-!!                "Load" FILE2 (note that it was loaded from META2)
-!!                "Load" FILE7 (note that it was loaded from META2)
-!!                "Load" FILE8 (note that it was loaded from META2)
-!!
-!!      So we see that unloading a file does not necessarily make its
-!!      data unavailable to your program. Unloading modifies the
-!!      precedence of the files loaded in your program. The data
-!!      associated with an unloaded file becomes unavailable only when
-!!      the file has been unloaded as many times as it was loaded.
-!!
-!!      When would you encounter such a scenario? The situation of
-!!      loading a file more than once might appear if you were trying to
-!!      contrast the results of computations performed with two
-!!      different meta-kernels. In such a scenario you might load a
-!!      "baseline" set of kernels early in your program and then load
-!!      and unload meta-kernels to compare results between the two
-!!      different sets of data.
-!!
-!!     Unloading Text Kernels or Meta-Kernels
-!!     --------------------------------------
-!!
-!!     Part of the action of unloading text (or meta-kernels) is
-!!     the clearing of the kernel pool and re-loading any kernels that
-!!     were not in the specified set of kernels to unload. Since
-!!     loading of text kernels is not a very fast process, unloading
-!!     text kernels takes considerably longer than unloading binary
-!!     kernels. Moreover, since the kernel pool is cleared, any kernel
-!!     pool variables you have set from your program by using one of the
-!!     interfaces PCPOOL, PDPOOL, PIPOOL, or LMPOOL will be removed from
-!!     the kernel pool. For this reason, if you plan to use this
-!!     feature in your program, together with one of the routines
-!!     specified above, you will need to take special precautions to
-!!     make sure kernel pool variables required by your program do not
-!!     inadvertently disappear.
-!!
-!!     As a side effect of unloading a text kernel, all watched kernel
-!!     variables are marked as updated. Note that unloading a text
-!!     kernel does not delete watchers. Watchers can be deleted by
-!!     calling the POOL entry point DWPOOL.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Load a meta-kernel with a PCK, an LSK and an SPK, and
-!!        separately, a text kernel and a binary PCK. Loop over the
-!!        loaded kernels, outputting file information for each of
-!!        them.
-!!
-!!        Then unload the text kernels, check that they have been
-!!        unloaded, and finally unload the meta-kernel.
-!!
-!!        Use the meta-kernel shown below to load the required SPICE
-!!        kernels.
-!!
-!!           KPL/MK
-!!
-!!           File name: unload_ex1.tm
-!!
-!!           This meta-kernel is intended to support operation of SPICE
-!!           example programs. The kernels shown here should not be
-!!           assumed to contain adequate or correct versions of data
-!!           required by SPICE-based user applications.
-!!
-!!           In order for an application to use this meta-kernel, the
-!!           kernels referenced here must be present in the user's
-!!           current working directory.
-!!
-!!           The names and contents of the kernels referenced
-!!           by this meta-kernel are as follows:
-!!
-!!              File name                     Contents
-!!              ---------                     --------
-!!              de421.bsp                     Planetary ephemeris
-!!              pck00009.tpc                  Planet orientation and
-!!                                            radii
-!!              naif0012.tls                  Leapseconds
-!!
-!!           \begindata
-!!
-!!              KERNELS_TO_LOAD = ( 'de421.bsp',
-!!                                  'naif0012.tls',
-!!                                  'pck00009.tpc' )
-!!
-!!           \begintext
-!!
-!!           End of meta-kernel
-!!
-!!        Use the PCK kernel below as the binary PCK required for the
-!!        example.
-!!
-!!           earth_latest_high_prec.bpc
-!!
-!!        Use the FK kernel below as the text kernel required for the
-!!        example.
-!!
-!!           RSSD0002.TF
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM UNLOAD_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Local constants.
-!!        C
-!!              INTEGER               FNAMLN
-!!              PARAMETER           ( FNAMLN = 256 )
-!!
-!!              INTEGER               FTYPLN
-!!              PARAMETER           ( FTYPLN = 33 )
-!!
-!!              INTEGER               SRCLEN
-!!              PARAMETER           ( SRCLEN = 256 )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(FNAMLN)    FILE
-!!              CHARACTER*(FTYPLN)    FILTYP
-!!              CHARACTER*(SRCLEN)    SRCFIL
-!!
-!!              INTEGER               COUNT
-!!              INTEGER               HANDLE
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Load several kernel files.
-!!        C
-!!              CALL FURNSH ( 'unload_ex1.tm'              )
-!!              CALL FURNSH ( 'RSSD0002.TF'                )
-!!              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
-!!
-!!        C
-!!        C     Count the number of loaded kernel files.
-!!        C
-!!              CALL KTOTAL ( 'ALL', COUNT )
-!!
-!!              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!!             . //               'final FURNSH: ', COUNT
-!!              WRITE(*,*) ' '
-!!
-!!        C
-!!        C     Unload the text kernels.
-!!        C
-!!              CALL KTOTAL ( 'TEXT', COUNT )
-!!
-!!              WRITE(*,*) ' '
-!!              WRITE(*,'(A,I2,A)') 'Unloading', COUNT,
-!!             .                    ' text kernels...'
-!!              WRITE(*,*) ' '
-!!
-!!              DO WHILE ( COUNT .NE. 0 )
-!!
-!!                 CALL KDATA (      1, 'TEXT',  FILE, FILTYP,
-!!             .                SRCFIL, HANDLE, FOUND        )
-!!
-!!        C
-!!        C        If the kernel is found in the pool, unload it.
-!!        C
-!!                 IF ( FOUND ) THEN
-!!
-!!                    CALL UNLOAD ( FILE )
-!!
-!!        C
-!!        C           Check if the file has been unloaded.
-!!        C
-!!                    CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
-!!
-!!                    IF ( FOUND ) THEN
-!!
-!!                       WRITE(*,'(A)') '  Error unloading ' // FILE
-!!
-!!                    ELSE
-!!
-!!                       WRITE(*,'(A)') '  Success unloading ' // FILE
-!!
-!!                    END IF
-!!
-!!        C
-!!        C        Something is not working. Inform NAIF.
-!!        C
-!!                 ELSE
-!!
-!!                    WRITE(*,*) ' ERROR: No kernel found but KTOTAL '
-!!             .      //         'returns ', COUNT
-!!
-!!                 END IF
-!!
-!!        C
-!!        C        Check if we have more text kernels to unload from
-!!        C        the kernel pool. Note that unloading a text kernel
-!!        C        or meta-kernel implies that the kernel pool is
-!!        C        cleared, and any kernel(s) that were not to be
-!!        C        unloaded are re-loaded. Therefore the COUNT value
-!!        C        changes, and the indexing of the files within the
-!!        C        kernel pool too.
-!!        C
-!!                 CALL KTOTAL ( 'TEXT', COUNT )
-!!
-!!              END DO
-!!
-!!              CALL KTOTAL ( 'ALL', COUNT )
-!!
-!!              WRITE(*,*) ' '
-!!              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!!             . //               'UNLOAD calls: ', COUNT
-!!
-!!        C
-!!        C     Unload the meta-kernel and retrieve the number of loaded
-!!        C     after the clear.
-!!        C
-!!              CALL UNLOAD ( 'unload_ex1.tm' )
-!!
-!!              CALL KTOTAL ( 'ALL', COUNT )
-!!
-!!              WRITE(*,*) ' '
-!!              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!!             . //               'final UNLOAD: ', COUNT
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!        The total number of kernels after final FURNSH:  6
-!!
-!!        Unloading 3 text kernels...
-!!
-!!          Success unloading naif0012.tls
-!!          Success unloading pck00009.tpc
-!!          Success unloading RSSD0002.TF
-!!
-!!        The total number of kernels after UNLOAD calls:  3
-!!
-!!        The total number of kernels after final UNLOAD:  1
-!!
-!! ## Restrictions
-!!
-!!     1)  See the note regarding the unloading of Text and meta-text
-!!         Kernels.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!     W.L. Taber         (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 5.0.1, 08-AUG-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Created complete code example from existing code fragments.
-!!
-!!-    SPICELIB Version 5.0.0, 01-FEB-2017 (NJB) (BVS)
-!!
-!!        Updated to support use of DSKs.
-!!
-!!        Bug fix: now unloads binary kernels via low-level
-!!        unload routines only when those kernels have just
-!!        one entry in the KEEPER database.
-!!
-!!        Updated the $Author_and_Institution section.
-!!
-!!-    SPICELIB Version 3.0.1, 01-JUL-2014 (NJB)
-!!
-!!        Updated discussion of kernel variable watchers.
-!!
-!!-    SPICELIB Version 3.0.0, 15-NOV-2006 (NJB)
-!!
-!!        Bug fix: corrected update of source pointers when a
-!!        meta-kernel is unloaded. Previously source pointers
-!!        having higher indices than those of the files referenced
-!!        by the meta kernel were not adjusted when the database
-!!        was compressed.
-!!
-!!-    SPICELIB Version 2.0.0, 23-AUG-2001 (WLT)
-!!
-!!        Added code to make sure that UNLOAD has the effect of
-!!        loading all remaining kernels in the order they were first
-!!        introduced.
-!!
-!!-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Unload a SPICE kernel
-!!
       use pepper_kinds, only: ip
       implicit none
       integer(ip), parameter :: typlen = 8

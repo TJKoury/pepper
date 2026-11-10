@@ -6,7 +6,6 @@ module pepper_inc_dla
 
    public
 
-
 !
 !     Include file dla.inc
 !
@@ -32,7 +31,6 @@ module pepper_inc_dla
 !
 !        Version 1.0.0 28-JAN-2004 (NJB)
 !
-
 
 !
 !     DAS integer address of DLA version code.
@@ -147,7 +145,6 @@ module pepper_inc_dla
    integer               dladsz
    parameter           ( dladsz = cszidx )
 
-
 !
 !     Other DLA parameters:
 !
@@ -163,7 +160,6 @@ module pepper_inc_dla
 !
    integer               nchrec
    parameter           ( nchrec = 1024 )
-
 
 !
 !     End of include file dla.inc

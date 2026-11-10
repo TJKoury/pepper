@@ -10,14 +10,6 @@ module pepper_inc_spk12
 !
 !     Declare parameters specific to SPK type 12.
 !
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     SPK
-!
 ! $ Restrictions
 !
 !     None.
@@ -34,7 +26,6 @@ module pepper_inc_spk12
 !
 !-    SPICELIB Version 1.0.0, 11-JAN-2014 (NJB)
 !
-!-&
 
 !
 !     MAXDEG         is the maximum allowed degree of type 12
@@ -52,7 +43,6 @@ module pepper_inc_spk12
 !
    integer               maxdeg
    parameter           ( maxdeg = 27 )
-
 
 !
 !     TOLSCL         is a tolerance scale factor (also called a

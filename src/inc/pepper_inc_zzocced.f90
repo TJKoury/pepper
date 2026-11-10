@@ -11,17 +11,6 @@ module pepper_inc_zzocced
 !     Declare ZZOCCED return code parameters, comparison strings
 !     and other parameters.
 !
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     ELLIPSOID
-!     GEOMETRY
-!     GF
-!     OCCULTATION
-!
 ! $ Restrictions
 !
 !     None.
@@ -38,8 +27,6 @@ module pepper_inc_zzocced
 !
 !-    SPICELIB Version 1.0.0, 01-SEP-2005 (NJB)
 !
-!-&
-
 
 !     The function returns an integer code indicating the geometric
 !     relationship of the three bodies.

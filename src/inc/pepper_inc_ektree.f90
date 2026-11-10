@@ -130,7 +130,6 @@ module pepper_inc_ektree
    integer               mnkidr
    parameter           ( mnkidr =  2   )
 
-
 !
 !
 !     The following parameters indicate positions of elements in the
@@ -200,8 +199,6 @@ module pepper_inc_ektree
 !
    integer               trsizr
    parameter           ( trsizr = trdatr + mxkeyr + 1 )
-
-
 
 !
 !     The following parameters are for child nodes only:

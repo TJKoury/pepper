@@ -11,15 +11,6 @@ module pepper_inc_gf
 !     This file contains public, global parameter declarations
 !     for the SPICELIB Geometry Finder (GF) subsystem.
 !
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     ROOT
-!
 ! $ Restrictions
 !
 !     None.
@@ -57,8 +48,6 @@ module pepper_inc_gf
 !
 !-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (EDW)
 !
-!-&
-
 
 !
 !     Root finding parameters:
@@ -74,7 +63,6 @@ module pepper_inc_gf
 !
    double precision      cnvtol
    parameter           ( cnvtol = 1.d-6 )
-
 
 !
 !     NWMAX is the maximum number of windows allowed for user-defined
@@ -99,14 +87,12 @@ module pepper_inc_gf
    integer               nwdist
    parameter           ( nwdist = 5 )
 
-
 !
 !     Callers of GFSEP should declare their workspace window
 !     count using NWSEP.
 !
    integer               nwsep
    parameter           ( nwsep  = 5 )
-
 
 !
 !     Callers of GFRR should declare their workspace window
@@ -115,14 +101,12 @@ module pepper_inc_gf
    integer               nwrr
    parameter           ( nwrr   = 5 )
 
-
 !
 !     Callers of GFUDS should declare their workspace window
 !     count using NWUDS.
 !
    integer               nwuds
    parameter           ( nwuds  = 5 )
-
 
 !
 !     Callers of GFPA should declare their workspace window
@@ -137,7 +121,6 @@ module pepper_inc_gf
 !
    integer               nwilum
    parameter           ( nwilum = 5 )
-
 
 !
 !     ADDWIN is a parameter used to expand each interval of the search
@@ -165,7 +148,6 @@ module pepper_inc_gf
 !     Specify the character strings that are allowed in the
 !     specification of field of view shapes.
 !
-
 
    character(*), parameter :: ftcirc = 'CIRCLE'
 
@@ -236,7 +218,6 @@ module pepper_inc_gf
    character(*), parameter :: polfov = 'POLYGON'
 
    character(*), parameter :: recfov = 'RECTANGLE'
-
 
 !
 !     End of file gf.inc.

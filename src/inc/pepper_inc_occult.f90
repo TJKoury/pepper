@@ -11,16 +11,6 @@ module pepper_inc_occult
 !     This file contains public, global parameter declarations
 !     for the SPICELIB occultation routines.
 !
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     ELLIPSOID
-!     GEOMETRY
-!     OCCULTATION
-!
 ! $ Restrictions
 !
 !     None.
@@ -38,7 +28,6 @@ module pepper_inc_occult
 !
 !-    SPICELIB Version 1.0.0, 24-JAN-2012 (SCK) (NJB)
 !
-!-&
 
 !
 !     The following integer codes indicate the geometric relationship
@@ -89,7 +78,6 @@ module pepper_inc_occult
 !                    TOTAL2      3      Total occultation of second
 !                                       target by first.
 !
-
 
    integer               total1
    parameter           ( total1 = -3 )

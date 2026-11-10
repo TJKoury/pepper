@@ -16,7 +16,6 @@ module pepper_inc_ekjrs
    integer               mxjrs
    parameter           ( mxjrs  = 200 )
 
-
 !
 !     The layout of a join row set in the EK scratch area is shown
 !     below:

@@ -6,7 +6,6 @@ module pepper_inc_dsktol
 
    public
 
-
 !
 !     File: dsktol.inc
 !
@@ -175,7 +174,6 @@ module pepper_inc_dsktol
 !
    integer               keyamg
    parameter           ( keyamg = keyptm + 1 )
-
 
 !
 !     Longitude alias margin

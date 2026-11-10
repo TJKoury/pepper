@@ -25,13 +25,11 @@ module pepper_inc_ekcoldsc
    integer               cdoff
    parameter           ( cdoff  = 24 )
 
-
 !
 !     Size of column descriptor
 !
    integer               cdscsz
    parameter           ( cdscsz = 11 )
-
 
 !
 !     Indices of various pieces of column descriptors:

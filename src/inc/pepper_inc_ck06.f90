@@ -10,14 +10,6 @@ module pepper_inc_ck06
 !
 !     Declare parameters specific to CK type 06.
 !
-! $ Required_Reading
-!
-!     CK
-!
-! $ Keywords
-!
-!     CK
-!
 ! $ Restrictions
 !
 !     None.
@@ -35,8 +27,6 @@ module pepper_inc_ck06
 !
 !-    SPICELIB Version 1.0.0, 10-MAR-2014 (NJB) (BVS)
 !
-!-&
-
 
 !
 !     Maximum polynomial degree supported by the current
@@ -57,7 +47,6 @@ module pepper_inc_ck06
    integer               ifalse
    parameter           ( ifalse = -1 )
 
-
 !
 !     CK type 6 subtype codes:
 !
@@ -72,7 +61,6 @@ module pepper_inc_ck06
    integer               c06tp0
    parameter           ( c06tp0 = 0 )
 
-
 !
 !     Subtype 1:  Lagrange interpolation, 4-element packets. Quaternion
 !                 only. Angular velocity is derived by differentiating
@@ -80,7 +68,6 @@ module pepper_inc_ck06
 !
    integer               c06tp1
    parameter           ( c06tp1 = c06tp0 + 1 )
-
 
 !
 !     Subtype 2:  Hermite interpolation, 14-element packets.
@@ -132,7 +119,6 @@ module pepper_inc_ck06
 !
    integer               c06mnz
    parameter           ( c06mnz = c06ps1 )
-
 
 !
 !     The CKPFS record size declared in ckparam.inc must be at least as

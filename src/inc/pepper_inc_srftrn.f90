@@ -10,17 +10,6 @@ module pepper_inc_srftrn
 !
 !     Declare public surface name/ID mapping parameters.
 !
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     CONVERSION
-!     NAME
-!     STRING
-!     SURFACE
-!
 ! $ Restrictions
 !
 !     None.
@@ -37,9 +26,6 @@ module pepper_inc_srftrn
 !
 !-    SPICELIB Version 1.0.0, 02-DEC-2015 (NJB)
 !
-!-&
-
-
 
 !
 !     Maximum number of surface name/ID mapping entries:

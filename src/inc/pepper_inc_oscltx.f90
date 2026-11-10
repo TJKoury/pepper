@@ -19,8 +19,6 @@ module pepper_inc_oscltx
 !
 !-    SPICELIB Version 1.0.0, 25-JAN-2017 (NJB)
 !
-!-&
-
 
 !
 !     Size of the OSCLTX output argument array ELTS.
@@ -35,7 +33,6 @@ module pepper_inc_oscltx
 
    integer               oscxsz
    parameter           ( oscxsz = 20 )
-
 
 !
 !     End of include file oscltx.inc

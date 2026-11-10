@@ -14,17 +14,6 @@ module pepper_inc_zzsrftrn
 !
 !     Declare private surface name/ID mapping parameters.
 !
-! $ Required_Reading
-!
-!     NAIF_IDS
-!
-! $ Keywords
-!
-!     CONVERSION
-!     NAME
-!     STRING
-!     SURFACE
-!
 ! $ Restrictions
 !
 !     None.
@@ -43,7 +32,6 @@ module pepper_inc_zzsrftrn
 !
 !        Original version 03-DEC-2015 (NJB)
 !
-!-&
 
 !
 !     Size of the lists and hashes storing the POOL-defined name/ID

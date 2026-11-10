@@ -11,14 +11,6 @@ module pepper_inc_zzddhman
 !
 !     Parameter declarations for the DAF/DAS handle manager.
 !
-! $ Required_Reading
-!
-!     DAF, DAS
-!
-! $ Keywords
-!
-!     PRIVATE
-!
 ! $ Particulars
 !
 !     This include file contains parameters defining limits and
@@ -153,7 +145,6 @@ module pepper_inc_zzddhman
 !
 !-    SPICELIB Version 1.0.0, 07-NOV-2001
 !
-!-&
 !
 !     Unit and file table size parameters.
 !
@@ -250,7 +241,6 @@ module pepper_inc_zzddhman
 
    integer               strlen
    parameter           ( strlen = (strsiz+1)*numbff )
-
 
 !
 !     Architecture enumeration.  These parameters are used to identify

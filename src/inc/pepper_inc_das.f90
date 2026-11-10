@@ -11,14 +11,6 @@ module pepper_inc_das
 !     This file contains public, global parameter declarations
 !     for the SPICELIB Direct Access Segregated (DAS) subsystem.
 !
-! $ Required_Reading
-!
-!     DAS
-!
-! $ Keywords
-!
-!     None.
-!
 ! $ Restrictions
 !
 !     None.
@@ -36,7 +28,6 @@ module pepper_inc_das
 !
 !-    SPICELIB Version 1.0.0, 10-FEB-2017 (NJB)
 !
-!-&
 
 !
 !     Parameter declarations follow.

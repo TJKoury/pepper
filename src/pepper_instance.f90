@@ -1624,7 +1624,6 @@ module pepper_instance
    end interface
    ! <<< generated callbacks
 
-
    ! The procedures of the subsystems, implemented in submodules of this
    ! module (e.g. pepper_cells in src/pepper_cells.f90). Each has the
    ! context as its first argument; the public ones are also bound to
@@ -3448,7 +3447,6 @@ module pepper_instance
          integer(ip), intent(in) :: iostat  !! The value of IOSTAT returned by ACTION.
       end subroutine ioerr
 
-
       !> Read the next line of text from a text file.
       !>
       !> MAXOPN     P   Maximum number of open files.
@@ -3761,7 +3759,6 @@ module pepper_instance
          character(:), allocatable, intent(out) :: varnam  !! name of variable parsed
          logical, intent(out) :: eof  !! if TRUE end of input file has been reached.
       end subroutine zzrvbf
-
 
       !> Remove all kernel variables from the kernel pool. Watches
       !> on kernel variables are retained.
@@ -13042,7 +13039,6 @@ module pepper_instance
          real(wp), intent(out) :: mxrad  (2)  !! Array(2) of max radii values for TARG1 and TARG2
          integer(ip), intent(out) :: obs  !! Body/SPK IDs of OBSRVR
       end subroutine zzspin
-
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines. Users should not call this routine directly due

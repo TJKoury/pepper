@@ -10,14 +10,6 @@ module pepper_inc_spk19
 !
 !     Declare parameters specific to SPK type 19.
 !
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     SPK
-!
 ! $ Restrictions
 !
 !     None.
@@ -39,8 +31,6 @@ module pepper_inc_spk19
 !
 !-    SPICELIB Version 1.0.0, 07-MAR-2014 (NJB) (BVS)
 !
-!-&
-
 
 !
 !     Maximum polynomial degree supported by the current
@@ -84,7 +74,6 @@ module pepper_inc_spk19
 !
    integer               s19tp2
    parameter           ( s19tp2 = s19tp1 + 1 )
-
 
 !
 !     Packet sizes associated with the various subtypes:

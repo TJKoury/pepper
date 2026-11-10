@@ -12,19 +12,8 @@ module pepper_inc_ninert
 !     frames that are currently known by the SPICE toolkit
 !     software.
 !
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
    integer               ninert
    parameter           ( ninert = 21 )
-
 
 ! $ Brief_I/O
 !
@@ -50,6 +39,5 @@ module pepper_inc_ninert
 !
 !-    SPICELIB Version 1.0.0, 10-OCT-1996 (WLT)
 !
-!-&
 
 end module pepper_inc_ninert

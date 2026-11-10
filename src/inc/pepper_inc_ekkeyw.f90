@@ -51,7 +51,6 @@ module pepper_inc_ekkeyw
    integer               nkeywd
    parameter           ( nkeywd =   29 )
 
-
    integer               kwall
    parameter           ( kwall  =          1 )
 

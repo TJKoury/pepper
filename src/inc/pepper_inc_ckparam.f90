@@ -11,14 +11,6 @@ module pepper_inc_ckparam
 !     Declarations of the CK data type specific and general CK low
 !     level routine parameters.
 !
-! $ Required_Reading
-!
-!     CK.REQ
-!
-! $ Keywords
-!
-!     CK
-!
 ! $ Restrictions
 !
 !     1) If new CK types are added, the size of the record passed
@@ -51,7 +43,6 @@ module pepper_inc_ckparam
 !
 !-    SPICELIB Version 1.0.0, 05-APR-1999 (BVS)
 !
-!-&
 
 !
 !     Number of quaternion components and number of quaternion and
@@ -90,7 +81,6 @@ module pepper_inc_ckparam
 
    integer               ck2rsz
    parameter           ( ck2rsz = 10 )
-
 
 !
 !     CK Type 3 parameters:
@@ -185,7 +175,6 @@ module pepper_inc_ckparam
 
    integer               ck5rsz
    parameter           ( ck5rsz = (ck5mxd + 1) * ck5mxp  +  ck5met )
-
 
 !
 !     CK Type 6 parameters:

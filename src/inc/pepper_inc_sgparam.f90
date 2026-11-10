@@ -11,14 +11,6 @@ module pepper_inc_sgparam
 !
 !     Parameter declarations for the generic segments subroutines.
 !
-! $ Required_Reading
-!
-!      DAF Required Reading
-!
-! $ Keywords
-!
-!       GENERIC SEGMENTS
-!
 ! $ Particulars
 !
 !     This include file contains the parameters used by the generic
@@ -128,7 +120,6 @@ module pepper_inc_sgparam
 !
 !-    SPICELIB Version 1.0.0, 04-03-95 (KRG) (WLT)
 !
-!-&
 
 !
 !     Mnemonics for the type of reference value index.

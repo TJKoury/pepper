@@ -71,13 +71,11 @@ module pepper_inc_ekdatpag
    integer               cfpidx
    parameter           ( cfpidx = cpsize + 1)
 
-
 !
 !     Location of character link count:
 !
    integer               clcidx
    parameter           ( clcidx = cfpidx + encsiz )
-
 
 !
 !     Double precision data page parameters:
@@ -93,13 +91,11 @@ module pepper_inc_ekdatpag
    integer               dfpidx
    parameter           ( dfpidx = dpsize + 1)
 
-
 !
 !     Location of d.p. link count:
 !
    integer               dlcidx
    parameter           ( dlcidx = dfpidx + 1 )
-
 
 !
 !     Integer data page parameters:
@@ -115,13 +111,11 @@ module pepper_inc_ekdatpag
    integer               ifpidx
    parameter           ( ifpidx = ipsize + 1)
 
-
 !
 !     Location of integer link count:
 !
    integer               ilcidx
    parameter           ( ilcidx = ifpidx + 1 )
-
 
 !
 !     End Include Section:  EK Data Page Parameters

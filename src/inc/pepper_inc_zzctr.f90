@@ -30,7 +30,6 @@ module pepper_inc_zzctr
 !
 !-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
 !
-!-&
 
    integer               ctrsiz
    parameter           ( ctrsiz = 2 )

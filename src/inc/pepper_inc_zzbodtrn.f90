@@ -33,15 +33,6 @@ module pepper_inc_zzbodtrn
 !                 set to the first prime number less than MAXLIN
 !                 defined in the POOL umbrella routine.
 !
-! $ Required_Reading
-!
-!     naif_ids.req
-!
-! $ Keywords
-!
-!     BODY
-!     CONVERSION
-!
 ! $ Author_and_Institution
 !
 !     B.V. Semenov (JPL)
@@ -58,7 +49,6 @@ module pepper_inc_zzbodtrn
 !
 !        N0064 version with MAXP = 150, NPERM = 563,
 !        MAXE = MAXP + NPERM, and NROOM = 2000.
-
 
 !
 !     A script generates this file. Do not edit by hand.

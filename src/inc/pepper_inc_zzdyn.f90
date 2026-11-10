@@ -6,7 +6,6 @@ module pepper_inc_zzdyn
 
    public
 
-
 ! $ Abstract
 !
 !     Include file zzdyn.inc
@@ -51,8 +50,6 @@ module pepper_inc_zzdyn
 !
 !-    SPICELIB Version 1.0.0, 22-DEC-2004 (NJB)
 !
-!-&
-
 
 !
 !     String length parameters
@@ -95,7 +92,6 @@ module pepper_inc_zzdyn
 !
    integer               bdnmln
    parameter           ( bdnmln = 36 )
-
 
 !
 !     Numeric parameters
@@ -165,7 +161,6 @@ module pepper_inc_zzdyn
    integer               qexp
    parameter           ( qexp = -27 )
 
-
 !
 !     Frame kernel parameters
 !     =======================
@@ -200,7 +195,6 @@ module pepper_inc_zzdyn
 !     Token indicating parameterized dynamic frame.
 !
    character(*), parameter :: kvparm = 'PARAMETERIZED'
-
 
 !
 !     Freeze epoch parameters
@@ -266,7 +260,6 @@ module pepper_inc_zzdyn
 !
    character(*), parameter :: kvprod = 'PRODUCT'
 
-
 !
 !     "Of date" frame family parameters
 !     ---------------------------------
@@ -308,7 +301,6 @@ module pepper_inc_zzdyn
 !     kind of model is being defined.
 !
    character(*), parameter :: kvm003 = 'EARTH_IAU_1980'
-
 
 !
 !     Two-vector frame family parameters
@@ -473,7 +465,6 @@ module pepper_inc_zzdyn
 
    character(*), parameter :: kwtfrm = 'TO_FRAMES'
 
-
 !
 !     Physical unit parameters
 !     ---------------------------------
@@ -491,7 +482,6 @@ module pepper_inc_zzdyn
 !     Token indicating degrees:
 !
    character(*), parameter :: kvdegr = 'DEGREES'
-
 
 !
 !     End of include file zzdyn.inc

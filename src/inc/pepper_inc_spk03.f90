@@ -10,14 +10,6 @@ module pepper_inc_spk03
 !
 !     Declare parameters specific to SPK type 3.
 !
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     SPK
-!
 ! $ Restrictions
 !
 !     None.
@@ -34,7 +26,6 @@ module pepper_inc_spk03
 !
 !-    SPICELIB Version 1.0.0, 30-DEC-2013 (NJB)
 !
-!-&
 
 !     MAXDEG         is the maximum allowed degree of the input
 !                    Chebyshev expansions. If the value of MAXDEG is
@@ -51,7 +42,6 @@ module pepper_inc_spk03
 !
    integer               maxdeg
    parameter           ( maxdeg = 27 )
-
 
 !
 !     TOLSCL         is a tolerance scale factor (also called a

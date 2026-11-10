@@ -148,7 +148,6 @@ module pepper_inc_zzsc01
    integer               nivals
    parameter           ( nivals = ixboff )
 
-
 !
 !     Data structure parameters
 !

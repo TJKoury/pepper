@@ -13,19 +13,8 @@ module pepper_inc_nninrt
 !     software.
 !
 !
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     FRAMES
-!
-! $ Declarations
-
    integer               nninrt
    parameter           ( nninrt = 124 )
-
 
 ! $ Brief_I/O
 !
@@ -141,6 +130,5 @@ module pepper_inc_nninrt
 !
 !-    SPICELIB Version 1.0.0, 10-OCT-1996 (WLT)
 !
-!-&
 
 end module pepper_inc_nninrt

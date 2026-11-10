@@ -12,14 +12,6 @@ module pepper_inc_spkrec
 !     SPKPVN and is passed to SPK reader (SPKRxx) and evaluator
 !     (SPKExx) routines.
 !
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     SPK
-!
 ! $ Restrictions
 !
 !     1) If new SPK types are added, it may be necessary to
@@ -45,12 +37,9 @@ module pepper_inc_spkrec
 !
 !-    SPICELIB Version 1.0.0, 16-AUG-2002 (NJB)
 !
-!-&
-
 
    integer               maxrec
    parameter           ( maxrec = 198 )
-
 
 !
 !     End include file spkrec.inc

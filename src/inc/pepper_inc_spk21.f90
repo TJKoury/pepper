@@ -6,18 +6,9 @@ module pepper_inc_spk21
 
    public
 
-
 ! $ Abstract
 !
 !     Declare parameters specific to SPK type 21.
-!
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     SPK
 !
 ! $ Restrictions
 !
@@ -35,7 +26,6 @@ module pepper_inc_spk21
 !
 !-    SPICELIB Version 1.0.0, 25-DEC-2013 (NJB)
 !
-!-&
 
 !
 !     MAXTRM      is the maximum number of terms allowed in each

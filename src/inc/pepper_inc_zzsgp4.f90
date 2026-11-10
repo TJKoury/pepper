@@ -6,24 +6,11 @@ module pepper_inc_zzsgp4
 
    public
 
-!$Procedure ZZSGP4 ( SGP4 parameters )
 !
 ! $ Abstract
 !
 !      Parameter assignments for SGP4 algorithm as expressed
 !      by Vallado [2].
-!
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     None.
-!
-! $ Declarations
-!
-!     None.
 !
 ! $ Brief_I/O
 !
@@ -92,14 +79,6 @@ module pepper_inc_zzsgp4
 !
 !-    SPICELIB Version 1.0.0 22-JUL-2014 (EDW)
 !
-!-&
-
-! $ Index_Entries
-!
-!  SGP4
-!
-!-&
-
 
 !
 !      WGS gravitational constants IDs.
@@ -111,7 +90,6 @@ module pepper_inc_zzsgp4
    integer                       ngravc
    parameter                   ( ngravc = 8 )
 
-
    integer                       wgs721
    parameter                   ( wgs721 = 1 )
 
@@ -120,7 +98,6 @@ module pepper_inc_zzsgp4
 
    integer                       wgs84
    parameter                   ( wgs84  = 3 )
-
 
 !
 !      Gravitational constant indices.
@@ -149,7 +126,6 @@ module pepper_inc_zzsgp4
 
    integer                       p_j3j2
    parameter                   ( p_j3j2 = 8 )
-
 
 !
 !     The following parameters give the indices in the GEOPHS

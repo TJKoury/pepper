@@ -10,14 +10,6 @@ module pepper_inc_pck20
 !
 !     Declare parameters specific to PCK type 20.
 !
-! $ Required_Reading
-!
-!     PCK
-!
-! $ Keywords
-!
-!     PCK
-!
 ! $ Restrictions
 !
 !     None.
@@ -34,7 +26,6 @@ module pepper_inc_pck20
 !
 !-    SPICELIB Version 1.0.0, 03-DEC-2013 (NJB)
 !
-!-&
 
 !     MAXDEG         is the maximum allowed degree of the input
 !                    Chebyshev expansions. If the value of MAXDEG is
@@ -46,7 +37,6 @@ module pepper_inc_pck20
 !
    integer               maxdeg
    parameter           ( maxdeg = 50 )
-
 
 !
 !     DTOL,
@@ -86,7 +76,6 @@ module pepper_inc_pck20
 !
    double precision      tolscl
    parameter           ( tolscl = 1.d-12 )
-
 
 !
 !     End of include file pck20.inc.

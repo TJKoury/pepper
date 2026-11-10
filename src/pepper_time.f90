@@ -11,354 +11,318 @@ submodule (pepper_instance) pepper_time
 
 contains
 
-!$Procedure BADKPV ( Bad Kernel Pool Variable )
-
+      !> ## Detailed Input
+      !>
+      !>     CALLER   is the name of the routine calling this routine
+      !>              to check correctness of kernel pool variables.
+      !>
+      !>     NAME     is the name of a kernel pool variable that the
+      !>              calling program expects to be present in the
+      !>              kernel pool.
+      !>
+      !>     COMP     is the comparison operator to use when comparing
+      !>              the number of components of the kernel pool variable
+      !>              specified by NAME with the integer SIZE. If DIM is
+      !>              is the actual size of the kernel pool variable then
+      !>              BADKPV will check that the sentence
+      !>
+      !>                 DIM COMP SIZE
+      !>
+      !>              is a true statement. If it is not a true statement
+      !>              an error will be signaled.
+      !>
+      !>              Allowed values for COMP and their meanings are:
+      !>
+      !>                 '='      DIM .EQ. SIZE
+      !>                 '<'      DIM .LT. SIZE
+      !>                 '>'      DIM .GT. SIZE
+      !>                 '=>'     DIM .GE. SIZE
+      !>                 '<='     DIM .LE. SIZE
+      !>
+      !>     SIZE     is an integer to compare with the actual
+      !>              number of components of the kernel pool variable
+      !>              specified by NAME.
+      !>
+      !>     DIVBY    is an integer that is one of the factors of the
+      !>              actual dimension of the specified kernel pool variable.
+      !>              In other words, it is expected that DIVBY evenly
+      !>              divides the actual dimension of NAME. In those
+      !>              cases in which the factors of the dimension of NAME
+      !>              are not important, set DIVBY to 1 in the calling
+      !>              program.
+      !>
+      !>     TYPE     is the expected type of the kernel pool variable.
+      !>              Recognized values are
+      !>
+      !>                 'C' for character type
+      !>                 'N' for numeric type (integer and double precision)
+      !>
+      !>              The case of TYPE is insignificant. If the value
+      !>              of TYPE is not one of the 2 values given above
+      !>              no check for the type of the variable will be
+      !>              performed.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     The function returns the value .FALSE. if the kernel pool
+      !>     variable has the expected properties. Otherwise the routine
+      !>     signals an error and returns the value .TRUE.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the kernel pool variable specified by NAME is not present
+      !>         in the kernel pool, the error SPICE(VARIABLENOTFOUND) is
+      !>         signaled and the routine will return the value .TRUE.
+      !>
+      !>     2)  If the comparison operator specified by COMP is unrecognized,
+      !>         the error SPICE(UNKNOWNCOMPARE) is signaled and the routine
+      !>         will return the value .TRUE.
+      !>
+      !>     3)  If the expected type of the kernel pool variable TYPE is not
+      !>         one of the supported types, the error SPICE(INVALIDTYPE) is
+      !>         signaled and the routine will return the value .TRUE.
+      !>
+      !>     4)  If the comparison of the actual size of the kernel pool
+      !>         variable with SIZE is not satisfied, the error
+      !>         SPICE(BADVARIABLESIZE) is signaled and the routine will
+      !>         return the value .TRUE.
+      !>
+      !>     5)  If the variable does not have the expected type, the error
+      !>         SPICE(BADVARIABLETYPE) is signaled and the routine will
+      !>         return the value .TRUE.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine takes care of routine checking that often needs
+      !>     to be done by programs and routines that rely upon kernel
+      !>     pool variables being present and having the correct attributes.
+      !>
+      !>     It checks for the presence of the kernel pool variable and
+      !>     examines the type and dimension of the variable to make sure
+      !>     they conform to the requirements of the calling routine.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Suppose that you need to fetch a number of variables
+      !>        from the kernel pool and want to check that the requested
+      !>        items are in fact available prior to performing further
+      !>        computations. The code example shows how you might use
+      !>        this routine to handle the details of checking of
+      !>        the various items.
+      !>
+      !>        Although by default the SPICE error handling system will
+      !>        report the error and halt the execution of the program, in
+      !>        this example we have decided to change this behavior to
+      !>        display the error messages and continue the execution of
+      !>        the program.
+      !>
+      !>        Use the kernel shown below to define some variables related
+      !>        to the Earth.
+      !>
+      !>           KPL/PCK
+      !>
+      !>           File name: badkpv_ex1.tpc
+      !>
+      !>           The contents of this kernel are not intended for
+      !>           real applications. Use only with this example.
+      !>
+      !>           \begindata
+      !>
+      !>              BODY_399_DATA  = ( 3.1416, 2.71828, 0.5, 12.0 )
+      !>              BODY_399_NAMES = ( 'PI', 'E', 'HALF', 'DOZEN' )
+      !>
+      !>           \begintext
+      !>
+      !>           End of constants kernel
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM BADKPV_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     SPICELIB functions.
+      !>        C
+      !>              LOGICAL               BADKPV
+      !>              INTEGER               RTRIM
+      !>
+      !>        C
+      !>        C     Local parameters.
+      !>        C
+      !>              CHARACTER*(*)         CALLER
+      !>              PARAMETER           ( CALLER  = 'BADKPV_EX1' )
+      !>
+      !>              INTEGER               KWDLEN
+      !>              PARAMETER           ( KWDLEN = 32 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*2           COMP
+      !>              CHARACTER*(KWDLEN)    NAME
+      !>              CHARACTER*1           TYPE
+      !>
+      !>              INTEGER               DIVBY
+      !>              INTEGER               SIZE
+      !>
+      !>        C
+      !>        C     Load the test kernel.
+      !>        C
+      !>              CALL FURNSH ( 'badkpv_ex1.tpc' )
+      !>
+      !>        C
+      !>        C     Change the default behavior of the SPICE error handling
+      !>        C     system to print out all messages and continue the
+      !>        C     execution of the program. We do this for demonstration
+      !>        C     purposes. Please, refrain from changing the default
+      !>        C     behavior on real applications.
+      !>        C
+      !>              CALL ERRACT ( 'SET', 'REPORT' )
+      !>
+      !>        C
+      !>        C     Assume that we need some data for body 399 and we expect
+      !>        C     there to be an even number of items available and at
+      !>        C     least 4 such items. Moreover we expect these items to be
+      !>        C     numeric. Note that the variable assignments below are
+      !>        C     present only to assist in understanding the calls to
+      !>        C     BADKPV.
+      !>        C
+      !>              NAME   = 'BODY_399_DATA'
+      !>              COMP   = '=>'
+      !>              SIZE   =  4
+      !>              DIVBY  =  2
+      !>              TYPE = 'N'
+      !>
+      !>              IF ( .NOT. BADKPV( CALLER, NAME,  COMP,
+      !>             .                   SIZE,   DIVBY, TYPE ) ) THEN
+      !>
+      !>                 WRITE(*,'(3A)') 'Expected form of variable ',
+      !>             .                   NAME(:RTRIM(NAME)),
+      !>             .                   ' found in kernel pool.'
+      !>
+      !>              END IF
+      !>
+      !>        C
+      !>        C     In addition we need the names given to these items.
+      !>        C     Improperly indicate the array has type numeric.
+      !>        C
+      !>              NAME   = 'BODY_399_NAMES'
+      !>              COMP   = '=>'
+      !>              SIZE   =  4
+      !>              DIVBY  =  1
+      !>              TYPE = 'N'
+      !>
+      !>              IF ( .NOT. BADKPV( CALLER, NAME,  COMP,
+      !>             .                   SIZE,   DIVBY, TYPE ) ) THEN
+      !>
+      !>                 WRITE(*,'(3A)') 'Expected form of variable ',
+      !>             .                   NAME(:RTRIM(NAME)),
+      !>             .                   ' found in kernel pool.'
+      !>
+      !>              END IF
+      !>
+      !>        C
+      !>        C     Change the behavior of the SPICE error handling to
+      !>        C     its default.
+      !>        C
+      !>              CALL ERRACT ( 'SET', 'DEFAULT' )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>        Expected form of variable BODY_399_DATA found in kernel pool.
+      !>
+      !>        ============================================================***
+      !>
+      !>        Toolkit version: N0066
+      !>
+      !>        SPICE(BADVARIABLETYPE) --
+      !>
+      !>        BADKPV_EX1: The kernel pool variable 'BODY_399_NAMES' must b***
+      !>        "NUMERIC". However, the current type is character.
+      !>
+      !>        A traceback follows.  The name of the highest level module i***
+      !>        BADKPV
+      !>
+      !>        ============================================================***
+      !>
+      !>        Warning: incomplete output. 4 lines extended past the right
+      !>        margin of the header and have been truncated. These lines are
+      !>        marked by "***" at the end of each line.
+      !>
+      !>        Note that, as expected, the error SPICE(BADVARIABLETYPE) is
+      !>        signaled by the second BADKPV call, since we have improperly
+      !>        indicated that the requested array is numeric, when actually
+      !>        it is of character type.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.2.0, 05-SEP-2021 (JDR) (BVS)
+      !>
+      !>        Fixed typo in long message for the case "comparison not
+      !>        favorable."
+      !>
+      !>        Added exception SPICE(INVALIDTYPE) for the case of unknown
+      !>        expected kernel pool variable type.
+      !>
+      !>        Edited the header to comply with NAIF standard. Added complete
+      !>        code example based on existing fragment. Added required
+      !>        readings references.
+      !>
+      !>        Removed references to FURNSH and CLPOOL from the "variable
+      !>        not present" long error message.
+      !>
+      !>-    SPICELIB Version 1.1.2, 22-AUG-2006 (EDW)
+      !>
+      !>        Replaced references to LDPOOL with references
+      !>        to FURNSH.
+      !>
+      !>-    SPICELIB Version 1.1.1, 10-MAY-2000 (WLT)
+      !>
+      !>        Modified the example section so that it is consistent with
+      !>        calling sequence for BADKPV.
+      !>
+      !>-    SPICELIB Version 1.1.0, 26-AUG-1997 (WLT)
+      !>
+      !>        Moved the initial assignment of BADKPV to the lines
+      !>        prior to the check of RETURN(). This avoids returning
+      !>        without having assigned value to BADKPV.
+      !>
+      !>-    SPICELIB Version 1.0.0, 09-APR-1997 (WLT)
       module procedure badkpv
-!! ## Abstract
-!!
-!!     Determine if a kernel pool variable is present and if so
-!!     that it has the correct size and type.
-!!
-!! ## Required Reading
-!!
-!!     ERROR
-!!     KERNEL
-!!
-!! ## Keywords
-!!
-!!     ERROR
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: eqchr
       implicit none
-
-
-! $ Detailed_Input
-!
-!     CALLER   is the name of the routine calling this routine
-!              to check correctness of kernel pool variables.
-!
-!     NAME     is the name of a kernel pool variable that the
-!              calling program expects to be present in the
-!              kernel pool.
-!
-!     COMP     is the comparison operator to use when comparing
-!              the number of components of the kernel pool variable
-!              specified by NAME with the integer SIZE. If DIM is
-!              is the actual size of the kernel pool variable then
-!              BADKPV will check that the sentence
-!
-!                 DIM COMP SIZE
-!
-!              is a true statement. If it is not a true statement
-!              an error will be signaled.
-!
-!              Allowed values for COMP and their meanings are:
-!
-!                 '='      DIM .EQ. SIZE
-!                 '<'      DIM .LT. SIZE
-!                 '>'      DIM .GT. SIZE
-!                 '=>'     DIM .GE. SIZE
-!                 '<='     DIM .LE. SIZE
-!
-!     SIZE     is an integer to compare with the actual
-!              number of components of the kernel pool variable
-!              specified by NAME.
-!
-!     DIVBY    is an integer that is one of the factors of the
-!              actual dimension of the specified kernel pool variable.
-!              In other words, it is expected that DIVBY evenly
-!              divides the actual dimension of NAME. In those
-!              cases in which the factors of the dimension of NAME
-!              are not important, set DIVBY to 1 in the calling
-!              program.
-!
-!     TYPE     is the expected type of the kernel pool variable.
-!              Recognized values are
-!
-!                 'C' for character type
-!                 'N' for numeric type (integer and double precision)
-!
-!              The case of TYPE is insignificant. If the value
-!              of TYPE is not one of the 2 values given above
-!              no check for the type of the variable will be
-!              performed.
-!
-! $ Detailed_Output
-!
-!     The function returns the value .FALSE. if the kernel pool
-!     variable has the expected properties. Otherwise the routine
-!     signals an error and returns the value .TRUE.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the kernel pool variable specified by NAME is not present
-!         in the kernel pool, the error SPICE(VARIABLENOTFOUND) is
-!         signaled and the routine will return the value .TRUE.
-!
-!     2)  If the comparison operator specified by COMP is unrecognized,
-!         the error SPICE(UNKNOWNCOMPARE) is signaled and the routine
-!         will return the value .TRUE.
-!
-!     3)  If the expected type of the kernel pool variable TYPE is not
-!         one of the supported types, the error SPICE(INVALIDTYPE) is
-!         signaled and the routine will return the value .TRUE.
-!
-!     4)  If the comparison of the actual size of the kernel pool
-!         variable with SIZE is not satisfied, the error
-!         SPICE(BADVARIABLESIZE) is signaled and the routine will
-!         return the value .TRUE.
-!
-!     5)  If the variable does not have the expected type, the error
-!         SPICE(BADVARIABLETYPE) is signaled and the routine will
-!         return the value .TRUE.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine takes care of routine checking that often needs
-!     to be done by programs and routines that rely upon kernel
-!     pool variables being present and having the correct attributes.
-!
-!     It checks for the presence of the kernel pool variable and
-!     examines the type and dimension of the variable to make sure
-!     they conform to the requirements of the calling routine.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Suppose that you need to fetch a number of variables
-!        from the kernel pool and want to check that the requested
-!        items are in fact available prior to performing further
-!        computations. The code example shows how you might use
-!        this routine to handle the details of checking of
-!        the various items.
-!
-!        Although by default the SPICE error handling system will
-!        report the error and halt the execution of the program, in
-!        this example we have decided to change this behavior to
-!        display the error messages and continue the execution of
-!        the program.
-!
-!        Use the kernel shown below to define some variables related
-!        to the Earth.
-!
-!           KPL/PCK
-!
-!           File name: badkpv_ex1.tpc
-!
-!           The contents of this kernel are not intended for
-!           real applications. Use only with this example.
-!
-!           \begindata
-!
-!              BODY_399_DATA  = ( 3.1416, 2.71828, 0.5, 12.0 )
-!              BODY_399_NAMES = ( 'PI', 'E', 'HALF', 'DOZEN' )
-!
-!           \begintext
-!
-!           End of constants kernel
-!
-!        Example code begins here.
-!
-!              PROGRAM BADKPV_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     SPICELIB functions.
-!        C
-!              LOGICAL               BADKPV
-!              INTEGER               RTRIM
-!
-!        C
-!        C     Local parameters.
-!        C
-!              CHARACTER*(*)         CALLER
-!              PARAMETER           ( CALLER  = 'BADKPV_EX1' )
-!
-!              INTEGER               KWDLEN
-!              PARAMETER           ( KWDLEN = 32 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*2           COMP
-!              CHARACTER*(KWDLEN)    NAME
-!              CHARACTER*1           TYPE
-!
-!              INTEGER               DIVBY
-!              INTEGER               SIZE
-!
-!        C
-!        C     Load the test kernel.
-!        C
-!              CALL FURNSH ( 'badkpv_ex1.tpc' )
-!
-!        C
-!        C     Change the default behavior of the SPICE error handling
-!        C     system to print out all messages and continue the
-!        C     execution of the program. We do this for demonstration
-!        C     purposes. Please, refrain from changing the default
-!        C     behavior on real applications.
-!        C
-!              CALL ERRACT ( 'SET', 'REPORT' )
-!
-!        C
-!        C     Assume that we need some data for body 399 and we expect
-!        C     there to be an even number of items available and at
-!        C     least 4 such items. Moreover we expect these items to be
-!        C     numeric. Note that the variable assignments below are
-!        C     present only to assist in understanding the calls to
-!        C     BADKPV.
-!        C
-!              NAME   = 'BODY_399_DATA'
-!              COMP   = '=>'
-!              SIZE   =  4
-!              DIVBY  =  2
-!              TYPE = 'N'
-!
-!              IF ( .NOT. BADKPV( CALLER, NAME,  COMP,
-!             .                   SIZE,   DIVBY, TYPE ) ) THEN
-!
-!                 WRITE(*,'(3A)') 'Expected form of variable ',
-!             .                   NAME(:RTRIM(NAME)),
-!             .                   ' found in kernel pool.'
-!
-!              END IF
-!
-!        C
-!        C     In addition we need the names given to these items.
-!        C     Improperly indicate the array has type numeric.
-!        C
-!              NAME   = 'BODY_399_NAMES'
-!              COMP   = '=>'
-!              SIZE   =  4
-!              DIVBY  =  1
-!              TYPE = 'N'
-!
-!              IF ( .NOT. BADKPV( CALLER, NAME,  COMP,
-!             .                   SIZE,   DIVBY, TYPE ) ) THEN
-!
-!                 WRITE(*,'(3A)') 'Expected form of variable ',
-!             .                   NAME(:RTRIM(NAME)),
-!             .                   ' found in kernel pool.'
-!
-!              END IF
-!
-!        C
-!        C     Change the behavior of the SPICE error handling to
-!        C     its default.
-!        C
-!              CALL ERRACT ( 'SET', 'DEFAULT' )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Expected form of variable BODY_399_DATA found in kernel pool.
-!
-!        ============================================================***
-!
-!        Toolkit version: N0066
-!
-!        SPICE(BADVARIABLETYPE) --
-!
-!        BADKPV_EX1: The kernel pool variable 'BODY_399_NAMES' must b***
-!        "NUMERIC". However, the current type is character.
-!
-!        A traceback follows.  The name of the highest level module i***
-!        BADKPV
-!
-!        ============================================================***
-!
-!        Warning: incomplete output. 4 lines extended past the right
-!        margin of the header and have been truncated. These lines are
-!        marked by "***" at the end of each line.
-!
-!        Note that, as expected, the error SPICE(BADVARIABLETYPE) is
-!        signaled by the second BADKPV call, since we have improperly
-!        indicated that the requested array is numeric, when actually
-!        it is of character type.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 05-SEP-2021 (JDR) (BVS)
-!
-!        Fixed typo in long message for the case "comparison not
-!        favorable."
-!
-!        Added exception SPICE(INVALIDTYPE) for the case of unknown
-!        expected kernel pool variable type.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example based on existing fragment. Added required
-!        readings references.
-!
-!        Removed references to FURNSH and CLPOOL from the "variable
-!        not present" long error message.
-!
-!-    SPICELIB Version 1.1.2, 22-AUG-2006 (EDW)
-!
-!        Replaced references to LDPOOL with references
-!        to FURNSH.
-!
-!-    SPICELIB Version 1.1.1, 10-MAY-2000 (WLT)
-!
-!        Modified the example section so that it is consistent with
-!        calling sequence for BADKPV.
-!
-!-    SPICELIB Version 1.1.0, 26-AUG-1997 (WLT)
-!
-!        Moved the initial assignment of BADKPV to the lines
-!        prior to the check of RETURN(). This avoids returning
-!        without having assigned value to BADKPV.
-!
-!-    SPICELIB Version 1.0.0, 09-APR-1997 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Check the properties of a kernel pool variable
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Variables
-!
 
       character(1)          class
 
@@ -535,202 +499,169 @@ contains
       return
       end procedure badkpv
 
-!$Procedure PRSINT   ( Parse integer with error checking )
-
+      !> ## Detailed Input
+      !>
+      !>     STRING   is a string representing a numeric value. Commas and
+      !>              spaces may be used in this string for ease of reading
+      !>              and writing the number. They are treated as
+      !>              insignificant but non-error-producing characters.
+      !>
+      !>              For exponential representation any of the characters
+      !>              'E','D','e','d' may be used.
+      !>
+      !>              The following are legitimate numeric expressions
+      !>
+      !>                 +12.2 e-1
+      !>                 -3. 1415 9276
+      !>                 1e6
+      !>                 E8
+      !>
+      !>              The program also recognizes the following  mnemonics
+      !>
+      !>                 'PI',  'pi',  'Pi',  'pI'
+      !>                 '+PI', '+pi', '+Pi', '+pI'
+      !>                 '-PI', '-pi', '-Pi', '-pI'
+      !>
+      !>              and returns the value ( + OR - ) 3 as appropriate.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     INTVAL   is the integer obtained by parsing STRING. If an error is
+      !>              encountered, INTVAL is not changed from whatever the
+      !>              input value was. If the input string has a fractional
+      !>              part, the fractional part will be truncated. Thus
+      !>              3.18 is interpreted as 3. -4.98 is interpreted as -4.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input string cannot be parsed or if the string
+      !>         represents a number that is outside the range of
+      !>         representable integers, as defined by INTMIN and INTMAX, the
+      !>         error SPICE(NOTANINTEGER) is signaled. The value of INTVAL is
+      !>         not changed from whatever the input value was.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The purpose of this routine is to enable safe parsing of numeric
+      !>     values into an INTEGER variable without the necessity of in-line
+      !>     error checking.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Parse into an INTEGER variable a set of strings representing
+      !>        numeric values.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM PRSINT_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local parameters.
+      !>        C
+      !>              INTEGER               SETSIZ
+      !>              PARAMETER           ( SETSIZ = 10 )
+      !>
+      !>              INTEGER               STRLEN
+      !>              PARAMETER           ( STRLEN = 11 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(STRLEN)    STRVAL ( SETSIZ )
+      !>
+      !>              INTEGER               I
+      !>              INTEGER               INTVAL
+      !>
+      !>        C
+      !>        C     Initialize the array of strings.
+      !>        C
+      !>              DATA                  STRVAL / '100,000,000',
+      !>             .                               ' -2 690 192',
+      !>             .                               '  +12.2 e-1',
+      !>             .                               '-3. 141 592',
+      !>             .                               '      1.2e8',
+      !>             .                               '         E6',
+      !>             .                               '         Pi',
+      !>             .                               '        -PI',
+      !>             .                               '-2147483648',
+      !>             .                               ' 2147483647' /
+      !>
+      !>        C
+      !>        C     Parse each string into an INTEGER variable.
+      !>        C
+      !>              WRITE(*,'(A)') '   STRVAL       INTVAL'
+      !>              WRITE(*,'(A)') '-----------  ------------'
+      !>              DO I = 1, SETSIZ
+      !>
+      !>                 CALL PRSINT ( STRVAL(I), INTVAL )
+      !>
+      !>                 WRITE(*,'(A11,2X,I12)') STRVAL(I), INTVAL
+      !>
+      !>              END DO
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>          STRVAL        INTVAL
+      !>        -----------  ------------
+      !>        100,000,000     100000000
+      !>         -2 690 192      -2690192
+      !>          +12.2 e-1             1
+      !>        -3. 141 592            -3
+      !>              1.2e8     120000000
+      !>                 E6       1000000
+      !>                 Pi             3
+      !>                -PI            -3
+      !>        -2147483648   -2147483648
+      !>         2147483647    2147483647
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 04-JUL-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard. Added complete
+      !>        code example.
+      !>
+      !>        Updated the header to properly describe its input, output,
+      !>        exceptions and particulars.
+      !>
+      !>-    SPICELIB Version 1.0.0, 22-JUL-1997 (NJB)
       module procedure prsint
-!! ## Abstract
-!!
-!!     Parse a string as an integer, encapsulating error handling.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     INTEGER
-!!     PARSING
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: nparsi
       implicit none
 
-
-! $ Detailed_Input
-!
-!     STRING   is a string representing a numeric value. Commas and
-!              spaces may be used in this string for ease of reading
-!              and writing the number. They are treated as
-!              insignificant but non-error-producing characters.
-!
-!              For exponential representation any of the characters
-!              'E','D','e','d' may be used.
-!
-!              The following are legitimate numeric expressions
-!
-!                 +12.2 e-1
-!                 -3. 1415 9276
-!                 1e6
-!                 E8
-!
-!              The program also recognizes the following  mnemonics
-!
-!                 'PI',  'pi',  'Pi',  'pI'
-!                 '+PI', '+pi', '+Pi', '+pI'
-!                 '-PI', '-pi', '-Pi', '-pI'
-!
-!              and returns the value ( + OR - ) 3 as appropriate.
-!
-! $ Detailed_Output
-!
-!     INTVAL   is the integer obtained by parsing STRING. If an error is
-!              encountered, INTVAL is not changed from whatever the
-!              input value was. If the input string has a fractional
-!              part, the fractional part will be truncated. Thus
-!              3.18 is interpreted as 3. -4.98 is interpreted as -4.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input string cannot be parsed or if the string
-!         represents a number that is outside the range of
-!         representable integers, as defined by INTMIN and INTMAX, the
-!         error SPICE(NOTANINTEGER) is signaled. The value of INTVAL is
-!         not changed from whatever the input value was.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The purpose of this routine is to enable safe parsing of numeric
-!     values into an INTEGER variable without the necessity of in-line
-!     error checking.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Parse into an INTEGER variable a set of strings representing
-!        numeric values.
-!
-!        Example code begins here.
-!
-!              PROGRAM PRSINT_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER               SETSIZ
-!              PARAMETER           ( SETSIZ = 10 )
-!
-!              INTEGER               STRLEN
-!              PARAMETER           ( STRLEN = 11 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(STRLEN)    STRVAL ( SETSIZ )
-!
-!              INTEGER               I
-!              INTEGER               INTVAL
-!
-!        C
-!        C     Initialize the array of strings.
-!        C
-!              DATA                  STRVAL / '100,000,000',
-!             .                               ' -2 690 192',
-!             .                               '  +12.2 e-1',
-!             .                               '-3. 141 592',
-!             .                               '      1.2e8',
-!             .                               '         E6',
-!             .                               '         Pi',
-!             .                               '        -PI',
-!             .                               '-2147483648',
-!             .                               ' 2147483647' /
-!
-!        C
-!        C     Parse each string into an INTEGER variable.
-!        C
-!              WRITE(*,'(A)') '   STRVAL       INTVAL'
-!              WRITE(*,'(A)') '-----------  ------------'
-!              DO I = 1, SETSIZ
-!
-!                 CALL PRSINT ( STRVAL(I), INTVAL )
-!
-!                 WRITE(*,'(A11,2X,I12)') STRVAL(I), INTVAL
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!          STRVAL        INTVAL
-!        -----------  ------------
-!        100,000,000     100000000
-!         -2 690 192      -2690192
-!          +12.2 e-1             1
-!        -3. 141 592            -3
-!              1.2e8     120000000
-!                 E6       1000000
-!                 Pi             3
-!                -PI            -3
-!        -2147483648   -2147483648
-!         2147483647    2147483647
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 04-JUL-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example.
-!
-!        Updated the header to properly describe its input, output,
-!        exceptions and particulars.
-!
-!-    SPICELIB Version 1.0.0, 22-JUL-1997 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     parse integer with encapsulated error handling
-!
-!-&
-
-!
-!     Local parameters
-!
       integer(ip), parameter :: msglen = 320
 
-!
-!     Local variables
-!
       character(msglen)     errmsg
       integer(ip)           ptr
 
@@ -747,209 +678,173 @@ contains
       return
       end procedure prsint
 
-!$Procedure CONVRT ( Convert Units )
-
+      !> ## Detailed Input
+      !>
+      !>     X        is a number representing a measurement in the units
+      !>              specified by IN.
+      !>
+      !>     IN       is the identifier of the units associated with the
+      !>              measurement X. Acceptable units are:
+      !>
+      !>                 Angles:                 'RADIANS'
+      !>                                         'DEGREES'
+      !>                                         'ARCMINUTES'
+      !>                                         'ARCSECONDS'
+      !>                                         'HOURANGLE'
+      !>                                         'MINUTEANGLE'
+      !>                                         'SECONDANGLE'
+      !>
+      !>                 Metric Distances:       'M'
+      !>                                         'METERS'
+      !>                                         'KM'
+      !>                                         'KILOMETERS'
+      !>                                         'CM'
+      !>                                         'CENTIMETERS'
+      !>                                         'MM'
+      !>                                         'MILLIMETERS'
+      !>
+      !>                 English Distances:      'FEET'
+      !>                                         'INCHES'
+      !>                                         'YARDS'
+      !>                                         'STATUTE_MILES'
+      !>                                         'NAUTICAL_MILES'
+      !>
+      !>                 Astrometric Distances:  'AU'
+      !>                                         'PARSECS'
+      !>                                         'LIGHTSECS'
+      !>                                         'LIGHTYEARS' julian lightyears
+      !>
+      !>                 Time:                   'SECONDS'
+      !>                                         'MINUTES'
+      !>                                         'HOURS'
+      !>                                         'DAYS'
+      !>                                         'JULIAN_YEARS'
+      !>                                         'TROPICAL_YEARS'
+      !>                                         'YEARS' (same as julian years)
+      !>
+      !>     OUT      is the identifier of the units desired for the
+      !>              measurement X. See the description of IN.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     Y        is the input measurement converted to the desired
+      !>              units.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input units, output units, or both input and
+      !>         output units are not recognized, the error
+      !>         SPICE(UNITSNOTREC) is signaled.
+      !>
+      !>     2)  If the units being converted between are incompatible, the
+      !>         error SPICE(INCOMPATIBLEUNITS) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine converts a measurement X given in units specified by
+      !>     IN to the equivalent value Y in units specified by OUT.
+      !>
+      !>     If a unit is not recognized, an error message is produced that
+      !>     indicates which one was not recognized.
+      !>
+      !>     If input and output units are incompatible (for example ANGLE
+      !>     and DISTANCE units) and error message will be produced stating
+      !>     the requested units and associated types.
+      !>
+      !> ## Examples
+      !>
+      !>     To convert 1 meter to statute miles and feet you could
+      !>
+      !>        CALL CONVRT ( 1.0D0, 'METERS',        'STATUTE_MILES', MILES )
+      !>        CALL CONVRT ( MILES, 'STATUTE_MILES', 'FEET',          FEET  )
+      !>
+      !>     or
+      !>
+      !>        CALL CONVRT ( 1.0D0, 'METERS', 'STATUTE_MILES', MILES )
+      !>        CALL CONVRT ( 1.0D0, 'METERS', 'FEET',          FEET  )
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine does not do any checking for overflow. The caller
+      !>         is required to make sure that the units used for the
+      !>         measurement are such that no floating point overflow will
+      !>         occur when the conversion is performed.
+      !>
+      !>     2)  Some of the units are not "defined" quantities. In such a case
+      !>         a best estimate is provided as of the date of the current
+      !>         version of this routine. Those estimated quantities are:
+      !>
+      !>            AU               The astronomical unit. The value was taken
+      !>                             from the JPL ephemeris DE125. This value
+      !>                             is an approximation and should not be used
+      !>                             for high-accuracy work. It agrees with the
+      !>                             value used in the JPL planetary ephemeris
+      !>                             DE430 (149597870.700 km) at the 100m
+      !>                             level.
+      !>
+      !>            TROPICAL_YEARS   The tropical year is the time from equinox
+      !>                             to equinox. This varies slightly with
+      !>                             time.
+      !>
+      !>            PARSECS          The parsec is the distance to an object
+      !>                             whose parallax angle is one arcsecond. Its
+      !>                             value is dependent upon the value of the
+      !>                             astronomical unit.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     C.A. Curzon        (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.M. Owen          (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Removed
+      !>        unnecessary $Revisions section.
+      !>
+      !>        Corrected a typo in $Restrictions section.
+      !>
+      !>-    SPICELIB Version 2.0.0, 12-MAY-2015 (NJB)
+      !>
+      !>        Added support for full names of metric distance units. Added
+      !>        support for the abbreviation 'M' indicating meters.
+      !>
+      !>-    SPICELIB Version 1.0.2, 01-JUL-2014 (NJB)
+      !>
+      !>        Updated the description of the AU in the $Restrictions
+      !>        section.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WMO) (WLT) (IMU)
       module procedure convrt
-!! ## Abstract
-!!
-!!     Take a measurement X, the units associated with
-!!     X, and units to which X should be converted; return Y ---
-!!     the value of the measurement in the output units.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     UNITS
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr
       use pepper_strings, only: ucase
       implicit none
 
-
-! $ Detailed_Input
-!
-!     X        is a number representing a measurement in the units
-!              specified by IN.
-!
-!     IN       is the identifier of the units associated with the
-!              measurement X. Acceptable units are:
-!
-!                 Angles:                 'RADIANS'
-!                                         'DEGREES'
-!                                         'ARCMINUTES'
-!                                         'ARCSECONDS'
-!                                         'HOURANGLE'
-!                                         'MINUTEANGLE'
-!                                         'SECONDANGLE'
-!
-!                 Metric Distances:       'M'
-!                                         'METERS'
-!                                         'KM'
-!                                         'KILOMETERS'
-!                                         'CM'
-!                                         'CENTIMETERS'
-!                                         'MM'
-!                                         'MILLIMETERS'
-!
-!                 English Distances:      'FEET'
-!                                         'INCHES'
-!                                         'YARDS'
-!                                         'STATUTE_MILES'
-!                                         'NAUTICAL_MILES'
-!
-!                 Astrometric Distances:  'AU'
-!                                         'PARSECS'
-!                                         'LIGHTSECS'
-!                                         'LIGHTYEARS' julian lightyears
-!
-!                 Time:                   'SECONDS'
-!                                         'MINUTES'
-!                                         'HOURS'
-!                                         'DAYS'
-!                                         'JULIAN_YEARS'
-!                                         'TROPICAL_YEARS'
-!                                         'YEARS' (same as julian years)
-!
-!     OUT      is the identifier of the units desired for the
-!              measurement X. See the description of IN.
-!
-! $ Detailed_Output
-!
-!     Y        is the input measurement converted to the desired
-!              units.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the input units, output units, or both input and
-!         output units are not recognized, the error
-!         SPICE(UNITSNOTREC) is signaled.
-!
-!     2)  If the units being converted between are incompatible, the
-!         error SPICE(INCOMPATIBLEUNITS) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine converts a measurement X given in units specified by
-!     IN to the equivalent value Y in units specified by OUT.
-!
-!     If a unit is not recognized, an error message is produced that
-!     indicates which one was not recognized.
-!
-!     If input and output units are incompatible (for example ANGLE
-!     and DISTANCE units) and error message will be produced stating
-!     the requested units and associated types.
-!
-! $ Examples
-!
-!     To convert 1 meter to statute miles and feet you could
-!
-!        CALL CONVRT ( 1.0D0, 'METERS',        'STATUTE_MILES', MILES )
-!        CALL CONVRT ( MILES, 'STATUTE_MILES', 'FEET',          FEET  )
-!
-!     or
-!
-!        CALL CONVRT ( 1.0D0, 'METERS', 'STATUTE_MILES', MILES )
-!        CALL CONVRT ( 1.0D0, 'METERS', 'FEET',          FEET  )
-!
-! $ Restrictions
-!
-!     1)  This routine does not do any checking for overflow. The caller
-!         is required to make sure that the units used for the
-!         measurement are such that no floating point overflow will
-!         occur when the conversion is performed.
-!
-!     2)  Some of the units are not "defined" quantities. In such a case
-!         a best estimate is provided as of the date of the current
-!         version of this routine. Those estimated quantities are:
-!
-!            AU               The astronomical unit. The value was taken
-!                             from the JPL ephemeris DE125. This value
-!                             is an approximation and should not be used
-!                             for high-accuracy work. It agrees with the
-!                             value used in the JPL planetary ephemeris
-!                             DE430 (149597870.700 km) at the 100m
-!                             level.
-!
-!            TROPICAL_YEARS   The tropical year is the time from equinox
-!                             to equinox. This varies slightly with
-!                             time.
-!
-!            PARSECS          The parsec is the distance to an object
-!                             whose parallax angle is one arcsecond. Its
-!                             value is dependent upon the value of the
-!                             astronomical unit.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     C.A. Curzon        (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.M. Owen          (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Removed
-!        unnecessary $Revisions section.
-!
-!        Corrected a typo in $Restrictions section.
-!
-!-    SPICELIB Version 2.0.0, 12-MAY-2015 (NJB)
-!
-!        Added support for full names of metric distance units. Added
-!        support for the abbreviation 'M' indicating meters.
-!
-!-    SPICELIB Version 1.0.2, 01-JUL-2014 (NJB)
-!
-!        Updated the description of the AU in the $Restrictions
-!        section.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WMO) (WLT) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     convert units
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       character(16)    inu
       character(16)    outu
 
@@ -1015,8 +910,6 @@ contains
          'TIME', 'TIME', 'TIME', 'TIME',&
          'TIME', 'TIME', 'TIME' ]
 
-
-
 !
 !     Angular Conversions:
 !
@@ -1030,29 +923,12 @@ contains
 !                 ()   Degrees/SECONDANGLE
 !
 
-
-
-
-
-
-
 !
 !     DATA CNVRTN (ANG + 1)  /      DPR()   /
 !
 !     This value will be loaded using the SPICELIB function DPR()
 !     on the first execution of this routine.
 !
-
-
-
-
-
-
-
-
-
-
-
 
 !
 !     Distance Conversions ( 8 through 17 )
@@ -1069,33 +945,6 @@ contains
 !                 (+ 10) Meters/mm
 !
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 !
 !     Distance Conversions
 !
@@ -1106,27 +955,12 @@ contains
 !                 (+ 15) Meters/Yard
 !
 
-
-
-
-
-
-
-
-
-
-
-
-
 !
 !     Distance Conversions
 !
 !                 (+ 16) Meters/LightYear
 !                 (+ 17) Meters/Parsec
 !
-
-
-
 
 !
 !     Time Conversions
@@ -1140,29 +974,10 @@ contains
 !                 (+ 7 ) Seconds / year          --- same as Julian year
 !
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 !
 !     Set up the error processing.
 !
       if ( ctx%failed() ) return
-
 
       call ucase ( in,  inu  )
       call ucase ( out, outu )
@@ -1232,197 +1047,173 @@ contains
 
       end procedure convrt
 
-!$Procedure ZZCVPOOL ( Private---Check variable update, with counter )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines. Users should not call this routine directly due to the
+      !>     volatile nature of this routine.
+      !>
+      !>     Determine whether or not any of the POOL variables that are to be
+      !>     watched and have AGENT on their distribution list have been
+      !>     updated, but do the full watcher check only if the POOL state
+      !>     counter has changed.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     AGENT       is the name of a subroutine, entry point, or
+      !>                 significant portion of code that needs to access
+      !>                 variables in the kernel pool. Generally this agent
+      !>                 will buffer these variables internally and fetch them
+      !>                 from the kernel pool only when they are updated.
+      !>
+      !>     USRCTR      is the value of the POOL state counter tracked by
+      !>                 (saved in) the caller (user) routine specifically
+      !>                 for this agent.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     USRCTR      is the current POOL state counter.
+      !>
+      !>     UPDATE      is a logical flag that will be set to true if the
+      !>                 variables in the kernel pool that are required by
+      !>                 AGENT have been updated since the last call to
+      !>                 CVPOOL.
+      !>
+      !> ## Parameters
+      !>
+      !>     CTRSIZ      is the dimension of the counter array used by
+      !>                 various SPICE subsystems to uniquely identify
+      !>                 changes in their states. This parameter is
+      !>                 defined in the private include file 'zzctr.inc'.
+      !>
+      !> ## Exceptions
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine uses ZZPCTRCK to check the caller's saved POOL state
+      !>     counter specific for the input AGENT against the current POOL
+      !>     state counter to bypass the call to CVPOOL in cases when the POOL
+      !>     has not changed.
+      !>
+      !>     If the POOL state counter specific for the input AGENT did not
+      !>     change it bypasses the call to CVPOOL and returns the UPDATE flag
+      !>     set to .FALSE.
+      !>
+      !>     If the POOL state counter specific for the input AGENT did change
+      !>     it calls CVPOOL and returns the UPDATE flag set to whatever value
+      !>     CVPOOL sets it to.
+      !>
+      !>     For details on ZZPCTRCK and CVPOOL see POOL the umbrella routine.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose that you have an application subroutine, TASK, that
+      !>     needs to access to two large independent data set in the kernel
+      !>     pool. If this data could be kept in local storage and kernel pool
+      !>     queries performed only when the data in the kernel pool has been
+      !>     updated, the routine can perform much more efficiently.
+      !>
+      !>     The code fragment below illustrates how you might make use of this
+      !>     feature.
+      !>
+      !>     C
+      !>     C     On the first call to this routine set two separate
+      !>     C     watchers for the two sets of POOL variables that we are
+      !>     C     interested in and initialize the two POOL state counters,
+      !>     C     one for each POOL agent.
+      !>     C
+      !>           IF ( FIRST ) THEN
+      !>
+      !>              FIRST = .FALSE.
+      !>              HAVE1 = .FALSE.
+      !>              HAVE2 = .FALSE.
+      !>
+      !>              CALL ZZCTRUIN ( USRCT1 )
+      !>              CALL ZZCTRUIN ( USRCT2 )
+      !>
+      !>              CALL SWPOOL ( 'TASK1', NNAMS1, NAMES1 )
+      !>              CALL SWPOOL ( 'TASK2', NNAMS2, NAMES2 )
+      !>
+      !>           END IF
+      !>
+      !>     C
+      !>     C     If any of the variables has been updated, fetch
+      !>     C     it from the kernel pool. (Note that this also
+      !>     C     handles getting variables for the first time.)
+      !>     C     We use HAVE1 to indicate the fetch succeeded. If it
+      !>     C     didn't, we need to attempt the fetch on the next
+      !>     C     pass into this routine. Do the first set of variable.
+      !>     C
+      !>           CALL CVPOOL ( 'TASK1', USRCT1, UPDATE )
+      !>
+      !>           IF (  UPDATE  .OR (.NOT. HAVE1 ) ) THEN
+      !>
+      !>              CALL GDPOOL ( 'TASK1_VAR_1', 1, M, N1, VALS1, FOUND(1) )
+      !>              CALL GDPOOL ( 'TASK1_VAR_2', 1, M, N2, VALS2, FOUND(2) )
+      !>                      .
+      !>              CALL GDPOOL ( 'TASK1_VAR_N', 1, M, NN, VALSN, FOUND(N) )
+      !>
+      !>           END IF
+      !>
+      !>           IF ( FAILED() ) THEN
+      !>                 .
+      !>              do something about the failure
+      !>                 .
+      !>           ELSE
+      !>              HAVE1 = .TRUE.
+      !>           END IF
+      !>
+      !>     C
+      !>     C     Do the second set of variable.
+      !>     C
+      !>           CALL CVPOOL ( 'TASK2', USRCT2, UPDATE )
+      !>
+      !>           IF (  UPDATE  .OR (.NOT. HAVE2 ) ) THEN
+      !>
+      !>              CALL GDPOOL ( 'TASK2_VAR_1', 1, M, N1, VALS1, FOUND(1) )
+      !>              CALL GDPOOL ( 'TASK2_VAR_2', 1, M, N2, VALS2, FOUND(2) )
+      !>                      .
+      !>              CALL GDPOOL ( 'TASK2_VAR_N', 1, M, NN, VALSN, FOUND(N) )
+      !>
+      !>           END IF
+      !>
+      !>           IF ( FAILED() ) THEN
+      !>                 .
+      !>              do something about the failure
+      !>                 .
+      !>           ELSE
+      !>              HAVE2 = .TRUE.
+      !>           END IF
+      !>
+      !> ## Restrictions
+      !>
+      !>     The POOL counter passed to the routine by the caller must be
+      !>     specific to the POOL agent that's being checked.
+      !>
+      !>     The caller routines watching more than one agent must set up a
+      !>     separate local POOL counter for each agent.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     B.V. Semenov   (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 06-SEP-2013 (BVS)
       module procedure zzcvpool
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due to the
-!!     volatile nature of this routine.
-!!
-!!     Determine whether or not any of the POOL variables that are to be
-!!     watched and have AGENT on their distribution list have been
-!!     updated, but do the full watcher check only if the POOL state
-!!     counter has changed.
-!!
-!! ## Required Reading
-!!
-!!     KERNEL
-!!
-!! ## Keywords
-!!
-!!     SYMBOLS
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
-
-
-
-! $ Detailed_Input
-!
-!     AGENT       is the name of a subroutine, entry point, or
-!                 significant portion of code that needs to access
-!                 variables in the kernel pool. Generally this agent
-!                 will buffer these variables internally and fetch them
-!                 from the kernel pool only when they are updated.
-!
-!     USRCTR      is the value of the POOL state counter tracked by
-!                 (saved in) the caller (user) routine specifically
-!                 for this agent.
-!
-! $ Detailed_Output
-!
-!     USRCTR      is the current POOL state counter.
-!
-!     UPDATE      is a logical flag that will be set to true if the
-!                 variables in the kernel pool that are required by
-!                 AGENT have been updated since the last call to
-!                 CVPOOL.
-!
-! $ Parameters
-!
-!     CTRSIZ      is the dimension of the counter array used by
-!                 various SPICE subsystems to uniquely identify
-!                 changes in their states. This parameter is
-!                 defined in the private include file 'zzctr.inc'.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine uses ZZPCTRCK to check the caller's saved POOL state
-!     counter specific for the input AGENT against the current POOL
-!     state counter to bypass the call to CVPOOL in cases when the POOL
-!     has not changed.
-!
-!     If the POOL state counter specific for the input AGENT did not
-!     change it bypasses the call to CVPOOL and returns the UPDATE flag
-!     set to .FALSE.
-!
-!     If the POOL state counter specific for the input AGENT did change
-!     it calls CVPOOL and returns the UPDATE flag set to whatever value
-!     CVPOOL sets it to.
-!
-!     For details on ZZPCTRCK and CVPOOL see POOL the umbrella routine.
-!
-! $ Examples
-!
-!     Suppose that you have an application subroutine, TASK, that
-!     needs to access to two large independent data set in the kernel
-!     pool. If this data could be kept in local storage and kernel pool
-!     queries performed only when the data in the kernel pool has been
-!     updated, the routine can perform much more efficiently.
-!
-!     The code fragment below illustrates how you might make use of this
-!     feature.
-!
-!     C
-!     C     On the first call to this routine set two separate
-!     C     watchers for the two sets of POOL variables that we are
-!     C     interested in and initialize the two POOL state counters,
-!     C     one for each POOL agent.
-!     C
-!           IF ( FIRST ) THEN
-!
-!              FIRST = .FALSE.
-!              HAVE1 = .FALSE.
-!              HAVE2 = .FALSE.
-!
-!              CALL ZZCTRUIN ( USRCT1 )
-!              CALL ZZCTRUIN ( USRCT2 )
-!
-!              CALL SWPOOL ( 'TASK1', NNAMS1, NAMES1 )
-!              CALL SWPOOL ( 'TASK2', NNAMS2, NAMES2 )
-!
-!           END IF
-!
-!     C
-!     C     If any of the variables has been updated, fetch
-!     C     it from the kernel pool. (Note that this also
-!     C     handles getting variables for the first time.)
-!     C     We use HAVE1 to indicate the fetch succeeded. If it
-!     C     didn't, we need to attempt the fetch on the next
-!     C     pass into this routine. Do the first set of variable.
-!     C
-!           CALL CVPOOL ( 'TASK1', USRCT1, UPDATE )
-!
-!           IF (  UPDATE  .OR (.NOT. HAVE1 ) ) THEN
-!
-!              CALL GDPOOL ( 'TASK1_VAR_1', 1, M, N1, VALS1, FOUND(1) )
-!              CALL GDPOOL ( 'TASK1_VAR_2', 1, M, N2, VALS2, FOUND(2) )
-!                      .
-!              CALL GDPOOL ( 'TASK1_VAR_N', 1, M, NN, VALSN, FOUND(N) )
-!
-!           END IF
-!
-!           IF ( FAILED() ) THEN
-!                 .
-!              do something about the failure
-!                 .
-!           ELSE
-!              HAVE1 = .TRUE.
-!           END IF
-!
-!     C
-!     C     Do the second set of variable.
-!     C
-!           CALL CVPOOL ( 'TASK2', USRCT2, UPDATE )
-!
-!           IF (  UPDATE  .OR (.NOT. HAVE2 ) ) THEN
-!
-!              CALL GDPOOL ( 'TASK2_VAR_1', 1, M, N1, VALS1, FOUND(1) )
-!              CALL GDPOOL ( 'TASK2_VAR_2', 1, M, N2, VALS2, FOUND(2) )
-!                      .
-!              CALL GDPOOL ( 'TASK2_VAR_N', 1, M, NN, VALSN, FOUND(N) )
-!
-!           END IF
-!
-!           IF ( FAILED() ) THEN
-!                 .
-!              do something about the failure
-!                 .
-!           ELSE
-!              HAVE2 = .TRUE.
-!           END IF
-!
-! $ Restrictions
-!
-!     The POOL counter passed to the routine by the caller must be
-!     specific to the POOL agent that's being checked.
-!
-!     The caller routines watching more than one agent must set up a
-!     separate local POOL counter for each agent.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 06-SEP-2013 (BVS)
-!
-!-&
-
-! $ Index_Entries
-!
-!     Check the kernel pool for updated variables, with counter
-!
-!-&
 
 !
 !     SPICELIB functions.
@@ -1451,109 +1242,89 @@ contains
 
       end procedure zzcvpool
 
-!$Procedure      ZZUTCPM ( UTC Plus or Minus Parse )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Parse a substring of the form ::UTC[+/-]1-12:0-59
+      !>
+      !> ## Detailed Input
+      !>
+      !>     STRING     is a string that has an embedded substring of the
+      !>                form ::UTC+HR[:MN] ( or ::UTC-HR[:MN] starting at
+      !>                character start.
+      !>
+      !>     START      is the location in STRING where a time zone
+      !>                specification is believed to begin.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HOFF       is the double precision value associated with
+      !>                HR in the picture above.  This value will be
+      !>                between -12 and 12 inclusive.
+      !>
+      !>     MOFF       is the double precision value associated with MN
+      !>                in the picture above.  This value will be between
+      !>                0 and 59 inclusive (or -59 and 0 inclusive) depending
+      !>                on the sign present in the UTC+/- substring.  The
+      !>                sign of MOFF is the same as the sign present in the
+      !>                string.
+      !>
+      !>     LAST       is the last character of the time zone specification.
+      !>                If the string doesn't have a correct format and
+      !>                range of values, LAST is returns as START - 1.
+      !>
+      !>     SUCCES     is a logical which if true, indicates that a time
+      !>                zone was successfully parsed.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) There are no exceptions.  Either the string matches
+      !>        the template or it doesn't.  No case is regarded
+      !>        as an error.
+      !>
+      !> ## Particulars
+      !>
+      !>     This is a private routine for parsing time zones specified
+      !>     as UTC+/-HR:MN  where HR is an unsigned integer between 0 and
+      !>     11.  HR must have no more than 2 digits.  MN is expected
+      !>     to be an unsigned integer between 0 and 59 inclusive.  It must
+      !>     have no more than 2 digits.
+      !>
+      !> ## Examples
+      !>
+      !>     See TIMOUT.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     W.L. Taber      (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 27-SEP-1996 (WLT)
       module procedure zzutcpm
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Parse a substring of the form ::UTC[+/-]1-12:0-59
-!!
-!! ## Required Reading
-!!
-!!      None.
-!!
-!! ## Keywords
-!!
-!!      Time --- PRIVATE
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lx4uns, nparsd, samch
       implicit none
 
-! $ Detailed_Input
-!
-!     STRING     is a string that has an embedded substring of the
-!                form ::UTC+HR[:MN] ( or ::UTC-HR[:MN] starting at
-!                character start.
-!
-!     START      is the location in STRING where a time zone
-!                specification is believed to begin.
-!
-! $ Detailed_Output
-!
-!     HOFF       is the double precision value associated with
-!                HR in the picture above.  This value will be
-!                between -12 and 12 inclusive.
-!
-!     MOFF       is the double precision value associated with MN
-!                in the picture above.  This value will be between
-!                0 and 59 inclusive (or -59 and 0 inclusive) depending
-!                on the sign present in the UTC+/- substring.  The
-!                sign of MOFF is the same as the sign present in the
-!                string.
-!
-!     LAST       is the last character of the time zone specification.
-!                If the string doesn't have a correct format and
-!                range of values, LAST is returns as START - 1.
-!
-!     SUCCES     is a logical which if true, indicates that a time
-!                zone was successfully parsed.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) There are no exceptions.  Either the string matches
-!        the template or it doesn't.  No case is regarded
-!        as an error.
-!
-! $ Particulars
-!
-!     This is a private routine for parsing time zones specified
-!     as UTC+/-HR:MN  where HR is an unsigned integer between 0 and
-!     11.  HR must have no more than 2 digits.  MN is expected
-!     to be an unsigned integer between 0 and 59 inclusive.  It must
-!     have no more than 2 digits.
-!
-! $ Examples
-!
-!     See TIMOUT.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber      (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 27-SEP-1996 (WLT)
-!
-!-&
-!
-!     Spicelib functions
-!
-!
-!     Local Variables
-!
       integer(ip), parameter :: lnsize = 80
 
       character(lnsize)     error
@@ -1650,7 +1421,6 @@ contains
 !     variables are in pepper_state_zzvstrng. Its documentation follows.
 !
 
-
 ! $ Abstract
 !
 !     SPICE Private routine intended solely for the support of SPICE
@@ -1659,17 +1429,6 @@ contains
 !
 !     Maintain a virtual decimal string associated with a d.p. number X.
 !
-! $ Required_Reading
-!
-!      None.
-!
-! $ Keywords
-!
-!      ALPHANUMERIC, PRIVATE
-!
-! $ Declarations
-
-
 ! $ Detailed_Input
 !
 !     X          is a double precision number for which we want to
@@ -1801,21 +1560,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 12-SEP-1996 (WLT)
 !
-!-&
-
-!
-!     Local Variables
-!
-
-
-
-
-
-
-
-
-
-
 
 !
 !     Although we don't anticipate ever needing these values
@@ -1824,83 +1568,67 @@ contains
 !
 !     This routine doesn't do anything.
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Set up the virtual string associated with X and return the
+      !>     exponent associated with X when represented in scientific
+      !>     notation.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     X          is a double precision number that from which
+      !>                a virtual decimal string should be created.
+      !>
+      !>     FILL       is the character to use for the leading character
+      !>                in the virtual decimal string.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     EXPONT     is the value of the scientific notation
+      !>                exponent associated with X.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !> ## Particulars
+      !>
+      !>     This entry point is used to establish a virtual decimal string.
+      !>     The companion entry point ZZVSBSTR is used to retrieve the
+      !>     characters in the virtual string.
+      !>
+      !> ## Examples
+      !>
+      !>     See the main entry point or the routine DPFMT.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     W.L. Taber      (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 12-SEP-1996 (WLT)
       module procedure zzvststr
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Set up the virtual string associated with X and return the
-!!     exponent associated with X when represented in scientific
-!!     notation.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ALPHANUMERIC, PRIVATE
-!!
-!! ## Declarations
-!!
-!!     IMPLICIT NONE
-!!     DOUBLE PRECISION      X
-!!     CHARACTER*(1)         FILL
-!!     INTEGER               EXPONT
-!!
-!! ## Detailed Input
-!!
-!!     X          is a double precision number that from which
-!!                a virtual decimal string should be created.
-!!
-!!     FILL       is the character to use for the leading character
-!!                in the virtual decimal string.
-!!
-!! ## Detailed Output
-!!
-!!     EXPONT     is the value of the scientific notation
-!!                exponent associated with X.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!! ## Particulars
-!!
-!!     This entry point is used to establish a virtual decimal string.
-!!     The companion entry point ZZVSBSTR is used to retrieve the
-!!     characters in the virtual string.
-!!
-!! ## Examples
-!!
-!!     See the main entry point or the routine DPFMT.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     W.L. Taber      (JPL)
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 12-SEP-1996 (WLT)
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: dpstr
       implicit none
@@ -1968,159 +1696,141 @@ contains
       end associate
       end procedure zzvststr
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Return the character from the specified SLOT of a virtual
+      !>     decimal string.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     FROM       is the index in the virtual decimal string of the
+      !>                first character that will be returned in SUBSTR.
+      !>
+      !>     TO         is the index in the virtual decimal string of the
+      !>                last character that will be returned in SUBSTR.
+      !>
+      !>     RND        is a logical flag used to indicate that the output
+      !>                string should represent the virtual decimal string
+      !>                that results from rounding to the TO'th decimal
+      !>                location.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     SUBSTR     is we regard the virtual string as VIRTUL.  Then
+      !>                in FORTRAN notation SUBSTR = VIRTUL(FROM:TO)
+      !>
+      !>     DID        is a logical flag that is used to indicate that
+      !>                the left most character returned by ZZVSBSTR became
+      !>                a zero as a result of rounding up from 9.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !> ## Particulars
+      !>
+      !>     This entry point retrieves a specified character from the
+      !>     virtual decimal string that was established by the last
+      !>     call to the entry point ZZVSTSTR.
+      !>
+      !> ## Examples
+      !>
+      !>     See the main entry point or the routine DPFMT.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     W.L. Taber      (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 12-SEP-1996 (WLT)
+      !>
+      !>     The buffered numeric string has the form:
+      !>
+      !>       by.xxxxxxxxxxxxxEseee...
+      !>       123456789012345678901234
+      !>                1         2
+      !>
+      !>     Ignoring the exponent we can regard this as being the
+      !>     decimal equivalent of the number with the decimal point
+      !>     in the wrong position.  We'll need to remedy this.
+      !>
+      !>       by.xxxxxxxxxxxxx
+      !>       1234567890123456
+      !>                1
+      !>
+      !>      We can think of this decimal representation as being a
+      !>      simplification of the "infinite string" representation
+      !>      below.
+      !>
+      !>                     b    y   .   x   x       x
+      !>        d-4 d-3 d-2 d-1  d00  p  d01 d02 ... d13  0   0   0   0
+      !>        -2  -1   0   1    2   3   4   5       16
+      !>
+      !>     From this its clear that i'th digit can be easily computed
+      !>     via following decision block.
+      !>
+      !>        if ( i .lt. 0 ) then
+      !>           digit  = '0'
+      !>        else if ( i .eq. 0 ) then
+      !>           digit  = string(2:2)
+      !>        else if ( i .lt. maxsig ) then
+      !>           digit = string(i+3:i+3)
+      !>        else
+      !>           digit = '0'
+      !>        end if
+      !>
+      !>     To have an accurate representation of the number (one that
+      !>     accounts for the exponent) we shift the decimal point ('p')
+      !>     "right" by EXP slots. (If EXP is negative we shift right a
+      !>     negative number of slots).  In the sequence of characters the
+      !>     decimal point will follow d_EXP.
+      !>
+      !>     IF we renumber the slots so that the decimal point is in
+      !>     slot 0 then for S < 0 slot S contains digit d_EXP+1+S
+      !>
+      !>     For S > 0 slot S contains digit d_EXP+S
+      !>
+      !>     Combining these observations we can compute the SLOT'th character
+      !>     of the virtual string as follows.
+      !>
+      !>     If the character requested is character zero of the virtual
+      !>     string, we just get the decimal point.
+      !>
+      !>     If the character requested is in a slot whose index is
+      !>     greater than zero it is to the
+      !>     right of the decimal point so it must be D_exp+slot.
+      !>
+      !>     If the character requested is in a slot whose index is negative
+      !>     it is to the left of the decimal point.  Since the slot
+      !>     just to the left of the decimal point contains D_exp it follows
+      !>     by induction that for any negative slot, the decimal is
+      !>     D_exp+slot+1
+      !>
+      !>     Since we may need to round the output, we will work from right
+      !>     to left.  First thing we do is get the index of the right most
+      !>     significant portion of SUBSTR that we will manipulate.
       module procedure zzvsbstr
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Return the character from the specified SLOT of a virtual
-!!     decimal string.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ALPHANUMERIC, PRIVATE
-!!
-!! ## Declarations
-!!
-!!     IMPLICIT NONE
-!!     INTEGER               FROM
-!!     INTEGER               TO
-!!     LOGICAL               RND
-!!     CHARACTER*(*)         SUBSTR
-!!     LOGICAL               DID
-!!
-!! ## Detailed Input
-!!
-!!     FROM       is the index in the virtual decimal string of the
-!!                first character that will be returned in SUBSTR.
-!!
-!!     TO         is the index in the virtual decimal string of the
-!!                last character that will be returned in SUBSTR.
-!!
-!!     RND        is a logical flag used to indicate that the output
-!!                string should represent the virtual decimal string
-!!                that results from rounding to the TO'th decimal
-!!                location.
-!!
-!! ## Detailed Output
-!!
-!!     SUBSTR     is we regard the virtual string as VIRTUL.  Then
-!!                in FORTRAN notation SUBSTR = VIRTUL(FROM:TO)
-!!
-!!     DID        is a logical flag that is used to indicate that
-!!                the left most character returned by ZZVSBSTR became
-!!                a zero as a result of rounding up from 9.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!! ## Particulars
-!!
-!!     This entry point retrieves a specified character from the
-!!     virtual decimal string that was established by the last
-!!     call to the entry point ZZVSTSTR.
-!!
-!! ## Examples
-!!
-!!     See the main entry point or the routine DPFMT.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     W.L. Taber      (JPL)
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 12-SEP-1996 (WLT)
-!!
-!!     The buffered numeric string has the form:
-!!
-!!       by.xxxxxxxxxxxxxEseee...
-!!       123456789012345678901234
-!!                1         2
-!!
-!!     Ignoring the exponent we can regard this as being the
-!!     decimal equivalent of the number with the decimal point
-!!     in the wrong position.  We'll need to remedy this.
-!!
-!!       by.xxxxxxxxxxxxx
-!!       1234567890123456
-!!                1
-!!
-!!      We can think of this decimal representation as being a
-!!      simplification of the "infinite string" representation
-!!      below.
-!!
-!!                     b    y   .   x   x       x
-!!        d-4 d-3 d-2 d-1  d00  p  d01 d02 ... d13  0   0   0   0
-!!        -2  -1   0   1    2   3   4   5       16
-!!
-!!     From this its clear that i'th digit can be easily computed
-!!     via following decision block.
-!!
-!!        if ( i .lt. 0 ) then
-!!           digit  = '0'
-!!        else if ( i .eq. 0 ) then
-!!           digit  = string(2:2)
-!!        else if ( i .lt. maxsig ) then
-!!           digit = string(i+3:i+3)
-!!        else
-!!           digit = '0'
-!!        end if
-!!
-!!     To have an accurate representation of the number (one that
-!!     accounts for the exponent) we shift the decimal point ('p')
-!!     "right" by EXP slots. (If EXP is negative we shift right a
-!!     negative number of slots).  In the sequence of characters the
-!!     decimal point will follow d_EXP.
-!!
-!!     IF we renumber the slots so that the decimal point is in
-!!     slot 0 then for S < 0 slot S contains digit d_EXP+1+S
-!!
-!!     For S > 0 slot S contains digit d_EXP+S
-!!
-!!     Combining these observations we can compute the SLOT'th character
-!!     of the virtual string as follows.
-!!
-!!     If the character requested is character zero of the virtual
-!!     string, we just get the decimal point.
-!!
-!!     If the character requested is in a slot whose index is
-!!     greater than zero it is to the
-!!     right of the decimal point so it must be D_exp+slot.
-!!
-!!     If the character requested is in a slot whose index is negative
-!!     it is to the left of the decimal point.  Since the slot
-!!     just to the left of the decimal point contains D_exp it follows
-!!     by induction that for any negative slot, the decimal is
-!!     D_exp+slot+1
-!!
-!!     Since we may need to round the output, we will work from right
-!!     to left.  First thing we do is get the index of the right most
-!!     significant portion of SUBSTR that we will manipulate.
-!!
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip), parameter :: maxsig = 14
@@ -2305,257 +2015,223 @@ contains
       end associate
       end procedure zzvsbstr
 
-!$Procedure DPFMT ( Format a double precision number )
-
+      !> ## Detailed Input
+      !>
+      !>     X        is any double precision number.
+      !>
+      !>     PICTUR   is a string used to describe the format of the
+      !>              output string. There are four special characters
+      !>              recognized by DPFMT --- a leading + or -, a leading
+      !>              zero ( '0' ) or a zero that follows a leading + or -,
+      !>              and the first decimal point of the string.
+      !>
+      !>              All other non-blank characters are regarded as
+      !>              equivalent. The picture ends at the first blank
+      !>              character. The effects associated with the various
+      !>              characters in a picture are spelled out in the
+      !>              description of the output STRING.
+      !>
+      !>              The following pictures are treated as errors.
+      !>
+      !>              ' ', '+', '-', '.', '+.', '-.'
+      !>
+      !> ## Detailed Output
+      !>
+      !>     STRING   is a string representing X that matches the input
+      !>              picture. The format of STRING is governed by PICTUR.
+      !>              It will represent X rounded to the level of precision
+      !>              specified by PICTUR.
+      !>
+      !>              If the first character of the picture is a minus sign,
+      !>              the first character in the output string will be
+      !>              a blank if the number is non-negative, a minus sign
+      !>              if the number is negative.
+      !>
+      !>              If the first character of the picture is a plus sign,
+      !>              the first character of the output string will be a
+      !>              plus if the number is positive, a blank if the number
+      !>              is zero, and a minus sign if the number is negative.
+      !>
+      !>              If the first character of the string is NOT a sign
+      !>              (plus or minus) the first character of the output
+      !>              string will be a minus sign if the number is negative
+      !>              and will be the first character of the integer part
+      !>              of the number otherwise.
+      !>
+      !>              The integer portion of STRING will contain the same
+      !>              number of characters as appear before the decimal
+      !>              point (or last character if there is no decimal
+      !>              point) but after a leading + or -.
+      !>
+      !>              If the picture begins with any of the following
+      !>
+      !>                 '+0', '-0', or '0'
+      !>
+      !>              it is said to have a leading zero. If a picture has
+      !>              a leading zero and the integer portion is not large
+      !>              enough to fill up the integer space specified by
+      !>              PICTUR, STRING will be zero padded from the sign (if
+      !>              one is required) up to the first character of the
+      !>              integer part of the number.
+      !>
+      !>              If picture does NOT have a leading zero and the
+      !>              integer portion is not large enough to fill up the
+      !>              space specified by PICTUR, STRING will be blank
+      !>              padded on the left between the sign (if one is
+      !>              required) and the first character of the integer part
+      !>              of the number.
+      !>
+      !>              If a decimal point ( '.' ) is present in PICTUR it
+      !>              will be present following the integer portion of
+      !>              STRING. Moreover, the decimal portion of STRING will
+      !>              contain the same number of digits as there are
+      !>              non-blank characters following the decimal point in
+      !>              PICTUR. However, only the first 14 digits starting
+      !>              with the first non-zero digit are meaningful.
+      !>
+      !>              If the format specified by PICTUR does not provide
+      !>              enough room for the integer portion of X, the routine
+      !>              determines whether or not the number of characters
+      !>              present in the picture is sufficient to create a
+      !>              representation for X using scientific notation. If
+      !>              so, the output is displayed using scientific notation
+      !>              (leading signs, if they are present in PICTUR, will
+      !>              also appear in STRING).   If the format specified by
+      !>              PICTUR is too short to accommodate scientific
+      !>              notation, the output string is filled with '*' to the
+      !>              same length as the length of PICTUR. Leading signs
+      !>              are not preserved in this overflow case.
+      !>
+      !>              STRING may overwrite PICTUR.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If PICTUR begins with a blank, the error SPICE(NOPICTURE) is
+      !>         signaled.
+      !>
+      !>     2)  If PICTUR consists only of '+', '-', '.', '+.' or '-.' are
+      !>         regarded as invalid (there's no significant component to the
+      !>         picture.) therefore, the error SPICE(BADPICTURE) is signaled.
+      !>
+      !>     3)  If the length of STR is less than the length of the first
+      !>         non-blank portion of PICTUR, the error SPICE(OUTPUTTOOSHORT)
+      !>         is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine provides a mechanism for producing numeric strings
+      !>     formatted according to a user supplied picture. We expect that
+      !>     the string produced by this routine will be used to assist in
+      !>     the construction of a string that can be read by people.
+      !>
+      !>     Note that the process of converting a double precision number
+      !>     to a string, in not precisely invertible even if the string
+      !>     contains all of the significant figures allowed by this
+      !>     routine. You should not anticipate that the string produced
+      !>     by this routine can be "read" into a double precision number
+      !>     to reproduce the double precision number X. To the level of
+      !>     accuracy implied by the string representation, they will be
+      !>     the same. But, they are unlikely to have the same internal
+      !>     binary representation.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose that X has the binary representation of PI. Then the
+      !>     table below illustrates the strings that would be produced
+      !>     by a variety of different pictures.
+      !>
+      !>     PICTUR         |    STRING
+      !>     -------------------------------
+      !>     '0x.xxx'       |  '03.142'
+      !>     'xx.xxx'       |  ' 3.142'
+      !>     '+xxx.yyyy'    |  '+  3.1416'
+      !>     '-.yyyy'       |  '******'
+      !>     'xxxxxxxx'     |  '       3'
+      !>     '00xx'         |  '0003'
+      !>     '-00.0000000'  |  ' 03.1415927'
+      !>     '00'           |  '03'
+      !>     'x.'           |  '3.'
+      !>     '.mynumber'    |  '3.142E+00'
+      !>     'my dog spot'  |  ' 3'
+      !>     'my.dog spot'  |  ' 3.142'
+      !>     '+my.dog,spot' |  '+ 3.14159265'
+      !>
+      !>     Suppose that X has the binary representation of 2/3. Then the
+      !>     table below illustrates the strings that would be produced
+      !>     by a variety of different pictures.
+      !>
+      !>     PICTUR         |    STRING
+      !>     -------------------------------
+      !>     '+x.xxx'       |  '+0.667'
+      !>     '+xx.xxx'      |  '+ 0.667'
+      !>     'xxx.yyyy'     |  '  0.6667'
+      !>     '.yyyy'        |  '.6667'
+      !>     'xxxxxxxx'     |  '       1'
+      !>     '00xx'         |  '0001'
+      !>     '-0.0000000'   |  ' 0.6666667'
+      !>     '00'           |  '01'
+      !>     'x.'           |  '1.'
+      !>     'mynumber'     |  '       1'
+      !>     'my dog spot'  |  ' 1'
+      !>     'my.dog spot'  |  ' 0.667'
+      !>     'my.dog,spot'  |  ' 0.66666667'
+      !>
+      !>     Suppose that X has the binary representation of -8/9. Then the
+      !>     table below illustrates the strings that would be produced
+      !>     by a variety of different pictures.
+      !>
+      !>     PICTUR         |    STRING
+      !>     -------------------------------
+      !>     '+x.xxx'       |  '-0.889'
+      !>     '-00.xxxx'     |  '-00.8889'
+      !>     'xxx.xxx'      |  ' -0.889'
+      !>     '000.000'      |  '-00.889'
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.3, 27-OCT-2021 (JDR) (EDW) (NJB)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.2, 31-JAN-2008 (BVS)
+      !>
+      !>        Removed non-standard end-of-declarations marker
+      !>        'C%&END_DECLARATIONS' from comments.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-JUN-1998 (WLT)
+      !>
+      !>        A number of typographical and grammatical errors
+      !>        were corrected in the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 17-SEP-1996 (WLT)
       module procedure dpfmt
-!! ## Abstract
-!!
-!!     Create a formatted string that represents a double precision
-!!     number, using a format picture.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ALPHANUMERIC
-!!     CONVERSION
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: dpstr, ncpos, pos, rjust
       implicit none
-
-
-! $ Detailed_Input
-!
-!     X        is any double precision number.
-!
-!     PICTUR   is a string used to describe the format of the
-!              output string. There are four special characters
-!              recognized by DPFMT --- a leading + or -, a leading
-!              zero ( '0' ) or a zero that follows a leading + or -,
-!              and the first decimal point of the string.
-!
-!              All other non-blank characters are regarded as
-!              equivalent. The picture ends at the first blank
-!              character. The effects associated with the various
-!              characters in a picture are spelled out in the
-!              description of the output STRING.
-!
-!              The following pictures are treated as errors.
-!
-!              ' ', '+', '-', '.', '+.', '-.'
-!
-! $ Detailed_Output
-!
-!     STRING   is a string representing X that matches the input
-!              picture. The format of STRING is governed by PICTUR.
-!              It will represent X rounded to the level of precision
-!              specified by PICTUR.
-!
-!              If the first character of the picture is a minus sign,
-!              the first character in the output string will be
-!              a blank if the number is non-negative, a minus sign
-!              if the number is negative.
-!
-!              If the first character of the picture is a plus sign,
-!              the first character of the output string will be a
-!              plus if the number is positive, a blank if the number
-!              is zero, and a minus sign if the number is negative.
-!
-!              If the first character of the string is NOT a sign
-!              (plus or minus) the first character of the output
-!              string will be a minus sign if the number is negative
-!              and will be the first character of the integer part
-!              of the number otherwise.
-!
-!              The integer portion of STRING will contain the same
-!              number of characters as appear before the decimal
-!              point (or last character if there is no decimal
-!              point) but after a leading + or -.
-!
-!              If the picture begins with any of the following
-!
-!                 '+0', '-0', or '0'
-!
-!              it is said to have a leading zero. If a picture has
-!              a leading zero and the integer portion is not large
-!              enough to fill up the integer space specified by
-!              PICTUR, STRING will be zero padded from the sign (if
-!              one is required) up to the first character of the
-!              integer part of the number.
-!
-!              If picture does NOT have a leading zero and the
-!              integer portion is not large enough to fill up the
-!              space specified by PICTUR, STRING will be blank
-!              padded on the left between the sign (if one is
-!              required) and the first character of the integer part
-!              of the number.
-!
-!              If a decimal point ( '.' ) is present in PICTUR it
-!              will be present following the integer portion of
-!              STRING. Moreover, the decimal portion of STRING will
-!              contain the same number of digits as there are
-!              non-blank characters following the decimal point in
-!              PICTUR. However, only the first 14 digits starting
-!              with the first non-zero digit are meaningful.
-!
-!              If the format specified by PICTUR does not provide
-!              enough room for the integer portion of X, the routine
-!              determines whether or not the number of characters
-!              present in the picture is sufficient to create a
-!              representation for X using scientific notation. If
-!              so, the output is displayed using scientific notation
-!              (leading signs, if they are present in PICTUR, will
-!              also appear in STRING).   If the format specified by
-!              PICTUR is too short to accommodate scientific
-!              notation, the output string is filled with '*' to the
-!              same length as the length of PICTUR. Leading signs
-!              are not preserved in this overflow case.
-!
-!              STRING may overwrite PICTUR.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If PICTUR begins with a blank, the error SPICE(NOPICTURE) is
-!         signaled.
-!
-!     2)  If PICTUR consists only of '+', '-', '.', '+.' or '-.' are
-!         regarded as invalid (there's no significant component to the
-!         picture.) therefore, the error SPICE(BADPICTURE) is signaled.
-!
-!     3)  If the length of STR is less than the length of the first
-!         non-blank portion of PICTUR, the error SPICE(OUTPUTTOOSHORT)
-!         is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine provides a mechanism for producing numeric strings
-!     formatted according to a user supplied picture. We expect that
-!     the string produced by this routine will be used to assist in
-!     the construction of a string that can be read by people.
-!
-!     Note that the process of converting a double precision number
-!     to a string, in not precisely invertible even if the string
-!     contains all of the significant figures allowed by this
-!     routine. You should not anticipate that the string produced
-!     by this routine can be "read" into a double precision number
-!     to reproduce the double precision number X. To the level of
-!     accuracy implied by the string representation, they will be
-!     the same. But, they are unlikely to have the same internal
-!     binary representation.
-!
-! $ Examples
-!
-!     Suppose that X has the binary representation of PI. Then the
-!     table below illustrates the strings that would be produced
-!     by a variety of different pictures.
-!
-!     PICTUR         |    STRING
-!     -------------------------------
-!     '0x.xxx'       |  '03.142'
-!     'xx.xxx'       |  ' 3.142'
-!     '+xxx.yyyy'    |  '+  3.1416'
-!     '-.yyyy'       |  '******'
-!     'xxxxxxxx'     |  '       3'
-!     '00xx'         |  '0003'
-!     '-00.0000000'  |  ' 03.1415927'
-!     '00'           |  '03'
-!     'x.'           |  '3.'
-!     '.mynumber'    |  '3.142E+00'
-!     'my dog spot'  |  ' 3'
-!     'my.dog spot'  |  ' 3.142'
-!     '+my.dog,spot' |  '+ 3.14159265'
-!
-!     Suppose that X has the binary representation of 2/3. Then the
-!     table below illustrates the strings that would be produced
-!     by a variety of different pictures.
-!
-!     PICTUR         |    STRING
-!     -------------------------------
-!     '+x.xxx'       |  '+0.667'
-!     '+xx.xxx'      |  '+ 0.667'
-!     'xxx.yyyy'     |  '  0.6667'
-!     '.yyyy'        |  '.6667'
-!     'xxxxxxxx'     |  '       1'
-!     '00xx'         |  '0001'
-!     '-0.0000000'   |  ' 0.6666667'
-!     '00'           |  '01'
-!     'x.'           |  '1.'
-!     'mynumber'     |  '       1'
-!     'my dog spot'  |  ' 1'
-!     'my.dog spot'  |  ' 0.667'
-!     'my.dog,spot'  |  ' 0.66666667'
-!
-!     Suppose that X has the binary representation of -8/9. Then the
-!     table below illustrates the strings that would be produced
-!     by a variety of different pictures.
-!
-!     PICTUR         |    STRING
-!     -------------------------------
-!     '+x.xxx'       |  '-0.889'
-!     '-00.xxxx'     |  '-00.8889'
-!     'xxx.xxx'      |  ' -0.889'
-!     '000.000'      |  '-00.889'
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.3, 27-OCT-2021 (JDR) (EDW) (NJB)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.2, 31-JAN-2008 (BVS)
-!
-!        Removed non-standard end-of-declarations marker
-!        'C%&END_DECLARATIONS' from comments.
-!
-!-    SPICELIB Version 1.0.1, 22-JUN-1998 (WLT)
-!
-!        A number of typographical and grammatical errors
-!        were corrected in the header.
-!
-!-    SPICELIB Version 1.0.0, 17-SEP-1996 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     format a string representing a d.p. number
-!     string from a d.p. number and format picture
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 
       integer(ip), parameter :: wdsize = 32
 
@@ -2582,10 +2258,6 @@ contains
       logical               needsn
       logical               ovflow
       logical               shift
-
-!
-!     Initial values
-!
 
 !
 !     Determine where the picture ends.
@@ -2917,229 +2589,195 @@ contains
       return
       end procedure dpfmt
 
-!$Procedure DPSTRF ( Double Precision Number to Character )
-
+      !> ## Detailed Input
+      !>
+      !>     X        is a double precision number.
+      !>
+      !>     SIGDIG   is the number of significant digits that are desired
+      !>              for the output string.
+      !>
+      !>     FORMAT   is a character flag that indicates how the double
+      !>              precision number should be represented. The two
+      !>              acceptable inputs are 'E' and 'F'.  If the input
+      !>              is 'E' then the number will be displayed with an
+      !>              exponent in scientific notation. It will have the
+      !>              form 'sx.xxx - - - xxxxxEsyy' where there are
+      !>              SIGDIG x's and s is ' ' or '-' at its first occurrence
+      !>              and '-' or '+' in the second.
+      !>
+      !>              If the input is 'F' then the number will be
+      !>              displayed without an exponent --- the representation
+      !>              will be strictly decimal. The first symbol will be
+      !>              a sign ('-' or ' ').
+      !>
+      !> ## Detailed Output
+      !>
+      !>     STRING   is a character representation of X to the number of
+      !>              significant digits specified by SIGDIG. The number of
+      !>              spaces required to return the requested character
+      !>              string is SIGDIG + 6. If STRING is not declared to
+      !>              have adequate length, the number returned will be
+      !>              truncated on the right.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If SIGDIG is less than one, this routine returns one
+      !>         significant digit in the output string.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine computes an approximate character representation
+      !>     of the input string X. The maximum number of significant
+      !>     digits returned is 14 (in F format there may be many extra
+      !>     zeros returned but only a maximum of 14 digits will be
+      !>     significant.
+      !>
+      !>     The output string is left justified.
+      !>
+      !>     This routine has the advantage that it does not use an internal
+      !>     file and is about twice as fast as an internal write. It can
+      !>     be used as part of character function without fear of introducing
+      !>     recursive I/O conflicts. It is intended to be an approximate
+      !>     inverse to the subroutine NPARSD.
+      !>
+      !>     IF you want the character string representation of a double
+      !>     precision number to be the same as that produced by a formatted
+      !>     write statement use a FORTRAN write statement.
+      !>
+      !>     For example the number represented by the string
+      !>
+      !>           1.245454545454545454545E+01
+      !>
+      !>     when read (via a FORTRAN READ statement) into the DP variable X
+      !>     and converted back to a character string having 14 significant
+      !>     digits by this routine yields
+      !>
+      !>           1.2454545454545E+01  in E format
+      !>           12.454545454545      in F format
+      !>
+      !>     The FORTRAN write statement
+      !>
+      !>           WRITE ( 6, FMT='(P1E)' ) X
+      !>
+      !>     yields
+      !>
+      !>           1.2454545454545454E+01
+      !>
+      !>     If this is too much error for your application DO NOT use this
+      !>     routine. You should be aware however, that a character string
+      !>     read into a double precision number may not WRITE out with an
+      !>     equivalent character representation as was input.
+      !>
+      !>     For example on a VAX 11/780 if you
+      !>
+      !>           READ  (5,*)         X
+      !>           WRITE (6,FMT='(E)') X
+      !>
+      !>     and enter a value of 7.00000001 for the read statement
+      !>     the output written will be 0.7000000010000001E+01
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose that you wished to insert the character representation
+      !>     of some DOUBLE PRECISION number into a line of text.
+      !>
+      !>     For example suppose X contains the double precision number
+      !>     4.268176872928187 and you would like to insert the character
+      !>     representation of this number to 2 places between the strings
+      !>
+      !>     'There are', 'meters between lamp posts'
+      !>
+      !>     You could perform the following sequence of steps
+      !>
+      !>           DOUBLE PRECISION  X
+      !>           CHARACTER*5       DISTANCE
+      !>           CHARACTER*80      MESSAGE
+      !>
+      !>           CALL DPSTRF ( X, 2, 'F', DISTANCE )
+      !>
+      !>           MESSAGE = 'There are '                //
+      !>          .           DISTANCE                   //
+      !>          .          'meters between lamp posts'
+      !>          .
+      !>
+      !>     C
+      !>     C     Squeeze any extra spaces out of the message string.
+      !>     C
+      !>           CALL CMPRSS ( ' ', 1, MESSAGE, MESSAGE )
+      !>
+      !>     The string MESSAGE would contain:
+      !>
+      !>          'There are 4.2 meters between lamp posts'
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  The maximum number of significant digits returned is 14.
+      !>
+      !>     2)  If the output string is not declared to be adequately large
+      !>         the numeric string will be truncated to the side opposite its
+      !>         justification (At least SIGDIG + 6 characters are needed in E
+      !>         format, in F format the size required is dependent upon the
+      !>         input X and the number of significant digits requested. In
+      !>         extreme cases up to 56 characters may be required.)
+      !>
+      !>     3)  This routine makes explicit use of the format of the string
+      !>         returned by DPSTR, should that routine change, substantial
+      !>         work may be required to bring this routine back up to snuff.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.2.1, 12-AUG-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.2.0, 17-SEP-1996 (WLT)
+      !>
+      !>        Upgraded routine to handle arbitrary magnitude d.p. numbers.
+      !>
+      !>-    SPICELIB Version 1.1.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.1.0, 30-JUL-1990 (WLT)
+      !>
+      !>        The routine was repaired so that references to zero-length
+      !>        strings ( for example STRING(4:3) ) are not made.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 1.1.0, 30-JUL-1990 (WLT)
+      !>
+      !>        As previously implemented, one would occasionally reference
+      !>        a zero length substring of the variable NUMSTR. This was
+      !>        O.K. under VAX Fortran, because it allows such references.
+      !>        However, most implementations of Fortran are not as forgiving.
       module procedure dpstrf
-!! ## Abstract
-!!
-!!     Take a double precision number and convert it to an
-!!     equivalent formatted character string representation (base 10).
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CHARACTER
-!!     CONVERSION
-!!     PARSING
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: dpstr
       implicit none
 
-
-! $ Detailed_Input
-!
-!     X        is a double precision number.
-!
-!     SIGDIG   is the number of significant digits that are desired
-!              for the output string.
-!
-!     FORMAT   is a character flag that indicates how the double
-!              precision number should be represented. The two
-!              acceptable inputs are 'E' and 'F'.  If the input
-!              is 'E' then the number will be displayed with an
-!              exponent in scientific notation. It will have the
-!              form 'sx.xxx - - - xxxxxEsyy' where there are
-!              SIGDIG x's and s is ' ' or '-' at its first occurrence
-!              and '-' or '+' in the second.
-!
-!              If the input is 'F' then the number will be
-!              displayed without an exponent --- the representation
-!              will be strictly decimal. The first symbol will be
-!              a sign ('-' or ' ').
-!
-! $ Detailed_Output
-!
-!     STRING   is a character representation of X to the number of
-!              significant digits specified by SIGDIG. The number of
-!              spaces required to return the requested character
-!              string is SIGDIG + 6. If STRING is not declared to
-!              have adequate length, the number returned will be
-!              truncated on the right.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  If SIGDIG is less than one, this routine returns one
-!         significant digit in the output string.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine computes an approximate character representation
-!     of the input string X. The maximum number of significant
-!     digits returned is 14 (in F format there may be many extra
-!     zeros returned but only a maximum of 14 digits will be
-!     significant.
-!
-!     The output string is left justified.
-!
-!     This routine has the advantage that it does not use an internal
-!     file and is about twice as fast as an internal write. It can
-!     be used as part of character function without fear of introducing
-!     recursive I/O conflicts. It is intended to be an approximate
-!     inverse to the subroutine NPARSD.
-!
-!     IF you want the character string representation of a double
-!     precision number to be the same as that produced by a formatted
-!     write statement use a FORTRAN write statement.
-!
-!     For example the number represented by the string
-!
-!           1.245454545454545454545E+01
-!
-!     when read (via a FORTRAN READ statement) into the DP variable X
-!     and converted back to a character string having 14 significant
-!     digits by this routine yields
-!
-!           1.2454545454545E+01  in E format
-!           12.454545454545      in F format
-!
-!     The FORTRAN write statement
-!
-!           WRITE ( 6, FMT='(P1E)' ) X
-!
-!     yields
-!
-!           1.2454545454545454E+01
-!
-!     If this is too much error for your application DO NOT use this
-!     routine. You should be aware however, that a character string
-!     read into a double precision number may not WRITE out with an
-!     equivalent character representation as was input.
-!
-!     For example on a VAX 11/780 if you
-!
-!           READ  (5,*)         X
-!           WRITE (6,FMT='(E)') X
-!
-!     and enter a value of 7.00000001 for the read statement
-!     the output written will be 0.7000000010000001E+01
-!
-! $ Examples
-!
-!     Suppose that you wished to insert the character representation
-!     of some DOUBLE PRECISION number into a line of text.
-!
-!     For example suppose X contains the double precision number
-!     4.268176872928187 and you would like to insert the character
-!     representation of this number to 2 places between the strings
-!
-!     'There are', 'meters between lamp posts'
-!
-!     You could perform the following sequence of steps
-!
-!           DOUBLE PRECISION  X
-!           CHARACTER*5       DISTANCE
-!           CHARACTER*80      MESSAGE
-!
-!           CALL DPSTRF ( X, 2, 'F', DISTANCE )
-!
-!           MESSAGE = 'There are '                //
-!          .           DISTANCE                   //
-!          .          'meters between lamp posts'
-!          .
-!
-!     C
-!     C     Squeeze any extra spaces out of the message string.
-!     C
-!           CALL CMPRSS ( ' ', 1, MESSAGE, MESSAGE )
-!
-!     The string MESSAGE would contain:
-!
-!          'There are 4.2 meters between lamp posts'
-!
-! $ Restrictions
-!
-!     1)  The maximum number of significant digits returned is 14.
-!
-!     2)  If the output string is not declared to be adequately large
-!         the numeric string will be truncated to the side opposite its
-!         justification (At least SIGDIG + 6 characters are needed in E
-!         format, in F format the size required is dependent upon the
-!         input X and the number of significant digits requested. In
-!         extreme cases up to 56 characters may be required.)
-!
-!     3)  This routine makes explicit use of the format of the string
-!         returned by DPSTR, should that routine change, substantial
-!         work may be required to bring this routine back up to snuff.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.1, 12-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.2.0, 17-SEP-1996 (WLT)
-!
-!        Upgraded routine to handle arbitrary magnitude d.p. numbers.
-!
-!-    SPICELIB Version 1.1.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.1.0, 30-JUL-1990 (WLT)
-!
-!        The routine was repaired so that references to zero-length
-!        strings ( for example STRING(4:3) ) are not made.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
-!
-!-&
-
-! $ Index_Entries
-!
-!     d.p. number to character with formatting
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 30-JUL-1990 (WLT)
-!
-!        As previously implemented, one would occasionally reference
-!        a zero length substring of the variable NUMSTR. This was
-!        O.K. under VAX Fortran, because it allows such references.
-!        However, most implementations of Fortran are not as forgiving.
-!
-!-&
-
-!
-!     Local variables
-!
       real(wp)              y
 
       integer(ip)           exp
@@ -3257,321 +2895,285 @@ contains
 
       end procedure dpstrf
 
-!$Procedure REPMF  ( Replace marker with formatted d.p. value )
-
+      !> ## Detailed Input
+      !>
+      !>     IN       is an arbitrary character string.
+      !>
+      !>     MARKER   is an arbitrary character string. The first occurrence of
+      !>              MARKER in the input string is to be replaced by VALUE.
+      !>
+      !>              Leading and trailing blanks in MARKER are NOT
+      !>              significant. In particular, no substitution is performed
+      !>              if MARKER is blank.
+      !>
+      !>     VALUE    is an arbitrary double precision number.
+      !>
+      !>     SIGDIG   is the number of significant digits with which VALUE is
+      !>              to be represented. SIGDIG must be greater than zero and
+      !>              less than 15.
+      !>
+      !>     FORMAT   is the format in which VALUE is to be represented. FORMAT
+      !>              may be any of the following:
+      !>
+      !>                 FORMAT   Meaning                 Example
+      !>                 ------   ---------------------   -----------
+      !>                 E, e     Scientific (exponent)   3.14159E+03
+      !>                          notation
+      !>
+      !>                 F, f     Fixed-point notation    3141.59
+      !>
+      !> ## Detailed Output
+      !>
+      !>     OUT      is the string obtained by substituting the text
+      !>              representation of VALUE for the first occurrence of
+      !>              MARKER in the input string.
+      !>
+      !>              The text representation of VALUE is in scientific
+      !>              (exponent) or fixed-point notation, depending on having
+      !>              the value of FORMAT, and having the number of significant
+      !>              digits specified by SIGDIG. The representation of VALUE
+      !>              is produced by the SPICELIB routine DPSTRF; see that
+      !>              routine for details concerning the representation of
+      !>              double precision numbers.
+      !>
+      !>              OUT and IN must be identical or disjoint.
+      !>
+      !> ## Parameters
+      !>
+      !>     MAXLFD   is the maximum expected length of the text representation
+      !>              of a formatted double precision number. 56 characters are
+      !>              sufficient to hold any result returned by the SPICELIB
+      !>              routine DPSTRF. (See $Restrictions)
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If OUT does not have sufficient length to accommodate the
+      !>         result of the substitution, the result will be truncated on
+      !>         the right.
+      !>
+      !>     2)  If MARKER is blank, or if MARKER is not a substring of IN,
+      !>         no substitution is performed. (OUT and IN are identical.)
+      !>
+      !>     3)  If FORMAT is anything other than 'E', this routine defaults
+      !>         to 'F'. This is not considered an error.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This is one of a family of related routines for inserting values
+      !>     into strings. They are typically to construct messages that
+      !>     are partly fixed, and partly determined at run time. For example,
+      !>     a message like
+      !>
+      !>        'Fifty-one pictures were found in directory [USER.DATA].'
+      !>
+      !>     might be constructed from the fixed string
+      !>
+      !>        '#1 pictures were found in directory #2.'
+      !>
+      !>     by the calls
+      !>
+      !>        CALL REPMCT ( STRING, '#1',  51,           'C', STRING )
+      !>        CALL REPMC  ( STRING, '#2', '[USER.DATA]',      STRING )
+      !>
+      !>     which substitute the cardinal text 'Fifty-one' and the character
+      !>     string '[USER.DATA]' for the markers '#1' and '#2' respectively.
+      !>
+      !>     The complete list of routines is shown below.
+      !>
+      !>        REPMC    ( Replace marker with character string value )
+      !>        REPMD    ( Replace marker with double precision value )
+      !>        REPMF    ( Replace marker with formatted d.p. value   )
+      !>        REPMI    ( Replace marker with integer value          )
+      !>        REPML    ( Replace marker with logical value          )
+      !>        REPMCT   ( Replace marker with cardinal text          )
+      !>        REPMOT   ( Replace marker with ordinal text           )
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) The following example illustrate the use of REPMF to
+      !>        replace a marker within a string with a formatted double
+      !>        precision value.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM REPMF_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local parameters.
+      !>        C
+      !>              INTEGER                 STRLEN
+      !>              PARAMETER             ( STRLEN = 80 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(STRLEN)      INSTR
+      !>              CHARACTER*(STRLEN)      MARKER
+      !>              CHARACTER*(STRLEN)      OUTSTR
+      !>
+      !>        C
+      !>        C     1. Single marker, two significant digits, scientific.
+      !>        C
+      !>              MARKER = '#'
+      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>
+      !>              CALL REPMF ( INSTR, MARKER, 5.0D1, 2, 'E', OUTSTR )
+      !>
+      !>              WRITE(*,*) 'Case 1: Single marker, two significant '
+      !>             .        // 'digits, scientific.'
+      !>              WRITE(*,*) '   Input : ', INSTR
+      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>              WRITE(*,*)
+      !>
+      !>        C
+      !>        C     2. Multiple markers, three significant digits,
+      !>        C        scientific.
+      !>        C
+      !>              MARKER = ' XX '
+      !>              INSTR  = 'Left > Right endpoint. Left: XX; Right: XX'
+      !>
+      !>              CALL REPMF ( INSTR, MARKER, -5.2D-9, 3, 'e', OUTSTR )
+      !>
+      !>              WRITE(*,*) 'Case 2: Multiple markers, 3 significant '
+      !>             .        // 'digits, scientific.'
+      !>              WRITE(*,*) '   Input : ', INSTR
+      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>              WRITE(*,*)
+      !>
+      !>        C
+      !>        C     3. Fixed-point notation.
+      !>        C
+      !>              MARKER = '#'
+      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>
+      !>              CALL REPMF ( INSTR, MARKER, 5.0D1, 3, 'F', OUTSTR )
+      !>
+      !>              WRITE(*,*) 'Case 3: Fixed-point notation.'
+      !>              WRITE(*,*) '   Input : ', INSTR
+      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>              WRITE(*,*)
+      !>
+      !>        C
+      !>        C     4. Fixed-point notation, no decimals.
+      !>        C
+      !>              MARKER = '#'
+      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>
+      !>              CALL REPMF ( INSTR, MARKER, 5.0D1, 2, 'f', OUTSTR )
+      !>
+      !>              WRITE(*,*) 'Case 4: Fixed-point notation, no decimals.'
+      !>              WRITE(*,*) '   Input : ', INSTR
+      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>              WRITE(*,*)
+      !>
+      !>        C
+      !>        C     5. Excessive significant digits.
+      !>        C
+      !>              MARKER = '#'
+      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>
+      !>              CALL REPMF ( INSTR, MARKER, 5.0D1, 100, 'F', OUTSTR )
+      !>
+      !>              WRITE(*,*) 'Case 5: Excessive significant digits.'
+      !>              WRITE(*,*) '   Input : ', INSTR
+      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>              WRITE(*,*)
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Case 1: Single marker, two significant digits, scientific.
+      !>            Input : Invalid value. The value was:  #
+      !>            Output: Invalid value. The value was:  5.0E+01
+      !>
+      !>         Case 2: Multiple markers, 3 significant digits, scientific.
+      !>            Input : Left > Right endpoint. Left: XX; Right: XX
+      !>            Output: Left > Right endpoint. Left: -5.20E-09; Right: XX
+      !>
+      !>         Case 3: Fixed-point notation.
+      !>            Input : Invalid value. The value was:  #
+      !>            Output: Invalid value. The value was:  50.0
+      !>
+      !>         Case 4: Fixed-point notation, no decimals.
+      !>            Input : Invalid value. The value was:  #
+      !>            Output: Invalid value. The value was:  50.
+      !>
+      !>         Case 5: Excessive significant digits.
+      !>            Input : Invalid value. The value was:  #
+      !>            Output: Invalid value. The value was:  50.000000000000
+      !>
+      !>        Note that, in Case #5 even though 100 digits of precision were
+      !>        requested, only 14 were returned.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  The maximum number of significant digits returned is 14.
+      !>
+      !>     2)  This routine makes explicit use of the format of the string
+      !>         returned by the SPICELIB routine DPSTRF; should that routine
+      !>         change, substantial work may be required to bring this routine
+      !>         back up to snuff.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.3.0, 03-OCT-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Added complete
+      !>        code example based on existing fragments.
+      !>
+      !>        Added REPML to the list of available replace marker routines in
+      !>        $Particulars. Added entry #3 in $Exceptions.
+      !>
+      !>-    SPICELIB Version 1.2.0, 23-SEP-2013 (BVS)
+      !>
+      !>        Minor efficiency update: the routine now looks up the first
+      !>        and last non-blank characters only once.
+      !>
+      !>-    SPICELIB Version 1.1.0, 15-AUG-2002 (WLT)
+      !>
+      !>        The routine is now error free.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
       module procedure repmf
-!! ## Abstract
-!!
-!!     Replace a marker in a string with a formatted double precision
-!!     value.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CHARACTER
-!!     CONVERSION
-!!     STRING
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase, zzrepsub
       implicit none
 
-
       integer(ip), parameter :: maxlfd = 56
 
-! $ Detailed_Input
-!
-!     IN       is an arbitrary character string.
-!
-!     MARKER   is an arbitrary character string. The first occurrence of
-!              MARKER in the input string is to be replaced by VALUE.
-!
-!              Leading and trailing blanks in MARKER are NOT
-!              significant. In particular, no substitution is performed
-!              if MARKER is blank.
-!
-!     VALUE    is an arbitrary double precision number.
-!
-!     SIGDIG   is the number of significant digits with which VALUE is
-!              to be represented. SIGDIG must be greater than zero and
-!              less than 15.
-!
-!     FORMAT   is the format in which VALUE is to be represented. FORMAT
-!              may be any of the following:
-!
-!                 FORMAT   Meaning                 Example
-!                 ------   ---------------------   -----------
-!                 E, e     Scientific (exponent)   3.14159E+03
-!                          notation
-!
-!                 F, f     Fixed-point notation    3141.59
-!
-! $ Detailed_Output
-!
-!     OUT      is the string obtained by substituting the text
-!              representation of VALUE for the first occurrence of
-!              MARKER in the input string.
-!
-!              The text representation of VALUE is in scientific
-!              (exponent) or fixed-point notation, depending on having
-!              the value of FORMAT, and having the number of significant
-!              digits specified by SIGDIG. The representation of VALUE
-!              is produced by the SPICELIB routine DPSTRF; see that
-!              routine for details concerning the representation of
-!              double precision numbers.
-!
-!              OUT and IN must be identical or disjoint.
-!
-! $ Parameters
-!
-!     MAXLFD   is the maximum expected length of the text representation
-!              of a formatted double precision number. 56 characters are
-!              sufficient to hold any result returned by the SPICELIB
-!              routine DPSTRF. (See $Restrictions)
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  If OUT does not have sufficient length to accommodate the
-!         result of the substitution, the result will be truncated on
-!         the right.
-!
-!     2)  If MARKER is blank, or if MARKER is not a substring of IN,
-!         no substitution is performed. (OUT and IN are identical.)
-!
-!     3)  If FORMAT is anything other than 'E', this routine defaults
-!         to 'F'. This is not considered an error.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This is one of a family of related routines for inserting values
-!     into strings. They are typically to construct messages that
-!     are partly fixed, and partly determined at run time. For example,
-!     a message like
-!
-!        'Fifty-one pictures were found in directory [USER.DATA].'
-!
-!     might be constructed from the fixed string
-!
-!        '#1 pictures were found in directory #2.'
-!
-!     by the calls
-!
-!        CALL REPMCT ( STRING, '#1',  51,           'C', STRING )
-!        CALL REPMC  ( STRING, '#2', '[USER.DATA]',      STRING )
-!
-!     which substitute the cardinal text 'Fifty-one' and the character
-!     string '[USER.DATA]' for the markers '#1' and '#2' respectively.
-!
-!     The complete list of routines is shown below.
-!
-!        REPMC    ( Replace marker with character string value )
-!        REPMD    ( Replace marker with double precision value )
-!        REPMF    ( Replace marker with formatted d.p. value   )
-!        REPMI    ( Replace marker with integer value          )
-!        REPML    ( Replace marker with logical value          )
-!        REPMCT   ( Replace marker with cardinal text          )
-!        REPMOT   ( Replace marker with ordinal text           )
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) The following example illustrate the use of REPMF to
-!        replace a marker within a string with a formatted double
-!        precision value.
-!
-!        Example code begins here.
-!
-!              PROGRAM REPMF_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local parameters.
-!        C
-!              INTEGER                 STRLEN
-!              PARAMETER             ( STRLEN = 80 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(STRLEN)      INSTR
-!              CHARACTER*(STRLEN)      MARKER
-!              CHARACTER*(STRLEN)      OUTSTR
-!
-!        C
-!        C     1. Single marker, two significant digits, scientific.
-!        C
-!              MARKER = '#'
-!              INSTR  = 'Invalid value. The value was:  #'
-!
-!              CALL REPMF ( INSTR, MARKER, 5.0D1, 2, 'E', OUTSTR )
-!
-!              WRITE(*,*) 'Case 1: Single marker, two significant '
-!             .        // 'digits, scientific.'
-!              WRITE(*,*) '   Input : ', INSTR
-!              WRITE(*,*) '   Output: ', OUTSTR
-!              WRITE(*,*)
-!
-!        C
-!        C     2. Multiple markers, three significant digits,
-!        C        scientific.
-!        C
-!              MARKER = ' XX '
-!              INSTR  = 'Left > Right endpoint. Left: XX; Right: XX'
-!
-!              CALL REPMF ( INSTR, MARKER, -5.2D-9, 3, 'e', OUTSTR )
-!
-!              WRITE(*,*) 'Case 2: Multiple markers, 3 significant '
-!             .        // 'digits, scientific.'
-!              WRITE(*,*) '   Input : ', INSTR
-!              WRITE(*,*) '   Output: ', OUTSTR
-!              WRITE(*,*)
-!
-!        C
-!        C     3. Fixed-point notation.
-!        C
-!              MARKER = '#'
-!              INSTR  = 'Invalid value. The value was:  #'
-!
-!              CALL REPMF ( INSTR, MARKER, 5.0D1, 3, 'F', OUTSTR )
-!
-!              WRITE(*,*) 'Case 3: Fixed-point notation.'
-!              WRITE(*,*) '   Input : ', INSTR
-!              WRITE(*,*) '   Output: ', OUTSTR
-!              WRITE(*,*)
-!
-!        C
-!        C     4. Fixed-point notation, no decimals.
-!        C
-!              MARKER = '#'
-!              INSTR  = 'Invalid value. The value was:  #'
-!
-!              CALL REPMF ( INSTR, MARKER, 5.0D1, 2, 'f', OUTSTR )
-!
-!              WRITE(*,*) 'Case 4: Fixed-point notation, no decimals.'
-!              WRITE(*,*) '   Input : ', INSTR
-!              WRITE(*,*) '   Output: ', OUTSTR
-!              WRITE(*,*)
-!
-!        C
-!        C     5. Excessive significant digits.
-!        C
-!              MARKER = '#'
-!              INSTR  = 'Invalid value. The value was:  #'
-!
-!              CALL REPMF ( INSTR, MARKER, 5.0D1, 100, 'F', OUTSTR )
-!
-!              WRITE(*,*) 'Case 5: Excessive significant digits.'
-!              WRITE(*,*) '   Input : ', INSTR
-!              WRITE(*,*) '   Output: ', OUTSTR
-!              WRITE(*,*)
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         Case 1: Single marker, two significant digits, scientific.
-!            Input : Invalid value. The value was:  #
-!            Output: Invalid value. The value was:  5.0E+01
-!
-!         Case 2: Multiple markers, 3 significant digits, scientific.
-!            Input : Left > Right endpoint. Left: XX; Right: XX
-!            Output: Left > Right endpoint. Left: -5.20E-09; Right: XX
-!
-!         Case 3: Fixed-point notation.
-!            Input : Invalid value. The value was:  #
-!            Output: Invalid value. The value was:  50.0
-!
-!         Case 4: Fixed-point notation, no decimals.
-!            Input : Invalid value. The value was:  #
-!            Output: Invalid value. The value was:  50.
-!
-!         Case 5: Excessive significant digits.
-!            Input : Invalid value. The value was:  #
-!            Output: Invalid value. The value was:  50.000000000000
-!
-!        Note that, in Case #5 even though 100 digits of precision were
-!        requested, only 14 were returned.
-!
-! $ Restrictions
-!
-!     1)  The maximum number of significant digits returned is 14.
-!
-!     2)  This routine makes explicit use of the format of the string
-!         returned by the SPICELIB routine DPSTRF; should that routine
-!         change, substantial work may be required to bring this routine
-!         back up to snuff.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.3.0, 03-OCT-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Added complete
-!        code example based on existing fragments.
-!
-!        Added REPML to the list of available replace marker routines in
-!        $Particulars. Added entry #3 in $Exceptions.
-!
-!-    SPICELIB Version 1.2.0, 23-SEP-2013 (BVS)
-!
-!        Minor efficiency update: the routine now looks up the first
-!        and last non-blank characters only once.
-!
-!-    SPICELIB Version 1.1.0, 15-AUG-2002 (WLT)
-!
-!        The routine is now error free.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     replace marker with formatted d.p. value
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       character(1)          gdfmt
       character(maxlfd)     substr
 
@@ -3638,264 +3240,244 @@ contains
       return
       end procedure repmf
 
+      !> ## Detailed Input
+      !>
+      !>     YEAR     is an integer representing the year of an epoch, E, in
+      !>              the Julian proleptic calendar. Note that the year 0
+      !>              and negative values are required to represent
+      !>              years in the pre-Christian era (B.C.) A year, Y B.C.,
+      !>              should be represented as -(Y-1).  For example the year
+      !>              435 B.C. should be input as -434.
+      !>
+      !>     MONTH    is an integer representing the month of some epoch, E,
+      !>              in the Julian proleptic calendar. Months
+      !>              outside the usual range from 1 to 12 are converted
+      !>              to the standard range using modular arithmetic and
+      !>              the input year is adjusted appropriately.
+      !>
+      !>     DAY      is the day of the month of some epoch, E, in the Julian
+      !>              proleptic calendar.
+      !>
+      !>              Note to input an epoch as the day of a year, set MONTH
+      !>              to 1 and DAY to the day of the year.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     YEAR     is an integer representing the year of the epoch, E,
+      !>              above in the Gregorian calendar. Note that the year
+      !>              0 (zero) and negative values are used to represent
+      !>              years in the pre-Christian era (B.C.) A year, Y B.C.,
+      !>              is be represented as -(Y-1).  For example the year
+      !>              435 B.C. will be returned as -434.
+      !>
+      !>     MONTH    is an integer representing the month of the epoch, E,
+      !>              above in the Gregorian Calendar calendar.
+      !>
+      !>     DAY      is the day of the month of the epoch, E, above in the
+      !>              Gregorian Calendar
+      !>
+      !>     DOY      is the day of the year of the epoch, E, above in the
+      !>              Gregorian Calendar.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This is a mid-level utility routine to assist in the assignment
+      !>     and presentation of ancient epochs.
+      !>
+      !>     The SPICE software deals primarily with epochs represented on
+      !>     in the Gregorian Calendar. However, the Gregorian calendar
+      !>     was not adopted until October 15, 1582. As a result, epochs
+      !>     prior to that time are usually represented in the Julian
+      !>     proleptic calendar.
+      !>
+      !>     Formally, both calendars can be extended indefinitely forward
+      !>     and backward in time due the algorithmic nature of the
+      !>     determination of calendar representation.
+      !>
+      !>     When converting "parsed" calendar epochs in the SPICE system,
+      !>     you need to first convert to the Gregorian Calendar. From that
+      !>     point the SPICE toolkit can easily convert the epoch to Julian
+      !>     date or seconds past the J2000 epoch.
+      !>
+      !>     This routine allows you to take a numeric representation of
+      !>     an epoch represented in the Julian proleptic calendar and
+      !>     convert that to an epoch in the Gregorian calendar.
+      !>
+      !>     To convert from Gregorian Calendar to Julian proleptic
+      !>     calendar, use the entry point GR2JUL.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose you need to find the epoch (in seconds past the
+      !>     J2000) of some ancient epoch that occurred at
+      !>     3:00 on March 4 of the year 121 B.C. And that this epoch
+      !>     is based on the Julian proleptic calendar. We first need
+      !>     to convert the Julian Calendar date to the Gregorian Calendar.
+      !>
+      !>     Here's the declarations we'll need
+      !>
+      !>        INTEGER               YEAR
+      !>        INTEGER               MONTH
+      !>        INTEGER               DAY
+      !>        INTEGER               DOY
+      !>
+      !>        DOUBLE PRECISION      TVEC ( 6 )
+      !>        DOUBLE PRECISION      TDB
+      !>
+      !>     You first need to convert the calendar date of this epoch
+      !>     integers. (We don't need to worry about the hours for a moment).
+      !>
+      !>        YEAR  = -120
+      !>        MONTH =  3
+      !>        DAY   =  4
+      !>
+      !>     Convert this Year, Month and Day to the Gregorian Calendar.
+      !>
+      !>        CALL JUL2GR ( YEAR, MONTH, DAY, DOY )
+      !>
+      !>     Now construct a time vector for use in the routine TTRANS.
+      !>     Note now we use the hour component of the epoch (the fourth
+      !>     component of the time vector TVEC).
+      !>
+      !>        TVEC(1) = DBLE( YEAR )
+      !>        TVEC(2) = DBLE( MONTH )
+      !>        TVEC(3) = DBLE( DAY )
+      !>        TVEC(4) = 3.0D0
+      !>        TVEC(5) = 0.0D0
+      !>        TVEC(6) = 0.0D0
+      !>
+      !>     Now the routine TTRANS can convert the time vector from
+      !>     the input YMD format to barycentric dynamical time.
+      !>
+      !>        CALL TTRANS ( 'YDM', 'TDB', TVEC )
+      !>
+      !>        TDB = TVEC(1)
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.2.1, 02-OCT-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.2.0, 26-AUG-2005 (NJB)
+      !>
+      !>        Updated to remove non-standard use of duplicate arguments
+      !>        in RMAINI calls.
+      !>
+      !>-    SPICELIB Version 1.1.1, 23-SEP-1999 (WLT)
+      !>
+      !>        Removed the unused variable DPMON.
+      !>
+      !>-    SPICELIB Version 1.1.0, 23-FEB-1998 (WLT)
+      !>
+      !>        The routine was upgraded so that it will handle without
+      !>        error months that are outside the range from 1 to 12.
+      !>
+      !>-    SPICELIB Version 1.0.0, 13-MAR-1996 (WLT)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 1.1.0, 23-FEB-1998 (NJB)
+      !>
+      !>        Updated to remove non-standard use of duplicate arguments
+      !>        in RMAINI calls.
+      !>
+      !>     Spicelib Functions
+      !>
+      !>     Local (in-line) Functions
+      !>
+      !>     Local parameters
+      !>
+      !>     We declare the variables that contain the number of days in
+      !>     400 years (Gregorian), 100 years (Gregorian), 4 years and 1 year.
+      !>
+      !>     The following integers give the number of days during the
+      !>     associated month of a non-leap year.
+      !>
+      !>     The integers that follow give the number of days in a normal
+      !>     year that precede the first of the month.
+      !>
+      !>     The integers that follow give the number of days in a leap
+      !>     year that precede the first of the month.
+      !>
+      !>     Local variables
+      !>
+      !>     The array EXTRA contains the number of additional days that
+      !>     appear before the first of a month during a leap year (as opposed
+      !>     to a non-leap year).
+      !>
+      !>     DPJAN0(I) gives the number of days that occur before the I'th
+      !>     month of a normal year.
+      !>
+      !>     Saved variables
+      !>
+      !>     Initial values
+      !>
+      !>     Definitions of statement functions.
+      !>
+      !>     The number of days elapsed since Gregorian Jan 1, of year 1 A.D.
+      !>     to Jan 1 of YR is given by:
+      !>
+      !>     The number of days elapsed since Julian Jan 1, of year 1 A.D.
+      !>     to Jan 1 of YR is given by:
+      !>
+      !>     Return 1 if YR is divisible by M, otherwise return 0.
+      !>
+      !>     The number of leap days in a Gregorian year is given by:
+      !>
+      !>     The number of leap days in a Julian year is given by:
+      !>
+      !>     To compute the day of the year we
+      !>
+      !>        look up the number of days to the beginning of the month,
+      !>
+      !>        add on the number leap days that occurred prior to that
+      !>        time
+      !>
+      !>        add on the number of days into the month
+      !>
+      !>     The number of days since 1 Jan 1 A.D. (Gregorian) is given by:
+      !>
+      !>     The number of days since 1 Jan 1 A.D. (Julianis given by:
+      !>
+      !>     If this is the first pass through this entry point (or the
+      !>     companion entry point) we need to set up some reference points.
+      !>
+      !>     RDAYG   is the number of days past 1 A.D. Jan 1 of the Gregorian
+      !>             calendar of the date Oct 15, 1582
+      !>
+      !>     RDAYJ   is the number of days past 1 A.D. Jan 1 of the Julian
+      !>             calendar of the date Oct 5, 1582.
+      !>
+      !>     OFFSTJ and OFFSTG are just the offset from one count of days
+      !>     to the other.
       module procedure jul2gr
-!! ## Abstract
-!!
-!!     Convert Year Month and Day on the Julian Calendar
-!!     to the Gregorian Calendar
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     TIME
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     YEAR     is an integer representing the year of an epoch, E, in
-!!              the Julian proleptic calendar. Note that the year 0
-!!              and negative values are required to represent
-!!              years in the pre-Christian era (B.C.) A year, Y B.C.,
-!!              should be represented as -(Y-1).  For example the year
-!!              435 B.C. should be input as -434.
-!!
-!!     MONTH    is an integer representing the month of some epoch, E,
-!!              in the Julian proleptic calendar. Months
-!!              outside the usual range from 1 to 12 are converted
-!!              to the standard range using modular arithmetic and
-!!              the input year is adjusted appropriately.
-!!
-!!     DAY      is the day of the month of some epoch, E, in the Julian
-!!              proleptic calendar.
-!!
-!!              Note to input an epoch as the day of a year, set MONTH
-!!              to 1 and DAY to the day of the year.
-!!
-!! ## Detailed Output
-!!
-!!     YEAR     is an integer representing the year of the epoch, E,
-!!              above in the Gregorian calendar. Note that the year
-!!              0 (zero) and negative values are used to represent
-!!              years in the pre-Christian era (B.C.) A year, Y B.C.,
-!!              is be represented as -(Y-1).  For example the year
-!!              435 B.C. will be returned as -434.
-!!
-!!     MONTH    is an integer representing the month of the epoch, E,
-!!              above in the Gregorian Calendar calendar.
-!!
-!!     DAY      is the day of the month of the epoch, E, above in the
-!!              Gregorian Calendar
-!!
-!!     DOY      is the day of the year of the epoch, E, above in the
-!!              Gregorian Calendar.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     None.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This is a mid-level utility routine to assist in the assignment
-!!     and presentation of ancient epochs.
-!!
-!!     The SPICE software deals primarily with epochs represented on
-!!     in the Gregorian Calendar. However, the Gregorian calendar
-!!     was not adopted until October 15, 1582. As a result, epochs
-!!     prior to that time are usually represented in the Julian
-!!     proleptic calendar.
-!!
-!!     Formally, both calendars can be extended indefinitely forward
-!!     and backward in time due the algorithmic nature of the
-!!     determination of calendar representation.
-!!
-!!     When converting "parsed" calendar epochs in the SPICE system,
-!!     you need to first convert to the Gregorian Calendar. From that
-!!     point the SPICE toolkit can easily convert the epoch to Julian
-!!     date or seconds past the J2000 epoch.
-!!
-!!     This routine allows you to take a numeric representation of
-!!     an epoch represented in the Julian proleptic calendar and
-!!     convert that to an epoch in the Gregorian calendar.
-!!
-!!     To convert from Gregorian Calendar to Julian proleptic
-!!     calendar, use the entry point GR2JUL.
-!!
-!! ## Examples
-!!
-!!     Suppose you need to find the epoch (in seconds past the
-!!     J2000) of some ancient epoch that occurred at
-!!     3:00 on March 4 of the year 121 B.C. And that this epoch
-!!     is based on the Julian proleptic calendar. We first need
-!!     to convert the Julian Calendar date to the Gregorian Calendar.
-!!
-!!     Here's the declarations we'll need
-!!
-!!        INTEGER               YEAR
-!!        INTEGER               MONTH
-!!        INTEGER               DAY
-!!        INTEGER               DOY
-!!
-!!        DOUBLE PRECISION      TVEC ( 6 )
-!!        DOUBLE PRECISION      TDB
-!!
-!!     You first need to convert the calendar date of this epoch
-!!     integers. (We don't need to worry about the hours for a moment).
-!!
-!!        YEAR  = -120
-!!        MONTH =  3
-!!        DAY   =  4
-!!
-!!     Convert this Year, Month and Day to the Gregorian Calendar.
-!!
-!!        CALL JUL2GR ( YEAR, MONTH, DAY, DOY )
-!!
-!!     Now construct a time vector for use in the routine TTRANS.
-!!     Note now we use the hour component of the epoch (the fourth
-!!     component of the time vector TVEC).
-!!
-!!        TVEC(1) = DBLE( YEAR )
-!!        TVEC(2) = DBLE( MONTH )
-!!        TVEC(3) = DBLE( DAY )
-!!        TVEC(4) = 3.0D0
-!!        TVEC(5) = 0.0D0
-!!        TVEC(6) = 0.0D0
-!!
-!!     Now the routine TTRANS can convert the time vector from
-!!     the input YMD format to barycentric dynamical time.
-!!
-!!        CALL TTRANS ( 'YDM', 'TDB', TVEC )
-!!
-!!        TDB = TVEC(1)
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     W.L. Taber         (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.2.1, 02-OCT-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 1.2.0, 26-AUG-2005 (NJB)
-!!
-!!        Updated to remove non-standard use of duplicate arguments
-!!        in RMAINI calls.
-!!
-!!-    SPICELIB Version 1.1.1, 23-SEP-1999 (WLT)
-!!
-!!        Removed the unused variable DPMON.
-!!
-!!-    SPICELIB Version 1.1.0, 23-FEB-1998 (WLT)
-!!
-!!        The routine was upgraded so that it will handle without
-!!        error months that are outside the range from 1 to 12.
-!!
-!!-    SPICELIB Version 1.0.0, 13-MAR-1996 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Convert from Julian proleptic to Gregorian Calendar
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 1.1.0, 23-FEB-1998 (NJB)
-!!
-!!        Updated to remove non-standard use of duplicate arguments
-!!        in RMAINI calls.
-!!
-!!     Spicelib Functions
-!!
-!!     Local (in-line) Functions
-!!
-!!     Local parameters
-!!
-!!     We declare the variables that contain the number of days in
-!!     400 years (Gregorian), 100 years (Gregorian), 4 years and 1 year.
-!!
-!!     The following integers give the number of days during the
-!!     associated month of a non-leap year.
-!!
-!!     The integers that follow give the number of days in a normal
-!!     year that precede the first of the month.
-!!
-!!     The integers that follow give the number of days in a leap
-!!     year that precede the first of the month.
-!!
-!!     Local variables
-!!
-!!     The array EXTRA contains the number of additional days that
-!!     appear before the first of a month during a leap year (as opposed
-!!     to a non-leap year).
-!!
-!!     DPJAN0(I) gives the number of days that occur before the I'th
-!!     month of a normal year.
-!!
-!!     Saved variables
-!!
-!!     Initial values
-!!
-!!     Definitions of statement functions.
-!!
-!!     The number of days elapsed since Gregorian Jan 1, of year 1 A.D.
-!!     to Jan 1 of YR is given by:
-!!
-!!     The number of days elapsed since Julian Jan 1, of year 1 A.D.
-!!     to Jan 1 of YR is given by:
-!!
-!!     Return 1 if YR is divisible by M, otherwise return 0.
-!!
-!!     The number of leap days in a Gregorian year is given by:
-!!
-!!     The number of leap days in a Julian year is given by:
-!!
-!!     To compute the day of the year we
-!!
-!!        look up the number of days to the beginning of the month,
-!!
-!!        add on the number leap days that occurred prior to that
-!!        time
-!!
-!!        add on the number of days into the month
-!!
-!!     The number of days since 1 Jan 1 A.D. (Gregorian) is given by:
-!!
-!!     The number of days since 1 Jan 1 A.D. (Julianis given by:
-!!
-!!     If this is the first pass through this entry point (or the
-!!     companion entry point) we need to set up some reference points.
-!!
-!!     RDAYG   is the number of days past 1 A.D. Jan 1 of the Gregorian
-!!             calendar of the date Oct 15, 1582
-!!
-!!     RDAYJ   is the number of days past 1 A.D. Jan 1 of the Julian
-!!             calendar of the date Oct 5, 1582.
-!!
-!!     OFFSTJ and OFFSTG are just the offset from one count of days
-!!     to the other.
-!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlti
       implicit none
@@ -4135,184 +3717,147 @@ contains
       end associate
       end procedure jul2gr
 
+      !> ## Detailed Input
+      !>
+      !>     YEAR     is an integer representing the year of an epoch, E, in
+      !>              the Gregorian calendar. Note that the year 0 (zero)
+      !>              and negative values are required to represent
+      !>              years in the pre-Christian era (B.C.) A year, Y B.C.
+      !>              should be represented as -(Y-1).  For example the year
+      !>              435 B.C. should be input as -434.
+      !>
+      !>     MONTH    is an integer representing the month of some epoch, E,
+      !>              in the Gregorian calendar. Months
+      !>              outside the usual range from 1 to 12 are converted
+      !>              to the standard range using modular arithmetic and
+      !>              the input year is adjusted appropriately.
+      !>
+      !>     DAY      is the day of the month of some epoch, E, in the
+      !>              Gregorian calendar.
+      !>
+      !>              Note to input an epoch as the day of a year, set MONTH
+      !>              to 1 and DAY to the day of the year.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     YEAR     is an integer representing the year of the epoch, E,
+      !>              above in the Julian calendar. Note that the year 0
+      !>              (zero) and negative values are used to represent
+      !>              years in the pre-Christian era (B.C.) A year, Y B.C.,
+      !>              is be represented as -(Y-1).  For example the year
+      !>              435 B.C. will be returned as -434.
+      !>
+      !>     MONTH    is an integer representing the month of the epoch, E,
+      !>              above in the Julian Calendar calendar.
+      !>
+      !>     DAY      is the day of the month of the epoch, E, above in the
+      !>              Julian Calendar
+      !>
+      !>     DOY      is the day of the year of the epoch, E, above in the
+      !>              Julian Calendar.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This is a mid-level utility routine to assist in the assignment
+      !>     and presentation of Ancient epochs.
+      !>
+      !>     The SPICE software deals primarily with epochs represented on
+      !>     in the Gregorian Calendar. However, the Gregorian calendar
+      !>     was not adopted until October 15, 1582. As a result, epochs
+      !>     prior to that time are usually represented in the Julian
+      !>     proleptic calendar.
+      !>
+      !>     Formally, both calendars can be extended indefinitely forward
+      !>     and backward in time due the algorithmic nature of the
+      !>     determination of calendar representation.
+      !>
+      !>     This routine allows you to take a numeric representation of
+      !>     an epoch represented in the Gregorian calendar and
+      !>     convert that to an epoch in the Julian calendar.
+      !>
+      !>     To convert from Julian Calendar to Gregorian
+      !>     calendar, use the entry point JUL2GR.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose you need to print an epoch (given in seconds past the
+      !>     J2000 epoch) of some ancient epoch that occurred during
+      !>     pre-Christian era, and that you want to represent this epoch
+      !>     using the Julian proleptic calendar.
+      !>
+      !>     Here's the declarations we'll need
+      !>
+      !>        INTEGER               YEAR
+      !>        INTEGER               MONTH
+      !>        INTEGER               DAY
+      !>        INTEGER               DOY
+      !>
+      !>        DOUBLE PRECISION      TVEC ( 6 )
+      !>        DOUBLE PRECISION      TDB
+      !>
+      !>     You first need to convert TDB (the epoch in Seconds past J2000)
+      !>     to a calendar representation.
+      !>
+      !>        TVEC(1) = TDB.
+      !>
+      !>        CALL TTRANS ( 'TDB', 'YMD', TVEC )
+      !>
+      !>     The output time vector will be relative to the Gregorian
+      !>     Calendar. Collect the year, month and day from the time
+      !>     vector.
+      !>
+      !>        YEAR    = INT ( TVEC(1) )
+      !>        MONTH   = INT ( TVEC(2) )
+      !>        DAY     = INT ( TVEC(3) )
+      !>
+      !>     The hours, minutes and seconds appear in components 4 through 6
+      !>     of the time vector. We can ignore them in the conversion
+      !>     of the calendar from Gregorian to Julian.
+      !>
+      !>        CALL GR2JUL ( YEAR, MONTH, DAY, DOY )
+      !>
+      !>     Now create a string from the YEAR, MONTH, DAY and TVEC(4)
+      !>     through TVEC(6).
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.1, 02-OCT-2021 (JDR)
+      !>
+      !>        Reordered header sections. Edited the header to comply with
+      !>        NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.1.0, 23-FEB-1998 (WLT)
+      !>
+      !>        The routine was upgraded so that it will handle without
+      !>        error months that are outside the range from 1 to 12.
+      !>
+      !>-    SPICELIB Version 1.0.0, 13-MAR-1996 (WLT)
       module procedure gr2jul
-!! ## Abstract
-!!
-!!     Convert Year Month and Day on the  Gregorian Calendar
-!!     to the Julian Calendar
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     TIME
-!!
-!! ## Declarations
-!!
-!!     INTEGER               YEAR
-!!     INTEGER               MONTH
-!!     INTEGER               DAY
-!!     INTEGER               DOY
-!!
-!! ## Detailed Input
-!!
-!!     YEAR     is an integer representing the year of an epoch, E, in
-!!              the Gregorian calendar. Note that the year 0 (zero)
-!!              and negative values are required to represent
-!!              years in the pre-Christian era (B.C.) A year, Y B.C.
-!!              should be represented as -(Y-1).  For example the year
-!!              435 B.C. should be input as -434.
-!!
-!!     MONTH    is an integer representing the month of some epoch, E,
-!!              in the Gregorian calendar. Months
-!!              outside the usual range from 1 to 12 are converted
-!!              to the standard range using modular arithmetic and
-!!              the input year is adjusted appropriately.
-!!
-!!     DAY      is the day of the month of some epoch, E, in the
-!!              Gregorian calendar.
-!!
-!!              Note to input an epoch as the day of a year, set MONTH
-!!              to 1 and DAY to the day of the year.
-!!
-!! ## Detailed Output
-!!
-!!     YEAR     is an integer representing the year of the epoch, E,
-!!              above in the Julian calendar. Note that the year 0
-!!              (zero) and negative values are used to represent
-!!              years in the pre-Christian era (B.C.) A year, Y B.C.,
-!!              is be represented as -(Y-1).  For example the year
-!!              435 B.C. will be returned as -434.
-!!
-!!     MONTH    is an integer representing the month of the epoch, E,
-!!              above in the Julian Calendar calendar.
-!!
-!!     DAY      is the day of the month of the epoch, E, above in the
-!!              Julian Calendar
-!!
-!!     DOY      is the day of the year of the epoch, E, above in the
-!!              Julian Calendar.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     None.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This is a mid-level utility routine to assist in the assignment
-!!     and presentation of Ancient epochs.
-!!
-!!     The SPICE software deals primarily with epochs represented on
-!!     in the Gregorian Calendar. However, the Gregorian calendar
-!!     was not adopted until October 15, 1582. As a result, epochs
-!!     prior to that time are usually represented in the Julian
-!!     proleptic calendar.
-!!
-!!     Formally, both calendars can be extended indefinitely forward
-!!     and backward in time due the algorithmic nature of the
-!!     determination of calendar representation.
-!!
-!!     This routine allows you to take a numeric representation of
-!!     an epoch represented in the Gregorian calendar and
-!!     convert that to an epoch in the Julian calendar.
-!!
-!!     To convert from Julian Calendar to Gregorian
-!!     calendar, use the entry point JUL2GR.
-!!
-!! ## Examples
-!!
-!!     Suppose you need to print an epoch (given in seconds past the
-!!     J2000 epoch) of some ancient epoch that occurred during
-!!     pre-Christian era, and that you want to represent this epoch
-!!     using the Julian proleptic calendar.
-!!
-!!     Here's the declarations we'll need
-!!
-!!        INTEGER               YEAR
-!!        INTEGER               MONTH
-!!        INTEGER               DAY
-!!        INTEGER               DOY
-!!
-!!        DOUBLE PRECISION      TVEC ( 6 )
-!!        DOUBLE PRECISION      TDB
-!!
-!!     You first need to convert TDB (the epoch in Seconds past J2000)
-!!     to a calendar representation.
-!!
-!!        TVEC(1) = TDB.
-!!
-!!        CALL TTRANS ( 'TDB', 'YMD', TVEC )
-!!
-!!     The output time vector will be relative to the Gregorian
-!!     Calendar. Collect the year, month and day from the time
-!!     vector.
-!!
-!!        YEAR    = INT ( TVEC(1) )
-!!        MONTH   = INT ( TVEC(2) )
-!!        DAY     = INT ( TVEC(3) )
-!!
-!!     The hours, minutes and seconds appear in components 4 through 6
-!!     of the time vector. We can ignore them in the conversion
-!!     of the calendar from Gregorian to Julian.
-!!
-!!        CALL GR2JUL ( YEAR, MONTH, DAY, DOY )
-!!
-!!     Now create a string from the YEAR, MONTH, DAY and TVEC(4)
-!!     through TVEC(6).
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     J. Diaz del Rio    (ODC Space)
-!!     W.L. Taber         (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.1.1, 02-OCT-2021 (JDR)
-!!
-!!        Reordered header sections. Edited the header to comply with
-!!        NAIF standard.
-!!
-!!-    SPICELIB Version 1.1.0, 23-FEB-1998 (WLT)
-!!
-!!        The routine was upgraded so that it will handle without
-!!        error months that are outside the range from 1 to 12.
-!!
-!!-    SPICELIB Version 1.0.0, 13-MAR-1996 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Convert from Gregorian to Julian Calendar
-!!
-!!     If this is the first pass through this entry point (or the
-!!     companion entry point) we need to set up some reference points.
-!!
-!!     RDAYG   is the number of days past 1 A.D. Jan 1 of the Gregorian
-!!             calendar of the date Oct 15, 1582
-!!
-!!     RDAYJ   is the number of days past 1 A.D. Jan 1 of the Julian
-!!             calendar of the date Oct 5, 1582.
-!!
-!!     OFFSTJ and OFFSTG are just the offset from one count of days
-!!     to the other.
-!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlti
       implicit none
@@ -4543,259 +4088,190 @@ contains
       end associate
       end procedure gr2jul
 
+      !> ## Detailed Input
+      !>
+      !>     ET       is an epoch measured in ephemeris seconds
+      !>              past the epoch of J2000.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     CALSTR   is a calendar string representing the input ephemeris
+      !>              epoch. This string is based upon extending the
+      !>              Gregorian Calendar backward and forward indefinitely
+      !>              keeping the same rules for determining leap years.
+      !>              Moreover, there is no accounting for leapseconds.
+      !>
+      !>              To be sure that all of the date can be stored in
+      !>              CALSTR, it should be declared to have length at
+      !>              least 48 characters.
+      !>
+      !>              The string will have the following format
+      !>
+      !>                 year (era) mon day hr:mn:sc.sss
+      !>
+      !>              Where:
+      !>
+      !>                 year --- is the year
+      !>                 era  --- is the chronological era associated with
+      !>                          the date. For years after 999 A.D.
+      !>                          the era is omitted. For years
+      !>                          between 1 A.D. and 999 A.D. (inclusive)
+      !>                          era is the string 'A.D.' For epochs
+      !>                          before 1 A.D. Jan 1 00:00:00, era is
+      !>                          given as 'B.C.' and the year is converted
+      !>                          to years before the "Christian Era".
+      !>                          The last B.C. epoch is
+      !>
+      !>                            1 B.C. DEC 31 23:59:59.999
+      !>
+      !>                          The first A.D. epoch (which occurs .001
+      !>                          seconds after the last B.C. epoch) is:
+      !>
+      !>                             1 A.D. JAN 1 00:00:00.000
+      !>
+      !>                          Note: there is no year 0 A.D. or 0 B.C.
+      !>                 mon  --- is a 3-letter abbreviation for the month
+      !>                          in all capital letters.
+      !>                 day  --- is the day of the month
+      !>                 hr   --- is the hour of the day (between 0 and 23)
+      !>                          leading zeros are added to hr if the
+      !>                          numeric value is less than 10.
+      !>                 mn   --- is the minute of the hour (0 to 59)
+      !>                          leading zeros are added to mn if the
+      !>                          numeric value is less than 10.
+      !>                 sc.sss   is the second of the minute to 3 decimal
+      !>                          places ( 0 to 59.999). Leading zeros
+      !>                          are added if the numeric value is less
+      !>                          than 10. Seconds are truncated, not
+      !>                          rounded.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If the input ET is so large that the corresponding
+      !>         number of days since 1 A.D. Jan 1, 00:00:00 is
+      !>         within 1 of overflowing or underflowing an integer,
+      !>         ET will not be converted to the correct string
+      !>         representation rather, the string returned will
+      !>         state that the epoch was before or after the day
+      !>         that is INTMIN +1 or INTMAX - 1 days after
+      !>         1 A.D. Jan 1, 00:00:00.
+      !>
+      !>     2)  If the output string is not sufficiently long to hold
+      !>         the full date, it will be truncated on the right.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This is an error free routine for converting ephemeris epochs
+      !>     represented as seconds past the J2000 epoch to formal
+      !>     calendar strings based upon the Gregorian Calendar. This formal
+      !>     time is often useful when one needs a human recognizable
+      !>     form of an ephemeris epoch. There is no accounting for leap
+      !>     seconds in the output times produced.
+      !>
+      !>     Note: The calendar epochs produced are not the same as the
+      !>           UTC calendar epochs that correspond to ET. The strings
+      !>           produced by this routine may vary from the corresponding
+      !>           UTC epochs by more than 1 minute.
+      !>
+      !>     This routine can be used in creating error messages or
+      !>     in routines and programs in which one prefers to report
+      !>     times without employing leapseconds to produce exact UTC
+      !>     epochs.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose you wish to  report that no data is
+      !>     available at a particular ephemeris epoch ET. The following
+      !>     code shows how you might accomplish this task:
+      !>
+      !>           CALL DPSTRF ( ET,  6, 'F', ETSTR  )
+      !>           CALL ETCAL  ( ET,          CALSTR )
+      !>
+      !>           E1 = RTRIM   (             CALSTR )
+      !>           E2 = RTRIM   (             ETSTR  )
+      !>
+      !>           WRITE (*,*) 'There is no data available for the body '
+      !>           WRITE (*,*) 'at requested time: '
+      !>           WRITE (*,*) '   ', CALSTR(1:E1), ' (', ETSTR(1:E2), ')'
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  One must keep in mind when using this routine that
+      !>         ancient times are not based upon the Gregorian
+      !>         calendar. For example the 0 point of the Julian
+      !>         Date system is 4713 B.C. Jan 1, 12:00:00 on the Julian
+      !>         Calendar. If one formalized the Gregorian calendar
+      !>         and extended it indefinitely, the zero point of the Julian
+      !>         date system corresponds to 4714 B.C. NOV 24 12:00:00 on
+      !>         the Gregorian calendar. There are several reasons for this.
+      !>         Leap years in the Julian calendar occur every
+      !>         4 years (including *all* centuries). Moreover,  the
+      !>         Gregorian calendar "effectively" begins on 15 Oct, 1582 A.D.
+      !>         which is 5 Oct, 1582 A.D. in the Julian Calendar.
+      !>
+      !>         Therefore you must be careful in your interpretation
+      !>         of ancient dates produced by this routine.
+      !>
+      !> ## Literature References
+      !>
+      !>     [1]  J. Jespersen and J. Fitz-Randolph, "From Sundials to Atomic
+      !>          Clocks, Understanding Time and Frequency," Dover
+      !>          Publications, Inc. New York, 1982.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.3.0, 17-JUN-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement. Changed output argument name
+      !>        STRING to CALSTR for consistency with other routines.
+      !>
+      !>        Edited the header to comply with NAIF standard. Removed
+      !>        unnecessary $Revisions section. Added TIME required reading.
+      !>
+      !>-    SPICELIB Version 2.2.0, 05-MAR-1998 (WLT)
+      !>
+      !>        The documentation concerning the appearance of the output
+      !>        time string was corrected so that it does not suggest
+      !>        a comma is inserted after the day of the month. The
+      !>        comma was removed from the output string in Version 2.0.0
+      !>        (see the note below) but the documentation was not upgraded
+      !>        accordingly.
+      !>
+      !>-    SPICELIB Version 2.1.0, 20-MAY-1996 (WLT)
+      !>
+      !>        Two arrays that were initialized but never used were
+      !>        removed.
+      !>
+      !>-    SPICELIB Version 2.0.0, 16-AUG-1995 (KRG)
+      !>
+      !>        If the day number was less than 10, the spacing was off for
+      !>        the rest of the time by one space, that for the "tens" digit.
+      !>        This has been fixed by using a leading zero when the number of
+      !>        days is < 10.
+      !>
+      !>        Also, the comma that appeared between the month/day/year
+      !>        and the hour:minute:seconds tokens has been removed. This was
+      !>        done in order to make the calendar date format of ETCAL
+      !>        consistent with the calendar date format of ET2UTC.
+      !>
+      !>-    SPICELIB Version 1.0.0, 14-DEC-1993 (WLT)
       module procedure etcal
-!! ## Abstract
-!!
-!!     Convert from an ephemeris epoch measured in seconds past
-!!     the epoch of J2000 to a calendar string format using a
-!!     formal calendar free of leapseconds.
-!!
-!! ## Required Reading
-!!
-!!     TIME
-!!
-!! ## Keywords
-!!
-!!     TIME
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     ET       is an epoch measured in ephemeris seconds
-!!              past the epoch of J2000.
-!!
-!! ## Detailed Output
-!!
-!!     CALSTR   is a calendar string representing the input ephemeris
-!!              epoch. This string is based upon extending the
-!!              Gregorian Calendar backward and forward indefinitely
-!!              keeping the same rules for determining leap years.
-!!              Moreover, there is no accounting for leapseconds.
-!!
-!!              To be sure that all of the date can be stored in
-!!              CALSTR, it should be declared to have length at
-!!              least 48 characters.
-!!
-!!              The string will have the following format
-!!
-!!                 year (era) mon day hr:mn:sc.sss
-!!
-!!              Where:
-!!
-!!                 year --- is the year
-!!                 era  --- is the chronological era associated with
-!!                          the date. For years after 999 A.D.
-!!                          the era is omitted. For years
-!!                          between 1 A.D. and 999 A.D. (inclusive)
-!!                          era is the string 'A.D.' For epochs
-!!                          before 1 A.D. Jan 1 00:00:00, era is
-!!                          given as 'B.C.' and the year is converted
-!!                          to years before the "Christian Era".
-!!                          The last B.C. epoch is
-!!
-!!                            1 B.C. DEC 31 23:59:59.999
-!!
-!!                          The first A.D. epoch (which occurs .001
-!!                          seconds after the last B.C. epoch) is:
-!!
-!!                             1 A.D. JAN 1 00:00:00.000
-!!
-!!                          Note: there is no year 0 A.D. or 0 B.C.
-!!                 mon  --- is a 3-letter abbreviation for the month
-!!                          in all capital letters.
-!!                 day  --- is the day of the month
-!!                 hr   --- is the hour of the day (between 0 and 23)
-!!                          leading zeros are added to hr if the
-!!                          numeric value is less than 10.
-!!                 mn   --- is the minute of the hour (0 to 59)
-!!                          leading zeros are added to mn if the
-!!                          numeric value is less than 10.
-!!                 sc.sss   is the second of the minute to 3 decimal
-!!                          places ( 0 to 59.999). Leading zeros
-!!                          are added if the numeric value is less
-!!                          than 10. Seconds are truncated, not
-!!                          rounded.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!!     1)  If the input ET is so large that the corresponding
-!!         number of days since 1 A.D. Jan 1, 00:00:00 is
-!!         within 1 of overflowing or underflowing an integer,
-!!         ET will not be converted to the correct string
-!!         representation rather, the string returned will
-!!         state that the epoch was before or after the day
-!!         that is INTMIN +1 or INTMAX - 1 days after
-!!         1 A.D. Jan 1, 00:00:00.
-!!
-!!     2)  If the output string is not sufficiently long to hold
-!!         the full date, it will be truncated on the right.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This is an error free routine for converting ephemeris epochs
-!!     represented as seconds past the J2000 epoch to formal
-!!     calendar strings based upon the Gregorian Calendar. This formal
-!!     time is often useful when one needs a human recognizable
-!!     form of an ephemeris epoch. There is no accounting for leap
-!!     seconds in the output times produced.
-!!
-!!     Note: The calendar epochs produced are not the same as the
-!!           UTC calendar epochs that correspond to ET. The strings
-!!           produced by this routine may vary from the corresponding
-!!           UTC epochs by more than 1 minute.
-!!
-!!     This routine can be used in creating error messages or
-!!     in routines and programs in which one prefers to report
-!!     times without employing leapseconds to produce exact UTC
-!!     epochs.
-!!
-!! ## Examples
-!!
-!!     Suppose you wish to  report that no data is
-!!     available at a particular ephemeris epoch ET. The following
-!!     code shows how you might accomplish this task:
-!!
-!!           CALL DPSTRF ( ET,  6, 'F', ETSTR  )
-!!           CALL ETCAL  ( ET,          CALSTR )
-!!
-!!           E1 = RTRIM   (             CALSTR )
-!!           E2 = RTRIM   (             ETSTR  )
-!!
-!!           WRITE (*,*) 'There is no data available for the body '
-!!           WRITE (*,*) 'at requested time: '
-!!           WRITE (*,*) '   ', CALSTR(1:E1), ' (', ETSTR(1:E2), ')'
-!!
-!! ## Restrictions
-!!
-!!     1)  One must keep in mind when using this routine that
-!!         ancient times are not based upon the Gregorian
-!!         calendar. For example the 0 point of the Julian
-!!         Date system is 4713 B.C. Jan 1, 12:00:00 on the Julian
-!!         Calendar. If one formalized the Gregorian calendar
-!!         and extended it indefinitely, the zero point of the Julian
-!!         date system corresponds to 4714 B.C. NOV 24 12:00:00 on
-!!         the Gregorian calendar. There are several reasons for this.
-!!         Leap years in the Julian calendar occur every
-!!         4 years (including *all* centuries). Moreover,  the
-!!         Gregorian calendar "effectively" begins on 15 Oct, 1582 A.D.
-!!         which is 5 Oct, 1582 A.D. in the Julian Calendar.
-!!
-!!         Therefore you must be careful in your interpretation
-!!         of ancient dates produced by this routine.
-!!
-!! ## Literature References
-!!
-!!     [1]  J. Jespersen and J. Fitz-Randolph, "From Sundials to Atomic
-!!          Clocks, Understanding Time and Frequency," Dover
-!!          Publications, Inc. New York, 1982.
-!!
-!! ## Author and Institution
-!!
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     W.L. Taber         (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.3.0, 17-JUN-2021 (JDR)
-!!
-!!        Added IMPLICIT NONE statement. Changed output argument name
-!!        STRING to CALSTR for consistency with other routines.
-!!
-!!        Edited the header to comply with NAIF standard. Removed
-!!        unnecessary $Revisions section. Added TIME required reading.
-!!
-!!-    SPICELIB Version 2.2.0, 05-MAR-1998 (WLT)
-!!
-!!        The documentation concerning the appearance of the output
-!!        time string was corrected so that it does not suggest
-!!        a comma is inserted after the day of the month. The
-!!        comma was removed from the output string in Version 2.0.0
-!!        (see the note below) but the documentation was not upgraded
-!!        accordingly.
-!!
-!!-    SPICELIB Version 2.1.0, 20-MAY-1996 (WLT)
-!!
-!!        Two arrays that were initialized but never used were
-!!        removed.
-!!
-!!-    SPICELIB Version 2.0.0, 16-AUG-1995 (KRG)
-!!
-!!        If the day number was less than 10, the spacing was off for
-!!        the rest of the time by one space, that for the "tens" digit.
-!!        This has been fixed by using a leading zero when the number of
-!!        days is < 10.
-!!
-!!        Also, the comma that appeared between the month/day/year
-!!        and the hour:minute:seconds tokens has been removed. This was
-!!        done in order to make the calendar date format of ETCAL
-!!        consistent with the calendar date format of ET2UTC.
-!!
-!!-    SPICELIB Version 1.0.0, 14-DEC-1993 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Convert ephemeris time to a formal calendar date
-!!
-!!     SPICELIB Functions.
-!!
-!!     We declare the variables that contain the number of days in
-!!     400 years, 100 years, 4 years and 1 year.
-!!
-!!     The following integers give the number of days during the
-!!     associated month of a non-leap year.
-!!
-!!     The integers that follow give the number of days in a normal
-!!     year that precede the first of the month.
-!!
-!!     The integers that follow give the number of days in a leap
-!!     year that precede the first of the month.
-!!
-!!     The variables below hold the components of the output string
-!!     before they are put together.
-!!
-!!     We will construct our string using the local variable DATE
-!!     and transfer the results to the output CALSTR when we are
-!!     done.
-!!
-!!     MONTHS contains 3-letter abbreviations for the months of the year
-!!
-!!     The array EXTRA contains the number of additional days that
-!!     appear before the first of a month during a leap year (as opposed
-!!     to a non-leap year).
-!!
-!!     DPJAN0(I) gives the number of days that occur before the I'th
-!!     month of a normal year.
-!!
-!!     Definitions of statement functions.
-!!
-!!     The number of days elapsed since Jan 1, of year 1 A.D. to
-!!     Jan 1 of YEAR is given by:
-!!
-!!     The number of leap days in a year is given by:
-!!
-!!     To compute the day of the year we
-!!
-!!        look up the number of days to the beginning of the month,
-!!
-!!        add on the number leap days that occurred prior to that
-!!        time
-!!
-!!        add on the number of days into the month
-!!
-!!     The number of days since 1 Jan 1 A.D. is given by:
-!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax, intmin, spd
       use pepper_arrays, only: lstlti
@@ -5195,513 +4671,491 @@ contains
       end associate
       end procedure etcal
 
+      !> ## Detailed Input
+      !>
+      !>     TVEC     is called a time vector. It is an array of double
+      !>              precision numbers that represent some epoch. To
+      !>              determine its meaning you must examine the string
+      !>              FROM. Note that the number of significant entries
+      !>              in TVEC is implied by FROM.
+      !>
+      !>     FROM,
+      !>     TO       are two strings used to describe the type of time vector
+      !>              TVEC. FROM is the type of the input vector TVEC and
+      !>              TO is the type of the output TVEC
+      !>
+      !>              The interpretation of TVEC  is as follows:
+      !>
+      !>                 TYPE      Interpretation of TVEC
+      !>                 ------    -------------------------------------------
+      !>                 YMD(F)  - year, month, day,   hour, minutes, seconds
+      !>                 YD(F)   - year,  day-of-year, hour, minutes, seconds
+      !>                 YD.D(F) - year, number of days past beginning of year
+      !>                 DAYSEC  - calendar days past 1 jan 1 AD,
+      !>                           seconds past beg day
+      !>                 DP2000  - calendar days past 1 jan 2000,
+      !>                           seconds past beg day
+      !>                 JDUTC   - julian date UTC.
+      !>                 FORMAL  - seconds in the formal calendar since J2000.
+      !>                 YWD(F)  - year, week, day, hour, minutes, seconds
+      !>                 YMWD(F) - year, month, week, day, hour, minutes,
+      !>                           seconds
+      !>                 TAI     - atomic seconds past Atomic J2000.
+      !>                 TDT     - Terrestrial Dynamical Time
+      !>                 TDB     - Barycentric Dynamical Time
+      !>                 JED     - Julian Ephemeris Date (based on TDB)
+      !>                 ET      - Ephemeris time (same as TDB)
+      !>                 JDTDB   - Julian Date based on TDB (same as JED)
+      !>                 JDTDT   - Julian Date based on TDT
+      !>
+      !>              The number of components of TVEC implied by TYPE is
+      !>              as follows:
+      !>
+      !>                 YMD     - 6
+      !>                 YD      - 5
+      !>                 JDUTC   - 1
+      !>                 FORMAL  - 1
+      !>                 YD.D    - 2
+      !>                 DAYSEC  - 2
+      !>                 DP2000  - 2
+      !>                 YWD     - 6
+      !>                 YMWD    - 7
+      !>                 TAI     - 1
+      !>                 TDT     - 1
+      !>                 TDB     - 1
+      !>                 JED     - 1
+      !>                 ET      - 1
+      !>                 JDTDB   - 1
+      !>                 JDTDT   - 1
+      !>
+      !>              For all types, only the last component of the
+      !>              time vector may be non-integer. If other components
+      !>              have fractional parts only their truncated integer
+      !>              components will be recognized.
+      !>
+      !>              YMD and YD
+      !>
+      !>                 These types are assumed to be different
+      !>                 representations on UTC time markers. Thus
+      !>                 the hour, minutes and seconds portions all
+      !>                 represent time elapsed
+      !>                 since the beginning of a day. As such the
+      !>                 seconds portion of HMS may range up to (but
+      !>                 not include) 61 on days when positive leap
+      !>                 seconds occur and may range up to (but not
+      !>                 include) 59 on days during which negative
+      !>                 leapseconds occur.
+      !>
+      !>              YD.D type.
+      !>
+      !>                 Y is the calendar year used in civil time keeping
+      !>                 D is the day of the calendar year --- for any time
+      !>                   during the first of January, the integer portion
+      !>                   of the day will be 1.
+      !>
+      !>                   The fractional portion is the fractional part of
+      !>                   the specific day. Thus the amount of time
+      !>                   specified by the fractional portion of the day
+      !>                   depends upon whether or not the day has a leap
+      !>                   second.  ".D" can be computed from the formula
+      !>
+      !>                         number of seconds past beginning of day
+      !>                   .D = ---------------------------------------
+      !>                            number of UTC seconds in the day.
+      !>
+      !>              FORMAL type.
+      !>
+      !>                 The FORMAL type for TVEC gives the number of
+      !>                 seconds past the epoch J2000 (noon Jan 1 2000)
+      !>                 on the formal calendar (no leap seconds ---
+      !>                 all days contain 86400 seconds)  The formal clock
+      !>                 is simply held still for one second during
+      !>                 positive leap seconds. Times during leap seconds
+      !>                 cannot be represented in this system.
+      !>
+      !>                 This system is converted internally to a
+      !>                 calendar days past epoch and seconds
+      !>                 past beginning of day form. For this reason,
+      !>                 times that occur during a positive leap second
+      !>                 can never be represented. Moreover, if a negative
+      !>                 leapsecond occurs, times that occur during the
+      !>                 ``missing'' leapsecond will simply be placed
+      !>                 at the beginning of the next day. Thus two
+      !>                 different FORMAL times can represent the
+      !>                 same time around a negative leap second.
+      !>
+      !>                 FORMAL time is equivalent to somewhat parochial
+      !>                 ``UTC seconds past J2000'' that is produced
+      !>                 by the SPICE routine TPARSE.
+      !>
+      !>              JDUTC type.
+      !>
+      !>                 This system is similar to the FORMAL system
+      !>                 described above. All days are assumed to have
+      !>                 86400 seconds. All numbers of the form
+      !>
+      !>                    integer + 0.5
+      !>
+      !>                 fall at the beginning of calendar UTC days.
+      !>
+      !>                 There is no way to represent times during a
+      !>                 positive leapsecond. Times during missing
+      !>                 negative leap seconds are represented in two ways.
+      !>
+      !>              DAYSEC type.
+      !>
+      !>                 This time vector has the form of calendar
+      !>                 days since January 1, of the year 1 A.D.
+      !>                 and number of seconds past the beginning of the
+      !>                 calendar day.
+      !>                 (January 2 of the year 1 A.D. is 1 calendar
+      !>                 day past January 1, 1 A.D.)
+      !>
+      !>              DP2000 type.
+      !>
+      !>                 This time vector has the same form as DAYSEC
+      !>                 time vectors. The only difference is that
+      !>                 the reference epoch is JAN 1, 2000.
+      !>
+      !>              YWD and YMWD types.
+      !>
+      !>                 These time vectors are used to specify a time
+      !>                 that are most conveniently expressed by phrases
+      !>                 such as "the third Monday of every month" or
+      !>                 "Beginning with the second Wednesday of the new
+      !>                 year and every 4th Wednesday thereafter."
+      !>
+      !>                 The hours, minutes and seconds components of
+      !>                 these time vectors are the
+      !>                 same as for the Year-Month-Day and Year-Day UTC
+      !>                 time vectors.
+      !>
+      !>                 The Y component refers to the calendar year, and
+      !>                 in the YMWD vector, the M component refers to
+      !>                 the calendar month.
+      !>
+      !>                 The W component refers to the week of the
+      !>                 Year (YWD) or Month (YMWD).  The first week
+      !>                 begins on the first day of the year or the first
+      !>                 day of the month. The D component is the day of the
+      !>                 week with 1 corresponding to Sunday, 2 to Monday,
+      !>                 and so on with 7 corresponding to Saturday.
+      !>
+      !>                 Thus the YMWD time vector
+      !>
+      !>                    1991
+      !>                      11
+      !>                       3
+      !>                       5
+      !>                      12
+      !>                       0
+      !>                       0
+      !>
+      !>                 refers to 12:00:00 on the third Thursday of
+      !>                 November of 1991.
+      !>
+      !>                 The YWD time vector
+      !>
+      !>                    1997
+      !>                      11
+      !>                       4
+      !>                      13
+      !>                       5
+      !>                      11
+      !>
+      !>                 refers to 12:05:11 on the eleventh Wednesday
+      !>                 of 1997.
+      !>
+      !>              Formal Calendar Time Vectors
+      !>              ============================
+      !>              The types YMDF, YDF, YD.D(F), YWDF, YMWDF are similar
+      !>              to the corresponding base types: YMD, YD, YD.D, YWD
+      !>              and YMWD. However, these types represent formal
+      !>              time vectors. Each day contains exactly 86400 seconds.
+      !>              The difference between formal and non-formal systems
+      !>              can only be seen during a positive leapsecond or
+      !>              during the second following a negative leapsecond.
+      !>
+      !>              Epochs during a positive leapsecond on input are
+      !>              placed in the first second of the next day. Epochs
+      !>              during a positive leapsecond on output are held
+      !>              at 00:00:00 of the next day.
+      !>
+      !>              Epochs during the first second following a negative
+      !>              leapsecond are counted as belonging to the previous
+      !>              day if both the input and output types are formal
+      !>              types.
+      !>
+      !>              Calendars
+      !>              =====================
+      !>              In all time vectors for which a year is specified,
+      !>              the year is assumed to belong to the Gregorian
+      !>              Calendar---every 4th year is a leapyear except
+      !>              for centuries (such as 1900) that are not divisible
+      !>              by 400. This calendar is formally extended
+      !>              indefinitely backward and forward in time.
+      !>
+      !>              Note that the Gregorian Calendar did not
+      !>              formally exist prior to October 15, 1582. Prior to
+      !>              that time the Julian Calendar was used (in the
+      !>              Julian Calendar every 4th year is a leapyear, including
+      !>              all centuries).
+      !>
+      !>              If you have epochs relative to the Julian calendar,
+      !>              the SPICE routine JUL2GR is available for converting
+      !>              to the formal Gregorian Calendar.
+      !>
+      !>              Epochs Prior to 1972
+      !>              =====================
+      !>              UTC as it exists today, was adopted in 1972. For
+      !>              epochs prior to 1972, it is assumed that the difference
+      !>              between TAI and UTC is a constant value.
+      !>
+      !>              Years prior to 1 A.D.
+      !>              =====================
+      !>              A year belonging to the B.C. era,  may be
+      !>              represented by subtracting the year from 1.
+      !>              Thus to specify 27 B.C (Gregorian) set the
+      !>              year component of the time vector to -26.
+      !>
+      !>              Notes:
+      !>              ======
+      !>              The FORMAL and JDUTC types should not be used
+      !>              for times near a leap second. However, for times
+      !>              removed from leap seconds they pose no problems.
+      !>
+      !>              The DAYSEC and DP2000 are useful for representing
+      !>              times that are given in atomic seconds past some
+      !>              reference epoch other than J2000.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     TVEC     is the time vector corresponding to the input
+      !>              time vector but with components consistent with
+      !>              the type specified by input variable TO.
+      !>
+      !> ## Parameters
+      !>
+      !>     MXCOMP   is the maximum number of components that can appear in
+      !>              TVEC.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the type of either FROM or TO is not recognized, the
+      !>         error SPICE(UNKNONWNTIMESYSTEM) is signaled.
+      !>
+      !>     2)  If a leapseconds kernel has not been loaded prior a call
+      !>         to TTRANS, the error  SPICE(NOLEAPSECONDS) is signaled.
+      !>
+      !>     3)  If epochs associated with leapseconds in the leapseconds
+      !>         kernel are not in increasing order, the error
+      !>         SPICE(BADLEAPSECONDS) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine is the fundamental translator between various
+      !>     representations of time in the SPICE system. However, it
+      !>     is intended to be a mid-level routine that few user's should
+      !>     have need of calling.
+      !>
+      !>     In addition to translating between time systems, this routine
+      !>     can be used to normalize the components of a time string
+      !>     so that they are in the normal range for a particular
+      !>     representation. This allows you to easily do arithmetic
+      !>     with epochs.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose you need to convert a time expressed as seconds
+      !>     past J2000 (TDB) to Pacific Daylight time. The following
+      !>     example shows how you might use TTRANS to accomplish this
+      !>     task.
+      !>
+      !>      TVEC(1) = ET
+      !>
+      !>      CALL TTRANS ( 'TDB', 'YMD', TVEC )
+      !>
+      !>      The seconds component of PDT is the same as the seconds
+      !>      component of UTC. We save and add the UTC-PDT offset
+      !>      to the hours and minutes component of the time vector.
+      !>
+      !>      SECNDS  = TVEC(6)
+      !>      TVEC(6) = 0.0D0
+      !>
+      !>      TVEC(4) = TVEC(4) - 7.0D0
+      !>      TVEC(5) = TVEC(5) + 0.0D0
+      !>
+      !>      CALL TTRANS ( 'YMDF', 'YMDF', TVEC )
+      !>
+      !>      Now reset the seconds component to the original value
+      !>      and pass the time vector to some formatting routine.
+      !>
+      !>      TVEC(6) = SECNDS
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.6.0, 05-SEP-2021 (EDW) (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Removed INT casts in HMSSEC calls. The casts prevent
+      !>        correct calculation of TDB time for non integer hour
+      !>        and minute values in time strings from STR2ET.
+      !>
+      !>        Removed reference to FURNSH from the "LSK variable
+      !>        not present" long error message.
+      !>
+      !>-    SPICELIB Version 1.5.0, 09-SEP-2013 (BVS)
+      !>
+      !>        Updated to keep track of the POOL counter and call ZZCVPOOL.
+      !>
+      !>-    SPICELIB Version 1.4.0, 05-MAR-2009 (NJB)
+      !>
+      !>        Bug fix: this routine now keeps track of whether its
+      !>        kernel pool look-up succeeded. If not, a kernel pool
+      !>        lookup is attempted on the next call to this routine.
+      !>
+      !>-    SPICELIB Version 1.3.0, 15-NOV-2006 (NJB)
+      !>
+      !>        A reference to RTPOOL was replaced by a reference
+      !>        to GDPOOL.
+      !>
+      !>-    SPICELIB Version 1.2.0, 24-OCT-2005 (NJB)
+      !>
+      !>        Updated to remove non-standard use of duplicate arguments
+      !>        in RMAIND and RMAINI calls. Changed reference to LDPOOL to
+      !>        reference to FURNSH in an error message.
+      !>
+      !>-    SPICELIB Version 1.1.0, 09-JUN-1999 (WLT)
+      !>
+      !>        The routine was modified so that uniform time system
+      !>        transformations (see UNITIM) are handled without
+      !>        performing intermediate computations. This gives a slight
+      !>        improvement in the accuracy of some computations.
+      !>
+      !>        In addition, two unused variables were removed.
+      !>
+      !>-    SPICELIB Version 1.0.0, 17-SEP-1996 (WLT)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 1.2.0, 24-OCT-2005 (NJB)
+      !>
+      !>        Updated to remove non-standard use of duplicate arguments
+      !>        in RMAIND and RMAINI calls. Changed reference to LDPOOL to
+      !>        reference to FURNSH in an error message.
+      !>
+      !>     SPICELIB functions
+      !>
+      !>     Local (in-line) functions
+      !>
+      !>     Local parameters
+      !>
+      !>     Parameters
+      !>
+      !>     We declare the variables that contain the number of days in
+      !>     400 years, 100 years, 4 years and 1 year.
+      !>
+      !>     The following integers give the number of days during the
+      !>     associated month of a non-leap year.
+      !>
+      !>     The integers that follow give the number of days in a normal
+      !>     year that precede the first of the month.
+      !>
+      !>     The integers that follow give the number of days in a leap
+      !>     year that precede the first of the month.
+      !>
+      !>     MAXLP is the maximum number of leap seconds that can be
+      !>     stored internally.   The value of 140 should be sufficient
+      !>     to store leap seconds through the year 2100.
+      !>
+      !>     MAXVAR is the number of kernel pool variables required by this
+      !>     routine.
+      !>
+      !>     The following gives us an "enumeration" for all of the
+      !>     various types of time vectors that are recognized.
+      !>
+      !>     DAYSEC
+      !>     DAYP2
+      !>     ET
+      !>     FRML
+      !>     JDTDB
+      !>     JDTDT
+      !>     JDUTC
+      !>     JED
+      !>     TAI
+      !>     TDB
+      !>     TDT
+      !>     YD
+      !>     YDD
+      !>     YDDF
+      !>     YDF
+      !>     YMD
+      !>     YMDF
+      !>     YMWD
+      !>     YMWDF
+      !>     YWD
+      !>     YWDF
+      !>
+      !>     The following parameters just make the code seem a bit
+      !>     more natural.
+      !>
+      !>     Local variables
+      !>
+      !>     The array EXTRA contains the number of many additional days that
+      !>     appear before the first of a month during a leap year (as opposed
+      !>     to a non-leap year).
+      !>
+      !>     DPJAN0(I) gives the number of days that occur before the I'th
+      !>     month of a normal year.
+      !>
+      !>     Saved variables
+      !>
+      !>     Initial values
+      !>
+      !>     Definitions of statement functions.
+      !>
+      !>     The number of days elapsed since Jan 1, of year 1 A.D. to
+      !>     Jan 1 of YEAR is given by:
+      !>
+      !>     Return 1 if YEAR is divisible by N, otherwise return 0.
+      !>
+      !>     The number of leap days in a year is given by:
+      !>
+      !>     To compute the day of the year we
+      !>
+      !>        look up the number of days to the beginning of the month,
+      !>
+      !>        add on the number leap days that occurred prior to that
+      !>        time
+      !>
+      !>        add on the number of days into the month
+      !>
+      !>     The number of days since 1 Jan 1 A.D. is given by:
+      !>
+      !>     The number of seconds represented by HOURS hours MINS minutes
+      !>     and SECS seconds.
       module procedure ttrans
-!! ## Abstract
-!!
-!!     Transform a time vector from one representation and system
-!!     to another.
-!!
-!! ## Required Reading
-!!
-!!     TIME
-!!
-!! ## Keywords
-!!
-!!     PARSING
-!!     TIME
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     TVEC     is called a time vector. It is an array of double
-!!              precision numbers that represent some epoch. To
-!!              determine its meaning you must examine the string
-!!              FROM. Note that the number of significant entries
-!!              in TVEC is implied by FROM.
-!!
-!!     FROM,
-!!     TO       are two strings used to describe the type of time vector
-!!              TVEC. FROM is the type of the input vector TVEC and
-!!              TO is the type of the output TVEC
-!!
-!!              The interpretation of TVEC  is as follows:
-!!
-!!                 TYPE      Interpretation of TVEC
-!!                 ------    -------------------------------------------
-!!                 YMD(F)  - year, month, day,   hour, minutes, seconds
-!!                 YD(F)   - year,  day-of-year, hour, minutes, seconds
-!!                 YD.D(F) - year, number of days past beginning of year
-!!                 DAYSEC  - calendar days past 1 jan 1 AD,
-!!                           seconds past beg day
-!!                 DP2000  - calendar days past 1 jan 2000,
-!!                           seconds past beg day
-!!                 JDUTC   - julian date UTC.
-!!                 FORMAL  - seconds in the formal calendar since J2000.
-!!                 YWD(F)  - year, week, day, hour, minutes, seconds
-!!                 YMWD(F) - year, month, week, day, hour, minutes,
-!!                           seconds
-!!                 TAI     - atomic seconds past Atomic J2000.
-!!                 TDT     - Terrestrial Dynamical Time
-!!                 TDB     - Barycentric Dynamical Time
-!!                 JED     - Julian Ephemeris Date (based on TDB)
-!!                 ET      - Ephemeris time (same as TDB)
-!!                 JDTDB   - Julian Date based on TDB (same as JED)
-!!                 JDTDT   - Julian Date based on TDT
-!!
-!!              The number of components of TVEC implied by TYPE is
-!!              as follows:
-!!
-!!                 YMD     - 6
-!!                 YD      - 5
-!!                 JDUTC   - 1
-!!                 FORMAL  - 1
-!!                 YD.D    - 2
-!!                 DAYSEC  - 2
-!!                 DP2000  - 2
-!!                 YWD     - 6
-!!                 YMWD    - 7
-!!                 TAI     - 1
-!!                 TDT     - 1
-!!                 TDB     - 1
-!!                 JED     - 1
-!!                 ET      - 1
-!!                 JDTDB   - 1
-!!                 JDTDT   - 1
-!!
-!!              For all types, only the last component of the
-!!              time vector may be non-integer. If other components
-!!              have fractional parts only their truncated integer
-!!              components will be recognized.
-!!
-!!              YMD and YD
-!!
-!!                 These types are assumed to be different
-!!                 representations on UTC time markers. Thus
-!!                 the hour, minutes and seconds portions all
-!!                 represent time elapsed
-!!                 since the beginning of a day. As such the
-!!                 seconds portion of HMS may range up to (but
-!!                 not include) 61 on days when positive leap
-!!                 seconds occur and may range up to (but not
-!!                 include) 59 on days during which negative
-!!                 leapseconds occur.
-!!
-!!              YD.D type.
-!!
-!!                 Y is the calendar year used in civil time keeping
-!!                 D is the day of the calendar year --- for any time
-!!                   during the first of January, the integer portion
-!!                   of the day will be 1.
-!!
-!!                   The fractional portion is the fractional part of
-!!                   the specific day. Thus the amount of time
-!!                   specified by the fractional portion of the day
-!!                   depends upon whether or not the day has a leap
-!!                   second.  ".D" can be computed from the formula
-!!
-!!                         number of seconds past beginning of day
-!!                   .D = ---------------------------------------
-!!                            number of UTC seconds in the day.
-!!
-!!              FORMAL type.
-!!
-!!                 The FORMAL type for TVEC gives the number of
-!!                 seconds past the epoch J2000 (noon Jan 1 2000)
-!!                 on the formal calendar (no leap seconds ---
-!!                 all days contain 86400 seconds)  The formal clock
-!!                 is simply held still for one second during
-!!                 positive leap seconds. Times during leap seconds
-!!                 cannot be represented in this system.
-!!
-!!                 This system is converted internally to a
-!!                 calendar days past epoch and seconds
-!!                 past beginning of day form. For this reason,
-!!                 times that occur during a positive leap second
-!!                 can never be represented. Moreover, if a negative
-!!                 leapsecond occurs, times that occur during the
-!!                 ``missing'' leapsecond will simply be placed
-!!                 at the beginning of the next day. Thus two
-!!                 different FORMAL times can represent the
-!!                 same time around a negative leap second.
-!!
-!!                 FORMAL time is equivalent to somewhat parochial
-!!                 ``UTC seconds past J2000'' that is produced
-!!                 by the SPICE routine TPARSE.
-!!
-!!              JDUTC type.
-!!
-!!                 This system is similar to the FORMAL system
-!!                 described above. All days are assumed to have
-!!                 86400 seconds. All numbers of the form
-!!
-!!                    integer + 0.5
-!!
-!!                 fall at the beginning of calendar UTC days.
-!!
-!!                 There is no way to represent times during a
-!!                 positive leapsecond. Times during missing
-!!                 negative leap seconds are represented in two ways.
-!!
-!!              DAYSEC type.
-!!
-!!                 This time vector has the form of calendar
-!!                 days since January 1, of the year 1 A.D.
-!!                 and number of seconds past the beginning of the
-!!                 calendar day.
-!!                 (January 2 of the year 1 A.D. is 1 calendar
-!!                 day past January 1, 1 A.D.)
-!!
-!!              DP2000 type.
-!!
-!!                 This time vector has the same form as DAYSEC
-!!                 time vectors. The only difference is that
-!!                 the reference epoch is JAN 1, 2000.
-!!
-!!              YWD and YMWD types.
-!!
-!!                 These time vectors are used to specify a time
-!!                 that are most conveniently expressed by phrases
-!!                 such as "the third Monday of every month" or
-!!                 "Beginning with the second Wednesday of the new
-!!                 year and every 4th Wednesday thereafter."
-!!
-!!                 The hours, minutes and seconds components of
-!!                 these time vectors are the
-!!                 same as for the Year-Month-Day and Year-Day UTC
-!!                 time vectors.
-!!
-!!                 The Y component refers to the calendar year, and
-!!                 in the YMWD vector, the M component refers to
-!!                 the calendar month.
-!!
-!!                 The W component refers to the week of the
-!!                 Year (YWD) or Month (YMWD).  The first week
-!!                 begins on the first day of the year or the first
-!!                 day of the month. The D component is the day of the
-!!                 week with 1 corresponding to Sunday, 2 to Monday,
-!!                 and so on with 7 corresponding to Saturday.
-!!
-!!                 Thus the YMWD time vector
-!!
-!!                    1991
-!!                      11
-!!                       3
-!!                       5
-!!                      12
-!!                       0
-!!                       0
-!!
-!!                 refers to 12:00:00 on the third Thursday of
-!!                 November of 1991.
-!!
-!!                 The YWD time vector
-!!
-!!                    1997
-!!                      11
-!!                       4
-!!                      13
-!!                       5
-!!                      11
-!!
-!!                 refers to 12:05:11 on the eleventh Wednesday
-!!                 of 1997.
-!!
-!!              Formal Calendar Time Vectors
-!!              ============================
-!!              The types YMDF, YDF, YD.D(F), YWDF, YMWDF are similar
-!!              to the corresponding base types: YMD, YD, YD.D, YWD
-!!              and YMWD. However, these types represent formal
-!!              time vectors. Each day contains exactly 86400 seconds.
-!!              The difference between formal and non-formal systems
-!!              can only be seen during a positive leapsecond or
-!!              during the second following a negative leapsecond.
-!!
-!!              Epochs during a positive leapsecond on input are
-!!              placed in the first second of the next day. Epochs
-!!              during a positive leapsecond on output are held
-!!              at 00:00:00 of the next day.
-!!
-!!              Epochs during the first second following a negative
-!!              leapsecond are counted as belonging to the previous
-!!              day if both the input and output types are formal
-!!              types.
-!!
-!!              Calendars
-!!              =====================
-!!              In all time vectors for which a year is specified,
-!!              the year is assumed to belong to the Gregorian
-!!              Calendar---every 4th year is a leapyear except
-!!              for centuries (such as 1900) that are not divisible
-!!              by 400. This calendar is formally extended
-!!              indefinitely backward and forward in time.
-!!
-!!              Note that the Gregorian Calendar did not
-!!              formally exist prior to October 15, 1582. Prior to
-!!              that time the Julian Calendar was used (in the
-!!              Julian Calendar every 4th year is a leapyear, including
-!!              all centuries).
-!!
-!!              If you have epochs relative to the Julian calendar,
-!!              the SPICE routine JUL2GR is available for converting
-!!              to the formal Gregorian Calendar.
-!!
-!!              Epochs Prior to 1972
-!!              =====================
-!!              UTC as it exists today, was adopted in 1972. For
-!!              epochs prior to 1972, it is assumed that the difference
-!!              between TAI and UTC is a constant value.
-!!
-!!              Years prior to 1 A.D.
-!!              =====================
-!!              A year belonging to the B.C. era,  may be
-!!              represented by subtracting the year from 1.
-!!              Thus to specify 27 B.C (Gregorian) set the
-!!              year component of the time vector to -26.
-!!
-!!              Notes:
-!!              ======
-!!              The FORMAL and JDUTC types should not be used
-!!              for times near a leap second. However, for times
-!!              removed from leap seconds they pose no problems.
-!!
-!!              The DAYSEC and DP2000 are useful for representing
-!!              times that are given in atomic seconds past some
-!!              reference epoch other than J2000.
-!!
-!! ## Detailed Output
-!!
-!!     TVEC     is the time vector corresponding to the input
-!!              time vector but with components consistent with
-!!              the type specified by input variable TO.
-!!
-!! ## Parameters
-!!
-!!     MXCOMP   is the maximum number of components that can appear in
-!!              TVEC.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the type of either FROM or TO is not recognized, the
-!!         error SPICE(UNKNONWNTIMESYSTEM) is signaled.
-!!
-!!     2)  If a leapseconds kernel has not been loaded prior a call
-!!         to TTRANS, the error  SPICE(NOLEAPSECONDS) is signaled.
-!!
-!!     3)  If epochs associated with leapseconds in the leapseconds
-!!         kernel are not in increasing order, the error
-!!         SPICE(BADLEAPSECONDS) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine is the fundamental translator between various
-!!     representations of time in the SPICE system. However, it
-!!     is intended to be a mid-level routine that few user's should
-!!     have need of calling.
-!!
-!!     In addition to translating between time systems, this routine
-!!     can be used to normalize the components of a time string
-!!     so that they are in the normal range for a particular
-!!     representation. This allows you to easily do arithmetic
-!!     with epochs.
-!!
-!! ## Examples
-!!
-!!     Suppose you need to convert a time expressed as seconds
-!!     past J2000 (TDB) to Pacific Daylight time. The following
-!!     example shows how you might use TTRANS to accomplish this
-!!     task.
-!!
-!!      TVEC(1) = ET
-!!
-!!      CALL TTRANS ( 'TDB', 'YMD', TVEC )
-!!
-!!      The seconds component of PDT is the same as the seconds
-!!      component of UTC. We save and add the UTC-PDT offset
-!!      to the hours and minutes component of the time vector.
-!!
-!!      SECNDS  = TVEC(6)
-!!      TVEC(6) = 0.0D0
-!!
-!!      TVEC(4) = TVEC(4) - 7.0D0
-!!      TVEC(5) = TVEC(5) + 0.0D0
-!!
-!!      CALL TTRANS ( 'YMDF', 'YMDF', TVEC )
-!!
-!!      Now reset the seconds component to the original value
-!!      and pass the time vector to some formatting routine.
-!!
-!!      TVEC(6) = SECNDS
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!     W.L. Taber         (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.6.0, 05-SEP-2021 (EDW) (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!        Removed INT casts in HMSSEC calls. The casts prevent
-!!        correct calculation of TDB time for non integer hour
-!!        and minute values in time strings from STR2ET.
-!!
-!!        Removed reference to FURNSH from the "LSK variable
-!!        not present" long error message.
-!!
-!!-    SPICELIB Version 1.5.0, 09-SEP-2013 (BVS)
-!!
-!!        Updated to keep track of the POOL counter and call ZZCVPOOL.
-!!
-!!-    SPICELIB Version 1.4.0, 05-MAR-2009 (NJB)
-!!
-!!        Bug fix: this routine now keeps track of whether its
-!!        kernel pool look-up succeeded. If not, a kernel pool
-!!        lookup is attempted on the next call to this routine.
-!!
-!!-    SPICELIB Version 1.3.0, 15-NOV-2006 (NJB)
-!!
-!!        A reference to RTPOOL was replaced by a reference
-!!        to GDPOOL.
-!!
-!!-    SPICELIB Version 1.2.0, 24-OCT-2005 (NJB)
-!!
-!!        Updated to remove non-standard use of duplicate arguments
-!!        in RMAIND and RMAINI calls. Changed reference to LDPOOL to
-!!        reference to FURNSH in an error message.
-!!
-!!-    SPICELIB Version 1.1.0, 09-JUN-1999 (WLT)
-!!
-!!        The routine was modified so that uniform time system
-!!        transformations (see UNITIM) are handled without
-!!        performing intermediate computations. This gives a slight
-!!        improvement in the accuracy of some computations.
-!!
-!!        In addition, two unused variables were removed.
-!!
-!!-    SPICELIB Version 1.0.0, 17-SEP-1996 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Convert from one time vector to another
-!!     Convert between various parsed time representations
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 1.2.0, 24-OCT-2005 (NJB)
-!!
-!!        Updated to remove non-standard use of duplicate arguments
-!!        in RMAIND and RMAINI calls. Changed reference to LDPOOL to
-!!        reference to FURNSH in an error message.
-!!
-!!     SPICELIB functions
-!!
-!!     Local (in-line) functions
-!!
-!!     Local parameters
-!!
-!!     Parameters
-!!
-!!     We declare the variables that contain the number of days in
-!!     400 years, 100 years, 4 years and 1 year.
-!!
-!!     The following integers give the number of days during the
-!!     associated month of a non-leap year.
-!!
-!!     The integers that follow give the number of days in a normal
-!!     year that precede the first of the month.
-!!
-!!     The integers that follow give the number of days in a leap
-!!     year that precede the first of the month.
-!!
-!!     MAXLP is the maximum number of leap seconds that can be
-!!     stored internally.   The value of 140 should be sufficient
-!!     to store leap seconds through the year 2100.
-!!
-!!     MAXVAR is the number of kernel pool variables required by this
-!!     routine.
-!!
-!!     The following gives us an "enumeration" for all of the
-!!     various types of time vectors that are recognized.
-!!
-!!     DAYSEC
-!!     DAYP2
-!!     ET
-!!     FRML
-!!     JDTDB
-!!     JDTDT
-!!     JDUTC
-!!     JED
-!!     TAI
-!!     TDB
-!!     TDT
-!!     YD
-!!     YDD
-!!     YDDF
-!!     YDF
-!!     YMD
-!!     YMDF
-!!     YMWD
-!!     YMWDF
-!!     YWD
-!!     YWDF
-!!
-!!     The following parameters just make the code seem a bit
-!!     more natural.
-!!
-!!     Local variables
-!!
-!!     The array EXTRA contains the number of many additional days that
-!!     appear before the first of a month during a leap year (as opposed
-!!     to a non-leap year).
-!!
-!!     DPJAN0(I) gives the number of days that occur before the I'th
-!!     month of a normal year.
-!!
-!!     Saved variables
-!!
-!!     Initial values
-!!
-!!     Definitions of statement functions.
-!!
-!!     The number of days elapsed since Jan 1, of year 1 A.D. to
-!!     Jan 1 of YEAR is given by:
-!!
-!!     Return 1 if YEAR is divisible by N, otherwise return 0.
-!!
-!!     The number of leap days in a year is given by:
-!!
-!!     To compute the day of the year we
-!!
-!!        look up the number of days to the beginning of the month,
-!!
-!!        add on the number leap days that occurred prior to that
-!!        time
-!!
-!!        add on the number of days into the month
-!!
-!!     The number of days since 1 Jan 1 A.D. is given by:
-!!
-!!     The number of seconds represented by HOURS hours MINS minutes
-!!     and SECS seconds.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       use pepper_arrays, only: bsrchc, lstled, lstlei, lstlti, orderc, reordc, reordi, reordl
@@ -6874,248 +6328,222 @@ contains
       end associate
       end procedure ttrans
 
+      !> ## Detailed Input
+      !>
+      !>     ACTION   is a word that specifies whether TIMDEF sets the
+      !>              value associated with ITEM or retrieves the value
+      !>              associated with ITEM. The allowed values for
+      !>              ACTION are 'SET' and 'GET'. The routine is not
+      !>              sensitive to the case of the letters in ACTION.
+      !>
+      !>     ITEM     is the default items whose value should be set or
+      !>              retrieved. The items that may be requested are:
+      !>
+      !>                 ITEM        Allowed Values
+      !>                 ---------   --------------
+      !>                 CALENDAR    GREGORIAN
+      !>                             JULIAN
+      !>                             MIXED
+      !>
+      !>                 SYSTEM      TDB
+      !>                             TDT
+      !>                             TT
+      !>                             UTC
+      !>
+      !>                 ZONE        EST, EDT, CST, CDT, MST, MDT, PST, PDT
+      !>                             UTC+HR
+      !>                             UTC-HR       ( 0 <= HR < 13 )
+      !>                             UTC+HR:MN    ( 0 <= MN < 60 )
+      !>                             UTC-HR:MN
+      !>
+      !>              The case of ITEM is not significant.
+      !>
+      !>     VALUE    if the action is 'SET' then VALUE is an input and
+      !>              is the value to be associated with ITEM. Note that
+      !>              VALUE is checked to ensure it is within the range
+      !>              of allowed values for ITEM. If it is not within
+      !>              the expected range and appropriate error message
+      !>              is signaled. The case of VALUE is not significant.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     VALUE    if the action is 'GET' then VALUE will be the
+      !>              value associated with the requested ITEM. Note that
+      !>              when time zones are set, they are translated to the
+      !>              UTC offset form ( UTC(+/-)HR[:MN] ). When VALUE is
+      !>              an output it will be in upper case.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the ACTION specified is not 'SET' or 'GET', the error
+      !>         SPICE(BADACTION) is signaled.
+      !>
+      !>     2)  If the ITEM specified is not one the recognized items,
+      !>         the error SPICE(BADTIMEITEM) is signaled.
+      !>
+      !>     3)  If the value associated with a 'SET' item input
+      !>         is not one of the recognized items, the error
+      !>         SPICE(BADDEFAULTVALUE) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine exists to allow SPICE toolkit users to alter
+      !>     the default interpretation of time strings made by the
+      !>     routine STR2ET.
+      !>
+      !>     Normally, unlabelled time strings are assumed to belong to
+      !>     the Gregorian Calendar and are UTC times. However, you
+      !>     may alter the default behavior by calling TIMDEF.
+      !>
+      !>     Calendar
+      !>     --------
+      !>
+      !>     You may set the calendar to be one of the following
+      !>
+      !>     Gregorian   --- This is the calendar used daily the
+      !>                     Western Hemisphere. Leap years occur in this
+      !>                     calendar every 4 years except on centuries
+      !>                     such as 1900 that are not divisible by 400.
+      !>
+      !>     Julian      --- This is the calendar that was in use prior
+      !>                     to October 15, 1582. Leap years occur every
+      !>                     4 years on the Julian Calendar (including all
+      !>                     centuries.) October 5, 1582 on the Julian
+      !>                     calendar corresponds to October 15, 1582 of the
+      !>                     Gregorian Calendar.
+      !>
+      !>     Mixed       --- This calendar uses the Julian calendar
+      !>                     for days prior to October 15, 1582 and
+      !>                     the Gregorian calendar for days on or after
+      !>                     October 15, 1582.
+      !>
+      !>     To set the default calendar, select on of the above for VALUE
+      !>     and make the following call.
+      !>
+      !>        CALL TIMDEF ( 'SET', 'CALENDAR', VALUE )
+      !>
+      !>     System
+      !>     -------
+      !>
+      !>     You may set the system used for keeping time to be UTC (default)
+      !>     TDB (barycentric Dynamical Time), TDT (Terrestrial Dynamical
+      !>     Time), or TT (Terrestrial Time). TDT and TT represent the same
+      !>     time system. Both TDB and TT (TDT) have no leapseconds. As such
+      !>     the time elapsed between any two epochs on these calendars does
+      !>     not depend upon when leapseconds occur.
+      !>
+      !>     To set the default time system, select TDT, TT, TDB or UTC for
+      !>     VALUE and make the following call.
+      !>
+      !>        CALL TIMDEF ( 'SET', 'SYSTEM', VALUE )
+      !>
+      !>     Note that such a call has the side effect of setting the value
+      !>     associated with ZONE to a blank.
+      !>
+      !>     Zone
+      !>     -----
+      !>
+      !>     You may alter the UTC system by specifying a time zone (UTC
+      !>     offset). For example you may specify that epochs are referred
+      !>     to Pacific Standard Time (PST --- UTC-7). The standard
+      !>     abbreviations for U.S. time zones are recognized:
+      !>
+      !>        EST   UTC-5
+      !>        EDT   UTC-4
+      !>        CST   UTC-6
+      !>        CDT   UTC-5
+      !>        MST   UTC-7
+      !>        MDT   UTC-6
+      !>        PST   UTC-8
+      !>        PDT   UTC-7
+      !>
+      !>     In addition you may specify any commercial time zone by using
+      !>     "offset" notation. This notation starts with the letters 'UTC'
+      !>     followed by a + for time zones east of Greenwich and - for time
+      !>     zones west of Greenwich. This is followed by the number of hours
+      !>     to add or subtract from UTC. This is optionally followed by a
+      !>     colon ':' and the number of minutes to add or subtract (based on
+      !>     the sign that follows 'UTC') to get the local time zone. Thus to
+      !>     specify the time zone of Calcutta you would specify the time zone
+      !>     to be UTC+5:30. To specify the time zone of Newfoundland use the
+      !>     time zone UTC-3:30.
+      !>
+      !>     To set a default time zone, select one of the "built-in" U.S.
+      !>     zones or construct an offset as discussed above. Then make the
+      !>     call
+      !>
+      !>        CALL TIMDEF ( 'SET', 'ZONE', VALUE )
+      !>
+      !>     If you 'GET' a 'ZONE' it will either be blank, or have the
+      !>     form 'UTC+/-HR[:MN]'
+      !>
+      !>     Note that such a call has the side effect of setting the value
+      !>     associated with SYSTEM to a blank.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose you wish to modify the behavior of STR2ET so that
+      !>     it interprets unlabeled time strings as being times in
+      !>     Pacific Daylight Time and that you want the calendar to use
+      !>     to be the "Mixed" calendar. The following two calls will
+      !>     make the desired changes to the behavior of STR2ET
+      !>
+      !>         CALL TIMDEF ( 'SET', 'CALENDAR', 'MIXED' )
+      !>         CALL TIMDEF ( 'SET', 'ZONE',     'PDT'   )
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.3.0, 14-OCT-2021 (EDW) (JDR)
+      !>
+      !>        UCASE and LJUST called on VALUE only in 'SET' block.
+      !>
+      !>        Add time system name 'TT' (Terrestrial Time) as alternate
+      !>        assignment of 'TDT' (Terrestrial Dynamical Time).
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.2.0, 26-MAY-1998 (WLT)
+      !>
+      !>        The previous version did not check out and return
+      !>        when an error was detected in the if block that
+      !>        begins with
+      !>
+      !>           ELSE IF ( MYITEM .EQ. 'ZONE' ) THEN
+      !>
+      !>        The routine did eventually check out and return so
+      !>        that the trace stack was maintained correctly, but
+      !>        the default time zone would be modified which was not
+      !>        the desired behavior.
+      !>
+      !>-    SPICELIB Version 1.1.0, 27-JUN-1997 (WLT)
+      !>
+      !>        The previous version failed to check out when
+      !>        the default value was set.
+      !>
+      !>-    SPICELIB Version 1.0.0, 13-NOV-1996 (WLT)
       module procedure timdef
-!! ## Abstract
-!!
-!!     Set and retrieve the defaults associated with calendar
-!!     input strings.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     TIME
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     ACTION   is a word that specifies whether TIMDEF sets the
-!!              value associated with ITEM or retrieves the value
-!!              associated with ITEM. The allowed values for
-!!              ACTION are 'SET' and 'GET'. The routine is not
-!!              sensitive to the case of the letters in ACTION.
-!!
-!!     ITEM     is the default items whose value should be set or
-!!              retrieved. The items that may be requested are:
-!!
-!!                 ITEM        Allowed Values
-!!                 ---------   --------------
-!!                 CALENDAR    GREGORIAN
-!!                             JULIAN
-!!                             MIXED
-!!
-!!                 SYSTEM      TDB
-!!                             TDT
-!!                             TT
-!!                             UTC
-!!
-!!                 ZONE        EST, EDT, CST, CDT, MST, MDT, PST, PDT
-!!                             UTC+HR
-!!                             UTC-HR       ( 0 <= HR < 13 )
-!!                             UTC+HR:MN    ( 0 <= MN < 60 )
-!!                             UTC-HR:MN
-!!
-!!              The case of ITEM is not significant.
-!!
-!!     VALUE    if the action is 'SET' then VALUE is an input and
-!!              is the value to be associated with ITEM. Note that
-!!              VALUE is checked to ensure it is within the range
-!!              of allowed values for ITEM. If it is not within
-!!              the expected range and appropriate error message
-!!              is signaled. The case of VALUE is not significant.
-!!
-!! ## Detailed Output
-!!
-!!     VALUE    if the action is 'GET' then VALUE will be the
-!!              value associated with the requested ITEM. Note that
-!!              when time zones are set, they are translated to the
-!!              UTC offset form ( UTC(+/-)HR[:MN] ). When VALUE is
-!!              an output it will be in upper case.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the ACTION specified is not 'SET' or 'GET', the error
-!!         SPICE(BADACTION) is signaled.
-!!
-!!     2)  If the ITEM specified is not one the recognized items,
-!!         the error SPICE(BADTIMEITEM) is signaled.
-!!
-!!     3)  If the value associated with a 'SET' item input
-!!         is not one of the recognized items, the error
-!!         SPICE(BADDEFAULTVALUE) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine exists to allow SPICE toolkit users to alter
-!!     the default interpretation of time strings made by the
-!!     routine STR2ET.
-!!
-!!     Normally, unlabelled time strings are assumed to belong to
-!!     the Gregorian Calendar and are UTC times. However, you
-!!     may alter the default behavior by calling TIMDEF.
-!!
-!!     Calendar
-!!     --------
-!!
-!!     You may set the calendar to be one of the following
-!!
-!!     Gregorian   --- This is the calendar used daily the
-!!                     Western Hemisphere. Leap years occur in this
-!!                     calendar every 4 years except on centuries
-!!                     such as 1900 that are not divisible by 400.
-!!
-!!     Julian      --- This is the calendar that was in use prior
-!!                     to October 15, 1582. Leap years occur every
-!!                     4 years on the Julian Calendar (including all
-!!                     centuries.) October 5, 1582 on the Julian
-!!                     calendar corresponds to October 15, 1582 of the
-!!                     Gregorian Calendar.
-!!
-!!     Mixed       --- This calendar uses the Julian calendar
-!!                     for days prior to October 15, 1582 and
-!!                     the Gregorian calendar for days on or after
-!!                     October 15, 1582.
-!!
-!!     To set the default calendar, select on of the above for VALUE
-!!     and make the following call.
-!!
-!!        CALL TIMDEF ( 'SET', 'CALENDAR', VALUE )
-!!
-!!     System
-!!     -------
-!!
-!!     You may set the system used for keeping time to be UTC (default)
-!!     TDB (barycentric Dynamical Time), TDT (Terrestrial Dynamical
-!!     Time), or TT (Terrestrial Time). TDT and TT represent the same
-!!     time system. Both TDB and TT (TDT) have no leapseconds. As such
-!!     the time elapsed between any two epochs on these calendars does
-!!     not depend upon when leapseconds occur.
-!!
-!!     To set the default time system, select TDT, TT, TDB or UTC for
-!!     VALUE and make the following call.
-!!
-!!        CALL TIMDEF ( 'SET', 'SYSTEM', VALUE )
-!!
-!!     Note that such a call has the side effect of setting the value
-!!     associated with ZONE to a blank.
-!!
-!!     Zone
-!!     -----
-!!
-!!     You may alter the UTC system by specifying a time zone (UTC
-!!     offset). For example you may specify that epochs are referred
-!!     to Pacific Standard Time (PST --- UTC-7). The standard
-!!     abbreviations for U.S. time zones are recognized:
-!!
-!!        EST   UTC-5
-!!        EDT   UTC-4
-!!        CST   UTC-6
-!!        CDT   UTC-5
-!!        MST   UTC-7
-!!        MDT   UTC-6
-!!        PST   UTC-8
-!!        PDT   UTC-7
-!!
-!!     In addition you may specify any commercial time zone by using
-!!     "offset" notation. This notation starts with the letters 'UTC'
-!!     followed by a + for time zones east of Greenwich and - for time
-!!     zones west of Greenwich. This is followed by the number of hours
-!!     to add or subtract from UTC. This is optionally followed by a
-!!     colon ':' and the number of minutes to add or subtract (based on
-!!     the sign that follows 'UTC') to get the local time zone. Thus to
-!!     specify the time zone of Calcutta you would specify the time zone
-!!     to be UTC+5:30. To specify the time zone of Newfoundland use the
-!!     time zone UTC-3:30.
-!!
-!!     To set a default time zone, select one of the "built-in" U.S.
-!!     zones or construct an offset as discussed above. Then make the
-!!     call
-!!
-!!        CALL TIMDEF ( 'SET', 'ZONE', VALUE )
-!!
-!!     If you 'GET' a 'ZONE' it will either be blank, or have the
-!!     form 'UTC+/-HR[:MN]'
-!!
-!!     Note that such a call has the side effect of setting the value
-!!     associated with SYSTEM to a blank.
-!!
-!! ## Examples
-!!
-!!     Suppose you wish to modify the behavior of STR2ET so that
-!!     it interprets unlabeled time strings as being times in
-!!     Pacific Daylight Time and that you want the calendar to use
-!!     to be the "Mixed" calendar. The following two calls will
-!!     make the desired changes to the behavior of STR2ET
-!!
-!!         CALL TIMDEF ( 'SET', 'CALENDAR', 'MIXED' )
-!!         CALL TIMDEF ( 'SET', 'ZONE',     'PDT'   )
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     J. Diaz del Rio    (ODC Space)
-!!     W.L. Taber         (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.3.0, 14-OCT-2021 (EDW) (JDR)
-!!
-!!        UCASE and LJUST called on VALUE only in 'SET' block.
-!!
-!!        Add time system name 'TT' (Terrestrial Time) as alternate
-!!        assignment of 'TDT' (Terrestrial Dynamical Time).
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 1.2.0, 26-MAY-1998 (WLT)
-!!
-!!        The previous version did not check out and return
-!!        when an error was detected in the if block that
-!!        begins with
-!!
-!!           ELSE IF ( MYITEM .EQ. 'ZONE' ) THEN
-!!
-!!        The routine did eventually check out and return so
-!!        that the trace stack was maintained correctly, but
-!!        the default time zone would be modified which was not
-!!        the desired behavior.
-!!
-!!-    SPICELIB Version 1.1.0, 27-JUN-1997 (WLT)
-!!
-!!        The previous version failed to check out when
-!!        the default value was set.
-!!
-!!-    SPICELIB Version 1.0.0, 13-NOV-1996 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Change time software defaults.
-!!     Time Zones
-!!     Gregorian and Julian Calendars
-!!
-!!     SPICELIB Functions
-!!
-!!     Local Variables.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: prefix, ucase
       implicit none
@@ -7294,211 +6722,150 @@ contains
       end associate
       end procedure timdef
 
+      !> ## Detailed Input
+      !>
+      !>     EPOCH    is an epoch relative to the INSYS time scale.
+      !>
+      !>     INSYS    is a time scale. Acceptable values are:
+      !>
+      !>                 'TAI'     International Atomic Time.
+      !>                 'TDB'     Barycentric Dynamical Time.
+      !>                 'TDT'     Terrestrial Dynamical Time.
+      !>                 'TT'      Terrestrial Time, identical to TDT.
+      !>                 'ET'      Ephemeris time (in the SPICE system, this is
+      !>                           equivalent to TDB).
+      !>                 'JDTDB'   Julian Date relative to TDB.
+      !>                 'JDTDT'   Julian Date relative to TDT.
+      !>                 'JED'     Julian Ephemeris date (in the SPICE system
+      !>                           this is equivalent to JDTDB).
+      !>                 'GPS'     Global Positioning System Time.
+      !>
+      !>              The routine is not sensitive to the case of the
+      !>              characters in INSYS; 'tai' 'Tai' and 'TAI' are all
+      !>              equivalent from the point of view of this routine.
+      !>
+      !>     OUTSYS   is the time scale to which EPOCH should be converted.
+      !>              Acceptable values are the same as for INSYS. The
+      !>              routine is not sensitive to the case of OUTSYS.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     The function returns the time in the system specified by OUTSYS
+      !>     that is equivalent to the EPOCH in the INSYS time scale.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  The kernel pool must contain the variables:
+      !>
+      !>            'DELTET/DELTA_T_A'
+      !>            'DELTET/K'
+      !>            'DELTET/EB'
+      !>            'DELTET/M'
+      !>
+      !>         If these are not present, the error SPICE(MISSINGTIMEINFO) is
+      !>         signaled. (These variables are typically inserted into the
+      !>         kernel pool by loading a leapseconds kernel with the SPICE
+      !>         routine FURNSH.)
+      !>
+      !>     2)  If the names of either the input or output time types are
+      !>         unrecognized, the error SPICE(BADTIMETYPE) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     We use the term uniform time scale to refer to those
+      !>     representations of time that are numeric (each epoch is
+      !>     represented by a number) and additive. A numeric time system is
+      !>     additive if given the representations, E1 and E2, of any pair of
+      !>     successive epochs, the time elapsed between the epochs is given by
+      !>     E2 - E1.
+      !>
+      !>     Given an epoch in one of the uniform time scales specified by
+      !>     INSYS, the function returns the equivalent representation in the
+      !>     scale specified by OUTSYS. A list of the recognized uniform time
+      !>     scales is given in the detailed input for INSYS.
+      !>
+      !> ## Examples
+      !>
+      !>     To convert an epoch with respect to the International Atomic
+      !>     Time (TAI) scale to ET (Barycentric Dynamical Time), make the
+      !>     following assignment.
+      !>
+      !>           ET = UNITIM ( TAI, 'TAI', 'ET' )
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  The appropriate variable must be loaded into the SPICE kernel
+      !>         pool (normally by loading a leapseconds kernel with FURNSH)
+      !>         prior to calling this routine.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.5.0, 05-SEP-2020 (EDW) (JDR)
+      !>
+      !>        Added time system name 'TT' (Terrestrial Time) as alternate
+      !>        assignment of 'TDT' (Terrestrial Dynamical Time).
+      !>
+      !>        Included GPS time system mapping.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Removed references to FURNSH, CLPOOL, KCLEAR, UNLOAD, and
+      !>        Required Reading documents and tutorials from the "variables
+      !>        not present" long error message.
+      !>
+      !>-    SPICELIB Version 1.4.0, 09-SEP-2013 (BVS)
+      !>
+      !>        Updated to keep track of the POOL counter and call ZZCVPOOL.
+      !>
+      !>-    SPICELIB Version 1.3.0, 05-MAR-2009 (NJB)
+      !>
+      !>        This routine now keeps track of whether its kernel pool
+      !>        look-up failed. If so, a kernel pool lookup is attempted on
+      !>        the next call to this routine. This change is an enhancement,
+      !>        not a bug fix (unlike similar modifications in SCLK routines).
+      !>
+      !>-    SPICELIB Version 1.2.1, 15-NOV-2006 (EDW) (NJB)
+      !>
+      !>        Replaced references to LDPOOL with references to FURNSH.
+      !>        Replaced references to RTPOOL with references to GDPOOL.
+      !>        Enhanced long error message associated with missing kernel
+      !>        variables.
+      !>
+      !>-    SPICELIB Version 1.2.0, 17-FEB-1999 (WLT)
+      !>
+      !>        Added a second call to SWPOOL in the event some required
+      !>        kernel pool variable is not supplied.
+      !>
+      !>-    SPICELIB Version 1.1.0, 17-MAY-1994 (HAN)
+      !>
+      !>        If the value of the function RETURN is .TRUE. upon execution of
+      !>        this module, this function is assigned a default value of
+      !>        either 0, 0.0D0, .FALSE., or blank depending on the type of
+      !>        the function.
+      !>
+      !>-    SPICELIB Version 1.0.0, 28-MAR-1992 (WLT)
       module procedure unitim
-!! ## Abstract
-!!
-!!     Transform time from one uniform scale to another. The uniform
-!!     time scales are TAI, GPS, TT, TDT, TDB, ET, JED, JDTDB, JDTDT.
-!!
-!! ## Required Reading
-!!
-!!     TIME
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     TIME
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     EPOCH    is an epoch relative to the INSYS time scale.
-!!
-!!     INSYS    is a time scale. Acceptable values are:
-!!
-!!                 'TAI'     International Atomic Time.
-!!                 'TDB'     Barycentric Dynamical Time.
-!!                 'TDT'     Terrestrial Dynamical Time.
-!!                 'TT'      Terrestrial Time, identical to TDT.
-!!                 'ET'      Ephemeris time (in the SPICE system, this is
-!!                           equivalent to TDB).
-!!                 'JDTDB'   Julian Date relative to TDB.
-!!                 'JDTDT'   Julian Date relative to TDT.
-!!                 'JED'     Julian Ephemeris date (in the SPICE system
-!!                           this is equivalent to JDTDB).
-!!                 'GPS'     Global Positioning System Time.
-!!
-!!              The routine is not sensitive to the case of the
-!!              characters in INSYS; 'tai' 'Tai' and 'TAI' are all
-!!              equivalent from the point of view of this routine.
-!!
-!!     OUTSYS   is the time scale to which EPOCH should be converted.
-!!              Acceptable values are the same as for INSYS. The
-!!              routine is not sensitive to the case of OUTSYS.
-!!
-!! ## Detailed Output
-!!
-!!     The function returns the time in the system specified by OUTSYS
-!!     that is equivalent to the EPOCH in the INSYS time scale.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  The kernel pool must contain the variables:
-!!
-!!            'DELTET/DELTA_T_A'
-!!            'DELTET/K'
-!!            'DELTET/EB'
-!!            'DELTET/M'
-!!
-!!         If these are not present, the error SPICE(MISSINGTIMEINFO) is
-!!         signaled. (These variables are typically inserted into the
-!!         kernel pool by loading a leapseconds kernel with the SPICE
-!!         routine FURNSH.)
-!!
-!!     2)  If the names of either the input or output time types are
-!!         unrecognized, the error SPICE(BADTIMETYPE) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     We use the term uniform time scale to refer to those
-!!     representations of time that are numeric (each epoch is
-!!     represented by a number) and additive. A numeric time system is
-!!     additive if given the representations, E1 and E2, of any pair of
-!!     successive epochs, the time elapsed between the epochs is given by
-!!     E2 - E1.
-!!
-!!     Given an epoch in one of the uniform time scales specified by
-!!     INSYS, the function returns the equivalent representation in the
-!!     scale specified by OUTSYS. A list of the recognized uniform time
-!!     scales is given in the detailed input for INSYS.
-!!
-!! ## Examples
-!!
-!!     To convert an epoch with respect to the International Atomic
-!!     Time (TAI) scale to ET (Barycentric Dynamical Time), make the
-!!     following assignment.
-!!
-!!           ET = UNITIM ( TAI, 'TAI', 'ET' )
-!!
-!! ## Restrictions
-!!
-!!     1)  The appropriate variable must be loaded into the SPICE kernel
-!!         pool (normally by loading a leapseconds kernel with FURNSH)
-!!         prior to calling this routine.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     B.V. Semenov       (JPL)
-!!     W.L. Taber         (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.5.0, 05-SEP-2020 (EDW) (JDR)
-!!
-!!        Added time system name 'TT' (Terrestrial Time) as alternate
-!!        assignment of 'TDT' (Terrestrial Dynamical Time).
-!!
-!!        Included GPS time system mapping.
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!        Removed references to FURNSH, CLPOOL, KCLEAR, UNLOAD, and
-!!        Required Reading documents and tutorials from the "variables
-!!        not present" long error message.
-!!
-!!-    SPICELIB Version 1.4.0, 09-SEP-2013 (BVS)
-!!
-!!        Updated to keep track of the POOL counter and call ZZCVPOOL.
-!!
-!!-    SPICELIB Version 1.3.0, 05-MAR-2009 (NJB)
-!!
-!!        This routine now keeps track of whether its kernel pool
-!!        look-up failed. If so, a kernel pool lookup is attempted on
-!!        the next call to this routine. This change is an enhancement,
-!!        not a bug fix (unlike similar modifications in SCLK routines).
-!!
-!!-    SPICELIB Version 1.2.1, 15-NOV-2006 (EDW) (NJB)
-!!
-!!        Replaced references to LDPOOL with references to FURNSH.
-!!        Replaced references to RTPOOL with references to GDPOOL.
-!!        Enhanced long error message associated with missing kernel
-!!        variables.
-!!
-!!-    SPICELIB Version 1.2.0, 17-FEB-1999 (WLT)
-!!
-!!        Added a second call to SWPOOL in the event some required
-!!        kernel pool variable is not supplied.
-!!
-!!-    SPICELIB Version 1.1.0, 17-MAY-1994 (HAN)
-!!
-!!        If the value of the function RETURN is .TRUE. upon execution of
-!!        this module, this function is assigned a default value of
-!!        either 0, 0.0D0, .FALSE., or blank depending on the type of
-!!        the function.
-!!
-!!-    SPICELIB Version 1.0.0, 28-MAR-1992 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Transform between two uniform numeric time systems
-!!     Transform between two additive numeric time systems
-!!     Convert one uniform numeric time system to another
-!!     Convert one additive numeric time system to another
-!!
-!!     SPICELIB functions
-!!
-!!     Local parameters
-!!
-!!     LBCELL is the bottom slot of a cell.
-!!
-!!     NEEDED is the number of kernel pool variables needed by this
-!!     routine.
-!!
-!!     LNGVAR is the length of the longest kernel pool variable name
-!!     that is used by this routine.
-!!
-!!     MISLEN is the length required by the MISSED array of strings
-!!     used for error messages.
-!!
-!!     TYPLEN is the maximum length allowed for names of uniform
-!!     time types.
-!!
-!!     NTDT is the number of time types based on terrestrial dynamical
-!!     time (TDT).
-!!
-!!     NTDB is the number of time types base on barycentric dynamical
-!!     time (TDB).
-!!
-!!     NRECOG is the total number of recognized types.
-!!
-!!     Constant shift between GPS time system and TAI time system.
-!!
-!!     Local variables
-!!
-!!     Saved variables
-!!
-!!     Initial values
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       use pepper_strings, only: ucase
@@ -7942,674 +7309,653 @@ contains
       end associate
       end procedure unitim
 
+      !> ## Detailed Input
+      !>
+      !>     TIMSTR   is a string representing an epoch. Virtually all
+      !>              common calendar representations are allowed. You may
+      !>              specify a time string belonging to any of the
+      !>              systems TDB, TDT, UTC. Moreover, you may specify a
+      !>              time string relative to a specific UTC based time
+      !>              zone.
+      !>
+      !>              The rules used in the parsing of TIMSTR are spelled out
+      !>              in great detail in the reference document time.req. The
+      !>              basics are given in the $Particulars section below.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     ET       is the double precision number of TDB seconds past the
+      !>              J2000 epoch that corresponds to the input TIMSTR.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the TIMSTR input string cannot be recognized as a
+      !>         legitimate time string, the error SPICE(UNPARSEDTIME) is
+      !>         signaled.
+      !>
+      !>     2)  If more than one time system is specified as part of the
+      !>         input time string, the error SPICE(TIMECONFLICT) is signaled.
+      !>
+      !>     3)  If any component of the input time string is outside the
+      !>         normal range of usage, the error SPICE(BADTIMESTRING) is
+      !>         signaled. For example, the day January 35 is outside the
+      !>         normal range of days in January. The checks applied are
+      !>         spelled out in the routine TCHECK.
+      !>
+      !>     4)  If a time zone is specified with hours or minutes components
+      !>         that are outside of the normal range, the error
+      !>         SPICE(TIMEZONEERROR) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine computes the ephemeris epoch corresponding to an
+      !>     input string. The ephemeris epoch is represented as seconds
+      !>     past the J2000 epoch in the time system known as Barycentric
+      !>     Dynamical Time (TDB). This time system is also referred to as
+      !>     Ephemeris Time (ET) throughout the SPICE Toolkit.
+      !>
+      !>     The variety of ways people have developed for representing
+      !>     times is enormous. It is unlikely that any single subroutine
+      !>     can accommodate the wide variety of custom time formats that
+      !>     have arisen in various computing contexts. However, we
+      !>     believe that this routine will correctly interpret most time
+      !>     formats used throughout the planetary science community.
+      !>     For example this routine supports ISO time formats and UNIX
+      !>     `date` output formats. One obvious omission from the strings
+      !>     recognized by this routine are strings of the form
+      !>
+      !>          93234.1829  or 1993234.1829
+      !>
+      !>     Some readers may recognize this as the epoch that is 0.1829
+      !>     days past the beginning of the 234'th day of 1993. However,
+      !>     many other readers may regard this interpretation as a bit
+      !>     obscure.
+      !>
+      !>     Below we outline some of the rules used in the interpretation
+      !>     of strings. A more complete discussion of the interpretation
+      !>     of strings is given in the reference document time.req.
+      !>
+      !>     Default Behavior
+      !>     ----------------
+      !>
+      !>     Consider the string
+      !>
+      !>        1988 June 13, 3:29:48
+      !>
+      !>     There is nothing in this string to indicate what time system
+      !>     the date and time belong to. Moreover, there is nothing to
+      !>     indicate whether the time is based on a 24-hour clock or
+      !>     twelve hour clock.
+      !>
+      !>     In the absence of such indicators, the default interpretation
+      !>     of this string is to regard the time of day to be a time on
+      !>     a 24-hour clock in the UTC time system. The date is a date
+      !>     on the Gregorian Calendar (this is the calendar used in nearly
+      !>     all western societies).
+      !>
+      !>     Labels
+      !>     ------
+      !>
+      !>     If you add more information to the string, STR2ET can make a
+      !>     more informed interpretation of the time string. For example:
+      !>
+      !>        1988 June 13, 3:29:48 P.M.
+      !>
+      !>     is still regarded as a UTC epoch. However, with the addition
+      !>     of the 'P.M.' label it is now interpreted as the same epoch
+      !>     as the unlabeled epoch 1988 June 13, 15:29:48. Similarly
+      !>
+      !>        1988 June 13, 12:29:48 A.M.
+      !>
+      !>     is interpreted as
+      !>
+      !>        1988 June 13, 00:29:48
+      !>
+      !>     For the record: 12:00 A.M. corresponds to Midnight (00:00 on the
+      !>     24 hour clock.  12:00 P.M. corresponds to Noon. (12:00) on the
+      !>     24 hour clock.
+      !>
+      !>     You may add still further indicators to the string. For example
+      !>
+      !>        1988 June 13, 3:29:48 P.M. PST
+      !>
+      !>     is interpreted as an epoch in the Pacific Standard Time system.
+      !>     This is equivalent to
+      !>
+      !>        1988 June 13, 07:29:48 UTC
+      !>
+      !>     The following U.S. time zones are recognized.
+      !>
+      !>        EST   --- Eastern Standard Time  ( UTC-5:00 )
+      !>        CST   --- Central Standard Time  ( UTC-6:00 )
+      !>        MST   --- Mountain Standard Time ( UTC-7:00 )
+      !>        PST   --- Pacific Standard Time  ( UTC-8:00 )
+      !>
+      !>        EDT   --- Eastern Daylight Time  ( UTC-4:00 )
+      !>        CDT   --- Central Daylight Time  ( UTC-5:00 )
+      !>        MDT   --- Mountain Daylight Time ( UTC-6:00 )
+      !>        PDT   --- Pacific Daylight Time  ( UTC-7:00 )
+      !>
+      !>     In addition any other time zone may be specified by representing
+      !>     its offset from UTC. This notation starts with the letters 'UTC'
+      !>     followed by a '+' for time zones east of Greenwich and '-' for
+      !>     time zones west of Greenwich. This is followed by the number of
+      !>     hours to add or subtract from UTC. This is optionally followed
+      !>     by a colon ':' and the number of minutes to add or subtract to
+      !>     get the local time zone. Thus to specify the time zone of
+      !>     Calcutta (which is 5 and 1/2 hours ahead of UTC) you would
+      !>     specify the time zone to be UTC+5:30. To specify the time zone
+      !>     of Newfoundland (which is 3 and 1/2 hours behind UTC) use the
+      !>     offset notation UTC-3:30.
+      !>
+      !>     For the Record:  Leapseconds occur at the same time in all
+      !>     time zones. In other words, the seconds component of a time
+      !>     string is the same for any time zone as is the seconds
+      !>     component of UTC. Thus the following are all legitimate
+      !>     ways to represent an epoch of some event that occurred
+      !>     in the leapsecond
+      !>
+      !>        1995 December 31  23:59:60.5  (UTC)
+      !>
+      !>        1996 January   1, 05:29:60.5  (UTC+5:30 --- Calcutta Time)
+      !>        1995 December 31, 20:29:60.5  (UTC-3:30 --- Newfoundland)
+      !>        1995 December 31  18:59:60.5  (EST)
+      !>        1995 December 31  17:59:60.5  (CST)
+      !>        1995 December 31  16:59:60.5  (MST)
+      !>        1995 December 31  15:59:60.5  (PST)
+      !>
+      !>     In addition to specifying time zones, you may specify that the
+      !>     string be interpreted as a formal calendar representation in
+      !>     either the Barycentric Dynamical Time system (TDB) or the
+      !>     Terrestrial Dynamical Time system (TDT).  In These systems there
+      !>     are no leapseconds. Times in TDB are written as
+      !>
+      !>        1988 June 13, 12:29:48 TDB
+      !>
+      !>     TDT times are written as:
+      !>
+      !>        1988 June 13, 12:29:48 TDT
+      !>
+      !>     Finally, you may explicitly state that the time system is UTC
+      !>
+      !>        1988 June 13, 12:29:48 UTC.
+      !>
+      !>     Abbreviating Years
+      !>     ------------------
+      !>
+      !>     Although it can lead to confusion, many people are in the
+      !>     habit of abbreviating years when they write them in dates.
+      !>     For example
+      !>
+      !>        99 Jan 13,  12:28:24
+      !>
+      !>     Upon seeing such a string, most of us would regard this
+      !>     as being 1999 January 13, 12:28:24 and not January 13 of
+      !>     the year 99. This routine interprets years that are less
+      !>     than 100 as belonging either to the 1900's or 2000's. Years
+      !>     greater than 68 ( 69 - 99 ) are regarded as being an
+      !>     abbreviation with the '19' suppressed (1969 - 1999). Years
+      !>     smaller than 69 ( 00 - 68 ) are regarded as being an
+      !>     abbreviation with the '20' suppressed (2000 - 2068).
+      !>
+      !>     Note that in general it is usually a good idea to write
+      !>     out the year. Or if you'd like to save some typing
+      !>     abbreviate 1999 as '99.
+      !>
+      !>     If you need to specify an epoch whose year
+      !>     is less than 1000, we recommend that you specify the era
+      !>     along with the year. For example if you want to specify
+      !>     the year 13 A.D. write it as
+      !>
+      !>        13 A.D. Jan 12
+      !>
+      !>     When specifying the era it should immediately follow the year.
+      !>     Both the A.D. and B.C. eras are supported.
+      !>
+      !>     Changing Default Behavior
+      !>     -------------------------
+      !>
+      !>     As discussed above, if a string is unlabeled, it is regarded
+      !>     as representing a string in the UTC time system on the
+      !>     Gregorian calendar. In addition abbreviated years are
+      !>     regarded as abbreviations of the years from 1969 to 2068.
+      !>
+      !>     You may modify these defaults through the routines TIMDEF
+      !>     and TSETYR.
+      !>
+      !>     You may:
+      !>
+      !>        Set the calendar to be Gregorian, Julian or a mixture of
+      !>        two via the TIMDEF;
+      !>
+      !>        Set the time system to be UTC, TDB, TDT or any time zone
+      !>        via the routine TIMDEF;
+      !>
+      !>        Set the range of year abbreviations to be any 100 year
+      !>        interval via the routine TSETYR.
+      !>
+      !>     See the SPICELIB routine TEXPYR and TIMDEF for details on changing
+      !>     defaults.
+      !>
+      !>     These alterations affect only the interpretation of unlabeled
+      !>     strings. If an input string is labeled the specification
+      !>     in the label is used.
+      !>
+      !>     If any component of a date or time is out of range, STR2ET
+      !>     regards the string as erroneous. Below is a list of
+      !>     erroneous strings and why they are regarded as such.
+      !>
+      !>        1997 Jan 32 12:29:29     --- there are only 31 days in January
+      !>
+      !>        '98 Jan 12 13:29:29 A.M. --- Hours must be between 1 and 12
+      !>                                     inclusive when A.M. or P.M. is
+      !>                                     specified.
+      !>
+      !>        1997 Feb 29, 12:29:20.0  --- February has only 29 days in
+      !>                                     1997. This would be ok if the
+      !>                                     year was 1996.
+      !>
+      !>        1992 Mar 12 12:62:20     --- Minutes must be between 0 and 59
+      !>                                     inclusive.
+      !>
+      !>        1993 Mar 18 15:29:60.5   --- Seconds is out of range for this
+      !>                                     date. It would not be out of
+      !>                                     range for Dec 31 23:59:60.5 or
+      !>                                     Jun 30 23:59:60.5 because these
+      !>                                     can be leapseconds (UTC).
+      !>
+      !>     Specifics On Interpretation of the Input String
+      !>     -----------------------------------------------
+      !>
+      !>     The process of examining the string to determine its meaning is
+      !>     called "parsing" the string. The string is parsed by first
+      !>     determining its recognizable substrings (integers, punctuation
+      !>     marks, names of months, names of weekdays, time systems, time
+      !>     zones, etc.) These recognizable substrings are called the tokens
+      !>     of the input string. The meaning of some tokens are immediately
+      !>     determined. For example named months, weekdays, time systems have
+      !>     clear meanings. However, the meanings of numeric components must
+      !>     be deciphered from their magnitudes and location in the string
+      !>     relative to the immediately recognized components of the input
+      !>     string.
+      !>
+      !>     To determine the meaning of the numeric tokens in the input
+      !>     string, a set of "production rules" and transformations are
+      !>     applied to the full set of tokens in the string. These
+      !>     transformations are repeated until the meaning of every token
+      !>     has been determined, or until further transformations yield
+      !>     no new clues into the meaning of the numeric tokens.
+      !>
+      !>     1)  Unless the substring 'JD' or 'jd' is present, the string is
+      !>         assumed to be a calendar format (day-month-year or year and
+      !>         day of year). If the substring JD or jd is present, the
+      !>         string is assumed to represent a Julian date.
+      !>
+      !>     2)  If the Julian date specifier is not present, any integer
+      !>         greater than 999 is regarded as being a year specification.
+      !>
+      !>     3)  A dash '-' can represent a minus sign only if it precedes
+      !>         the first digit in the string and the string contains
+      !>         the Julian date specifier (JD). (No negative years,
+      !>         months, days, etc. are allowed).
+      !>
+      !>     4)  Numeric components of a time string must be separated
+      !>         by a character that is not a digit or decimal point.
+      !>         Only one decimal component is allowed. For example
+      !>         1994219.12819 is sometimes interpreted as the
+      !>         219th day of 1994 + 0.12819 days. STR2ET does not
+      !>         support such strings.
+      !>
+      !>     5)   No exponential components are allowed. For example you
+      !>         can't specify the Julian date of J2000 as 2.451545E6.
+      !>         You also can't input 1993 Jun 23 23:00:01.202E-4 and have
+      !>         to explicitly list all zeros that follow the decimal
+      !>         point: i.e. 1993 Jun 23 23:00:00.0001202.
+      !>
+      !>     6)  The single colon (:) when used to separate numeric
+      !>         components of a string is interpreted as separating
+      !>         Hours, Minutes, and Seconds of time.
+      !>
+      !>     7)  If a double slash (//) or double colon (::) follows
+      !>         a pair of integers, those integers are assumed  to
+      !>         represent the year and day of year.
+      !>
+      !>     8)  A quote followed by an integer less than 100 is regarded
+      !>         as an abbreviated year. For example: '93 would be regarded
+      !>         as the 93rd year of the reference century. See the SPICELIB
+      !>         routine TEXPYR for further discussion of abbreviated years.
+      !>
+      !>     9)  An integer followed by 'B.C.' or 'A.D.' is regarded as
+      !>         a year in the era associated with that abbreviation.
+      !>
+      !>     10) All dates are regarded as belonging to the extended
+      !>         Gregorian Calendar (the Gregorian calendar is the calendar
+      !>         currently used by western society). See the routine TIMDEF
+      !>         to modify this behavior.
+      !>
+      !>     11) If the ISO date-time separator (T) is present in the string
+      !>         ISO allowed token patterns are examined for a match
+      !>         with the current token list. If no match is found the
+      !>         search is abandoned and appropriate diagnostic messages
+      !>         are generated. Historically the interpretation of ISO
+      !>         formatted time strings deviates from the ISO standard in
+      !>         allowing two digit years and expanding years in the 0 to 99
+      !>         range the same way as is done for non ISO formatted strings.
+      !>         Due to this interpretation it is impossible to specify
+      !>         times in years in the 0 A.D. to 99 A.D. range using ISO
+      !>         formatted strings on the input.
+      !>
+      !>     12) If two delimiters are found in succession in the time
+      !>         string, the time string is diagnosed as an erroneous string.
+      !>         (Delimiters are comma, white space, dash, slash, period, or
+      !>         day of year mark. The day of year mark is a pair of forward
+      !>         slashes or a pair of colons.)
+      !>
+      !>         Note the delimiters do not have to be the same. The pair
+      !>         of characters ",-" counts as two successive delimiters.
+      !>
+      !>     13) White space and commas serve only to delimit tokens in the
+      !>         input string. They do not affect the meaning of any
+      !>         of the tokens.
+      !>
+      !>     14) If an integer is greater than 1000 (and the 'JD' label
+      !>         is not present, the integer is regarded as a year.
+      !>
+      !>     15) When the size of the integer components does not clearly
+      !>         specify a year the following patterns are assumed
+      !>
+      !>         Calendar Format
+      !>
+      !>            Year Month Day
+      !>            Month Day Year
+      !>            Year Day Month
+      !>
+      !>            where Month is the name of a month, not its numeric
+      !>            value.
+      !>
+      !>            When integer components are separated by slashes (/)
+      !>            as in 3/4/5. Month, Day, Year is assumed (2005 March 4)
+      !>
+      !>         Day of Year Format.
+      !>
+      !>            If a day of year marker is present (// or ::) the
+      !>            pattern
+      !>
+      !>              I-I// or I-I:: (where I stands for an integer)
+      !>
+      !>            is interpreted as Year Day-of-Year. However, I-I/ is
+      !>            regarded as ambiguous.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for these examples may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Suppose you would like to determine whether your favorite
+      !>        time representation is supported by STR2ET. The small
+      !>        program below gives you a simple way to experiment with
+      !>        STR2ET. (Note that erroneous inputs will be flagged by
+      !>        signaling an error.)
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM STR2ET_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(64)        TIMSTR
+      !>              CHARACTER*(64)        CALDR
+      !>              CHARACTER*(64)        DAYOFY
+      !>              CHARACTER*(127)       FILNAM
+      !>
+      !>              DOUBLE PRECISION      ET
+      !>
+      !>        C
+      !>        C     First get the name of a leapseconds kernel, and load it.
+      !>        C
+      !>              CALL PROMPT ( 'Leapseconds kernel: ', FILNAM )
+      !>              CALL FURNSH ( FILNAM )
+      !>
+      !>        C
+      !>        C     Get the time string.
+      !>        C
+      !>              CALL PROMPT ( 'Time string: ', TIMSTR )
+      !>
+      !>        C
+      !>        C     Convert the string to ET and then back to UTC calendar
+      !>        C     and day-of-year formats.
+      !>        C
+      !>              CALL STR2ET ( TIMSTR, ET )
+      !>              CALL ET2UTC ( ET, 'C', 0, CALDR  )
+      !>              CALL ET2UTC ( ET, 'D', 0, DAYOFY )
+      !>
+      !>        C
+      !>        C     Print the results.
+      !>        C
+      !>              WRITE (*,*)
+      !>              WRITE (*,*) 'TBD seconds from J2000 epoch: ', ET
+      !>              WRITE (*,*) 'Calendar    Format:           ', CALDR
+      !>              WRITE (*,*) 'Day of year Format:           ', DAYOFY
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a PC/Linux/gfortran/64-bit
+      !>        platform, using the LCK file named naif0012.tls and the time
+      !>        string '2017-07-14T19:46:00', the output was:
+      !>
+      !>        Leapseconds kernel: naif0012.tls
+      !>        Time string: 2017-07-14T19:46:00
+      !>
+      !>         TBD seconds from J2000 epoch:    553333629.18372738
+      !>         Calendar    Format:           2017 JUL 14 19:46:00
+      !>         Day of year Format:           2017-195 // 19:46:00
+      !>
+      !>     2) Below is a sampling of some of the time formats that are
+      !>        acceptable as inputs to STR2ET. A complete discussion of
+      !>        permissible formats is given in the reference document
+      !>        time.req.
+      !>
+      !>        ISO (T) Formats.
+      !>
+      !>        String                        Year Mon  DOY DOM  HR Min Sec
+      !>        ----------------------------  ---- ---  --- ---  -- --- ------
+      !>        1996-12-18T12:28:28           1996 Dec   na  18  12  28 28
+      !>        1986-01-18T12                 1986 Jan   na  18  12  00 00
+      !>        1986-01-18T12:19              1986 Jan   na  18  12  19 00
+      !>        1986-01-18T12:19:52.18        1986 Jan   na  18  12  19 52.18
+      !>        1986-01-18T12:19:52.18Z       1986 Jan   na  18  12  19 52.18
+      !>        1995-08T18:28:12              1995  na  008  na  18  28 12
+      !>        1995-08T18:28:12Z             1995  na  008  na  18  28 12
+      !>        1995-18T                      1995  na  018  na  00  00 00
+      !>        0000-01-01T                   1 BC Jan   na  01  00  00 00
+      !>
+      !>        Calendar Formats.
+      !>
+      !>        String                        Year   Mon DOM  HR Min  Sec
+      !>        ----------------------------  ----   --- ---  -- ---  ------
+      !>        Tue Aug  6 11:10:57  1996     1996   Aug  06  11  10  57
+      !>        1 DEC 1997 12:28:29.192       1997   Dec  01  12  28  29.192
+      !>        2/3/1996 17:18:12.002         1996   Feb  03  17  18  12.002
+      !>        Mar 2 12:18:17.287 1993       1993   Mar  02  12  18  17.287
+      !>        1992 11:18:28  3 Jul          1992   Jul  03  11  18  28
+      !>        June 12, 1989 01:21           1989   Jun  12  01  21  00
+      !>        1978/3/12 23:28:59.29         1978   Mar  12  23  28  59.29
+      !>        17JUN1982 18:28:28            1982   Jun  17  18  28  28
+      !>        13:28:28.128 1992 27 Jun      1992   Jun  27  13  28  28.128
+      !>        1972 27 jun 12:29             1972   Jun  27  12  29  00
+      !>        '93 Jan 23 12:29:47.289       1993*  Jan  23  12  29  47.289
+      !>        27 Jan 3, 19:12:28.182        2027*  Jan  03  19  12  28.182
+      !>        23 A.D. APR 4, 18:28:29.29    0023** Apr  04  18  28  29.29
+      !>        18 B.C. Jun 3, 12:29:28.291   -017** Jun  03  12  29  28.291
+      !>        29 Jun  30 12:29:29.298       2029+  Jun  30  12  29  29.298
+      !>        29 Jun '30 12:29:29.298       2030*  Jun  29  12  29  29.298
+      !>
+      !>        Day of Year Formats
+      !>
+      !>        String                        Year  DOY HR Min Sec
+      !>        ----------------------------  ----  --- -- --- ------
+      !>        1997-162::12:18:28.827        1997  162 12  18 28.827
+      !>        162-1996/12:28:28.287         1996  162 12  28 28.287
+      !>        1993-321/12:28:28.287         1993  231 12  28 28.287
+      !>        1992 183// 12:18:19           1992  183 12  18 19
+      !>        17:28:01.287 1992-272//       1992  272 17  28 01.287
+      !>        17:28:01.282 272-1994//       1994  272 17  28 01.282
+      !>        '92-271/ 12:28:30.291         1992* 271 12  28 30.291
+      !>        92-182/ 18:28:28.281          1992* 182 18  28 28.281
+      !>        182-92/ 12:29:29.192          0182+ 092 12  29 29.192
+      !>        182-'92/ 12:28:29.182         1992  182 12  28 29.182
+      !>
+      !>        Julian Date Strings
+      !>
+      !>        jd 28272.291                  Julian Date   28272.291
+      !>        2451515.2981 (JD)             Julian Date 2451515.2981
+      !>        2451515.2981 JD               Julian Date 2451515.2981
+      !>
+      !>                                      Abbreviations Used in Tables
+      !>
+      !>                                        na    --- Not Applicable
+      !>                                        Mon   --- Month
+      !>                                        DOY   --- Day of Year
+      !>                                        DOM   --- Day of Month
+      !>                                        Wkday --- Weekday
+      !>                                        Hr    --- Hour
+      !>                                        Min   --- Minutes
+      !>                                        Sec   --- Seconds
+      !>
+      !>        *  The default interpretation of a year that has been
+      !>           abbreviated to two digits with or without a leading quote
+      !>           as in 'xy or xy (such as '92 or 92) is to treat the year as
+      !>           19xy if xy > 68 and to treat it as 20xy otherwise. Thus '70
+      !>           is interpreted as 1970 and '67 is treated as 2067. However,
+      !>           you may change the "split point" and centuries through use
+      !>           of the SPICE routine TSETYR. See that routine for a
+      !>           discussion of how you may reset the split point.
+      !>
+      !>        ** All epochs are regarded as belonging to the Gregorian
+      !>           calendar. We formally extend the Gregorian calendar backward
+      !>           and forward in time for all epochs. If you have epochs
+      !>           belonging to the Julian Calendar, consult the SPICELIB
+      !>           routines TPARTV and JUL2GR for a discussion concerning
+      !>           conversions to the Gregorian calendar and ET. The routines
+      !>           TIMDEF and STR2ET, used together, also support conversions
+      !>           from Julian Calendar epochs to ET.
+      !>
+      !>        +  When a day of year format or calendar format string is
+      !>           input and neither of the integer components of the date is
+      !>           greater than 1000, the first integer is regarded as being
+      !>           the year.
+      !>
+      !>        Any integer greater than 1000 is regarded as a year
+      !>        specification. Thus 1001-1821//12:28:28 is interpreted as
+      !>        specifying two years and will be rejected as ambiguous.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     C.H. Acton         (JPL)
+      !>     N.J. Bachman       (JPL)
+      !>     M. Costa Sitja     (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.4.0, 23-DEC-2021 (JDR) (EDW) (MCS)
+      !>
+      !>        Changed the input argument name STRING to TIMSTR for
+      !>        consistency with other routines.
+      !>
+      !>        Header edits to expand description of ISO format.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Added comments and removed do-loop from code example.
+      !>
+      !>        Replaced references to TPARTV by time.req.
+      !>
+      !>-    SPICELIB Version 1.3.1, 02-NOV-2009 (CHA)
+      !>
+      !>        A few minor grammar errors were fixed in the header.
+      !>        The header sections were reordered.
+      !>
+      !>-    SPICELIB Version 1.3.0, 31-AUG-2006 (NJB) (EDW)
+      !>
+      !>        Bug fix: routine formerly returned incorrect results
+      !>        in some cases on calls following calls for which a time
+      !>        zone was specified.
+      !>
+      !>        Replaced reference to LDPOOL in header $Examples section
+      !>        with reference to FURNSH.
+      !>
+      !>-    SPICELIB Version 1.2.2, 29-JUL-2003 (NJB)
+      !>
+      !>        Various minor header corrections were made
+      !>
+      !>-    SPICELIB Version 1.2.1, 10-FEB-2003 (NJB)
+      !>
+      !>        Corrected header typo.
+      !>
+      !>-    SPICELIB Version 1.2.0, 11-NOV-1997 (WLT)
+      !>
+      !>        The previous versions of this routine did not correctly
+      !>        convert day-of-year strings in the TDB or TDT systems.
+      !>        They treated the day of year as year, month, day giving
+      !>        spectacularly wrong answers.
+      !>
+      !>        In addition, comments concerning the default century for
+      !>        abbreviated years were updated to reflect changes to TEXPYR
+      !>
+      !>-    SPICELIB Version 1.1.0, 10-FEB-1997 (WLT)
+      !>
+      !>        In the case that a time zone could not be parsed,
+      !>        this routine signaled an error and checked out without
+      !>        then returning. This error has been corrected.
+      !>
+      !>-    SPICELIB Version 1.0.0, 15-NOV-1996 (WLT)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 1.3.0, 31-AUG-2006 (NJB)
+      !>
+      !>        Bug fix: routine formerly returned incorrect results
+      !>        in some cases on calls following calls for which a time
+      !>        zone was specified.
+      !>
+      !>        The problem was caused by the variable ZONED not being
+      !>        properly set when a time system was specified
+      !>        in the input string. In such cases, ZONED retained the
+      !>        value from the previous call.
+      !>
+      !>     SPICELIB Functions.
+      !>
+      !>     Local (in-line) Functions
+      !>
+      !>     The following integers are pointers to the
+      !>     locations of various components in a time vector.
+      !>
+      !>     Saved variables
+      !>
+      !>     Initial values
       module procedure str2et
-!! ## Abstract
-!!
-!!     Convert a string representing an epoch to a double precision
-!!     value representing the number of TDB seconds past the J2000
-!!     epoch corresponding to the input epoch.
-!!
-!! ## Required Reading
-!!
-!!     TIME
-!!
-!! ## Keywords
-!!
-!!     TIME
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     TIMSTR   is a string representing an epoch. Virtually all
-!!              common calendar representations are allowed. You may
-!!              specify a time string belonging to any of the
-!!              systems TDB, TDT, UTC. Moreover, you may specify a
-!!              time string relative to a specific UTC based time
-!!              zone.
-!!
-!!              The rules used in the parsing of TIMSTR are spelled out
-!!              in great detail in the reference document time.req. The
-!!              basics are given in the $Particulars section below.
-!!
-!! ## Detailed Output
-!!
-!!     ET       is the double precision number of TDB seconds past the
-!!              J2000 epoch that corresponds to the input TIMSTR.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the TIMSTR input string cannot be recognized as a
-!!         legitimate time string, the error SPICE(UNPARSEDTIME) is
-!!         signaled.
-!!
-!!     2)  If more than one time system is specified as part of the
-!!         input time string, the error SPICE(TIMECONFLICT) is signaled.
-!!
-!!     3)  If any component of the input time string is outside the
-!!         normal range of usage, the error SPICE(BADTIMESTRING) is
-!!         signaled. For example, the day January 35 is outside the
-!!         normal range of days in January. The checks applied are
-!!         spelled out in the routine TCHECK.
-!!
-!!     4)  If a time zone is specified with hours or minutes components
-!!         that are outside of the normal range, the error
-!!         SPICE(TIMEZONEERROR) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine computes the ephemeris epoch corresponding to an
-!!     input string. The ephemeris epoch is represented as seconds
-!!     past the J2000 epoch in the time system known as Barycentric
-!!     Dynamical Time (TDB). This time system is also referred to as
-!!     Ephemeris Time (ET) throughout the SPICE Toolkit.
-!!
-!!     The variety of ways people have developed for representing
-!!     times is enormous. It is unlikely that any single subroutine
-!!     can accommodate the wide variety of custom time formats that
-!!     have arisen in various computing contexts. However, we
-!!     believe that this routine will correctly interpret most time
-!!     formats used throughout the planetary science community.
-!!     For example this routine supports ISO time formats and UNIX
-!!     `date` output formats. One obvious omission from the strings
-!!     recognized by this routine are strings of the form
-!!
-!!          93234.1829  or 1993234.1829
-!!
-!!     Some readers may recognize this as the epoch that is 0.1829
-!!     days past the beginning of the 234'th day of 1993. However,
-!!     many other readers may regard this interpretation as a bit
-!!     obscure.
-!!
-!!     Below we outline some of the rules used in the interpretation
-!!     of strings. A more complete discussion of the interpretation
-!!     of strings is given in the reference document time.req.
-!!
-!!     Default Behavior
-!!     ----------------
-!!
-!!     Consider the string
-!!
-!!        1988 June 13, 3:29:48
-!!
-!!     There is nothing in this string to indicate what time system
-!!     the date and time belong to. Moreover, there is nothing to
-!!     indicate whether the time is based on a 24-hour clock or
-!!     twelve hour clock.
-!!
-!!     In the absence of such indicators, the default interpretation
-!!     of this string is to regard the time of day to be a time on
-!!     a 24-hour clock in the UTC time system. The date is a date
-!!     on the Gregorian Calendar (this is the calendar used in nearly
-!!     all western societies).
-!!
-!!     Labels
-!!     ------
-!!
-!!     If you add more information to the string, STR2ET can make a
-!!     more informed interpretation of the time string. For example:
-!!
-!!        1988 June 13, 3:29:48 P.M.
-!!
-!!     is still regarded as a UTC epoch. However, with the addition
-!!     of the 'P.M.' label it is now interpreted as the same epoch
-!!     as the unlabeled epoch 1988 June 13, 15:29:48. Similarly
-!!
-!!        1988 June 13, 12:29:48 A.M.
-!!
-!!     is interpreted as
-!!
-!!        1988 June 13, 00:29:48
-!!
-!!     For the record: 12:00 A.M. corresponds to Midnight (00:00 on the
-!!     24 hour clock.  12:00 P.M. corresponds to Noon. (12:00) on the
-!!     24 hour clock.
-!!
-!!     You may add still further indicators to the string. For example
-!!
-!!        1988 June 13, 3:29:48 P.M. PST
-!!
-!!     is interpreted as an epoch in the Pacific Standard Time system.
-!!     This is equivalent to
-!!
-!!        1988 June 13, 07:29:48 UTC
-!!
-!!     The following U.S. time zones are recognized.
-!!
-!!        EST   --- Eastern Standard Time  ( UTC-5:00 )
-!!        CST   --- Central Standard Time  ( UTC-6:00 )
-!!        MST   --- Mountain Standard Time ( UTC-7:00 )
-!!        PST   --- Pacific Standard Time  ( UTC-8:00 )
-!!
-!!        EDT   --- Eastern Daylight Time  ( UTC-4:00 )
-!!        CDT   --- Central Daylight Time  ( UTC-5:00 )
-!!        MDT   --- Mountain Daylight Time ( UTC-6:00 )
-!!        PDT   --- Pacific Daylight Time  ( UTC-7:00 )
-!!
-!!     In addition any other time zone may be specified by representing
-!!     its offset from UTC. This notation starts with the letters 'UTC'
-!!     followed by a '+' for time zones east of Greenwich and '-' for
-!!     time zones west of Greenwich. This is followed by the number of
-!!     hours to add or subtract from UTC. This is optionally followed
-!!     by a colon ':' and the number of minutes to add or subtract to
-!!     get the local time zone. Thus to specify the time zone of
-!!     Calcutta (which is 5 and 1/2 hours ahead of UTC) you would
-!!     specify the time zone to be UTC+5:30. To specify the time zone
-!!     of Newfoundland (which is 3 and 1/2 hours behind UTC) use the
-!!     offset notation UTC-3:30.
-!!
-!!     For the Record:  Leapseconds occur at the same time in all
-!!     time zones. In other words, the seconds component of a time
-!!     string is the same for any time zone as is the seconds
-!!     component of UTC. Thus the following are all legitimate
-!!     ways to represent an epoch of some event that occurred
-!!     in the leapsecond
-!!
-!!        1995 December 31  23:59:60.5  (UTC)
-!!
-!!        1996 January   1, 05:29:60.5  (UTC+5:30 --- Calcutta Time)
-!!        1995 December 31, 20:29:60.5  (UTC-3:30 --- Newfoundland)
-!!        1995 December 31  18:59:60.5  (EST)
-!!        1995 December 31  17:59:60.5  (CST)
-!!        1995 December 31  16:59:60.5  (MST)
-!!        1995 December 31  15:59:60.5  (PST)
-!!
-!!     In addition to specifying time zones, you may specify that the
-!!     string be interpreted as a formal calendar representation in
-!!     either the Barycentric Dynamical Time system (TDB) or the
-!!     Terrestrial Dynamical Time system (TDT).  In These systems there
-!!     are no leapseconds. Times in TDB are written as
-!!
-!!        1988 June 13, 12:29:48 TDB
-!!
-!!     TDT times are written as:
-!!
-!!        1988 June 13, 12:29:48 TDT
-!!
-!!     Finally, you may explicitly state that the time system is UTC
-!!
-!!        1988 June 13, 12:29:48 UTC.
-!!
-!!     Abbreviating Years
-!!     ------------------
-!!
-!!     Although it can lead to confusion, many people are in the
-!!     habit of abbreviating years when they write them in dates.
-!!     For example
-!!
-!!        99 Jan 13,  12:28:24
-!!
-!!     Upon seeing such a string, most of us would regard this
-!!     as being 1999 January 13, 12:28:24 and not January 13 of
-!!     the year 99. This routine interprets years that are less
-!!     than 100 as belonging either to the 1900's or 2000's. Years
-!!     greater than 68 ( 69 - 99 ) are regarded as being an
-!!     abbreviation with the '19' suppressed (1969 - 1999). Years
-!!     smaller than 69 ( 00 - 68 ) are regarded as being an
-!!     abbreviation with the '20' suppressed (2000 - 2068).
-!!
-!!     Note that in general it is usually a good idea to write
-!!     out the year. Or if you'd like to save some typing
-!!     abbreviate 1999 as '99.
-!!
-!!     If you need to specify an epoch whose year
-!!     is less than 1000, we recommend that you specify the era
-!!     along with the year. For example if you want to specify
-!!     the year 13 A.D. write it as
-!!
-!!        13 A.D. Jan 12
-!!
-!!     When specifying the era it should immediately follow the year.
-!!     Both the A.D. and B.C. eras are supported.
-!!
-!!     Changing Default Behavior
-!!     -------------------------
-!!
-!!     As discussed above, if a string is unlabeled, it is regarded
-!!     as representing a string in the UTC time system on the
-!!     Gregorian calendar. In addition abbreviated years are
-!!     regarded as abbreviations of the years from 1969 to 2068.
-!!
-!!     You may modify these defaults through the routines TIMDEF
-!!     and TSETYR.
-!!
-!!     You may:
-!!
-!!        Set the calendar to be Gregorian, Julian or a mixture of
-!!        two via the TIMDEF;
-!!
-!!        Set the time system to be UTC, TDB, TDT or any time zone
-!!        via the routine TIMDEF;
-!!
-!!        Set the range of year abbreviations to be any 100 year
-!!        interval via the routine TSETYR.
-!!
-!!     See the SPICELIB routine TEXPYR and TIMDEF for details on changing
-!!     defaults.
-!!
-!!     These alterations affect only the interpretation of unlabeled
-!!     strings. If an input string is labeled the specification
-!!     in the label is used.
-!!
-!!     If any component of a date or time is out of range, STR2ET
-!!     regards the string as erroneous. Below is a list of
-!!     erroneous strings and why they are regarded as such.
-!!
-!!        1997 Jan 32 12:29:29     --- there are only 31 days in January
-!!
-!!        '98 Jan 12 13:29:29 A.M. --- Hours must be between 1 and 12
-!!                                     inclusive when A.M. or P.M. is
-!!                                     specified.
-!!
-!!        1997 Feb 29, 12:29:20.0  --- February has only 29 days in
-!!                                     1997. This would be ok if the
-!!                                     year was 1996.
-!!
-!!        1992 Mar 12 12:62:20     --- Minutes must be between 0 and 59
-!!                                     inclusive.
-!!
-!!        1993 Mar 18 15:29:60.5   --- Seconds is out of range for this
-!!                                     date. It would not be out of
-!!                                     range for Dec 31 23:59:60.5 or
-!!                                     Jun 30 23:59:60.5 because these
-!!                                     can be leapseconds (UTC).
-!!
-!!     Specifics On Interpretation of the Input String
-!!     -----------------------------------------------
-!!
-!!     The process of examining the string to determine its meaning is
-!!     called "parsing" the string. The string is parsed by first
-!!     determining its recognizable substrings (integers, punctuation
-!!     marks, names of months, names of weekdays, time systems, time
-!!     zones, etc.) These recognizable substrings are called the tokens
-!!     of the input string. The meaning of some tokens are immediately
-!!     determined. For example named months, weekdays, time systems have
-!!     clear meanings. However, the meanings of numeric components must
-!!     be deciphered from their magnitudes and location in the string
-!!     relative to the immediately recognized components of the input
-!!     string.
-!!
-!!     To determine the meaning of the numeric tokens in the input
-!!     string, a set of "production rules" and transformations are
-!!     applied to the full set of tokens in the string. These
-!!     transformations are repeated until the meaning of every token
-!!     has been determined, or until further transformations yield
-!!     no new clues into the meaning of the numeric tokens.
-!!
-!!     1)  Unless the substring 'JD' or 'jd' is present, the string is
-!!         assumed to be a calendar format (day-month-year or year and
-!!         day of year). If the substring JD or jd is present, the
-!!         string is assumed to represent a Julian date.
-!!
-!!     2)  If the Julian date specifier is not present, any integer
-!!         greater than 999 is regarded as being a year specification.
-!!
-!!     3)  A dash '-' can represent a minus sign only if it precedes
-!!         the first digit in the string and the string contains
-!!         the Julian date specifier (JD). (No negative years,
-!!         months, days, etc. are allowed).
-!!
-!!     4)  Numeric components of a time string must be separated
-!!         by a character that is not a digit or decimal point.
-!!         Only one decimal component is allowed. For example
-!!         1994219.12819 is sometimes interpreted as the
-!!         219th day of 1994 + 0.12819 days. STR2ET does not
-!!         support such strings.
-!!
-!!     5)   No exponential components are allowed. For example you
-!!         can't specify the Julian date of J2000 as 2.451545E6.
-!!         You also can't input 1993 Jun 23 23:00:01.202E-4 and have
-!!         to explicitly list all zeros that follow the decimal
-!!         point: i.e. 1993 Jun 23 23:00:00.0001202.
-!!
-!!     6)  The single colon (:) when used to separate numeric
-!!         components of a string is interpreted as separating
-!!         Hours, Minutes, and Seconds of time.
-!!
-!!     7)  If a double slash (//) or double colon (::) follows
-!!         a pair of integers, those integers are assumed  to
-!!         represent the year and day of year.
-!!
-!!     8)  A quote followed by an integer less than 100 is regarded
-!!         as an abbreviated year. For example: '93 would be regarded
-!!         as the 93rd year of the reference century. See the SPICELIB
-!!         routine TEXPYR for further discussion of abbreviated years.
-!!
-!!     9)  An integer followed by 'B.C.' or 'A.D.' is regarded as
-!!         a year in the era associated with that abbreviation.
-!!
-!!     10) All dates are regarded as belonging to the extended
-!!         Gregorian Calendar (the Gregorian calendar is the calendar
-!!         currently used by western society). See the routine TIMDEF
-!!         to modify this behavior.
-!!
-!!     11) If the ISO date-time separator (T) is present in the string
-!!         ISO allowed token patterns are examined for a match
-!!         with the current token list. If no match is found the
-!!         search is abandoned and appropriate diagnostic messages
-!!         are generated. Historically the interpretation of ISO
-!!         formatted time strings deviates from the ISO standard in
-!!         allowing two digit years and expanding years in the 0 to 99
-!!         range the same way as is done for non ISO formatted strings.
-!!         Due to this interpretation it is impossible to specify
-!!         times in years in the 0 A.D. to 99 A.D. range using ISO
-!!         formatted strings on the input.
-!!
-!!     12) If two delimiters are found in succession in the time
-!!         string, the time string is diagnosed as an erroneous string.
-!!         (Delimiters are comma, white space, dash, slash, period, or
-!!         day of year mark. The day of year mark is a pair of forward
-!!         slashes or a pair of colons.)
-!!
-!!         Note the delimiters do not have to be the same. The pair
-!!         of characters ",-" counts as two successive delimiters.
-!!
-!!     13) White space and commas serve only to delimit tokens in the
-!!         input string. They do not affect the meaning of any
-!!         of the tokens.
-!!
-!!     14) If an integer is greater than 1000 (and the 'JD' label
-!!         is not present, the integer is regarded as a year.
-!!
-!!     15) When the size of the integer components does not clearly
-!!         specify a year the following patterns are assumed
-!!
-!!         Calendar Format
-!!
-!!            Year Month Day
-!!            Month Day Year
-!!            Year Day Month
-!!
-!!            where Month is the name of a month, not its numeric
-!!            value.
-!!
-!!            When integer components are separated by slashes (/)
-!!            as in 3/4/5. Month, Day, Year is assumed (2005 March 4)
-!!
-!!         Day of Year Format.
-!!
-!!            If a day of year marker is present (// or ::) the
-!!            pattern
-!!
-!!              I-I// or I-I:: (where I stands for an integer)
-!!
-!!            is interpreted as Year Day-of-Year. However, I-I/ is
-!!            regarded as ambiguous.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for these examples may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Suppose you would like to determine whether your favorite
-!!        time representation is supported by STR2ET. The small
-!!        program below gives you a simple way to experiment with
-!!        STR2ET. (Note that erroneous inputs will be flagged by
-!!        signaling an error.)
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM STR2ET_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Local variables
-!!        C
-!!              CHARACTER*(64)        TIMSTR
-!!              CHARACTER*(64)        CALDR
-!!              CHARACTER*(64)        DAYOFY
-!!              CHARACTER*(127)       FILNAM
-!!
-!!              DOUBLE PRECISION      ET
-!!
-!!        C
-!!        C     First get the name of a leapseconds kernel, and load it.
-!!        C
-!!              CALL PROMPT ( 'Leapseconds kernel: ', FILNAM )
-!!              CALL FURNSH ( FILNAM )
-!!
-!!        C
-!!        C     Get the time string.
-!!        C
-!!              CALL PROMPT ( 'Time string: ', TIMSTR )
-!!
-!!        C
-!!        C     Convert the string to ET and then back to UTC calendar
-!!        C     and day-of-year formats.
-!!        C
-!!              CALL STR2ET ( TIMSTR, ET )
-!!              CALL ET2UTC ( ET, 'C', 0, CALDR  )
-!!              CALL ET2UTC ( ET, 'D', 0, DAYOFY )
-!!
-!!        C
-!!        C     Print the results.
-!!        C
-!!              WRITE (*,*)
-!!              WRITE (*,*) 'TBD seconds from J2000 epoch: ', ET
-!!              WRITE (*,*) 'Calendar    Format:           ', CALDR
-!!              WRITE (*,*) 'Day of year Format:           ', DAYOFY
-!!
-!!              END
-!!
-!!        When this program was executed on a PC/Linux/gfortran/64-bit
-!!        platform, using the LCK file named naif0012.tls and the time
-!!        string '2017-07-14T19:46:00', the output was:
-!!
-!!        Leapseconds kernel: naif0012.tls
-!!        Time string: 2017-07-14T19:46:00
-!!
-!!         TBD seconds from J2000 epoch:    553333629.18372738
-!!         Calendar    Format:           2017 JUL 14 19:46:00
-!!         Day of year Format:           2017-195 // 19:46:00
-!!
-!!     2) Below is a sampling of some of the time formats that are
-!!        acceptable as inputs to STR2ET. A complete discussion of
-!!        permissible formats is given in the reference document
-!!        time.req.
-!!
-!!        ISO (T) Formats.
-!!
-!!        String                        Year Mon  DOY DOM  HR Min Sec
-!!        ----------------------------  ---- ---  --- ---  -- --- ------
-!!        1996-12-18T12:28:28           1996 Dec   na  18  12  28 28
-!!        1986-01-18T12                 1986 Jan   na  18  12  00 00
-!!        1986-01-18T12:19              1986 Jan   na  18  12  19 00
-!!        1986-01-18T12:19:52.18        1986 Jan   na  18  12  19 52.18
-!!        1986-01-18T12:19:52.18Z       1986 Jan   na  18  12  19 52.18
-!!        1995-08T18:28:12              1995  na  008  na  18  28 12
-!!        1995-08T18:28:12Z             1995  na  008  na  18  28 12
-!!        1995-18T                      1995  na  018  na  00  00 00
-!!        0000-01-01T                   1 BC Jan   na  01  00  00 00
-!!
-!!        Calendar Formats.
-!!
-!!        String                        Year   Mon DOM  HR Min  Sec
-!!        ----------------------------  ----   --- ---  -- ---  ------
-!!        Tue Aug  6 11:10:57  1996     1996   Aug  06  11  10  57
-!!        1 DEC 1997 12:28:29.192       1997   Dec  01  12  28  29.192
-!!        2/3/1996 17:18:12.002         1996   Feb  03  17  18  12.002
-!!        Mar 2 12:18:17.287 1993       1993   Mar  02  12  18  17.287
-!!        1992 11:18:28  3 Jul          1992   Jul  03  11  18  28
-!!        June 12, 1989 01:21           1989   Jun  12  01  21  00
-!!        1978/3/12 23:28:59.29         1978   Mar  12  23  28  59.29
-!!        17JUN1982 18:28:28            1982   Jun  17  18  28  28
-!!        13:28:28.128 1992 27 Jun      1992   Jun  27  13  28  28.128
-!!        1972 27 jun 12:29             1972   Jun  27  12  29  00
-!!        '93 Jan 23 12:29:47.289       1993*  Jan  23  12  29  47.289
-!!        27 Jan 3, 19:12:28.182        2027*  Jan  03  19  12  28.182
-!!        23 A.D. APR 4, 18:28:29.29    0023** Apr  04  18  28  29.29
-!!        18 B.C. Jun 3, 12:29:28.291   -017** Jun  03  12  29  28.291
-!!        29 Jun  30 12:29:29.298       2029+  Jun  30  12  29  29.298
-!!        29 Jun '30 12:29:29.298       2030*  Jun  29  12  29  29.298
-!!
-!!        Day of Year Formats
-!!
-!!        String                        Year  DOY HR Min Sec
-!!        ----------------------------  ----  --- -- --- ------
-!!        1997-162::12:18:28.827        1997  162 12  18 28.827
-!!        162-1996/12:28:28.287         1996  162 12  28 28.287
-!!        1993-321/12:28:28.287         1993  231 12  28 28.287
-!!        1992 183// 12:18:19           1992  183 12  18 19
-!!        17:28:01.287 1992-272//       1992  272 17  28 01.287
-!!        17:28:01.282 272-1994//       1994  272 17  28 01.282
-!!        '92-271/ 12:28:30.291         1992* 271 12  28 30.291
-!!        92-182/ 18:28:28.281          1992* 182 18  28 28.281
-!!        182-92/ 12:29:29.192          0182+ 092 12  29 29.192
-!!        182-'92/ 12:28:29.182         1992  182 12  28 29.182
-!!
-!!        Julian Date Strings
-!!
-!!        jd 28272.291                  Julian Date   28272.291
-!!        2451515.2981 (JD)             Julian Date 2451515.2981
-!!        2451515.2981 JD               Julian Date 2451515.2981
-!!
-!!                                      Abbreviations Used in Tables
-!!
-!!                                        na    --- Not Applicable
-!!                                        Mon   --- Month
-!!                                        DOY   --- Day of Year
-!!                                        DOM   --- Day of Month
-!!                                        Wkday --- Weekday
-!!                                        Hr    --- Hour
-!!                                        Min   --- Minutes
-!!                                        Sec   --- Seconds
-!!
-!!        *  The default interpretation of a year that has been
-!!           abbreviated to two digits with or without a leading quote
-!!           as in 'xy or xy (such as '92 or 92) is to treat the year as
-!!           19xy if xy > 68 and to treat it as 20xy otherwise. Thus '70
-!!           is interpreted as 1970 and '67 is treated as 2067. However,
-!!           you may change the "split point" and centuries through use
-!!           of the SPICE routine TSETYR. See that routine for a
-!!           discussion of how you may reset the split point.
-!!
-!!        ** All epochs are regarded as belonging to the Gregorian
-!!           calendar. We formally extend the Gregorian calendar backward
-!!           and forward in time for all epochs. If you have epochs
-!!           belonging to the Julian Calendar, consult the SPICELIB
-!!           routines TPARTV and JUL2GR for a discussion concerning
-!!           conversions to the Gregorian calendar and ET. The routines
-!!           TIMDEF and STR2ET, used together, also support conversions
-!!           from Julian Calendar epochs to ET.
-!!
-!!        +  When a day of year format or calendar format string is
-!!           input and neither of the integer components of the date is
-!!           greater than 1000, the first integer is regarded as being
-!!           the year.
-!!
-!!        Any integer greater than 1000 is regarded as a year
-!!        specification. Thus 1001-1821//12:28:28 is interpreted as
-!!        specifying two years and will be rejected as ambiguous.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     C.H. Acton         (JPL)
-!!     N.J. Bachman       (JPL)
-!!     M. Costa Sitja     (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     W.L. Taber         (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.4.0, 23-DEC-2021 (JDR) (EDW) (MCS)
-!!
-!!        Changed the input argument name STRING to TIMSTR for
-!!        consistency with other routines.
-!!
-!!        Header edits to expand description of ISO format.
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Added comments and removed do-loop from code example.
-!!
-!!        Replaced references to TPARTV by time.req.
-!!
-!!-    SPICELIB Version 1.3.1, 02-NOV-2009 (CHA)
-!!
-!!        A few minor grammar errors were fixed in the header.
-!!        The header sections were reordered.
-!!
-!!-    SPICELIB Version 1.3.0, 31-AUG-2006 (NJB) (EDW)
-!!
-!!        Bug fix: routine formerly returned incorrect results
-!!        in some cases on calls following calls for which a time
-!!        zone was specified.
-!!
-!!        Replaced reference to LDPOOL in header $Examples section
-!!        with reference to FURNSH.
-!!
-!!-    SPICELIB Version 1.2.2, 29-JUL-2003 (NJB)
-!!
-!!        Various minor header corrections were made
-!!
-!!-    SPICELIB Version 1.2.1, 10-FEB-2003 (NJB)
-!!
-!!        Corrected header typo.
-!!
-!!-    SPICELIB Version 1.2.0, 11-NOV-1997 (WLT)
-!!
-!!        The previous versions of this routine did not correctly
-!!        convert day-of-year strings in the TDB or TDT systems.
-!!        They treated the day of year as year, month, day giving
-!!        spectacularly wrong answers.
-!!
-!!        In addition, comments concerning the default century for
-!!        abbreviated years were updated to reflect changes to TEXPYR
-!!
-!!-    SPICELIB Version 1.1.0, 10-FEB-1997 (WLT)
-!!
-!!        In the case that a time zone could not be parsed,
-!!        this routine signaled an error and checked out without
-!!        then returning. This error has been corrected.
-!!
-!!-    SPICELIB Version 1.0.0, 15-NOV-1996 (WLT)
-!!
-!! ## Index Entries
-!!
-!!     Convert a string to TDB seconds past the J2000 epoch
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 1.3.0, 31-AUG-2006 (NJB)
-!!
-!!        Bug fix: routine formerly returned incorrect results
-!!        in some cases on calls following calls for which a time
-!!        zone was specified.
-!!
-!!        The problem was caused by the variable ZONED not being
-!!        properly set when a time system was specified
-!!        in the input string. In such cases, ZONED retained the
-!!        value from the previous call.
-!!
-!!     SPICELIB Functions.
-!!
-!!     Local (in-line) Functions
-!!
-!!     The following integers are pointers to the
-!!     locations of various components in a time vector.
-!!
-!!     Saved variables
-!!
-!!     Initial values
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: prefix, repmc
       implicit none
@@ -9287,157 +8633,142 @@ contains
       end associate
       end procedure str2et
 
-!$Procedure ZZPRSCOR ( Parse aberration correction )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Parse an aberration correction string; return attributes.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     ABCORR         is a string representing a aberration
+      !>                    correction.  The supported values are:
+      !>
+      !>                       'CN'
+      !>                       'CN+S'
+      !>                       'LT'
+      !>                       'LT+S'
+      !>                       'NONE'
+      !>                       'RL'
+      !>                       'RL+S'
+      !>                       'S'
+      !>                       'XCN'
+      !>                       'XCN+S'
+      !>                       'XLT'
+      !>                       'XLT+S'
+      !>                       'XRL'
+      !>                       'XRL+S'
+      !>                       'XS'
+      !>
+      !>                    Note that some values not supported by the
+      !>                    SPICELIB SPK subsystem are supported by
+      !>                    this routine:
+      !>
+      !>                       - The letter 'R' indicates relativistic
+      !>                         corrections.
+      !>
+      !>                       - Stellar aberration-only corrections are
+      !>                         indicated by the strings
+      !>
+      !>                            'S'
+      !>                            'XS'
+      !>
+      !>                    Case and embedded blanks are not significant in
+      !>                    ABCORR.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     ATTBLK         is a block of logical flags indicating the
+      !>                    attributes of the aberration correction
+      !>                    specified by ABCORR.  The attributes are:
+      !>
+      !>                       - Is the correction "geometric"?
+      !>
+      !>                       - Is light time correction indicated?
+      !>
+      !>                       - Is stellar aberration correction indicated?
+      !>
+      !>                       - Is the light time correction of the
+      !>                         "converged Newtonian" variety?
+      !>
+      !>                       - Is the correction for the transmission
+      !>                         case?
+      !>
+      !>                       - Is the correction relativistic?
+      !>
+      !>                    The structure of ATTBLK is defined in the
+      !>                    include file
+      !>
+      !>                       zzabcorr.inc
+      !>
+      !>                    The size of ATTBLK and the offsets of the
+      !>                    component flags are defined there.
+      !>
+      !> ## Parameters
+      !>
+      !>     See INCLUDE file zzabcorr.inc.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If the input aberration correction choice is not recognized,
+      !>        the error SPICE(INVALIDOPTION) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Many SPICELIB routines have logic branches based on the
+      !>     attributes of aberration corrections.  Much duplicated
+      !>     parsing code can be avoided by using this routine.
+      !>
+      !>     In particular, the routine ZZCOREPC uses this routine
+      !>     to combine an epoch and light time value to compute
+      !>     a light-time-adjusted epoch.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZCOREPC.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) This is a SPICE private routine; the routine is subject
+      !>        to change without notice.  User applications should not
+      !>        call this routine.
+      !>
+      !>     2) This routine recognizes some aberration corrections not
+      !>        handled by most SPICELIB routines.  Callers should do
+      !>        their own checking to ensure the parsed correction is
+      !>        acceptable.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>     B.V. Semenov    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 21-SEP-2013 (BVS)
+      !>
+      !>        Efficiency updates: moved CHKIN inside the exception block;
+      !>        replaced CMPRSS/UCASE with LJUCRS.
+      !>
+      !>-    SPICELIB Version 1.0.0, 13-DEC-2004 (NJB)
+      !>
+      !>     SPICELIB functions
+      !>
+      !>     Local variables
+      !>
+      !>     PEPPER: the table (in increasing order of the strings, as the
+      !>     binary search needs; SPICELIB sorted it on the first call).
       module procedure zzprscor
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Parse an aberration correction string; return attributes.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ABERRATION
-!!     PARSING
-!!     PRIVATE
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     ABCORR         is a string representing a aberration
-!!                    correction.  The supported values are:
-!!
-!!                       'CN'
-!!                       'CN+S'
-!!                       'LT'
-!!                       'LT+S'
-!!                       'NONE'
-!!                       'RL'
-!!                       'RL+S'
-!!                       'S'
-!!                       'XCN'
-!!                       'XCN+S'
-!!                       'XLT'
-!!                       'XLT+S'
-!!                       'XRL'
-!!                       'XRL+S'
-!!                       'XS'
-!!
-!!                    Note that some values not supported by the
-!!                    SPICELIB SPK subsystem are supported by
-!!                    this routine:
-!!
-!!                       - The letter 'R' indicates relativistic
-!!                         corrections.
-!!
-!!                       - Stellar aberration-only corrections are
-!!                         indicated by the strings
-!!
-!!                            'S'
-!!                            'XS'
-!!
-!!                    Case and embedded blanks are not significant in
-!!                    ABCORR.
-!!
-!! ## Detailed Output
-!!
-!!     ATTBLK         is a block of logical flags indicating the
-!!                    attributes of the aberration correction
-!!                    specified by ABCORR.  The attributes are:
-!!
-!!                       - Is the correction "geometric"?
-!!
-!!                       - Is light time correction indicated?
-!!
-!!                       - Is stellar aberration correction indicated?
-!!
-!!                       - Is the light time correction of the
-!!                         "converged Newtonian" variety?
-!!
-!!                       - Is the correction for the transmission
-!!                         case?
-!!
-!!                       - Is the correction relativistic?
-!!
-!!                    The structure of ATTBLK is defined in the
-!!                    include file
-!!
-!!                       zzabcorr.inc
-!!
-!!                    The size of ATTBLK and the offsets of the
-!!                    component flags are defined there.
-!!
-!! ## Parameters
-!!
-!!     See INCLUDE file zzabcorr.inc.
-!!
-!! ## Exceptions
-!!
-!!     1) If the input aberration correction choice is not recognized,
-!!        the error SPICE(INVALIDOPTION) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     Many SPICELIB routines have logic branches based on the
-!!     attributes of aberration corrections.  Much duplicated
-!!     parsing code can be avoided by using this routine.
-!!
-!!     In particular, the routine ZZCOREPC uses this routine
-!!     to combine an epoch and light time value to compute
-!!     a light-time-adjusted epoch.
-!!
-!! ## Examples
-!!
-!!     See ZZCOREPC.
-!!
-!! ## Restrictions
-!!
-!!     1) This is a SPICE private routine; the routine is subject
-!!        to change without notice.  User applications should not
-!!        call this routine.
-!!
-!!     2) This routine recognizes some aberration corrections not
-!!        handled by most SPICELIB routines.  Callers should do
-!!        their own checking to ensure the parsed correction is
-!!        acceptable.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman    (JPL)
-!!     B.V. Semenov    (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.1.0, 21-SEP-2013 (BVS)
-!!
-!!        Efficiency updates: moved CHKIN inside the exception block;
-!!        replaced CMPRSS/UCASE with LJUCRS.
-!!
-!!-    SPICELIB Version 1.0.0, 13-DEC-2004 (NJB)
-!!
-!!     SPICELIB functions
-!!
-!!     Local variables
-!!
-!!     PEPPER: the table (in increasing order of the strings, as the
-!!     binary search needs; SPICELIB sorted it on the first call).
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       use pepper_strings, only: ljucrs
@@ -9470,13 +8801,6 @@ contains
          .false., .false., .false., .false., .false., .false., .false., .false.,&
          .true., .true., .true., .true., .true., .true., .true. ]
 
-!
-!     Saved variables
-!
-
-!
-!     Initial values
-!
 !     It is recommended that, for maintainability, the correction
 !     strings be kept in increasing order in this list.  However,
 !     this routine does not rely on the strings being ordered
@@ -9484,9 +8808,7 @@ contains
 !     are ordered at run time.
 !
 
-
       if ( ctx%failed() ) return
-
 
 !
 !     Obtain a blank-free, upper-case copy of the aberration
@@ -9522,160 +8844,136 @@ contains
       return
       end procedure zzprscor
 
-!$Procedure ZZVALCOR ( Validate aberration correction )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Validate an aberration correction string suitable for use by
+      !>     the SPK system; return attributes.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     ABCORR         is a string representing a aberration
+      !>                    correction.  The supported values are:
+      !>
+      !>                       'CN'
+      !>                       'CN+S'
+      !>                       'LT'
+      !>                       'LT+S'
+      !>                       'NONE'
+      !>                       'XCN'
+      !>                       'XCN+S'
+      !>                       'XLT'
+      !>                       'XLT+S'
+      !>
+      !>                    Note that some values not supported by the
+      !>                    SPICELIB SPK subsystem are supported by
+      !>                    the underlying routine ZZPRSCOR:
+      !>
+      !>                       - The letter 'R' indicates relativistic
+      !>                         corrections.
+      !>
+      !>                       - Stellar aberration-only corrections are
+      !>                         indicated by the strings
+      !>
+      !>                            'S'
+      !>                            'XS'
+      !>
+      !>                    This routine *does not* permit values that
+      !>                    the SPK system doesn't handle.
+      !>
+      !>                    Case and embedded blanks are not significant in
+      !>                    ABCORR.
+      !>
+      !>                    If ABCORR contains an unsupported value, this
+      !>                    routine will signal an error.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     ATTBLK         is a block of logical flags indicating the
+      !>                    attributes of the aberration correction
+      !>                    specified by ABCORR.  The attributes are:
+      !>
+      !>                       - Is the correction "geometric"?
+      !>
+      !>                       - Is light time correction indicated?
+      !>
+      !>                       - Is stellar aberration correction indicated?
+      !>
+      !>                       - Is the light time correction of the
+      !>                         "converged Newtonian" variety?
+      !>
+      !>                       - Is the correction for the transmission
+      !>                         case?
+      !>
+      !>                       - Is the correction relativistic? (This
+      !>                         value is always .FALSE. for aberration
+      !>                         correction specifications allowed by
+      !>                         this routine.)
+      !>
+      !>                    The structure of ATTBLK is defined in the
+      !>                    include file
+      !>
+      !>                       zzabcorr.inc
+      !>
+      !>                    The size of ATTBLK and the offsets of the
+      !>                    component flags are defined there.
+      !>
+      !> ## Parameters
+      !>
+      !>     See INCLUDE file zzabcorr.inc.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If the input aberration correction choice is not allowed,
+      !>        the error SPICE(INVALIDOPTION) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine is similar to ZZPRSCOR, but stellar aberration-only
+      !>     and relativistic corrections specifications are not allowed
+      !>     by this routine. The allowed values are precisely those allowed
+      !>     by SPKEZR.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZGFOCIN.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) This is a SPICE private routine; the routine is subject
+      !>        to change without notice.  User applications should not
+      !>        call this routine.
+      !>
+      !>     2) This routine recognizes some aberration corrections not
+      !>        handled by most SPICELIB routines.  Callers should do
+      !>        their own checking to ensure the parsed correction is
+      !>        acceptable.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
+      !>
+      !>        Corrected typo in comments.
+      !>
+      !>-    SPICELIB Version 1.0.0, 11-APR-2008 (NJB)
       module procedure zzvalcor
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Validate an aberration correction string suitable for use by
-!!     the SPK system; return attributes.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ABERRATION
-!!     PARSING
-!!     PRIVATE
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_inc_zzabcorr
       implicit none
-
-
-
-! $ Detailed_Input
-!
-!     ABCORR         is a string representing a aberration
-!                    correction.  The supported values are:
-!
-!                       'CN'
-!                       'CN+S'
-!                       'LT'
-!                       'LT+S'
-!                       'NONE'
-!                       'XCN'
-!                       'XCN+S'
-!                       'XLT'
-!                       'XLT+S'
-!
-!                    Note that some values not supported by the
-!                    SPICELIB SPK subsystem are supported by
-!                    the underlying routine ZZPRSCOR:
-!
-!                       - The letter 'R' indicates relativistic
-!                         corrections.
-!
-!                       - Stellar aberration-only corrections are
-!                         indicated by the strings
-!
-!                            'S'
-!                            'XS'
-!
-!                    This routine *does not* permit values that
-!                    the SPK system doesn't handle.
-!
-!                    Case and embedded blanks are not significant in
-!                    ABCORR.
-!
-!                    If ABCORR contains an unsupported value, this
-!                    routine will signal an error.
-!
-! $ Detailed_Output
-!
-!     ATTBLK         is a block of logical flags indicating the
-!                    attributes of the aberration correction
-!                    specified by ABCORR.  The attributes are:
-!
-!                       - Is the correction "geometric"?
-!
-!                       - Is light time correction indicated?
-!
-!                       - Is stellar aberration correction indicated?
-!
-!                       - Is the light time correction of the
-!                         "converged Newtonian" variety?
-!
-!                       - Is the correction for the transmission
-!                         case?
-!
-!                       - Is the correction relativistic? (This
-!                         value is always .FALSE. for aberration
-!                         correction specifications allowed by
-!                         this routine.)
-!
-!                    The structure of ATTBLK is defined in the
-!                    include file
-!
-!                       zzabcorr.inc
-!
-!                    The size of ATTBLK and the offsets of the
-!                    component flags are defined there.
-!
-! $ Parameters
-!
-!     See INCLUDE file zzabcorr.inc.
-!
-! $ Exceptions
-!
-!     1) If the input aberration correction choice is not allowed,
-!        the error SPICE(INVALIDOPTION) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is similar to ZZPRSCOR, but stellar aberration-only
-!     and relativistic corrections specifications are not allowed
-!     by this routine. The allowed values are precisely those allowed
-!     by SPKEZR.
-!
-! $ Examples
-!
-!     See ZZGFOCIN.
-!
-! $ Restrictions
-!
-!     1) This is a SPICE private routine; the routine is subject
-!        to change without notice.  User applications should not
-!        call this routine.
-!
-!     2) This routine recognizes some aberration corrections not
-!        handled by most SPICELIB routines.  Callers should do
-!        their own checking to ensure the parsed correction is
-!        acceptable.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
-!
-!        Corrected typo in comments.
-!
-!-    SPICELIB Version 1.0.0, 11-APR-2008 (NJB)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 
       if ( ctx%failed() ) return
 
@@ -9721,140 +9019,124 @@ contains
       return
       end procedure zzvalcor
 
-!$Procedure ZZCOREPC ( Correct epoch for aberration )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Compute an aberration corrected epoch, given an aberration
+      !>     correction specification, an epoch, and a light time.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     ABCORR         is a string representing a aberration
+      !>                    correction.  The supported values are:
+      !>
+      !>                       'CN'
+      !>                       'CN+S'
+      !>                       'LT'
+      !>                       'LT+S'
+      !>                       'NONE'
+      !>                       'RL'
+      !>                       'RL+S'
+      !>                       'S'
+      !>                       'XCN'
+      !>                       'XCN+S'
+      !>                       'XLT'
+      !>                       'XLT+S'
+      !>                       'XRL'
+      !>                       'XRL+S'
+      !>                       'XS'
+      !>
+      !>                    Note that some values not supported by the
+      !>                    SPICELIB SPK subsystem are supported by
+      !>                    this routine:
+      !>
+      !>                       - The letter 'R' indicates relativistic
+      !>                         corrections.
+      !>
+      !>                       - Stellar aberration-only corrections are
+      !>                         indicated by the strings
+      !>
+      !>                            'S'
+      !>                            'XS'
+      !>
+      !>                    Case and leading and trailing blanks are not
+      !>                    significant in ABCORR.
+      !>
+      !>     ET             is an epoch, expressed as seconds past J2000 TDB.
+      !>
+      !>     LT             is a light time value, expressed as TDB seconds.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     ETCORR         is the input epoch ET, corrected for light time:
+      !>
+      !>                       If the specified aberration correction calls
+      !>                       for some type of light time correction (normal,
+      !>                       converged Newtonian, relativistic), LT will be
+      !>                       added to or subtracted from ET.  If the
+      !>                       correction is of the transmission type, then
+      !>
+      !>                          ETCORR = ET + LT
+      !>
+      !>                       If the correction is of the reception type,
+      !>                       then
+      !>
+      !>                          ETCORR = ET - LT
+      !>
+      !>                       If no light time correction is specified, then
+      !>
+      !>                          ETCORR = ET
+      !>
+      !> ## Parameters
+      !>
+      !>     See INCLUDE file zzabcorr.inc.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If the input aberration correction choice is not recognized,
+      !>        the error SPICE(INVALIDOPTION) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Many SPICELIB routines have logic branches based on the
+      !>     attributes of aberration corrections.  Much duplicated
+      !>     parsing code can be avoided by using this routine.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDYNFRM.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) This is a SPICE private routine; the routine is subject
+      !>        to change without notice.  User applications should not
+      !>        call this routine.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 24-NOV-2004 (NJB)
+      !>
+      !>     SPICELIB functions
+      !>
+      !>     Local parameters
+      !>
+      !>     Local variables
       module procedure zzcorepc
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Compute an aberration corrected epoch, given an aberration
-!!     correction specification, an epoch, and a light time.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ABERRATION
-!!     PARSING
-!!     PRIVATE
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     ABCORR         is a string representing a aberration
-!!                    correction.  The supported values are:
-!!
-!!                       'CN'
-!!                       'CN+S'
-!!                       'LT'
-!!                       'LT+S'
-!!                       'NONE'
-!!                       'RL'
-!!                       'RL+S'
-!!                       'S'
-!!                       'XCN'
-!!                       'XCN+S'
-!!                       'XLT'
-!!                       'XLT+S'
-!!                       'XRL'
-!!                       'XRL+S'
-!!                       'XS'
-!!
-!!                    Note that some values not supported by the
-!!                    SPICELIB SPK subsystem are supported by
-!!                    this routine:
-!!
-!!                       - The letter 'R' indicates relativistic
-!!                         corrections.
-!!
-!!                       - Stellar aberration-only corrections are
-!!                         indicated by the strings
-!!
-!!                            'S'
-!!                            'XS'
-!!
-!!                    Case and leading and trailing blanks are not
-!!                    significant in ABCORR.
-!!
-!!     ET             is an epoch, expressed as seconds past J2000 TDB.
-!!
-!!     LT             is a light time value, expressed as TDB seconds.
-!!
-!! ## Detailed Output
-!!
-!!     ETCORR         is the input epoch ET, corrected for light time:
-!!
-!!                       If the specified aberration correction calls
-!!                       for some type of light time correction (normal,
-!!                       converged Newtonian, relativistic), LT will be
-!!                       added to or subtracted from ET.  If the
-!!                       correction is of the transmission type, then
-!!
-!!                          ETCORR = ET + LT
-!!
-!!                       If the correction is of the reception type,
-!!                       then
-!!
-!!                          ETCORR = ET - LT
-!!
-!!                       If no light time correction is specified, then
-!!
-!!                          ETCORR = ET
-!!
-!! ## Parameters
-!!
-!!     See INCLUDE file zzabcorr.inc.
-!!
-!! ## Exceptions
-!!
-!!     1) If the input aberration correction choice is not recognized,
-!!        the error SPICE(INVALIDOPTION) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     Many SPICELIB routines have logic branches based on the
-!!     attributes of aberration corrections.  Much duplicated
-!!     parsing code can be avoided by using this routine.
-!!
-!! ## Examples
-!!
-!!     See ZZDYNFRM.
-!!
-!! ## Restrictions
-!!
-!!     1) This is a SPICE private routine; the routine is subject
-!!        to change without notice.  User applications should not
-!!        call this routine.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman    (JPL)
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 24-NOV-2004 (NJB)
-!!
-!!     SPICELIB functions
-!!
-!!     Local parameters
-!!
-!!     Local variables
-!!
       use pepper_kinds, only: wp
       use pepper_inc_zzabcorr
       implicit none

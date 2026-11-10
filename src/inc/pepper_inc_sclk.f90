@@ -46,7 +46,6 @@ module pepper_inc_sclk
 !
 !-    SPICELIB Version 1.0.0, 11-FEB-2008 (NJB)
 !
-!-&
 
 !
 !        NOTE: many of the declarations present here are duplicated

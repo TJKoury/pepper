@@ -12,260 +12,206 @@ submodule (pepper_instance) pepper_files
 
 contains
 
+      !> ## Detailed Input
+      !>
+      !>     KEY         is a string value that indicates which platform
+      !>                 specific information is desired.  Acceptable inputs
+      !>                 are:
+      !>
+      !>                    'SYSTEM'      -  System Identification String
+      !>                    'O/S'         -  Operating System or Environment
+      !>                    'COMPILER'    -  NAIF Supported Compiler
+      !>                    'FILE_FORMAT' -  Native Binary File Format
+      !>                    'TEXT_FORMAT' -  Native Text File Format
+      !>                    'READS_BFF'   -  List of supported binary file
+      !>                                     formats.
+      !>
+      !>                 Note: The comparison is case-insensitive, and the
+      !>                       supplied value must fit into a string buffer
+      !>                       KYSIZE characters in length.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     VALUE       is the string that holds the information requested
+      !>                 by the input string KEY. VALUE must be able to
+      !>                 contain the maximum number of characters returned
+      !>                 by this routine, WDSIZE, or truncation will occur.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If the KEY is invalid, then VALUE is set to the value
+      !>        stored in the character string parameter DEFRPY defined
+      !>        below.
+      !>
+      !>     2) If VALUE is not large enough to contain the requested
+      !>        KEY's value, then truncation will occur.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine serves to identify the platform and compiler
+      !>     used in creating SPICELIB.  It is provided so that routines
+      !>     and programs can make run-time decisions based upon the
+      !>     ambient Fortran environment.
+      !>
+      !>     Operating Systems:
+      !>
+      !>        This routine is now aware of the operating systems for which
+      !>        the code is intended for compilation.  In some cases this may
+      !>        be more than one operating system, particularly in the case
+      !>        of the PC.
+      !>
+      !>     Binary File Format:
+      !>
+      !>        This routine now adds the capability to return at run time
+      !>        the binary file architecture that is native to the system.
+      !>
+      !>     Text File Format:
+      !>
+      !>        This routine now has the capability to return at run time
+      !>        the mechanism (or line terminator) used to delimit lines
+      !>        in text files.  In most cases it will return common labels
+      !>        for the special characters FORTRAN considers line break
+      !>        indicators.
+      !>
+      !>     Binary File Formats Read:
+      !>
+      !>        This returns a space delimited list of all the binary file
+      !>        formats this environment can read for DAF/DAS based files.
+      !>
+      !> ## Examples
+      !>
+      !>     This routine could be used so that a single routine
+      !>     could be written that translates the meaning of IOSTAT values
+      !>     that depend upon the machine and compiler.  At run time
+      !>     the routine could look up the appropriate message to associate
+      !>     with an IOSTAT value.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) VALUE must be large enough to contain the requested
+      !>        information, otherwise truncation will occur.
+      !>
+      !>     2) The string passed in via the KEY input must be capable
+      !>        of being properly copied into the KEYCPY buffer internal
+      !>        to this routine.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     W.L. Taber      (JPL)
+      !>     F.S. Turner     (JPL)
+      !>     E.D. Wright     (JPL)
+      !>     B.V. Semenov    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.1.0, 28-NOV-2021 (BVS)
+      !>
+      !>        Updated for:
+      !>
+      !>           MAC-OSX-M1-64BIT-CLANG_C
+      !>
+      !>        environment.
+      !>
+      !>-    SPICELIB Version 3.0.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for:
+      !>
+      !>           PC-CYGWIN-64BIT-GCC_C
+      !>           PC-CYGWIN-64BIT-GFORTRAN
+      !>           PC-CYGWIN-GFORTRAN
+      !>           PC-LINUX-64BIT-IFORT
+      !>           SUN-SOLARIS-64BIT-INTEL
+      !>
+      !>        environments.
+      !>
+      !>-    SPICELIB Version 2.9.0, 16-MAR-2010 (EDW)
+      !>
+      !>        Updated for:
+      !>
+      !>           MAC-OSX-64BIT-INTEL_C
+      !>           PC-64BIT-MS_C
+      !>           SUN-SOLARIS-64BIT-NATIVE_C
+      !>           MAC-OSX-64BIT-GFORTRAN
+      !>           MAC-OSX-64BIT-IFORT
+      !>           PC-LINUX-64BIT-GFORTRAN
+      !>           PC-WINDOWS-64BIT-IFORT
+      !>           SUN-SOLARIS-INTEL-64BIT-CC_C
+      !>           SUN-SOLARIS-INTEL-CC_C
+      !>           SUN-SOLARIS-INTEL
+      !>
+      !>        environments.
+      !>
+      !>-    SPICELIB Version 2.8.0, 12-JAN-2009 (EDW)
+      !>
+      !>        Added MAC-OSX-GFORTRAN PC-LINUX-GFORTRAN environments.
+      !>
+      !>-    SPICELIB Version 2.7.0, 19-FEB-2008 (BVS)
+      !>
+      !>        Added PC-LINUX-IFORT environment.
+      !>
+      !>-    SPICELIB Version 2.6.0, 15-NOV-2006 (NJB)
+      !>
+      !>        Added PC-WINDOWS-IFORT, MAC-OSX-IFORT, and MAC-OSX-INTEL_C
+      !>        environments.
+      !>
+      !>-    SPICELIB Version 2.5.0, 21-FEB-2006 (NJB)
+      !>
+      !>        Added PC-LINUX-64BIT-GCC_C environment.
+      !>
+      !>        Corrected error in in-line comments:  changed keyword
+      !>        from FILE_ARCH to FILE_FORMAT.
+      !>
+      !>-    SPICELIB Version 2.4.0, 14-MAR-2005 (BVS)
+      !>
+      !>        Added SUN-SOLARIS-64BIT-GCC_C environment.
+      !>
+      !>-    SPICELIB Version 2.3.0, 31-DEC-2004 (BVS)
+      !>
+      !>        Added PC CYGWIN environments. Changed OS for PC-LAHEY,
+      !>        PC-DIGITAL, and PC-MS_C to 'MICROSOFT WINDOWS'.
+      !>
+      !>-    SPICELIB Version 2.2.0, 07-JUL-2002 (EDW)
+      !>
+      !>        Added Mac OS X Unix environment.
+      !>
+      !>-    SPICELIB Version 2.1.0, 06-FEB-2002 (FST)
+      !>
+      !>        Updated the 'TEXT_FORMAT' key value for the PC-LINUX_C
+      !>        environment.  Previous versions incorrectly indicated
+      !>        'CR-LF' as line terminators.
+      !>
+      !>-    SPICELIB Version 2.0.0, 05-JUN-2001 (FST)
+      !>
+      !>        Added TEXT_FORMAT and READS_BFF key/value pairs.
+      !>        Modified the header slightly to improve word choice;
+      !>        specifically binary file format replaces file
+      !>        architecture.
+      !>
+      !>        Updated the compiler entry for the PC-LINUX
+      !>        environment to refer to g77 as opposed to f2c.
+      !>
+      !>        Updated the compiler entry for the MACPPC environment.
+      !>        This environment is now officially tied to Absoft
+      !>        Fortran.
+      !>
+      !>        Updated the compiler entry for the PC-LAHEY environment.
+      !>        The compiler for this environment is LF95, the latest
+      !>        offering from Lahey.
+      !>
+      !>-    SPICELIB Version 1.0.0, 22-FEB-1999 (FST)
       module procedure zzplatfm
-!! ## Abstract
-!!
-!!     Return platform ID and various attributes of the intended
-!!     environment
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     KEY         is a string value that indicates which platform
-!!                 specific information is desired.  Acceptable inputs
-!!                 are:
-!!
-!!                    'SYSTEM'      -  System Identification String
-!!                    'O/S'         -  Operating System or Environment
-!!                    'COMPILER'    -  NAIF Supported Compiler
-!!                    'FILE_FORMAT' -  Native Binary File Format
-!!                    'TEXT_FORMAT' -  Native Text File Format
-!!                    'READS_BFF'   -  List of supported binary file
-!!                                     formats.
-!!
-!!                 Note: The comparison is case-insensitive, and the
-!!                       supplied value must fit into a string buffer
-!!                       KYSIZE characters in length.
-!!
-!! ## Detailed Output
-!!
-!!     VALUE       is the string that holds the information requested
-!!                 by the input string KEY. VALUE must be able to
-!!                 contain the maximum number of characters returned
-!!                 by this routine, WDSIZE, or truncation will occur.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1) If the KEY is invalid, then VALUE is set to the value
-!!        stored in the character string parameter DEFRPY defined
-!!        below.
-!!
-!!     2) If VALUE is not large enough to contain the requested
-!!        KEY's value, then truncation will occur.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine serves to identify the platform and compiler
-!!     used in creating SPICELIB.  It is provided so that routines
-!!     and programs can make run-time decisions based upon the
-!!     ambient Fortran environment.
-!!
-!!     Operating Systems:
-!!
-!!        This routine is now aware of the operating systems for which
-!!        the code is intended for compilation.  In some cases this may
-!!        be more than one operating system, particularly in the case
-!!        of the PC.
-!!
-!!     Binary File Format:
-!!
-!!        This routine now adds the capability to return at run time
-!!        the binary file architecture that is native to the system.
-!!
-!!     Text File Format:
-!!
-!!        This routine now has the capability to return at run time
-!!        the mechanism (or line terminator) used to delimit lines
-!!        in text files.  In most cases it will return common labels
-!!        for the special characters FORTRAN considers line break
-!!        indicators.
-!!
-!!     Binary File Formats Read:
-!!
-!!        This returns a space delimited list of all the binary file
-!!        formats this environment can read for DAF/DAS based files.
-!!
-!! ## Examples
-!!
-!!     This routine could be used so that a single routine
-!!     could be written that translates the meaning of IOSTAT values
-!!     that depend upon the machine and compiler.  At run time
-!!     the routine could look up the appropriate message to associate
-!!     with an IOSTAT value.
-!!
-!! ## Restrictions
-!!
-!!     1) VALUE must be large enough to contain the requested
-!!        information, otherwise truncation will occur.
-!!
-!!     2) The string passed in via the KEY input must be capable
-!!        of being properly copied into the KEYCPY buffer internal
-!!        to this routine.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     W.L. Taber      (JPL)
-!!     F.S. Turner     (JPL)
-!!     E.D. Wright     (JPL)
-!!     B.V. Semenov    (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 3.1.0, 28-NOV-2021 (BVS)
-!!
-!!        Updated for:
-!!
-!!           MAC-OSX-M1-64BIT-CLANG_C
-!!
-!!        environment.
-!!
-!!-    SPICELIB Version 3.0.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for:
-!!
-!!           PC-CYGWIN-64BIT-GCC_C
-!!           PC-CYGWIN-64BIT-GFORTRAN
-!!           PC-CYGWIN-GFORTRAN
-!!           PC-LINUX-64BIT-IFORT
-!!           SUN-SOLARIS-64BIT-INTEL
-!!
-!!        environments.
-!!
-!!-    SPICELIB Version 2.9.0, 16-MAR-2010 (EDW)
-!!
-!!        Updated for:
-!!
-!!           MAC-OSX-64BIT-INTEL_C
-!!           PC-64BIT-MS_C
-!!           SUN-SOLARIS-64BIT-NATIVE_C
-!!           MAC-OSX-64BIT-GFORTRAN
-!!           MAC-OSX-64BIT-IFORT
-!!           PC-LINUX-64BIT-GFORTRAN
-!!           PC-WINDOWS-64BIT-IFORT
-!!           SUN-SOLARIS-INTEL-64BIT-CC_C
-!!           SUN-SOLARIS-INTEL-CC_C
-!!           SUN-SOLARIS-INTEL
-!!
-!!        environments.
-!!
-!!-    SPICELIB Version 2.8.0, 12-JAN-2009 (EDW)
-!!
-!!        Added MAC-OSX-GFORTRAN PC-LINUX-GFORTRAN environments.
-!!
-!!-    SPICELIB Version 2.7.0, 19-FEB-2008 (BVS)
-!!
-!!        Added PC-LINUX-IFORT environment.
-!!
-!!-    SPICELIB Version 2.6.0, 15-NOV-2006 (NJB)
-!!
-!!        Added PC-WINDOWS-IFORT, MAC-OSX-IFORT, and MAC-OSX-INTEL_C
-!!        environments.
-!!
-!!-    SPICELIB Version 2.5.0, 21-FEB-2006 (NJB)
-!!
-!!        Added PC-LINUX-64BIT-GCC_C environment.
-!!
-!!        Corrected error in in-line comments:  changed keyword
-!!        from FILE_ARCH to FILE_FORMAT.
-!!
-!!-    SPICELIB Version 2.4.0, 14-MAR-2005 (BVS)
-!!
-!!        Added SUN-SOLARIS-64BIT-GCC_C environment.
-!!
-!!-    SPICELIB Version 2.3.0, 31-DEC-2004 (BVS)
-!!
-!!        Added PC CYGWIN environments. Changed OS for PC-LAHEY,
-!!        PC-DIGITAL, and PC-MS_C to 'MICROSOFT WINDOWS'.
-!!
-!!-    SPICELIB Version 2.2.0, 07-JUL-2002 (EDW)
-!!
-!!        Added Mac OS X Unix environment.
-!!
-!!-    SPICELIB Version 2.1.0, 06-FEB-2002 (FST)
-!!
-!!        Updated the 'TEXT_FORMAT' key value for the PC-LINUX_C
-!!        environment.  Previous versions incorrectly indicated
-!!        'CR-LF' as line terminators.
-!!
-!!-    SPICELIB Version 2.0.0, 05-JUN-2001 (FST)
-!!
-!!        Added TEXT_FORMAT and READS_BFF key/value pairs.
-!!        Modified the header slightly to improve word choice;
-!!        specifically binary file format replaces file
-!!        architecture.
-!!
-!!        Updated the compiler entry for the PC-LINUX
-!!        environment to refer to g77 as opposed to f2c.
-!!
-!!        Updated the compiler entry for the MACPPC environment.
-!!        This environment is now officially tied to Absoft
-!!        Fortran.
-!!
-!!        Updated the compiler entry for the PC-LAHEY environment.
-!!        The compiler for this environment is LF95, the latest
-!!        offering from Lahey.
-!!
-!!-    SPICELIB Version 1.0.0, 22-FEB-1999 (FST)
-!!
-!! ## Index Entries
-!!
-!!     fetch platform dependent information
-!!
-!!     SPICELIB Functions
-!!
-!!     Local Parameters
-!!
-!!     Array index parameters for each of the key/value pairs.
-!!
-!!     SYSTEM Index.
-!!
-!!     O/S Index.
-!!
-!!     Compiler Index.
-!!
-!!     Binary File Format Index.
-!!
-!!     Text File Format Index
-!!
-!!     Reads Binary File Format Index.
-!!
-!!     Size of the buffer in which KEY is placed.
-!!
-!!     Maximum Size of local string returned in VALUE
-!!
-!!     Number of Platform Dependent values stored here.
-!!
-!!     Default Reply in the event of an invalid KEY.
-!!
-!!     Local Variables
-!!
-!!     Saved Variables
-!!
-!!     Data Statements
-!!
-!!     Make the initial assignments to the saved character array.
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase
       implicit none
@@ -365,98 +311,72 @@ contains
       end associate
       end procedure zzplatfm
 
-!$Procedure ZZPLTCHK ( Private --- Platform Check )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Validate the runtime environment against values assumed by the
+      !>     current toolkit source package.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     OK         is a logical when set to .TRUE. indicates that the
+      !>                runtime environment passes any checks implemented
+      !>                by this routine against the configured code.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) This routine signals SPICE(BUG) if it determines the runtime
+      !>        environment is incompatible with the configured binary file
+      !>        format.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine encapsulates a series of checks to diagnose the
+      !>     runtime environment against assumptions configured in the
+      !>     source code.  Configuration errors are reported via the error
+      !>     SPICE(BUG).
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDDHOPN for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 07-AUG-2002 (FST)
       module procedure zzpltchk
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Validate the runtime environment against values assumed by the
-!!     current toolkit source package.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_zzddhman
       implicit none
 
-
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     OK         is a logical when set to .TRUE. indicates that the
-!                runtime environment passes any checks implemented
-!                by this routine against the configured code.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) This routine signals SPICE(BUG) if it determines the runtime
-!        environment is incompatible with the configured binary file
-!        format.
-!
-! $ Particulars
-!
-!     This routine encapsulates a series of checks to diagnose the
-!     runtime environment against assumptions configured in the
-!     source code.  Configuration errors are reported via the error
-!     SPICE(BUG).
-!
-! $ Examples
-!
-!     See ZZDDHOPN for sample usage.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     F.S. Turner     (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 07-AUG-2002 (FST)
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Parameters
-!
       integer(ip), parameter :: wdsize = 32
 
-!
-!     Local Variables
-!
       character(wdsize)     strbff
       character(wdsize)     value
       character(wdsize)     rtebff
@@ -524,221 +444,202 @@ contains
 
       end procedure zzpltchk
 
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     TSTCOM     is a string composed of clusters of characters that
+      !>                are susceptible to FTP ASCII mode transfer corruption,
+      !>                separated by the DELIM character.  For example:
+      !>
+      !>                    :<CLUSTR(1)>:<CLUSTR(2):...
+      !>                                            ...<CLUSTR(N)>:
+      !>
+      !>                where <CLUSTR(I)> is one cluster of characters that
+      !>                is subject to improper FTP corruption. The string
+      !>                that is to receive this value should be SIZSTR
+      !>                characters in length.
+      !>
+      !>     LEND,      are the two sequences of printing characters that
+      !>     REND       bracket TSTCOM in the binary file.  Their purpose is
+      !>                to permit proper detection of TSTCOM in the event
+      !>                of compression or expansion, due to improper FTP
+      !>                transfer.  The variables which are to receive these
+      !>                values should be SIZEND characters in length.
+      !>
+      !>     DELIM      is the printing character delimiter that separates the
+      !>                test character clusters from one another, as well as
+      !>                LEND and REND.  Since it is often the case that pairs
+      !>                or triples of non-printing characters will trigger
+      !>                FTP corruption, this delimiter blocks any unintended
+      !>                interaction.
+      !>
+      !> ## Parameters
+      !>
+      !>     1) See include file zzftprms.inc
+      !>
+      !>     2) Since inserting non-printing characters into strings is a
+      !>        somewhat arduous task requiring extensive use of the intrinsic
+      !>        CHAR, integer parameters that map to the needed ASCII codes are
+      !>        defined with variable names INT###, where ### is replaced with
+      !>        the three digit ASCII integer code.  For each such integer
+      !>        code, there is a corresponding character parameter whose name
+      !>        is of the form ASC###.  For example:
+      !>
+      !>           INT010 = 10  -> ASC010 = <10> or <LF>
+      !>           INT206 = 206 -> ASC206 = <206>
+      !>
+      !>        where <#> refers to CHAR(#) or CHAR(ICHAR('#')) in the case of
+      !>        LF(line feed).
+      !>
+      !>        These naming conventions should be preserved when the FTP
+      !>        validation string is updated.
+      !>
+      !> ## Files
+      !>
+      !>     While this routine is designed to aid in the detection of
+      !>     improper FTP transfers, it simply returns the candidate
+      !>     string for validation and does not interact with any
+      !>     files directly.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error Free.
+      !>
+      !> ## Particulars
+      !>
+      !>     To minimize code alterations in the event of a string update,
+      !>     the calling routine that declares the variables to receive
+      !>     the strings stored here should include zzftprms.inc and utilize
+      !>     the size parameters defined there as recommended in the Detailed
+      !>     I/O sections above.
+      !>
+      !>     This private SPICELIB routine is designed to centralize the
+      !>     definition of the FTP validation string present in binary
+      !>     SPICE kernels.  If in the process of FTP'ing a binary
+      !>     file from one platform to another, the user neglects to
+      !>     invoke the IMAGE (BINARY) transfer mode, an ASCII mode
+      !>     transfer may occur.  As this at the very least may substitute
+      !>     one set of line terminators for another, corruption of the
+      !>     binary file is likely.  By placing a string that encapsulates
+      !>     a representative set of these character sequences that are
+      !>     susceptible to corruption in the file record, it is possible
+      !>     to trap and report any problems to the user when corrupted
+      !>     kernels are loaded at run time.
+      !>
+      !>     To that end, analysis of evidence obtained by moving test binary
+      !>     files from one platform to another indicates the following
+      !>     clusters of ASCII codes are likely candidates for corruption:
+      !>
+      !>        Test Clusters:
+      !>
+      !>        <13>      - Text line terminator on Macintosh-based platforms.
+      !>        <10>      - Text line terminator on UNIX-based platforms.
+      !>        <13><10>  - Text line terminator on Microsoft platforms.
+      !>        <13><0>   - Sequence of characters that maps into <13> on some
+      !>                    UNIX-based systems. (HP, SGI, NEXT)
+      !>        <129>     - Macintosh based systems permute ASCII values whose
+      !>                    parity bit is set.  Codes in excess of ASCII
+      !>                    127 are altered.
+      !>        <16><206> - Some ancient FTP servers on PC's convert this
+      !>                    sequence of ASCII characters to <16><16><206>.
+      !>
+      !>     The examples above show that substitution of one set of line
+      !>     terminators for another can result in expansion or compression of
+      !>     certain sequences of bytes.  If the clusters were juxtaposed, new
+      !>     sequences of adjacent bytes, themselves subject to transformation,
+      !>     might be formed.  So the FTP test string present in the binary
+      !>     file should have some mechanism for preventing interaction between
+      !>     the clusters.  The test string should also be constructed so that
+      !>     it can be easily located in the event compression or expansion,
+      !>     either internally or elsewhere in the file record, shifts it away
+      !>     from its default location.
+      !>
+      !>     So by separating these clusters with a printable delimiter, then
+      !>     bracketing the entire test string with start and stop identifiers,
+      !>     we have a reasonable mechanism for locating and analyzing any
+      !>     potential FTP corruption. Then the sequence of characters to be
+      !>     inserted into the file will appear as:
+      !>
+      !>        FTPSTR:<13>:<10>:<13><10>:<13><0>:<129>:<16><206>:ENDFTP
+      !>
+      !>     where 'FTPSTR' and 'ENDFTP' are the bracketing substrings and
+      !>     ':' is the delimiting character.
+      !>
+      !>     By no means do we claim that these are the complete set of
+      !>     clusters that are corruptible through an improper FTP transfer.
+      !>     An update procedure is provided in the Revisions section just
+      !>     after the routine header.  Following this procedure will require
+      !>     the least amount of effort to prevent older files from falsely
+      !>     indicating corruption under new Toolkits, as well as newer files
+      !>     failing on old Toolkits.
+      !>
+      !> ## Examples
+      !>
+      !>     This routine just fetches the components of the FTP validation
+      !>     string.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) TSTCOM, LEND, REND, and DELIM must be large enough to hold
+      !>        the entire values returned by this routine, otherwise
+      !>        truncation will occur.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 21-MAR-1999 (FST)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 1.0.0, 21-MAR-1999 (FST)
+      !>
+      !>        FTP validation string update procedure:
+      !>
+      !>           (1) Leave 'FTPSTR', 'ENDFTP', and ':' alone, as
+      !>               their alteration will require special
+      !>               consideration for older files.
+      !>
+      !>           (2) Leave the existing test clusters in the
+      !>               existing order, and place any new clusters
+      !>               between the last ':' and the E in 'ENDFTP'.
+      !>               Make certain these are ':' delimited as well.
+      !>
+      !>           (3) Modify the contents of zzftprms.inc to
+      !>               indicate the new sizes of the various string
+      !>               components. Routines that include this must
+      !>               then be recompiled.
+      !>
+      !>     Local Parameters
+      !>
+      !>     Maximum size of an individual test cluster component
+      !>     including the ':'.
+      !>
+      !>     Integer codes of characters appearing in test clusters.
+      !>
+      !>     Local Variables
+      !>
+      !>     Non-printing character values.
+      !>
+      !>     Saved Variables
+      !>
+      !>     Data Statements
+      !>
+      !>     Set up the components of the FTP validation string that
+      !>     are not supposed to change for forward and backward
+      !>     compatibility.
+      !>
+      !>     On the first invocation initialize the string values.
       module procedure zzftpstr
-!! ## Abstract
-!!
-!!    Retrieve the components of the FTP validation string.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     None.
-!!
-!! ## Detailed Output
-!!
-!!     TSTCOM     is a string composed of clusters of characters that
-!!                are susceptible to FTP ASCII mode transfer corruption,
-!!                separated by the DELIM character.  For example:
-!!
-!!                    :<CLUSTR(1)>:<CLUSTR(2):...
-!!                                            ...<CLUSTR(N)>:
-!!
-!!                where <CLUSTR(I)> is one cluster of characters that
-!!                is subject to improper FTP corruption. The string
-!!                that is to receive this value should be SIZSTR
-!!                characters in length.
-!!
-!!     LEND,      are the two sequences of printing characters that
-!!     REND       bracket TSTCOM in the binary file.  Their purpose is
-!!                to permit proper detection of TSTCOM in the event
-!!                of compression or expansion, due to improper FTP
-!!                transfer.  The variables which are to receive these
-!!                values should be SIZEND characters in length.
-!!
-!!     DELIM      is the printing character delimiter that separates the
-!!                test character clusters from one another, as well as
-!!                LEND and REND.  Since it is often the case that pairs
-!!                or triples of non-printing characters will trigger
-!!                FTP corruption, this delimiter blocks any unintended
-!!                interaction.
-!!
-!! ## Parameters
-!!
-!!     1) See include file zzftprms.inc
-!!
-!!     2) Since inserting non-printing characters into strings is a
-!!        somewhat arduous task requiring extensive use of the intrinsic
-!!        CHAR, integer parameters that map to the needed ASCII codes are
-!!        defined with variable names INT###, where ### is replaced with
-!!        the three digit ASCII integer code.  For each such integer
-!!        code, there is a corresponding character parameter whose name
-!!        is of the form ASC###.  For example:
-!!
-!!           INT010 = 10  -> ASC010 = <10> or <LF>
-!!           INT206 = 206 -> ASC206 = <206>
-!!
-!!        where <#> refers to CHAR(#) or CHAR(ICHAR('#')) in the case of
-!!        LF(line feed).
-!!
-!!        These naming conventions should be preserved when the FTP
-!!        validation string is updated.
-!!
-!! ## Files
-!!
-!!     While this routine is designed to aid in the detection of
-!!     improper FTP transfers, it simply returns the candidate
-!!     string for validation and does not interact with any
-!!     files directly.
-!!
-!! ## Exceptions
-!!
-!!     Error Free.
-!!
-!! ## Particulars
-!!
-!!     To minimize code alterations in the event of a string update,
-!!     the calling routine that declares the variables to receive
-!!     the strings stored here should include zzftprms.inc and utilize
-!!     the size parameters defined there as recommended in the Detailed
-!!     I/O sections above.
-!!
-!!     This private SPICELIB routine is designed to centralize the
-!!     definition of the FTP validation string present in binary
-!!     SPICE kernels.  If in the process of FTP'ing a binary
-!!     file from one platform to another, the user neglects to
-!!     invoke the IMAGE (BINARY) transfer mode, an ASCII mode
-!!     transfer may occur.  As this at the very least may substitute
-!!     one set of line terminators for another, corruption of the
-!!     binary file is likely.  By placing a string that encapsulates
-!!     a representative set of these character sequences that are
-!!     susceptible to corruption in the file record, it is possible
-!!     to trap and report any problems to the user when corrupted
-!!     kernels are loaded at run time.
-!!
-!!     To that end, analysis of evidence obtained by moving test binary
-!!     files from one platform to another indicates the following
-!!     clusters of ASCII codes are likely candidates for corruption:
-!!
-!!        Test Clusters:
-!!
-!!        <13>      - Text line terminator on Macintosh-based platforms.
-!!        <10>      - Text line terminator on UNIX-based platforms.
-!!        <13><10>  - Text line terminator on Microsoft platforms.
-!!        <13><0>   - Sequence of characters that maps into <13> on some
-!!                    UNIX-based systems. (HP, SGI, NEXT)
-!!        <129>     - Macintosh based systems permute ASCII values whose
-!!                    parity bit is set.  Codes in excess of ASCII
-!!                    127 are altered.
-!!        <16><206> - Some ancient FTP servers on PC's convert this
-!!                    sequence of ASCII characters to <16><16><206>.
-!!
-!!     The examples above show that substitution of one set of line
-!!     terminators for another can result in expansion or compression of
-!!     certain sequences of bytes.  If the clusters were juxtaposed, new
-!!     sequences of adjacent bytes, themselves subject to transformation,
-!!     might be formed.  So the FTP test string present in the binary
-!!     file should have some mechanism for preventing interaction between
-!!     the clusters.  The test string should also be constructed so that
-!!     it can be easily located in the event compression or expansion,
-!!     either internally or elsewhere in the file record, shifts it away
-!!     from its default location.
-!!
-!!     So by separating these clusters with a printable delimiter, then
-!!     bracketing the entire test string with start and stop identifiers,
-!!     we have a reasonable mechanism for locating and analyzing any
-!!     potential FTP corruption. Then the sequence of characters to be
-!!     inserted into the file will appear as:
-!!
-!!        FTPSTR:<13>:<10>:<13><10>:<13><0>:<129>:<16><206>:ENDFTP
-!!
-!!     where 'FTPSTR' and 'ENDFTP' are the bracketing substrings and
-!!     ':' is the delimiting character.
-!!
-!!     By no means do we claim that these are the complete set of
-!!     clusters that are corruptible through an improper FTP transfer.
-!!     An update procedure is provided in the Revisions section just
-!!     after the routine header.  Following this procedure will require
-!!     the least amount of effort to prevent older files from falsely
-!!     indicating corruption under new Toolkits, as well as newer files
-!!     failing on old Toolkits.
-!!
-!! ## Examples
-!!
-!!     This routine just fetches the components of the FTP validation
-!!     string.
-!!
-!! ## Restrictions
-!!
-!!     1) TSTCOM, LEND, REND, and DELIM must be large enough to hold
-!!        the entire values returned by this routine, otherwise
-!!        truncation will occur.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 21-MAR-1999 (FST)
-!!
-!! ## Index Entries
-!!
-!!     fetch the ftp validation string components
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 1.0.0, 21-MAR-1999 (FST)
-!!
-!!        FTP validation string update procedure:
-!!
-!!           (1) Leave 'FTPSTR', 'ENDFTP', and ':' alone, as
-!!               their alteration will require special
-!!               consideration for older files.
-!!
-!!           (2) Leave the existing test clusters in the
-!!               existing order, and place any new clusters
-!!               between the last ':' and the E in 'ENDFTP'.
-!!               Make certain these are ':' delimited as well.
-!!
-!!           (3) Modify the contents of zzftprms.inc to
-!!               indicate the new sizes of the various string
-!!               components. Routines that include this must
-!!               then be recompiled.
-!!
-!!     Local Parameters
-!!
-!!     Maximum size of an individual test cluster component
-!!     including the ':'.
-!!
-!!     Integer codes of characters appearing in test clusters.
-!!
-!!     Local Variables
-!!
-!!     Non-printing character values.
-!!
-!!     Saved Variables
-!!
-!!     Data Statements
-!!
-!!     Set up the components of the FTP validation string that
-!!     are not supposed to change for forward and backward
-!!     compatibility.
-!!
-!!     On the first invocation initialize the string values.
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: suffix
       use pepper_inc_zzftprms
@@ -857,205 +758,184 @@ contains
       end associate
       end procedure zzftpstr
 
+      !> ## Detailed Input
+      !>
+      !>     STRING     is a string read in directly from a binary file.  This
+      !>                string should, but does not have to, contain the FTP
+      !>                validation string.  Typically this block of characters
+      !>                is read in from the file record of the binary kernel.
+      !>                If 'FTPSTR' or 'ENDFTP' occur anywhere in STRING, then
+      !>                validation will be attempted.  Multiple occurrences of
+      !>                these two special strings in STRING is also an issue.
+      !>                See Restrictions for details.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     FTPERR     is a logical that indicates whether or not an FTP
+      !>                error has occurred.  If an error is detected FTPERR
+      !>                is set to TRUE, otherwise FTPERR is FALSE.  In the
+      !>                event that STRING does not contain either of the FTP
+      !>                bracketing strings, then the test will not be
+      !>                performed.  Thus, FTPERR is set to FALSE.
+      !>
+      !> ## Parameters
+      !>
+      !>     See include file zzftprms.inc.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) In the event that both the left and right end markers of the
+      !>        FTP validation string are not present in STRING, the routine
+      !>        assumes that this information is from a pre-FTP test file.  As
+      !>        such, the file can not be validated, so FTPERR remains FALSE.
+      !>
+      !>     2) If the FTP string brackets 'FTPSTR' and 'ENDFTP' are present in
+      !>        multiple places in the text block, then this routine assumes
+      !>        the last occurrence of the substring these strings bracket is
+      !>        the FTP test sequence that requires validation.  So if this
+      !>        routine encounters a block of text:
+      !>
+      !>        ...FTPSTR:<TESTSQ>:ENDFTP...FTPSTR[THISISNOTATEST]ENDFTP...
+      !>
+      !>        where <TESTSQ> is the actual test sequence, then it will
+      !>        incorrectly compare [THISISNOTATEST] to the test component
+      !>        returned from ZZFTPSTR.
+      !>
+      !> ## Files
+      !>
+      !>     Although this routine validates information from a binary file,
+      !>     it does not interact with the file directly, and relies upon
+      !>     the caller to pass the appropriate string block.
+      !>
+      !> ## Particulars
+      !>
+      !>     The purpose of this routine is to examine for FTP errors a
+      !>     string brought in from a binary kernel.  This text may or may
+      !>     not contain the FTP validation string defined in ZZFTPSTR.
+      !>     However, if it contains at least one of the two bracketing
+      !>     substrings ('FTPSTR' and 'ENDFTP'), then the routine assumes
+      !>     that the text is subject to FTP validation. As a result of this,
+      !>     the caller should avoid passing in user controlled chunks of
+      !>     character data from the file.  If the user has decided to place
+      !>     one of the FTP string bracket components in this portion of the
+      !>     file, then ZZFTPCHK may be confused and incorrectly indicate an
+      !>     error condition.
+      !>
+      !> ## Examples
+      !>
+      !>     The following code fragment from DAFOPR reads in the DAF file
+      !>     record and attempts to examine the contents for FTP errors.
+      !>     (Note: this code fragment is from a 32 bit word length, 1
+      !>     byte character environment.)
+      !>
+      !>     C
+      !>     C     Check for FTP transfer errors to prevent the user from
+      !>     C     inadvertently using a damaged kernel. First read the file
+      !>     C     record into a string of 1000 characters.
+      !>     C
+      !>           READ ( UNIT = LUN, REC = 1, IOSTAT = IOSTAT ) FTPTST
+      !>
+      !>           IF ( IOSTAT .NE. 0 ) THEN
+      !>
+      !>              CLOSE       ( LUN                                     )
+      !>              CALL SETMSG ( 'Error reading the file record from'   //
+      !>          .                 ' the binary DAF file ''#''. IOSTAT'   //
+      !>          .                 ' = #.'                                 )
+      !>              CALL ERRCH  ( '#', FNAME                              )
+      !>              CALL ERRINT ( '#', IOSTAT                             )
+      !>              CALL SIGERR ( 'SPICE(FILEREADFAILED)'                 )
+      !>              CALL CHKOUT ( 'DAFOPR'                                )
+      !>              RETURN
+      !>
+      !>           END IF
+      !>
+      !>     C
+      !>     C     Since we are dealing with DAF files, only place the
+      !>     C     last 500 characters of data from the file record into
+      !>     C     ZZFTPCHK.  This ensures that the internal filename
+      !>     C     and the ID word do not interfere with the FTP validation
+      !>     C     process.
+      !>     C
+      !>           CALL ZZFTPCHK ( FTPTST(501:1000), FTPERR )
+      !>
+      !>           IF ( FTPERR ) THEN
+      !>
+      !>              CLOSE       ( LUN                                      )
+      !>              CALL SETMSG ( 'FTP transfer error.  This binary DAF, '//
+      !>          .                 '''#'', has most likely been corrupted '//
+      !>          .                 'by an ASCII mode FTP transfer. '       //
+      !>          .                 'Re-obtain the file using IMAGE or '    //
+      !>          .                 'BINARY transfer mode.'                  )
+      !>              CALL ERRCH  ( '#', FNAME                               )
+      !>              CALL SIGERR ( 'SPICE(FTPXFERERROR)'                    )
+      !>              CALL CHKOUT ( 'DAFOPR'                                 )
+      !>              RETURN
+      !>
+      !>           END IF
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) STRING may contain multiple occurrences of the FTP bracketing
+      !>        substrings ('FTPSTR' and 'ENDFTP'), but only if the last
+      !>        occurrence of both brackets the actual data for validation.
+      !>
+      !>     2) This routine assumes the presence of either 'FTPSTR' or
+      !>        'ENDFTP' in STRING indicates that validation is to be
+      !>        attempted.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 02-OCT-2021 (NJB)
+      !>
+      !>        Fixed typo in comment. Reordered header sections.
+      !>
+      !>-    SPICELIB Version 1.0.0, 22-MAR-1999 (FST)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 1.0.0, 22-MAR-1999 (FST)
+      !>
+      !>        This routine does not require modification if the FTP
+      !>        validation string is updated according to the guidelines
+      !>        laid out in ZZFTPSTR.  The reason for this is the
+      !>        verification algorithm extracts the chunk of text between
+      !>        'FTPSTR' and 'ENDFTP'.  It then checks to see whether or
+      !>        not this chunk is a subset of the test component stored
+      !>        in ZZFTPSTR. Two cases:
+      !>
+      !>           (1) It is.  Then this indicates that at the worst,
+      !>               the chunk is from a valid file with an earlier
+      !>               version of the FTP validation string.
+      !>
+      !>           (2) It is not.  While this is a fair indication that
+      !>               the file may be corrupt, it's not a complete
+      !>               treatment, since we may be examining a file
+      !>               created with a newer version of the FTP validation
+      !>               string.  So now check to see whether that test
+      !>               component from ZZFTPSTR is a subset of the text
+      !>               chunk from STRING.  If it is, then the file is
+      !>               as valid as far as this version of the toolkit is
+      !>               concerned.  Otherwise, the file is damaged.
+      !>
+      !>     SPICELIB Functions
+      !>
+      !>     Local Variables
+      !>
+      !>     Saved Variables
+      !>
+      !>     Data Statements
+      !>
+      !>     On the first pass through, fetch a copy of the current FTP
+      !>     validation string.
       module procedure zzftpchk
-!! ## Abstract
-!!
-!!    Check a character string that may contain the FTP validation
-!!    string for FTP based errors.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     FILE
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     STRING     is a string read in directly from a binary file.  This
-!!                string should, but does not have to, contain the FTP
-!!                validation string.  Typically this block of characters
-!!                is read in from the file record of the binary kernel.
-!!                If 'FTPSTR' or 'ENDFTP' occur anywhere in STRING, then
-!!                validation will be attempted.  Multiple occurrences of
-!!                these two special strings in STRING is also an issue.
-!!                See Restrictions for details.
-!!
-!! ## Detailed Output
-!!
-!!     FTPERR     is a logical that indicates whether or not an FTP
-!!                error has occurred.  If an error is detected FTPERR
-!!                is set to TRUE, otherwise FTPERR is FALSE.  In the
-!!                event that STRING does not contain either of the FTP
-!!                bracketing strings, then the test will not be
-!!                performed.  Thus, FTPERR is set to FALSE.
-!!
-!! ## Parameters
-!!
-!!     See include file zzftprms.inc.
-!!
-!! ## Exceptions
-!!
-!!     1) In the event that both the left and right end markers of the
-!!        FTP validation string are not present in STRING, the routine
-!!        assumes that this information is from a pre-FTP test file.  As
-!!        such, the file can not be validated, so FTPERR remains FALSE.
-!!
-!!     2) If the FTP string brackets 'FTPSTR' and 'ENDFTP' are present in
-!!        multiple places in the text block, then this routine assumes
-!!        the last occurrence of the substring these strings bracket is
-!!        the FTP test sequence that requires validation.  So if this
-!!        routine encounters a block of text:
-!!
-!!        ...FTPSTR:<TESTSQ>:ENDFTP...FTPSTR[THISISNOTATEST]ENDFTP...
-!!
-!!        where <TESTSQ> is the actual test sequence, then it will
-!!        incorrectly compare [THISISNOTATEST] to the test component
-!!        returned from ZZFTPSTR.
-!!
-!! ## Files
-!!
-!!     Although this routine validates information from a binary file,
-!!     it does not interact with the file directly, and relies upon
-!!     the caller to pass the appropriate string block.
-!!
-!! ## Particulars
-!!
-!!     The purpose of this routine is to examine for FTP errors a
-!!     string brought in from a binary kernel.  This text may or may
-!!     not contain the FTP validation string defined in ZZFTPSTR.
-!!     However, if it contains at least one of the two bracketing
-!!     substrings ('FTPSTR' and 'ENDFTP'), then the routine assumes
-!!     that the text is subject to FTP validation. As a result of this,
-!!     the caller should avoid passing in user controlled chunks of
-!!     character data from the file.  If the user has decided to place
-!!     one of the FTP string bracket components in this portion of the
-!!     file, then ZZFTPCHK may be confused and incorrectly indicate an
-!!     error condition.
-!!
-!! ## Examples
-!!
-!!     The following code fragment from DAFOPR reads in the DAF file
-!!     record and attempts to examine the contents for FTP errors.
-!!     (Note: this code fragment is from a 32 bit word length, 1
-!!     byte character environment.)
-!!
-!!     C
-!!     C     Check for FTP transfer errors to prevent the user from
-!!     C     inadvertently using a damaged kernel. First read the file
-!!     C     record into a string of 1000 characters.
-!!     C
-!!           READ ( UNIT = LUN, REC = 1, IOSTAT = IOSTAT ) FTPTST
-!!
-!!           IF ( IOSTAT .NE. 0 ) THEN
-!!
-!!              CLOSE       ( LUN                                     )
-!!              CALL SETMSG ( 'Error reading the file record from'   //
-!!          .                 ' the binary DAF file ''#''. IOSTAT'   //
-!!          .                 ' = #.'                                 )
-!!              CALL ERRCH  ( '#', FNAME                              )
-!!              CALL ERRINT ( '#', IOSTAT                             )
-!!              CALL SIGERR ( 'SPICE(FILEREADFAILED)'                 )
-!!              CALL CHKOUT ( 'DAFOPR'                                )
-!!              RETURN
-!!
-!!           END IF
-!!
-!!     C
-!!     C     Since we are dealing with DAF files, only place the
-!!     C     last 500 characters of data from the file record into
-!!     C     ZZFTPCHK.  This ensures that the internal filename
-!!     C     and the ID word do not interfere with the FTP validation
-!!     C     process.
-!!     C
-!!           CALL ZZFTPCHK ( FTPTST(501:1000), FTPERR )
-!!
-!!           IF ( FTPERR ) THEN
-!!
-!!              CLOSE       ( LUN                                      )
-!!              CALL SETMSG ( 'FTP transfer error.  This binary DAF, '//
-!!          .                 '''#'', has most likely been corrupted '//
-!!          .                 'by an ASCII mode FTP transfer. '       //
-!!          .                 'Re-obtain the file using IMAGE or '    //
-!!          .                 'BINARY transfer mode.'                  )
-!!              CALL ERRCH  ( '#', FNAME                               )
-!!              CALL SIGERR ( 'SPICE(FTPXFERERROR)'                    )
-!!              CALL CHKOUT ( 'DAFOPR'                                 )
-!!              RETURN
-!!
-!!           END IF
-!!
-!! ## Restrictions
-!!
-!!     1) STRING may contain multiple occurrences of the FTP bracketing
-!!        substrings ('FTPSTR' and 'ENDFTP'), but only if the last
-!!        occurrence of both brackets the actual data for validation.
-!!
-!!     2) This routine assumes the presence of either 'FTPSTR' or
-!!        'ENDFTP' in STRING indicates that validation is to be
-!!        attempted.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.1, 02-OCT-2021 (NJB)
-!!
-!!        Fixed typo in comment. Reordered header sections.
-!!
-!!-    SPICELIB Version 1.0.0, 22-MAR-1999 (FST)
-!!
-!! ## Index Entries
-!!
-!!     check text block for FTP errors
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 1.0.0, 22-MAR-1999 (FST)
-!!
-!!        This routine does not require modification if the FTP
-!!        validation string is updated according to the guidelines
-!!        laid out in ZZFTPSTR.  The reason for this is the
-!!        verification algorithm extracts the chunk of text between
-!!        'FTPSTR' and 'ENDFTP'.  It then checks to see whether or
-!!        not this chunk is a subset of the test component stored
-!!        in ZZFTPSTR. Two cases:
-!!
-!!           (1) It is.  Then this indicates that at the worst,
-!!               the chunk is from a valid file with an earlier
-!!               version of the FTP validation string.
-!!
-!!           (2) It is not.  While this is a fair indication that
-!!               the file may be corrupt, it's not a complete
-!!               treatment, since we may be examining a file
-!!               created with a newer version of the FTP validation
-!!               string.  So now check to see whether that test
-!!               component from ZZFTPSTR is a subset of the text
-!!               chunk from STRING.  If it is, then the file is
-!!               as valid as far as this version of the toolkit is
-!!               concerned.  Otherwise, the file is damaged.
-!!
-!!     SPICELIB Functions
-!!
-!!     Local Variables
-!!
-!!     Saved Variables
-!!
-!!     Data Statements
-!!
-!!     On the first pass through, fetch a copy of the current FTP
-!!     validation string.
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: pos, rtrim
       use pepper_inc_zzftprms
@@ -1166,147 +1046,112 @@ contains
       end associate
       end procedure zzftpchk
 
-!$Procedure ZZRBRKST ( Private --- Reverse Bracketed String Extractor )
-
+      !> ## Detailed Input
+      !>
+      !>     STRING     is a string to be searched for a substring bracketed
+      !>                by the strings LFTEND and RGTEND (see below).
+      !>
+      !>     LFTEND,    are respectively the left and right bracketing strings.
+      !>     RGTEND     Trailing and leading white space is significant. LFTEND
+      !>                may equal RGTEND.  See the Exceptions section for a
+      !>                discussion of the case in which either of these strings
+      !>                is absent.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     SUBSTR     is the substring of interest.  It consists of the
+      !>                substring between the last instances of LFTEND
+      !>                and RGTEND in STRING. Note: The argument passed into
+      !>                the routine should be large enough to hold the entire
+      !>                substring, or else truncation will occur. SUBSTR is
+      !>                padded with trailing blanks.
+      !>
+      !>     LENGTH     is the number of characters placed into SUBSTR. This
+      !>                value permits any significant trailing whitespace to be
+      !>                dealt with appropriately. In the event that no
+      !>                substring is assigned to SUBSTR, LENGTH will be 0.
+      !>
+      !>     BKPRES     is a logical that indicates whether or not at least
+      !>                one of LFTEND or RGTEND is present in STRING.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If LFTEND or RGTEND are not present in STRING, then the routine
+      !>        does not modify the contents of SUBSTR, LENGTH is returned as
+      !>        0, and BKPRES is TRUE only if LFTEND or RGTEND is present.
+      !>
+      !>     2) If LFTEND and RGTEND are adjacent, then SUBSTR is not modified,
+      !>        LENGTH is returned as 0, and BKPRES is TRUE.
+      !>
+      !> ## Particulars
+      !>
+      !>     The purpose of this routine is to extract the last instance of
+      !>     a substring bracketed by two specified strings.  The searching
+      !>     is case sensitive, and all white space is significant.  The
+      !>     characters between LFTEND and RGTEND are placed into SUBSTR,
+      !>     and LENGTH is set to the number of characters copied into SUBSTR.
+      !>     The assignment is not substring assignment, so the resultant
+      !>     SUBSTR will be blank padded.  The logical BKPRES is a flag that
+      !>     indicates whether or not either of the two brackets was found.
+      !>     This is diagnostic information of some limited use in the event
+      !>     that SUBSTR was not assigned a value.
+      !>
+      !> ## Examples
+      !>
+      !>     The following table demonstrates the behavior of this routine:
+      !>     ( If a row in the table has no entry for SUBSTR, then the
+      !>       contents of SUBSTR are not modified by calling the routine
+      !>       with these inputs. )
+      !>
+      !>     STRING               LFTEND   RGTEND   SUBSTR             LENGTH
+      !>     ===================  =======  =======  =================  ======
+      !>     'abc def ghi jkl'    'a'      'l'      'bc def ghi jk'      13
+      !>     'abc def ghi jkl'    'abc'    'ghi'    ' def '              5
+      !>     'abc def ghi jkl'    'abc'    '123'                         0
+      !>     'abc def ghi jkl'    '123'    'def'                         0
+      !>     'abc def ghi jkl'    'jkl'    'zzz'                         0
+      !>     'abc def abc jkl'    'abc'    'abc'    ' def '              5
+      !>     'ab cd ab ef ab '    'ab'     'ab'     ' ef '               4
+      !>     'ab cd ab ef ab '    'ef'     'cd'                          0
+      !>     'abc def-fed abc'    'def'    '-fed'                        0
+      !>     'aaaaaaaaaaaaaaa'    'aa'     'aaaa'                        0
+      !>     'aaaabbbaabababa'    'ba'     'a'      'b'                  1
+      !>     'aaaabbbaababada'    'ba'     'a'      'd'                  1
+      !>     'abcd efgh ijkl '    ' '      'l'      'ijk'                3
+      !>     'abcd efgh ijkl '    '    '   'l'                           0
+      !>     'ab  ef   ijklm '    '  '     'm'      'ijkl'               4
+      !>     'ab   ef  ijklm '    '   '    'm'      'ef  ijkl'           8
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) The size of SUBSTR must be large enough to contain any
+      !>        possible substring bracketed by LFTEND or RGTEND, otherwise
+      !>        truncation will occur at assignment.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 22-MAR-1999 (FST)
       module procedure zzrbrkst
-!! ## Abstract
-!!
-!!    Extract from a string the last instance of a substring bracketed
-!!    by specified left and right strings .
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     STRINGS
-!!     UTILITY
-!!     SCANNING
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: posr
       implicit none
 
-! $ Detailed_Input
-!
-!     STRING     is a string to be searched for a substring bracketed
-!                by the strings LFTEND and RGTEND (see below).
-!
-!     LFTEND,    are respectively the left and right bracketing strings.
-!     RGTEND     Trailing and leading white space is significant. LFTEND
-!                may equal RGTEND.  See the Exceptions section for a
-!                discussion of the case in which either of these strings
-!                is absent.
-!
-! $ Detailed_Output
-!
-!     SUBSTR     is the substring of interest.  It consists of the
-!                substring between the last instances of LFTEND
-!                and RGTEND in STRING. Note: The argument passed into
-!                the routine should be large enough to hold the entire
-!                substring, or else truncation will occur. SUBSTR is
-!                padded with trailing blanks.
-!
-!     LENGTH     is the number of characters placed into SUBSTR. This
-!                value permits any significant trailing whitespace to be
-!                dealt with appropriately. In the event that no
-!                substring is assigned to SUBSTR, LENGTH will be 0.
-!
-!     BKPRES     is a logical that indicates whether or not at least
-!                one of LFTEND or RGTEND is present in STRING.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If LFTEND or RGTEND are not present in STRING, then the routine
-!        does not modify the contents of SUBSTR, LENGTH is returned as
-!        0, and BKPRES is TRUE only if LFTEND or RGTEND is present.
-!
-!     2) If LFTEND and RGTEND are adjacent, then SUBSTR is not modified,
-!        LENGTH is returned as 0, and BKPRES is TRUE.
-!
-! $ Particulars
-!
-!     The purpose of this routine is to extract the last instance of
-!     a substring bracketed by two specified strings.  The searching
-!     is case sensitive, and all white space is significant.  The
-!     characters between LFTEND and RGTEND are placed into SUBSTR,
-!     and LENGTH is set to the number of characters copied into SUBSTR.
-!     The assignment is not substring assignment, so the resultant
-!     SUBSTR will be blank padded.  The logical BKPRES is a flag that
-!     indicates whether or not either of the two brackets was found.
-!     This is diagnostic information of some limited use in the event
-!     that SUBSTR was not assigned a value.
-!
-! $ Examples
-!
-!     The following table demonstrates the behavior of this routine:
-!     ( If a row in the table has no entry for SUBSTR, then the
-!       contents of SUBSTR are not modified by calling the routine
-!       with these inputs. )
-!
-!     STRING               LFTEND   RGTEND   SUBSTR             LENGTH
-!     ===================  =======  =======  =================  ======
-!     'abc def ghi jkl'    'a'      'l'      'bc def ghi jk'      13
-!     'abc def ghi jkl'    'abc'    'ghi'    ' def '              5
-!     'abc def ghi jkl'    'abc'    '123'                         0
-!     'abc def ghi jkl'    '123'    'def'                         0
-!     'abc def ghi jkl'    'jkl'    'zzz'                         0
-!     'abc def abc jkl'    'abc'    'abc'    ' def '              5
-!     'ab cd ab ef ab '    'ab'     'ab'     ' ef '               4
-!     'ab cd ab ef ab '    'ef'     'cd'                          0
-!     'abc def-fed abc'    'def'    '-fed'                        0
-!     'aaaaaaaaaaaaaaa'    'aa'     'aaaa'                        0
-!     'aaaabbbaabababa'    'ba'     'a'      'b'                  1
-!     'aaaabbbaababada'    'ba'     'a'      'd'                  1
-!     'abcd efgh ijkl '    ' '      'l'      'ijk'                3
-!     'abcd efgh ijkl '    '    '   'l'                           0
-!     'ab  ef   ijklm '    '  '     'm'      'ijkl'               4
-!     'ab   ef  ijklm '    '   '    'm'      'ef  ijkl'           8
-!
-! $ Restrictions
-!
-!     1) The size of SUBSTR must be large enough to contain any
-!        possible substring bracketed by LFTEND or RGTEND, otherwise
-!        truncation will occur at assignment.
-!
-! $ Author_and_Institution
-!
-!     F.S. Turner     (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 22-MAR-1999 (FST)
-!
-!-&
-
-! $ Index_Entries
-!
-!     reverse bracketed string extraction
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Variables
-!
       integer(ip)           bsize
       integer(ip)           lindex
       integer(ip)           lsize
@@ -1386,117 +1231,97 @@ contains
       return
       end procedure zzrbrkst
 
-!$Procedure ZZDDHINI ( Private --- DDH Initialize Structures )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Initialize ZZDDHMAN data structures.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NATBFF     is an integer code for the binary file format native
+      !>                to this system as described in the include file
+      !>                'zzddhman.inc'.  Possible values are the parameters:
+      !>
+      !>                   BIGI3E
+      !>                   LTLI3E
+      !>                   VAXGFL
+      !>                   VAXDFL
+      !>
+      !>     SUPBFF     is an array of integer codes for the binary file
+      !>                formats supports for reading.  At the very minimum
+      !>                it includes NATBFF, but potentially NUMBFF entries.
+      !>                See the include file 'zzddhman.inc'.
+      !>
+      !>     NUMSUP     is the number of entries in the SUPBFF list.
+      !>
+      !>     STRAMH     is a list of strings containing the labels for the
+      !>                access method ID codes defined in the include file
+      !>                'zzddhman.inc'.  These values are retrieved from
+      !>                ZZDDHGSD.  See it for details.
+      !>
+      !>     STRARC     is a list of strings containing the labels for the
+      !>                file architecture ID codes defined in the include file
+      !>                'zzddhman.inc'.  These values are retrieved from
+      !>                ZZDDHGSD.  See it for details.
+      !>
+      !>     STRBFF     is a list of strings containing the labels for the
+      !>                binary file format ID codes defined in the include
+      !>                file 'zzddhman.inc'.  These values are retrieved from
+      !>                ZZDDHGSD.  See it for details.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file 'zzddhman.inc'.
+      !>
+      !> ## Exceptions
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine populates a variety data structures that ZZDDHMAN
+      !>     requires to perform its functions.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDDHMAN for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 03-OCT-2021 (NJB)
+      !>
+      !>        Corrected typo in long error message. Reordered header
+      !>        sections.
+      !>
+      !>-    SPICELIB Version 1.0.0, 13-AUGUST-2001 (FST)
       module procedure zzddhini
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Initialize ZZDDHMAN data structures.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: nextwd, ucase
       use pepper_inc_zzddhman
       implicit none
-
-
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     NATBFF     is an integer code for the binary file format native
-!                to this system as described in the include file
-!                'zzddhman.inc'.  Possible values are the parameters:
-!
-!                   BIGI3E
-!                   LTLI3E
-!                   VAXGFL
-!                   VAXDFL
-!
-!     SUPBFF     is an array of integer codes for the binary file
-!                formats supports for reading.  At the very minimum
-!                it includes NATBFF, but potentially NUMBFF entries.
-!                See the include file 'zzddhman.inc'.
-!
-!     NUMSUP     is the number of entries in the SUPBFF list.
-!
-!     STRAMH     is a list of strings containing the labels for the
-!                access method ID codes defined in the include file
-!                'zzddhman.inc'.  These values are retrieved from
-!                ZZDDHGSD.  See it for details.
-!
-!     STRARC     is a list of strings containing the labels for the
-!                file architecture ID codes defined in the include file
-!                'zzddhman.inc'.  These values are retrieved from
-!                ZZDDHGSD.  See it for details.
-!
-!     STRBFF     is a list of strings containing the labels for the
-!                binary file format ID codes defined in the include
-!                file 'zzddhman.inc'.  These values are retrieved from
-!                ZZDDHGSD.  See it for details.
-!
-! $ Parameters
-!
-!     See the include file 'zzddhman.inc'.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine populates a variety data structures that ZZDDHMAN
-!     requires to perform its functions.
-!
-! $ Examples
-!
-!     See ZZDDHMAN for sample usage.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     F.S. Turner     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 03-OCT-2021 (NJB)
-!
-!        Corrected typo in long error message. Reordered header
-!        sections.
-!
-!-    SPICELIB Version 1.0.0, 13-AUGUST-2001 (FST)
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
 
 !
 !     Local Variables.
@@ -1610,134 +1435,123 @@ contains
       return
       end procedure zzddhini
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Fetch binary file format.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     BFFID      is an integer code that indicates the binary file
+      !>                format that is determined to be native to this
+      !>                platform.  Possible values are:
+      !>
+      !>                   BIGI3E
+      !>                   LTLI3E
+      !>                   VAXGFL
+      !>                   VAXDFL
+      !>
+      !>                as defined in the include file 'zzddhman.inc'.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1) If the platform on which this code is compiled does not
+      !>        produce results that match any of the known binary file
+      !>        formats, this routine sets BFFID to 0.
+      !>
+      !> ## Particulars
+      !>
+      !>     This simple program:
+      !>
+      !>        PROGRAM DPTEST
+      !>
+      !>        DOUBLE PRECISION      DPNUM
+      !>        INTEGER               INNUM ( 2 )
+      !>
+      !>        EQUIVALENCE         ( DPNUM, INNUM )
+      !>
+      !>        DPNUM = 7.0D0
+      !>
+      !>        WRITE (*,*) DPNUM
+      !>        WRITE (*,*) INNUM ( 1 )
+      !>        WRITE (*,*) INNUM ( 2 )
+      !>
+      !>        END
+      !>
+      !>     produces the following results on these representative platforms:
+      !>
+      !>        Sun-Solaris (BIGI3E):
+      !>
+      !>           7.000000000
+      !>           1075576832
+      !>           0
+      !>
+      !>        PC-Linux (LTLI3E):
+      !>
+      !>           7.000000000
+      !>           0
+      !>           1075576832
+      !>
+      !>        Alpha-Gfloat (VAXGFL):
+      !>
+      !>           7.000000000
+      !>           16444
+      !>           0
+      !>
+      !>        Alpha-Dfloat (VAXDFL):
+      !>
+      !>           7.000000000
+      !>           16864
+      !>           0
+      !>
+      !>     This routine performs exactly the same decomposition of the
+      !>     double precision number 7.0D0 into two integers.  The results
+      !>     are checked against those displayed here, and if a match is
+      !>     found, returned.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDDHOPN for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     This routine derives the binary file format ID for a particular
+      !>     platform, but for verification purposes only.  ZZPLATFM should
+      !>     be used to obtain the binary file format for the current platform.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 06-AUG-2002 (FST)
+      !>
+      !>     Local Parameters
+      !>
+      !>     Local Variables
       module procedure zzgetbff
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Fetch binary file format.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     None.
-!!
-!! ## Detailed Output
-!!
-!!     BFFID      is an integer code that indicates the binary file
-!!                format that is determined to be native to this
-!!                platform.  Possible values are:
-!!
-!!                   BIGI3E
-!!                   LTLI3E
-!!                   VAXGFL
-!!                   VAXDFL
-!!
-!!                as defined in the include file 'zzddhman.inc'.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!!     1) If the platform on which this code is compiled does not
-!!        produce results that match any of the known binary file
-!!        formats, this routine sets BFFID to 0.
-!!
-!! ## Particulars
-!!
-!!     This simple program:
-!!
-!!        PROGRAM DPTEST
-!!
-!!        DOUBLE PRECISION      DPNUM
-!!        INTEGER               INNUM ( 2 )
-!!
-!!        EQUIVALENCE         ( DPNUM, INNUM )
-!!
-!!        DPNUM = 7.0D0
-!!
-!!        WRITE (*,*) DPNUM
-!!        WRITE (*,*) INNUM ( 1 )
-!!        WRITE (*,*) INNUM ( 2 )
-!!
-!!        END
-!!
-!!     produces the following results on these representative platforms:
-!!
-!!        Sun-Solaris (BIGI3E):
-!!
-!!           7.000000000
-!!           1075576832
-!!           0
-!!
-!!        PC-Linux (LTLI3E):
-!!
-!!           7.000000000
-!!           0
-!!           1075576832
-!!
-!!        Alpha-Gfloat (VAXGFL):
-!!
-!!           7.000000000
-!!           16444
-!!           0
-!!
-!!        Alpha-Dfloat (VAXDFL):
-!!
-!!           7.000000000
-!!           16864
-!!           0
-!!
-!!     This routine performs exactly the same decomposition of the
-!!     double precision number 7.0D0 into two integers.  The results
-!!     are checked against those displayed here, and if a match is
-!!     found, returned.
-!!
-!! ## Examples
-!!
-!!     See ZZDDHOPN for sample usage.
-!!
-!! ## Restrictions
-!!
-!!     This routine derives the binary file format ID for a particular
-!!     platform, but for verification purposes only.  ZZPLATFM should
-!!     be used to obtain the binary file format for the current platform.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 06-AUG-2002 (FST)
-!!
-!!     Local Parameters
-!!
-!!     Local Variables
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -1790,108 +1604,97 @@ contains
       return
       end procedure zzgetbff
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Retrieve string definitions for various CLASS and ID pairs.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     CLASS      is the class of the input ID code.  Acceptable
+      !>                values are:
+      !>
+      !>                   'METHOD' - File access method
+      !>                   'ARCH'   - File architecture
+      !>                   'BFF'    - Binary file format
+      !>
+      !>     ID         is a integer value that is defined in the include
+      !>                file 'zzddhman.inc'.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     LABEL      is the 'decoded' ID value that describes a particular
+      !>                CLASS/ID pair. In the event that CLASS and ID do not
+      !>                correspond to parameters in the include file, the
+      !>                routine simply returns a blank string.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If the CLASS/ID pair is not known, then this routine
+      !>        simply returns a blank label.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine is designed to consolidate label definitions for
+      !>     parameters in the include file 'zzddhman.inc'.  These labels
+      !>     are to be used in error messages and user level subroutines.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDDHMAN for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     This routine must be kept compatible with the contents of
+      !>     'zzddhman.inc' as its functionality is heavily dependent
+      !>     on its contents.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 11-OCT-2005 (NJB)
+      !>
+      !>        Removed embedded blanks from reference to parameter ARCH.
+      !>        Previous spelling was 'ARC  H'.  This was not a problem
+      !>        for Fortran compilers but was irritating for human readers.
+      !>
+      !>-    SPICELIB Version 1.0.0, 07-JUN-2001 (FST)
+      !>
+      !>     SPICELIB Functions
+      !>
+      !>     Local Parameters
+      !>
+      !>     Number of classes of label/ID pairs of which this routine is
+      !>     aware.
+      !>
+      !>     Integer codes for the currently supported classes.
+      !>
+      !>     Local Variables
+      !>
+      !>     Saved Variables
+      !>
+      !>     Data Statements
+      !>
+      !>     Left justify and convert the input to upper case.
       module procedure zzddhgsd
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Retrieve string definitions for various CLASS and ID pairs.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     CLASS      is the class of the input ID code.  Acceptable
-!!                values are:
-!!
-!!                   'METHOD' - File access method
-!!                   'ARCH'   - File architecture
-!!                   'BFF'    - Binary file format
-!!
-!!     ID         is a integer value that is defined in the include
-!!                file 'zzddhman.inc'.
-!!
-!! ## Detailed Output
-!!
-!!     LABEL      is the 'decoded' ID value that describes a particular
-!!                CLASS/ID pair. In the event that CLASS and ID do not
-!!                correspond to parameters in the include file, the
-!!                routine simply returns a blank string.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1) If the CLASS/ID pair is not known, then this routine
-!!        simply returns a blank label.
-!!
-!! ## Particulars
-!!
-!!     This routine is designed to consolidate label definitions for
-!!     parameters in the include file 'zzddhman.inc'.  These labels
-!!     are to be used in error messages and user level subroutines.
-!!
-!! ## Examples
-!!
-!!     See ZZDDHMAN for sample usage.
-!!
-!! ## Restrictions
-!!
-!!     This routine must be kept compatible with the contents of
-!!     'zzddhman.inc' as its functionality is heavily dependent
-!!     on its contents.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.1.0, 11-OCT-2005 (NJB)
-!!
-!!        Removed embedded blanks from reference to parameter ARCH.
-!!        Previous spelling was 'ARC  H'.  This was not a problem
-!!        for Fortran compilers but was irritating for human readers.
-!!
-!!-    SPICELIB Version 1.0.0, 07-JUN-2001 (FST)
-!!
-!!     SPICELIB Functions
-!!
-!!     Local Parameters
-!!
-!!     Number of classes of label/ID pairs of which this routine is
-!!     aware.
-!!
-!!     Integer codes for the currently supported classes.
-!!
-!!     Local Variables
-!!
-!!     Saved Variables
-!!
-!!     Data Statements
-!!
-!!     Left justify and convert the input to upper case.
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
@@ -1946,140 +1749,129 @@ contains
       end associate
       end procedure zzddhgsd
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines. Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Return a unique enough DP number ("Magic NuMber") computed
+      !>     using the contents of the file attached to the specified unit.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     UNIT        is the logical unit attached to a file opened for
+      !>                 direct access prior to calling this routine.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     The function returns a DP number, computed using a few integers
+      !>     read from the file attached to the UNIT, that is unique enough
+      !>     for the handle manager to check if two files opened for READ
+      !>     access are not the same file.
+      !>
+      !>     If reading the first record of the file or any of the lower level
+      !>     routines called by this function fail for any reason, the
+      !>     returned value is set to 0.D0.
+      !>
+      !> ## Parameters
+      !>
+      !>     IDLEN       is the length of the ID word.
+      !>
+      !>     NINTS       is the number of integers that will be read from
+      !>                 a particular record of the file. NINTS must be
+      !>                 big enough to make sure that unique pointers from
+      !>                 the file record of DAF and DAS files are read and
+      !>                 used to compute the output value.
+      !>
+      !>     The function also uses some DDH general parameters from
+      !>     zzddhman.inc.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     This routine and routines in its call tree signal several
+      !>     SPICE(BUG) exceptions. They are signaled if the module or modules
+      !>     in its calling tree are improperly configured to run on this
+      !>     platform.
+      !>
+      !> ## Files
+      !>
+      !>     The input UNIT must be attached to a file opened for direct
+      !>     access prior to calling this function.
+      !>
+      !> ## Particulars
+      !>
+      !>     This function reads the first IDLEN characters (assumed to be the
+      !>     ID word) followed by NINTS integers from the first record of the
+      !>     direct access file attached to the input UNIT.
+      !>
+      !>     If successful, it examines the ID word to determine the file
+      !>     architecture.
+      !>
+      !>     For DAF files it then tries to determine the binary format.
+      !>
+      !>     For DAF files in the native binary format, it adds up NINTS
+      !>     integers read from the first record to get initial output value.
+      !>     Then it reads additional NINTS integers from the first descriptor
+      !>     record and, if the second read is successful, it adds these
+      !>     additional integers to the output value.
+      !>
+      !>     For DAF files in a non-native binary format supported by run-time
+      !>     translation, it re-read NINTS integers from the first record as
+      !>     characters, converts them to NINTS integers using ZZXLATEI, and
+      !>     adds them up to get initial output value. Then it reads as
+      !>     characters NINTS integers from the first descriptor record of the
+      !>     file, converts them to NINTS integers using ZZXLATEI and ,if the
+      !>     second read is successful, it adds these additional integers to
+      !>     the output value.
+      !>
+      !>     For DAS files, text kernels and unrecognized files, it simply
+      !>     adds up NINTS integers to get the output value.
+      !>
+      !>     If the initial read is not successful, the output value is set to
+      !>     zero.
+      !>
+      !> ## Examples
+      !>
+      !>     See the caller routine, ZZDDHF2H.
+      !>
+      !> ## Restrictions
+      !>
+      !>     The input UNIT must be attached to a file opened for direct
+      !>     access prior to calling this function.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     B.B. Semenov    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 26-APR-2012 (BVS)
+      !>
+      !>     SPICELIB Functions
+      !>
+      !>     Local parameters.
+      !>
+      !>     Character buffer size consistent with the number of integers
+      !>     that will be read from the file.
+      !>
+      !>     Minimum and maximum values for the range of ASCII printing
+      !>     characters.
+      !>
+      !>     Local variables.
+      !>
+      !>     Saved variables.
+      !>
+      !>     Data statements.
+      !>
+      !>     Set default output value to zero.
       module procedure zzddhmnm
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Return a unique enough DP number ("Magic NuMber") computed
-!!     using the contents of the file attached to the specified unit.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     UNIT        is the logical unit attached to a file opened for
-!!                 direct access prior to calling this routine.
-!!
-!! ## Detailed Output
-!!
-!!     The function returns a DP number, computed using a few integers
-!!     read from the file attached to the UNIT, that is unique enough
-!!     for the handle manager to check if two files opened for READ
-!!     access are not the same file.
-!!
-!!     If reading the first record of the file or any of the lower level
-!!     routines called by this function fail for any reason, the
-!!     returned value is set to 0.D0.
-!!
-!! ## Parameters
-!!
-!!     IDLEN       is the length of the ID word.
-!!
-!!     NINTS       is the number of integers that will be read from
-!!                 a particular record of the file. NINTS must be
-!!                 big enough to make sure that unique pointers from
-!!                 the file record of DAF and DAS files are read and
-!!                 used to compute the output value.
-!!
-!!     The function also uses some DDH general parameters from
-!!     zzddhman.inc.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!!     This routine and routines in its call tree signal several
-!!     SPICE(BUG) exceptions. They are signaled if the module or modules
-!!     in its calling tree are improperly configured to run on this
-!!     platform.
-!!
-!! ## Files
-!!
-!!     The input UNIT must be attached to a file opened for direct
-!!     access prior to calling this function.
-!!
-!! ## Particulars
-!!
-!!     This function reads the first IDLEN characters (assumed to be the
-!!     ID word) followed by NINTS integers from the first record of the
-!!     direct access file attached to the input UNIT.
-!!
-!!     If successful, it examines the ID word to determine the file
-!!     architecture.
-!!
-!!     For DAF files it then tries to determine the binary format.
-!!
-!!     For DAF files in the native binary format, it adds up NINTS
-!!     integers read from the first record to get initial output value.
-!!     Then it reads additional NINTS integers from the first descriptor
-!!     record and, if the second read is successful, it adds these
-!!     additional integers to the output value.
-!!
-!!     For DAF files in a non-native binary format supported by run-time
-!!     translation, it re-read NINTS integers from the first record as
-!!     characters, converts them to NINTS integers using ZZXLATEI, and
-!!     adds them up to get initial output value. Then it reads as
-!!     characters NINTS integers from the first descriptor record of the
-!!     file, converts them to NINTS integers using ZZXLATEI and ,if the
-!!     second read is successful, it adds these additional integers to
-!!     the output value.
-!!
-!!     For DAS files, text kernels and unrecognized files, it simply
-!!     adds up NINTS integers to get the output value.
-!!
-!!     If the initial read is not successful, the output value is set to
-!!     zero.
-!!
-!! ## Examples
-!!
-!!     See the caller routine, ZZDDHF2H.
-!!
-!! ## Restrictions
-!!
-!!     The input UNIT must be attached to a file opened for direct
-!!     access prior to calling this function.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     B.B. Semenov    (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 26-APR-2012 (BVS)
-!!
-!!     SPICELIB Functions
-!!
-!!     Local parameters.
-!!
-!!     Character buffer size consistent with the number of integers
-!!     that will be read from the file.
-!!
-!!     Minimum and maximum values for the range of ASCII printing
-!!     characters.
-!!
-!!     Local variables.
-!!
-!!     Saved variables.
-!!
-!!     Data statements.
-!!
-!!     Set default output value to zero.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -2260,345 +2052,334 @@ contains
       end associate
       end procedure zzddhmnm
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Prepare preexisting binary file for entry into the handle
+      !>     table.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     UNIT       is a logical unit attached to the binary file to be
+      !>                prepared for inclusion into the handle table.
+      !>
+      !>     ARCH       is an integer that indicates the architecture of
+      !>                the file attached to UNIT.  Acceptable values are
+      !>                the parameters:
+      !>
+      !>                   DAF
+      !>                   DAS
+      !>
+      !>                defined in ZZDDHMAN.INC.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     BFF        is an integer that indicates the binary file format
+      !>                of the DAF attached to UNIT.  Possible values are
+      !>                the parameters:
+      !>
+      !>                   BIGI3E
+      !>                   LTLI3E
+      !>                   VAXGFL
+      !>                   VAXDFL
+      !>
+      !>                defined in ZZDDHMAN.INC.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file ZZDDHMAN.INC.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) SPICE(UNKNOWNFILARC) is signaled when ARCH is not in the
+      !>        range of codes for known file architectures or the binary
+      !>        file's ID word is unknown to IDW2AT.  BFF is set to 0 when
+      !>        this error is signaled.  UNIT is not closed.
+      !>
+      !>     2) SPICE(FILEREADFAILED) is signaled when either of the two
+      !>        READ statements in the module returns non-zero IOSTAT, thus
+      !>        indicating read failure.  BFF is set to 0 in this case.  Unit
+      !>        is not closed.
+      !>
+      !>     3) SPICE(FILARCMISMATCH) is signaled when the file attached to
+      !>        UNIT is determined to utilize an architecture that is
+      !>        different from the one to which the input argument ARCH
+      !>        refers.  Unit is not closed.
+      !>
+      !>     4) SPICE(UNKNOWNBFF) is signaled whenever the binary file
+      !>        format detection algorithm reaches a state of uncertainty
+      !>        for DAFs.  This can be the result of several conditions,
+      !>        an empty pre-N0052 DAF, reading a DAF with an unknown BFF
+      !>        from a future toolkit, etc.  In all cases, BFF is set to 0.
+      !>        Unit is not closed.
+      !>
+      !>     5) If a pre-FTP string binary is loaded, no FTP based
+      !>        diagnostics are performed, and the file is assumed to be
+      !>        in proper, working order.
+      !>
+      !> ## Files
+      !>
+      !>     This routine reads at least one, and potentially, several records
+      !>     from the file attached to UNIT.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine exists to prepare a binary file for inclusion
+      !>     in the handle table in ZZDDHMAN.  This includes verifying
+      !>     that the file is suitable to load and determining the binary
+      !>     file format where possible.
+      !>
+      !>     For DAF files:
+      !>
+      !>        The binary file format of old (pre-N0050) binaries is
+      !>        detectable if the file is non-empty and undamaged.
+      !>        New files contain the binary file format identification
+      !>        string in the file record along with the FTP error
+      !>        detection string.  They are correctly identified in most
+      !>        cases, including damaged.
+      !>
+      !>     For DAS files:
+      !>
+      !>        The binary file format of old (pre-N0052) binaries is
+      !>        not detectable.  This this module will assume that any
+      !>        old DAS binaries are of the native format.  New binaries
+      !>        include the binary file format identification string as
+      !>        well as the FTP error detection string.  They are
+      !>        correctly identified in most cases as well.
+      !>
+      !>     FTP Error Detection:
+      !>
+      !>        FTP error detection occurs when at least part of the
+      !>        detection string is detected in the file record.  When
+      !>        absent, no errors are signaled and the file is then
+      !>        assumed to be an old binary.  In the event that the FTP
+      !>        detection string is present, and additional unknown
+      !>        sequences are present, diagnostics are only performed on
+      !>        sequences known to this version of the toolkit.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDDHMAN for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) The file attached to UNIT was written on a platform whose
+      !>        characters are of a single byte in length.
+      !>
+      !>     2) Numeric data when read as characters from the UNIT
+      !>        preserves the bit patterns present in the file in
+      !>        memory.
+      !>
+      !>     3) The intrinsic ICHAR preserves the bit pattern of the
+      !>        character byte read from a file.  Namely if one examines
+      !>        the integer created the 8 least significant bits will be
+      !>        precisely those found in the character.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.26.0, 28-NOV-2021 (BVS)
+      !>
+      !>        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+      !>
+      !>-    SPICELIB Version 2.25.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-INTEL.
+      !>
+      !>-    SPICELIB Version 2.24.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 2.23.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.22.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.21.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 2.20.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL.
+      !>
+      !>-    SPICELIB Version 2.19.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-CC_C.
+      !>
+      !>-    SPICELIB Version 2.18.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+      !>
+      !>-    SPICELIB Version 2.17.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+      !>
+      !>-    SPICELIB Version 2.16.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 2.15.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.14.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-64BIT-MS_C.
+      !>
+      !>-    SPICELIB Version 2.13.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-INTEL_C.
+      !>
+      !>-    SPICELIB Version 2.12.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 2.11.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.10.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for PC-LINUX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.9.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for MAC-OSX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.8.0, 19-FEB-2008 (BVS)
+      !>
+      !>        Updated for PC-LINUX-IFORT.
+      !>
+      !>-    SPICELIB Version 2.7.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 2.6.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-INTEL_C.
+      !>
+      !>-    SPICELIB Version 2.5.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-IFORT.
+      !>
+      !>-    SPICELIB Version 2.4.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-IFORT.
+      !>
+      !>-    SPICELIB Version 2.3.0, 26-OCT-2005 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 2.2.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN_C.
+      !>
+      !>-    SPICELIB Version 2.1.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN.
+      !>
+      !>-    SPICELIB Version 2.0.1, 17-JUL-2002 (BVS)
+      !>
+      !>        Added MAC-OSX environments.
+      !>
+      !>-    SPICELIB Version 2.0.0, 06-FEB-2002 (FST)
+      !>
+      !>        This routine was updated to load binaries created by
+      !>        N0051 versions of Sun Solaris Native C Toolkits.  See
+      !>        the Revisions section for details.
+      !>
+      !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 2.0.0, 06-FEB-2002 (FST)
+      !>
+      !>        Shortly after releasing N0052, a few of our users
+      !>        discovered that they were unable to load binary
+      !>        DAFs created with the N0051 Sun Solaris Native C
+      !>        (SUN-SOLARIS-NATIVE_C) Toolkits.  The reason for this
+      !>        is the previous version of ZZDDHPPF released with N0052
+      !>        assumed that if a DAF file record possessed a valid
+      !>        FTP error detection string, then it must contain a
+      !>        binary file format ID string as well.  Both were added
+      !>        to the DAF file record in N0050.
+      !>
+      !>        However, a bug in the N0051 version of the ZZPLATFM
+      !>        master file, the source of the binary file format ID
+      !>        string for a given platform, neglected to assign a
+      !>        value to the string.  Since it was a C environment
+      !>        and the implementation of ZZPLATFM resulted in the
+      !>        string being a static variable, it was initialized
+      !>        to nulls and written into the file.
+      !>
+      !>        This version of ZZDDHPPF has been extended to recognize
+      !>        a null binary file format ID, and apply the byte
+      !>        examination algorithm used on pre-N0050 DAFs to determine
+      !>        its format.
+      !>
+      !>     SPICELIB Functions
+      !>
+      !>     Local Parameters
+      !>
+      !>     Number of characters to be read in from a record.
+      !>
+      !>     Bounding indices for the window that brackets the FTP
+      !>     error detection string in the file record.
+      !>
+      !>     Index of the start of the binary file format identification
+      !>     string in DAF binaries.
+      !>
+      !>     Index of the start of the binary file format identification
+      !>     string in DAS binaries.
+      !>
+      !>     Size of the binary format identification string.
+      !>
+      !>     Index of the first byte of NI in the DAF file record.
+      !>
+      !>     Index of the first byte of NSUM in the DAF descriptor record.
+      !>
+      !>     Index of the first byte of FDREC in the DAF file record.
+      !>
+      !>     Integer code such that CHAR(INTNUL) produces the NULL character.
+      !>
+      !>     IDW2AT Output Argument Lengths.
+      !>
+      !>     NULLID is the index of the extended STRBFF "NULL" string ID.
+      !>
+      !>     Local Variables
+      !>
+      !>     Statement Functions
+      !>
+      !>     Saved Variables
+      !>
+      !>     Data Statements
+      !>
+      !>     Statement Function Definitions
+      !>
+      !>     This function controls the conversion of characters to integers.
+      !>     On some supported environments, ICHAR is not sufficient to
+      !>     produce the desired results.  This however, is not the case
+      !>     with this particular environment.
+      !>     Some versions of the g77 implement ICHAR with a signed integer.
+      !>     This function computes the value of ICHAR that this code requires
+      !>     on any version of g77 for x86 Linux.
+      !>
+      !>     Standard SPICE error handling.
       module procedure zzddhppf
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Prepare preexisting binary file for entry into the handle
-!!     table.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     UNIT       is a logical unit attached to the binary file to be
-!!                prepared for inclusion into the handle table.
-!!
-!!     ARCH       is an integer that indicates the architecture of
-!!                the file attached to UNIT.  Acceptable values are
-!!                the parameters:
-!!
-!!                   DAF
-!!                   DAS
-!!
-!!                defined in ZZDDHMAN.INC.
-!!
-!! ## Detailed Output
-!!
-!!     BFF        is an integer that indicates the binary file format
-!!                of the DAF attached to UNIT.  Possible values are
-!!                the parameters:
-!!
-!!                   BIGI3E
-!!                   LTLI3E
-!!                   VAXGFL
-!!                   VAXDFL
-!!
-!!                defined in ZZDDHMAN.INC.
-!!
-!! ## Parameters
-!!
-!!     See the include file ZZDDHMAN.INC.
-!!
-!! ## Exceptions
-!!
-!!     1) SPICE(UNKNOWNFILARC) is signaled when ARCH is not in the
-!!        range of codes for known file architectures or the binary
-!!        file's ID word is unknown to IDW2AT.  BFF is set to 0 when
-!!        this error is signaled.  UNIT is not closed.
-!!
-!!     2) SPICE(FILEREADFAILED) is signaled when either of the two
-!!        READ statements in the module returns non-zero IOSTAT, thus
-!!        indicating read failure.  BFF is set to 0 in this case.  Unit
-!!        is not closed.
-!!
-!!     3) SPICE(FILARCMISMATCH) is signaled when the file attached to
-!!        UNIT is determined to utilize an architecture that is
-!!        different from the one to which the input argument ARCH
-!!        refers.  Unit is not closed.
-!!
-!!     4) SPICE(UNKNOWNBFF) is signaled whenever the binary file
-!!        format detection algorithm reaches a state of uncertainty
-!!        for DAFs.  This can be the result of several conditions,
-!!        an empty pre-N0052 DAF, reading a DAF with an unknown BFF
-!!        from a future toolkit, etc.  In all cases, BFF is set to 0.
-!!        Unit is not closed.
-!!
-!!     5) If a pre-FTP string binary is loaded, no FTP based
-!!        diagnostics are performed, and the file is assumed to be
-!!        in proper, working order.
-!!
-!! ## Files
-!!
-!!     This routine reads at least one, and potentially, several records
-!!     from the file attached to UNIT.
-!!
-!! ## Particulars
-!!
-!!     This routine exists to prepare a binary file for inclusion
-!!     in the handle table in ZZDDHMAN.  This includes verifying
-!!     that the file is suitable to load and determining the binary
-!!     file format where possible.
-!!
-!!     For DAF files:
-!!
-!!        The binary file format of old (pre-N0050) binaries is
-!!        detectable if the file is non-empty and undamaged.
-!!        New files contain the binary file format identification
-!!        string in the file record along with the FTP error
-!!        detection string.  They are correctly identified in most
-!!        cases, including damaged.
-!!
-!!     For DAS files:
-!!
-!!        The binary file format of old (pre-N0052) binaries is
-!!        not detectable.  This this module will assume that any
-!!        old DAS binaries are of the native format.  New binaries
-!!        include the binary file format identification string as
-!!        well as the FTP error detection string.  They are
-!!        correctly identified in most cases as well.
-!!
-!!     FTP Error Detection:
-!!
-!!        FTP error detection occurs when at least part of the
-!!        detection string is detected in the file record.  When
-!!        absent, no errors are signaled and the file is then
-!!        assumed to be an old binary.  In the event that the FTP
-!!        detection string is present, and additional unknown
-!!        sequences are present, diagnostics are only performed on
-!!        sequences known to this version of the toolkit.
-!!
-!! ## Examples
-!!
-!!     See ZZDDHMAN for sample usage.
-!!
-!! ## Restrictions
-!!
-!!     1) The file attached to UNIT was written on a platform whose
-!!        characters are of a single byte in length.
-!!
-!!     2) Numeric data when read as characters from the UNIT
-!!        preserves the bit patterns present in the file in
-!!        memory.
-!!
-!!     3) The intrinsic ICHAR preserves the bit pattern of the
-!!        character byte read from a file.  Namely if one examines
-!!        the integer created the 8 least significant bits will be
-!!        precisely those found in the character.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.26.0, 28-NOV-2021 (BVS)
-!!
-!!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
-!!
-!!-    SPICELIB Version 2.25.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-64BIT-INTEL.
-!!
-!!-    SPICELIB Version 2.24.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-LINUX-64BIT-IFORT.
-!!
-!!-    SPICELIB Version 2.23.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-CYGWIN-GFORTRAN.
-!!
-!!-    SPICELIB Version 2.22.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
-!!
-!!-    SPICELIB Version 2.21.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-CYGWIN-64BIT-GCC_C.
-!!
-!!-    SPICELIB Version 2.20.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-INTEL.
-!!
-!!-    SPICELIB Version 2.19.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-INTEL-CC_C.
-!!
-!!-    SPICELIB Version 2.18.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
-!!
-!!-    SPICELIB Version 2.17.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
-!!
-!!-    SPICELIB Version 2.16.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for PC-WINDOWS-64BIT-IFORT.
-!!
-!!-    SPICELIB Version 2.15.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for PC-LINUX-64BIT-GFORTRAN.
-!!
-!!-    SPICELIB Version 2.14.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for PC-64BIT-MS_C.
-!!
-!!-    SPICELIB Version 2.13.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for MAC-OSX-64BIT-INTEL_C.
-!!
-!!-    SPICELIB Version 2.12.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for MAC-OSX-64BIT-IFORT.
-!!
-!!-    SPICELIB Version 2.11.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for MAC-OSX-64BIT-GFORTRAN.
-!!
-!!-    SPICELIB Version 2.10.0, 18-MAR-2009 (BVS)
-!!
-!!        Updated for PC-LINUX-GFORTRAN.
-!!
-!!-    SPICELIB Version 2.9.0, 18-MAR-2009 (BVS)
-!!
-!!        Updated for MAC-OSX-GFORTRAN.
-!!
-!!-    SPICELIB Version 2.8.0, 19-FEB-2008 (BVS)
-!!
-!!        Updated for PC-LINUX-IFORT.
-!!
-!!-    SPICELIB Version 2.7.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for PC-LINUX-64BIT-GCC_C.
-!!
-!!-    SPICELIB Version 2.6.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for MAC-OSX-INTEL_C.
-!!
-!!-    SPICELIB Version 2.5.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for MAC-OSX-IFORT.
-!!
-!!-    SPICELIB Version 2.4.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for PC-WINDOWS-IFORT.
-!!
-!!-    SPICELIB Version 2.3.0, 26-OCT-2005 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-64BIT-GCC_C.
-!!
-!!-    SPICELIB Version 2.2.0, 03-JAN-2005 (BVS)
-!!
-!!        Updated for PC-CYGWIN_C.
-!!
-!!-    SPICELIB Version 2.1.0, 03-JAN-2005 (BVS)
-!!
-!!        Updated for PC-CYGWIN.
-!!
-!!-    SPICELIB Version 2.0.1, 17-JUL-2002 (BVS)
-!!
-!!        Added MAC-OSX environments.
-!!
-!!-    SPICELIB Version 2.0.0, 06-FEB-2002 (FST)
-!!
-!!        This routine was updated to load binaries created by
-!!        N0051 versions of Sun Solaris Native C Toolkits.  See
-!!        the Revisions section for details.
-!!
-!!-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 2.0.0, 06-FEB-2002 (FST)
-!!
-!!        Shortly after releasing N0052, a few of our users
-!!        discovered that they were unable to load binary
-!!        DAFs created with the N0051 Sun Solaris Native C
-!!        (SUN-SOLARIS-NATIVE_C) Toolkits.  The reason for this
-!!        is the previous version of ZZDDHPPF released with N0052
-!!        assumed that if a DAF file record possessed a valid
-!!        FTP error detection string, then it must contain a
-!!        binary file format ID string as well.  Both were added
-!!        to the DAF file record in N0050.
-!!
-!!        However, a bug in the N0051 version of the ZZPLATFM
-!!        master file, the source of the binary file format ID
-!!        string for a given platform, neglected to assign a
-!!        value to the string.  Since it was a C environment
-!!        and the implementation of ZZPLATFM resulted in the
-!!        string being a static variable, it was initialized
-!!        to nulls and written into the file.
-!!
-!!        This version of ZZDDHPPF has been extended to recognize
-!!        a null binary file format ID, and apply the byte
-!!        examination algorithm used on pre-N0050 DAFs to determine
-!!        its format.
-!!
-!!     SPICELIB Functions
-!!
-!!     Local Parameters
-!!
-!!     Number of characters to be read in from a record.
-!!
-!!     Bounding indices for the window that brackets the FTP
-!!     error detection string in the file record.
-!!
-!!     Index of the start of the binary file format identification
-!!     string in DAF binaries.
-!!
-!!     Index of the start of the binary file format identification
-!!     string in DAS binaries.
-!!
-!!     Size of the binary format identification string.
-!!
-!!     Index of the first byte of NI in the DAF file record.
-!!
-!!     Index of the first byte of NSUM in the DAF descriptor record.
-!!
-!!     Index of the first byte of FDREC in the DAF file record.
-!!
-!!     Integer code such that CHAR(INTNUL) produces the NULL character.
-!!
-!!     IDW2AT Output Argument Lengths.
-!!
-!!     NULLID is the index of the extended STRBFF "NULL" string ID.
-!!
-!!     Local Variables
-!!
-!!     Statement Functions
-!!
-!!     Saved Variables
-!!
-!!     Data Statements
-!!
-!!     Statement Function Definitions
-!!
-!!     This function controls the conversion of characters to integers.
-!!     On some supported environments, ICHAR is not sufficient to
-!!     produce the desired results.  This however, is not the case
-!!     with this particular environment.
-!!     Some versions of the g77 implement ICHAR with a signed integer.
-!!     This function computes the value of ICHAR that this code requires
-!!     on any version of g77 for x86 Linux.
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: pos, ucase
       use pepper_inc_zzddhman
@@ -3016,199 +2797,170 @@ contains
       end associate
       end procedure zzddhppf
 
-!$Procedure IDW2AT ( Get file architecture and type from ID word )
-
+      !> ## Detailed Input
+      !>
+      !>     IDWORD   is the ID word from a SPICE binary kernel file or a
+      !>              text version of a binary kernel file whose
+      !>              architecture and type are to be extracted.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     ARCH     is the file architecture used to store the data in
+      !>              a SPICE binary kernel file. If the architecture cannot
+      !>              be extracted or is not recognized the value '?' is
+      !>              returned.
+      !>
+      !>              The possible architectures are:
+      !>
+      !>                 ASC -- An ASCII text file.
+      !>                 DAF -- A DAF based file.
+      !>                 DAS -- A DAS based file.
+      !>                 KPL -- Kernel Pool File (i.e., a text kernel)
+      !>                 TXT -- An ASCII text file.
+      !>                 TE1 -- Text E-Kernel type 1.
+      !>
+      !>     TYPE     is the type of the SPICE file. If the type can not be
+      !>              extracted or if it is blank, the value '?' is
+      !>              returned.
+      !>
+      !>              The type can only be extracted by this routine if
+      !>              the ID word follows the convention
+      !>
+      !>                 <architecture>/<type>
+      !>
+      !>              where <architecture> is one of the file architectures
+      !>              specified above, and
+      !>
+      !>                 <type> = 'xxxx'
+      !>
+      !>              where 'xxxx' represents a four character mnemonic or
+      !>              code for the file type.
+      !>
+      !>              This subroutine does not do any checking of the file
+      !>              types. If a valid architecture is found and the type
+      !>              is non-blank, that is what will be returned. It is up
+      !>              to a higher level authority to determine whether a type
+      !>              is valid.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the variable ID word is blank, both the architecture and
+      !>         type will be unknown, specified by '?'.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This subroutine is a support utility routine that attempts
+      !>     to extract the architecture and type of a file from its ID word.
+      !>     It may not be possible to determine the type of the file from the
+      !>     ID word alone. Older files which contain the ID words 'NAIF/NIP',
+      !>     or 'NAIF/DAF' do not have sufficient information in the ID word to
+      !>     determine the type of the file. A type for the ID word 'NAIF/DAS'
+      !>     is always 'PRE ', since files with this ID word were pre-release
+      !>     DAS files.
+      !>
+      !>     A file architecture can always be extracted from a valid SPICE
+      !>     ID word.
+      !>
+      !>     This subroutine and the subroutine GETFAT (get file architecture
+      !>     and type) are intimately related. Whenever one of them is modified
+      !>     the other should be checked to see if the modifications affect it.
+      !>     Whenever a new architecture is added, both of the subroutines are
+      !>     affected.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose you wish to write a single routine for converting files
+      !>     between text and binary formats. You can use this routine to
+      !>     determine the architecture and type of the file and then pass the
+      !>     file to the appropriate low level file conversion routine to
+      !>     handle the actual conversion.
+      !>
+      !>        CALL IDW2AT ( IDWORD, ARCH, TYPE )
+      !>
+      !>        IF ( ARCH .EQ. 'DAF' ) THEN
+      !>
+      !>           convert a DAF file
+      !>
+      !>        ELSE IF ( ARCH .EQ. 'DAS' ) THEN
+      !>
+      !>           convert a DAS file
+      !>
+      !>        ELSE
+      !>
+      !>           WRITE(*,*) 'File architecture not supported.'
+      !>
+      !>        END IF
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.0, 20-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 2.0.0, 26-OCT-1995 (KRG)
+      !>
+      !>        Changed the Version line from "Beta" to "SPICELIB" for the
+      !>        current revisions. The subroutine was already in SPICELIB,
+      !>        but the Version line said "Beta."
+      !>
+      !>        Added several new architectures:
+      !>
+      !>           KPL -- Kernel Pool File (i.e., a text kernel)
+      !>           TXT -- An ASCII text file.
+      !>           ASC -- An ASCII text file.
+      !>           TE1 -- Text E-Kernel type 1.
+      !>
+      !>        Changed the response foe the ID word 'NAIF/DAS' to be
+      !>        consistent with GETFAT. It now sets the architecture to 'DAS'
+      !>        and the type to 'PRE', for pre-release version.
+      !>
+      !>-    SPICELIB Version 1.0.0, 30-SEP-1993 (KRG)
+      !>
+      !> ## Revisions
+      !>
+      !>-     SPICELIB Version 2.0.0, 26-OCT-1995 (KRG)
+      !>
+      !>         Changed the Version line from "Beta" to "SPICELIB" for the
+      !>         current revisions. The subroutine was already in SPICELIB,
+      !>         but the Version line said "Beta."
+      !>
+      !>         Added several new architectures:
+      !>
+      !>            KPL -- Kernel Pool File (i.e., a text kernel)
+      !>            TXT -- An ASCII text file.
+      !>            ASC -- An ASCII text file.
+      !>            TE1 -- Text E-Kernel type 1.
+      !>
+      !>         Changed the response foe the ID word 'NAIF/DAS' to be
+      !>         consistent with GETFAT. It now sets the architecture to 'DAS'
+      !>         and the type to 'PRE', for pre-release version.
       module procedure idw2at
-!! ## Abstract
-!!
-!!     Extract the architecture and type of a SPICE binary kernel file
-!!     from a file ID word.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     KERNEL
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: pos
       implicit none
-
-! $ Detailed_Input
-!
-!     IDWORD   is the ID word from a SPICE binary kernel file or a
-!              text version of a binary kernel file whose
-!              architecture and type are to be extracted.
-!
-! $ Detailed_Output
-!
-!     ARCH     is the file architecture used to store the data in
-!              a SPICE binary kernel file. If the architecture cannot
-!              be extracted or is not recognized the value '?' is
-!              returned.
-!
-!              The possible architectures are:
-!
-!                 ASC -- An ASCII text file.
-!                 DAF -- A DAF based file.
-!                 DAS -- A DAS based file.
-!                 KPL -- Kernel Pool File (i.e., a text kernel)
-!                 TXT -- An ASCII text file.
-!                 TE1 -- Text E-Kernel type 1.
-!
-!     TYPE     is the type of the SPICE file. If the type can not be
-!              extracted or if it is blank, the value '?' is
-!              returned.
-!
-!              The type can only be extracted by this routine if
-!              the ID word follows the convention
-!
-!                 <architecture>/<type>
-!
-!              where <architecture> is one of the file architectures
-!              specified above, and
-!
-!                 <type> = 'xxxx'
-!
-!              where 'xxxx' represents a four character mnemonic or
-!              code for the file type.
-!
-!              This subroutine does not do any checking of the file
-!              types. If a valid architecture is found and the type
-!              is non-blank, that is what will be returned. It is up
-!              to a higher level authority to determine whether a type
-!              is valid.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the variable ID word is blank, both the architecture and
-!         type will be unknown, specified by '?'.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This subroutine is a support utility routine that attempts
-!     to extract the architecture and type of a file from its ID word.
-!     It may not be possible to determine the type of the file from the
-!     ID word alone. Older files which contain the ID words 'NAIF/NIP',
-!     or 'NAIF/DAF' do not have sufficient information in the ID word to
-!     determine the type of the file. A type for the ID word 'NAIF/DAS'
-!     is always 'PRE ', since files with this ID word were pre-release
-!     DAS files.
-!
-!     A file architecture can always be extracted from a valid SPICE
-!     ID word.
-!
-!     This subroutine and the subroutine GETFAT (get file architecture
-!     and type) are intimately related. Whenever one of them is modified
-!     the other should be checked to see if the modifications affect it.
-!     Whenever a new architecture is added, both of the subroutines are
-!     affected.
-!
-! $ Examples
-!
-!     Suppose you wish to write a single routine for converting files
-!     between text and binary formats. You can use this routine to
-!     determine the architecture and type of the file and then pass the
-!     file to the appropriate low level file conversion routine to
-!     handle the actual conversion.
-!
-!        CALL IDW2AT ( IDWORD, ARCH, TYPE )
-!
-!        IF ( ARCH .EQ. 'DAF' ) THEN
-!
-!           convert a DAF file
-!
-!        ELSE IF ( ARCH .EQ. 'DAS' ) THEN
-!
-!           convert a DAS file
-!
-!        ELSE
-!
-!           WRITE(*,*) 'File architecture not supported.'
-!
-!        END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 20-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.0, 26-OCT-1995 (KRG)
-!
-!        Changed the Version line from "Beta" to "SPICELIB" for the
-!        current revisions. The subroutine was already in SPICELIB,
-!        but the Version line said "Beta."
-!
-!        Added several new architectures:
-!
-!           KPL -- Kernel Pool File (i.e., a text kernel)
-!           TXT -- An ASCII text file.
-!           ASC -- An ASCII text file.
-!           TE1 -- Text E-Kernel type 1.
-!
-!        Changed the response foe the ID word 'NAIF/DAS' to be
-!        consistent with GETFAT. It now sets the architecture to 'DAS'
-!        and the type to 'PRE', for pre-release version.
-!
-!-    SPICELIB Version 1.0.0, 30-SEP-1993 (KRG)
-!
-!-&
-
-! $ Index_Entries
-!
-!     extract architecture and type from an id word
-!
-!-&
-
-! $ Revisions
-!
-!-     SPICELIB Version 2.0.0, 26-OCT-1995 (KRG)
-!
-!         Changed the Version line from "Beta" to "SPICELIB" for the
-!         current revisions. The subroutine was already in SPICELIB,
-!         but the Version line said "Beta."
-!
-!         Added several new architectures:
-!
-!            KPL -- Kernel Pool File (i.e., a text kernel)
-!            TXT -- An ASCII text file.
-!            ASC -- An ASCII text file.
-!            TE1 -- Text E-Kernel type 1.
-!
-!         Changed the response foe the ID word 'NAIF/DAS' to be
-!         consistent with GETFAT. It now sets the architecture to 'DAS'
-!         and the type to 'PRE', for pre-release version.
-!
-!-&
 
 !
 !     Spicelib Routines
@@ -3218,9 +2970,6 @@ contains
 !     Set the length of a SPICE file ID word.
 !
       integer(ip), parameter :: idwlen = 8
-!
-!     Local Variables
-!
       character(idwlen)      part1
       character(idwlen)      part2
 
@@ -3380,265 +3129,254 @@ contains
 
       end procedure idw2at
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Convert integers from one binary file format to another.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     INBFF      is an integer code that indicates the binary file
+      !>                format of INPUT.  Acceptable values are the
+      !>                parameters:
+      !>
+      !>                   BIGI3E
+      !>                   LTLI3E
+      !>                   VAXGFL
+      !>                   VAXDFL
+      !>
+      !>                as defined in the include file 'zzddhman.inc'.
+      !>
+      !>     INPUT      is a string containing a group of integers read
+      !>                from a file as a character string.  The length of
+      !>                this string must be a multiple of the number of
+      !>                bytes used to store an integer in a file utilizing
+      !>                INBFF.
+      !>
+      !>     SPACE      is the number of integers that OUTPUT has room to
+      !>                store.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     OUTPUT     is an array of integers containing the translated
+      !>                values from INPUT into the native binary format.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     This routine signals several SPICE(BUG) exceptions.  They are
+      !>     signaled when improperly specified inputs are passed into the
+      !>     routine or if the module or modules in its calling tree are
+      !>     improperly configured to run on this platform.  Callers that
+      !>     prevent invalid inputs from being passed into this routine
+      !>     need not check in.  See the $Restrictions section for a
+      !>     discussion of input argument restrictions.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine translates integers from a non-native integer format
+      !>     read from a file as a sequence of characters to the native format.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDAFGFR, ZZDAFGSR.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) Numeric data when read as characters from a file preserve
+      !>        the bit patterns present in the file in memory.
+      !>
+      !>     2) A byte is 8 bits, and a character is some multiple of
+      !>        bytes.
+      !>
+      !>     3) The intrinsic ICHAR preserves the bit pattern of the character
+      !>        byte read from a file.  Namely if one examines the integer
+      !>        created the 8 least significant bits will be precisely those
+      !>        found in the character.
+      !>
+      !>     4) The size of integers on the target environment are a multiple
+      !>        of some number of bytes.
+      !>
+      !>     5) The length of the INPUT string is a multiple of the number
+      !>        of bytes for an integer in the INBFF format.
+      !>
+      !>     6) INBFF is supported for reading on this platform, and not
+      !>        equivalent to NATBFF on this platform.
+      !>
+      !>     7) This routine must support all of the non-native translations
+      !>        required by the 'READS_BFF' key in ZZPLATFM.
+      !>
+      !>     8) The character label corresponding to INBFF must be one of the
+      !>        non-native entries in the value of 'READS_BFF' returned by
+      !>        ZZPLATFM for this environment.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.27.0, 28-NOV-2021 (BVS)
+      !>
+      !>        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+      !>
+      !>-    SPICELIB Version 1.26.1, 01-OCT-2021 (NJB)
+      !>
+      !>        Fixed typo in comments.
+      !>
+      !>-    SPICELIB Version 1.26.0, 15-NOV-2015 (EDW)
+      !>
+      !>        Recast J = 4*(-1+I) + 1 as J = -3+4*I to accommodate
+      !>        f2c processing.
+      !>
+      !>-    SPICELIB Version 1.25.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-INTEL.
+      !>
+      !>-    SPICELIB Version 1.24.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.23.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.22.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.21.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 1.20.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL.
+      !>
+      !>-    SPICELIB Version 1.19.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-CC_C.
+      !>
+      !>-    SPICELIB Version 1.18.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+      !>
+      !>-    SPICELIB Version 1.17.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+      !>
+      !>-    SPICELIB Version 1.16.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.15.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.14.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-64BIT-MS_C.
+      !>
+      !>-    SPICELIB Version 1.13.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-INTEL_C.
+      !>
+      !>-    SPICELIB Version 1.12.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.11.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.10.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for PC-LINUX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.9.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for MAC-OSX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.8.0, 19-FEB-2008 (BVS)
+      !>
+      !>        Updated for PC-LINUX-IFORT.
+      !>
+      !>-    SPICELIB Version 1.7.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 1.6.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-INTEL_C.
+      !>
+      !>-    SPICELIB Version 1.5.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-IFORT.
+      !>
+      !>-    SPICELIB Version 1.4.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-IFORT.
+      !>
+      !>-    SPICELIB Version 1.3.0, 26-OCT-2005 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 1.2.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN_C.
+      !>
+      !>-    SPICELIB Version 1.1.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN.
+      !>
+      !>-    SPICELIB Version 1.0.1, 17-JUL-2002 (BVS)
+      !>
+      !>        Added MAC-OSX environments.
+      !>
+      !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
+      !>
+      !>     SPICELIB Functions
+      !>
+      !>     Local Parameters
+      !>
+      !>     These parameters are used for arithmetic shifting.
+      !>
+      !>     Local Variables
+      !>
+      !>     Statement Functions
+      !>
+      !>     Saved Variables
+      !>
+      !>     Data Statements
+      !>
+      !>     Statement Function Definitions
+      !>
+      !>     This function controls the conversion of characters to integers.
+      !>     On some supported environments, ICHAR is not sufficient to
+      !>     produce the desired results.  This however, is not the case
+      !>     with this particular environment.
+      !>     Some versions of the g77 implement ICHAR with a signed integer.
+      !>     This function computes the value of ICHAR that this code requires
+      !>     on any version of g77 for x86 Linux.
+      !>
+      !>     Standard SPICE error handling.
       module procedure zzxlatei
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Convert integers from one binary file format to another.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     INBFF      is an integer code that indicates the binary file
-!!                format of INPUT.  Acceptable values are the
-!!                parameters:
-!!
-!!                   BIGI3E
-!!                   LTLI3E
-!!                   VAXGFL
-!!                   VAXDFL
-!!
-!!                as defined in the include file 'zzddhman.inc'.
-!!
-!!     INPUT      is a string containing a group of integers read
-!!                from a file as a character string.  The length of
-!!                this string must be a multiple of the number of
-!!                bytes used to store an integer in a file utilizing
-!!                INBFF.
-!!
-!!     SPACE      is the number of integers that OUTPUT has room to
-!!                store.
-!!
-!! ## Detailed Output
-!!
-!!     OUTPUT     is an array of integers containing the translated
-!!                values from INPUT into the native binary format.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!!     This routine signals several SPICE(BUG) exceptions.  They are
-!!     signaled when improperly specified inputs are passed into the
-!!     routine or if the module or modules in its calling tree are
-!!     improperly configured to run on this platform.  Callers that
-!!     prevent invalid inputs from being passed into this routine
-!!     need not check in.  See the $Restrictions section for a
-!!     discussion of input argument restrictions.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine translates integers from a non-native integer format
-!!     read from a file as a sequence of characters to the native format.
-!!
-!! ## Examples
-!!
-!!     See ZZDAFGFR, ZZDAFGSR.
-!!
-!! ## Restrictions
-!!
-!!     1) Numeric data when read as characters from a file preserve
-!!        the bit patterns present in the file in memory.
-!!
-!!     2) A byte is 8 bits, and a character is some multiple of
-!!        bytes.
-!!
-!!     3) The intrinsic ICHAR preserves the bit pattern of the character
-!!        byte read from a file.  Namely if one examines the integer
-!!        created the 8 least significant bits will be precisely those
-!!        found in the character.
-!!
-!!     4) The size of integers on the target environment are a multiple
-!!        of some number of bytes.
-!!
-!!     5) The length of the INPUT string is a multiple of the number
-!!        of bytes for an integer in the INBFF format.
-!!
-!!     6) INBFF is supported for reading on this platform, and not
-!!        equivalent to NATBFF on this platform.
-!!
-!!     7) This routine must support all of the non-native translations
-!!        required by the 'READS_BFF' key in ZZPLATFM.
-!!
-!!     8) The character label corresponding to INBFF must be one of the
-!!        non-native entries in the value of 'READS_BFF' returned by
-!!        ZZPLATFM for this environment.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.27.0, 28-NOV-2021 (BVS)
-!!
-!!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
-!!
-!!-    SPICELIB Version 1.26.1, 01-OCT-2021 (NJB)
-!!
-!!        Fixed typo in comments.
-!!
-!!-    SPICELIB Version 1.26.0, 15-NOV-2015 (EDW)
-!!
-!!        Recast J = 4*(-1+I) + 1 as J = -3+4*I to accommodate
-!!        f2c processing.
-!!
-!!-    SPICELIB Version 1.25.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-64BIT-INTEL.
-!!
-!!-    SPICELIB Version 1.24.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-LINUX-64BIT-IFORT.
-!!
-!!-    SPICELIB Version 1.23.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-CYGWIN-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.22.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.21.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-CYGWIN-64BIT-GCC_C.
-!!
-!!-    SPICELIB Version 1.20.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-INTEL.
-!!
-!!-    SPICELIB Version 1.19.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-INTEL-CC_C.
-!!
-!!-    SPICELIB Version 1.18.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
-!!
-!!-    SPICELIB Version 1.17.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
-!!
-!!-    SPICELIB Version 1.16.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for PC-WINDOWS-64BIT-IFORT.
-!!
-!!-    SPICELIB Version 1.15.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for PC-LINUX-64BIT-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.14.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for PC-64BIT-MS_C.
-!!
-!!-    SPICELIB Version 1.13.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for MAC-OSX-64BIT-INTEL_C.
-!!
-!!-    SPICELIB Version 1.12.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for MAC-OSX-64BIT-IFORT.
-!!
-!!-    SPICELIB Version 1.11.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for MAC-OSX-64BIT-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.10.0, 18-MAR-2009 (BVS)
-!!
-!!        Updated for PC-LINUX-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.9.0, 18-MAR-2009 (BVS)
-!!
-!!        Updated for MAC-OSX-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.8.0, 19-FEB-2008 (BVS)
-!!
-!!        Updated for PC-LINUX-IFORT.
-!!
-!!-    SPICELIB Version 1.7.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for PC-LINUX-64BIT-GCC_C.
-!!
-!!-    SPICELIB Version 1.6.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for MAC-OSX-INTEL_C.
-!!
-!!-    SPICELIB Version 1.5.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for MAC-OSX-IFORT.
-!!
-!!-    SPICELIB Version 1.4.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for PC-WINDOWS-IFORT.
-!!
-!!-    SPICELIB Version 1.3.0, 26-OCT-2005 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-64BIT-GCC_C.
-!!
-!!-    SPICELIB Version 1.2.0, 03-JAN-2005 (BVS)
-!!
-!!        Updated for PC-CYGWIN_C.
-!!
-!!-    SPICELIB Version 1.1.0, 03-JAN-2005 (BVS)
-!!
-!!        Updated for PC-CYGWIN.
-!!
-!!-    SPICELIB Version 1.0.1, 17-JUL-2002 (BVS)
-!!
-!!        Added MAC-OSX environments.
-!!
-!!-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-!!
-!!     SPICELIB Functions
-!!
-!!     Local Parameters
-!!
-!!     These parameters are used for arithmetic shifting.
-!!
-!!     Local Variables
-!!
-!!     Statement Functions
-!!
-!!     Saved Variables
-!!
-!!     Data Statements
-!!
-!!     Statement Function Definitions
-!!
-!!     This function controls the conversion of characters to integers.
-!!     On some supported environments, ICHAR is not sufficient to
-!!     produce the desired results.  This however, is not the case
-!!     with this particular environment.
-!!     Some versions of the g77 implement ICHAR with a signed integer.
-!!     This function computes the value of ICHAR that this code requires
-!!     on any version of g77 for x86 Linux.
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip
       use pepper_constants, only: intmin
       use pepper_strings, only: ucase
@@ -4119,223 +3857,204 @@ contains
       end associate
       end procedure zzxlatei
 
-!$Procedure ZZDDHIVF ( Private --- DDH Identify VAX DAF File Format )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Identify VAX DAF file format.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     NSUM       is a string whose first 8 bytes contain NSUM (the third
+      !>                double precision number) from the first descriptor
+      !>                record of a non-empty DAF suspected to be in one of
+      !>                the VAX binary file formats.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     BFF        is an integer that signals whether NSUM indicates the
+      !>                DAF is VAX-DFLT or VAX-GFLT.  Possible values are:
+      !>
+      !>                   VAXGFL
+      !>                   VAXDFL
+      !>
+      !>                as defined in the include file 'zzddhman.inc'.  See it
+      !>                for details.
+      !>
+      !>     FOUND      is a logical that indicates whether the ZZDDHVFF check
+      !>                was successful.  If TRUE, BFF contains the code for
+      !>                VAX-DFLT or VAX-GFLT binary file format.  If FALSE,
+      !>                then BFF is untouched.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the include file 'zzddhman.inc'.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !> ## Files
+      !>
+      !>     This routine examines a series of bytes from a potential pre-N0050
+      !>     DAF to determine its architecture, but does not access the file
+      !>     itself.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine examines the bit patterns stored in NSUM to determine
+      !>     which of the two VAX binary file formats are used to store the
+      !>     double precision values in the DAF file.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDDHPPF for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) The first 8 bytes of NSUM must contain the third double
+      !>        precision value from the first descriptor record in a DAF
+      !>        file not in BIG-IEEE binary file format.
+      !>
+      !>     2) The DAF file from which NSUM is extracted must be correct
+      !>        or this routine may produce incorrect results.
+      !>
+      !>     3) Assumes CHARACTER*(1) is byte sized.
+      !>
+      !>     4) Assumes that ICHAR(CHAR(CHARACTER)) yields an integer with
+      !>        the same bit pattern as the source character.
+      !>
+      !> ## Literature References
+      !>
+      !>     1) Binary File Formats and Code Relying on Function Not Addressed
+      !>        by the ANSI '77 Fortran Standard.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.26.0, 28-NOV-2021 (BVS)
+      !>
+      !>        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+      !>
+      !>-    SPICELIB Version 1.25.1, 02-OCT-2021 (NJB)
+      !>
+      !>        Corrected typo in comments.
+      !>
+      !>-    SPICELIB Version 1.25.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-INTEL.
+      !>
+      !>-    SPICELIB Version 1.24.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.23.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.22.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.21.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 1.20.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL.
+      !>
+      !>-    SPICELIB Version 1.19.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-CC_C.
+      !>
+      !>-    SPICELIB Version 1.18.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+      !>
+      !>-    SPICELIB Version 1.17.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+      !>
+      !>-    SPICELIB Version 1.16.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.15.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.14.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-64BIT-MS_C.
+      !>
+      !>-    SPICELIB Version 1.13.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-INTEL_C.
+      !>
+      !>-    SPICELIB Version 1.12.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.11.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.10.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for PC-LINUX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.9.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for MAC-OSX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.8.0, 19-FEB-2008 (BVS)
+      !>
+      !>        Updated for PC-LINUX-IFORT.
+      !>
+      !>-    SPICELIB Version 1.7.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 1.6.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-INTEL_C.
+      !>
+      !>-    SPICELIB Version 1.5.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-IFORT.
+      !>
+      !>-    SPICELIB Version 1.4.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-IFORT.
+      !>
+      !>-    SPICELIB Version 1.3.0, 26-OCT-2005 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 1.2.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN_C.
+      !>
+      !>-    SPICELIB Version 1.1.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN.
+      !>
+      !>-    SPICELIB Version 1.0.1, 17-JUL-2002 (BVS)
+      !>
+      !>        Added MAC-OSX environments.
+      !>
+      !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
       module procedure zzddhivf
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Identify VAX DAF file format.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_zzddhman
       implicit none
 
-
-! $ Detailed_Input
-!
-!     NSUM       is a string whose first 8 bytes contain NSUM (the third
-!                double precision number) from the first descriptor
-!                record of a non-empty DAF suspected to be in one of
-!                the VAX binary file formats.
-!
-! $ Detailed_Output
-!
-!     BFF        is an integer that signals whether NSUM indicates the
-!                DAF is VAX-DFLT or VAX-GFLT.  Possible values are:
-!
-!                   VAXGFL
-!                   VAXDFL
-!
-!                as defined in the include file 'zzddhman.inc'.  See it
-!                for details.
-!
-!     FOUND      is a logical that indicates whether the ZZDDHVFF check
-!                was successful.  If TRUE, BFF contains the code for
-!                VAX-DFLT or VAX-GFLT binary file format.  If FALSE,
-!                then BFF is untouched.
-!
-! $ Parameters
-!
-!     See the include file 'zzddhman.inc'.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     This routine examines a series of bytes from a potential pre-N0050
-!     DAF to determine its architecture, but does not access the file
-!     itself.
-!
-! $ Particulars
-!
-!     This routine examines the bit patterns stored in NSUM to determine
-!     which of the two VAX binary file formats are used to store the
-!     double precision values in the DAF file.
-!
-! $ Examples
-!
-!     See ZZDDHPPF for sample usage.
-!
-! $ Restrictions
-!
-!     1) The first 8 bytes of NSUM must contain the third double
-!        precision value from the first descriptor record in a DAF
-!        file not in BIG-IEEE binary file format.
-!
-!     2) The DAF file from which NSUM is extracted must be correct
-!        or this routine may produce incorrect results.
-!
-!     3) Assumes CHARACTER*(1) is byte sized.
-!
-!     4) Assumes that ICHAR(CHAR(CHARACTER)) yields an integer with
-!        the same bit pattern as the source character.
-!
-! $ Literature_References
-!
-!     1) Binary File Formats and Code Relying on Function Not Addressed
-!        by the ANSI '77 Fortran Standard.
-!
-! $ Author_and_Institution
-!
-!     F.S. Turner     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.26.0, 28-NOV-2021 (BVS)
-!
-!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
-!
-!-    SPICELIB Version 1.25.1, 02-OCT-2021 (NJB)
-!
-!        Corrected typo in comments.
-!
-!-    SPICELIB Version 1.25.0, 10-MAR-2014 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-INTEL.
-!
-!-    SPICELIB Version 1.24.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-IFORT.
-!
-!-    SPICELIB Version 1.23.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-GFORTRAN.
-!
-!-    SPICELIB Version 1.22.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 1.21.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GCC_C.
-!
-!-    SPICELIB Version 1.20.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL.
-!
-!-    SPICELIB Version 1.19.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-CC_C.
-!
-!-    SPICELIB Version 1.18.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
-!
-!-    SPICELIB Version 1.17.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
-!
-!-    SPICELIB Version 1.16.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-WINDOWS-64BIT-IFORT.
-!
-!-    SPICELIB Version 1.15.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 1.14.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-64BIT-MS_C.
-!
-!-    SPICELIB Version 1.13.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-INTEL_C.
-!
-!-    SPICELIB Version 1.12.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-IFORT.
-!
-!-    SPICELIB Version 1.11.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 1.10.0, 18-MAR-2009 (BVS)
-!
-!        Updated for PC-LINUX-GFORTRAN.
-!
-!-    SPICELIB Version 1.9.0, 18-MAR-2009 (BVS)
-!
-!        Updated for MAC-OSX-GFORTRAN.
-!
-!-    SPICELIB Version 1.8.0, 19-FEB-2008 (BVS)
-!
-!        Updated for PC-LINUX-IFORT.
-!
-!-    SPICELIB Version 1.7.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GCC_C.
-!
-!-    SPICELIB Version 1.6.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-INTEL_C.
-!
-!-    SPICELIB Version 1.5.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-IFORT.
-!
-!-    SPICELIB Version 1.4.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-WINDOWS-IFORT.
-!
-!-    SPICELIB Version 1.3.0, 26-OCT-2005 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-GCC_C.
-!
-!-    SPICELIB Version 1.2.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN_C.
-!
-!-    SPICELIB Version 1.1.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN.
-!
-!-    SPICELIB Version 1.0.1, 17-JUL-2002 (BVS)
-!
-!        Added MAC-OSX environments.
-!
-!-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
-!
-!-&
-
-!
-!     Local Variables
-!
       character(1)          carg
 
       integer(ip)           leader
@@ -4524,223 +4243,198 @@ contains
       return
       end procedure zzddhivf
 
-!$Procedure ZZDDHF2H ( Private --- DDH Filename to Handle )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Convert filename to a handle.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     FNAME      is the name of the file to locate in the file table.
+      !>
+      !>     FTABS,
+      !>     FTAMH,
+      !>     FTARC,
+      !>     FTBFF,
+      !>     FTHAN,
+      !>     FTNAM,
+      !>     FTRTM,
+      !>     FTMNM      are the arrays respectively containing the absolute
+      !>                value of the handle, access method, architecture,
+      !>                binary file format, handle, name, RTRIM and
+      !>                magic number columns of the file table.
+      !>
+      !>     NFT        is the number of entries in the file table.
+      !>
+      !>     PEPPER: the file table is FT (the records of zzddhman_state, with
+      !>     NFT entries) instead of the arrays above.
+      !>
+      !>     UTCST,
+      !>     UTHAN,
+      !>     UTLCK,
+      !>     UTLUN      are the arrays respectively containing the cost,
+      !>                handle, locked, and logical unit columns of the unit
+      !>                table.
+      !>
+      !>     NUT        is the number of entries in the unit table.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     UTCST,
+      !>     UTHAN,
+      !>     UTLCK,
+      !>     UTLUN      are the arrays respectively containing the cost,
+      !>                handle, locked, and logical unit columns of the unit
+      !>                table.  If ZZDDHF2H requires a logical unit, then
+      !>                it will borrow one from the unit table.  Depending
+      !>                on the state of the table passed in from the caller
+      !>                one of three possible scenarios may occur (Recall
+      !>                that 'zero-cost' rows are ones whose units are
+      !>                reserved with RESLUN and not currently connected
+      !>                to any file.)
+      !>
+      !>                   A 'zero-cost' row exists in the table, in
+      !>                   which case the row is used temporarily and
+      !>                   may be removed depending on the number of entries
+      !>                   in the file table (NFT).
+      !>
+      !>                   The unit table is full (NUT=UTSIZE), in which
+      !>                   case the unit with the lowest cost that is not
+      !>                   locked to its handle will be disconnected, used,
+      !>                   and then returned to the table as a 'zero-cost'
+      !>                   row before returning to the caller.
+      !>
+      !>                   The unit table is not full (NUT<UTSIZE) and there
+      !>                   are no 'zero-cost' rows.  In this case NUT is
+      !>                   temporarily increased by one, and the new row
+      !>                   is used.  After this routine no longer requires
+      !>                   the unit, depending on the number of entries in
+      !>                   the file table (NFT) the row may be left in the
+      !>                   table as a 'zero-handle' row or removed entirely.
+      !>
+      !>                In the event an error is signaled, the contents of the
+      !>                unit table are placed into a usable state before
+      !>                returning to the caller.
+      !>
+      !>     NUT        is the number of entries in the unit table. Since
+      !>                this routine borrows a unit from the unit table, which
+      !>                may involve allocation of a new unit, this value may
+      !>                change.
+      !>
+      !>     EXISTS     is a logical if set to TRUE, indicates that FNAME
+      !>                exists.  If FALSE, FNAME does not exist.  In the event
+      !>                an exception is signaled the value is undefined.
+      !>
+      !>     OPENED     is a logical if set to TRUE, indicates that FNAME
+      !>                is opened and attached to a logical unit.  If FALSE,
+      !>                FNAME is not attached to a unit.  In the event an
+      !>                exception is signaled the value is undefined.
+      !>
+      !>     HANDLE     is the handle in the file table associated with
+      !>                FNAME.  If FOUND is FALSE, then HANDLE is returned as
+      !>                0.
+      !>
+      !>     FOUND      is a logical if TRUE indicates that FNAME was found
+      !>                in the file table.  If FALSE indicates that it was not
+      !>                located.
+      !>
+      !>     MNM        is a unique (enough) DP number -- the Magic NuMber --
+      !>                associated with FNAME computed by this examining the
+      !>                file contents.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If any of the INQUIRE statements this routine performs fail,
+      !>        the error SPICE(INQUIREFAILED) is signaled. FOUND is set to
+      !>        FALSE and HANDLE to 0.
+      !>
+      !>     2) If the attempt to open FNAME fails, then SPICE(FILEOPENFAILED)
+      !>        is signaled. FOUND is set to FALSE, and HANDLE to 0.
+      !>
+      !>     3) If FNAME is determined not to be loaded into the file table
+      !>        then FOUND is set to FALSE and HANDLE is set to 0.
+      !>
+      !> ## Files
+      !>
+      !>     If the file named by FNAME is not connected to a logical unit,
+      !>     this routine will open it for direct access to complete its
+      !>     examination.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine encapsulates the logic necessary to determine if
+      !>     a particular filename names a file already loaded into the
+      !>     DAF/DAS handle manager.  If it discovers the file is loaded,
+      !>     the routine returns the handle to the caller.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDDHFNH for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>     E.D. Wright     (JPL)
+      !>     B.V. Semenov    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.0.1, 02-OCT-2021 (NJB)
+      !>
+      !>        Corrected typos in comments.
+      !>
+      !>-    SPICELIB Version 3.0.0, 26-APR-2012 (BVS)
+      !>
+      !>        Changed calling sequence to include FTMNM and MNM. Change
+      !>        algorithm to compute MNM and use it to bypass n^2 INQUIREs
+      !>        for files opened for READ access, if possible.
+      !>
+      !>-    SPICELIB Version 2.0.1, 24-APR-2003 (EDW)
+      !>
+      !>        Added MAC-OSX-F77 to the list of platforms
+      !>        that require READONLY to read write protected
+      !>        kernels.
+      !>
+      !>-    SPICELIB Version 2.0.0, 05-AUG-2002 (FST)
+      !>
+      !>        Bug fix: this module was updated to allow proper loading
+      !>        of read-only files on VAX environments.
+      !>
+      !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 2.0.0, 05-AUG-2002 (FST)
+      !>
+      !>        An OPEN statement that is exercised by this module under
+      !>        certain circumstances, failed to pass the non-standard
+      !>        READONLY option for the VAX environments.  This had the
+      !>        undesirable side-effect of not permitting files available
+      !>        only for READ access to be opened.
+      !>
+      !>        This file was promoted from a standard portable module
+      !>        to a master file.
       module procedure zzddhf2h
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Convert filename to a handle.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim
       use pepper_inc_zzddhman
       implicit none
 
-
-! $ Detailed_Input
-!
-!     FNAME      is the name of the file to locate in the file table.
-!
-!     FTABS,
-!     FTAMH,
-!     FTARC,
-!     FTBFF,
-!     FTHAN,
-!     FTNAM,
-!     FTRTM,
-!     FTMNM      are the arrays respectively containing the absolute
-!                value of the handle, access method, architecture,
-!                binary file format, handle, name, RTRIM and
-!                magic number columns of the file table.
-!
-!     NFT        is the number of entries in the file table.
-!
-!     PEPPER: the file table is FT (the records of zzddhman_state, with
-!     NFT entries) instead of the arrays above.
-!
-!     UTCST,
-!     UTHAN,
-!     UTLCK,
-!     UTLUN      are the arrays respectively containing the cost,
-!                handle, locked, and logical unit columns of the unit
-!                table.
-!
-!     NUT        is the number of entries in the unit table.
-!
-! $ Detailed_Output
-!
-!     UTCST,
-!     UTHAN,
-!     UTLCK,
-!     UTLUN      are the arrays respectively containing the cost,
-!                handle, locked, and logical unit columns of the unit
-!                table.  If ZZDDHF2H requires a logical unit, then
-!                it will borrow one from the unit table.  Depending
-!                on the state of the table passed in from the caller
-!                one of three possible scenarios may occur (Recall
-!                that 'zero-cost' rows are ones whose units are
-!                reserved with RESLUN and not currently connected
-!                to any file.)
-!
-!                   A 'zero-cost' row exists in the table, in
-!                   which case the row is used temporarily and
-!                   may be removed depending on the number of entries
-!                   in the file table (NFT).
-!
-!                   The unit table is full (NUT=UTSIZE), in which
-!                   case the unit with the lowest cost that is not
-!                   locked to its handle will be disconnected, used,
-!                   and then returned to the table as a 'zero-cost'
-!                   row before returning to the caller.
-!
-!                   The unit table is not full (NUT<UTSIZE) and there
-!                   are no 'zero-cost' rows.  In this case NUT is
-!                   temporarily increased by one, and the new row
-!                   is used.  After this routine no longer requires
-!                   the unit, depending on the number of entries in
-!                   the file table (NFT) the row may be left in the
-!                   table as a 'zero-handle' row or removed entirely.
-!
-!                In the event an error is signaled, the contents of the
-!                unit table are placed into a usable state before
-!                returning to the caller.
-!
-!     NUT        is the number of entries in the unit table. Since
-!                this routine borrows a unit from the unit table, which
-!                may involve allocation of a new unit, this value may
-!                change.
-!
-!     EXISTS     is a logical if set to TRUE, indicates that FNAME
-!                exists.  If FALSE, FNAME does not exist.  In the event
-!                an exception is signaled the value is undefined.
-!
-!     OPENED     is a logical if set to TRUE, indicates that FNAME
-!                is opened and attached to a logical unit.  If FALSE,
-!                FNAME is not attached to a unit.  In the event an
-!                exception is signaled the value is undefined.
-!
-!     HANDLE     is the handle in the file table associated with
-!                FNAME.  If FOUND is FALSE, then HANDLE is returned as
-!                0.
-!
-!     FOUND      is a logical if TRUE indicates that FNAME was found
-!                in the file table.  If FALSE indicates that it was not
-!                located.
-!
-!     MNM        is a unique (enough) DP number -- the Magic NuMber --
-!                associated with FNAME computed by this examining the
-!                file contents.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If any of the INQUIRE statements this routine performs fail,
-!        the error SPICE(INQUIREFAILED) is signaled. FOUND is set to
-!        FALSE and HANDLE to 0.
-!
-!     2) If the attempt to open FNAME fails, then SPICE(FILEOPENFAILED)
-!        is signaled. FOUND is set to FALSE, and HANDLE to 0.
-!
-!     3) If FNAME is determined not to be loaded into the file table
-!        then FOUND is set to FALSE and HANDLE is set to 0.
-!
-! $ Files
-!
-!     If the file named by FNAME is not connected to a logical unit,
-!     this routine will open it for direct access to complete its
-!     examination.
-!
-! $ Particulars
-!
-!     This routine encapsulates the logic necessary to determine if
-!     a particular filename names a file already loaded into the
-!     DAF/DAS handle manager.  If it discovers the file is loaded,
-!     the routine returns the handle to the caller.
-!
-! $ Examples
-!
-!     See ZZDDHFNH for sample usage.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     F.S. Turner     (JPL)
-!     E.D. Wright     (JPL)
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.0.1, 02-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    SPICELIB Version 3.0.0, 26-APR-2012 (BVS)
-!
-!        Changed calling sequence to include FTMNM and MNM. Change
-!        algorithm to compute MNM and use it to bypass n^2 INQUIREs
-!        for files opened for READ access, if possible.
-!
-!-    SPICELIB Version 2.0.1, 24-APR-2003 (EDW)
-!
-!        Added MAC-OSX-F77 to the list of platforms
-!        that require READONLY to read write protected
-!        kernels.
-!
-!-    SPICELIB Version 2.0.0, 05-AUG-2002 (FST)
-!
-!        Bug fix: this module was updated to allow proper loading
-!        of read-only files on VAX environments.
-!
-!-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 2.0.0, 05-AUG-2002 (FST)
-!
-!        An OPEN statement that is exercised by this module under
-!        certain circumstances, failed to pass the non-standard
-!        READONLY option for the VAX environments.  This had the
-!        undesirable side-effect of not permitting files available
-!        only for READ access to be opened.
-!
-!        This file was promoted from a standard portable module
-!        to a master file.
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Variables
-!
       integer(ip)           i
       integer(ip)           iostat
       integer(ip)           rchar
@@ -5048,116 +4742,94 @@ contains
 
       end procedure zzddhf2h
 
-!$Procedure ZZDDHRCM ( Private --- DDH Request Count )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Manage augmentation of the handle to logical unit request counter
+      !>     and the cost column in the unit table.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     NUT        is the number of entries in the unit table.
+      !>
+      !>     UTCST      is the current cost column of the unit table.
+      !>
+      !>     REQCNT     is the current value of the HLU request counter to
+      !>                adjust.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     UTCST      is the updated cost column of the unit table.  In
+      !>                the nominal case, UTCST will not be adjusted, but
+      !>                if REQCNT overflows, then adjustments will be made
+      !>                to approximately preserve the priority.
+      !>
+      !>     REQCNT     is the updated value of the request counter.
+      !>                Nominally this will be 1 more than the input
+      !>                value.  However, in the case where REQCNT will
+      !>                exceed INTMAX it will be assigned to INTMAX()/2 + 1.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1) If REQCNT on input is INTMAX(), then REQCNT on output will
+      !>        be assigned INTMAX()/2 + 1 and the UTCST column will be
+      !>        recomputed.
+      !>
+      !> ## Particulars
+      !>
+      !>     This module manages the request counter and the cost column of
+      !>     the unit table which is used to determine the expense of
+      !>     disconnecting a handle from its logical unit.
+      !>
+      !>     In the nominal mode of operation, the request counter is simply
+      !>     incremented by one and the cost column remains untouched.
+      !>     However, when the request counter passed into the routine is
+      !>     INTMAX, then REQCNT is not incremented.  In an attempt to preserve
+      !>     the relationships between costs, all entries in the cost column
+      !>     are halved and REQCNT is set to INTMAX()/2 + 1.  This has the
+      !>     effect of preserving the cost relationships between rows, except
+      !>     in half the cases where subsequent cost values are present.
+      !>
+      !>     The occurrence of rollover is rare, and thus the destruction of
+      !>     relative cost relationships as well.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDDHHLU for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
       module procedure zzddhrcm
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Manage augmentation of the handle to logical unit request counter
-!!     and the cost column in the unit table.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax
       implicit none
 
-! $ Detailed_Input
-!
-!     NUT        is the number of entries in the unit table.
-!
-!     UTCST      is the current cost column of the unit table.
-!
-!     REQCNT     is the current value of the HLU request counter to
-!                adjust.
-!
-! $ Detailed_Output
-!
-!     UTCST      is the updated cost column of the unit table.  In
-!                the nominal case, UTCST will not be adjusted, but
-!                if REQCNT overflows, then adjustments will be made
-!                to approximately preserve the priority.
-!
-!     REQCNT     is the updated value of the request counter.
-!                Nominally this will be 1 more than the input
-!                value.  However, in the case where REQCNT will
-!                exceed INTMAX it will be assigned to INTMAX()/2 + 1.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1) If REQCNT on input is INTMAX(), then REQCNT on output will
-!        be assigned INTMAX()/2 + 1 and the UTCST column will be
-!        recomputed.
-!
-! $ Particulars
-!
-!     This module manages the request counter and the cost column of
-!     the unit table which is used to determine the expense of
-!     disconnecting a handle from its logical unit.
-!
-!     In the nominal mode of operation, the request counter is simply
-!     incremented by one and the cost column remains untouched.
-!     However, when the request counter passed into the routine is
-!     INTMAX, then REQCNT is not incremented.  In an attempt to preserve
-!     the relationships between costs, all entries in the cost column
-!     are halved and REQCNT is set to INTMAX()/2 + 1.  This has the
-!     effect of preserving the cost relationships between rows, except
-!     in half the cases where subsequent cost values are present.
-!
-!     The occurrence of rollover is rare, and thus the destruction of
-!     relative cost relationships as well.
-!
-! $ Examples
-!
-!     See ZZDDHHLU for sample usage.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     F.S. Turner     (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Variables
-!
       integer(ip)           i
 
 !
@@ -5181,117 +4853,94 @@ contains
       return
       end procedure zzddhrcm
 
-!$Procedure ZZDDHGTU ( Private --- DDH Get Unit )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Get or prepare an entry in the unit table to receive a new
+      !>     file.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     UTCST,
+      !>     UTHAN,
+      !>     UTLCK,
+      !>     UTLUN,     are the arrays respectively containing the cost,
+      !>                handle, locked, and logical unit columns of the
+      !>                unit table.
+      !>
+      !>     NUT        is the number of entries in the unit table.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     UTCST,
+      !>     UTHAN,
+      !>     UTLCK,
+      !>     UTLUN,     are the arrays respectively containing the cost,
+      !>                handle, locked, and logical unit columns of the
+      !>                unit table.  This may change as a new unit is
+      !>                added or old ones are removed.
+      !>
+      !>     NUT        is the number of entries in the unit table.  This may
+      !>                change as new entries are added.
+      !>
+      !>     UINDEX     is the index of the row where the new unit should
+      !>                be attached.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     This routine may disconnect a file from its logical unit, to
+      !>     successfully process the caller's request for a unit.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If GETLUN fails to assign a logical unit for any reason to
+      !>        the row of interest, this routine sets the logical unit to -1,
+      !>        since negative logical units in Fortran are not permitted.
+      !>
+      !> ## Particulars
+      !>
+      !>      This routine only manipulates the contents of the unit table.
+      !>      Any "zero" cost rows in the table indicate rows where the
+      !>      listed logical unit has been reserved, but no file is currently
+      !>      attached.
+      !>
+      !>      Callers of this routine should check FAILED since this
+      !>      routine may invoke GETLUN.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDDHHLU for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) This routine must not be used to retrieve a unit for a
+      !>        file that is already connected to a unit listed in the
+      !>        unit table.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 29-MAY-2001 (FST)
       module procedure zzddhgtu
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Get or prepare an entry in the unit table to receive a new
-!!     file.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_arrays, only: orderi
       use pepper_inc_zzddhman
       implicit none
 
-
-! $ Detailed_Input
-!
-!     UTCST,
-!     UTHAN,
-!     UTLCK,
-!     UTLUN,     are the arrays respectively containing the cost,
-!                handle, locked, and logical unit columns of the
-!                unit table.
-!
-!     NUT        is the number of entries in the unit table.
-!
-! $ Detailed_Output
-!
-!     UTCST,
-!     UTHAN,
-!     UTLCK,
-!     UTLUN,     are the arrays respectively containing the cost,
-!                handle, locked, and logical unit columns of the
-!                unit table.  This may change as a new unit is
-!                added or old ones are removed.
-!
-!     NUT        is the number of entries in the unit table.  This may
-!                change as new entries are added.
-!
-!     UINDEX     is the index of the row where the new unit should
-!                be attached.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Files
-!
-!     This routine may disconnect a file from its logical unit, to
-!     successfully process the caller's request for a unit.
-!
-! $ Exceptions
-!
-!     1) If GETLUN fails to assign a logical unit for any reason to
-!        the row of interest, this routine sets the logical unit to -1,
-!        since negative logical units in Fortran are not permitted.
-!
-! $ Particulars
-!
-!      This routine only manipulates the contents of the unit table.
-!      Any "zero" cost rows in the table indicate rows where the
-!      listed logical unit has been reserved, but no file is currently
-!      attached.
-!
-!      Callers of this routine should check FAILED since this
-!      routine may invoke GETLUN.
-!
-! $ Examples
-!
-!     See ZZDDHHLU for sample usage.
-!
-! $ Restrictions
-!
-!     1) This routine must not be used to retrieve a unit for a
-!        file that is already connected to a unit listed in the
-!        unit table.
-!
-! $ Author_and_Institution
-!
-!     F.S. Turner     (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 29-MAY-2001 (FST)
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Variables
-!
       integer(ip)           i
       integer(ip), allocatable :: orderv ( : )
 
@@ -5458,135 +5107,116 @@ contains
          end function size_of_table
       end procedure zzddhgtu
 
-!$Procedure ZZDDHRMU ( Private --- DDH Remove Unit )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Remove an entry from the unit table.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     HANDLE     is the index of the row in the unit table for the
+      !>                unit to remove.
+      !>
+      !>     NFT        is the number of entries in the file table after
+      !>                the file whose unit is about to be disconnected
+      !>                has been removed.
+      !>
+      !>     UTCST,
+      !>     UTHAN,
+      !>     UTLCK,
+      !>     UTLUN,     are the cost, handle, locked, and logical unit columns
+      !>                of the unit table respectively.
+      !>
+      !>     NUT        is the number of entries in the unit table.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     UTCST,
+      !>     UTHAN,
+      !>     UTLCK,
+      !>     UTLUN,     are the cost, handle, locked, and logical unit columns
+      !>                of the unit table respectively.  The contents will
+      !>                change, for specifics see the Particulars section
+      !>                below.
+      !>
+      !>     NUT        is the number of entries in the unit table.  Depending
+      !>                on the state of the file table, this may or may not
+      !>                change.  See the $Particulars section below for
+      !>                details.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) SPICE(INDEXOUTOFRANGE) is signaled when the input UINDEX is
+      !>        either greater than NUT or less than 1.
+      !>
+      !>     2) If NUT is 0 on input, then this module simply returns.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine only manipulates the contents of the unit table.
+      !>     It is utilized to delete an entry in the unit table that is
+      !>     the result of a file 'unload' or close operation.
+      !>
+      !>     If the number of files listed in the file table exceeds the
+      !>     number of entries in the unit table, then this module will
+      !>     reserve the logical unit listed in the row to remove, zero
+      !>     out the cost and return.  In this event, NUT will remain
+      !>     unchanged.
+      !>
+      !>     However, if there are less files in the file table than the
+      !>     number of entries in the unit table, then this routine removes
+      !>     the row and compresses the unit table, as one would expect.
+      !>
+      !>     The file attached to UNIT is not closed by this routine, the
+      !>     closure should occur before invoking this module.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDDHHLU for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) This routine operates when an error condition introduced
+      !>        by a prior call to SIGERR exists.  It calls no routines
+      !>        that return on entry when proper inputs are provided.
+      !>        Any updates to this routine must preserve this behavior.
+      !>
+      !>     2) The file attached to the unit that is to be removed should
+      !>        already have been removed from the file table.  This is
+      !>        necessary so the value of NFT reflects the number of files
+      !>        available after the removal.
+      !>
+      !>     3) The logical unit in UTLUN(UINDEX) must be closed or buffered
+      !>        externally prior to calling this routine.  Knowledge of its
+      !>        value could be lost otherwise.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 05-NOV-2001 (FST)
       module procedure zzddhrmu
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Remove an entry from the unit table.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_inc_zzddhman
       implicit none
 
-
-! $ Detailed_Input
-!
-!     HANDLE     is the index of the row in the unit table for the
-!                unit to remove.
-!
-!     NFT        is the number of entries in the file table after
-!                the file whose unit is about to be disconnected
-!                has been removed.
-!
-!     UTCST,
-!     UTHAN,
-!     UTLCK,
-!     UTLUN,     are the cost, handle, locked, and logical unit columns
-!                of the unit table respectively.
-!
-!     NUT        is the number of entries in the unit table.
-!
-! $ Detailed_Output
-!
-!     UTCST,
-!     UTHAN,
-!     UTLCK,
-!     UTLUN,     are the cost, handle, locked, and logical unit columns
-!                of the unit table respectively.  The contents will
-!                change, for specifics see the Particulars section
-!                below.
-!
-!     NUT        is the number of entries in the unit table.  Depending
-!                on the state of the file table, this may or may not
-!                change.  See the $Particulars section below for
-!                details.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) SPICE(INDEXOUTOFRANGE) is signaled when the input UINDEX is
-!        either greater than NUT or less than 1.
-!
-!     2) If NUT is 0 on input, then this module simply returns.
-!
-! $ Particulars
-!
-!     This routine only manipulates the contents of the unit table.
-!     It is utilized to delete an entry in the unit table that is
-!     the result of a file 'unload' or close operation.
-!
-!     If the number of files listed in the file table exceeds the
-!     number of entries in the unit table, then this module will
-!     reserve the logical unit listed in the row to remove, zero
-!     out the cost and return.  In this event, NUT will remain
-!     unchanged.
-!
-!     However, if there are less files in the file table than the
-!     number of entries in the unit table, then this routine removes
-!     the row and compresses the unit table, as one would expect.
-!
-!     The file attached to UNIT is not closed by this routine, the
-!     closure should occur before invoking this module.
-!
-! $ Examples
-!
-!     See ZZDDHHLU for sample usage.
-!
-! $ Restrictions
-!
-!     1) This routine operates when an error condition introduced
-!        by a prior call to SIGERR exists.  It calls no routines
-!        that return on entry when proper inputs are provided.
-!        Any updates to this routine must preserve this behavior.
-!
-!     2) The file attached to the unit that is to be removed should
-!        already have been removed from the file table.  This is
-!        necessary so the value of NFT reflects the number of files
-!        available after the removal.
-!
-!     3) The logical unit in UTLUN(UINDEX) must be closed or buffered
-!        externally prior to calling this routine.  Knowledge of its
-!        value could be lost otherwise.
-!
-! $ Author_and_Institution
-!
-!     F.S. Turner     (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 05-NOV-2001 (FST)
-!
-!-&
-
-!
-!     Local Variables
-!
       integer(ip)           i
 
 !
@@ -5656,84 +5286,66 @@ contains
       return
       end procedure zzddhrmu
 
-!$Procedure ZZDDHCLU ( Private --- DDH Count Locks )
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Retrieve the number of locked units in the unit table.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     UTLCK      is the lock column of the unit table.  TRUE entries in
+      !>                this column indicate a handle is locked to a particular
+      !>                unit.
+      !>
+      !>     NUT        is the number of entries in the unit table.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     The function returns the number of locked units in the unit table.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine simply encapsulates some logic used in several
+      !>     places in ZZDDHMAN.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDDHMAN for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
       module procedure zzddhclu
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Retrieve the number of locked units in the unit table.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     UTLCK      is the lock column of the unit table.  TRUE entries in
-!                this column indicate a handle is locked to a particular
-!                unit.
-!
-!     NUT        is the number of entries in the unit table.
-!
-! $ Detailed_Output
-!
-!     The function returns the number of locked units in the unit table.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Particulars
-!
-!     This routine simply encapsulates some logic used in several
-!     places in ZZDDHMAN.
-!
-! $ Examples
-!
-!     See ZZDDHMAN for sample usage.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     F.S. Turner     (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
-!
-!-&
-
-!
-!     Local Variables
-!
       integer(ip)           i
 
 !
@@ -5752,95 +5364,67 @@ contains
       return
       end procedure zzddhclu
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines. Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Return the integer code for the native binary file format
+      !>     of the host system.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NATBFF         is the native binary file format code for the host
+      !>                    system on which this routine is called.
+      !>
+      !> ## Parameters
+      !>
+      !>     See the INCLUDE file zzddhman.inc for a description of
+      !>     binary file format codes.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If an error occurs while attempting to obtain the host
+      !>         binary file format code, the error will be diagnosed by a
+      !>         routine in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Routines outside of SPICELIB will normally have no need to call
+      !>     this routine.
+      !>
+      !>     This routine centralizes the logic needed to obtain the host
+      !>     system's binary file format code.
+      !>
+      !> ## Examples
+      !>
+      !>     See usage in DASGRD.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman   (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 05-FEB-2015 (NJB)
       module procedure zzddhnfc
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines. Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Return the integer code for the native binary file format
-!!     of the host system.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!     DAS
-!!
-!! ## Keywords
-!!
-!!     ASSIGNMENT
-!!     DAS
-!!     FILES
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     None.
-!!
-!! ## Detailed Output
-!!
-!!     NATBFF         is the native binary file format code for the host
-!!                    system on which this routine is called.
-!!
-!! ## Parameters
-!!
-!!     See the INCLUDE file zzddhman.inc for a description of
-!!     binary file format codes.
-!!
-!! ## Exceptions
-!!
-!!     1)  If an error occurs while attempting to obtain the host
-!!         binary file format code, the error will be diagnosed by a
-!!         routine in the call tree of this routine.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     Routines outside of SPICELIB will normally have no need to call
-!!     this routine.
-!!
-!!     This routine centralizes the logic needed to obtain the host
-!!     system's binary file format code.
-!!
-!! ## Examples
-!!
-!!     See usage in DASGRD.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman   (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 05-FEB-2015 (NJB)
-!!
-!! ## Index Entries
-!!
-!!     return native binary file format code
-!!
-!!     SPICELIB functions
-!!
-!!     Local variables
-!!
-!!     Saved variables
-!!
-!!     Initial values
-!!
-!!     This routine checks in on the first pass only.
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
@@ -5912,18 +5496,6 @@ contains
 !     This is an umbrella routine for a collection of entry points
 !     to the DAF/DAS handle manager.
 !
-! $ Required_Reading
-!
-!     None.
-!
-! $ Keywords
-!
-!     DAF
-!     DAS
-!     PRIVATE
-!
-! $ Declarations
-
 ! $ Detailed_Input
 !
 !     See the entry points for descriptions of their inputs.
@@ -6026,7 +5598,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
 !
-!-&
 
 ! $ Revisions
 !
@@ -6045,15 +5616,6 @@ contains
 !        As of this release, all that is verified is that the
 !        BFF ID listed in ZZPLATFM is compatible with the runtime
 !        environment.  See ZZPLTCHK's header for details.
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-
-!
-!     Local Variables
 !
 
 !
@@ -6135,198 +5697,176 @@ contains
 !
 
 !
-!     Saved Variables
-!
-
-!
 !     Data Statements
 !
 
 !
 !     Standard SPICE error handling.
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Load a new direct access file.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     FNAME      is the file name of the file to be loaded for direct
+      !>                access.
+      !>
+      !>     METHOD     is the method by which to load the file. Acceptable
+      !>                values are:
+      !>
+      !>                   'READ'    - Load existing file for read access.
+      !>                   'WRITE'   - Load existing file for write access.
+      !>                   'SCRATCH' - Load scratch file.
+      !>                   'NEW'     - Load a new file for write access.
+      !>
+      !>                Note: The value of METHOD is case-insensitive.
+      !>
+      !>     ARCH       is the architecture of the file to be loaded.
+      !>                Acceptable values are:
+      !>
+      !>                   'DAF'    - Load a DAF file
+      !>                   'DAS'    - Load a DAS file
+      !>
+      !>                Note: The value of ARCH is case-insensitive.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HANDLE     is the file handle associated with the file.  This
+      !>                handle is used to identify the file in subsequent
+      !>                calls to other routines.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) The error SPICE(UNSUPPORTEDMETHOD) is signaled when the
+      !>        METHOD input argument is improperly specified.  The value of
+      !>        the output argument HANDLE is undefined when this error is
+      !>        signaled.
+      !>
+      !>     2) The error SPICE(UNSUPPORTEDARCH) is signaled when the ARCH
+      !>        input argument is improperly specified.  The value of the
+      !>        output argument HANDLE is undefined when this error is
+      !>        signaled.
+      !>
+      !>     3) The error SPICE(UTFULL) is signaled whenever METHOD is
+      !>        set to 'SCRATCH' and no available units exist in the
+      !>        unit table for locking.  The value of the output argument
+      !>        HANDLE is undefined when this error is signaled.
+      !>
+      !>     4) The error SPICE(BLANKFILENAME) is signaled whenever METHOD
+      !>        is set to 'READ', 'WRITE', or 'NEW' and the FNAME argument
+      !>        is a blank string.  The value of the output argument HANDLE
+      !>        is undefined when this error is signaled.
+      !>
+      !>     5) The error SPICE(FILENOTFOUND) is signaled whenever METHOD
+      !>        is set to 'READ' or 'WRITE' and an INQUIRE performed on FNAME
+      !>        indicates the file does not exist.  The value of the output
+      !>        argument HANDLE is undefined when this error is signaled.
+      !>
+      !>     6) The error SPICE(IMPROPEROPEN) is signaled if the file
+      !>        associated with FNAME is attached to a unit from some
+      !>        source external to ZZDDHMAN's entry points.  The value of the
+      !>        output argument HANDLE is undefined when this error is
+      !>        signaled.
+      !>
+      !>     7) The error SPICE(FILARCMISMATCH) is signaled when a file is
+      !>        loaded for 'READ' or 'WRITE' and the architecture of the
+      !>        existing file disagrees with that of the input argument ARCH.
+      !>        The value of the output argument HANDLE is undefined when
+      !>        this error is signaled.
+      !>
+      !>     8) The error SPICE(FILEOPENCONFLICT) is signaled when an attempt
+      !>        to load an already loaded file for any access other than READ.
+      !>        The value of the output argument HANDLE is undefined when this
+      !>        error is signaled.
+      !>
+      !>     9) The error SPICE(RWCONFLICT) is signaled when an attempt to
+      !>        load a file for READ access that is already loaded into the
+      !>        handle manager with a conflicting access method.  The value of
+      !>        the output argument HANDLE is undefined when this error is
+      !>        signaled.
+      !>
+      !>    10) The error SPICE(FTFULL) is signaled when an attempt to load
+      !>        more than the maximum number of allowable files, FTSIZE,
+      !>        is made.  The value of the output argument HANDLE is undefined
+      !>        when this error is signaled.
+      !>
+      !>    11) The error SPICE(FILEOPENFAIL) is signaled whenever the
+      !>        the file open fails with non-zero IOSTAT.  The value of the
+      !>        output argument HANDLE is undefined when this error is
+      !>        signaled.
+      !>
+      !>    12) The error SPICE(UNSUPPORTEDBFF) is signaled whenever the file
+      !>        to be opened utilizes a binary file format that the platform
+      !>        does not currently support.  The value of the output argument
+      !>        HANDLE is undefined when this error is signaled.
+      !>
+      !>    13) When loading files with METHOD set to 'NEW', any errors
+      !>        generated by this routine will cause the newly created file
+      !>        to be deleted.
+      !>
+      !>    14) If the toolkit source is improperly configured for the
+      !>        runtime environment, routines in the call tree of this
+      !>        routine may signal errors.
+      !>
+      !> ## Files
+      !>
+      !>     1) All direct access files loaded by this routine for
+      !>        access methods other than 'SCRATCH' are specified by name.
+      !>
+      !>     2) Files opened with access method 'SCRATCH' are referenced
+      !>        only by their logical unit.
+      !>
+      !> ## Particulars
+      !>
+      !>     This private routine is designed to provide a common, unified
+      !>     file load interface for DAF and DAS.
+      !>
+      !> ## Examples
+      !>
+      !>     See DAFOPR, DAFONW, DAFOPW, DASOPR, DASOPS, DASONW, DASOPW for
+      !>     sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) Files loaded through this interface should not be opened by
+      !>        any other mechanism until the appropriate call to ZZDDHCLS
+      !>        is made.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>     B.V. Semenov    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.0, 26-APR-2012 (BVS)
+      !>
+      !>        Updated for the new "magic number" column in the file table.
+      !>
+      !>-    SPICELIB Version 2.0.0, 07-AUG-2002 (FST)
+      !>
+      !>        This entry point was updated to perform checks on the
+      !>        runtime environment, to verify that the source is properly
+      !>        configured for execution on this environment.  See the
+      !>        Revisions section of ZZDDHMAN for details.
+      !>
+      !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
+      !>
+      !>     Standard SPICE error handling.
       module procedure zzddhopn
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Load a new direct access file.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DAF
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         FNAME
-!!     CHARACTER*(*)         METHOD
-!!     CHARACTER*(*)         ARCH
-!!     INTEGER               HANDLE
-!!
-!! ## Detailed Input
-!!
-!!     FNAME      is the file name of the file to be loaded for direct
-!!                access.
-!!
-!!     METHOD     is the method by which to load the file. Acceptable
-!!                values are:
-!!
-!!                   'READ'    - Load existing file for read access.
-!!                   'WRITE'   - Load existing file for write access.
-!!                   'SCRATCH' - Load scratch file.
-!!                   'NEW'     - Load a new file for write access.
-!!
-!!                Note: The value of METHOD is case-insensitive.
-!!
-!!     ARCH       is the architecture of the file to be loaded.
-!!                Acceptable values are:
-!!
-!!                   'DAF'    - Load a DAF file
-!!                   'DAS'    - Load a DAS file
-!!
-!!                Note: The value of ARCH is case-insensitive.
-!!
-!! ## Detailed Output
-!!
-!!     HANDLE     is the file handle associated with the file.  This
-!!                handle is used to identify the file in subsequent
-!!                calls to other routines.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1) The error SPICE(UNSUPPORTEDMETHOD) is signaled when the
-!!        METHOD input argument is improperly specified.  The value of
-!!        the output argument HANDLE is undefined when this error is
-!!        signaled.
-!!
-!!     2) The error SPICE(UNSUPPORTEDARCH) is signaled when the ARCH
-!!        input argument is improperly specified.  The value of the
-!!        output argument HANDLE is undefined when this error is
-!!        signaled.
-!!
-!!     3) The error SPICE(UTFULL) is signaled whenever METHOD is
-!!        set to 'SCRATCH' and no available units exist in the
-!!        unit table for locking.  The value of the output argument
-!!        HANDLE is undefined when this error is signaled.
-!!
-!!     4) The error SPICE(BLANKFILENAME) is signaled whenever METHOD
-!!        is set to 'READ', 'WRITE', or 'NEW' and the FNAME argument
-!!        is a blank string.  The value of the output argument HANDLE
-!!        is undefined when this error is signaled.
-!!
-!!     5) The error SPICE(FILENOTFOUND) is signaled whenever METHOD
-!!        is set to 'READ' or 'WRITE' and an INQUIRE performed on FNAME
-!!        indicates the file does not exist.  The value of the output
-!!        argument HANDLE is undefined when this error is signaled.
-!!
-!!     6) The error SPICE(IMPROPEROPEN) is signaled if the file
-!!        associated with FNAME is attached to a unit from some
-!!        source external to ZZDDHMAN's entry points.  The value of the
-!!        output argument HANDLE is undefined when this error is
-!!        signaled.
-!!
-!!     7) The error SPICE(FILARCMISMATCH) is signaled when a file is
-!!        loaded for 'READ' or 'WRITE' and the architecture of the
-!!        existing file disagrees with that of the input argument ARCH.
-!!        The value of the output argument HANDLE is undefined when
-!!        this error is signaled.
-!!
-!!     8) The error SPICE(FILEOPENCONFLICT) is signaled when an attempt
-!!        to load an already loaded file for any access other than READ.
-!!        The value of the output argument HANDLE is undefined when this
-!!        error is signaled.
-!!
-!!     9) The error SPICE(RWCONFLICT) is signaled when an attempt to
-!!        load a file for READ access that is already loaded into the
-!!        handle manager with a conflicting access method.  The value of
-!!        the output argument HANDLE is undefined when this error is
-!!        signaled.
-!!
-!!    10) The error SPICE(FTFULL) is signaled when an attempt to load
-!!        more than the maximum number of allowable files, FTSIZE,
-!!        is made.  The value of the output argument HANDLE is undefined
-!!        when this error is signaled.
-!!
-!!    11) The error SPICE(FILEOPENFAIL) is signaled whenever the
-!!        the file open fails with non-zero IOSTAT.  The value of the
-!!        output argument HANDLE is undefined when this error is
-!!        signaled.
-!!
-!!    12) The error SPICE(UNSUPPORTEDBFF) is signaled whenever the file
-!!        to be opened utilizes a binary file format that the platform
-!!        does not currently support.  The value of the output argument
-!!        HANDLE is undefined when this error is signaled.
-!!
-!!    13) When loading files with METHOD set to 'NEW', any errors
-!!        generated by this routine will cause the newly created file
-!!        to be deleted.
-!!
-!!    14) If the toolkit source is improperly configured for the
-!!        runtime environment, routines in the call tree of this
-!!        routine may signal errors.
-!!
-!! ## Files
-!!
-!!     1) All direct access files loaded by this routine for
-!!        access methods other than 'SCRATCH' are specified by name.
-!!
-!!     2) Files opened with access method 'SCRATCH' are referenced
-!!        only by their logical unit.
-!!
-!! ## Particulars
-!!
-!!     This private routine is designed to provide a common, unified
-!!     file load interface for DAF and DAS.
-!!
-!! ## Examples
-!!
-!!     See DAFOPR, DAFONW, DAFOPW, DASOPR, DASOPS, DASONW, DASOPW for
-!!     sample usage.
-!!
-!! ## Restrictions
-!!
-!!     1) Files loaded through this interface should not be opened by
-!!        any other mechanism until the appropriate call to ZZDDHCLS
-!!        is made.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!     B.V. Semenov    (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.1.0, 26-APR-2012 (BVS)
-!!
-!!        Updated for the new "magic number" column in the file table.
-!!
-!!-    SPICELIB Version 2.0.0, 07-AUG-2002 (FST)
-!!
-!!        This entry point was updated to perform checks on the
-!!        runtime environment, to verify that the source is properly
-!!        configured for execution on this environment.  See the
-!!        Revisions section of ZZDDHMAN for details.
-!!
-!!-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_strings, only: repmc, rtrim, ucase
@@ -7071,138 +6611,121 @@ contains
       end associate
       end procedure zzddhopn
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Close the file associated with HANDLE.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     HANDLE     is the file handle associated with the file that is
+      !>                to be closed.
+      !>
+      !>     ARCH       is the expected architecture of the file associated
+      !>                with HANDLE.
+      !>
+      !>     KILL       is a logical that indicates whether to kill the file
+      !>                associated with HANDLE.  Essentially it performs:
+      !>
+      !>                   CLOSE ( UNIT, STATUS = 'DELETE')
+      !>
+      !>                on the file.  This only works if HANDLE is currently
+      !>                assigned a UNIT in the UNIT table.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) SPICE(FILARCMISMATCH) is signaled if the specified architecture
+      !>        does not match the one listed in the file table.
+      !>
+      !>     2) SPICE(INVALIDACCESS) is signaled if KILL is set to .TRUE., and
+      !>        HANDLE is associated with a file open for READ access.
+      !>
+      !>     3) SPICE(FILENOTCONNECTED) is signaled if KILL is set to .TRUE.,
+      !>        and the file associated with handle is not currently in the
+      !>        unit table.  The file is removed from the file table (closed)
+      !>        as a result, even if this error is signaled.
+      !>
+      !>     4) If HANDLE is not found in the file table, this routine simply
+      !>        returns to the caller.
+      !>
+      !> ## Files
+      !>
+      !>     This routine will close the file associated with HANDLE if it
+      !>     is currently utilizing a logical unit.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine closes files in the file table and performs
+      !>     any necessary operations to facilitate the proper disconnect
+      !>     from any logical unit.
+      !>
+      !>     This routine may also be used to delete a file that is open
+      !>     for write access if it currently has an entry in the UNIT table.
+      !>
+      !> ## Examples
+      !>
+      !>     See DAFCLS or DASLLC.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>     B.V. Semenov    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.1, 01-OCT-2021 (NJB)
+      !>
+      !>        Corrected typo in comments.
+      !>
+      !>-    SPICELIB Version 2.1.0, 26-APR-2012 (BVS)
+      !>
+      !>        Updated for the new "magic number" column in the file table.
+      !>
+      !>-    SPICELIB Version 2.0.0, 02-APR-2001 (FST)
+      !>
+      !>        Added a "KILL" argument to the argument list of the routine.
+      !>        This will allow certain raw close statements to be replaced
+      !>        with calls to ZZDDHCLS.
+      !>
+      !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 2.0.0, 02-APR-2002 (FST)
+      !>
+      !>        Added the error SPICE(FILENOTCONNECTED) since the KILL
+      !>        functionality is only required in the entry points:
+      !>
+      !>            DASFM - DASOPN, DASONW
+      !>            DAFAH - DAFOPN, DAFONW
+      !>
+      !>        These routines open new files, so they reference newly
+      !>        created handles that have entries in the UNIT table. Thus
+      !>        the decision was made to signal the error
+      !>        SPICE(FILENOTCONNECTED) rather than connect a file not
+      !>        present in the unit table when KILL is set.
+      !>
+      !>     Standard SPICE error handling.
       module procedure zzddhcls
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Close the file associated with HANDLE.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     DAF
-!!     DAS
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!     CHARACTER*(*)         ARCH
-!!     LOGICAL               KILL
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE     is the file handle associated with the file that is
-!!                to be closed.
-!!
-!!     ARCH       is the expected architecture of the file associated
-!!                with HANDLE.
-!!
-!!     KILL       is a logical that indicates whether to kill the file
-!!                associated with HANDLE.  Essentially it performs:
-!!
-!!                   CLOSE ( UNIT, STATUS = 'DELETE')
-!!
-!!                on the file.  This only works if HANDLE is currently
-!!                assigned a UNIT in the UNIT table.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1) SPICE(FILARCMISMATCH) is signaled if the specified architecture
-!!        does not match the one listed in the file table.
-!!
-!!     2) SPICE(INVALIDACCESS) is signaled if KILL is set to .TRUE., and
-!!        HANDLE is associated with a file open for READ access.
-!!
-!!     3) SPICE(FILENOTCONNECTED) is signaled if KILL is set to .TRUE.,
-!!        and the file associated with handle is not currently in the
-!!        unit table.  The file is removed from the file table (closed)
-!!        as a result, even if this error is signaled.
-!!
-!!     4) If HANDLE is not found in the file table, this routine simply
-!!        returns to the caller.
-!!
-!! ## Files
-!!
-!!     This routine will close the file associated with HANDLE if it
-!!     is currently utilizing a logical unit.
-!!
-!! ## Particulars
-!!
-!!     This routine closes files in the file table and performs
-!!     any necessary operations to facilitate the proper disconnect
-!!     from any logical unit.
-!!
-!!     This routine may also be used to delete a file that is open
-!!     for write access if it currently has an entry in the UNIT table.
-!!
-!! ## Examples
-!!
-!!     See DAFCLS or DASLLC.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!     B.V. Semenov    (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.1.1, 01-OCT-2021 (NJB)
-!!
-!!        Corrected typo in comments.
-!!
-!!-    SPICELIB Version 2.1.0, 26-APR-2012 (BVS)
-!!
-!!        Updated for the new "magic number" column in the file table.
-!!
-!!-    SPICELIB Version 2.0.0, 02-APR-2001 (FST)
-!!
-!!        Added a "KILL" argument to the argument list of the routine.
-!!        This will allow certain raw close statements to be replaced
-!!        with calls to ZZDDHCLS.
-!!
-!!-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 2.0.0, 02-APR-2002 (FST)
-!!
-!!        Added the error SPICE(FILENOTCONNECTED) since the KILL
-!!        functionality is only required in the entry points:
-!!
-!!            DASFM - DASOPN, DASONW
-!!            DAFAH - DAFOPN, DAFONW
-!!
-!!        These routines open new files, so they reference newly
-!!        created handles that have entries in the UNIT table. Thus
-!!        the decision was made to signal the error
-!!        SPICE(FILENOTCONNECTED) rather than connect a file not
-!!        present in the unit table when KILL is set.
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_strings, only: ucase
@@ -7426,118 +6949,100 @@ contains
       end associate
       end procedure zzddhcls
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Return the logical unit associated with a handle, in the event
+      !>     the handle is not connected to a unit, connect it to one.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     HANDLE     is the handle associated with the file to retrieve a
+      !>                logical unit.
+      !>
+      !>     ARCH       is the expected file architecture of the file
+      !>                associated with HANDLE.
+      !>
+      !>     LOCK       is a logical that indicates whether the UNIT should be
+      !>                locked to HANDLE.  Locked units will keep the files
+      !>                open and assigned the same logical unit.  They may
+      !>                only be unlocked by calling ZZDDHUNL.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     UNIT       is the logical unit that is currently assigned to
+      !>                HANDLE.  This unit may be used to perform I/O
+      !>                operations on the file.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) The error SPICE(NOSUCHHANDLE) is signaled when HANDLE is not
+      !>        found in the file table.  The value of UNIT is undefined when
+      !>        this error occurs.
+      !>
+      !>     2) The error SPICE(FILARCMISMATCH) is signaled if the specified
+      !>        architecture does not match the one listed for HANDLE in the
+      !>        file table.  The value of UNIT is undefined when this error
+      !>        occurs.
+      !>
+      !>     3) SPICE(FILEOPENFAIL) is signaled only when an attempt to
+      !>        attach a logical unit to the file associated with HANDLE
+      !>        fails.  The value of UNIT is undefined when this error
+      !>        occurs.
+      !>
+      !>     4) The error SPICE(HLULOCKFAILED) is signaled when the input
+      !>        LOCK logical has a value of TRUE, and there are no free
+      !>        'lockable' units left in the unit table.  The value of UNIT
+      !>        returned when this error is signaled is undefined.
+      !>
+      !> ## Files
+      !>
+      !>     If HANDLE refers to a file not currently connected to a logical
+      !>     unit, this routine will locate an entry in the unit table;
+      !>     disconnect it if necessary; and connect the file associated with
+      !>     HANDLE in its place.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine is used to retrieve a logical unit for a desired
+      !>     handle.  It also serves as a mechanism for locking the UNIT
+      !>     to HANDLE relationship for a particular handle.  This routine
+      !>     can not be used to unlock this relationship.  See ZZDDHUNL for
+      !>     that functionality.
+      !>
+      !> ## Examples
+      !>
+      !>     See DAFHLU or DASHLU for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 01-OCT-2021 (NJB)
+      !>
+      !>        Fixed typo in long error message and in comments.
+      !>
+      !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
+      !>
+      !>     Standard SPICE error handling.
       module procedure zzddhhlu
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Return the logical unit associated with a handle, in the event
-!!     the handle is not connected to a unit, connect it to one.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DAF
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!     CHARACTER*(*)         ARCH
-!!     LOGICAL               LOCK
-!!     INTEGER               UNIT
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE     is the handle associated with the file to retrieve a
-!!                logical unit.
-!!
-!!     ARCH       is the expected file architecture of the file
-!!                associated with HANDLE.
-!!
-!!     LOCK       is a logical that indicates whether the UNIT should be
-!!                locked to HANDLE.  Locked units will keep the files
-!!                open and assigned the same logical unit.  They may
-!!                only be unlocked by calling ZZDDHUNL.
-!!
-!! ## Detailed Output
-!!
-!!     UNIT       is the logical unit that is currently assigned to
-!!                HANDLE.  This unit may be used to perform I/O
-!!                operations on the file.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1) The error SPICE(NOSUCHHANDLE) is signaled when HANDLE is not
-!!        found in the file table.  The value of UNIT is undefined when
-!!        this error occurs.
-!!
-!!     2) The error SPICE(FILARCMISMATCH) is signaled if the specified
-!!        architecture does not match the one listed for HANDLE in the
-!!        file table.  The value of UNIT is undefined when this error
-!!        occurs.
-!!
-!!     3) SPICE(FILEOPENFAIL) is signaled only when an attempt to
-!!        attach a logical unit to the file associated with HANDLE
-!!        fails.  The value of UNIT is undefined when this error
-!!        occurs.
-!!
-!!     4) The error SPICE(HLULOCKFAILED) is signaled when the input
-!!        LOCK logical has a value of TRUE, and there are no free
-!!        'lockable' units left in the unit table.  The value of UNIT
-!!        returned when this error is signaled is undefined.
-!!
-!! ## Files
-!!
-!!     If HANDLE refers to a file not currently connected to a logical
-!!     unit, this routine will locate an entry in the unit table;
-!!     disconnect it if necessary; and connect the file associated with
-!!     HANDLE in its place.
-!!
-!! ## Particulars
-!!
-!!     This routine is used to retrieve a logical unit for a desired
-!!     handle.  It also serves as a mechanism for locking the UNIT
-!!     to HANDLE relationship for a particular handle.  This routine
-!!     can not be used to unlock this relationship.  See ZZDDHUNL for
-!!     that functionality.
-!!
-!! ## Examples
-!!
-!!     See DAFHLU or DASHLU for sample usage.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.1.0, 01-OCT-2021 (NJB)
-!!
-!!        Fixed typo in long error message and in comments.
-!!
-!!-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_strings, only: ucase
@@ -7803,102 +7308,86 @@ contains
       end associate
       end procedure zzddhhlu
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Unlock a logical unit from the specified handle.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     HANDLE     is the file handle associated with the file that
+      !>                is to have its logical unit lock released.
+      !>
+      !>     ARCH       is the expected architecture of the file associated
+      !>                with HANDLE.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If HANDLE is 0, not found in the unit table, or found and
+      !>        not currently locked, this routine just returns to the
+      !>        caller.
+      !>
+      !>     2) SPICE(FILARCMISMATCH) is signaled if the specified architecture
+      !>        does not match the one listed in the file table.
+      !>
+      !>     3) If HANDLE is associated with a scratch file, this routine
+      !>        simply returns, as scratch files may not be unlocked from
+      !>        their logical units.
+      !>
+      !> ## Files
+      !>
+      !>     This routine does not explicitly alter the open or closed
+      !>     state of the file associated with HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine allows users to unlock a handle from it's logical
+      !>     unit in the event a handle to logical unit request was made
+      !>     with the LOCK argument set to true.  (DAFHLU and DASHLU both
+      !>     lock units, and require a call to this routine to unlock them).
+      !>
+      !> ## Examples
+      !>
+      !>     See some routine that calls this one (TBD).
+      !>
+      !> ## Restrictions
+      !>
+      !>     This routine utilizes discovery check in and out.  However,
+      !>     routines in the initialization loop may signal the error
+      !>     SPICE(BUG) under the conditions of the existence of a bug.
+      !>     Since this routine utilizes discovery check in and out,
+      !>     no check in or out is performed around the initialization
+      !>     block.  This is by design.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
+      !>
+      !>        Corrected typo in comments.
+      !>
+      !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
+      !>
+      !>     Standard SPICE discovery error handling.
       module procedure zzddhunl
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Unlock a logical unit from the specified handle.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DAF
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!     CHARACTER*(*)         ARCH
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE     is the file handle associated with the file that
-!!                is to have its logical unit lock released.
-!!
-!!     ARCH       is the expected architecture of the file associated
-!!                with HANDLE.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1) If HANDLE is 0, not found in the unit table, or found and
-!!        not currently locked, this routine just returns to the
-!!        caller.
-!!
-!!     2) SPICE(FILARCMISMATCH) is signaled if the specified architecture
-!!        does not match the one listed in the file table.
-!!
-!!     3) If HANDLE is associated with a scratch file, this routine
-!!        simply returns, as scratch files may not be unlocked from
-!!        their logical units.
-!!
-!! ## Files
-!!
-!!     This routine does not explicitly alter the open or closed
-!!     state of the file associated with HANDLE.
-!!
-!! ## Particulars
-!!
-!!     This routine allows users to unlock a handle from it's logical
-!!     unit in the event a handle to logical unit request was made
-!!     with the LOCK argument set to true.  (DAFHLU and DASHLU both
-!!     lock units, and require a call to this routine to unlock them).
-!!
-!! ## Examples
-!!
-!!     See some routine that calls this one (TBD).
-!!
-!! ## Restrictions
-!!
-!!     This routine utilizes discovery check in and out.  However,
-!!     routines in the initialization loop may signal the error
-!!     SPICE(BUG) under the conditions of the existence of a bug.
-!!     Since this routine utilizes discovery check in and out,
-!!     no check in or out is performed around the initialization
-!!     block.  This is by design.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
-!!
-!!        Corrected typo in comments.
-!!
-!!-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-!!
-!!     Standard SPICE discovery error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_strings, only: ucase
@@ -8047,120 +7536,100 @@ contains
       end associate
       end procedure zzddhunl
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Get information about the file attached to HANDLE.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     HANDLE     is the file handle associated with the file for which
+      !>                information is requested.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     FNAME      is the name of the file used associated with HANDLE.
+      !>                This is the name used to load the file originally.
+      !>
+      !>     INTARC     is an integer code for FNAME's file architecture.
+      !>                See the include file 'zzddhman.inc' for particulars.
+      !>                The following are possible outputs:
+      !>
+      !>                   DAS - Direct Access, Segregated File Architecture
+      !>                   DAF - Double Precision Array File Architecture
+      !>
+      !>     INTBFF     is an integer code that represents FNAME's binary
+      !>                file format.  See the include file 'zzddhman.inc' for
+      !>                particulars.  The following are the possible outputs:
+      !>
+      !>                   BIGI3E - Big Endian IEEE Floating Point Format
+      !>                   LTLI3E - Little Endian IEEE Floating Point Format
+      !>                   VAXGFL - VAX G-Float Format
+      !>                   VAXDFL - VAX D-Float Format
+      !>
+      !>     INTAMH     is an integer code that represents FNAME's access
+      !>                method.  See the include file 'zzddhman.inc' for
+      !>                particulars.  The following are possible outputs:
+      !>
+      !>                   READ   - File was loaded for read access
+      !>                   WRITE  - File was loaded for read/write access
+      !>                   NEW    - New file was created for read/write access
+      !>                   SCRTCH - Scratch file created for read/write access
+      !>
+      !>     FOUND      is a logical if set to TRUE indicates that HANDLE
+      !>                was located in the file table.  Otherwise, it was
+      !>                not found in the table.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1) If FOUND is FALSE, then the other output arguments
+      !>        are undefined.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine provides access to information necessary for
+      !>     translation and other I/O based tasks to modules that are
+      !>     not entry points to this handle manager.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDAFGFR, ZZDAFGSR, or ZZDAFGDR for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     Routines in the call tree of this routine may signal the error
+      !>     SPICE(BUG) under the conditions of the existence of a bug
+      !>     in routines the initialization loop invokes.  Since this
+      !>     routine is error free with the exception of this bug condition,
+      !>     it does not participate in tracing by design.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
+      !>
+      !>     Do the initialization tasks.
       module procedure zzddhnfo
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Get information about the file attached to HANDLE.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     DAF
-!!     DAS
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!     CHARACTER*(*)         FNAME
-!!     INTEGER               INTARC
-!!     INTEGER               INTBFF
-!!     INTEGER               INTAMH
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE     is the file handle associated with the file for which
-!!                information is requested.
-!!
-!! ## Detailed Output
-!!
-!!     FNAME      is the name of the file used associated with HANDLE.
-!!                This is the name used to load the file originally.
-!!
-!!     INTARC     is an integer code for FNAME's file architecture.
-!!                See the include file 'zzddhman.inc' for particulars.
-!!                The following are possible outputs:
-!!
-!!                   DAS - Direct Access, Segregated File Architecture
-!!                   DAF - Double Precision Array File Architecture
-!!
-!!     INTBFF     is an integer code that represents FNAME's binary
-!!                file format.  See the include file 'zzddhman.inc' for
-!!                particulars.  The following are the possible outputs:
-!!
-!!                   BIGI3E - Big Endian IEEE Floating Point Format
-!!                   LTLI3E - Little Endian IEEE Floating Point Format
-!!                   VAXGFL - VAX G-Float Format
-!!                   VAXDFL - VAX D-Float Format
-!!
-!!     INTAMH     is an integer code that represents FNAME's access
-!!                method.  See the include file 'zzddhman.inc' for
-!!                particulars.  The following are possible outputs:
-!!
-!!                   READ   - File was loaded for read access
-!!                   WRITE  - File was loaded for read/write access
-!!                   NEW    - New file was created for read/write access
-!!                   SCRTCH - Scratch file created for read/write access
-!!
-!!     FOUND      is a logical if set to TRUE indicates that HANDLE
-!!                was located in the file table.  Otherwise, it was
-!!                not found in the table.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!!     1) If FOUND is FALSE, then the other output arguments
-!!        are undefined.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine provides access to information necessary for
-!!     translation and other I/O based tasks to modules that are
-!!     not entry points to this handle manager.
-!!
-!! ## Examples
-!!
-!!     See ZZDAFGFR, ZZDAFGSR, or ZZDAFGDR for sample usage.
-!!
-!! ## Restrictions
-!!
-!!     Routines in the call tree of this routine may signal the error
-!!     SPICE(BUG) under the conditions of the existence of a bug
-!!     in routines the initialization loop invokes.  Since this
-!!     routine is error free with the exception of this bug condition,
-!!     it does not participate in tracing by design.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-!!
-!!     Do the initialization tasks.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_inc_zzddhman
@@ -8251,95 +7720,78 @@ contains
       end associate
       end procedure zzddhnfo
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Determine whether the file attached to HANDLE is uses the
+      !>     binary file format native to the system.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     HANDLE     is the file handle associated with the file that is
+      !>                to be determined to be native or not.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NATIVE     is a logical that when set to TRUE indicates that
+      !>                the file associated with HANDLE is of the native
+      !>                binary file format for the current platform. If
+      !>                FALSE, then the file is of an alien file format.
+      !>
+      !>     FOUND      is a logical that when set to TRUE indicates that
+      !>                HANDLE was found in the file table and is associated
+      !>                with a file.  If FALSE, then NATIVE remains unchanged,
+      !>                since the file was not found in the table.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error Free.
+      !>
+      !>     1) In the event that HANDLE can not be found in the file table,
+      !>        FOUND is set to FALSE and NATIVE is left unchanged.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine simply answers the question:  "Is the file attached
+      !>     to this handle of the native binary file format?"
+      !>
+      !> ## Examples
+      !>
+      !>     See DAFRDA for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     Routines in the call tree of this routine may signal the error
+      !>     SPICE(BUG) under the conditions of the existence of a bug
+      !>     in routines the initialization loop invokes.  Since this
+      !>     routine is error free with the exception of this bug condition,
+      !>     it does not participate in tracing by design.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
+      !>
+      !>     Do the initialization tasks.
       module procedure zzddhisn
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Determine whether the file attached to HANDLE is uses the
-!!     binary file format native to the system.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DAF
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!     LOGICAL               NATIVE
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE     is the file handle associated with the file that is
-!!                to be determined to be native or not.
-!!
-!! ## Detailed Output
-!!
-!!     NATIVE     is a logical that when set to TRUE indicates that
-!!                the file associated with HANDLE is of the native
-!!                binary file format for the current platform. If
-!!                FALSE, then the file is of an alien file format.
-!!
-!!     FOUND      is a logical that when set to TRUE indicates that
-!!                HANDLE was found in the file table and is associated
-!!                with a file.  If FALSE, then NATIVE remains unchanged,
-!!                since the file was not found in the table.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error Free.
-!!
-!!     1) In the event that HANDLE can not be found in the file table,
-!!        FOUND is set to FALSE and NATIVE is left unchanged.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine simply answers the question:  "Is the file attached
-!!     to this handle of the native binary file format?"
-!!
-!! ## Examples
-!!
-!!     See DAFRDA for sample usage.
-!!
-!! ## Restrictions
-!!
-!!     Routines in the call tree of this routine may signal the error
-!!     SPICE(BUG) under the conditions of the existence of a bug
-!!     in routines the initialization loop invokes.  Since this
-!!     routine is error free with the exception of this bug condition,
-!!     it does not participate in tracing by design.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-!!
-!!     Do the initialization tasks.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_inc_zzddhman
@@ -8423,90 +7875,73 @@ contains
       end associate
       end procedure zzddhisn
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Retrieve handle associated with filename.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     FNAME      is the name of a file previously loaded with ZZDDHOPN.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HANDLE     is the handle associated with the file.
+      !>
+      !>     FOUND      is a logical when TRUE indicates HANDLE was located
+      !>                for FNAME.  If FALSE no handle was found associated
+      !>                with FNAME.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) ZZDDHF2H in the call tree of this routine performs I/O
+      !>        functions and may signal errors that are the result of
+      !>        I/O failures.  See ZZDDHF2H header for details.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine is provided for completeness and serves only to
+      !>     support the DAFFNH and DASFNH interfaces.
+      !>
+      !> ## Examples
+      !>
+      !>     See DAFFNH or DASFNH for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) On VAX environments, this routine may only be used when
+      !>        FNAME refers to a DAF or DAS file.  An error may be
+      !>        signaled when used with unopened files that utilize other
+      !>        architectures.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>     B.V. Semenov    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.0, 26-APR-2012 (BVS)
+      !>
+      !>        Updated for the new "magic number" column in the file table.
+      !>
+      !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
       module procedure zzddhfnh
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Retrieve handle associated with filename.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     DAF
-!!     DAS
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         FNAME
-!!     INTEGER               HANDLE
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     FNAME      is the name of a file previously loaded with ZZDDHOPN.
-!!
-!! ## Detailed Output
-!!
-!!     HANDLE     is the handle associated with the file.
-!!
-!!     FOUND      is a logical when TRUE indicates HANDLE was located
-!!                for FNAME.  If FALSE no handle was found associated
-!!                with FNAME.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1) ZZDDHF2H in the call tree of this routine performs I/O
-!!        functions and may signal errors that are the result of
-!!        I/O failures.  See ZZDDHF2H header for details.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine is provided for completeness and serves only to
-!!     support the DAFFNH and DASFNH interfaces.
-!!
-!! ## Examples
-!!
-!!     See DAFFNH or DASFNH for sample usage.
-!!
-!! ## Restrictions
-!!
-!!     1) On VAX environments, this routine may only be used when
-!!        FNAME refers to a DAF or DAS file.  An error may be
-!!        signaled when used with unopened files that utilize other
-!!        architectures.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!     B.V. Semenov    (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.1.0, 26-APR-2012 (BVS)
-!!
-!!        Updated for the new "magic number" column in the file table.
-!!
-!!-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -8600,91 +8035,74 @@ contains
       end associate
       end procedure zzddhfnh
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Return the handle associated with a logical unit.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     UNIT       is the logical unit to which a file managed by DDH is
+      !>                currently connected.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HANDLE     is the handle associated with the logical unit of
+      !>                interest.
+      !>
+      !>     FOUND      is a logical flag if TRUE indicates that a HANDLE
+      !>                was found associated with UNIT.  If FALSE indicates
+      !>                no handle was found for UNIT.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1) If UNIT is not found in the unit table, HANDLE is undefined
+      !>        and FOUND is set to .FALSE.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine is provided for completeness and serves only to
+      !>     support the DAFLUH and DASLUH interfaces.
+      !>
+      !> ## Examples
+      !>
+      !>     See DAFLUH or DASLUH for usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     Routines in the call tree of this routine may signal the error
+      !>     SPICE(BUG) under the conditions of the existence of a bug
+      !>     in routines the initialization loop invokes.  Since this
+      !>     routine is error free with the exception of this bug condition,
+      !>     it does not participate in tracing by design.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
+      !>
+      !>     Do the initialization tasks.
       module procedure zzddhluh
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Return the handle associated with a logical unit.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     DAS
-!!     DAF
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!!     INTEGER               UNIT
-!!     INTEGER               HANDLE
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     UNIT       is the logical unit to which a file managed by DDH is
-!!                currently connected.
-!!
-!! ## Detailed Output
-!!
-!!     HANDLE     is the handle associated with the logical unit of
-!!                interest.
-!!
-!!     FOUND      is a logical flag if TRUE indicates that a HANDLE
-!!                was found associated with UNIT.  If FALSE indicates
-!!                no handle was found for UNIT.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!!     1) If UNIT is not found in the unit table, HANDLE is undefined
-!!        and FOUND is set to .FALSE.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine is provided for completeness and serves only to
-!!     support the DAFLUH and DASLUH interfaces.
-!!
-!! ## Examples
-!!
-!!     See DAFLUH or DASLUH for usage.
-!!
-!! ## Restrictions
-!!
-!!     Routines in the call tree of this routine may signal the error
-!!     SPICE(BUG) under the conditions of the existence of a bug
-!!     in routines the initialization loop invokes.  Since this
-!!     routine is error free with the exception of this bug condition,
-!!     it does not participate in tracing by design.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-!!
-!!     Do the initialization tasks.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -8767,7 +8185,6 @@ contains
       return
       end associate
       end procedure zzddhluh
-
 
    !> PEPPER: allocate the unit table of a context, with the instance's
    !> max_open_files entries (SPICELIB: UTSIZE).

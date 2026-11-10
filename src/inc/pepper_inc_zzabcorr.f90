@@ -6,7 +6,6 @@ module pepper_inc_zzabcorr
 
    public
 
-
 ! $ Abstract
 !
 !     Include file zzabcorr.inc
@@ -76,8 +75,6 @@ module pepper_inc_zzabcorr
 !
 !-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
 !
-!-&
-
 
 !     Number of aberration correction choices:
 !

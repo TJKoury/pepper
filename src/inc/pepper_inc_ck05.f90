@@ -10,14 +10,6 @@ module pepper_inc_ck05
 !
 !     Declare parameters specific to CK type 05.
 !
-! $ Required_Reading
-!
-!     CK
-!
-! $ Keywords
-!
-!     CK
-!
 ! $ Restrictions
 !
 !     None.
@@ -34,7 +26,6 @@ module pepper_inc_ck05
 !
 !-    SPICELIB Version 1.0.0, 20-AUG-2002 (NJB)
 !
-!-&
 
 !
 !     CK type 5 subtype codes:
@@ -50,7 +41,6 @@ module pepper_inc_ck05
    integer               c05tp0
    parameter           ( c05tp0 = 0 )
 
-
 !
 !     Subtype 1:  Lagrange interpolation, 4-element packets. Quaternion
 !                 only. Angular velocity is derived by differentiating
@@ -58,7 +48,6 @@ module pepper_inc_ck05
 !
    integer               c05tp1
    parameter           ( c05tp1 = c05tp0 + 1 )
-
 
 !
 !     Subtype 2:  Hermite interpolation, 14-element packets.

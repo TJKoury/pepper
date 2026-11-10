@@ -191,7 +191,6 @@ module pepper_inc_ekquery
    integer               eqbord
    parameter           ( eqbord = eqbcon + 1 )
 
-
 !
 !     After the quantities named above, the integer array contains
 !     series of descriptors for tables, constraints, and order-by
@@ -279,7 +278,6 @@ module pepper_inc_ekquery
    integer               eqvdsz
    parameter           ( eqvdsz = 6 )
 
-
 !
 !     Column Descriptors
 !     -----------------
@@ -363,7 +361,6 @@ module pepper_inc_ekquery
    integer               eqrcol
    parameter           ( eqrcol = eqrtab + eqvdsz )
 
-
 !
 !        If the constraint has a literal value on the right side, the
 !        operator code is followed by...
@@ -373,13 +370,11 @@ module pepper_inc_ekquery
    integer               eqbval
    parameter           ( eqbval = eqopcd + 1 )
 
-
 !
 !        - Size of a constraint descriptor:
 !
    integer               eqcdsz
    parameter           ( eqcdsz = 2 + 4*eqvdsz )
-
 
 !
 !     Conjunction sizes
@@ -445,7 +440,6 @@ module pepper_inc_ekquery
 !
    integer               eqsdsz
    parameter           ( eqsdsz = 2*eqvdsz )
-
 
 !
 !     Miscellaneous parameters:

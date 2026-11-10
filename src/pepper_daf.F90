@@ -12,148 +12,117 @@ submodule (pepper_instance) pepper_daf
 
 contains
 
-!$Procedure RDENCI  ( Read encoded integers from text file )
-
+      !> ## Detailed Input
+      !>
+      !>     UNIT     is the Fortran unit number for a previously opened text
+      !>              file. All reading will begin at the CURRENT POSITION
+      !>              in the text file.
+      !>
+      !>     N        is the number of encoded integers to be read from the
+      !>              text file attached to UNIT.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     DATA     is the list of decoded integers read from the text file
+      !>              attached to UNIT.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If N, the number of data items, is not positive, the error
+      !>         SPICE(INVALIDARGUMENT) is signaled.
+      !>
+      !>     2)  If an error occurs while reading from the text file attached
+      !>         to UNIT, the error SPICE(FILEREADFAILED) is signaled.
+      !>
+      !>     3)  If an error occurs while decoding a number, the error
+      !>         SPICE(DECODINGERROR) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See the description of UNIT in $Detailed_Input.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine will read N encoded integers beginning at the
+      !>     current position in a previously opened text file. The current
+      !>     position in a file is defined to be the text line immediately
+      !>     following the last text line that was written or read. The
+      !>     integers will be decoded and placed into a list of integers
+      !>     which will be passed back to the caller. The encoded integers
+      !>     are represented as quoted character strings so that a Fortran
+      !>     list directed read may be used to read the encoded values,
+      !>     rather than a formatted read with the format specifier
+      !>     FMT = '(A)'.
+      !>
+      !>     This routine is one of a pair of routines which are used to
+      !>     encode and decode integers:
+      !>
+      !>           WRENCI -- Encode and write integers to a file.
+      !>           RDENCI -- Read and decode integers from a file.
+      !>
+      !>     The encoding/decoding of integers is performed to provide a
+      !>     portable means for transferring data values.
+      !>
+      !>     Currently the encoded integers are represented as signed
+      !>     hexadecimal numbers See INT2HX.FOR and HX2INT.FOR for details.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose we have the following input file which contains the values
+      !>     1 - 100 encoded, and that the input file has already been opened
+      !>     for reading. The arrow, '-->', indicates the current position in
+      !>     the file.
+      !>
+      !>        -->'1' '2' '3' '4' '5' '6' '7' '8' '9' 'A' 'B' 'C' 'D' 'E'
+      !>           'F' '10' '11' '12' '13' '14' '15' '16' '17' '18' '19'
+      !>           '1A' '1B' '1C' '1D' '1E' '1F' '20' '21' '22' '23' '24'
+      !>           '25' '26' '27' '28' '29' '2A' '2B' '2C' '2D' '2E' '2F'
+      !>           '30' '31' '32' '33' '34' '35' '36' '37' '38' '39' '3A'
+      !>           '3B' '3C' '3D' '3E' '3F' '40'
+      !>           '41' '42' '43' '44' '45' '46' '47' '48' '49' '4A' '4B'
+      !>           '4C' '4D' '4E' '4F' '50' '51' '52' '53' '54' '55' '56'
+      !>           '57' '58' '59' '5A' '5B' '5C' '5D' '5E' '5F' '60' '61'
+      !>           '62' '63' '64'
+      !>
+      !>     Then, the following code fragment would read and decode these
+      !>     100 values.
+      !>
+      !>           N = 100
+      !>           CALL RDENCI( UNIT, N, DATA )
+      !>
+      !>      Upon returning, the array data would contain the values 1 - 100.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 03-JUN-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Fixed I/O type
+      !>        of argument DATA in $Brief_I/O table.
+      !>
+      !>-    SPICELIB Version 1.0.0, 19-OCT-1992 (KRG)
       module procedure rdenci
-!! ## Abstract
-!!
-!!     Read N encoded integers from a text file, decoding them into
-!!     their equivalent integers.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     NUMBERS
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     UNIT     is the Fortran unit number for a previously opened text
-!              file. All reading will begin at the CURRENT POSITION
-!              in the text file.
-!
-!     N        is the number of encoded integers to be read from the
-!              text file attached to UNIT.
-!
-! $ Detailed_Output
-!
-!     DATA     is the list of decoded integers read from the text file
-!              attached to UNIT.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If N, the number of data items, is not positive, the error
-!         SPICE(INVALIDARGUMENT) is signaled.
-!
-!     2)  If an error occurs while reading from the text file attached
-!         to UNIT, the error SPICE(FILEREADFAILED) is signaled.
-!
-!     3)  If an error occurs while decoding a number, the error
-!         SPICE(DECODINGERROR) is signaled.
-!
-! $ Files
-!
-!     See the description of UNIT in $Detailed_Input.
-!
-! $ Particulars
-!
-!     This routine will read N encoded integers beginning at the
-!     current position in a previously opened text file. The current
-!     position in a file is defined to be the text line immediately
-!     following the last text line that was written or read. The
-!     integers will be decoded and placed into a list of integers
-!     which will be passed back to the caller. The encoded integers
-!     are represented as quoted character strings so that a Fortran
-!     list directed read may be used to read the encoded values,
-!     rather than a formatted read with the format specifier
-!     FMT = '(A)'.
-!
-!     This routine is one of a pair of routines which are used to
-!     encode and decode integers:
-!
-!           WRENCI -- Encode and write integers to a file.
-!           RDENCI -- Read and decode integers from a file.
-!
-!     The encoding/decoding of integers is performed to provide a
-!     portable means for transferring data values.
-!
-!     Currently the encoded integers are represented as signed
-!     hexadecimal numbers See INT2HX.FOR and HX2INT.FOR for details.
-!
-! $ Examples
-!
-!     Suppose we have the following input file which contains the values
-!     1 - 100 encoded, and that the input file has already been opened
-!     for reading. The arrow, '-->', indicates the current position in
-!     the file.
-!
-!        -->'1' '2' '3' '4' '5' '6' '7' '8' '9' 'A' 'B' 'C' 'D' 'E'
-!           'F' '10' '11' '12' '13' '14' '15' '16' '17' '18' '19'
-!           '1A' '1B' '1C' '1D' '1E' '1F' '20' '21' '22' '23' '24'
-!           '25' '26' '27' '28' '29' '2A' '2B' '2C' '2D' '2E' '2F'
-!           '30' '31' '32' '33' '34' '35' '36' '37' '38' '39' '3A'
-!           '3B' '3C' '3D' '3E' '3F' '40'
-!           '41' '42' '43' '44' '45' '46' '47' '48' '49' '4A' '4B'
-!           '4C' '4D' '4E' '4F' '50' '51' '52' '53' '54' '55' '56'
-!           '57' '58' '59' '5A' '5B' '5C' '5D' '5E' '5F' '60' '61'
-!           '62' '63' '64'
-!
-!     Then, the following code fragment would read and decode these
-!     100 values.
-!
-!           N = 100
-!           CALL RDENCI( UNIT, N, DATA )
-!
-!      Upon returning, the array data would contain the values 1 - 100.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 03-JUN-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Fixed I/O type
-!        of argument DATA in $Brief_I/O table.
-!
-!-    SPICELIB Version 1.0.0, 19-OCT-1992 (KRG)
-!
-!-&
-
-! $ Index_Entries
-!
-!     read and decode encoded integers from a text file
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 !     Local parameters
 !
       integer(ip), parameter :: errlen = 80
@@ -161,9 +130,6 @@ contains
       integer(ip), parameter :: maxenc = 64
 
       integer(ip), parameter :: wrksiz = 64
-!
-!     Local variables
-!
       character(errlen)     errmsg
       character(maxenc)     work(wrksiz)
 
@@ -270,405 +236,344 @@ contains
       return
       end procedure rdenci
 
+      !> ## Detailed Input
+      !>
+      !>     STRING   is a character string containing a base 16 "scientific
+      !>              notation" representation of a double precision number
+      !>              which is to be converted to a double precision number.
+      !>              Examples of such a string are:
+      !>
+      !>                 '2A^3' = ( 2/16 + 10/( 16**2 ) ) * 16**3 = 672.0
+      !>
+      !>              and
+      !>
+      !>                 '-B^1' = - ( 11/16 ) * 16**1             = -11.0
+      !>
+      !>              The following table describes the character set used to
+      !>              represent the hexadecimal digits and their corresponding
+      !>              values.
+      !>
+      !>                 Character     Value         Character     Value
+      !>                 ---------    -------        ---------    -------
+      !>                    '0'         0.0D0           '8'         8.0D0
+      !>                    '1'         1.0D0           '9'         9.0D0
+      !>                    '2'         2.0D0         'A','a'      10.0D0
+      !>                    '3'         3.0D0         'B','b'      11.0D0
+      !>                    '4'         4.0D0         'C','c'      12.0D0
+      !>                    '5'         5.0D0         'D','d'      13.0D0
+      !>                    '6'         6.0D0         'E','e'      14.0D0
+      !>                    '7'         7.0D0         'F','f'      15.0D0
+      !>
+      !>              The caret, or hat, character, '^', is used to
+      !>              distinguish the exponent.
+      !>
+      !>              The plus sign, '+', and the minus sign, '-', are used,
+      !>              and they have their usual meanings.
+      !>
+      !>              A base 16 "scientific notation" character string which
+      !>              is to be parsed by this routine should consist of a sign,
+      !>              '+' or '-' (the plus sign is optional for nonnegative
+      !>              numbers), followed immediately by a contiguous sequence
+      !>              of hexadecimal digits, the exponent character, and a
+      !>              signed hexadecimal exponent. The exponent is required,
+      !>              but the sign is optional for a nonnegative exponent.
+      !>
+      !>              A number in base 16 "scientific notation" consists of
+      !>              a contiguous sequence of characters with one of the
+      !>              following formats:
+      !>
+      !>                 (1)   h h h h  ... h ^H H  ... H
+      !>                        1 2 3 4      n  1 2      m
+      !>
+      !>                 (2)   +h h h h  ... h ^H H  ... H
+      !>                         1 2 3 4      n  1 2      m
+      !>
+      !>                 (3)   -h h h h  ... h ^H H  ... H
+      !>                         1 2 3 4      n  1 2      m
+      !>
+      !>                 (4)    h h h h  ... h ^+H H  ... H
+      !>                         1 2 3 4      n   1 2      m
+      !>
+      !>                 (5)   +h h h h  ... h ^+H H  ... H
+      !>                         1 2 3 4      n   1 2      m
+      !>
+      !>                 (6)   -h h h h  ... h ^+H H  ... H
+      !>                         1 2 3 4      n   1 2      m
+      !>
+      !>                 (7)   h h h h  ... h ^-H H  ... H
+      !>                        1 2 3 4      n   1 2      m
+      !>
+      !>                 (8)   +h h h h  ... h ^-H H  ... H
+      !>                         1 2 3 4      n   1 2      m
+      !>
+      !>                 (9)   -h h h h  ... h ^-H H  ... H
+      !>                         1 2 3 4      n   1 2      m
+      !>
+      !>              where
+      !>
+      !>                 h  and H  denote hexadecimal digits;
+      !>                  i      j
+      !>
+      !>                 ^         denotes exponentiation;
+      !>
+      !>              and
+      !>
+      !>                 + and - have their usual interpretations.
+      !>
+      !>              STRING may have leading and trailing blanks, but blanks
+      !>              embedded within the significant portion of the input
+      !>              string are not allowed.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NUMBER   is the double precision value to be returned. The value
+      !>              of this argument is not changed if an error occurs while
+      !>              parsing the input string.
+      !>
+      !>     ERROR    is a logical flag which indicates whether an error
+      !>              occurred while attempting to parse NUMBER from the input
+      !>              character string STRING. ERROR will have the value
+      !>              .TRUE. if an error occurs. It will have the value
+      !>              .FALSE. otherwise.
+      !>
+      !>     ERRMSG   is a descriptive error message if an error occurs while
+      !>              attempting to parse the number NUMBER from the
+      !>              hexadecimal character string STRING, blank otherwise.
+      !>
+      !> ## Parameters
+      !>
+      !>     MAXMAN   is the maximum number of digits in a hexadecimal
+      !>              mantissa. The value of MAXMAN is 31.
+      !>
+      !>              The current value of MAXMAN is more than sufficient for
+      !>              most double precision implementations, providing almost
+      !>              twice as many digits as can actually be produced. This
+      !>              value may be changed when a greater precision is known
+      !>              to exist among all of the supported platforms.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If an unexpected character is encountered, an appropriate
+      !>         error message will be set, and the routine will exit. The
+      !>         value of NUMBER will be unchanged.
+      !>
+      !>     2)  If the input string represents a number that is larger in
+      !>         absolute magnitude than the maximum representable
+      !>         double precision number an appropriate error message
+      !>         will be set, and the routine will exit. The value of
+      !>         NUMBER will be unchanged.
+      !>
+      !>     3)  If the input string is blank, an appropriate error message
+      !>         will be set, and the routine will exit. The value of
+      !>         NUMBER will be unchanged.
+      !>
+      !>     4)  If the string has too many digits in the mantissa, then an
+      !>         appropriate error message will be set, and the routine will
+      !>         exit. The value of NUMBER will be unchanged.
+      !>
+      !>     5)  If the output error message string is not long enough to
+      !>         contain the entire error message, the error message will be
+      !>         truncated on the right.
+      !>
+      !>     6)  This routine does NOT check for underflow errors when
+      !>         constructing a double precision number.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine will convert a character string containing a number
+      !>     in base 16 "scientific notation" into its equivalent double
+      !>     precision number.
+      !>
+      !>     This routine is one of a pair of routines which are used to
+      !>     perform conversions between double precision numbers and
+      !>     an equivalent base 16 "scientific notation" character string
+      !>     representation:
+      !>
+      !>           DP2HX  -- Convert a double precision number into a base 16
+      !>                     "scientific notation" character string.
+      !>
+      !>           HX2DP  -- Convert a base 16 "scientific notation"
+      !>                     character string into a double precision number.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Convert a set of character strings containing a base 16
+      !>        "scientific notation" representation of a double precision
+      !>        number, to their double precision values.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM HX2DP_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local constants.
+      !>        C
+      !>              INTEGER               ERRLEN
+      !>              PARAMETER           ( ERRLEN = 80 )
+      !>
+      !>              INTEGER               STRLEN
+      !>              PARAMETER           ( STRLEN = 17 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(ERRLEN)    ERRMSG
+      !>              CHARACTER*(STRLEN)    NUMBER ( 16 )
+      !>
+      !>              DOUBLE PRECISION      VALUE
+      !>
+      !>              INTEGER               I
+      !>
+      !>              LOGICAL               ERROR
+      !>
+      !>        C
+      !>        C     Assign an array of strings representing, in base 16
+      !>        C     "scientific notation", double precision numbers.
+      !>        C     Not all of them are valid representations.
+      !>        C
+      !>              DATA                  NUMBER /
+      !>             .                  '89705F4136B4A6^-7', '12357898765X34',
+      !>             .                  '1^1',               '-1^1',
+      !>             .                  '4^3',               '-4^3',
+      !>             .                  '7F5EB^5',           '7F5eb^5',
+      !>             .                  '1B^2',              '+1B^2',
+      !>             .                  '+1B^+2',            '0^0',
+      !>             .                  ' ',                 '-AB238Z^2',
+      !>             .                  '234ABC',            '234ABC^'    /
+      !>
+      !>        C
+      !>        C     Loop over the NUMBER array, call HX2DP for each
+      !>        C     element of NUMBER.
+      !>        C
+      !>              WRITE(*,'(A)') 'string             number'
+      !>              WRITE(*,'(A)') '-----------------  ----------------'
+      !>
+      !>              DO I= 1, 16
+      !>
+      !>                 CALL HX2DP ( NUMBER(I), VALUE, ERROR, ERRMSG )
+      !>
+      !>                 IF ( ERROR ) THEN
+      !>
+      !>                    WRITE(*,'(A17,2X,A)') NUMBER(I), ERRMSG
+      !>
+      !>                 ELSE
+      !>
+      !>                    WRITE(*,'(A17,X,E17.9)') NUMBER(I), VALUE
+      !>
+      !>                 END IF
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Finally, try with a number that has too many digits in
+      !>        C     the mantissa.
+      !>        C
+      !>              CALL HX2DP ( '4ABC123AB346523BDC568798C2473678^1',
+      !>             .             VALUE, ERROR, ERRMSG )
+      !>
+      !>              WRITE(*,*)
+      !>              WRITE(*,*) 'String 4ABC123AB346523BDC568798C2473678^1 '
+      !>             .        // 'produces:'
+      !>              WRITE(*,*) '   ', ERRMSG
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>        string             number
+      !>        -----------------  ----------------
+      !>        89705F4136B4A6^-7   0.200000000E-08
+      !>        12357898765X34     ERROR: Illegal character 'X' encountered.
+      !>        1^1                 0.100000000E+01
+      !>        -1^1               -0.100000000E+01
+      !>        4^3                 0.102400000E+04
+      !>        -4^3               -0.102400000E+04
+      !>        7F5EB^5             0.521707000E+06
+      !>        7F5eb^5             0.521707000E+06
+      !>        1B^2                0.270000000E+02
+      !>        +1B^2               0.270000000E+02
+      !>        +1B^+2              0.270000000E+02
+      !>        0^0                 0.000000000E+00
+      !>                           ERROR: A blank input string is not allowed.
+      !>        -AB238Z^2          ERROR: Illegal character 'Z' encountered.
+      !>        234ABC             ERROR: Missing exponent.
+      !>        234ABC^            ERROR: Missing exponent.
+      !>
+      !>         String 4ABC123AB346523BDC568798C2473678^1 produces:
+      !>            ERROR: Too many digits in the mantissa (> 31).
+      !>
+      !>        Note: The hat or caret, '^', signals an exponent.
+      !>
+      !>        Note that some errors are machine dependent. For example,
+      !>        for a VAX using D_floating arithmetic we get:
+      !>
+      !>           STRING = '23BCE^30'
+      !>           NUMBER = ( Not defined )
+      !>           ERROR  = .TRUE.
+      !>           ERRMSG = 'ERROR: Number is too large to be represented.'
+      !>
+      !>           STRING = '-2abc3^22'
+      !>           NUMBER = ( Not defined )
+      !>           ERROR  = .TRUE.
+      !>           ERRMSG = 'ERROR: Number is too small to be represented.'
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  The current value of MAXMAN is more than sufficient for most
+      !>         double precision implementations, providing almost twice as
+      !>         many digits as can actually be produced.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     B.V. Semenov       (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR) (BVS)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        The declaration of MAXMAN has been promoted to the
+      !>        $Declarations section and the error produced when the maximum
+      !>        number of digits for the mantissa is exceeded has been updated
+      !>        to inform about MAXMAN value.
+      !>
+      !>        Edited the header to comply with NAIF standard. Added complete
+      !>        code example based on existing example.
+      !>
+      !>        Updated $Brief_I/O, $Parameters, $Exceptions and $Restrictions
+      !>        sections to properly describe MAXMAN.
+      !>
+      !>        Corrected $Revisions entries.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1994 (KRG)
+      !>
+      !>        Fixed a typo in the description of the input argument STRING.
+      !>        The example showing the expansion of 160 into hexadecimal
+      !>        was incorrect. 160 was replaced with 672 which makes the
+      !>        example correct.
+      !>
+      !>-    SPICELIB Version 1.0.0, 26-OCT-1992 (KRG)
       module procedure hx2dp
-!! ## Abstract
-!!
-!!     Convert a string representing a double precision number in a
-!!     base 16 "scientific notation" into its equivalent double
-!!     precision number.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ALPHANUMERIC
-!!     CONVERSION
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     STRING   is a character string containing a base 16 "scientific
-!!              notation" representation of a double precision number
-!!              which is to be converted to a double precision number.
-!!              Examples of such a string are:
-!!
-!!                 '2A^3' = ( 2/16 + 10/( 16**2 ) ) * 16**3 = 672.0
-!!
-!!              and
-!!
-!!                 '-B^1' = - ( 11/16 ) * 16**1             = -11.0
-!!
-!!              The following table describes the character set used to
-!!              represent the hexadecimal digits and their corresponding
-!!              values.
-!!
-!!                 Character     Value         Character     Value
-!!                 ---------    -------        ---------    -------
-!!                    '0'         0.0D0           '8'         8.0D0
-!!                    '1'         1.0D0           '9'         9.0D0
-!!                    '2'         2.0D0         'A','a'      10.0D0
-!!                    '3'         3.0D0         'B','b'      11.0D0
-!!                    '4'         4.0D0         'C','c'      12.0D0
-!!                    '5'         5.0D0         'D','d'      13.0D0
-!!                    '6'         6.0D0         'E','e'      14.0D0
-!!                    '7'         7.0D0         'F','f'      15.0D0
-!!
-!!              The caret, or hat, character, '^', is used to
-!!              distinguish the exponent.
-!!
-!!              The plus sign, '+', and the minus sign, '-', are used,
-!!              and they have their usual meanings.
-!!
-!!              A base 16 "scientific notation" character string which
-!!              is to be parsed by this routine should consist of a sign,
-!!              '+' or '-' (the plus sign is optional for nonnegative
-!!              numbers), followed immediately by a contiguous sequence
-!!              of hexadecimal digits, the exponent character, and a
-!!              signed hexadecimal exponent. The exponent is required,
-!!              but the sign is optional for a nonnegative exponent.
-!!
-!!              A number in base 16 "scientific notation" consists of
-!!              a contiguous sequence of characters with one of the
-!!              following formats:
-!!
-!!                 (1)   h h h h  ... h ^H H  ... H
-!!                        1 2 3 4      n  1 2      m
-!!
-!!                 (2)   +h h h h  ... h ^H H  ... H
-!!                         1 2 3 4      n  1 2      m
-!!
-!!                 (3)   -h h h h  ... h ^H H  ... H
-!!                         1 2 3 4      n  1 2      m
-!!
-!!                 (4)    h h h h  ... h ^+H H  ... H
-!!                         1 2 3 4      n   1 2      m
-!!
-!!                 (5)   +h h h h  ... h ^+H H  ... H
-!!                         1 2 3 4      n   1 2      m
-!!
-!!                 (6)   -h h h h  ... h ^+H H  ... H
-!!                         1 2 3 4      n   1 2      m
-!!
-!!                 (7)   h h h h  ... h ^-H H  ... H
-!!                        1 2 3 4      n   1 2      m
-!!
-!!                 (8)   +h h h h  ... h ^-H H  ... H
-!!                         1 2 3 4      n   1 2      m
-!!
-!!                 (9)   -h h h h  ... h ^-H H  ... H
-!!                         1 2 3 4      n   1 2      m
-!!
-!!              where
-!!
-!!                 h  and H  denote hexadecimal digits;
-!!                  i      j
-!!
-!!                 ^         denotes exponentiation;
-!!
-!!              and
-!!
-!!                 + and - have their usual interpretations.
-!!
-!!              STRING may have leading and trailing blanks, but blanks
-!!              embedded within the significant portion of the input
-!!              string are not allowed.
-!!
-!! ## Detailed Output
-!!
-!!     NUMBER   is the double precision value to be returned. The value
-!!              of this argument is not changed if an error occurs while
-!!              parsing the input string.
-!!
-!!     ERROR    is a logical flag which indicates whether an error
-!!              occurred while attempting to parse NUMBER from the input
-!!              character string STRING. ERROR will have the value
-!!              .TRUE. if an error occurs. It will have the value
-!!              .FALSE. otherwise.
-!!
-!!     ERRMSG   is a descriptive error message if an error occurs while
-!!              attempting to parse the number NUMBER from the
-!!              hexadecimal character string STRING, blank otherwise.
-!!
-!! ## Parameters
-!!
-!!     MAXMAN   is the maximum number of digits in a hexadecimal
-!!              mantissa. The value of MAXMAN is 31.
-!!
-!!              The current value of MAXMAN is more than sufficient for
-!!              most double precision implementations, providing almost
-!!              twice as many digits as can actually be produced. This
-!!              value may be changed when a greater precision is known
-!!              to exist among all of the supported platforms.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!!     1)  If an unexpected character is encountered, an appropriate
-!!         error message will be set, and the routine will exit. The
-!!         value of NUMBER will be unchanged.
-!!
-!!     2)  If the input string represents a number that is larger in
-!!         absolute magnitude than the maximum representable
-!!         double precision number an appropriate error message
-!!         will be set, and the routine will exit. The value of
-!!         NUMBER will be unchanged.
-!!
-!!     3)  If the input string is blank, an appropriate error message
-!!         will be set, and the routine will exit. The value of
-!!         NUMBER will be unchanged.
-!!
-!!     4)  If the string has too many digits in the mantissa, then an
-!!         appropriate error message will be set, and the routine will
-!!         exit. The value of NUMBER will be unchanged.
-!!
-!!     5)  If the output error message string is not long enough to
-!!         contain the entire error message, the error message will be
-!!         truncated on the right.
-!!
-!!     6)  This routine does NOT check for underflow errors when
-!!         constructing a double precision number.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine will convert a character string containing a number
-!!     in base 16 "scientific notation" into its equivalent double
-!!     precision number.
-!!
-!!     This routine is one of a pair of routines which are used to
-!!     perform conversions between double precision numbers and
-!!     an equivalent base 16 "scientific notation" character string
-!!     representation:
-!!
-!!           DP2HX  -- Convert a double precision number into a base 16
-!!                     "scientific notation" character string.
-!!
-!!           HX2DP  -- Convert a base 16 "scientific notation"
-!!                     character string into a double precision number.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Convert a set of character strings containing a base 16
-!!        "scientific notation" representation of a double precision
-!!        number, to their double precision values.
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM HX2DP_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Local constants.
-!!        C
-!!              INTEGER               ERRLEN
-!!              PARAMETER           ( ERRLEN = 80 )
-!!
-!!              INTEGER               STRLEN
-!!              PARAMETER           ( STRLEN = 17 )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(ERRLEN)    ERRMSG
-!!              CHARACTER*(STRLEN)    NUMBER ( 16 )
-!!
-!!              DOUBLE PRECISION      VALUE
-!!
-!!              INTEGER               I
-!!
-!!              LOGICAL               ERROR
-!!
-!!        C
-!!        C     Assign an array of strings representing, in base 16
-!!        C     "scientific notation", double precision numbers.
-!!        C     Not all of them are valid representations.
-!!        C
-!!              DATA                  NUMBER /
-!!             .                  '89705F4136B4A6^-7', '12357898765X34',
-!!             .                  '1^1',               '-1^1',
-!!             .                  '4^3',               '-4^3',
-!!             .                  '7F5EB^5',           '7F5eb^5',
-!!             .                  '1B^2',              '+1B^2',
-!!             .                  '+1B^+2',            '0^0',
-!!             .                  ' ',                 '-AB238Z^2',
-!!             .                  '234ABC',            '234ABC^'    /
-!!
-!!        C
-!!        C     Loop over the NUMBER array, call HX2DP for each
-!!        C     element of NUMBER.
-!!        C
-!!              WRITE(*,'(A)') 'string             number'
-!!              WRITE(*,'(A)') '-----------------  ----------------'
-!!
-!!              DO I= 1, 16
-!!
-!!                 CALL HX2DP ( NUMBER(I), VALUE, ERROR, ERRMSG )
-!!
-!!                 IF ( ERROR ) THEN
-!!
-!!                    WRITE(*,'(A17,2X,A)') NUMBER(I), ERRMSG
-!!
-!!                 ELSE
-!!
-!!                    WRITE(*,'(A17,X,E17.9)') NUMBER(I), VALUE
-!!
-!!                 END IF
-!!
-!!              END DO
-!!
-!!        C
-!!        C     Finally, try with a number that has too many digits in
-!!        C     the mantissa.
-!!        C
-!!              CALL HX2DP ( '4ABC123AB346523BDC568798C2473678^1',
-!!             .             VALUE, ERROR, ERRMSG )
-!!
-!!              WRITE(*,*)
-!!              WRITE(*,*) 'String 4ABC123AB346523BDC568798C2473678^1 '
-!!             .        // 'produces:'
-!!              WRITE(*,*) '   ', ERRMSG
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!        string             number
-!!        -----------------  ----------------
-!!        89705F4136B4A6^-7   0.200000000E-08
-!!        12357898765X34     ERROR: Illegal character 'X' encountered.
-!!        1^1                 0.100000000E+01
-!!        -1^1               -0.100000000E+01
-!!        4^3                 0.102400000E+04
-!!        -4^3               -0.102400000E+04
-!!        7F5EB^5             0.521707000E+06
-!!        7F5eb^5             0.521707000E+06
-!!        1B^2                0.270000000E+02
-!!        +1B^2               0.270000000E+02
-!!        +1B^+2              0.270000000E+02
-!!        0^0                 0.000000000E+00
-!!                           ERROR: A blank input string is not allowed.
-!!        -AB238Z^2          ERROR: Illegal character 'Z' encountered.
-!!        234ABC             ERROR: Missing exponent.
-!!        234ABC^            ERROR: Missing exponent.
-!!
-!!         String 4ABC123AB346523BDC568798C2473678^1 produces:
-!!            ERROR: Too many digits in the mantissa (> 31).
-!!
-!!        Note: The hat or caret, '^', signals an exponent.
-!!
-!!        Note that some errors are machine dependent. For example,
-!!        for a VAX using D_floating arithmetic we get:
-!!
-!!           STRING = '23BCE^30'
-!!           NUMBER = ( Not defined )
-!!           ERROR  = .TRUE.
-!!           ERRMSG = 'ERROR: Number is too large to be represented.'
-!!
-!!           STRING = '-2abc3^22'
-!!           NUMBER = ( Not defined )
-!!           ERROR  = .TRUE.
-!!           ERRMSG = 'ERROR: Number is too small to be represented.'
-!!
-!! ## Restrictions
-!!
-!!     1)  The current value of MAXMAN is more than sufficient for most
-!!         double precision implementations, providing almost twice as
-!!         many digits as can actually be produced.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     B.V. Semenov       (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR) (BVS)
-!!
-!!        Added IMPLICIT NONE statement.
-!!
-!!        The declaration of MAXMAN has been promoted to the
-!!        $Declarations section and the error produced when the maximum
-!!        number of digits for the mantissa is exceeded has been updated
-!!        to inform about MAXMAN value.
-!!
-!!        Edited the header to comply with NAIF standard. Added complete
-!!        code example based on existing example.
-!!
-!!        Updated $Brief_I/O, $Parameters, $Exceptions and $Restrictions
-!!        sections to properly describe MAXMAN.
-!!
-!!        Corrected $Revisions entries.
-!!
-!!-    SPICELIB Version 1.0.1, 10-MAR-1994 (KRG)
-!!
-!!        Fixed a typo in the description of the input argument STRING.
-!!        The example showing the expansion of 160 into hexadecimal
-!!        was incorrect. 160 was replaced with 672 which makes the
-!!        example correct.
-!!
-!!-    SPICELIB Version 1.0.0, 26-OCT-1992 (KRG)
-!!
-!! ## Index Entries
-!!
-!!     convert signed normalized hexadecimal string to d.p.
-!!     convert encoded d.p. number to d.p. number
-!!     convert base 16 scientific notation d.p. number
-!!
-!!     SPICELIB functions
-!!
-!!     Local Parameters
-!!
-!!     Local variables
-!!
-!!     Saved variables
-!!
-!!     Initial values
-!!
-!!     Here is a brief outline of the algorithm used to convert the
-!!     character string into its equivalent double precision number.
-!!
-!!        The input hexadecimal string is scanned from left to right.
-!!
-!!        0) Any leading white space is skipped.
-!!
-!!        1) The length of the significant portion of the string
-!!           is determined.
-!!
-!!        2) The sign of the mantissa is determined.
-!!
-!!        3) The digits of the hexadecimal mantissa are parsed.
-!!
-!!        4) The exponent of the number is parsed.
-!!
-!!        5) The mantissa of the double precision number is generated
-!!           by summing appropriately scaled values of the hexadecimal
-!!           mantissa digits which were collected in step 2. The
-!!           summation is performed so that the summands are added
-!!           in order of increasing magnitude to eliminate a potential
-!!           loss of significance which might occur otherwise. This
-!!           yields a number in the range of 1/BASE and 1.0 or zero.
-!!
-!!        6) The double precision number is then scaled by the exponent
-!!           obtained in step 3.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
       use pepper_strings, only: repmc
@@ -1070,160 +975,129 @@ contains
       end associate
       end procedure hx2dp
 
-!$Procedure RDENCD  ( Read encoded d.p. numbers from file )
-
+      !> ## Detailed Input
+      !>
+      !>     UNIT     is the Fortran unit number for a previously opened text
+      !>              file. All reading will begin at the CURRENT POSITION
+      !>              in the text file.
+      !>
+      !>     N        is the number of encoded double precision numbers, to be
+      !>              read from the text file attached to UNIT.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     DATA     is the list of decoded double precision numbers read from
+      !>              the text file attached to UNIT.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If N, the number of data items, is not positive, the error
+      !>         SPICE(INVALIDARGUMENT) is signaled.
+      !>
+      !>     2)  If an error occurs while reading from the text file attached
+      !>         to UNIT, the error SPICE(FILEREADFAILED) is signaled.
+      !>
+      !>     3)  If an error occurs while decoding a number, the error
+      !>         SPICE(DECODINGERROR) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See the description of UNIT in $Detailed_Input.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine will read N encoded double precision numbers from
+      !>     the current position in a previously opened text file. The
+      !>     current position in a file is defined to be the text line
+      !>     immediately following the last text line that was written or
+      !>     read. The numbers will be decoded and placed into a list of
+      !>     double precision numbers which will be passed back to the caller.
+      !>     The encoded double precision numbers are represented as quoted
+      !>     character strings so that a Fortran list directed read may be
+      !>     used to read the encoded values, rather than a formatted read
+      !>     with the format specifier FMT = '(A)'.
+      !>
+      !>     This routine is one of a pair of routines which are used to
+      !>     encode and decode d.p. numbers:
+      !>
+      !>           WRENCD -- Encode and write d.p. numbers to a file.
+      !>           RDENCD -- Read and decode d.p. numbers from a file.
+      !>
+      !>     The encoding/decoding of d.p. numbers is performed to provide a
+      !>     portable means for transferring data values.
+      !>
+      !>     Currently the encoded d.p. numbers are represented in a base
+      !>     16 ``scientific notation.'' See DP2HX.FOR and HX2DP.FOR for
+      !>     details.
+      !>
+      !> ## Examples
+      !>
+      !>     Suppose we have the following input file which contains the
+      !>     values 1.0D0 - 100.0D0 in encoded format, and that the input
+      !>     file has already been opened for reading. The arrow, '-->',
+      !>     indicates the current position in the file.
+      !>
+      !>        -->'1^1' '2^1' '3^1' '4^1' '5^1' '6^1' '7^1' '8^1' '9^1'
+      !>           'A^1' 'B^1' 'C^1' 'D^1' 'E^1' 'F^1' '1^2' '11^2' '12^2'
+      !>           '13^2' '14^2' '15^2' '16^2' '17^2' '18^2' '19^2' '1A^2'
+      !>           '1B^2' '1C^2' '1D^2' '1E^2' '1F^2' '2^2' '21^2' '22^2'
+      !>           '23^2' '24^2' '25^2' '26^2' '27^2' '28^2' '29^2' '2A^2'
+      !>           '2B^2' '2C^2' '2D^2' '2E^2' '2F^2' '3^2' '31^2' '32^2'
+      !>           '33^2' '34^2' '35^2' '36^2' '37^2' '38^2' '39^2' '3A^2'
+      !>           '3B^2' '3C^2' '3D^2' '3E^2' '3F^2' '4^2'
+      !>           '41^2' '42^2' '43^2' '44^2' '45^2' '46^2' '47^2' '48^2'
+      !>           '49^2' '4A^2' '4B^2' '4C^2' '4D^2' '4E^2' '4F^2' '5^2'
+      !>           '51^2' '52^2' '53^2' '54^2' '55^2' '56^2' '57^2' '58^2'
+      !>           '59^2' '5A^2' '5B^2' '5C^2' '5D^2' '5E^2' '5F^2' '6^2'
+      !>           '61^2' '62^2' '63^2' '64^2'
+      !>
+      !>     Then the following code fragment would read and decode these
+      !>     100 values.
+      !>
+      !>           N = 100
+      !>           CALL RDENCD( UNIT, N, DATA )
+      !>
+      !>      Upon returning, the array data would contain the values
+      !>      1.0D0 - 100.0D0.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     F.S. Turner        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.2.0, 03-JUN-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Fixed I/O type
+      !>        of argument DATA in $Brief_I/O table.
+      !>
+      !>-    SPICELIB Version 1.1.0, 19-MAR-1999 (FST)
+      !>
+      !>        Modified the long error message for SPICE(FILEREADFAILED)
+      !>        to indicate the possibility of an incomplete text transfer
+      !>        file as the cause.
+      !>
+      !>-    SPICELIB Version 1.0.0, 20-OCT-1992 (KRG)
       module procedure rdencd
-!! ## Abstract
-!!
-!!     Read N encoded d.p. numbers from a text file, decoding them
-!!     into their equivalent d.p. numbers.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     NUMBERS
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       implicit none
 
-! $ Detailed_Input
-!
-!     UNIT     is the Fortran unit number for a previously opened text
-!              file. All reading will begin at the CURRENT POSITION
-!              in the text file.
-!
-!     N        is the number of encoded double precision numbers, to be
-!              read from the text file attached to UNIT.
-!
-! $ Detailed_Output
-!
-!     DATA     is the list of decoded double precision numbers read from
-!              the text file attached to UNIT.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If N, the number of data items, is not positive, the error
-!         SPICE(INVALIDARGUMENT) is signaled.
-!
-!     2)  If an error occurs while reading from the text file attached
-!         to UNIT, the error SPICE(FILEREADFAILED) is signaled.
-!
-!     3)  If an error occurs while decoding a number, the error
-!         SPICE(DECODINGERROR) is signaled.
-!
-! $ Files
-!
-!     See the description of UNIT in $Detailed_Input.
-!
-! $ Particulars
-!
-!     This routine will read N encoded double precision numbers from
-!     the current position in a previously opened text file. The
-!     current position in a file is defined to be the text line
-!     immediately following the last text line that was written or
-!     read. The numbers will be decoded and placed into a list of
-!     double precision numbers which will be passed back to the caller.
-!     The encoded double precision numbers are represented as quoted
-!     character strings so that a Fortran list directed read may be
-!     used to read the encoded values, rather than a formatted read
-!     with the format specifier FMT = '(A)'.
-!
-!     This routine is one of a pair of routines which are used to
-!     encode and decode d.p. numbers:
-!
-!           WRENCD -- Encode and write d.p. numbers to a file.
-!           RDENCD -- Read and decode d.p. numbers from a file.
-!
-!     The encoding/decoding of d.p. numbers is performed to provide a
-!     portable means for transferring data values.
-!
-!     Currently the encoded d.p. numbers are represented in a base
-!     16 ``scientific notation.'' See DP2HX.FOR and HX2DP.FOR for
-!     details.
-!
-! $ Examples
-!
-!     Suppose we have the following input file which contains the
-!     values 1.0D0 - 100.0D0 in encoded format, and that the input
-!     file has already been opened for reading. The arrow, '-->',
-!     indicates the current position in the file.
-!
-!        -->'1^1' '2^1' '3^1' '4^1' '5^1' '6^1' '7^1' '8^1' '9^1'
-!           'A^1' 'B^1' 'C^1' 'D^1' 'E^1' 'F^1' '1^2' '11^2' '12^2'
-!           '13^2' '14^2' '15^2' '16^2' '17^2' '18^2' '19^2' '1A^2'
-!           '1B^2' '1C^2' '1D^2' '1E^2' '1F^2' '2^2' '21^2' '22^2'
-!           '23^2' '24^2' '25^2' '26^2' '27^2' '28^2' '29^2' '2A^2'
-!           '2B^2' '2C^2' '2D^2' '2E^2' '2F^2' '3^2' '31^2' '32^2'
-!           '33^2' '34^2' '35^2' '36^2' '37^2' '38^2' '39^2' '3A^2'
-!           '3B^2' '3C^2' '3D^2' '3E^2' '3F^2' '4^2'
-!           '41^2' '42^2' '43^2' '44^2' '45^2' '46^2' '47^2' '48^2'
-!           '49^2' '4A^2' '4B^2' '4C^2' '4D^2' '4E^2' '4F^2' '5^2'
-!           '51^2' '52^2' '53^2' '54^2' '55^2' '56^2' '57^2' '58^2'
-!           '59^2' '5A^2' '5B^2' '5C^2' '5D^2' '5E^2' '5F^2' '6^2'
-!           '61^2' '62^2' '63^2' '64^2'
-!
-!     Then the following code fragment would read and decode these
-!     100 values.
-!
-!           N = 100
-!           CALL RDENCD( UNIT, N, DATA )
-!
-!      Upon returning, the array data would contain the values
-!      1.0D0 - 100.0D0.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     F.S. Turner        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 03-JUN-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Fixed I/O type
-!        of argument DATA in $Brief_I/O table.
-!
-!-    SPICELIB Version 1.1.0, 19-MAR-1999 (FST)
-!
-!        Modified the long error message for SPICE(FILEREADFAILED)
-!        to indicate the possibility of an incomplete text transfer
-!        file as the cause.
-!
-!-    SPICELIB Version 1.0.0, 20-OCT-1992 (KRG)
-!
-!-&
-
-! $ Index_Entries
-!
-!     read and decode encoded d.p. numbers from a text file
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 !     Local parameters
 !
       integer(ip), parameter :: errlen = 80
@@ -1231,9 +1105,6 @@ contains
       integer(ip), parameter :: maxenc = 64
 
       integer(ip), parameter :: wrksiz = 64
-!
-!     Local variables
-!
       character(errlen)     errmsg
       character(maxenc)     work(wrksiz)
 
@@ -1342,307 +1213,272 @@ contains
       return
       end procedure rdencd
 
-!$Procedure TXTOPN ( Text file, open new )
-
+      !> ## Detailed Input
+      !>
+      !>     FNAME    is the name of the new text file to be opened.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     UNIT     is the logical unit connected to the opened file.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the file cannot be opened, the error SPICE(FILEOPENFAILED)
+      !>         is signaled.
+      !>
+      !>     2)  If FNAME is a blank string, the error SPICE(BLANKFILENAME) is
+      !>         signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See FNAME and UNIT above.
+      !>
+      !> ## Particulars
+      !>
+      !>     In SPICELIB, a text file is formatted and sequential and may
+      !>     contain only printable ASCII characters and blanks (ASCII 32-127).
+      !>     When printing a text file, records are single spaced; the first
+      !>     character will not be interpreted as a carriage control character.
+      !>
+      !>     TXTOPN opens a new text file and makes use of the SPICELIB
+      !>     mechanism for coordinating the use of logical units.
+      !>
+      !>     System Dependencies
+      !>     ===================
+      !>
+      !>     The open statement will include the following keyword = value
+      !>     pairs:
+      !>
+      !>            UNIT   =  UNIT
+      !>            FILE   =  FNAME
+      !>            FORM   = 'FORMATTED'
+      !>            ACCESS = 'SEQUENTIAL'
+      !>            STATUS = 'NEW'
+      !>            IOSTAT =  IOSTAT
+      !>
+      !>     In addition, the statement will include
+      !>
+      !>            CARRIAGECONTROL = 'LIST'
+      !>
+      !>     for the Vax and Macintosh.
+      !>
+      !> ## Examples
+      !>
+      !>     The following example reads a line from an input file,
+      !>     'INPUT.TXT', and writes it to an output file, 'OUTPUT.TXT'.
+      !>
+      !>        CALL TXTOPR ( 'INPUT.TXT',  IN  )
+      !>        CALL TXTOPN ( 'OUTPUT.TXT', OUT )
+      !>
+      !>        READ  ( IN,  FMT='(A)' ) LINE
+      !>        WRITE ( OUT, FMT='(A)' ) LINE
+      !>
+      !>        CLOSE ( IN  )
+      !>        CLOSE ( OUT )
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     [1]  "Language Reference Manual", Absoft Fortran V3.2, page 7-12
+      !>          (for the NeXT), 1993.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     J.E. McLean        (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.27.0, 28-NOV-2021 (BVS)
+      !>
+      !>        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+      !>
+      !>-    SPICELIB Version 2.26.0, 17-JUN-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 2.25.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-INTEL.
+      !>
+      !>-    SPICELIB Version 2.24.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 2.23.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.22.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.21.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 2.20.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL.
+      !>
+      !>-    SPICELIB Version 2.19.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-CC_C.
+      !>
+      !>-    SPICELIB Version 2.18.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+      !>
+      !>-    SPICELIB Version 2.17.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+      !>
+      !>-    SPICELIB Version 2.16.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 2.15.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.14.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-64BIT-MS_C.
+      !>
+      !>-    SPICELIB Version 2.13.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-INTEL_C.
+      !>
+      !>-    SPICELIB Version 2.12.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 2.11.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.10.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for PC-LINUX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.9.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for MAC-OSX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.8.0, 19-FEB-2008 (BVS)
+      !>
+      !>        Updated for PC-LINUX-IFORT.
+      !>
+      !>-    SPICELIB Version 2.7.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 2.6.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-INTEL_C.
+      !>
+      !>-    SPICELIB Version 2.5.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-IFORT.
+      !>
+      !>-    SPICELIB Version 2.4.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-IFORT.
+      !>
+      !>-    SPICELIB Version 2.3.0, 26-OCT-2005 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 2.2.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN_C.
+      !>
+      !>-    SPICELIB Version 2.1.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN.
+      !>
+      !>-    SPICELIB Version 2.0.5, 17-JUL-2002 (BVS)
+      !>
+      !>        Added MAC-OSX environments.
+      !>
+      !>-    SPICELIB Version 2.0.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 2.0.3, 16-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 2.0.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 2.0.1, 18-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 2.0.0, 07-APR-1998 (NJB)
+      !>
+      !>        Module was updated for the PC-LINUX platform.
+      !>
+      !>-    SPICELIB Version 1.2.0, 11-NOV-1993 (HAN)
+      !>
+      !>        Module was updated for the Silicon Graphics, DEC Alpha-OSF/1,
+      !>        and NeXT platforms.
+      !>
+      !>-    SPICELIB Version 1.1.0, 12-OCT-1992 (HAN)
+      !>
+      !>        The code was reformatted so that a utility program can
+      !>        create the source file for a specific environment given a
+      !>        master source file.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 2.0.0, 07-APR-1998 (NJB)
+      !>
+      !>        Module was updated for the PC-LINUX platform.
+      !>
+      !>-    SPICELIB Version 1.2.0, 11-NOV-1993 (HAN)
+      !>
+      !>        Module was updated for the Silicon Graphics, DEC Alpha-OSF/1,
+      !>        and NeXT platforms.
+      !>
+      !>-    SPICELIB Version 1.1.0, 12-OCT-1992 (HAN)
+      !>
+      !>        The code was reformatted so that a utility program can
+      !>        create the source file for a specific environment given a
+      !>        master source file.
       module procedure txtopn
-!! ## Abstract
-!!
-!!     Open a new text file for subsequent write access.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!     TEXT
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     FNAME    is the name of the new text file to be opened.
-!
-! $ Detailed_Output
-!
-!     UNIT     is the logical unit connected to the opened file.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the file cannot be opened, the error SPICE(FILEOPENFAILED)
-!         is signaled.
-!
-!     2)  If FNAME is a blank string, the error SPICE(BLANKFILENAME) is
-!         signaled.
-!
-! $ Files
-!
-!     See FNAME and UNIT above.
-!
-! $ Particulars
-!
-!     In SPICELIB, a text file is formatted and sequential and may
-!     contain only printable ASCII characters and blanks (ASCII 32-127).
-!     When printing a text file, records are single spaced; the first
-!     character will not be interpreted as a carriage control character.
-!
-!     TXTOPN opens a new text file and makes use of the SPICELIB
-!     mechanism for coordinating the use of logical units.
-!
-!     System Dependencies
-!     ===================
-!
-!     The open statement will include the following keyword = value
-!     pairs:
-!
-!            UNIT   =  UNIT
-!            FILE   =  FNAME
-!            FORM   = 'FORMATTED'
-!            ACCESS = 'SEQUENTIAL'
-!            STATUS = 'NEW'
-!            IOSTAT =  IOSTAT
-!
-!     In addition, the statement will include
-!
-!            CARRIAGECONTROL = 'LIST'
-!
-!     for the Vax and Macintosh.
-!
-! $ Examples
-!
-!     The following example reads a line from an input file,
-!     'INPUT.TXT', and writes it to an output file, 'OUTPUT.TXT'.
-!
-!        CALL TXTOPR ( 'INPUT.TXT',  IN  )
-!        CALL TXTOPN ( 'OUTPUT.TXT', OUT )
-!
-!        READ  ( IN,  FMT='(A)' ) LINE
-!        WRITE ( OUT, FMT='(A)' ) LINE
-!
-!        CLOSE ( IN  )
-!        CLOSE ( OUT )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     [1]  "Language Reference Manual", Absoft Fortran V3.2, page 7-12
-!          (for the NeXT), 1993.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     J.E. McLean        (JPL)
-!     H.A. Neilan        (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.27.0, 28-NOV-2021 (BVS)
-!
-!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
-!
-!-    SPICELIB Version 2.26.0, 17-JUN-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.25.0, 10-MAR-2014 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-INTEL.
-!
-!-    SPICELIB Version 2.24.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-IFORT.
-!
-!-    SPICELIB Version 2.23.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-GFORTRAN.
-!
-!-    SPICELIB Version 2.22.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 2.21.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GCC_C.
-!
-!-    SPICELIB Version 2.20.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL.
-!
-!-    SPICELIB Version 2.19.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-CC_C.
-!
-!-    SPICELIB Version 2.18.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
-!
-!-    SPICELIB Version 2.17.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
-!
-!-    SPICELIB Version 2.16.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-WINDOWS-64BIT-IFORT.
-!
-!-    SPICELIB Version 2.15.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 2.14.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-64BIT-MS_C.
-!
-!-    SPICELIB Version 2.13.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-INTEL_C.
-!
-!-    SPICELIB Version 2.12.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-IFORT.
-!
-!-    SPICELIB Version 2.11.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 2.10.0, 18-MAR-2009 (BVS)
-!
-!        Updated for PC-LINUX-GFORTRAN.
-!
-!-    SPICELIB Version 2.9.0, 18-MAR-2009 (BVS)
-!
-!        Updated for MAC-OSX-GFORTRAN.
-!
-!-    SPICELIB Version 2.8.0, 19-FEB-2008 (BVS)
-!
-!        Updated for PC-LINUX-IFORT.
-!
-!-    SPICELIB Version 2.7.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GCC_C.
-!
-!-    SPICELIB Version 2.6.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-INTEL_C.
-!
-!-    SPICELIB Version 2.5.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-IFORT.
-!
-!-    SPICELIB Version 2.4.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-WINDOWS-IFORT.
-!
-!-    SPICELIB Version 2.3.0, 26-OCT-2005 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-GCC_C.
-!
-!-    SPICELIB Version 2.2.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN_C.
-!
-!-    SPICELIB Version 2.1.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN.
-!
-!-    SPICELIB Version 2.0.5, 17-JUL-2002 (BVS)
-!
-!        Added MAC-OSX environments.
-!
-!-    SPICELIB Version 2.0.4, 08-OCT-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. New
-!        environments are WIN-NT
-!
-!-    SPICELIB Version 2.0.3, 16-SEP-1999 (NJB)
-!
-!        CSPICE environments were added. Some typos were corrected.
-!
-!-    SPICELIB Version 2.0.2, 28-JUL-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. New
-!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!
-!-    SPICELIB Version 2.0.1, 18-MAR-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. Previously,
-!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!        by the environment label SUN.
-!
-!-    SPICELIB Version 2.0.0, 07-APR-1998 (NJB)
-!
-!        Module was updated for the PC-LINUX platform.
-!
-!-    SPICELIB Version 1.2.0, 11-NOV-1993 (HAN)
-!
-!        Module was updated for the Silicon Graphics, DEC Alpha-OSF/1,
-!        and NeXT platforms.
-!
-!-    SPICELIB Version 1.1.0, 12-OCT-1992 (HAN)
-!
-!        The code was reformatted so that a utility program can
-!        create the source file for a specific environment given a
-!        master source file.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-!
-!-&
-
-! $ Index_Entries
-!
-!     text file open new
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 2.0.0, 07-APR-1998 (NJB)
-!
-!        Module was updated for the PC-LINUX platform.
-!
-!-    SPICELIB Version 1.2.0, 11-NOV-1993 (HAN)
-!
-!        Module was updated for the Silicon Graphics, DEC Alpha-OSF/1,
-!        and NeXT platforms.
-!
-!-    SPICELIB Version 1.1.0, 12-OCT-1992 (HAN)
-!
-!        The code was reformatted so that a utility program can
-!        create the source file for a specific environment given a
-!        master source file.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           iostat
 
 !
@@ -1676,332 +1512,297 @@ contains
       return
       end procedure txtopn
 
-!$Procedure TXTOPR ( Text file, open for read )
-
+      !> ## Detailed Input
+      !>
+      !>     FNAME    is the name of the text file to be opened.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     UNIT     is the logical unit connected to the opened file.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If FNAME is a blank string, the error SPICE(BLANKFILENAME) is
+      !>         signaled.
+      !>
+      !>     2)  If the file cannot be opened, the error SPICE(FILEOPENFAILED)
+      !>         is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See FNAME and UNIT above.
+      !>
+      !> ## Particulars
+      !>
+      !>     In SPICELIB, a text file is formatted and sequential and may
+      !>     contain only printable ASCII characters and blanks (ASCII 32-127).
+      !>     When printing a text file, records are single spaced; the first
+      !>     character will not be interpreted as a carriage control character.
+      !>
+      !>     TXTOPR opens an existing text file for read access and makes use
+      !>     of the SPICELIB mechanism for coordinating use of logical units.
+      !>
+      !>     System Dependencies
+      !>     ===================
+      !>
+      !>     The open statement will include the following keyword = value
+      !>     pairs:
+      !>
+      !>            UNIT   =  UNIT
+      !>            FILE   =  FNAME
+      !>            FORM   = 'FORMATTED'
+      !>            ACCESS = 'SEQUENTIAL'
+      !>            STATUS = 'OLD'
+      !>            IOSTAT =  IOSTAT
+      !>
+      !>     In addition, the statement will include
+      !>
+      !>            CARRIAGECONTROL = 'LIST'
+      !>            READONLY
+      !>
+      !>     for the Vax and the OS X Absoft compiler, or
+      !>
+      !>            MODE            = 'READ'
+      !>
+      !>     for the IBM pc.
+      !>
+      !> ## Examples
+      !>
+      !>     The following example reads the first line from an input file,
+      !>     'INPUT.TXT', and writes it to an output file, 'OUTPUT.TXT'.
+      !>
+      !>        CALL TXTOPR ( 'INPUT.TXT',  IN  )
+      !>        CALL TXTOPN ( 'OUTPUT.TXT', OUT )
+      !>
+      !>        READ  ( IN,  FMT='(A)' ) LINE
+      !>        WRITE ( OUT, FMT='(A)' ) LINE
+      !>
+      !>        CLOSE ( IN  )
+      !>        CLOSE ( OUT )
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  The file, FNAME, must exist prior to calling TXTOPR.
+      !>
+      !> ## Literature References
+      !>
+      !>     [1]  "Lahey F77L EM/32 FORTRAN Language Reference Manual", p.145.
+      !>
+      !>     [2]  "Language Reference Manual", Absoft Fortran V3.2, page 7-12
+      !>          (for the NeXT), 1993.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     J.E. McLean        (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     B.V. Semenov       (JPL)
+      !>     M.J. Spencer       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.27.0, 28-NOV-2021 (BVS)
+      !>
+      !>        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+      !>
+      !>-    SPICELIB Version 2.26.0, 17-JUN-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 2.25.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-INTEL.
+      !>
+      !>-    SPICELIB Version 2.24.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 2.23.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.22.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.21.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 2.20.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL.
+      !>
+      !>-    SPICELIB Version 2.19.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-CC_C.
+      !>
+      !>-    SPICELIB Version 2.18.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+      !>
+      !>-    SPICELIB Version 2.17.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+      !>
+      !>-    SPICELIB Version 2.16.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 2.15.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.14.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-64BIT-MS_C.
+      !>
+      !>-    SPICELIB Version 2.13.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-INTEL_C.
+      !>
+      !>-    SPICELIB Version 2.12.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 2.11.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.10.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for PC-LINUX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.9.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for MAC-OSX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 2.8.0, 19-FEB-2008 (BVS)
+      !>
+      !>        Updated for PC-LINUX-IFORT.
+      !>
+      !>-    SPICELIB Version 2.7.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 2.6.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-INTEL_C.
+      !>
+      !>-    SPICELIB Version 2.5.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-IFORT.
+      !>
+      !>-    SPICELIB Version 2.4.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-IFORT.
+      !>
+      !>-    SPICELIB Version 2.3.0, 26-OCT-2005 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 2.2.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN_C.
+      !>
+      !>-    SPICELIB Version 2.1.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN.
+      !>
+      !>-    SPICELIB Version 2.0.6, 24-APR-2003 (EDW)
+      !>
+      !>        Added MAC-OSX-F77 to the list of platforms
+      !>        that require READONLY to read write protected
+      !>        kernels.
+      !>
+      !>-    SPICELIB Version 2.0.5, 17-JUL-2002 (BVS)
+      !>
+      !>        Added MAC-OSX environments.
+      !>
+      !>-    SPICELIB Version 2.0.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 2.0.3, 16-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 2.0.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 2.0.1, 18-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 2.0.0, 05-APR-1998 (NJB)
+      !>
+      !>        References to the PC-LINUX environment were added.
+      !>
+      !>-    SPICELIB Version 1.3.0, 11-NOV-1993 (HAN)
+      !>
+      !>        Module was updated for the Silicon Graphics, DEC Alpha-OSF/1,
+      !>        and NeXT platforms.
+      !>
+      !>-    SPICELIB Version 1.2.0, 12-OCT-1992 (HAN)
+      !>
+      !>        The code was also reformatted so that a utility program can
+      !>        create the source file for a specific environment given a
+      !>        master source file.
+      !>
+      !>-    SPICELIB Version 1.1.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.1.0, 13-NOV-1991 (MJS)
+      !>
+      !>        Module updated to allow portability to the Lahey F77L EM/32
+      !>        FORTRAN V 4.0 environment.
+      !>
+      !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 2.0.0, 05-APR-1998 (NJB)
+      !>
+      !>        References to the PC-LINUX environment were added.
+      !>
+      !>-    SPICELIB Version 1.3.0, 11-NOV-1993 (HAN)
+      !>
+      !>        Module was updated for the Silicon Graphics, DEC Alpha-OSF/1,
+      !>        and NeXT platforms.
+      !>
+      !>-    SPICELIB Version 1.2.0, 12-OCT-1992 (HAN)
+      !>
+      !>        The code was also reformatted so that a utility program can
+      !>        create the source file for a specific environment given a
+      !>        master source file.
+      !>
+      !>-    SPICELIB Version 1.1.0, 13-NOV-1991 (MJS)
+      !>
+      !>        Module updated to allow portability to the Lahey F77L EM/32
+      !>        FORTRAN V 4.0 environment.
       module procedure txtopr
-!! ## Abstract
-!!
-!!     Open a text file for read access.
-!!
-!! ## Required Reading
-!!
-!!     TEXT
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!     TEXT
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     FNAME    is the name of the text file to be opened.
-!
-! $ Detailed_Output
-!
-!     UNIT     is the logical unit connected to the opened file.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If FNAME is a blank string, the error SPICE(BLANKFILENAME) is
-!         signaled.
-!
-!     2)  If the file cannot be opened, the error SPICE(FILEOPENFAILED)
-!         is signaled.
-!
-! $ Files
-!
-!     See FNAME and UNIT above.
-!
-! $ Particulars
-!
-!     In SPICELIB, a text file is formatted and sequential and may
-!     contain only printable ASCII characters and blanks (ASCII 32-127).
-!     When printing a text file, records are single spaced; the first
-!     character will not be interpreted as a carriage control character.
-!
-!     TXTOPR opens an existing text file for read access and makes use
-!     of the SPICELIB mechanism for coordinating use of logical units.
-!
-!     System Dependencies
-!     ===================
-!
-!     The open statement will include the following keyword = value
-!     pairs:
-!
-!            UNIT   =  UNIT
-!            FILE   =  FNAME
-!            FORM   = 'FORMATTED'
-!            ACCESS = 'SEQUENTIAL'
-!            STATUS = 'OLD'
-!            IOSTAT =  IOSTAT
-!
-!     In addition, the statement will include
-!
-!            CARRIAGECONTROL = 'LIST'
-!            READONLY
-!
-!     for the Vax and the OS X Absoft compiler, or
-!
-!            MODE            = 'READ'
-!
-!     for the IBM pc.
-!
-! $ Examples
-!
-!     The following example reads the first line from an input file,
-!     'INPUT.TXT', and writes it to an output file, 'OUTPUT.TXT'.
-!
-!        CALL TXTOPR ( 'INPUT.TXT',  IN  )
-!        CALL TXTOPN ( 'OUTPUT.TXT', OUT )
-!
-!        READ  ( IN,  FMT='(A)' ) LINE
-!        WRITE ( OUT, FMT='(A)' ) LINE
-!
-!        CLOSE ( IN  )
-!        CLOSE ( OUT )
-!
-! $ Restrictions
-!
-!     1)  The file, FNAME, must exist prior to calling TXTOPR.
-!
-! $ Literature_References
-!
-!     [1]  "Lahey F77L EM/32 FORTRAN Language Reference Manual", p.145.
-!
-!     [2]  "Language Reference Manual", Absoft Fortran V3.2, page 7-12
-!          (for the NeXT), 1993.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     J.E. McLean        (JPL)
-!     H.A. Neilan        (JPL)
-!     B.V. Semenov       (JPL)
-!     M.J. Spencer       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.27.0, 28-NOV-2021 (BVS)
-!
-!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
-!
-!-    SPICELIB Version 2.26.0, 17-JUN-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.25.0, 10-MAR-2014 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-INTEL.
-!
-!-    SPICELIB Version 2.24.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-IFORT.
-!
-!-    SPICELIB Version 2.23.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-GFORTRAN.
-!
-!-    SPICELIB Version 2.22.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 2.21.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GCC_C.
-!
-!-    SPICELIB Version 2.20.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL.
-!
-!-    SPICELIB Version 2.19.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-CC_C.
-!
-!-    SPICELIB Version 2.18.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
-!
-!-    SPICELIB Version 2.17.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
-!
-!-    SPICELIB Version 2.16.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-WINDOWS-64BIT-IFORT.
-!
-!-    SPICELIB Version 2.15.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 2.14.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-64BIT-MS_C.
-!
-!-    SPICELIB Version 2.13.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-INTEL_C.
-!
-!-    SPICELIB Version 2.12.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-IFORT.
-!
-!-    SPICELIB Version 2.11.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 2.10.0, 18-MAR-2009 (BVS)
-!
-!        Updated for PC-LINUX-GFORTRAN.
-!
-!-    SPICELIB Version 2.9.0, 18-MAR-2009 (BVS)
-!
-!        Updated for MAC-OSX-GFORTRAN.
-!
-!-    SPICELIB Version 2.8.0, 19-FEB-2008 (BVS)
-!
-!        Updated for PC-LINUX-IFORT.
-!
-!-    SPICELIB Version 2.7.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GCC_C.
-!
-!-    SPICELIB Version 2.6.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-INTEL_C.
-!
-!-    SPICELIB Version 2.5.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-IFORT.
-!
-!-    SPICELIB Version 2.4.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-WINDOWS-IFORT.
-!
-!-    SPICELIB Version 2.3.0, 26-OCT-2005 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-GCC_C.
-!
-!-    SPICELIB Version 2.2.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN_C.
-!
-!-    SPICELIB Version 2.1.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN.
-!
-!-    SPICELIB Version 2.0.6, 24-APR-2003 (EDW)
-!
-!        Added MAC-OSX-F77 to the list of platforms
-!        that require READONLY to read write protected
-!        kernels.
-!
-!-    SPICELIB Version 2.0.5, 17-JUL-2002 (BVS)
-!
-!        Added MAC-OSX environments.
-!
-!-    SPICELIB Version 2.0.4, 08-OCT-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. New
-!        environments are WIN-NT
-!
-!-    SPICELIB Version 2.0.3, 16-SEP-1999 (NJB)
-!
-!        CSPICE environments were added. Some typos were corrected.
-!
-!-    SPICELIB Version 2.0.2, 28-JUL-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. New
-!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!
-!-    SPICELIB Version 2.0.1, 18-MAR-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. Previously,
-!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!        by the environment label SUN.
-!
-!-    SPICELIB Version 2.0.0, 05-APR-1998 (NJB)
-!
-!        References to the PC-LINUX environment were added.
-!
-!-    SPICELIB Version 1.3.0, 11-NOV-1993 (HAN)
-!
-!        Module was updated for the Silicon Graphics, DEC Alpha-OSF/1,
-!        and NeXT platforms.
-!
-!-    SPICELIB Version 1.2.0, 12-OCT-1992 (HAN)
-!
-!        The code was also reformatted so that a utility program can
-!        create the source file for a specific environment given a
-!        master source file.
-!
-!-    SPICELIB Version 1.1.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.1.0, 13-NOV-1991 (MJS)
-!
-!        Module updated to allow portability to the Lahey F77L EM/32
-!        FORTRAN V 4.0 environment.
-!
-!-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-!
-!-&
-
-! $ Index_Entries
-!
-!     text file open for read
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 2.0.0, 05-APR-1998 (NJB)
-!
-!        References to the PC-LINUX environment were added.
-!
-!-    SPICELIB Version 1.3.0, 11-NOV-1993 (HAN)
-!
-!        Module was updated for the Silicon Graphics, DEC Alpha-OSF/1,
-!        and NeXT platforms.
-!
-!-    SPICELIB Version 1.2.0, 12-OCT-1992 (HAN)
-!
-!        The code was also reformatted so that a utility program can
-!        create the source file for a specific environment given a
-!        master source file.
-!
-!-    SPICELIB Version 1.1.0, 13-NOV-1991 (MJS)
-!
-!        Module updated to allow portability to the Lahey F77L EM/32
-!        FORTRAN V 4.0 environment.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           iostat
 
 !
@@ -2038,237 +1839,198 @@ contains
       return
       end procedure txtopr
 
-!$Procedure WRENCI ( Write encoded integers to text file )
-
+      !> ## Detailed Input
+      !>
+      !>     UNIT     is the Fortran unit number for a previously opened text
+      !>              file. All writing will begin at the CURRENT POSITION
+      !>              in the text file.
+      !>
+      !>     N        is the number of integers to be encoded and written to
+      !>              the text file attached to UNIT.
+      !>
+      !>     DATA     is the list of integers to be encoded and written to the
+      !>              text file attached to UNIT.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     See the $Particulars section for a description of the effect of
+      !>     this routine.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If N, the number of data items, is not positive, the error
+      !>         SPICE(INVALIDARGUMENT) is signaled.
+      !>
+      !>     2)  If an error occurs while writing to the text file attached
+      !>         to UNIT, the error SPICE(FILEWRITEFAILED) is signaled.
+      !>
+      !>     3)  If the Fortran logical unit UNIT is not defined, the results
+      !>         of this routine are unpredictable.
+      !>
+      !> ## Files
+      !>
+      !>     See the description of UNIT in the $Detailed_Input section.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine will accept a list of one or more integers which
+      !>     it will encode into equivalent text strings and write to the
+      !>     current position in a text file. The current position in a file
+      !>     is defined to be the text line immediately following the last
+      !>     text line that was written or read. The encoded integers are
+      !>     written to the output text file as quoted character strings so
+      !>     that a Fortran list directed read may be used to read the
+      !>     encoded values, rather than a formatted read with the format
+      !>     specifier FMT = '(A)'.
+      !>
+      !>     This routine is one of a pair of routines which are used to
+      !>     encode and decode integers:
+      !>
+      !>           WRENCI -- Encode and write integers to a file.
+      !>           RDENCI -- Read and decode integers from a file.
+      !>
+      !>     The encoding/decoding of integers is performed to provide a
+      !>     portable means for transferring data values.
+      !>
+      !>     Currently the text string produced will be a signed hexadecimal
+      !>     number See INT2HX.FOR and HX2INT.FOR for details.
+      !>
+      !> ## Examples
+      !>
+      !>     Please note that the output format in the examples is not
+      !>     intended to be exactly identical with the output format of this
+      !>     routine in actual use. The output format used in the examples is
+      !>     intended to aid in the understanding of how this routine works.
+      !>     It is NOT intended to be a specification of the output format for
+      !>     this routine.
+      !>
+      !>     Let
+      !>
+      !>        UNIT     be the Fortran logical unit of a previously opened
+      !>                 text file.
+      !>
+      !>        N        = 100
+      !>
+      !>        DATA(I)  = I, I = 1, N
+      !>
+      !>     Then, the subroutine call
+      !>
+      !>           CALL WRENCI( UNIT, N, DATA )
+      !>
+      !>     will write the first 100 integers, encoded, to the output text
+      !>     file attached to UNIT, beginning at the current position in the
+      !>     output file, which is marked by an arrow, '-->'. The resulting
+      !>     output will look something like the following:
+      !>
+      !>        -->'1' '2' '3' '4' '5' '6' '7' '8' '9' 'A' 'B' 'C' 'D' 'E'
+      !>           'F' '10' '11' '12' '13' '14' '15' '16' '17' '18' '19'
+      !>           '1A' '1B' '1C' '1D' '1E' '1F' '20' '21' '22' '23' '24'
+      !>           '25' '26' '27' '28' '29' '2A' '2B' '2C' '2D' '2E' '2F'
+      !>           '30' '31' '32' '33' '34' '35' '36' '37' '38' '39' '3A'
+      !>           '3B' '3C' '3D' '3E' '3F' '40'
+      !>           '41' '42' '43' '44' '45' '46' '47' '48' '49' '4A' '4B'
+      !>           '4C' '4D' '4E' '4F' '50' '51' '52' '53' '54' '55' '56'
+      !>           '57' '58' '59' '5A' '5B' '5C' '5D' '5E' '5F' '60' '61'
+      !>           '62' '63' '64'
+      !>        -->
+      !>
+      !>     At this point, the arrow marks the position of the file pointer
+      !>     immediately after the call to WRENCI.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.3.0, 13-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.2.0, 09-SEP-1993 (KRG)
+      !>
+      !>        The list directed write was changed to a formatted write using
+      !>        the  specifier FMT='(A)'. This was done in order to prevent a
+      !>        space from appearing as the first character on each line of the
+      !>        file for certain computer platforms.
+      !>
+      !>-    SPICELIB Version 1.1.0, 21-JUN-1993 (KRG)
+      !>
+      !>        This routine was modified to avoid the creation of long output
+      !>        lines on some of the supported systems, such as the NeXT with
+      !>        Absoft Fortran 3.2.
+      !>
+      !>        A disclaimer was added to the $Examples section concerning
+      !>        the output format used. The disclaimer simply states that the
+      !>        output format used in the example is not necessarily the
+      !>        output format actually used by the routine.
+      !>
+      !>-    SPICELIB Version 1.0.0, 19-OCT-1992 (KRG)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 1.2.0, 09-SEP-1993 (KRG)
+      !>
+      !>        The list directed write was changed to a formatted write using
+      !>        the  specifier FMT='(A)'. This was done in order to prevent a
+      !>        space from appearing as the first character on each line of the
+      !>        file for certain computer platforms.
+      !>
+      !>-    SPICELIB Version 1.1.0, 21-JUN-1993 (KRG)
+      !>
+      !>        This routine was modified to avoid the creation of long output
+      !>        lines on some of the supported systems, such as the NeXT with
+      !>        Absoft Fortran 3.2.
+      !>
+      !>        On some of the supported computers this routine would produce
+      !>        very long (greater than 1000 characters) output lines due to
+      !>        the implicit DO loop used in the WRITE statement:
+      !>
+      !>            WRITE (UNIT,IOSTAT=IOSTAT,FMT=*)
+      !>           .   ( QUOTE//WORK(I)(1:LENGTH(I))//QUOTE//' ', I=1,NITMS )
+      !>
+      !>        This problem was fixed by removing the implicit DO loop from
+      !>        the WRITE statement and placing an equivalent DO loop around
+      !>        the WRITE statement:
+      !>
+      !>            DO I = 1, NITMS
+      !>               WRITE (UNIT,IOSTAT=IOSTAT,FMT=*)
+      !>           .       QUOTE//WORK(I)(1:LENGTH(I))//QUOTE
+      !>            END DO
+      !>
+      !>        The net effect of this will be that only a single datum will
+      !>        be written on each line of output.
+      !>
+      !>        A disclaimer was added to the $Examples section concerning
+      !>        the output format used. The disclaimer simply states that the
+      !>        output format used in the example is not necessarily the
+      !>        output format actually used by the routine.
+      !>
+      !>-    SPICELIB Version 1.0.0, 19-OCT-1992 (KRG)
       module procedure wrenci
-!! ## Abstract
-!!
-!!     Encode and write integers to a text file.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     NUMBERS
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     UNIT     is the Fortran unit number for a previously opened text
-!              file. All writing will begin at the CURRENT POSITION
-!              in the text file.
-!
-!     N        is the number of integers to be encoded and written to
-!              the text file attached to UNIT.
-!
-!     DATA     is the list of integers to be encoded and written to the
-!              text file attached to UNIT.
-!
-! $ Detailed_Output
-!
-!     See the $Particulars section for a description of the effect of
-!     this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If N, the number of data items, is not positive, the error
-!         SPICE(INVALIDARGUMENT) is signaled.
-!
-!     2)  If an error occurs while writing to the text file attached
-!         to UNIT, the error SPICE(FILEWRITEFAILED) is signaled.
-!
-!     3)  If the Fortran logical unit UNIT is not defined, the results
-!         of this routine are unpredictable.
-!
-! $ Files
-!
-!     See the description of UNIT in the $Detailed_Input section.
-!
-! $ Particulars
-!
-!     This routine will accept a list of one or more integers which
-!     it will encode into equivalent text strings and write to the
-!     current position in a text file. The current position in a file
-!     is defined to be the text line immediately following the last
-!     text line that was written or read. The encoded integers are
-!     written to the output text file as quoted character strings so
-!     that a Fortran list directed read may be used to read the
-!     encoded values, rather than a formatted read with the format
-!     specifier FMT = '(A)'.
-!
-!     This routine is one of a pair of routines which are used to
-!     encode and decode integers:
-!
-!           WRENCI -- Encode and write integers to a file.
-!           RDENCI -- Read and decode integers from a file.
-!
-!     The encoding/decoding of integers is performed to provide a
-!     portable means for transferring data values.
-!
-!     Currently the text string produced will be a signed hexadecimal
-!     number See INT2HX.FOR and HX2INT.FOR for details.
-!
-! $ Examples
-!
-!     Please note that the output format in the examples is not
-!     intended to be exactly identical with the output format of this
-!     routine in actual use. The output format used in the examples is
-!     intended to aid in the understanding of how this routine works.
-!     It is NOT intended to be a specification of the output format for
-!     this routine.
-!
-!     Let
-!
-!        UNIT     be the Fortran logical unit of a previously opened
-!                 text file.
-!
-!        N        = 100
-!
-!        DATA(I)  = I, I = 1, N
-!
-!     Then, the subroutine call
-!
-!           CALL WRENCI( UNIT, N, DATA )
-!
-!     will write the first 100 integers, encoded, to the output text
-!     file attached to UNIT, beginning at the current position in the
-!     output file, which is marked by an arrow, '-->'. The resulting
-!     output will look something like the following:
-!
-!        -->'1' '2' '3' '4' '5' '6' '7' '8' '9' 'A' 'B' 'C' 'D' 'E'
-!           'F' '10' '11' '12' '13' '14' '15' '16' '17' '18' '19'
-!           '1A' '1B' '1C' '1D' '1E' '1F' '20' '21' '22' '23' '24'
-!           '25' '26' '27' '28' '29' '2A' '2B' '2C' '2D' '2E' '2F'
-!           '30' '31' '32' '33' '34' '35' '36' '37' '38' '39' '3A'
-!           '3B' '3C' '3D' '3E' '3F' '40'
-!           '41' '42' '43' '44' '45' '46' '47' '48' '49' '4A' '4B'
-!           '4C' '4D' '4E' '4F' '50' '51' '52' '53' '54' '55' '56'
-!           '57' '58' '59' '5A' '5B' '5C' '5D' '5E' '5F' '60' '61'
-!           '62' '63' '64'
-!        -->
-!
-!     At this point, the arrow marks the position of the file pointer
-!     immediately after the call to WRENCI.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.3.0, 13-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.2.0, 09-SEP-1993 (KRG)
-!
-!        The list directed write was changed to a formatted write using
-!        the  specifier FMT='(A)'. This was done in order to prevent a
-!        space from appearing as the first character on each line of the
-!        file for certain computer platforms.
-!
-!-    SPICELIB Version 1.1.0, 21-JUN-1993 (KRG)
-!
-!        This routine was modified to avoid the creation of long output
-!        lines on some of the supported systems, such as the NeXT with
-!        Absoft Fortran 3.2.
-!
-!        A disclaimer was added to the $Examples section concerning
-!        the output format used. The disclaimer simply states that the
-!        output format used in the example is not necessarily the
-!        output format actually used by the routine.
-!
-!-    SPICELIB Version 1.0.0, 19-OCT-1992 (KRG)
-!
-!-&
-
-! $ Index_Entries
-!
-!     encode and write integers to a text file
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.2.0, 09-SEP-1993 (KRG)
-!
-!        The list directed write was changed to a formatted write using
-!        the  specifier FMT='(A)'. This was done in order to prevent a
-!        space from appearing as the first character on each line of the
-!        file for certain computer platforms.
-!
-!-    SPICELIB Version 1.1.0, 21-JUN-1993 (KRG)
-!
-!        This routine was modified to avoid the creation of long output
-!        lines on some of the supported systems, such as the NeXT with
-!        Absoft Fortran 3.2.
-!
-!        On some of the supported computers this routine would produce
-!        very long (greater than 1000 characters) output lines due to
-!        the implicit DO loop used in the WRITE statement:
-!
-!            WRITE (UNIT,IOSTAT=IOSTAT,FMT=*)
-!           .   ( QUOTE//WORK(I)(1:LENGTH(I))//QUOTE//' ', I=1,NITMS )
-!
-!        This problem was fixed by removing the implicit DO loop from
-!        the WRITE statement and placing an equivalent DO loop around
-!        the WRITE statement:
-!
-!            DO I = 1, NITMS
-!               WRITE (UNIT,IOSTAT=IOSTAT,FMT=*)
-!           .       QUOTE//WORK(I)(1:LENGTH(I))//QUOTE
-!            END DO
-!
-!        The net effect of this will be that only a single datum will
-!        be written on each line of output.
-!
-!        A disclaimer was added to the $Examples section concerning
-!        the output format used. The disclaimer simply states that the
-!        output format used in the example is not necessarily the
-!        output format actually used by the routine.
-!
-!-    SPICELIB Version 1.0.0, 19-OCT-1992 (KRG)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
       character(1), parameter :: quote = ''''
 
       integer(ip), parameter :: maxenc = 64
 
       integer(ip), parameter :: wrksiz = 64
-!
-!     Local variables
-!
       character(maxenc)     work(wrksiz)
 
       integer(ip)           i
@@ -2357,204 +2119,172 @@ contains
       return
       end procedure wrenci
 
-!$Procedure INT2HX  ( Integer to signed hexadecimal string )
-
+      !> ## Detailed Input
+      !>
+      !>     NUMBER   is the integer to be converted.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     STRING   is the signed hexadecimal string representing the integer
+      !>              NUMBER.
+      !>
+      !>              The following table describes the character set used
+      !>              to represent the hexadecimal digits and their
+      !>              corresponding values.
+      !>
+      !>              Character    Value           Character    Value
+      !>              ---------    -----           ---------    -----
+      !>                '0'          0                '8'          8
+      !>                '1'          1                '9'          9
+      !>                '2'          2                'A'         10
+      !>                '3'          3                'B'         11
+      !>                '4'          4                'C'         12
+      !>                '5'          5                'D'         13
+      !>                '6'          6                'E'         14
+      !>                '7'          7                'F'         15
+      !>
+      !>              In order to obtain the entire signed hexadecimal number,
+      !>              the output character string should be at least N
+      !>              characters long, where
+      !>
+      !>                              # of bits per integer + 3
+      !>                    N = 1 + ---------------------------- .
+      !>                                         4
+      !>
+      !>              There should be 1 character position for the sign, and
+      !>              one character position for each hexadecimal digit that
+      !>              could be produced from any integer which can be
+      !>              represented by a particular computer system.
+      !>
+      !>              The following table contains minimum output string
+      !>              lengths necessary to obtain the complete hexadecimal
+      !>              string for various integer sizes.
+      !>
+      !>                 Integer size in bits      Minimum output length
+      !>                 --------------------      ---------------------
+      !>                 8                         3
+      !>                 16                        5
+      !>                 32                        9
+      !>                 36 (really,it exists)     10
+      !>                 64                        17
+      !>                 etc.
+      !>
+      !>              The hexadecimal character string produced by this
+      !>              routine will be left justified and consist of a
+      !>              contiguous sequence of hexadecimal digits, or in the
+      !>              case of a negative number, a contiguous sequence of
+      !>              hexadecimal digits immediately preceded by a minus
+      !>              sign, '-', e.g.:
+      !>
+      !>                 (1)   h h ... h
+      !>                        1 2     n
+      !>
+      !>                 (2)   -h h ... h
+      !>                         1 2     n
+      !>
+      !>              where h  represents an hexadecimal digit.
+      !>                     i
+      !>
+      !>              The character string produced will be blank padded on
+      !>              the right if LENGTH < LEN( STRING ).
+      !>
+      !>     LENGTH   is the length of the hexadecimal character string
+      !>              produced by the conversion.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If the output character string is not long enough to
+      !>         contain the entire hexadecimal string that was produced,
+      !>         the hexadecimal string will be truncated on the right.
+      !>
+      !>     2)  If LEN( STRING ) > LENGTH, the output character string will
+      !>         be blank padded on the right.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine will convert a signed integer into an equivalent
+      !>     signed hexadecimal character string. This provides a machine
+      !>     independent mechanism for storing or porting integer values.
+      !>     This routine is used by the routine DP2HX which converts a
+      !>     double precision value into an equivalent character string.
+      !>
+      !>     This routine is one of a pair of routines which are used to
+      !>     perform conversions between integers and equivalent signed
+      !>     hexadecimal character strings:
+      !>
+      !>           INT2HX -- Convert an integer into a signed hexadecimal
+      !>                     character string.
+      !>
+      !>           HX2INT -- Convert a signed hexadecimal character string
+      !>                     into an integer.
+      !>
+      !> ## Examples
+      !>
+      !>     All of the values shown are for a two's complement representation
+      !>     for signed integers.
+      !>
+      !>     The following input and output argument values illustrate the
+      !>     action of INT2HX for various input values of NUMBER.
+      !>
+      !>         NUMBER       STRING           LENGTH
+      !>         -----------  ---------------  ------
+      !>          1           '1'              1
+      !>         -1           '-1'             2
+      !>          223         'DF'             2
+      !>         -32          '-20'            3
+      !>          0           '0'              1
+      !>
+      !>          2147483647  '7FFFFFFF'       8
+      !>          (Maximum 32 bit integer)
+      !>
+      !>         -2147483647  '-7FFFFFFF'      9
+      !>          (Minimum 32 bit integer + 1)
+      !>
+      !>         -2147483648  '-80000000'      9
+      !>          (Minimum 32 bit integer)
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  The maximum number of characters permitted in the output
+      !>         string is specified by the local parameter STRLEN.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.0, 22-OCT-1992 (KRG)
       module procedure int2hx
-!! ## Abstract
-!!
-!!     Convert an integer to an equivalent signed hexadecimal string.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ALPHANUMERIC
-!!     CONVERSION
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     NUMBER   is the integer to be converted.
-!
-! $ Detailed_Output
-!
-!     STRING   is the signed hexadecimal string representing the integer
-!              NUMBER.
-!
-!              The following table describes the character set used
-!              to represent the hexadecimal digits and their
-!              corresponding values.
-!
-!              Character    Value           Character    Value
-!              ---------    -----           ---------    -----
-!                '0'          0                '8'          8
-!                '1'          1                '9'          9
-!                '2'          2                'A'         10
-!                '3'          3                'B'         11
-!                '4'          4                'C'         12
-!                '5'          5                'D'         13
-!                '6'          6                'E'         14
-!                '7'          7                'F'         15
-!
-!              In order to obtain the entire signed hexadecimal number,
-!              the output character string should be at least N
-!              characters long, where
-!
-!                              # of bits per integer + 3
-!                    N = 1 + ---------------------------- .
-!                                         4
-!
-!              There should be 1 character position for the sign, and
-!              one character position for each hexadecimal digit that
-!              could be produced from any integer which can be
-!              represented by a particular computer system.
-!
-!              The following table contains minimum output string
-!              lengths necessary to obtain the complete hexadecimal
-!              string for various integer sizes.
-!
-!                 Integer size in bits      Minimum output length
-!                 --------------------      ---------------------
-!                 8                         3
-!                 16                        5
-!                 32                        9
-!                 36 (really,it exists)     10
-!                 64                        17
-!                 etc.
-!
-!              The hexadecimal character string produced by this
-!              routine will be left justified and consist of a
-!              contiguous sequence of hexadecimal digits, or in the
-!              case of a negative number, a contiguous sequence of
-!              hexadecimal digits immediately preceded by a minus
-!              sign, '-', e.g.:
-!
-!                 (1)   h h ... h
-!                        1 2     n
-!
-!                 (2)   -h h ... h
-!                         1 2     n
-!
-!              where h  represents an hexadecimal digit.
-!                     i
-!
-!              The character string produced will be blank padded on
-!              the right if LENGTH < LEN( STRING ).
-!
-!     LENGTH   is the length of the hexadecimal character string
-!              produced by the conversion.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  If the output character string is not long enough to
-!         contain the entire hexadecimal string that was produced,
-!         the hexadecimal string will be truncated on the right.
-!
-!     2)  If LEN( STRING ) > LENGTH, the output character string will
-!         be blank padded on the right.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine will convert a signed integer into an equivalent
-!     signed hexadecimal character string. This provides a machine
-!     independent mechanism for storing or porting integer values.
-!     This routine is used by the routine DP2HX which converts a
-!     double precision value into an equivalent character string.
-!
-!     This routine is one of a pair of routines which are used to
-!     perform conversions between integers and equivalent signed
-!     hexadecimal character strings:
-!
-!           INT2HX -- Convert an integer into a signed hexadecimal
-!                     character string.
-!
-!           HX2INT -- Convert a signed hexadecimal character string
-!                     into an integer.
-!
-! $ Examples
-!
-!     All of the values shown are for a two's complement representation
-!     for signed integers.
-!
-!     The following input and output argument values illustrate the
-!     action of INT2HX for various input values of NUMBER.
-!
-!         NUMBER       STRING           LENGTH
-!         -----------  ---------------  ------
-!          1           '1'              1
-!         -1           '-1'             2
-!          223         'DF'             2
-!         -32          '-20'            3
-!          0           '0'              1
-!
-!          2147483647  '7FFFFFFF'       8
-!          (Maximum 32 bit integer)
-!
-!         -2147483647  '-7FFFFFFF'      9
-!          (Minimum 32 bit integer + 1)
-!
-!         -2147483648  '-80000000'      9
-!          (Minimum 32 bit integer)
-!
-! $ Restrictions
-!
-!     1)  The maximum number of characters permitted in the output
-!         string is specified by the local parameter STRLEN.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 22-OCT-1992 (KRG)
-!
-!-&
-
-! $ Index_Entries
-!
-!     convert integer to signed hexadecimal string
-!
-!-&
-
-!
-!     Local Parameters
-!
       integer(ip), parameter :: base = 16
 
       integer(ip), parameter :: maxdig = 16
 
       integer(ip), parameter :: strlen = 255
-!
-!     Local variables
-!
       character(1), parameter :: digits(0:maxdig-1) = &
          [ character(1) :: '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', &
            'C', 'D', 'E', 'F' ]
@@ -2564,9 +2294,6 @@ contains
       integer(ip)           itemp
       integer(ip)           remndr
       integer(ip)           result
-!
-!     Saved variables
-!
 !     Local variables
 !
 
@@ -2666,299 +2393,267 @@ contains
       return
       end procedure int2hx
 
-!$Procedure DP2HX ( D.p. number to hexadecimal string )
-
+      !> ## Detailed Input
+      !>
+      !>     NUMBER   is the double precision number to be converted to a
+      !>              character string representation.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HXSTR    is the character string produced by this routine that
+      !>              represents NUMBER in a base 16 "scientific notation,"
+      !>              e.g.:
+      !>
+      !>                 672.0 = '2A^3' = ( 2/16 + 10/( 16**2 ) ) * 16**3
+      !>
+      !>              and
+      !>
+      !>                 -11.0 = '-B^1' = - ( 11/16 ) * 16**1.
+      !>
+      !>              The following table describes the character set used to
+      !>              represent the hexadecimal digits and their corresponding
+      !>              values.
+      !>
+      !>                 Character    Value         Character    Value
+      !>                 ---------    ------        ---------    ------
+      !>                   '0'         0.0D0          '8'         8.0D0
+      !>                   '1'         1.0D0          '9'         9.0D0
+      !>                   '2'         2.0D0          'A'        10.0D0
+      !>                   '3'         3.0D0          'B'        11.0D0
+      !>                   '4'         4.0D0          'C'        12.0D0
+      !>                   '5'         5.0D0          'D'        13.0D0
+      !>                   '6'         6.0D0          'E'        14.0D0
+      !>                   '7'         7.0D0          'F'        15.0D0
+      !>
+      !>              The caret, or hat, character, '^', is used to
+      !>              distinguish the exponent.
+      !>
+      !>              The plus sign, '+', and the minus sign, '-', are used,
+      !>              and they have their usual meanings.
+      !>
+      !>              In order to obtain the entire character string produced
+      !>              by this routine, the output character string should be
+      !>              at least N characters long, where
+      !>
+      !>                          # of bits per double precision mantissa + 3
+      !>                 N = 3 + ---------------------------------------------
+      !>                                               4
+      !>
+      !>                          # of bits per double precision exponent + 3
+      !>                       + ---------------------------------------------
+      !>                                               4
+      !>
+      !>              There should be one character position for the sign of
+      !>              the mantissa, one for the sign of the exponent, one for
+      !>              the exponentiation character, and one for each
+      !>              hexadecimal digit that could be produced from a mantissa
+      !>              and an exponent.
+      !>
+      !>              The following table contains minimum output string
+      !>              lengths necessary to obtain the complete character
+      !>              string produced by this routine for some typical
+      !>              implementations of double precision numbers.
+      !>
+      !>                 Double precision number
+      !>                 Size Mantissa Exponent   Minimum output string
+      !>                 bits   bits     bits     length
+      !>                 ---- -------- --------   ----------------------
+      !>                 64   48       15         3 + 12 + 4 = 19
+      !>                 64   55+1     8          3 + 14 + 2 = 19 (VAX)
+      !>                 64   52       11         3 + 13 + 3 = 19 (IEEE)
+      !>
+      !>              The base 16 "scientific notation" character string
+      !>              produced by this routine will be left justified and
+      !>              consist of a contiguous sequence of characters with one
+      !>              of the following formats:
+      !>
+      !>                 (1)   h h h h  ... h ^H H  ... H
+      !>                        1 2 3 4      n  1 2      m
+      !>
+      !>                 (2)   -h h h h  ... h ^H H  ... H
+      !>                         1 2 3 4      n  1 2      m
+      !>
+      !>                 (3)   h h h h  ... h ^-H H  ... H
+      !>                        1 2 3 4      n   1 2      m
+      !>
+      !>                 (4)   -h h h h  ... h ^-H H  ... H
+      !>                         1 2 3 4      n   1 2      m
+      !>
+      !>              where
+      !>
+      !>                 h   and  H   denote hexadecimal digits
+      !>                  i        j
+      !>
+      !>                 '^'          denotes exponentiation ( base 16 )
+      !>
+      !>              and
+      !>
+      !>                 '+' and '-'  have their usual interpretations.
+      !>
+      !>              The character string produced will be blank padded on
+      !>              the right if HXSSIZ < LEN( HXSTR ).
+      !>
+      !>     HXSSIZ   is the length of the base 16 "scientific notation"
+      !>              character string produced by this routine.
+      !>
+      !> ## Parameters
+      !>
+      !>     STRLEN   is the maximum number of characters permitted in the
+      !>              output string. The value of STRLEN is 255.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If the output character string is not long enough to
+      !>         contain the entire character string that was produced,
+      !>         the string will be truncated on the right.
+      !>
+      !>     2)  If LEN( HXSTR ) > HXSSIZ, the output character string will
+      !>         be blank padded on the right.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine converts a double precision number into an equivalent
+      !>     character string using a base 16 "scientific notation." This
+      !>     representation allows the full precision of a number to be placed
+      !>     in a format that is suitable for porting or archival storage.
+      !>
+      !>     This routine is one of a pair of routines which are used to
+      !>     perform conversions between double precision numbers and
+      !>     an equivalent base 16 "scientific notation" character string
+      !>     representation:
+      !>
+      !>        DP2HX  -- Convert a double precision number into a base 16
+      !>                  "scientific notation" character string.
+      !>
+      !>        HX2DP  -- Convert a base 16 "scientific notation"
+      !>                  character string into a double precision number.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Convert a set of double precision numbers to their equivalent
+      !>        character string using a base 16 "scientific notation."
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DP2HX_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local constants.
+      !>        C
+      !>              INTEGER               HXSLEN
+      !>              PARAMETER           ( HXSLEN = 40 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(HXSLEN)    STRVAL
+      !>
+      !>              DOUBLE PRECISION      NUMBER (8)
+      !>
+      !>              INTEGER               I
+      !>              INTEGER               SVALLN
+      !>
+      !>        C
+      !>        C     Assign an array of double precision numbers.
+      !>        C
+      !>              DATA                  NUMBER /    2.0D-9,       1.0D0,
+      !>             .                                  -1.0D0,    1024.0D0,
+      !>             .                               -1024.0D0,  521707.0D0,
+      !>             .                                  27.0D0,       0.0D0 /
+      !>
+      !>        C
+      !>        C     Loop over the NUMBER array, call DP2HX for each
+      !>        C     element of NUMBER.
+      !>        C
+      !>              WRITE(*,*) 'number       string             length'
+      !>              WRITE(*,*) '-----------  -----------------  ------'
+      !>
+      !>              DO I= 1, 8
+      !>
+      !>                 CALL DP2HX ( NUMBER(I), STRVAL, SVALLN )
+      !>                 WRITE(*,'(E12.4,2X,A17,2X,I5)') NUMBER(I), STRVAL,
+      !>             .                                              SVALLN
+      !>
+      !>              END DO
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         number       string             length
+      !>         -----------  -----------------  ------
+      !>          0.2000E-08  89705F4136B4A8^-7     17
+      !>          0.1000E+01  1^1                    3
+      !>         -0.1000E+01  -1^1                   4
+      !>          0.1024E+04  4^3                    3
+      !>         -0.1024E+04  -4^3                   4
+      !>          0.5217E+06  7F5EB^5                7
+      !>          0.2700E+02  1B^2                   4
+      !>          0.0000E+00  0^0                    3
+      !>
+      !>        Note: the hat or caret, '^', signals an exponent.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  The maximum number of characters permitted in the output
+      !>         string is specified by the parameter STRLEN.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
+      !>
+      !>        Changed the argument names "STRING" and "LENGTH" to "HXSTR"
+      !>        and "HXSSIZ" for consistency with other routines.
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        The declaration of STRLEN has been promoted to the
+      !>        $Declarations section.
+      !>
+      !>        Edited the header to comply with NAIF standard. Removed
+      !>        unnecessary $Revisions section.
+      !>
+      !>        Added complete example code.
+      !>
+      !>        Updated $Brief_I/O, $Parameters and $Restrictions sections to
+      !>        properly describe STRLEN.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1994 (KRG)
+      !>
+      !>        Fixed a typo in the description of the input argument STRING.
+      !>        The example showing the expansion of 160 into hexadecimal
+      !>        was incorrect. 160 was replaced with 672 which makes the
+      !>        example correct.
+      !>
+      !>-    SPICELIB Version 1.0.0, 26-OCT-1992 (KRG)
       module procedure dp2hx
-!! ## Abstract
-!!
-!!     Convert a double precision number to an equivalent character
-!!     string using a base 16 "scientific notation."
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     ALPHANUMERIC
-!!     CONVERSION
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       implicit none
 
       integer(ip), parameter :: strlen = 255
 
-! $ Detailed_Input
-!
-!     NUMBER   is the double precision number to be converted to a
-!              character string representation.
-!
-! $ Detailed_Output
-!
-!     HXSTR    is the character string produced by this routine that
-!              represents NUMBER in a base 16 "scientific notation,"
-!              e.g.:
-!
-!                 672.0 = '2A^3' = ( 2/16 + 10/( 16**2 ) ) * 16**3
-!
-!              and
-!
-!                 -11.0 = '-B^1' = - ( 11/16 ) * 16**1.
-!
-!              The following table describes the character set used to
-!              represent the hexadecimal digits and their corresponding
-!              values.
-!
-!                 Character    Value         Character    Value
-!                 ---------    ------        ---------    ------
-!                   '0'         0.0D0          '8'         8.0D0
-!                   '1'         1.0D0          '9'         9.0D0
-!                   '2'         2.0D0          'A'        10.0D0
-!                   '3'         3.0D0          'B'        11.0D0
-!                   '4'         4.0D0          'C'        12.0D0
-!                   '5'         5.0D0          'D'        13.0D0
-!                   '6'         6.0D0          'E'        14.0D0
-!                   '7'         7.0D0          'F'        15.0D0
-!
-!              The caret, or hat, character, '^', is used to
-!              distinguish the exponent.
-!
-!              The plus sign, '+', and the minus sign, '-', are used,
-!              and they have their usual meanings.
-!
-!              In order to obtain the entire character string produced
-!              by this routine, the output character string should be
-!              at least N characters long, where
-!
-!                          # of bits per double precision mantissa + 3
-!                 N = 3 + ---------------------------------------------
-!                                               4
-!
-!                          # of bits per double precision exponent + 3
-!                       + ---------------------------------------------
-!                                               4
-!
-!              There should be one character position for the sign of
-!              the mantissa, one for the sign of the exponent, one for
-!              the exponentiation character, and one for each
-!              hexadecimal digit that could be produced from a mantissa
-!              and an exponent.
-!
-!              The following table contains minimum output string
-!              lengths necessary to obtain the complete character
-!              string produced by this routine for some typical
-!              implementations of double precision numbers.
-!
-!                 Double precision number
-!                 Size Mantissa Exponent   Minimum output string
-!                 bits   bits     bits     length
-!                 ---- -------- --------   ----------------------
-!                 64   48       15         3 + 12 + 4 = 19
-!                 64   55+1     8          3 + 14 + 2 = 19 (VAX)
-!                 64   52       11         3 + 13 + 3 = 19 (IEEE)
-!
-!              The base 16 "scientific notation" character string
-!              produced by this routine will be left justified and
-!              consist of a contiguous sequence of characters with one
-!              of the following formats:
-!
-!                 (1)   h h h h  ... h ^H H  ... H
-!                        1 2 3 4      n  1 2      m
-!
-!                 (2)   -h h h h  ... h ^H H  ... H
-!                         1 2 3 4      n  1 2      m
-!
-!                 (3)   h h h h  ... h ^-H H  ... H
-!                        1 2 3 4      n   1 2      m
-!
-!                 (4)   -h h h h  ... h ^-H H  ... H
-!                         1 2 3 4      n   1 2      m
-!
-!              where
-!
-!                 h   and  H   denote hexadecimal digits
-!                  i        j
-!
-!                 '^'          denotes exponentiation ( base 16 )
-!
-!              and
-!
-!                 '+' and '-'  have their usual interpretations.
-!
-!              The character string produced will be blank padded on
-!              the right if HXSSIZ < LEN( HXSTR ).
-!
-!     HXSSIZ   is the length of the base 16 "scientific notation"
-!              character string produced by this routine.
-!
-! $ Parameters
-!
-!     STRLEN   is the maximum number of characters permitted in the
-!              output string. The value of STRLEN is 255.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-!     1)  If the output character string is not long enough to
-!         contain the entire character string that was produced,
-!         the string will be truncated on the right.
-!
-!     2)  If LEN( HXSTR ) > HXSSIZ, the output character string will
-!         be blank padded on the right.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine converts a double precision number into an equivalent
-!     character string using a base 16 "scientific notation." This
-!     representation allows the full precision of a number to be placed
-!     in a format that is suitable for porting or archival storage.
-!
-!     This routine is one of a pair of routines which are used to
-!     perform conversions between double precision numbers and
-!     an equivalent base 16 "scientific notation" character string
-!     representation:
-!
-!        DP2HX  -- Convert a double precision number into a base 16
-!                  "scientific notation" character string.
-!
-!        HX2DP  -- Convert a base 16 "scientific notation"
-!                  character string into a double precision number.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Convert a set of double precision numbers to their equivalent
-!        character string using a base 16 "scientific notation."
-!
-!        Example code begins here.
-!
-!              PROGRAM DP2HX_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local constants.
-!        C
-!              INTEGER               HXSLEN
-!              PARAMETER           ( HXSLEN = 40 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(HXSLEN)    STRVAL
-!
-!              DOUBLE PRECISION      NUMBER (8)
-!
-!              INTEGER               I
-!              INTEGER               SVALLN
-!
-!        C
-!        C     Assign an array of double precision numbers.
-!        C
-!              DATA                  NUMBER /    2.0D-9,       1.0D0,
-!             .                                  -1.0D0,    1024.0D0,
-!             .                               -1024.0D0,  521707.0D0,
-!             .                                  27.0D0,       0.0D0 /
-!
-!        C
-!        C     Loop over the NUMBER array, call DP2HX for each
-!        C     element of NUMBER.
-!        C
-!              WRITE(*,*) 'number       string             length'
-!              WRITE(*,*) '-----------  -----------------  ------'
-!
-!              DO I= 1, 8
-!
-!                 CALL DP2HX ( NUMBER(I), STRVAL, SVALLN )
-!                 WRITE(*,'(E12.4,2X,A17,2X,I5)') NUMBER(I), STRVAL,
-!             .                                              SVALLN
-!
-!              END DO
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         number       string             length
-!         -----------  -----------------  ------
-!          0.2000E-08  89705F4136B4A8^-7     17
-!          0.1000E+01  1^1                    3
-!         -0.1000E+01  -1^1                   4
-!          0.1024E+04  4^3                    3
-!         -0.1024E+04  -4^3                   4
-!          0.5217E+06  7F5EB^5                7
-!          0.2700E+02  1B^2                   4
-!          0.0000E+00  0^0                    3
-!
-!        Note: the hat or caret, '^', signals an exponent.
-!
-! $ Restrictions
-!
-!     1)  The maximum number of characters permitted in the output
-!         string is specified by the parameter STRLEN.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
-!
-!        Changed the argument names "STRING" and "LENGTH" to "HXSTR"
-!        and "HXSSIZ" for consistency with other routines.
-!
-!        Added IMPLICIT NONE statement.
-!
-!        The declaration of STRLEN has been promoted to the
-!        $Declarations section.
-!
-!        Edited the header to comply with NAIF standard. Removed
-!        unnecessary $Revisions section.
-!
-!        Added complete example code.
-!
-!        Updated $Brief_I/O, $Parameters and $Restrictions sections to
-!        properly describe STRLEN.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1994 (KRG)
-!
-!        Fixed a typo in the description of the input argument STRING.
-!        The example showing the expansion of 160 into hexadecimal
-!        was incorrect. 160 was replaced with 672 which makes the
-!        example correct.
-!
-!-    SPICELIB Version 1.0.0, 26-OCT-1992 (KRG)
-!
-!-&
-
-! $ Index_Entries
-!
-!     convert d.p. to signed normalized hexadecimal string
-!     convert d.p. number to encoded d.p. number
-!     convert d.p. to base 16 scientific notation
-!
-!-&
-
-!
-!     Local Parameters
-!
       character(1), parameter :: expchr = '^'
 
       real(wp), parameter :: base = 16.0_wp
@@ -2981,9 +2676,6 @@ contains
 
       integer(ip), parameter :: maxdig = 16
 
-!
-!     Local variables
-!
       character(1), parameter :: digits(0:maxdig-1) = &
          [ character(1) :: '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', &
            'C', 'D', 'E', 'F' ]
@@ -3000,9 +2692,6 @@ contains
 
       logical               negtiv
       logical               postiv
-!
-!     Saved variables
-!
 !     Initial values
 !
 
@@ -3288,230 +2977,198 @@ contains
       return
       end procedure dp2hx
 
-!$Procedure WRENCD ( Write encoded d.p. numbers to text file )
-
+      !> ## Detailed Input
+      !>
+      !>     UNIT     is the Fortran unit number for a previously opened text
+      !>              file. All writing will begin at the CURRENT POSITION
+      !>              in the text file.
+      !>
+      !>     N        is the number of double precision numbers to be encoded
+      !>              and written to the text file attached to UNIT.
+      !>
+      !>     DATA     is the list of double precision numbers to be encoded and
+      !>              written to the text file attached to UNIT.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     See the $Particulars section for a description of the effect of
+      !>     this routine.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If N, the number of data items, is not positive, the error
+      !>         SPICE(INVALIDARGUMENT) is signaled.
+      !>
+      !>     2)  If an error occurs while writing to the text file attached
+      !>         to UNIT, the error SPICE(FILEWRITEFAILED) is signaled.
+      !>
+      !>     3)  If the Fortran logical unit UNIT is not defined, the results
+      !>         of this routine are unpredictable.
+      !>
+      !> ## Files
+      !>
+      !>     See the description of UNIT in the $Detailed_Input section.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine will accept a list of one or more double precision
+      !>     numbers which it will encode into equivalent text strings and
+      !>     write to the current position in a text file. The current
+      !>     position in a file is defined to be the text line immediately
+      !>     following the last text line that was written or read. The
+      !>     encoded d.p. numbers are written to the output text file as
+      !>     quoted character strings so that a Fortran list directed read may
+      !>     be used to read the encoded values, rather than a formatted read
+      !>     with the format specifier FMT = '(A)'.
+      !>
+      !>     This routine is one of a pair of routines which are used to
+      !>     encode and decode d.p. numbers:
+      !>
+      !>           WRENCD -- Encode and write d.p. numbers to a file.
+      !>           RDENCD -- Read and decode d.p. numbers from a file.
+      !>
+      !>     The encoding/decoding of d.p.numbers is performed to provide a
+      !>     portable means for transferring data values.
+      !>
+      !>     Currently the text string produced will be in a base 16
+      !>     ``scientific notation.'' This format retains the full precision
+      !>     available for d.p. numbers on any given computer architecture.
+      !>     See DP2HX.FOR and HX2DP.FOR for details.
+      !>
+      !> ## Examples
+      !>
+      !>     Please note that the output format in the examples is not
+      !>     intended to be exactly identical with the output format of this
+      !>     routine in actual use. The output format used in the examples is
+      !>     intended to aid in the understanding of how this routine works.
+      !>     It is NOT intended to be a specification of the output format for
+      !>     this routine.
+      !>
+      !>     Let
+      !>
+      !>        UNIT     be the Fortran logical unit of a previously opened
+      !>                 text file.
+      !>
+      !>        N        = 100
+      !>
+      !>        DATA(I)  = DBLE(I), I = 1,N
+      !>
+      !>     Then, the subroutine call
+      !>
+      !>           CALL WRENCD( UNIT, N, DATA )
+      !>
+      !>     will write the first 100 integers as encoded d.p. numbers to the
+      !>     output text file attached to UNIT, beginning at the current
+      !>     position in the output file, which is marked by an arrow, '-->'.
+      !>     The resulting output will look something like the following:
+      !>
+      !>        -->'1^1' '2^1' '3^1' '4^1' '5^1' '6^1' '7^1' '8^1' '9^1'
+      !>           'A^1' 'B^1' 'C^1' 'D^1' 'E^1' 'F^1' '1^2' '11^2' '12^2'
+      !>           '13^2' '14^2' '15^2' '16^2' '17^2' '18^2' '19^2' '1A^2'
+      !>           '1B^2' '1C^2' '1D^2' '1E^2' '1F^2' '2^2' '21^2' '22^2'
+      !>           '23^2' '24^2' '25^2' '26^2' '27^2' '28^2' '29^2' '2A^2'
+      !>           '2B^2' '2C^2' '2D^2' '2E^2' '2F^2' '3^2' '31^2' '32^2'
+      !>           '33^2' '34^2' '35^2' '36^2' '37^2' '38^2' '39^2' '3A^2'
+      !>           '3B^2' '3C^2' '3D^2' '3E^2' '3F^2' '4^2'
+      !>           '41^2' '42^2' '43^2' '44^2' '45^2' '46^2' '47^2' '48^2'
+      !>           '49^2' '4A^2' '4B^2' '4C^2' '4D^2' '4E^2' '4F^2' '5^2'
+      !>           '51^2' '52^2' '53^2' '54^2' '55^2' '56^2' '57^2' '58^2'
+      !>           '59^2' '5A^2' '5B^2' '5C^2' '5D^2' '5E^2' '5F^2' '6^2'
+      !>           '61^2' '62^2' '63^2' '64^2'
+      !>        -->
+      !>
+      !>     At this point, the arrow marks the position of the file pointer
+      !>     immediately after the call to WRENCD.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.3.0, 13-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.2.0, 09-SEP-1993 (KRG)
+      !>
+      !>        The list directed write was changed to a formatted write using
+      !>        the specifier FMT='(A)'. This was done in order to prevent a
+      !>        space from appearing as the first character on each line of the
+      !>        file for certain computer platforms.
+      !>
+      !>-    SPICELIB Version 1.1.0, 21-JUN-1993 (KRG)
+      !>
+      !>        This routine was modified to avoid the creation of long output
+      !>        lines on some of the supported systems, such as the NeXT with
+      !>        Absoft Fortran 3.2.
+      !>
+      !>        A disclaimer was added to the $Examples section concerning
+      !>        the output format used. The disclaimer simply states that the
+      !>        output format used in the example is not necessarily the
+      !>        output format actually used by the routine.
+      !>
+      !>-    SPICELIB Version 1.0.0, 20-OCT-1992 (KRG)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 1.2.0, 09-SEP-1993 (KRG)
+      !>
+      !>        The list directed write was changed to a formatted write using
+      !>        the  specifier FMT='(A)'. This was done in order to prevent a
+      !>        space from appearing as the first character on each line of the
+      !>        file for certain computer platforms.
+      !>
+      !>-    SPICELIB Version 1.1.0, 21-JUN-1993 (KRG)
+      !>
+      !>        This routine was modified to avoid the creation of long output
+      !>        lines on some of the supported systems, such as the NeXT with
+      !>        Absoft Fortran 3.2.
+      !>
+      !>        On some of the supported computers this routine would produce
+      !>        very long (greater than 1000 characters) output lines due to
+      !>        the implicit DO loop used in the WRITE statement:
+      !>
+      !>            WRITE (UNIT,IOSTAT=IOSTAT,FMT=*)
+      !>           .   ( QUOTE//WORK(I)(1:LENGTH(I))//QUOTE//' ', I=1,NITMS )
+      !>
+      !>        This problem was fixed by removing the implicit DO loop from
+      !>        the WRITE statement and placing an equivalent DO loop around
+      !>        the WRITE statement:
+      !>
+      !>            DO I = 1, NITMS
+      !>               WRITE (UNIT,IOSTAT=IOSTAT,FMT=*)
+      !>           .       QUOTE//WORK(I)(1:LENGTH(I))//QUOTE
+      !>            END DO
+      !>
+      !>        The net effect of this will be that only a single datum will
+      !>        be written on each line of output.
+      !>
+      !>        A disclaimer was added to the $Examples section concerning
+      !>        the output format used. The disclaimer simply states that the
+      !>        output format used in the example is not necessarily the
+      !>        output format actually used by the routine.
+      !>
+      !>-    SPICELIB Version 1.0.0, 20-OCT-1992 (KRG)
       module procedure wrencd
-!! ## Abstract
-!!
-!!     Encode and write d.p. numbers to a text file.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     NUMBERS
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       implicit none
 
-! $ Detailed_Input
-!
-!     UNIT     is the Fortran unit number for a previously opened text
-!              file. All writing will begin at the CURRENT POSITION
-!              in the text file.
-!
-!     N        is the number of double precision numbers to be encoded
-!              and written to the text file attached to UNIT.
-!
-!     DATA     is the list of double precision numbers to be encoded and
-!              written to the text file attached to UNIT.
-!
-! $ Detailed_Output
-!
-!     See the $Particulars section for a description of the effect of
-!     this routine.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If N, the number of data items, is not positive, the error
-!         SPICE(INVALIDARGUMENT) is signaled.
-!
-!     2)  If an error occurs while writing to the text file attached
-!         to UNIT, the error SPICE(FILEWRITEFAILED) is signaled.
-!
-!     3)  If the Fortran logical unit UNIT is not defined, the results
-!         of this routine are unpredictable.
-!
-! $ Files
-!
-!     See the description of UNIT in the $Detailed_Input section.
-!
-! $ Particulars
-!
-!     This routine will accept a list of one or more double precision
-!     numbers which it will encode into equivalent text strings and
-!     write to the current position in a text file. The current
-!     position in a file is defined to be the text line immediately
-!     following the last text line that was written or read. The
-!     encoded d.p. numbers are written to the output text file as
-!     quoted character strings so that a Fortran list directed read may
-!     be used to read the encoded values, rather than a formatted read
-!     with the format specifier FMT = '(A)'.
-!
-!     This routine is one of a pair of routines which are used to
-!     encode and decode d.p. numbers:
-!
-!           WRENCD -- Encode and write d.p. numbers to a file.
-!           RDENCD -- Read and decode d.p. numbers from a file.
-!
-!     The encoding/decoding of d.p.numbers is performed to provide a
-!     portable means for transferring data values.
-!
-!     Currently the text string produced will be in a base 16
-!     ``scientific notation.'' This format retains the full precision
-!     available for d.p. numbers on any given computer architecture.
-!     See DP2HX.FOR and HX2DP.FOR for details.
-!
-! $ Examples
-!
-!     Please note that the output format in the examples is not
-!     intended to be exactly identical with the output format of this
-!     routine in actual use. The output format used in the examples is
-!     intended to aid in the understanding of how this routine works.
-!     It is NOT intended to be a specification of the output format for
-!     this routine.
-!
-!     Let
-!
-!        UNIT     be the Fortran logical unit of a previously opened
-!                 text file.
-!
-!        N        = 100
-!
-!        DATA(I)  = DBLE(I), I = 1,N
-!
-!     Then, the subroutine call
-!
-!           CALL WRENCD( UNIT, N, DATA )
-!
-!     will write the first 100 integers as encoded d.p. numbers to the
-!     output text file attached to UNIT, beginning at the current
-!     position in the output file, which is marked by an arrow, '-->'.
-!     The resulting output will look something like the following:
-!
-!        -->'1^1' '2^1' '3^1' '4^1' '5^1' '6^1' '7^1' '8^1' '9^1'
-!           'A^1' 'B^1' 'C^1' 'D^1' 'E^1' 'F^1' '1^2' '11^2' '12^2'
-!           '13^2' '14^2' '15^2' '16^2' '17^2' '18^2' '19^2' '1A^2'
-!           '1B^2' '1C^2' '1D^2' '1E^2' '1F^2' '2^2' '21^2' '22^2'
-!           '23^2' '24^2' '25^2' '26^2' '27^2' '28^2' '29^2' '2A^2'
-!           '2B^2' '2C^2' '2D^2' '2E^2' '2F^2' '3^2' '31^2' '32^2'
-!           '33^2' '34^2' '35^2' '36^2' '37^2' '38^2' '39^2' '3A^2'
-!           '3B^2' '3C^2' '3D^2' '3E^2' '3F^2' '4^2'
-!           '41^2' '42^2' '43^2' '44^2' '45^2' '46^2' '47^2' '48^2'
-!           '49^2' '4A^2' '4B^2' '4C^2' '4D^2' '4E^2' '4F^2' '5^2'
-!           '51^2' '52^2' '53^2' '54^2' '55^2' '56^2' '57^2' '58^2'
-!           '59^2' '5A^2' '5B^2' '5C^2' '5D^2' '5E^2' '5F^2' '6^2'
-!           '61^2' '62^2' '63^2' '64^2'
-!        -->
-!
-!     At this point, the arrow marks the position of the file pointer
-!     immediately after the call to WRENCD.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.3.0, 13-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.2.0, 09-SEP-1993 (KRG)
-!
-!        The list directed write was changed to a formatted write using
-!        the specifier FMT='(A)'. This was done in order to prevent a
-!        space from appearing as the first character on each line of the
-!        file for certain computer platforms.
-!
-!-    SPICELIB Version 1.1.0, 21-JUN-1993 (KRG)
-!
-!        This routine was modified to avoid the creation of long output
-!        lines on some of the supported systems, such as the NeXT with
-!        Absoft Fortran 3.2.
-!
-!        A disclaimer was added to the $Examples section concerning
-!        the output format used. The disclaimer simply states that the
-!        output format used in the example is not necessarily the
-!        output format actually used by the routine.
-!
-!-    SPICELIB Version 1.0.0, 20-OCT-1992 (KRG)
-!
-!-&
-
-! $ Index_Entries
-!
-!     encode and write d.p. numbers to a text file
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.2.0, 09-SEP-1993 (KRG)
-!
-!        The list directed write was changed to a formatted write using
-!        the  specifier FMT='(A)'. This was done in order to prevent a
-!        space from appearing as the first character on each line of the
-!        file for certain computer platforms.
-!
-!-    SPICELIB Version 1.1.0, 21-JUN-1993 (KRG)
-!
-!        This routine was modified to avoid the creation of long output
-!        lines on some of the supported systems, such as the NeXT with
-!        Absoft Fortran 3.2.
-!
-!        On some of the supported computers this routine would produce
-!        very long (greater than 1000 characters) output lines due to
-!        the implicit DO loop used in the WRITE statement:
-!
-!            WRITE (UNIT,IOSTAT=IOSTAT,FMT=*)
-!           .   ( QUOTE//WORK(I)(1:LENGTH(I))//QUOTE//' ', I=1,NITMS )
-!
-!        This problem was fixed by removing the implicit DO loop from
-!        the WRITE statement and placing an equivalent DO loop around
-!        the WRITE statement:
-!
-!            DO I = 1, NITMS
-!               WRITE (UNIT,IOSTAT=IOSTAT,FMT=*)
-!           .       QUOTE//WORK(I)(1:LENGTH(I))//QUOTE
-!            END DO
-!
-!        The net effect of this will be that only a single datum will
-!        be written on each line of output.
-!
-!        A disclaimer was added to the $Examples section concerning
-!        the output format used. The disclaimer simply states that the
-!        output format used in the example is not necessarily the
-!        output format actually used by the routine.
-!
-!-    SPICELIB Version 1.0.0, 20-OCT-1992 (KRG)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 !     Local parameters
 !
       character(1), parameter :: quote = ''''
@@ -3519,9 +3176,6 @@ contains
       integer(ip), parameter :: maxenc = 64
 
       integer(ip), parameter :: wrksiz = 64
-!
-!     Local variables
-!
       character(maxenc)     work(wrksiz)
 
       integer(ip)           i
@@ -3610,154 +3264,143 @@ contains
       return
       end procedure wrencd
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Read the contents of the file record of a DAF.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     HANDLE     is the handle associated with the DAF.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     IDWORD     is a character string identifying the architecture
+      !>                and type of a SPICE binary kernel.  In this case
+      !>                it will be a string identifying the type of DAF.
+      !>
+      !>     ND,
+      !>     NI         are the number of double precision and integer
+      !>                components, respectively, in each array summary in
+      !>                the specified file.
+      !>
+      !>     IFNAME     is the internal file name stored in the first
+      !>                (or file) record of the specified file.
+      !>
+      !>     FWARD      is the forward list pointer. This points to the
+      !>                first summary record in the file. (Records between
+      !>                the first record and the first summary record are
+      !>                reserved when the file is created, and are invisible
+      !>                to DAF routines.)
+      !>
+      !>     BWARD      is the backward list pointer. This points
+      !>                to the final summary record in the file.
+      !>
+      !>     FREE       is the free address pointer. This contains the
+      !>                first free address in the file. (That is, the
+      !>                initial address of the next array to be added
+      !>                to the file.)
+      !>
+      !>     FOUND      is TRUE when the file record is found, and is
+      !>                FALSE otherwise.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) SPICE(HANDLENOTFOUND) is signaled if HANDLE can not be
+      !>        found in the set of loaded handles.  The output arguments
+      !>        are unmodified when this error occurs.
+      !>
+      !>     2) Routines in the call tree of this routine may trap and
+      !>        signal errors.  The output arguments are unmodified in
+      !>        these cases.
+      !>
+      !> ## Files
+      !>
+      !>     This routine reads data from the DAF associated with HANDLE.
+      !>     This action may result in connecting a logical unit to the
+      !>     file, if the handle manager has rotated the file out of the
+      !>     unit table.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine reads the publicly available components of
+      !>     file records from native and supported non-native DAFs.
+      !>
+      !>     The size of the character buffer and the number of records
+      !>     read may have to change to support new environments.  As of
+      !>     the original release of this routine, all systems currently
+      !>     supported have a 1 kilobyte record length.
+      !>
+      !> ## Examples
+      !>
+      !>     See DAFRFR for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) Numeric data when read as characters from a file preserves
+      !>        the bit patterns present in the file in memory.
+      !>
+      !>     2) A record of double precision data is at most 1024 characters
+      !>        in length.
+      !>
+      !>     3) Future updates to this module must preserve the fact that
+      !>        FOUND is returned as FALSE whenever an error occurs.  An
+      !>        incompletely translated or extracted file record is NOT
+      !>        FOUND.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.2, 03-OCT-2021 (NJB)
+      !>
+      !>        Corrected typo in comments.
+      !>
+      !>-    SPICELIB Version 1.0.1, 24-JUL-2014 (NJB)
+      !>
+      !>        Corrected typo in Procedure line of header.
+      !>        Re-ordered header sections.
+      !>
+      !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
+      !>
+      !>     SPICELIB Functions
+      !>
+      !>     Local Parameters
+      !>
+      !>     Record Number of the file record in a DAF.
+      !>
+      !>     Length of the IDWORD string.
+      !>
+      !>     Length of the internal filename string.
+      !>
+      !>     Starting location in bytes of the internal filename in the
+      !>     file record.
+      !>
+      !>     Size of an integer in bytes.
+      !>
+      !>     Local Variables
+      !>
+      !>     PEPPER: ZZXLATEI returns an array (also of one element).
+      !>
+      !>     Saved Variables
+      !>
+      !>     Data Statements
+      !>
+      !>     Standard SPICE error handling.
       module procedure zzdafgfr
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Read the contents of the file record of a DAF.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE     is the handle associated with the DAF.
-!!
-!! ## Detailed Output
-!!
-!!     IDWORD     is a character string identifying the architecture
-!!                and type of a SPICE binary kernel.  In this case
-!!                it will be a string identifying the type of DAF.
-!!
-!!     ND,
-!!     NI         are the number of double precision and integer
-!!                components, respectively, in each array summary in
-!!                the specified file.
-!!
-!!     IFNAME     is the internal file name stored in the first
-!!                (or file) record of the specified file.
-!!
-!!     FWARD      is the forward list pointer. This points to the
-!!                first summary record in the file. (Records between
-!!                the first record and the first summary record are
-!!                reserved when the file is created, and are invisible
-!!                to DAF routines.)
-!!
-!!     BWARD      is the backward list pointer. This points
-!!                to the final summary record in the file.
-!!
-!!     FREE       is the free address pointer. This contains the
-!!                first free address in the file. (That is, the
-!!                initial address of the next array to be added
-!!                to the file.)
-!!
-!!     FOUND      is TRUE when the file record is found, and is
-!!                FALSE otherwise.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1) SPICE(HANDLENOTFOUND) is signaled if HANDLE can not be
-!!        found in the set of loaded handles.  The output arguments
-!!        are unmodified when this error occurs.
-!!
-!!     2) Routines in the call tree of this routine may trap and
-!!        signal errors.  The output arguments are unmodified in
-!!        these cases.
-!!
-!! ## Files
-!!
-!!     This routine reads data from the DAF associated with HANDLE.
-!!     This action may result in connecting a logical unit to the
-!!     file, if the handle manager has rotated the file out of the
-!!     unit table.
-!!
-!! ## Particulars
-!!
-!!     This routine reads the publicly available components of
-!!     file records from native and supported non-native DAFs.
-!!
-!!     The size of the character buffer and the number of records
-!!     read may have to change to support new environments.  As of
-!!     the original release of this routine, all systems currently
-!!     supported have a 1 kilobyte record length.
-!!
-!! ## Examples
-!!
-!!     See DAFRFR for sample usage.
-!!
-!! ## Restrictions
-!!
-!!     1) Numeric data when read as characters from a file preserves
-!!        the bit patterns present in the file in memory.
-!!
-!!     2) A record of double precision data is at most 1024 characters
-!!        in length.
-!!
-!!     3) Future updates to this module must preserve the fact that
-!!        FOUND is returned as FALSE whenever an error occurs.  An
-!!        incompletely translated or extracted file record is NOT
-!!        FOUND.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.2, 03-OCT-2021 (NJB)
-!!
-!!        Corrected typo in comments.
-!!
-!!-    SPICELIB Version 1.0.1, 24-JUL-2014 (NJB)
-!!
-!!        Corrected typo in Procedure line of header.
-!!        Re-ordered header sections.
-!!
-!!-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-!!
-!!     SPICELIB Functions
-!!
-!!     Local Parameters
-!!
-!!     Record Number of the file record in a DAF.
-!!
-!!     Length of the IDWORD string.
-!!
-!!     Length of the internal filename string.
-!!
-!!     Starting location in bytes of the internal filename in the
-!!     file record.
-!!
-!!     Size of an integer in bytes.
-!!
-!!     Local Variables
-!!
-!!     PEPPER: ZZXLATEI returns an array (also of one element).
-!!
-!!     Saved Variables
-!!
-!!     Data Statements
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
@@ -3960,139 +3603,123 @@ contains
       end associate
       end procedure zzdafgfr
 
+      !> ## Detailed Input
+      !>
+      !>     LUN        is a logical unit number of a DAF whose first record is
+      !>                to be created with a DAF file record bearing the
+      !>                attributes specified by the other arguments.
+      !>
+      !>     IDWORD     is the 'ID word' contained in the first eight
+      !>                characters of the file record.
+      !>
+      !>     ND,        are the number of double precision and integer
+      !>     NI         components, respectively, in each array summary
+      !>                in the specified file.
+      !>
+      !>     IFNAME     is the internal filename to be stored in the file
+      !>                record for identification purposes.
+      !>
+      !>     FWARD,     are the record numbers of the first and last
+      !>     BWARD      descriptor records in the DAF file, respectively.
+      !>                FWARD is greater than 2 whenever reserved records
+      !>                are present.
+      !>
+      !>     FREE       is the first free address pointer.  This integer
+      !>                stores the first free DAF address for writing the
+      !>                next array to be appended to the file.
+      !>
+      !>     FORMAT     is a character string that indicates what the numeric
+      !>                binary format the DAF is utilizing.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     See include file zzftprms.inc.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) If any errors occur from the WRITE to the logical unit LUN,
+      !>        the error SPICE(DAFWRITEFAIL) is signaled. Before returning
+      !>        to the caller, the file attached to LUN is closed and deleted.
+      !>
+      !> ## Files
+      !>
+      !>     This routine writes to the first record of the DAF whose
+      !>     logical unit is LUN.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine assembles the file record and writes it to the
+      !>     first record in a DAF.  Its purpose is to write new file
+      !>     records only.  For updates, use DAFWFR.
+      !>
+      !>     Make certain the caller checks FAILED() after this returns, since
+      !>     on error it closes and deletes the file.
+      !>
+      !> ## Examples
+      !>
+      !>     None.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) An individual character must occupy 1 byte of space and
+      !>        conform to the ASCII standard.
+      !>
+      !>     2) The word size for the machine should be at least 32 bits,
+      !>        else the computations to null pad the gaps in the file
+      !>        record may overstep record boundaries.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.2, 02-OCT-2021 (NJB)
+      !>
+      !>        Corrected typos in comments. Reordered header sections.
+      !>
+      !>-    SPICELIB Version 1.0.1, 11-DEC-2001 (FST)
+      !>
+      !>        Corrected the omission of IDWORD from the Brief_I/O and
+      !>        Detailed_Input sections of the module header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 02-MAR-1999 (FST)
+      !>
+      !>     SPICELIB Functions
+      !>
+      !>     Local Parameters
+      !>
+      !>     Amount of space measured in characters necessary to
+      !>     null pad between the last character of FORMAT and the
+      !>     first character of FTPSTR to keep FTPSTR at character
+      !>     700 in a 1024 byte record.
+      !>
+      !>     Amount of space measured in characters necessary to
+      !>     null pad from the last character of FTPSTR to the
+      !>     end of the file record. Note: This value assumes the
+      !>     length of the file record is 1024 bytes.  The DAF
+      !>     specification only requires the presence of 1000
+      !>     characters, so this may require modification for
+      !>     non-standard platforms.
+      !>
+      !>     Lengths of internal file name, ID word, and format word.
+      !>
+      !>     Local Variables
+      !>
+      !>     Saved Variables
+      !>
+      !>     Data Statements
+      !>
+      !>     Standard SPICE error handling.
       module procedure zzdafnfr
-!! ## Abstract
-!!
-!!    Write the file record to a new DAF file.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     DAF
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     LUN        is a logical unit number of a DAF whose first record is
-!!                to be created with a DAF file record bearing the
-!!                attributes specified by the other arguments.
-!!
-!!     IDWORD     is the 'ID word' contained in the first eight
-!!                characters of the file record.
-!!
-!!     ND,        are the number of double precision and integer
-!!     NI         components, respectively, in each array summary
-!!                in the specified file.
-!!
-!!     IFNAME     is the internal filename to be stored in the file
-!!                record for identification purposes.
-!!
-!!     FWARD,     are the record numbers of the first and last
-!!     BWARD      descriptor records in the DAF file, respectively.
-!!                FWARD is greater than 2 whenever reserved records
-!!                are present.
-!!
-!!     FREE       is the first free address pointer.  This integer
-!!                stores the first free DAF address for writing the
-!!                next array to be appended to the file.
-!!
-!!     FORMAT     is a character string that indicates what the numeric
-!!                binary format the DAF is utilizing.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     See include file zzftprms.inc.
-!!
-!! ## Exceptions
-!!
-!!     1) If any errors occur from the WRITE to the logical unit LUN,
-!!        the error SPICE(DAFWRITEFAIL) is signaled. Before returning
-!!        to the caller, the file attached to LUN is closed and deleted.
-!!
-!! ## Files
-!!
-!!     This routine writes to the first record of the DAF whose
-!!     logical unit is LUN.
-!!
-!! ## Particulars
-!!
-!!     This routine assembles the file record and writes it to the
-!!     first record in a DAF.  Its purpose is to write new file
-!!     records only.  For updates, use DAFWFR.
-!!
-!!     Make certain the caller checks FAILED() after this returns, since
-!!     on error it closes and deletes the file.
-!!
-!! ## Examples
-!!
-!!     None.
-!!
-!! ## Restrictions
-!!
-!!     1) An individual character must occupy 1 byte of space and
-!!        conform to the ASCII standard.
-!!
-!!     2) The word size for the machine should be at least 32 bits,
-!!        else the computations to null pad the gaps in the file
-!!        record may overstep record boundaries.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.2, 02-OCT-2021 (NJB)
-!!
-!!        Corrected typos in comments. Reordered header sections.
-!!
-!!-    SPICELIB Version 1.0.1, 11-DEC-2001 (FST)
-!!
-!!        Corrected the omission of IDWORD from the Brief_I/O and
-!!        Detailed_Input sections of the module header.
-!!
-!!-    SPICELIB Version 1.0.0, 02-MAR-1999 (FST)
-!!
-!!     SPICELIB Functions
-!!
-!!     Local Parameters
-!!
-!!     Amount of space measured in characters necessary to
-!!     null pad between the last character of FORMAT and the
-!!     first character of FTPSTR to keep FTPSTR at character
-!!     700 in a 1024 byte record.
-!!
-!!     Amount of space measured in characters necessary to
-!!     null pad from the last character of FTPSTR to the
-!!     end of the file record. Note: This value assumes the
-!!     length of the file record is 1024 bytes.  The DAF
-!!     specification only requires the presence of 1000
-!!     characters, so this may require modification for
-!!     non-standard platforms.
-!!
-!!     Lengths of internal file name, ID word, and format word.
-!!
-!!     Local Variables
-!!
-!!     Saved Variables
-!!
-!!     Data Statements
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       use pepper_inc_zzftprms
@@ -4229,111 +3856,100 @@ contains
       end associate
       end procedure zzdafnfr
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Read a data record from a DAF.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     HANDLE     is the handle associated with the DAF.
+      !>
+      !>     RECNO      is the record number of a particular double precision
+      !>                record within the DAF, whose contents are to be read.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     DPREC      contains the contents of the specified record from
+      !>                the DAF associated with HANDLE.
+      !>
+      !>     FOUND      is TRUE when the specified record is found, and is
+      !>                FALSE otherwise.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     This routine reads data from the DAF associated with HANDLE.
+      !>     This action may result in connecting a logical unit to the
+      !>     file, if the handle manager has rotated the file out of the
+      !>     unit table.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) SPICE(HANDLENOTFOUND) is signaled if HANDLE can not be
+      !>        found in the set of loaded handles.
+      !>
+      !>     2) Routines in the call tree of this routine may trap and
+      !>        signal errors.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine reads records of double precision numbers
+      !>     from native and supported non-native DAFs.
+      !>
+      !>     The size of the character buffer and the number of records
+      !>     read may have to change to support new environments.  As of
+      !>     the original release of this routine, all systems currently
+      !>     supported have a 1 kilobyte record length.
+      !>
+      !> ## Examples
+      !>
+      !>     See DAFGDR for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) Numeric data when read as characters from a file preserves
+      !>        the bit patterns present in the file in memory.
+      !>
+      !>     2) A record of double precision data is at most 1024 characters
+      !>        in length.
+      !>
+      !>     3) DPREC has enough space to store 128 double precision numbers.
+      !>
+      !>     4) RECNO points to a record that contains double precision data
+      !>        in the file to which HANDLE refers.
+      !>
+      !>     5) ZZXLATED will translate all possible inputs (garbage or not)
+      !>        coming from the file associated with HANDLE.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
+      !>
+      !>     SPICELIB Functions
+      !>
+      !>     Local Variables
+      !>
+      !>     Saved Variables
+      !>
+      !>     Data Statements
+      !>
+      !>     Standard SPICE error handling.
       module procedure zzdafgdr
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Read a data record from a DAF.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE     is the handle associated with the DAF.
-!!
-!!     RECNO      is the record number of a particular double precision
-!!                record within the DAF, whose contents are to be read.
-!!
-!! ## Detailed Output
-!!
-!!     DPREC      contains the contents of the specified record from
-!!                the DAF associated with HANDLE.
-!!
-!!     FOUND      is TRUE when the specified record is found, and is
-!!                FALSE otherwise.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Files
-!!
-!!     This routine reads data from the DAF associated with HANDLE.
-!!     This action may result in connecting a logical unit to the
-!!     file, if the handle manager has rotated the file out of the
-!!     unit table.
-!!
-!! ## Exceptions
-!!
-!!     1) SPICE(HANDLENOTFOUND) is signaled if HANDLE can not be
-!!        found in the set of loaded handles.
-!!
-!!     2) Routines in the call tree of this routine may trap and
-!!        signal errors.
-!!
-!! ## Particulars
-!!
-!!     This routine reads records of double precision numbers
-!!     from native and supported non-native DAFs.
-!!
-!!     The size of the character buffer and the number of records
-!!     read may have to change to support new environments.  As of
-!!     the original release of this routine, all systems currently
-!!     supported have a 1 kilobyte record length.
-!!
-!! ## Examples
-!!
-!!     See DAFGDR for sample usage.
-!!
-!! ## Restrictions
-!!
-!!     1) Numeric data when read as characters from a file preserves
-!!        the bit patterns present in the file in memory.
-!!
-!!     2) A record of double precision data is at most 1024 characters
-!!        in length.
-!!
-!!     3) DPREC has enough space to store 128 double precision numbers.
-!!
-!!     4) RECNO points to a record that contains double precision data
-!!        in the file to which HANDLE refers.
-!!
-!!     5) ZZXLATED will translate all possible inputs (garbage or not)
-!!        coming from the file associated with HANDLE.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-!!
-!!     SPICELIB Functions
-!!
-!!     Local Variables
-!!
-!!     Saved Variables
-!!
-!!     Data Statements
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
@@ -4492,124 +4108,113 @@ contains
       end associate
       end procedure zzdafgdr
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Read a summary/descriptor record from a DAF.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     HANDLE     is the handle associated with the DAF.
+      !>
+      !>     RECNO      is the record number of a particular summary record
+      !>                within the DAF, whose contents are to be read.
+      !>     ND,
+      !>     NI         are the number of double precision and integer
+      !>                components, respectively, in each array summary
+      !>                in the specified file.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     DPREC      contains the contents of the specified record from
+      !>                the DAF associated with HANDLE, properly translated
+      !>                for use on the native environment.
+      !>
+      !>     FOUND      is TRUE when the specified record is found, and is
+      !>                FALSE otherwise.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1) SPICE(HANDLENOTFOUND) is signaled if HANDLE can not be
+      !>        found in the set of loaded handles.
+      !>
+      !>     2) Routines in the call tree of this routine may trap and
+      !>        signal errors.
+      !>
+      !> ## Files
+      !>
+      !>     This routine reads data from the DAF associated with HANDLE.
+      !>     This action may result in connecting a logical unit to the
+      !>     file, if the handle manager has rotated the file out of the
+      !>     unit table.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine reads summary records of double precision
+      !>     numbers which contain integers packed through an EQUIVALENCE
+      !>     statement from native and supported non-native DAFs.
+      !>
+      !>     The size of the character buffer and the number of records
+      !>     read may have to change to support new environments.  As of
+      !>     the original release of this routine, all systems currently
+      !>     supported have a 1 kilobyte record length.
+      !>
+      !> ## Examples
+      !>
+      !>     See DAFGSR for sample usage.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) Numeric data when read as characters from a file preserves
+      !>        the bit patterns present in the file in memory.
+      !>
+      !>     2) A record of double precision data is at most 1024 characters
+      !>        in length.
+      !>
+      !>     3) DPREC has enough space to store 128 double precision numbers.
+      !>
+      !>     4) Characters a byte-sized, 8 characters constitute a double
+      !>        precision number, and 4 characters an integer.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.1, 02-OCT-2021 (NJB)
+      !>
+      !>        Corrected typo in comments. Reordered header sections.
+      !>
+      !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
+      !>
+      !>     SPICELIB Functions
+      !>
+      !>     Local Parameters
+      !>
+      !>     Length in bytes of double precision numbers and integers.
+      !>
+      !>     Local Variables
+      !>
+      !>     Equivalence DPBUF to INBUF.
+      !>
+      !>     Saved Variables
+      !>
+      !>     Data Statements
+      !>
+      !>     Standard SPICE error handling.
       module procedure zzdafgsr
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Read a summary/descriptor record from a DAF.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE     is the handle associated with the DAF.
-!!
-!!     RECNO      is the record number of a particular summary record
-!!                within the DAF, whose contents are to be read.
-!!     ND,
-!!     NI         are the number of double precision and integer
-!!                components, respectively, in each array summary
-!!                in the specified file.
-!!
-!! ## Detailed Output
-!!
-!!     DPREC      contains the contents of the specified record from
-!!                the DAF associated with HANDLE, properly translated
-!!                for use on the native environment.
-!!
-!!     FOUND      is TRUE when the specified record is found, and is
-!!                FALSE otherwise.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1) SPICE(HANDLENOTFOUND) is signaled if HANDLE can not be
-!!        found in the set of loaded handles.
-!!
-!!     2) Routines in the call tree of this routine may trap and
-!!        signal errors.
-!!
-!! ## Files
-!!
-!!     This routine reads data from the DAF associated with HANDLE.
-!!     This action may result in connecting a logical unit to the
-!!     file, if the handle manager has rotated the file out of the
-!!     unit table.
-!!
-!! ## Particulars
-!!
-!!     This routine reads summary records of double precision
-!!     numbers which contain integers packed through an EQUIVALENCE
-!!     statement from native and supported non-native DAFs.
-!!
-!!     The size of the character buffer and the number of records
-!!     read may have to change to support new environments.  As of
-!!     the original release of this routine, all systems currently
-!!     supported have a 1 kilobyte record length.
-!!
-!! ## Examples
-!!
-!!     See DAFGSR for sample usage.
-!!
-!! ## Restrictions
-!!
-!!     1) Numeric data when read as characters from a file preserves
-!!        the bit patterns present in the file in memory.
-!!
-!!     2) A record of double precision data is at most 1024 characters
-!!        in length.
-!!
-!!     3) DPREC has enough space to store 128 double precision numbers.
-!!
-!!     4) Characters a byte-sized, 8 characters constitute a double
-!!        precision number, and 4 characters an integer.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.1, 02-OCT-2021 (NJB)
-!!
-!!        Corrected typo in comments. Reordered header sections.
-!!
-!!-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-!!
-!!     SPICELIB Functions
-!!
-!!     Local Parameters
-!!
-!!     Length in bytes of double precision numbers and integers.
-!!
-!!     Local Variables
-!!
-!!     Equivalence DPBUF to INBUF.
-!!
-!!     Saved Variables
-!!
-!!     Data Statements
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
@@ -4907,17 +4512,6 @@ contains
 !
 !     Assign handles to DAFs as they are opened.
 !
-! $ Required_Reading
-!
-!     DAF
-!
-! $ Keywords
-!
-!     DAF
-!     FILES
-!
-! $ Declarations
-
 ! $ Detailed_Input
 !
 !     FNAME    on input, is the name of a DAF to be opened, or
@@ -5379,13 +4973,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
 !
-!-&
-
-! $ Index_Entries
-!
-!     assign DAF handles
-!
-!-&
 
 ! $ Revisions
 !
@@ -5585,19 +5172,6 @@ contains
 !        The parameter FTSIZE was increased from 4 to 20. The number
 !        4 was chosen for testing purposes and was not removed.
 !
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Local variables
-!
 
 !
 !     As each file is opened, it is assigned a handle, and the
@@ -5622,419 +5196,382 @@ contains
 !
 
 !
-!     Other local variables
-!
-
-!
-!     Saved variables
-!
-
-!
 !     Save everything between calls.
-!
-
-!
-!     Initial values
 !
 
 !
 !     Standard SPICE error handling.
 
+      !> ## Detailed Input
+      !>
+      !>     FNAME    is the file name of a DAF to be opened for read
+      !>              access.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HANDLE   is the file handle associated with the file. This
+      !>              handle is used to identify the file in subsequent
+      !>              calls to other DAF routines.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the specified file has already been opened for read
+      !>         access, the handle already associated with the file is
+      !>         returned.
+      !>
+      !>     2)  If the specified file has already been opened for write
+      !>         access, an error is signaled by a routine in the call
+      !>         tree of this routine.
+      !>
+      !>     3)  If the specified file has already been opened by a non-DAF
+      !>         routine, an error is signaled by a routine in the call
+      !>         tree of this routine.
+      !>
+      !>     4)  If the specified file cannot be opened without exceeding
+      !>         the maximum number of files, the error SPICE(DAFFTFULL)
+      !>         is signaled.
+      !>
+      !>     5)  If the attempt to read the file's file record fails,
+      !>         the error SPICE(FILEREADFAILED) is signaled.
+      !>
+      !>     6)  If the specified file is not a DAF file, an error is
+      !>         signaled by a routine in the call tree of this routine.
+      !>
+      !>     7)  If no logical units are available, an error is
+      !>         signaled by a routine in the call tree of this routine.
+      !>
+      !>     8)  If the file does not exist, an error is signaled by a routine
+      !>         in the call tree of this routine.
+      !>
+      !>     9)  If an I/O error occurs in the process of opening the file,
+      !>         the error is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !>     10) If the file name is blank or otherwise inappropriate,
+      !>         an error is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !>     11) If the file was transferred improperly via FTP, an error is
+      !>         signaled by a routine in the call tree of this routine.
+      !>
+      !>     12) If the file utilizes a binary file format that is not
+      !>         currently supported on this platform, an error is signaled by
+      !>         a routine in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     See argument FNAME.
+      !>
+      !> ## Particulars
+      !>
+      !>     Most DAFs require only read access. If you do not need to
+      !>     change the contents of a file, you should open it with DAFOPR.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for these examples may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) In the following code fragment, DAFOPR is used to open a file,
+      !>        which is then searched for DAFs containing data for a
+      !>        particular object.
+      !>
+      !>           CALL DAFOPR ( FNAME, HANDLE )
+      !>           CALL DAFBFS ( HANDLE )
+      !>           CALL DAFFNA ( FOUND  )
+      !>
+      !>           DO WHILE ( FOUND )
+      !>              CALL DAFGS ( SUM )
+      !>              CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>
+      !>              IF ( IC(1) .EQ. TARGET_OBJECT ) THEN
+      !>               .
+      !>               .
+      !>
+      !>              END IF
+      !>
+      !>              CALL DAFFNA ( FOUND )
+      !>           END DO
+      !>
+      !>     2) Use a simple routine to output the double precision and integer
+      !>        values stored in an SPK's segments descriptors. This function
+      !>        opens a DAF for read, performs a forwards search for the DAF
+      !>        arrays, prints segments description for each array found, then
+      !>        closes the DAF.
+      !>
+      !>        Use the SPK kernel below as input DAF file for the program.
+      !>
+      !>           de421.bsp
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFOPR_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Define the summary parameters appropriate
+      !>        C     for an SPK file.
+      !>        C
+      !>              INTEGER               MAXSUM
+      !>              PARAMETER           ( MAXSUM = 125 )
+      !>
+      !>              INTEGER               ND
+      !>              PARAMETER           ( ND = 2 )
+      !>
+      !>              INTEGER               NI
+      !>              PARAMETER           ( NI = 6 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(32)        KERNEL
+      !>
+      !>              DOUBLE PRECISION      DC     ( ND     )
+      !>              DOUBLE PRECISION      SUM    ( MAXSUM )
+      !>
+      !>              INTEGER               HANDLE
+      !>              INTEGER               IC     ( NI     )
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Open a DAF for read. Return a HANDLE referring to the
+      !>        C     file.
+      !>        C
+      !>              KERNEL = 'de421.bsp'
+      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a forward search on the file.
+      !>        C
+      !>              CALL DAFBFS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Search until a DAF array is found.
+      !>        C
+      !>              CALL DAFFNA ( FOUND )
+      !>
+      !>        C
+      !>        C     Loop while the search finds subsequent DAF arrays.
+      !>        C
+      !>              DO WHILE ( FOUND )
+      !>
+      !>                 CALL DAFGS ( SUM )
+      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>
+      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>
+      !>        C
+      !>        C        Check for another segment.
+      !>        C
+      !>                 CALL DAFFNA ( FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Safely close the DAF.
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        1        0        1        2      641   310404
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        2        0        1        2   310405   423048
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        3        0        1        2   423049   567372
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        4        0        1        2   567373   628976
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        5        0        1        2   628977   674740
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        6        0        1        2   674741   715224
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        7        0        1        2   715225   750428
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        8        0        1        2   750429   785632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        9        0        1        2   785633   820836
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:       10        0        1        2   820837   944040
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      301        3        1        2   944041  1521324
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      399        3        1        2  1521325  2098608
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      199        1        1        2  2098609  2098620
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      299        2        1        2  2098621  2098632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      499        4        1        2  2098633  2098644
+      !>
+      !>        Note, the final entries in the integer array contain the
+      !>        segment start/end indexes. The output indicates the search
+      !>        proceeded from the start of the file (low value index) towards
+      !>        the end (high value index).
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Files opened using this routine must be closed with DAFCLS.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     J.M. Lynch         (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 8.1.2, 25-NOV-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Updated code example with IMPLICIT NONE, and declarations of
+      !>        SUM variable and MAXSUM parameter.
+      !>
+      !>        Corrected minor typos in header.
+      !>
+      !>-    SPICELIB Version 8.1.1, 10-OCT-2012 (EDW)
+      !>
+      !>        Added a functional code example to the $Examples section.
+      !>
+      !>        Removed the unneeded $Revisions section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>        Corrected ordering of header section.
+      !>
+      !>-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
+      !>
+      !>        This routine was updated to accommodate changes to the
+      !>        handle manager interface. See DAFAH's Revision section
+      !>        for details.
+      !>
+      !>-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
+      !>
+      !>        This routine was updated to utilize the new handle manager
+      !>        software to manage binary file formats and consolidated
+      !>        I/O code.
+      !>
+      !>-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 5.0.0, 03-MAR-1999 (FST)
+      !>
+      !>        This entry point now attempts to locate and validate the
+      !>        FTP validation string contained in the file record.
+      !>
+      !>        See the $Revisions section under DAFAH for a discussion
+      !>        of the impact of the changes made for this version.
+      !>
+      !>-    SPICELIB Version 4.0.0, 27-SEP-1993 (KRG)
+      !>
+      !>        This routine was modified to use a subroutine to obtain the
+      !>        architecture of the file rather than using hard coded values
+      !>        for comparison with the file ID word. This was done in order to
+      !>        isolate the code which checks to determine a file architecture
+      !>        and to make the identification of file types easier through a
+      !>        change to the file ID word.
+      !>
+      !>        In particular, the changes to this routine support the change
+      !>        of the file ID word from 'NAIF/DAF' or 'NAIF/NIP' to 'DAF/xxxx'
+      !>        where 'xxxx' represents a four character mnemonic code for the
+      !>        type of data in the file.
+      !>
+      !>        Removed the error SPICE(DAFNOIDWORD) as it was no longer
+      !>        relevant.
+      !>
+      !>        Added the error SPICE(NOTADAFFILE) if this routine is called
+      !>        with a file that does not contain an ID word identifying the
+      !>        file as a DAF file.
+      !>
+      !>        Changed the long error message when the error
+      !>        SPICE(NOTADAFFILE) is signaled to suggest that a common error
+      !>        is attempting to load a text version of the desired file rather
+      !>        than the binary version.
+      !>
+      !>-    SPICELIB Version 3.0.0, 25-FEB-1993 (JML)
+      !>
+      !>        The INQUIRE statement that checks if the file is already open
+      !>        now also checks that the file exists.
+      !>
+      !>        A new variable LUN is used for the logical unit number
+      !>        returned by GETLUN.
+      !>
+      !>        The IF-THEN statements were reorganized to improve readability.
+      !>
+      !>        A long error message is now set when the DAF id word is not
+      !>        recognized. Also, the file is closed when this error is
+      !>        signaled.
+      !>
+      !>        IOSTAT is checked after the file record is read.
+      !>
+      !>        The file name is checked to see if it is blank.
+      !>
+      !>        The file name string that is passed to the FORTRAN OPEN and
+      !>        INQUIRE statements has been chopped at the last non-blank
+      !>        character.
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 03-SEP-1991 (NJB) (WLT)
+      !>
+      !>        This routine was updated so that it now keeps current the set
+      !>        of DAF handles returned by DAFHOF.
+      !>
+      !>        Some error messages were changed so that they specify
+      !>        names of relevant DAFs.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafopr
-!! ## Abstract
-!!
-!!     Open a DAF for subsequent read requests.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     DAF
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         FNAME
-!!     INTEGER               HANDLE
-!!
-!! ## Detailed Input
-!!
-!!     FNAME    is the file name of a DAF to be opened for read
-!!              access.
-!!
-!! ## Detailed Output
-!!
-!!     HANDLE   is the file handle associated with the file. This
-!!              handle is used to identify the file in subsequent
-!!              calls to other DAF routines.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the specified file has already been opened for read
-!!         access, the handle already associated with the file is
-!!         returned.
-!!
-!!     2)  If the specified file has already been opened for write
-!!         access, an error is signaled by a routine in the call
-!!         tree of this routine.
-!!
-!!     3)  If the specified file has already been opened by a non-DAF
-!!         routine, an error is signaled by a routine in the call
-!!         tree of this routine.
-!!
-!!     4)  If the specified file cannot be opened without exceeding
-!!         the maximum number of files, the error SPICE(DAFFTFULL)
-!!         is signaled.
-!!
-!!     5)  If the attempt to read the file's file record fails,
-!!         the error SPICE(FILEREADFAILED) is signaled.
-!!
-!!     6)  If the specified file is not a DAF file, an error is
-!!         signaled by a routine in the call tree of this routine.
-!!
-!!     7)  If no logical units are available, an error is
-!!         signaled by a routine in the call tree of this routine.
-!!
-!!     8)  If the file does not exist, an error is signaled by a routine
-!!         in the call tree of this routine.
-!!
-!!     9)  If an I/O error occurs in the process of opening the file,
-!!         the error is signaled by a routine in the call tree of this
-!!         routine.
-!!
-!!     10) If the file name is blank or otherwise inappropriate,
-!!         an error is signaled by a routine in the call tree of this
-!!         routine.
-!!
-!!     11) If the file was transferred improperly via FTP, an error is
-!!         signaled by a routine in the call tree of this routine.
-!!
-!!     12) If the file utilizes a binary file format that is not
-!!         currently supported on this platform, an error is signaled by
-!!         a routine in the call tree of this routine.
-!!
-!! ## Files
-!!
-!!     See argument FNAME.
-!!
-!! ## Particulars
-!!
-!!     Most DAFs require only read access. If you do not need to
-!!     change the contents of a file, you should open it with DAFOPR.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for these examples may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) In the following code fragment, DAFOPR is used to open a file,
-!!        which is then searched for DAFs containing data for a
-!!        particular object.
-!!
-!!           CALL DAFOPR ( FNAME, HANDLE )
-!!           CALL DAFBFS ( HANDLE )
-!!           CALL DAFFNA ( FOUND  )
-!!
-!!           DO WHILE ( FOUND )
-!!              CALL DAFGS ( SUM )
-!!              CALL DAFUS ( SUM, ND, NI, DC, IC )
-!!
-!!              IF ( IC(1) .EQ. TARGET_OBJECT ) THEN
-!!               .
-!!               .
-!!
-!!              END IF
-!!
-!!              CALL DAFFNA ( FOUND )
-!!           END DO
-!!
-!!     2) Use a simple routine to output the double precision and integer
-!!        values stored in an SPK's segments descriptors. This function
-!!        opens a DAF for read, performs a forwards search for the DAF
-!!        arrays, prints segments description for each array found, then
-!!        closes the DAF.
-!!
-!!        Use the SPK kernel below as input DAF file for the program.
-!!
-!!           de421.bsp
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DAFOPR_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Define the summary parameters appropriate
-!!        C     for an SPK file.
-!!        C
-!!              INTEGER               MAXSUM
-!!              PARAMETER           ( MAXSUM = 125 )
-!!
-!!              INTEGER               ND
-!!              PARAMETER           ( ND = 2 )
-!!
-!!              INTEGER               NI
-!!              PARAMETER           ( NI = 6 )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(32)        KERNEL
-!!
-!!              DOUBLE PRECISION      DC     ( ND     )
-!!              DOUBLE PRECISION      SUM    ( MAXSUM )
-!!
-!!              INTEGER               HANDLE
-!!              INTEGER               IC     ( NI     )
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Open a DAF for read. Return a HANDLE referring to the
-!!        C     file.
-!!        C
-!!              KERNEL = 'de421.bsp'
-!!              CALL DAFOPR ( KERNEL, HANDLE )
-!!
-!!        C
-!!        C     Begin a forward search on the file.
-!!        C
-!!              CALL DAFBFS ( HANDLE )
-!!
-!!        C
-!!        C     Search until a DAF array is found.
-!!        C
-!!              CALL DAFFNA ( FOUND )
-!!
-!!        C
-!!        C     Loop while the search finds subsequent DAF arrays.
-!!        C
-!!              DO WHILE ( FOUND )
-!!
-!!                 CALL DAFGS ( SUM )
-!!                 CALL DAFUS ( SUM, ND, NI, DC, IC )
-!!
-!!                 WRITE(*,*)                'Doubles:', DC(1:ND)
-!!                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
-!!
-!!        C
-!!        C        Check for another segment.
-!!        C
-!!                 CALL DAFFNA ( FOUND )
-!!
-!!              END DO
-!!
-!!        C
-!!        C     Safely close the DAF.
-!!        C
-!!              CALL DAFCLS ( HANDLE )
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        1        0        1        2      641   310404
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        2        0        1        2   310405   423048
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        3        0        1        2   423049   567372
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        4        0        1        2   567373   628976
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        5        0        1        2   628977   674740
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        6        0        1        2   674741   715224
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        7        0        1        2   715225   750428
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        8        0        1        2   750429   785632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        9        0        1        2   785633   820836
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:       10        0        1        2   820837   944040
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      301        3        1        2   944041  1521324
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      399        3        1        2  1521325  2098608
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      199        1        1        2  2098609  2098620
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      299        2        1        2  2098621  2098632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      499        4        1        2  2098633  2098644
-!!
-!!        Note, the final entries in the integer array contain the
-!!        segment start/end indexes. The output indicates the search
-!!        proceeded from the start of the file (low value index) towards
-!!        the end (high value index).
-!!
-!! ## Restrictions
-!!
-!!     1)  Files opened using this routine must be closed with DAFCLS.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     J.M. Lynch         (JPL)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 8.1.2, 25-NOV-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Updated code example with IMPLICIT NONE, and declarations of
-!!        SUM variable and MAXSUM parameter.
-!!
-!!        Corrected minor typos in header.
-!!
-!!-    SPICELIB Version 8.1.1, 10-OCT-2012 (EDW)
-!!
-!!        Added a functional code example to the $Examples section.
-!!
-!!        Removed the unneeded $Revisions section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!        Corrected ordering of header section.
-!!
-!!-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
-!!
-!!        This routine was updated to accommodate changes to the
-!!        handle manager interface. See DAFAH's Revision section
-!!        for details.
-!!
-!!-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
-!!
-!!        This routine was updated to utilize the new handle manager
-!!        software to manage binary file formats and consolidated
-!!        I/O code.
-!!
-!!-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are WIN-NT
-!!
-!!-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
-!!
-!!        CSPICE environments were added. Some typos were corrected.
-!!
-!!-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!!
-!!-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. Previously,
-!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!!        by the environment label SUN.
-!!
-!!-    SPICELIB Version 5.0.0, 03-MAR-1999 (FST)
-!!
-!!        This entry point now attempts to locate and validate the
-!!        FTP validation string contained in the file record.
-!!
-!!        See the $Revisions section under DAFAH for a discussion
-!!        of the impact of the changes made for this version.
-!!
-!!-    SPICELIB Version 4.0.0, 27-SEP-1993 (KRG)
-!!
-!!        This routine was modified to use a subroutine to obtain the
-!!        architecture of the file rather than using hard coded values
-!!        for comparison with the file ID word. This was done in order to
-!!        isolate the code which checks to determine a file architecture
-!!        and to make the identification of file types easier through a
-!!        change to the file ID word.
-!!
-!!        In particular, the changes to this routine support the change
-!!        of the file ID word from 'NAIF/DAF' or 'NAIF/NIP' to 'DAF/xxxx'
-!!        where 'xxxx' represents a four character mnemonic code for the
-!!        type of data in the file.
-!!
-!!        Removed the error SPICE(DAFNOIDWORD) as it was no longer
-!!        relevant.
-!!
-!!        Added the error SPICE(NOTADAFFILE) if this routine is called
-!!        with a file that does not contain an ID word identifying the
-!!        file as a DAF file.
-!!
-!!        Changed the long error message when the error
-!!        SPICE(NOTADAFFILE) is signaled to suggest that a common error
-!!        is attempting to load a text version of the desired file rather
-!!        than the binary version.
-!!
-!!-    SPICELIB Version 3.0.0, 25-FEB-1993 (JML)
-!!
-!!        The INQUIRE statement that checks if the file is already open
-!!        now also checks that the file exists.
-!!
-!!        A new variable LUN is used for the logical unit number
-!!        returned by GETLUN.
-!!
-!!        The IF-THEN statements were reorganized to improve readability.
-!!
-!!        A long error message is now set when the DAF id word is not
-!!        recognized. Also, the file is closed when this error is
-!!        signaled.
-!!
-!!        IOSTAT is checked after the file record is read.
-!!
-!!        The file name is checked to see if it is blank.
-!!
-!!        The file name string that is passed to the FORTRAN OPEN and
-!!        INQUIRE statements has been chopped at the last non-blank
-!!        character.
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 03-SEP-1991 (NJB) (WLT)
-!!
-!!        This routine was updated so that it now keeps current the set
-!!        of DAF handles returned by DAFHOF.
-!!
-!!        Some error messages were changed so that they specify
-!!        names of relevant DAFs.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     open DAF for read
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -6137,406 +5674,382 @@ contains
 !
       call ft%add ( daf_file ( handle = handle, links = 1, nd = fnd, ni = fni ) )
 
-
       return
       end associate
       end procedure dafopr
 
+      !> ## Detailed Input
+      !>
+      !>     FNAME    is the name of a DAF to be opened with write access.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HANDLE   is the file handle associated with the file. This handle
+      !>              is used to identify the file in subsequent calls to other
+      !>              DAF routines.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the specified file has already been opened, either by the
+      !>         DAF routines or by other code, an error is signaled by a
+      !>         routine in the call tree of this routine. Note that this
+      !>         response is not paralleled by DAFOPR, which allows you to open
+      !>         a DAF for reading even if it is already open for reading.
+      !>
+      !>     2)  If the specified file cannot be opened without exceeding the
+      !>         maximum number of files, the error SPICE(DAFFTFULL) is
+      !>         signaled.
+      !>
+      !>     3)  If the attempt to read the file's file record fails, the error
+      !>         SPICE(FILEREADFAILED) is signaled.
+      !>
+      !>     4)  If the specified file is not a DAF file, an error is signaled
+      !>         by a routine in the call tree of this routine.
+      !>
+      !>     5)  If no logical units are available, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     6)  If the file does not exist, an error is signaled by a routine
+      !>         in the call tree of this routine.
+      !>
+      !>     7)  If an I/O error occurs in the process of opening the file, the
+      !>         error is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !>     8)  If the file name is blank or otherwise inappropriate, an error
+      !>         is signaled by a routine in the call tree of this routine.
+      !>
+      !>     9)  If the file was transferred improperly via FTP, an error is
+      !>         signaled by a routine in the call tree of this routine.
+      !>
+      !>     10) If the file utilizes a non-native binary file format, an error
+      !>         is signaled by a routine in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     See argument FNAME.
+      !>
+      !> ## Particulars
+      !>
+      !>     Most DAFs require only read access. If you do not need to
+      !>     change the contents of a file, you should open it with DAFOPR.
+      !>     Use DAFOPW when you need to
+      !>
+      !>        -- change (update) one or more summaries, names, or
+      !>           arrays within a file; or
+      !>
+      !>        -- add new arrays to a file.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Delete the entire comment area of a DAF file. Note that this
+      !>        action should only be performed if fresh new comments are to
+      !>        be placed within the DAF file.
+      !>
+      !>        Use the SPK kernel below as input DAF file for the program.
+      !>
+      !>           earthstns_itrf93_201023.bsp
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFOPW_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     SPICELIB functions
+      !>        C
+      !>              INTEGER               RTRIM
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              CHARACTER*(*)         KERNEL
+      !>              PARAMETER           ( KERNEL =
+      !>             .                         'earthstns_itrf93_201023.bsp' )
+      !>
+      !>              INTEGER               BUFFSZ
+      !>              PARAMETER           ( BUFFSZ = 10 )
+      !>
+      !>              INTEGER               LINLEN
+      !>              PARAMETER           ( LINLEN = 1000 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(LINLEN)    BUFFER ( BUFFSZ )
+      !>
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               N
+      !>
+      !>              LOGICAL               DONE
+      !>
+      !>        C
+      !>        C     Open a DAF for write. Return a HANDLE referring to the
+      !>        C     file.
+      !>        C
+      !>              CALL DAFOPW ( KERNEL, HANDLE )
+      !>
+      !>        C
+      !>        C     Print the first 10 lines of comments from the DAF file.
+      !>        C
+      !>              WRITE(*,'(A)') 'Comment area of input DAF file '
+      !>             .            // '(max. 10 lines): '
+      !>              WRITE(*,'(A)') '---------------------------------------'
+      !>             .            // '-----------------------'
+      !>
+      !>              CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
+      !>
+      !>              DO I = 1, N
+      !>
+      !>                 WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
+      !>
+      !>              END DO
+      !>
+      !>              WRITE(*,'(A)') '---------------------------------------'
+      !>             .            // '-----------------------'
+      !>              WRITE(*,*) ' '
+      !>              WRITE(*,*) 'Deleting entire comment area...'
+      !>
+      !>        C
+      !>        C     Delete all the comments from the DAF file.
+      !>        C
+      !>              CALL DAFDC ( HANDLE )
+      !>
+      !>        C
+      !>        C     Close the DAF file and re-open it for read
+      !>        C     access to work around the DAFEC restriction
+      !>        C     on comments not to be modified while they are
+      !>        C     being extracted.
+      !>        C
+      !>              CALL DAFCLS( HANDLE  )
+      !>
+      !>              CALL DAFOPR( KERNEL, HANDLE  )
+      !>
+      !>        C
+      !>        C     Check if the comments have indeed been deleted.
+      !>        C
+      !>              CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
+      !>
+      !>              IF ( DONE .AND. N .EQ. 0 ) THEN
+      !>
+      !>                 WRITE(*,*) ' '
+      !>                 WRITE(*,*) '   Successful operation.'
+      !>
+      !>              ELSE
+      !>
+      !>                 WRITE(*,*) ' '
+      !>                 WRITE(*,*) '   Operation failed.'
+      !>
+      !>              END IF
+      !>
+      !>        C
+      !>        C     Safely close the DAF.
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>        Comment area of input DAF file (max. 10 lines):
+      !>        --------------------------------------------------------------
+      !>
+      !>            SPK for DSN Station Locations
+      !>            ========================================================***
+      !>
+      !>            Original file name:                   earthstns_itrf93_2***
+      !>            Creation date:                        2020 October 28 12:30
+      !>            Created by:                           Nat Bachman  (NAIF***
+      !>
+      !>            Introduction
+      !>        --------------------------------------------------------------
+      !>
+      !>         Deleting entire comment area...
+      !>
+      !>            Successful operation.
+      !>
+      !>        Warning: incomplete output. 3 lines extended past the right
+      !>        margin of the header and have been truncated. These lines are
+      !>        marked by "***" at the end of each line.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Only files of the native binary file format may be opened
+      !>         with this routine.
+      !>
+      !>     2)  Files opened using this routine must be closed with DAFCLS.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     J.M. Lynch         (JPL)
+      !>     J.E. McLean        (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 8.1.2, 25-NOV-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard. Added complete
+      !>        code example. Updated $Index_Entries.
+      !>
+      !>-    SPICELIB Version 8.1.1, 10-OCT-2012 (EDW)
+      !>
+      !>        Corrected ordering of header section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
+      !>
+      !>        This routine was updated to accommodate changes to the
+      !>        handle manager interface. See DAFAH's Revision section
+      !>        for details.
+      !>
+      !>-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
+      !>
+      !>        This routine was updated to utilize the new handle manager
+      !>        software to manage binary file formats and consolidated
+      !>        I/O code.
+      !>
+      !>-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 6.0.0, 03-MAR-1999 (FST)
+      !>
+      !>        This entry point now attempts to locate and validate the
+      !>        FTP validation string contained in the file record.
+      !>
+      !>-    SPICELIB Version 5.0.0, 27-SEP-1993 (KRG)
+      !>
+      !>        This routine was modified to use a subroutine to obtain the
+      !>        architecture of the file rather than using hard coded values
+      !>        for comparing to the file ID word. This was done in order to
+      !>        isolate the code which checks to determine a file architecture,
+      !>        and to make the identification of file types easier through a
+      !>        change to the file ID word.
+      !>
+      !>        In particular, the changes to this routine support the change
+      !>        of the file ID word from 'NAIF/DAF' or 'NAIF/NIP' to 'DAF/xxxx'
+      !>        where 'xxxx' represents a four character mnemonic code for the
+      !>        type of data in the file.
+      !>
+      !>        Removed the error SPICE(DAFNOIDWORD) as it was no longer
+      !>        relevant.
+      !>
+      !>        Added the error SPICE(NOTADAFFILE) if this routine is called
+      !>        with a file that does not contain an ID word identifying the
+      !>        file as a DAF file.
+      !>
+      !>        Changed the long error message when the error
+      !>        SPICE(NOTADAFFILE) is signaled to suggest that a common error
+      !>        is attempting to load a text version of the desired file rather
+      !>        than the binary version.
+      !>
+      !>-    SPICELIB Version 4.0.0, 25-FEB-1993 (JML)
+      !>
+      !>        The INQUIRE statement that checks if the file is already open
+      !>        now also checks that the file exists.
+      !>
+      !>        A new variable LUN is used for the logical unit number
+      !>        returned by GETLUN.
+      !>
+      !>        The IF-THEN statements were reorganized to improve readability.
+      !>
+      !>        A long error message is now set when the DAF id word is not
+      !>        recognized. Also, the file is closed when this error is
+      !>        signaled.
+      !>
+      !>        IOSTAT is now checked after the file record is read.
+      !>
+      !>        The file name is checked to see if it is blank.
+      !>
+      !>        The file name string that is passed to the FORTRAN OPEN and
+      !>        INQUIRE statements has been chopped at the last non-blank
+      !>        character.
+      !>
+      !>-    SPICELIB Version 3.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 3.0.0, 03-SEP-1991 (NJB) (WLT)
+      !>
+      !>        DAFOPW now allows multiple files to be open for writing.
+      !>
+      !>        This routine was updated so that it now keeps current the set
+      !>        of DAF handles returned by DAFHOF.
+      !>
+      !>-    SPICELIB Version 2.0.0, 24-JAN-1991 (JEM)
+      !>
+      !>        DAFOPW now accepts the ID word 'NAIF/NIP' as well 'NAIF/DAF'.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 6.0.0, 03-MAR-1999 (FST)
+      !>
+      !>        See the $Revisions section under DAFAH for a discussion
+      !>        of the impact of the changes made for this version.
+      !>
+      !>-    SPICELIB Version 2.0.0, 24-JAN-1991 (NJB) (WLT)
+      !>
+      !>        DAFOPW now allows multiple files to be open for writing.
+      !>
+      !>        This routine was updated so that it now keeps current the set
+      !>        of DAF handles returned by DAFHOF.
+      !>
+      !>        Some error messages were changed so that they specify
+      !>        names of relevant DAFs.
+      !>
+      !>     Standard SPICE error handling.
       module procedure dafopw
-!! ## Abstract
-!!
-!!     Open a DAF for subsequent write requests.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     DAF
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         FNAME
-!!     INTEGER               HANDLE
-!!
-!! ## Detailed Input
-!!
-!!     FNAME    is the name of a DAF to be opened with write access.
-!!
-!! ## Detailed Output
-!!
-!!     HANDLE   is the file handle associated with the file. This handle
-!!              is used to identify the file in subsequent calls to other
-!!              DAF routines.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the specified file has already been opened, either by the
-!!         DAF routines or by other code, an error is signaled by a
-!!         routine in the call tree of this routine. Note that this
-!!         response is not paralleled by DAFOPR, which allows you to open
-!!         a DAF for reading even if it is already open for reading.
-!!
-!!     2)  If the specified file cannot be opened without exceeding the
-!!         maximum number of files, the error SPICE(DAFFTFULL) is
-!!         signaled.
-!!
-!!     3)  If the attempt to read the file's file record fails, the error
-!!         SPICE(FILEREADFAILED) is signaled.
-!!
-!!     4)  If the specified file is not a DAF file, an error is signaled
-!!         by a routine in the call tree of this routine.
-!!
-!!     5)  If no logical units are available, an error is signaled by a
-!!         routine in the call tree of this routine.
-!!
-!!     6)  If the file does not exist, an error is signaled by a routine
-!!         in the call tree of this routine.
-!!
-!!     7)  If an I/O error occurs in the process of opening the file, the
-!!         error is signaled by a routine in the call tree of this
-!!         routine.
-!!
-!!     8)  If the file name is blank or otherwise inappropriate, an error
-!!         is signaled by a routine in the call tree of this routine.
-!!
-!!     9)  If the file was transferred improperly via FTP, an error is
-!!         signaled by a routine in the call tree of this routine.
-!!
-!!     10) If the file utilizes a non-native binary file format, an error
-!!         is signaled by a routine in the call tree of this routine.
-!!
-!! ## Files
-!!
-!!     See argument FNAME.
-!!
-!! ## Particulars
-!!
-!!     Most DAFs require only read access. If you do not need to
-!!     change the contents of a file, you should open it with DAFOPR.
-!!     Use DAFOPW when you need to
-!!
-!!        -- change (update) one or more summaries, names, or
-!!           arrays within a file; or
-!!
-!!        -- add new arrays to a file.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Delete the entire comment area of a DAF file. Note that this
-!!        action should only be performed if fresh new comments are to
-!!        be placed within the DAF file.
-!!
-!!        Use the SPK kernel below as input DAF file for the program.
-!!
-!!           earthstns_itrf93_201023.bsp
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DAFOPW_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     SPICELIB functions
-!!        C
-!!              INTEGER               RTRIM
-!!
-!!        C
-!!        C     Local parameters
-!!        C
-!!              CHARACTER*(*)         KERNEL
-!!              PARAMETER           ( KERNEL =
-!!             .                         'earthstns_itrf93_201023.bsp' )
-!!
-!!              INTEGER               BUFFSZ
-!!              PARAMETER           ( BUFFSZ = 10 )
-!!
-!!              INTEGER               LINLEN
-!!              PARAMETER           ( LINLEN = 1000 )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(LINLEN)    BUFFER ( BUFFSZ )
-!!
-!!              INTEGER               HANDLE
-!!              INTEGER               I
-!!              INTEGER               N
-!!
-!!              LOGICAL               DONE
-!!
-!!        C
-!!        C     Open a DAF for write. Return a HANDLE referring to the
-!!        C     file.
-!!        C
-!!              CALL DAFOPW ( KERNEL, HANDLE )
-!!
-!!        C
-!!        C     Print the first 10 lines of comments from the DAF file.
-!!        C
-!!              WRITE(*,'(A)') 'Comment area of input DAF file '
-!!             .            // '(max. 10 lines): '
-!!              WRITE(*,'(A)') '---------------------------------------'
-!!             .            // '-----------------------'
-!!
-!!              CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
-!!
-!!              DO I = 1, N
-!!
-!!                 WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
-!!
-!!              END DO
-!!
-!!              WRITE(*,'(A)') '---------------------------------------'
-!!             .            // '-----------------------'
-!!              WRITE(*,*) ' '
-!!              WRITE(*,*) 'Deleting entire comment area...'
-!!
-!!        C
-!!        C     Delete all the comments from the DAF file.
-!!        C
-!!              CALL DAFDC ( HANDLE )
-!!
-!!        C
-!!        C     Close the DAF file and re-open it for read
-!!        C     access to work around the DAFEC restriction
-!!        C     on comments not to be modified while they are
-!!        C     being extracted.
-!!        C
-!!              CALL DAFCLS( HANDLE  )
-!!
-!!              CALL DAFOPR( KERNEL, HANDLE  )
-!!
-!!        C
-!!        C     Check if the comments have indeed been deleted.
-!!        C
-!!              CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
-!!
-!!              IF ( DONE .AND. N .EQ. 0 ) THEN
-!!
-!!                 WRITE(*,*) ' '
-!!                 WRITE(*,*) '   Successful operation.'
-!!
-!!              ELSE
-!!
-!!                 WRITE(*,*) ' '
-!!                 WRITE(*,*) '   Operation failed.'
-!!
-!!              END IF
-!!
-!!        C
-!!        C     Safely close the DAF.
-!!        C
-!!              CALL DAFCLS ( HANDLE )
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!        Comment area of input DAF file (max. 10 lines):
-!!        --------------------------------------------------------------
-!!
-!!            SPK for DSN Station Locations
-!!            ========================================================***
-!!
-!!            Original file name:                   earthstns_itrf93_2***
-!!            Creation date:                        2020 October 28 12:30
-!!            Created by:                           Nat Bachman  (NAIF***
-!!
-!!            Introduction
-!!        --------------------------------------------------------------
-!!
-!!         Deleting entire comment area...
-!!
-!!            Successful operation.
-!!
-!!        Warning: incomplete output. 3 lines extended past the right
-!!        margin of the header and have been truncated. These lines are
-!!        marked by "***" at the end of each line.
-!!
-!! ## Restrictions
-!!
-!!     1)  Only files of the native binary file format may be opened
-!!         with this routine.
-!!
-!!     2)  Files opened using this routine must be closed with DAFCLS.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     J.M. Lynch         (JPL)
-!!     J.E. McLean        (JPL)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 8.1.2, 25-NOV-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard. Added complete
-!!        code example. Updated $Index_Entries.
-!!
-!!-    SPICELIB Version 8.1.1, 10-OCT-2012 (EDW)
-!!
-!!        Corrected ordering of header section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
-!!
-!!        This routine was updated to accommodate changes to the
-!!        handle manager interface. See DAFAH's Revision section
-!!        for details.
-!!
-!!-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
-!!
-!!        This routine was updated to utilize the new handle manager
-!!        software to manage binary file formats and consolidated
-!!        I/O code.
-!!
-!!-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are WIN-NT
-!!
-!!-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
-!!
-!!        CSPICE environments were added. Some typos were corrected.
-!!
-!!-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!!
-!!-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. Previously,
-!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!!        by the environment label SUN.
-!!
-!!-    SPICELIB Version 6.0.0, 03-MAR-1999 (FST)
-!!
-!!        This entry point now attempts to locate and validate the
-!!        FTP validation string contained in the file record.
-!!
-!!-    SPICELIB Version 5.0.0, 27-SEP-1993 (KRG)
-!!
-!!        This routine was modified to use a subroutine to obtain the
-!!        architecture of the file rather than using hard coded values
-!!        for comparing to the file ID word. This was done in order to
-!!        isolate the code which checks to determine a file architecture,
-!!        and to make the identification of file types easier through a
-!!        change to the file ID word.
-!!
-!!        In particular, the changes to this routine support the change
-!!        of the file ID word from 'NAIF/DAF' or 'NAIF/NIP' to 'DAF/xxxx'
-!!        where 'xxxx' represents a four character mnemonic code for the
-!!        type of data in the file.
-!!
-!!        Removed the error SPICE(DAFNOIDWORD) as it was no longer
-!!        relevant.
-!!
-!!        Added the error SPICE(NOTADAFFILE) if this routine is called
-!!        with a file that does not contain an ID word identifying the
-!!        file as a DAF file.
-!!
-!!        Changed the long error message when the error
-!!        SPICE(NOTADAFFILE) is signaled to suggest that a common error
-!!        is attempting to load a text version of the desired file rather
-!!        than the binary version.
-!!
-!!-    SPICELIB Version 4.0.0, 25-FEB-1993 (JML)
-!!
-!!        The INQUIRE statement that checks if the file is already open
-!!        now also checks that the file exists.
-!!
-!!        A new variable LUN is used for the logical unit number
-!!        returned by GETLUN.
-!!
-!!        The IF-THEN statements were reorganized to improve readability.
-!!
-!!        A long error message is now set when the DAF id word is not
-!!        recognized. Also, the file is closed when this error is
-!!        signaled.
-!!
-!!        IOSTAT is now checked after the file record is read.
-!!
-!!        The file name is checked to see if it is blank.
-!!
-!!        The file name string that is passed to the FORTRAN OPEN and
-!!        INQUIRE statements has been chopped at the last non-blank
-!!        character.
-!!
-!!-    SPICELIB Version 3.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 3.0.0, 03-SEP-1991 (NJB) (WLT)
-!!
-!!        DAFOPW now allows multiple files to be open for writing.
-!!
-!!        This routine was updated so that it now keeps current the set
-!!        of DAF handles returned by DAFHOF.
-!!
-!!-    SPICELIB Version 2.0.0, 24-JAN-1991 (JEM)
-!!
-!!        DAFOPW now accepts the ID word 'NAIF/NIP' as well 'NAIF/DAF'.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     open existing DAF for write
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 6.0.0, 03-MAR-1999 (FST)
-!!
-!!        See the $Revisions section under DAFAH for a discussion
-!!        of the impact of the changes made for this version.
-!!
-!!-    SPICELIB Version 2.0.0, 24-JAN-1991 (NJB) (WLT)
-!!
-!!        DAFOPW now allows multiple files to be open for writing.
-!!
-!!        This routine was updated so that it now keeps current the set
-!!        of DAF handles returned by DAFHOF.
-!!
-!!        Some error messages were changed so that they specify
-!!        names of relevant DAFs.
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -6636,325 +6149,296 @@ contains
 !
       call ft%add ( daf_file ( handle = handle, links = 1, nd = fnd, ni = fni ) )
 
-
       return
       end associate
       end procedure dafopw
 
+      !> ## Detailed Input
+      !>
+      !>     FNAME    is the name of a new DAF to be created (and
+      !>              consequently opened for write access).
+      !>
+      !>     FTYPE    is a code for type of data placed into a DAF file.
+      !>              The first nonblank character and the three (3)
+      !>              characters immediately following it, giving four (4)
+      !>              characters, are used to represent the type of the data
+      !>              placed in the DAF file. This is provided as a
+      !>              convenience for higher level software. It is an error
+      !>              if this string is blank. When written to the DAF file,
+      !>              the value for the type IS case sensitive; what you put
+      !>              in is what you get out, so be careful.
+      !>
+      !>              NAIF has reserved for its own use file types
+      !>              consisting of the upper case letters (A-Z) and the
+      !>              digits 0-9. NAIF recommends lower case or mixed case
+      !>              file types be used by all others in order to avoid
+      !>              any conflicts with NAIF file types.
+      !>
+      !>     ND       is the number of double precision components
+      !>              in each array summary of the new file.
+      !>
+      !>     NI       is the number of integer components in each
+      !>              array summary in the new file.
+      !>
+      !>     IFNAME   is the internal file name (containing as many as 60
+      !>              characters) for the new file. This should uniquely
+      !>              identify the file.
+      !>
+      !>     RESV     is the number of records in the new file to be
+      !>              reserved; these records will not be used to store any
+      !>              data belonging to DAF arrays subsequently written to
+      !>              the file. The user may reserve records 2 through (2 +
+      !>              RESV - 1) in the file. SPICE kernels based on the DAF
+      !>              format use the reserved record area to store optional
+      !>              textual information; for these kernels, the reserved
+      !>              records contain the file's "comment area."
+      !>
+      !>              When RESV is non-zero, this routine writes an
+      !>              end-of-comments character into the first byte of
+      !>              record 2, and fills the rest of the allocated records
+      !>              will null (ASCII code 0) characters.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HANDLE   is the file handle associated with the file. This
+      !>              handle is used to identify the file in subsequent
+      !>              calls to other DAF routines.
+      !>
+      !> ## Parameters
+      !>
+      !>     INTEOC   is the ASCII decimal integer code of the character
+      !>              recognized by SPICE as representing the end of the
+      !>              comment data in the reserved record area.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the specified file cannot be opened without exceeding
+      !>         the maximum number of files, the error SPICE(DAFFTFULL)
+      !>         is signaled.
+      !>
+      !>     2)  If the input argument ND is out of the range [0, 124]
+      !>         or if NI is out of the range [2, 250], the error
+      !>         SPICE(DAFINVALIDPARAMS) is signaled.
+      !>
+      !>     3)  If
+      !>
+      !>            ND + ( NI + 1 ) / 2   >  125
+      !>
+      !>         the error SPICE(DAFINVALIDPARAMS) is signaled.
+      !>
+      !>     4)  If the number of records to be reserved is not zero or
+      !>         positive, the error SPICE(DAFNORESV) is signaled.
+      !>
+      !>     5)  If an I/O error occurs in the process of opening the file,
+      !>         the error is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !>     6)  If (for some reason) the initial records in the file cannot
+      !>         be written, the error SPICE(DAFWRITEFAIL) is signaled.
+      !>
+      !>     7)  If no logical units are available, an error is
+      !>         signaled by a routine in the call tree of this routine.
+      !>
+      !>     8)  If the file name is blank or otherwise inappropriate,
+      !>         an error is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !>     9)  If the file type is blank, the error SPICE(BLANKFILETYPE)
+      !>         is signaled.
+      !>
+      !>     10) If the file type contains nonprinting characters, decimal
+      !>         0-31 and 127-255, the error SPICE(ILLEGALCHARACTER) is
+      !>         signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See argument FNAME.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine supersedes DAFOPN as the method for opening a new DAF
+      !>     file. It includes a data type identifier as part of the ID word of
+      !>     a DAF file it creates.
+      !>
+      !>     The DAFs created by DAFONW have initialized file records but
+      !>     do not yet contain any arrays. See the DAF Required Reading
+      !>     for a discussion of file records.
+      !>
+      !> ## Examples
+      !>
+      !>     In the following code fragment, DAFONW is used to open a file,
+      !>     to which a new array is then added. This file will have the data
+      !>     type 'TEST' which may be used to distinguish production data from
+      !>     test data at a user subroutine level.
+      !>
+      !>        FNAME = 'test.bin'
+      !>        FTYPE = 'TEST'
+      !>
+      !>        CALL DAFONW   ( FNAME, FTYPE,  ND,  NI,  IFNAME, 0, HANDLE )
+      !>
+      !>        CALL DAFBNA   ( HANDLE, SUM, NAME  )
+      !>        CALL GET_DATA ( DATA,   N,   FOUND )
+      !>
+      !>        DO WHILE ( FOUND )
+      !>
+      !>           CALL DAFADA   ( DATA, N        )
+      !>           CALL GET_DATA ( DATA, N, FOUND )
+      !>
+      !>        END DO
+      !>
+      !>        CALL DAFENA
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Files opened using this routine must be closed with DAFCLS.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 9.0.2, 25-NOV-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 9.0.1, 10-OCT-2012 (EDW)
+      !>
+      !>        Corrected ordering of header section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 9.0.0, 09-NOV-2006 (NJB)
+      !>
+      !>        DAFONW now writes a EOC character to the first byte
+      !>        of the second record when NRESV > 0.
+      !>
+      !>-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
+      !>
+      !>        This routine was updated to accommodate changes to the
+      !>        handle manager interface. See DAFAH's Revision section
+      !>        for details.
+      !>
+      !>-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
+      !>
+      !>        This routine was updated to utilize the new handle manager
+      !>        software to manage binary file formats and consolidated
+      !>        I/O code.
+      !>
+      !>-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 2.0.0, 03-MAR-1999 (FST)
+      !>
+      !>        The entry point was modified to insert the FTP validation
+      !>        string, as well as the binary file format into the file record.
+      !>
+      !>-    SPICELIB Version 1.1.0, 08-MAR-1996 (KRG)
+      !>
+      !>        The modifications support the notion of a DAF comment area,
+      !>        and involve writing NULL filled reserved records when the
+      !>        number of reserved records is greater than zero (0).
+      !>
+      !>        Some nested IF...THEN...ELSE IF...THEN...END IF constructs
+      !>        were expanded to be independent IF...THEN...END IF tests.
+      !>        The tests were for IOSTAT errors on cascading write statements
+      !>        nested in the IF...ELSE IF... statements, and this was
+      !>        confusing. These tests were restructured so that IOSTAT is
+      !>        tested after each write statement which is equivalent to the
+      !>        original intent and easier to read.
+      !>
+      !>-    SPICELIB Version 1.0.0, 29-SEP-1993 (KRG)
+      !>
+      !>        This routine implements the notion of a file type for DAF
+      !>        files. It allows type information to be added to the file ID
+      !>        word.
+      !>
+      !>        This routine is a modified version of DAFOPN. See the revision
+      !>        history of that entry point for details of changes before the
+      !>        creation of this entry point.
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 9.0.0, 09-NOV-2006 (NJB)
+      !>
+      !>        DAFONW now writes a EOC character to the first byte
+      !>        of the second record when NRESV > 0.
+      !>
+      !>-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
+      !>
+      !>        This routine was updated to accommodate changes to the
+      !>        handle manager interface. See DAFAH's Revision section
+      !>        for details.
+      !>
+      !>-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
+      !>
+      !>        This routine was updated to utilize the new handle manager
+      !>        software to manage binary file formats and consolidated
+      !>        I/O code.
+      !>
+      !>-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 2.0.0, 03-MAR-1999 (FST)
+      !>
+      !>        The entry point was modified to insert the FTP validation
+      !>        string, as well as the binary file format into the file record.
+      !>
+      !>-    SPICELIB Version 1.1.0, 08-MAR-1996 (KRG)
+      !>
+      !>        The modifications support the notion of a DAF comment area,
+      !>        and involve writing NULL filled reserved records when the
+      !>        number of reserved records is greater than zero (0).
+      !>
+      !>        Some nested IF...THEN...ELSE IF...THEN...END IF constructs
+      !>        were expanded to be independent IF...THEN...END IF tests.
+      !>        The tests were for IOSTAT errors on cascading write statements
+      !>        nested in the IF...ELSE IF... statements, and this was
+      !>        confusing. These tests were restructured so that IOSTAT is
+      !>        tested after each write statement which is equivalent to the
+      !>        original intent and easier to read.
+      !>
+      !>-    SPICELIB Version 2.0.0, 03-MAR-1999 (FST)
+      !>
+      !>        See the $Revisions section under DAFAH for a discussion
+      !>        of the impact of the changes made for this version.
+      !>
+      !>     Standard SPICE error handling.
       module procedure dafonw
-!! ## Abstract
-!!
-!!     Open a new DAF for subsequent write requests.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     DAF
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         FNAME
-!!     CHARACTER*(*)         FTYPE
-!!     INTEGER               ND
-!!     INTEGER               NI
-!!     CHARACTER*(*)         IFNAME
-!!     INTEGER               RESV
-!!     INTEGER               HANDLE
-!!
-!! ## Detailed Input
-!!
-!!     FNAME    is the name of a new DAF to be created (and
-!!              consequently opened for write access).
-!!
-!!     FTYPE    is a code for type of data placed into a DAF file.
-!!              The first nonblank character and the three (3)
-!!              characters immediately following it, giving four (4)
-!!              characters, are used to represent the type of the data
-!!              placed in the DAF file. This is provided as a
-!!              convenience for higher level software. It is an error
-!!              if this string is blank. When written to the DAF file,
-!!              the value for the type IS case sensitive; what you put
-!!              in is what you get out, so be careful.
-!!
-!!              NAIF has reserved for its own use file types
-!!              consisting of the upper case letters (A-Z) and the
-!!              digits 0-9. NAIF recommends lower case or mixed case
-!!              file types be used by all others in order to avoid
-!!              any conflicts with NAIF file types.
-!!
-!!     ND       is the number of double precision components
-!!              in each array summary of the new file.
-!!
-!!     NI       is the number of integer components in each
-!!              array summary in the new file.
-!!
-!!     IFNAME   is the internal file name (containing as many as 60
-!!              characters) for the new file. This should uniquely
-!!              identify the file.
-!!
-!!     RESV     is the number of records in the new file to be
-!!              reserved; these records will not be used to store any
-!!              data belonging to DAF arrays subsequently written to
-!!              the file. The user may reserve records 2 through (2 +
-!!              RESV - 1) in the file. SPICE kernels based on the DAF
-!!              format use the reserved record area to store optional
-!!              textual information; for these kernels, the reserved
-!!              records contain the file's "comment area."
-!!
-!!              When RESV is non-zero, this routine writes an
-!!              end-of-comments character into the first byte of
-!!              record 2, and fills the rest of the allocated records
-!!              will null (ASCII code 0) characters.
-!!
-!! ## Detailed Output
-!!
-!!     HANDLE   is the file handle associated with the file. This
-!!              handle is used to identify the file in subsequent
-!!              calls to other DAF routines.
-!!
-!! ## Parameters
-!!
-!!     INTEOC   is the ASCII decimal integer code of the character
-!!              recognized by SPICE as representing the end of the
-!!              comment data in the reserved record area.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the specified file cannot be opened without exceeding
-!!         the maximum number of files, the error SPICE(DAFFTFULL)
-!!         is signaled.
-!!
-!!     2)  If the input argument ND is out of the range [0, 124]
-!!         or if NI is out of the range [2, 250], the error
-!!         SPICE(DAFINVALIDPARAMS) is signaled.
-!!
-!!     3)  If
-!!
-!!            ND + ( NI + 1 ) / 2   >  125
-!!
-!!         the error SPICE(DAFINVALIDPARAMS) is signaled.
-!!
-!!     4)  If the number of records to be reserved is not zero or
-!!         positive, the error SPICE(DAFNORESV) is signaled.
-!!
-!!     5)  If an I/O error occurs in the process of opening the file,
-!!         the error is signaled by a routine in the call tree of this
-!!         routine.
-!!
-!!     6)  If (for some reason) the initial records in the file cannot
-!!         be written, the error SPICE(DAFWRITEFAIL) is signaled.
-!!
-!!     7)  If no logical units are available, an error is
-!!         signaled by a routine in the call tree of this routine.
-!!
-!!     8)  If the file name is blank or otherwise inappropriate,
-!!         an error is signaled by a routine in the call tree of this
-!!         routine.
-!!
-!!     9)  If the file type is blank, the error SPICE(BLANKFILETYPE)
-!!         is signaled.
-!!
-!!     10) If the file type contains nonprinting characters, decimal
-!!         0-31 and 127-255, the error SPICE(ILLEGALCHARACTER) is
-!!         signaled.
-!!
-!! ## Files
-!!
-!!     See argument FNAME.
-!!
-!! ## Particulars
-!!
-!!     This routine supersedes DAFOPN as the method for opening a new DAF
-!!     file. It includes a data type identifier as part of the ID word of
-!!     a DAF file it creates.
-!!
-!!     The DAFs created by DAFONW have initialized file records but
-!!     do not yet contain any arrays. See the DAF Required Reading
-!!     for a discussion of file records.
-!!
-!! ## Examples
-!!
-!!     In the following code fragment, DAFONW is used to open a file,
-!!     to which a new array is then added. This file will have the data
-!!     type 'TEST' which may be used to distinguish production data from
-!!     test data at a user subroutine level.
-!!
-!!        FNAME = 'test.bin'
-!!        FTYPE = 'TEST'
-!!
-!!        CALL DAFONW   ( FNAME, FTYPE,  ND,  NI,  IFNAME, 0, HANDLE )
-!!
-!!        CALL DAFBNA   ( HANDLE, SUM, NAME  )
-!!        CALL GET_DATA ( DATA,   N,   FOUND )
-!!
-!!        DO WHILE ( FOUND )
-!!
-!!           CALL DAFADA   ( DATA, N        )
-!!           CALL GET_DATA ( DATA, N, FOUND )
-!!
-!!        END DO
-!!
-!!        CALL DAFENA
-!!
-!! ## Restrictions
-!!
-!!     1)  Files opened using this routine must be closed with DAFCLS.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 9.0.2, 25-NOV-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 9.0.1, 10-OCT-2012 (EDW)
-!!
-!!        Corrected ordering of header section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 9.0.0, 09-NOV-2006 (NJB)
-!!
-!!        DAFONW now writes a EOC character to the first byte
-!!        of the second record when NRESV > 0.
-!!
-!!-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
-!!
-!!        This routine was updated to accommodate changes to the
-!!        handle manager interface. See DAFAH's Revision section
-!!        for details.
-!!
-!!-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
-!!
-!!        This routine was updated to utilize the new handle manager
-!!        software to manage binary file formats and consolidated
-!!        I/O code.
-!!
-!!-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are WIN-NT
-!!
-!!-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
-!!
-!!        CSPICE environments were added. Some typos were corrected.
-!!
-!!-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!!
-!!-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. Previously,
-!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!!        by the environment label SUN.
-!!
-!!-    SPICELIB Version 2.0.0, 03-MAR-1999 (FST)
-!!
-!!        The entry point was modified to insert the FTP validation
-!!        string, as well as the binary file format into the file record.
-!!
-!!-    SPICELIB Version 1.1.0, 08-MAR-1996 (KRG)
-!!
-!!        The modifications support the notion of a DAF comment area,
-!!        and involve writing NULL filled reserved records when the
-!!        number of reserved records is greater than zero (0).
-!!
-!!        Some nested IF...THEN...ELSE IF...THEN...END IF constructs
-!!        were expanded to be independent IF...THEN...END IF tests.
-!!        The tests were for IOSTAT errors on cascading write statements
-!!        nested in the IF...ELSE IF... statements, and this was
-!!        confusing. These tests were restructured so that IOSTAT is
-!!        tested after each write statement which is equivalent to the
-!!        original intent and easier to read.
-!!
-!!-    SPICELIB Version 1.0.0, 29-SEP-1993 (KRG)
-!!
-!!        This routine implements the notion of a file type for DAF
-!!        files. It allows type information to be added to the file ID
-!!        word.
-!!
-!!        This routine is a modified version of DAFOPN. See the revision
-!!        history of that entry point for details of changes before the
-!!        creation of this entry point.
-!!
-!! ## Index Entries
-!!
-!!     open new DAF with type
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 9.0.0, 09-NOV-2006 (NJB)
-!!
-!!        DAFONW now writes a EOC character to the first byte
-!!        of the second record when NRESV > 0.
-!!
-!!-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
-!!
-!!        This routine was updated to accommodate changes to the
-!!        handle manager interface. See DAFAH's Revision section
-!!        for details.
-!!
-!!-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
-!!
-!!        This routine was updated to utilize the new handle manager
-!!        software to manage binary file formats and consolidated
-!!        I/O code.
-!!
-!!-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. Previously,
-!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!!        by the environment label SUN.
-!!
-!!-    SPICELIB Version 2.0.0, 03-MAR-1999 (FST)
-!!
-!!        The entry point was modified to insert the FTP validation
-!!        string, as well as the binary file format into the file record.
-!!
-!!-    SPICELIB Version 1.1.0, 08-MAR-1996 (KRG)
-!!
-!!        The modifications support the notion of a DAF comment area,
-!!        and involve writing NULL filled reserved records when the
-!!        number of reserved records is greater than zero (0).
-!!
-!!        Some nested IF...THEN...ELSE IF...THEN...END IF constructs
-!!        were expanded to be independent IF...THEN...END IF tests.
-!!        The tests were for IOSTAT errors on cascading write statements
-!!        nested in the IF...ELSE IF... statements, and this was
-!!        confusing. These tests were restructured so that IOSTAT is
-!!        tested after each write statement which is equivalent to the
-!!        original intent and easier to read.
-!!
-!!-    SPICELIB Version 2.0.0, 03-MAR-1999 (FST)
-!!
-!!        See the $Revisions section under DAFAH for a discussion
-!!        of the impact of the changes made for this version.
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ltrim, rtrim
       use pepper_inc_zzddhman
@@ -7230,294 +6714,270 @@ contains
 !
       call ft%add ( daf_file ( handle = handle, links = 1, nd = fnd, ni = fni ) )
 
-
       return
       end associate
       end procedure dafonw
 
+      !> ## Abstract
+      !>
+      !>     Deprecated: This routine has been superseded by the SPICELIB
+      !>     routine DAFONW. NAIF supports this routine only to provide
+      !>     backward compatibility.
+      !>
+      !>     Open a new DAF for subsequent write requests.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     FNAME    is the name of a new DAF to be created (and
+      !>              consequently open for write access).
+      !>
+      !>     ND       is the number of double precision components
+      !>              in each array summary of the new file.
+      !>
+      !>     NI       is the number of integer components in each
+      !>              array summary in the new file.
+      !>
+      !>     IFNAME   is the internal file name (containing as many as 60
+      !>              characters) for the new file. This should uniquely
+      !>              identify the file.
+      !>
+      !>     RESV     is the number of records in the new file to be
+      !>              reserved for non-DAF use. The user may reserve
+      !>              records 2 through (2 + RESV - 1) in the file.
+      !>              These records are not used to store DAF data,
+      !>              and are in fact invisible to all DAF routines.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HANDLE   is the file handle associated with the file. This
+      !>              handle is used to identify the file in subsequent
+      !>              calls to other DAF routines.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the specified file cannot be opened without exceeding
+      !>         the maximum number of files, the error SPICE(DAFFTFULL)
+      !>         is signaled.
+      !>
+      !>     2)  If the input argument ND is out of the range [0, 124]
+      !>         or if NI is out of the range [2, 250], the error
+      !>         SPICE(DAFINVALIDPARAMS) is signaled.
+      !>
+      !>     3)  If
+      !>
+      !>            ND + ( NI + 1 ) / 2   >  125
+      !>
+      !>         the error SPICE(DAFINVALIDPARAMS) is signaled.
+      !>
+      !>     4)  If the number of records to be reserved is not zero or
+      !>         positive, the error SPICE(DAFNORESV) is signaled.
+      !>
+      !>     5)  If an I/O error occurs in the process of opening the file,
+      !>         the error is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !>     6)  If (for some reason) the initial records in the file cannot
+      !>         be written, the error SPICE(DAFWRITEFAIL) is signaled.
+      !>
+      !>     7)  If no logical units are available, an error is
+      !>         signaled by a routine in the call tree of this routine.
+      !>
+      !>     8)  If the file name is blank or otherwise inappropriate,
+      !>         an error is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !> ## Files
+      !>
+      !>     See argument FNAME.
+      !>
+      !> ## Particulars
+      !>
+      !>     The DAFs created by DAFOPN have initialized file records but
+      !>     do not yet contain any arrays. See the DAF Required Reading
+      !>     for a discussion of file records.
+      !>
+      !>     This entry point has been made obsolete by the entry point DAFONW.
+      !>     It is supported for reasons of backward compatibility only. New
+      !>     software development should use the entry point DAFONW.
+      !>
+      !> ## Examples
+      !>
+      !>     In the following code fragment, DAFOPN is used to open a file,
+      !>     to which a new array is then added.
+      !>
+      !>        CALL DAFOPN   ( FNAME,  ND,  NI,  IFNAME, 0, HANDLE )
+      !>
+      !>        CALL DAFBNA   ( HANDLE, SUM, NAME  )
+      !>        CALL GET_DATA ( DATA,   N,   FOUND )
+      !>
+      !>        DO WHILE ( FOUND )
+      !>
+      !>           CALL DAFADA   ( DATA, N        )
+      !>           CALL GET_DATA ( DATA, N, FOUND )
+      !>
+      !>        END DO
+      !>
+      !>        CALL DAFENA
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Files opened using this routine must be closed with DAFCLS.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     J.M. Lynch         (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 8.1.2, 25-NOV-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 8.1.1, 10-OCT-2012 (EDW)
+      !>
+      !>        Edited $Abstract section to use "Deprecated" keyword
+      !>        and state replacement routine.
+      !>
+      !>        Corrected ordering of header section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
+      !>
+      !>        This routine was updated to accommodate changes to the
+      !>        handle manager interface. See DAFAH's Revision section
+      !>        for details.
+      !>
+      !>-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
+      !>
+      !>        This routine was updated to utilize the new handle manager
+      !>        software to manage binary file formats and consolidated
+      !>        I/O code.
+      !>
+      !>-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 4.0.0, 03-MAR-1999 (FST)
+      !>
+      !>        The entry point was modified to insert the FTP validation
+      !>        string, as well as the binary file format into the file record.
+      !>
+      !>-    SPICELIB Version 3.1.0, 08-MAR-1996 (KRG)
+      !>
+      !>        The modifications support the notion of a DAF comment area,
+      !>        and involve writing NULL filled reserved records when the
+      !>        number of reserved records is greater than zero (0).
+      !>
+      !>        Some nested IF...THEN...ELSE IF...THEN...END IF constructs
+      !>        were expanded to be independent IF...THEN...END IF tests.
+      !>        The tests were for IOSTAT errors on cascading write statements
+      !>        nested in the IF...ELSE IF... statements, and this was
+      !>        confusing. These tests were restructured so that IOSTAT is
+      !>        tested after each write statement which is equivalent to the
+      !>        original intent and easier to read.
+      !>
+      !>-    SPICELIB Version 3.0.0, 29-SEP-1993 (KRG)
+      !>
+      !>        Modified the logical structure of some
+      !>           IF ... THEN ... ELSE IF... END IF
+      !>        statements which were testing different items in each ELSE IF
+      !>        clause for failure into separate IF ... END IF statements. This
+      !>        improved the readability and supportability of the code.
+      !>
+      !>-    SPICELIB Version 2.1.0, 25-FEB-1993 (JML)
+      !>
+      !>        A new variable LUN is used for the logical unit number
+      !>        returned by GETLUN.
+      !>
+      !>        The file name is checked to see if it is blank.
+      !>
+      !>        The file name string that is passed to the FORTRAN OPEN and
+      !>        INQUIRE statements has been chopped at the last non-blank
+      !>        character.
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 03-SEP-1991 (NJB) (HAN) (WLT)
+      !>
+      !>        Updated to allow multiple DAFs to be open for write
+      !>        access simultaneously. An error in a calling sequence
+      !>        shown in the $Examples section was corrected.
+      !>
+      !>        This routine was updated so that it now keeps current the set
+      !>        of DAF handles returned by DAFHOF.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 4.0.0, 03-MAR-1999 (FST)
+      !>
+      !>        See the $Revisions section under DAFAH for a discussion
+      !>        of the impact of the changes made for this version.
+      !>
+      !>-    SPICELIB Version 2.0.0, 03-SEP-1991 (NJB) (HAN) (WLT)
+      !>
+      !>        Updated to allow multiple DAFs to be open for write
+      !>        access simultaneously.
+      !>
+      !>        This routine was updated so that it now keeps current the set
+      !>        of DAF handles returned by DAFHOF.
+      !>
+      !>        Invalid values of ND and NI are now screened; two new
+      !>        exceptions were added to the $Exceptions header section.
+      !>
+      !>        The calling sequence of DAFADA shown in the first example
+      !>        in the $Examples section was reversed; this was fixed.
+      !>
+      !>        Some error messages were changed so that they specify
+      !>        names of relevant DAFs.
+      !>
+      !>     Standard SPICE error handling.
       module procedure dafopn
-!! ## Abstract
-!!
-!!     Deprecated: This routine has been superseded by the SPICELIB
-!!     routine DAFONW. NAIF supports this routine only to provide
-!!     backward compatibility.
-!!
-!!     Open a new DAF for subsequent write requests.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     DAF
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         FNAME
-!!     INTEGER               ND
-!!     INTEGER               NI
-!!     CHARACTER*(*)         IFNAME
-!!     INTEGER               RESV
-!!     INTEGER               HANDLE
-!!
-!! ## Detailed Input
-!!
-!!     FNAME    is the name of a new DAF to be created (and
-!!              consequently open for write access).
-!!
-!!     ND       is the number of double precision components
-!!              in each array summary of the new file.
-!!
-!!     NI       is the number of integer components in each
-!!              array summary in the new file.
-!!
-!!     IFNAME   is the internal file name (containing as many as 60
-!!              characters) for the new file. This should uniquely
-!!              identify the file.
-!!
-!!     RESV     is the number of records in the new file to be
-!!              reserved for non-DAF use. The user may reserve
-!!              records 2 through (2 + RESV - 1) in the file.
-!!              These records are not used to store DAF data,
-!!              and are in fact invisible to all DAF routines.
-!!
-!! ## Detailed Output
-!!
-!!     HANDLE   is the file handle associated with the file. This
-!!              handle is used to identify the file in subsequent
-!!              calls to other DAF routines.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the specified file cannot be opened without exceeding
-!!         the maximum number of files, the error SPICE(DAFFTFULL)
-!!         is signaled.
-!!
-!!     2)  If the input argument ND is out of the range [0, 124]
-!!         or if NI is out of the range [2, 250], the error
-!!         SPICE(DAFINVALIDPARAMS) is signaled.
-!!
-!!     3)  If
-!!
-!!            ND + ( NI + 1 ) / 2   >  125
-!!
-!!         the error SPICE(DAFINVALIDPARAMS) is signaled.
-!!
-!!     4)  If the number of records to be reserved is not zero or
-!!         positive, the error SPICE(DAFNORESV) is signaled.
-!!
-!!     5)  If an I/O error occurs in the process of opening the file,
-!!         the error is signaled by a routine in the call tree of this
-!!         routine.
-!!
-!!     6)  If (for some reason) the initial records in the file cannot
-!!         be written, the error SPICE(DAFWRITEFAIL) is signaled.
-!!
-!!     7)  If no logical units are available, an error is
-!!         signaled by a routine in the call tree of this routine.
-!!
-!!     8)  If the file name is blank or otherwise inappropriate,
-!!         an error is signaled by a routine in the call tree of this
-!!         routine.
-!!
-!! ## Files
-!!
-!!     See argument FNAME.
-!!
-!! ## Particulars
-!!
-!!     The DAFs created by DAFOPN have initialized file records but
-!!     do not yet contain any arrays. See the DAF Required Reading
-!!     for a discussion of file records.
-!!
-!!     This entry point has been made obsolete by the entry point DAFONW.
-!!     It is supported for reasons of backward compatibility only. New
-!!     software development should use the entry point DAFONW.
-!!
-!! ## Examples
-!!
-!!     In the following code fragment, DAFOPN is used to open a file,
-!!     to which a new array is then added.
-!!
-!!        CALL DAFOPN   ( FNAME,  ND,  NI,  IFNAME, 0, HANDLE )
-!!
-!!        CALL DAFBNA   ( HANDLE, SUM, NAME  )
-!!        CALL GET_DATA ( DATA,   N,   FOUND )
-!!
-!!        DO WHILE ( FOUND )
-!!
-!!           CALL DAFADA   ( DATA, N        )
-!!           CALL GET_DATA ( DATA, N, FOUND )
-!!
-!!        END DO
-!!
-!!        CALL DAFENA
-!!
-!! ## Restrictions
-!!
-!!     1)  Files opened using this routine must be closed with DAFCLS.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     J.M. Lynch         (JPL)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 8.1.2, 25-NOV-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 8.1.1, 10-OCT-2012 (EDW)
-!!
-!!        Edited $Abstract section to use "Deprecated" keyword
-!!        and state replacement routine.
-!!
-!!        Corrected ordering of header section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
-!!
-!!        This routine was updated to accommodate changes to the
-!!        handle manager interface. See DAFAH's Revision section
-!!        for details.
-!!
-!!-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
-!!
-!!        This routine was updated to utilize the new handle manager
-!!        software to manage binary file formats and consolidated
-!!        I/O code.
-!!
-!!-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are WIN-NT
-!!
-!!-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
-!!
-!!        CSPICE environments were added. Some typos were corrected.
-!!
-!!-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!!
-!!-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. Previously,
-!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!!        by the environment label SUN.
-!!
-!!-    SPICELIB Version 4.0.0, 03-MAR-1999 (FST)
-!!
-!!        The entry point was modified to insert the FTP validation
-!!        string, as well as the binary file format into the file record.
-!!
-!!-    SPICELIB Version 3.1.0, 08-MAR-1996 (KRG)
-!!
-!!        The modifications support the notion of a DAF comment area,
-!!        and involve writing NULL filled reserved records when the
-!!        number of reserved records is greater than zero (0).
-!!
-!!        Some nested IF...THEN...ELSE IF...THEN...END IF constructs
-!!        were expanded to be independent IF...THEN...END IF tests.
-!!        The tests were for IOSTAT errors on cascading write statements
-!!        nested in the IF...ELSE IF... statements, and this was
-!!        confusing. These tests were restructured so that IOSTAT is
-!!        tested after each write statement which is equivalent to the
-!!        original intent and easier to read.
-!!
-!!-    SPICELIB Version 3.0.0, 29-SEP-1993 (KRG)
-!!
-!!        Modified the logical structure of some
-!!           IF ... THEN ... ELSE IF... END IF
-!!        statements which were testing different items in each ELSE IF
-!!        clause for failure into separate IF ... END IF statements. This
-!!        improved the readability and supportability of the code.
-!!
-!!-    SPICELIB Version 2.1.0, 25-FEB-1993 (JML)
-!!
-!!        A new variable LUN is used for the logical unit number
-!!        returned by GETLUN.
-!!
-!!        The file name is checked to see if it is blank.
-!!
-!!        The file name string that is passed to the FORTRAN OPEN and
-!!        INQUIRE statements has been chopped at the last non-blank
-!!        character.
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 03-SEP-1991 (NJB) (HAN) (WLT)
-!!
-!!        Updated to allow multiple DAFs to be open for write
-!!        access simultaneously. An error in a calling sequence
-!!        shown in the $Examples section was corrected.
-!!
-!!        This routine was updated so that it now keeps current the set
-!!        of DAF handles returned by DAFHOF.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     DEPRECATED open new DAF
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 4.0.0, 03-MAR-1999 (FST)
-!!
-!!        See the $Revisions section under DAFAH for a discussion
-!!        of the impact of the changes made for this version.
-!!
-!!-    SPICELIB Version 2.0.0, 03-SEP-1991 (NJB) (HAN) (WLT)
-!!
-!!        Updated to allow multiple DAFs to be open for write
-!!        access simultaneously.
-!!
-!!        This routine was updated so that it now keeps current the set
-!!        of DAF handles returned by DAFHOF.
-!!
-!!        Invalid values of ND and NI are now screened; two new
-!!        exceptions were added to the $Exceptions header section.
-!!
-!!        The calling sequence of DAFADA shown in the first example
-!!        in the $Examples section was reversed; this was fixed.
-!!
-!!        Some error messages were changed so that they specify
-!!        names of relevant DAFs.
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -7745,340 +7205,315 @@ contains
 !
       call ft%add ( daf_file ( handle = handle, links = 1, nd = fnd, ni = fni ) )
 
-
       return
       end associate
       end procedure dafopn
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the file handle of a previously opened DAF file.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the specified handle does not belong to a DAF
+      !>         that is currently open, nothing happens.
+      !>
+      !>     2)  If this routine is used to close a HANDLE not associated
+      !>         with a DAF, an error is signaled by a routine in the call tree
+      !>         of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Because DAFAH and its entry points must keep track of what
+      !>     files are open at any given time, it is important that DAF
+      !>     files be closed only with DAFCLS, to prevent the remaining
+      !>     DAF routines from failing, sometimes mysteriously.
+      !>
+      !>     Note that when a file is opened more than once for read access,
+      !>     DAFOPR returns the same handle each time it is re-opened.
+      !>     Each time the file is closed, DAFCLS checks to see if any other
+      !>     claims on the file are still active before physically closing
+      !>     the file.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for these examples may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) In the following code fragment, the arrays in a file are
+      !>        examined in order to determine whether the file contains
+      !>        any arrays whose names begin with the word TEST.
+      !>        The complete names for these arrays are printed to
+      !>        the screen. The file is closed at the end of the search.
+      !>
+      !>           CALL DAFOPR ( FNAME, HANDLE )
+      !>           CALL DAFBFS ( HANDLE )
+      !>           CALL DAFFNA ( FOUND  )
+      !>
+      !>           DO WHILE ( FOUND )
+      !>              CALL DAFGN ( NAME )
+      !>
+      !>              IF ( NAME(1:5) .EQ. 'TEST ' ) THEN
+      !>                 WRITE (*,*) NAME
+      !>              END IF
+      !>
+      !>              CALL DAFFNA ( FOUND )
+      !>           END DO
+      !>
+      !>           CALL DAFCLS ( HANDLE )
+      !>
+      !>        Note that if the file has been opened already by a DAF routine
+      !>        at some other place in the calling program, it remains open.
+      !>        This makes it possible to examine files that have been opened
+      !>        for use by other modules without interfering with the operation
+      !>        of those routines.
+      !>
+      !>     2) Use a simple routine to output the double precision and integer
+      !>        values stored in an SPK's segments descriptors. This function
+      !>        opens a DAF for read, performs a forwards search for the DAF
+      !>        arrays, prints segments description for each array found, then
+      !>        closes the DAF.
+      !>
+      !>        Use the SPK kernel below as input DAF file for the program.
+      !>
+      !>           de421.bsp
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFCLS_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Define the summary parameters appropriate
+      !>        C     for an SPK file.
+      !>        C
+      !>              INTEGER               MAXSUM
+      !>              PARAMETER           ( MAXSUM = 125 )
+      !>
+      !>              INTEGER               ND
+      !>              PARAMETER           ( ND = 2 )
+      !>
+      !>              INTEGER               NI
+      !>              PARAMETER           ( NI = 6 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(32)        KERNEL
+      !>
+      !>              DOUBLE PRECISION      DC     ( ND     )
+      !>              DOUBLE PRECISION      SUM    ( MAXSUM )
+      !>
+      !>              INTEGER               HANDLE
+      !>              INTEGER               IC     ( NI     )
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Open a DAF for read. Return a HANDLE referring to the
+      !>        C     file.
+      !>        C
+      !>              KERNEL = 'de421.bsp'
+      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a forward search on the file.
+      !>        C
+      !>              CALL DAFBFS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Search until a DAF array is found.
+      !>        C
+      !>              CALL DAFFNA ( FOUND )
+      !>
+      !>        C
+      !>        C     Loop while the search finds subsequent DAF arrays.
+      !>        C
+      !>              DO WHILE ( FOUND )
+      !>
+      !>                 CALL DAFGS ( SUM )
+      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>
+      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>
+      !>        C
+      !>        C        Check for another segment.
+      !>        C
+      !>                 CALL DAFFNA ( FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Safely close the DAF.
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        1        0        1        2      641   310404
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        2        0        1        2   310405   423048
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        3        0        1        2   423049   567372
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        4        0        1        2   567373   628976
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        5        0        1        2   628977   674740
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        6        0        1        2   674741   715224
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        7        0        1        2   715225   750428
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        8        0        1        2   750429   785632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        9        0        1        2   785633   820836
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:       10        0        1        2   820837   944040
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      301        3        1        2   944041  1521324
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      399        3        1        2  1521325  2098608
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      199        1        1        2  2098609  2098620
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      299        2        1        2  2098621  2098632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      499        4        1        2  2098633  2098644
+      !>
+      !>        Note, the final entries in the integer array contain the
+      !>        segment start/end indexes. The output indicates the search
+      !>        proceeded from the start of the file (low value index) towards
+      !>        the end (high value index).
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     J.M. Lynch         (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 8.1.2, 25-NOV-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Updated code example with IMPLICIT NONE, and declarations of
+      !>        SUM variable and MAXSUM parameter.
+      !>
+      !>        Corrected minor typos in header.
+      !>
+      !>-    SPICELIB Version 8.1.1, 10-OCT-2012 (EDW)
+      !>
+      !>        Added a functional code example to the $Examples section.
+      !>
+      !>        Removed the unneeded $Revisions section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>        Corrected ordering of header section.
+      !>
+      !>-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
+      !>
+      !>        This routine was updated to accommodate changes to the
+      !>        handle manager interface. See DAFAH's Revision section
+      !>        for details.
+      !>
+      !>-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
+      !>
+      !>        This routine was updated to utilize the new handle manager
+      !>        software to manage binary file formats and consolidated
+      !>        I/O code.
+      !>
+      !>-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 2.0.3, 29-SEP-1993 (KRG)
+      !>
+      !>        Removed references to specific DAF file open routines in the
+      !>        $Detailed_Input section of the header. This was done in order
+      !>        to minimize documentation changes if these open routines ever
+      !>        change.
+      !>
+      !>-    SPICELIB Version 2.0.2, 25-FEB-1993 (JML)
+      !>
+      !>        A minor error in the $Particulars section of the header was
+      !>        corrected. It formerly stated that a file could be open more
+      !>        than once for read or write access instead of just read access.
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 03-SEP-1991 (NJB) (WLT)
+      !>
+      !>        This routine was updated so that it now keeps current the set
+      !>        of DAF handles returned by DAFHOF.
+      !>
+      !>        Upgraded to support file handle checking routines
+      !>        DAFHOF and DAFSIH. DAFCLS now initializes the file
+      !>        handle list if necessary, and removes from the list
+      !>        the handles of files it closes.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafcls
-!! ## Abstract
-!!
-!!     Close the DAF associated with a given handle.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     DAF
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the file handle of a previously opened DAF file.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the specified handle does not belong to a DAF
-!!         that is currently open, nothing happens.
-!!
-!!     2)  If this routine is used to close a HANDLE not associated
-!!         with a DAF, an error is signaled by a routine in the call tree
-!!         of this routine.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     Because DAFAH and its entry points must keep track of what
-!!     files are open at any given time, it is important that DAF
-!!     files be closed only with DAFCLS, to prevent the remaining
-!!     DAF routines from failing, sometimes mysteriously.
-!!
-!!     Note that when a file is opened more than once for read access,
-!!     DAFOPR returns the same handle each time it is re-opened.
-!!     Each time the file is closed, DAFCLS checks to see if any other
-!!     claims on the file are still active before physically closing
-!!     the file.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for these examples may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) In the following code fragment, the arrays in a file are
-!!        examined in order to determine whether the file contains
-!!        any arrays whose names begin with the word TEST.
-!!        The complete names for these arrays are printed to
-!!        the screen. The file is closed at the end of the search.
-!!
-!!           CALL DAFOPR ( FNAME, HANDLE )
-!!           CALL DAFBFS ( HANDLE )
-!!           CALL DAFFNA ( FOUND  )
-!!
-!!           DO WHILE ( FOUND )
-!!              CALL DAFGN ( NAME )
-!!
-!!              IF ( NAME(1:5) .EQ. 'TEST ' ) THEN
-!!                 WRITE (*,*) NAME
-!!              END IF
-!!
-!!              CALL DAFFNA ( FOUND )
-!!           END DO
-!!
-!!           CALL DAFCLS ( HANDLE )
-!!
-!!        Note that if the file has been opened already by a DAF routine
-!!        at some other place in the calling program, it remains open.
-!!        This makes it possible to examine files that have been opened
-!!        for use by other modules without interfering with the operation
-!!        of those routines.
-!!
-!!     2) Use a simple routine to output the double precision and integer
-!!        values stored in an SPK's segments descriptors. This function
-!!        opens a DAF for read, performs a forwards search for the DAF
-!!        arrays, prints segments description for each array found, then
-!!        closes the DAF.
-!!
-!!        Use the SPK kernel below as input DAF file for the program.
-!!
-!!           de421.bsp
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DAFCLS_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Define the summary parameters appropriate
-!!        C     for an SPK file.
-!!        C
-!!              INTEGER               MAXSUM
-!!              PARAMETER           ( MAXSUM = 125 )
-!!
-!!              INTEGER               ND
-!!              PARAMETER           ( ND = 2 )
-!!
-!!              INTEGER               NI
-!!              PARAMETER           ( NI = 6 )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(32)        KERNEL
-!!
-!!              DOUBLE PRECISION      DC     ( ND     )
-!!              DOUBLE PRECISION      SUM    ( MAXSUM )
-!!
-!!              INTEGER               HANDLE
-!!              INTEGER               IC     ( NI     )
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Open a DAF for read. Return a HANDLE referring to the
-!!        C     file.
-!!        C
-!!              KERNEL = 'de421.bsp'
-!!              CALL DAFOPR ( KERNEL, HANDLE )
-!!
-!!        C
-!!        C     Begin a forward search on the file.
-!!        C
-!!              CALL DAFBFS ( HANDLE )
-!!
-!!        C
-!!        C     Search until a DAF array is found.
-!!        C
-!!              CALL DAFFNA ( FOUND )
-!!
-!!        C
-!!        C     Loop while the search finds subsequent DAF arrays.
-!!        C
-!!              DO WHILE ( FOUND )
-!!
-!!                 CALL DAFGS ( SUM )
-!!                 CALL DAFUS ( SUM, ND, NI, DC, IC )
-!!
-!!                 WRITE(*,*)                'Doubles:', DC(1:ND)
-!!                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
-!!
-!!        C
-!!        C        Check for another segment.
-!!        C
-!!                 CALL DAFFNA ( FOUND )
-!!
-!!              END DO
-!!
-!!        C
-!!        C     Safely close the DAF.
-!!        C
-!!              CALL DAFCLS ( HANDLE )
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        1        0        1        2      641   310404
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        2        0        1        2   310405   423048
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        3        0        1        2   423049   567372
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        4        0        1        2   567373   628976
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        5        0        1        2   628977   674740
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        6        0        1        2   674741   715224
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        7        0        1        2   715225   750428
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        8        0        1        2   750429   785632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        9        0        1        2   785633   820836
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:       10        0        1        2   820837   944040
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      301        3        1        2   944041  1521324
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      399        3        1        2  1521325  2098608
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      199        1        1        2  2098609  2098620
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      299        2        1        2  2098621  2098632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      499        4        1        2  2098633  2098644
-!!
-!!        Note, the final entries in the integer array contain the
-!!        segment start/end indexes. The output indicates the search
-!!        proceeded from the start of the file (low value index) towards
-!!        the end (high value index).
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     J.M. Lynch         (JPL)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 8.1.2, 25-NOV-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Updated code example with IMPLICIT NONE, and declarations of
-!!        SUM variable and MAXSUM parameter.
-!!
-!!        Corrected minor typos in header.
-!!
-!!-    SPICELIB Version 8.1.1, 10-OCT-2012 (EDW)
-!!
-!!        Added a functional code example to the $Examples section.
-!!
-!!        Removed the unneeded $Revisions section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!        Corrected ordering of header section.
-!!
-!!-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
-!!
-!!        This routine was updated to accommodate changes to the
-!!        handle manager interface. See DAFAH's Revision section
-!!        for details.
-!!
-!!-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
-!!
-!!        This routine was updated to utilize the new handle manager
-!!        software to manage binary file formats and consolidated
-!!        I/O code.
-!!
-!!-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are WIN-NT
-!!
-!!-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
-!!
-!!        CSPICE environments were added. Some typos were corrected.
-!!
-!!-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!!
-!!-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. Previously,
-!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!!        by the environment label SUN.
-!!
-!!-    SPICELIB Version 2.0.3, 29-SEP-1993 (KRG)
-!!
-!!        Removed references to specific DAF file open routines in the
-!!        $Detailed_Input section of the header. This was done in order
-!!        to minimize documentation changes if these open routines ever
-!!        change.
-!!
-!!-    SPICELIB Version 2.0.2, 25-FEB-1993 (JML)
-!!
-!!        A minor error in the $Particulars section of the header was
-!!        corrected. It formerly stated that a file could be open more
-!!        than once for read or write access instead of just read access.
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 03-SEP-1991 (NJB) (WLT)
-!!
-!!        This routine was updated so that it now keeps current the set
-!!        of DAF handles returned by DAFHOF.
-!!
-!!        Upgraded to support file handle checking routines
-!!        DAFHOF and DAFSIH. DAFCLS now initializes the file
-!!        handle list if necessary, and removes from the list
-!!        the handles of files it closes.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     close DAF
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -8153,247 +7588,220 @@ contains
       end associate
       end procedure dafcls
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle associated with a previously opened
+      !>              DAF file.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     ND,
+      !>     NI       are the numbers of double precision and integer
+      !>              components, respectively, in each array summary
+      !>              in the specified file.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the specified handle does not belong to any file that is
+      !>         currently known to be open, the error SPICE(DAFNOSUCHHANDLE)
+      !>         is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The summary format must be known in order to pack or unpack
+      !>     an array summary. See the DAF Required Reading for a discussion
+      !>     of summary formats.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Find the number of d.p. `words' in a DAF having an
+      !>        arbitrary summary format.
+      !>
+      !>        Use the SPK kernel below as input DAF file for the program.
+      !>
+      !>           de421.bsp
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFHSF_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Count the number of d.p. words of data in a
+      !>        C     DAF.  Exclude array summaries, reserved records,
+      !>        C     the file record, and character records.
+      !>        C
+      !>              INTEGER               FILEN
+      !>              PARAMETER           ( FILEN  = 128 )
+      !>
+      !>              INTEGER               MAXND
+      !>              PARAMETER           ( MAXND  = 124 )
+      !>
+      !>              INTEGER               MAXNI
+      !>              PARAMETER           ( MAXNI  = 250 )
+      !>
+      !>              INTEGER               MAXSUM
+      !>              PARAMETER           ( MAXSUM = 125 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(FILEN)     DAF
+      !>
+      !>              DOUBLE PRECISION      DC    ( MAXND  )
+      !>              DOUBLE PRECISION      SUM   ( MAXSUM )
+      !>
+      !>              INTEGER               FA
+      !>              INTEGER               HANDLE
+      !>              INTEGER               IA
+      !>              INTEGER               IC    ( MAXNI )
+      !>              INTEGER               N
+      !>              INTEGER               ND
+      !>              INTEGER               NI
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>              DAF = 'de421.bsp'
+      !>
+      !>        C
+      !>        C     Open the DAF and find the summary format.
+      !>        C
+      !>              CALL DAFOPR ( DAF,    HANDLE )
+      !>              CALL DAFHSF ( HANDLE, ND, NI )
+      !>
+      !>        C
+      !>        C     Start a forward search and examine each array in
+      !>        C     turn.
+      !>        C
+      !>              CALL DAFBFS ( HANDLE )
+      !>              CALL DAFFNA ( FOUND  )
+      !>
+      !>              N = 0
+      !>              DO WHILE ( FOUND )
+      !>
+      !>        C
+      !>        C        Obtain the array summary, unpack it, and get
+      !>        C        the initial and final array addresses from
+      !>        C        the integer descriptor component.
+      !>        C
+      !>                 CALL DAFGS ( SUM )
+      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>
+      !>                 IA  =  IC ( NI - 1 )
+      !>                 FA  =  IC ( NI     )
+      !>
+      !>                 N   =  FA - IA + 1 + N
+      !>
+      !>                 CALL DAFFNA ( FOUND )
+      !>
+      !>              END DO
+      !>
+      !>              WRITE (*,*) 'Number of d.p. words is ', N
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Number of d.p. words is      2098004
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 8.0.2, 25-NOV-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard. Changed example
+      !>        code to hardcode the DAF file used as input.
+      !>
+      !>-    SPICELIB Version 8.0.1, 10-OCT-2012 (EDW)
+      !>
+      !>        Corrected ordering of header section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
+      !>
+      !>        This routine was updated to utilize the new handle manager
+      !>        software to manage binary file formats and consolidated
+      !>        I/O code.
+      !>
+      !>-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 1.0.4, 29-SEP-1993 (KRG)
+      !>
+      !>        Removed references to specific DAF file open routines in the
+      !>        $Detailed_Input section of the header. This was done in order
+      !>        to minimize documentation changes if these open routines ever
+      !>        change.
+      !>
+      !>-    SPICELIB Version 1.0.3, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.2, 03-SEP-1990 (NJB)
+      !>
+      !>        Example added to the $Examples section.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafhsf
-!! ## Abstract
-!!
-!!     Return the summary format associated with a handle.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     DAF
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!     INTEGER               ND
-!!     INTEGER               NI
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle associated with a previously opened
-!!              DAF file.
-!!
-!! ## Detailed Output
-!!
-!!     ND,
-!!     NI       are the numbers of double precision and integer
-!!              components, respectively, in each array summary
-!!              in the specified file.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the specified handle does not belong to any file that is
-!!         currently known to be open, the error SPICE(DAFNOSUCHHANDLE)
-!!         is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     The summary format must be known in order to pack or unpack
-!!     an array summary. See the DAF Required Reading for a discussion
-!!     of summary formats.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Find the number of d.p. `words' in a DAF having an
-!!        arbitrary summary format.
-!!
-!!        Use the SPK kernel below as input DAF file for the program.
-!!
-!!           de421.bsp
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DAFHSF_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Count the number of d.p. words of data in a
-!!        C     DAF.  Exclude array summaries, reserved records,
-!!        C     the file record, and character records.
-!!        C
-!!              INTEGER               FILEN
-!!              PARAMETER           ( FILEN  = 128 )
-!!
-!!              INTEGER               MAXND
-!!              PARAMETER           ( MAXND  = 124 )
-!!
-!!              INTEGER               MAXNI
-!!              PARAMETER           ( MAXNI  = 250 )
-!!
-!!              INTEGER               MAXSUM
-!!              PARAMETER           ( MAXSUM = 125 )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(FILEN)     DAF
-!!
-!!              DOUBLE PRECISION      DC    ( MAXND  )
-!!              DOUBLE PRECISION      SUM   ( MAXSUM )
-!!
-!!              INTEGER               FA
-!!              INTEGER               HANDLE
-!!              INTEGER               IA
-!!              INTEGER               IC    ( MAXNI )
-!!              INTEGER               N
-!!              INTEGER               ND
-!!              INTEGER               NI
-!!
-!!              LOGICAL               FOUND
-!!
-!!              DAF = 'de421.bsp'
-!!
-!!        C
-!!        C     Open the DAF and find the summary format.
-!!        C
-!!              CALL DAFOPR ( DAF,    HANDLE )
-!!              CALL DAFHSF ( HANDLE, ND, NI )
-!!
-!!        C
-!!        C     Start a forward search and examine each array in
-!!        C     turn.
-!!        C
-!!              CALL DAFBFS ( HANDLE )
-!!              CALL DAFFNA ( FOUND  )
-!!
-!!              N = 0
-!!              DO WHILE ( FOUND )
-!!
-!!        C
-!!        C        Obtain the array summary, unpack it, and get
-!!        C        the initial and final array addresses from
-!!        C        the integer descriptor component.
-!!        C
-!!                 CALL DAFGS ( SUM )
-!!                 CALL DAFUS ( SUM, ND, NI, DC, IC )
-!!
-!!                 IA  =  IC ( NI - 1 )
-!!                 FA  =  IC ( NI     )
-!!
-!!                 N   =  FA - IA + 1 + N
-!!
-!!                 CALL DAFFNA ( FOUND )
-!!
-!!              END DO
-!!
-!!              WRITE (*,*) 'Number of d.p. words is ', N
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!         Number of d.p. words is      2098004
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 8.0.2, 25-NOV-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard. Changed example
-!!        code to hardcode the DAF file used as input.
-!!
-!!-    SPICELIB Version 8.0.1, 10-OCT-2012 (EDW)
-!!
-!!        Corrected ordering of header section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
-!!
-!!        This routine was updated to utilize the new handle manager
-!!        software to manage binary file formats and consolidated
-!!        I/O code.
-!!
-!!-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are WIN-NT
-!!
-!!-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
-!!
-!!        CSPICE environments were added. Some typos were corrected.
-!!
-!!-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!!
-!!-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. Previously,
-!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!!        by the environment label SUN.
-!!
-!!-    SPICELIB Version 1.0.4, 29-SEP-1993 (KRG)
-!!
-!!        Removed references to specific DAF file open routines in the
-!!        $Detailed_Input section of the header. This was done in order
-!!        to minimize documentation changes if these open routines ever
-!!        change.
-!!
-!!-    SPICELIB Version 1.0.3, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.2, 03-SEP-1990 (NJB)
-!!
-!!        Example added to the $Examples section.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     handle to DAF summary format
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -8457,190 +7865,166 @@ contains
       end associate
       end procedure dafhsf
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle associated with a previously opened
+      !>              DAF file.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     UNIT     is the Fortran logical unit to which the file is
+      !>              connected.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If any error occurs while attempting to fetch a logical unit,
+      !>         the error is signaled by a routine in the call tree of this
+      !>         routine. The value of UNIT in this case is undefined.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The best reason for knowing the logical unit to which a DAF
+      !>     is connected is to read or write from the records reserved in a
+      !>     file. Since these records are by definition invisible to the DAF
+      !>     routines, you must read and write them directly.
+      !>
+      !> ## Examples
+      !>
+      !>     In the following code fragment, the first reserved record in
+      !>     a newly created DAF is used to store the name and address
+      !>     of the person who created it.
+      !>
+      !>        FTYPE = 'TEST'
+      !>        CALL DAFONW ( FNAME, FTYPE, 3, 6, IFNAME, 5, HANDLE )
+      !>        CALL DAFHLU ( HANDLE, UNIT )
+      !>
+      !>        WRITE (UNIT,REC=2) 'Ellis Wyatt, JPL ',
+      !>       .                   '4800 Oak Grove Drive ',
+      !>       .                   'Room 301-125A ',
+      !>       .                   'Pasadena, CA 91109'
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine may only be used to retrieve logical units
+      !>         for DAFs loaded or created using the interfaces available
+      !>         in this entry point umbrella. Using this entry point to
+      !>         retrieve units for files not loaded through these interfaces
+      !>         may result in unexpected behavior.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 8.0.2, 25-NOV-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 8.0.1, 10-OCT-2012 (EDW)
+      !>
+      !>        Corrected ordering of header section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
+      !>
+      !>        This routine was updated to utilize the new handle manager
+      !>        software to manage binary file formats and consolidated
+      !>        I/O code.
+      !>
+      !>-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 1.0.3, 29-SEP-1993 (KRG)
+      !>
+      !>        Removed references to specific DAF file open routines in the
+      !>        $Detailed_Input section of the header. This was done in order
+      !>        to minimize documentation changes if these open routines ever
+      !>        change.
+      !>
+      !>        Changed the example to use the new entry point DAFONW.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
+      !>
+      !>        Successfully invoking this module has the side effect of
+      !>        locking UNIT to HANDLE. This 'lock' guarantees until
+      !>        HANDLE is closed (or unlocked) that the file associated
+      !>        with HANDLE is always open and attached to logical unit
+      !>        UNIT. To unlock a handle without closing the file, use
+      !>        ZZDDHUNL, an entry point in the handle manager umbrella,
+      !>        ZZDDHMAN.
+      !>
+      !>        The system can lock at most UTSIZE-SCRUNT-RSVUNT
+      !>        simultaneously (see the include file 'zzddhman.inc' for
+      !>        specific values of these parameters), but unnecessarily
+      !>        locking handles to their logical units may cause performance
+      !>        degradation. The handle manager will have less logical
+      !>        units to utilize when disconnecting and reconnecting
+      !>        loaded files.
+      !>
+      !>-    Beta Version 1.1.0, 1-NOV-1989 (RET)
+      !>
+      !>        DAFHLU now only checks in and checks out if the one exception
+      !>        occurs. The purpose of this change was to help speed up a
+      !>        routine that gets called constantly by higher level DAF
+      !>        routines.
+      !>
+      !>     Standard SPICE error handling.
       module procedure dafhlu
-!! ## Abstract
-!!
-!!     Return the logical unit associated with a handle.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     DAF
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!     INTEGER               UNIT
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle associated with a previously opened
-!!              DAF file.
-!!
-!! ## Detailed Output
-!!
-!!     UNIT     is the Fortran logical unit to which the file is
-!!              connected.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If any error occurs while attempting to fetch a logical unit,
-!!         the error is signaled by a routine in the call tree of this
-!!         routine. The value of UNIT in this case is undefined.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     The best reason for knowing the logical unit to which a DAF
-!!     is connected is to read or write from the records reserved in a
-!!     file. Since these records are by definition invisible to the DAF
-!!     routines, you must read and write them directly.
-!!
-!! ## Examples
-!!
-!!     In the following code fragment, the first reserved record in
-!!     a newly created DAF is used to store the name and address
-!!     of the person who created it.
-!!
-!!        FTYPE = 'TEST'
-!!        CALL DAFONW ( FNAME, FTYPE, 3, 6, IFNAME, 5, HANDLE )
-!!        CALL DAFHLU ( HANDLE, UNIT )
-!!
-!!        WRITE (UNIT,REC=2) 'Ellis Wyatt, JPL ',
-!!       .                   '4800 Oak Grove Drive ',
-!!       .                   'Room 301-125A ',
-!!       .                   'Pasadena, CA 91109'
-!!
-!! ## Restrictions
-!!
-!!     1)  This routine may only be used to retrieve logical units
-!!         for DAFs loaded or created using the interfaces available
-!!         in this entry point umbrella. Using this entry point to
-!!         retrieve units for files not loaded through these interfaces
-!!         may result in unexpected behavior.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 8.0.2, 25-NOV-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 8.0.1, 10-OCT-2012 (EDW)
-!!
-!!        Corrected ordering of header section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
-!!
-!!        This routine was updated to utilize the new handle manager
-!!        software to manage binary file formats and consolidated
-!!        I/O code.
-!!
-!!-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are WIN-NT
-!!
-!!-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
-!!
-!!        CSPICE environments were added. Some typos were corrected.
-!!
-!!-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!!
-!!-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. Previously,
-!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!!        by the environment label SUN.
-!!
-!!-    SPICELIB Version 1.0.3, 29-SEP-1993 (KRG)
-!!
-!!        Removed references to specific DAF file open routines in the
-!!        $Detailed_Input section of the header. This was done in order
-!!        to minimize documentation changes if these open routines ever
-!!        change.
-!!
-!!        Changed the example to use the new entry point DAFONW.
-!!
-!!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     DAF handle to logical unit
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
-!!
-!!        Successfully invoking this module has the side effect of
-!!        locking UNIT to HANDLE. This 'lock' guarantees until
-!!        HANDLE is closed (or unlocked) that the file associated
-!!        with HANDLE is always open and attached to logical unit
-!!        UNIT. To unlock a handle without closing the file, use
-!!        ZZDDHUNL, an entry point in the handle manager umbrella,
-!!        ZZDDHMAN.
-!!
-!!        The system can lock at most UTSIZE-SCRUNT-RSVUNT
-!!        simultaneously (see the include file 'zzddhman.inc' for
-!!        specific values of these parameters), but unnecessarily
-!!        locking handles to their logical units may cause performance
-!!        degradation. The handle manager will have less logical
-!!        units to utilize when disconnecting and reconnecting
-!!        loaded files.
-!!
-!!-    Beta Version 1.1.0, 1-NOV-1989 (RET)
-!!
-!!        DAFHLU now only checks in and checks out if the one exception
-!!        occurs. The purpose of this change was to help speed up a
-!!        routine that gets called constantly by higher level DAF
-!!        routines.
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -8687,156 +8071,130 @@ contains
       return
       end procedure dafhlu
 
+      !> ## Detailed Input
+      !>
+      !>     UNIT     is the logical unit to which a DAF has been
+      !>              connected after it has been opened.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HANDLE   is the handle associated with the file.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the specified unit is not connected to any file that is
+      !>         currently loaded as a DAF, the error SPICE(DAFNOSUCHUNIT)
+      !>         is signaled. The value of HANDLE returned is undefined in
+      !>         this case.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     It is unlikely, but possible, that a calling program would know
+      !>     the logical unit to which a file is connected without knowing the
+      !>     handle associated with the file. DAFLUH is provided mostly for
+      !>     completeness.
+      !>
+      !> ## Examples
+      !>
+      !>     In the following code fragment, the handle associated with
+      !>     a DAF is retrieved using the logical unit to which the
+      !>     file is connected. The handle is then used to determine the
+      !>     name of the file.
+      !>
+      !>        CALL DAFLUH ( UNIT,   HANDLE )
+      !>        CALL DAFHFN ( HANDLE, FNAME )
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine may only be used to retrieve handles for logical
+      !>         units connected to DAFs loaded or created using the interfaces
+      !>         available in this entry point umbrella. Using this entry point
+      !>         to retrieve handles for files not loaded through these
+      !>         interfaces may result in unexpected behavior.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 8.0.2, 25-NOV-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 8.0.1, 10-OCT-2012 (EDW)
+      !>
+      !>        Corrected ordering of header section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
+      !>
+      !>        This routine was updated to utilize the new handle manager
+      !>        software to manage binary file formats and consolidated
+      !>        I/O code.
+      !>
+      !>-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 1.0.3, 29-SEP-1993 (KRG)
+      !>
+      !>        Removed references to specific DAF file open routines in the
+      !>        $Detailed_Input section of the header. This was done in order
+      !>        to minimize documentation changes if these open routines ever
+      !>        change.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafluh
-!! ## Abstract
-!!
-!!     Return the handle associated with a logical unit.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     DAF
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               UNIT
-!!     INTEGER               HANDLE
-!!
-!! ## Detailed Input
-!!
-!!     UNIT     is the logical unit to which a DAF has been
-!!              connected after it has been opened.
-!!
-!! ## Detailed Output
-!!
-!!     HANDLE   is the handle associated with the file.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the specified unit is not connected to any file that is
-!!         currently loaded as a DAF, the error SPICE(DAFNOSUCHUNIT)
-!!         is signaled. The value of HANDLE returned is undefined in
-!!         this case.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     It is unlikely, but possible, that a calling program would know
-!!     the logical unit to which a file is connected without knowing the
-!!     handle associated with the file. DAFLUH is provided mostly for
-!!     completeness.
-!!
-!! ## Examples
-!!
-!!     In the following code fragment, the handle associated with
-!!     a DAF is retrieved using the logical unit to which the
-!!     file is connected. The handle is then used to determine the
-!!     name of the file.
-!!
-!!        CALL DAFLUH ( UNIT,   HANDLE )
-!!        CALL DAFHFN ( HANDLE, FNAME )
-!!
-!! ## Restrictions
-!!
-!!     1)  This routine may only be used to retrieve handles for logical
-!!         units connected to DAFs loaded or created using the interfaces
-!!         available in this entry point umbrella. Using this entry point
-!!         to retrieve handles for files not loaded through these
-!!         interfaces may result in unexpected behavior.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 8.0.2, 25-NOV-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 8.0.1, 10-OCT-2012 (EDW)
-!!
-!!        Corrected ordering of header section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
-!!
-!!        This routine was updated to utilize the new handle manager
-!!        software to manage binary file formats and consolidated
-!!        I/O code.
-!!
-!!-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are WIN-NT
-!!
-!!-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
-!!
-!!        CSPICE environments were added. Some typos were corrected.
-!!
-!!-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!!
-!!-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. Previously,
-!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!!        by the environment label SUN.
-!!
-!!-    SPICELIB Version 1.0.3, 29-SEP-1993 (KRG)
-!!
-!!        Removed references to specific DAF file open routines in the
-!!        $Detailed_Input section of the header. This was done in order
-!!        to minimize documentation changes if these open routines ever
-!!        change.
-!!
-!!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     logical unit to DAF handle
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -8907,175 +8265,149 @@ contains
       return
       end procedure dafluh
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle associated with a previously opened
+      !>              DAF file.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     FNAME    is the name of the file.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the specified handle does not belong to any file that is
+      !>         currently known to be loaded as a DAF, the error
+      !>         SPICE(DAFNOSUCHHANDLE) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     It may be desirable to recover the names of one or more DAF
+      !>     files in a different part of the program from the one in which
+      !>     they were opened. Note that the names returned by DAFHFN may
+      !>     not be identical to the names used to open the files. Under
+      !>     most operating systems, a particular file can be accessed using
+      !>     many different names. DAFHFN returns one of them.
+      !>
+      !> ## Examples
+      !>
+      !>     In the following code fragment, the name of a DAF is
+      !>     recovered using the handle associated with the file.
+      !>
+      !>        CALL DAFOPR ( 'sample.DAF', HANDLE )
+      !>         .
+      !>         .
+      !>
+      !>        CALL DAFHFN ( HANDLE, FNAME )
+      !>
+      !>     Depending on the circumstances (operating system, compiler,
+      !>     default directory) the value of FNAME might resemble any of
+      !>     the following:
+      !>
+      !>        'USER$DISK:[WYATT.IMAGES]SAMPLE.DAF;4'
+      !>
+      !>        '/wyatt/images/sample.DAF'
+      !>
+      !>        'A:\IMAGES\SAMPLE.DAF'
+      !>
+      !>     On the other hand, it might not.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine may only be used to retrieve the names of DAFs
+      !>         loaded or created using the interfaces available in this entry
+      !>         point umbrella. Using this entry point to retrieve names for
+      !>         files not loaded through these interfaces may result in
+      !>         unexpected behavior.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     J.M. Lynch         (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 8.0.2, 25-NOV-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 8.0.1, 10-OCT-2012 (EDW)
+      !>
+      !>        Corrected ordering of header section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
+      !>
+      !>        This routine was updated to utilize the new handle manager
+      !>        software to manage binary file formats and consolidated
+      !>        I/O code.
+      !>
+      !>-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 1.1.1, 29-SEP-1993 (KRG)
+      !>
+      !>        Removed references to specific DAF file open routines in the
+      !>        $Detailed_Input section of the header. This was done in order
+      !>        to minimize documentation changes if these open routines ever
+      !>        change.
+      !>
+      !>-    SPICELIB Version 1.1.0, 25-FEB-1993 (JML)
+      !>
+      !>        IOSTAT is checked after the INQUIRE statement.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafhfn
-!! ## Abstract
-!!
-!!     Return the name of the file associated with a handle.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     DAF
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!     CHARACTER*(*)         FNAME
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle associated with a previously opened
-!!              DAF file.
-!!
-!! ## Detailed Output
-!!
-!!     FNAME    is the name of the file.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the specified handle does not belong to any file that is
-!!         currently known to be loaded as a DAF, the error
-!!         SPICE(DAFNOSUCHHANDLE) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     It may be desirable to recover the names of one or more DAF
-!!     files in a different part of the program from the one in which
-!!     they were opened. Note that the names returned by DAFHFN may
-!!     not be identical to the names used to open the files. Under
-!!     most operating systems, a particular file can be accessed using
-!!     many different names. DAFHFN returns one of them.
-!!
-!! ## Examples
-!!
-!!     In the following code fragment, the name of a DAF is
-!!     recovered using the handle associated with the file.
-!!
-!!        CALL DAFOPR ( 'sample.DAF', HANDLE )
-!!         .
-!!         .
-!!
-!!        CALL DAFHFN ( HANDLE, FNAME )
-!!
-!!     Depending on the circumstances (operating system, compiler,
-!!     default directory) the value of FNAME might resemble any of
-!!     the following:
-!!
-!!        'USER$DISK:[WYATT.IMAGES]SAMPLE.DAF;4'
-!!
-!!        '/wyatt/images/sample.DAF'
-!!
-!!        'A:\IMAGES\SAMPLE.DAF'
-!!
-!!     On the other hand, it might not.
-!!
-!! ## Restrictions
-!!
-!!     1)  This routine may only be used to retrieve the names of DAFs
-!!         loaded or created using the interfaces available in this entry
-!!         point umbrella. Using this entry point to retrieve names for
-!!         files not loaded through these interfaces may result in
-!!         unexpected behavior.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     J.M. Lynch         (JPL)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 8.0.2, 25-NOV-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 8.0.1, 10-OCT-2012 (EDW)
-!!
-!!        Corrected ordering of header section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
-!!
-!!        This routine was updated to utilize the new handle manager
-!!        software to manage binary file formats and consolidated
-!!        I/O code.
-!!
-!!-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are WIN-NT
-!!
-!!-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
-!!
-!!        CSPICE environments were added. Some typos were corrected.
-!!
-!!-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!!
-!!-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. Previously,
-!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!!        by the environment label SUN.
-!!
-!!-    SPICELIB Version 1.1.1, 29-SEP-1993 (KRG)
-!!
-!!        Removed references to specific DAF file open routines in the
-!!        $Detailed_Input section of the header. This was done in order
-!!        to minimize documentation changes if these open routines ever
-!!        change.
-!!
-!!-    SPICELIB Version 1.1.0, 25-FEB-1993 (JML)
-!!
-!!        IOSTAT is checked after the INQUIRE statement.
-!!
-!!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     DAF handle to file name
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -9130,207 +8462,181 @@ contains
       return
       end procedure dafhfn
 
+      !> ## Detailed Input
+      !>
+      !>     FNAME    is the name of a previously opened DAF file.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HANDLE   is the handle associated with the file.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the specified name does not specify any file currently
+      !>         known to be loaded as a DAF, the error SPICE(DAFNOSUCHFILE) is
+      !>         signaled. The value of HANDLE is undefined in this case.
+      !>
+      !>     2)  If the file does not exist, an error is signaled by a routine
+      !>         in the call tree of this routine. The value of HANDLE is
+      !>         undefined in this case.
+      !>
+      !>     3)  If an I/O error is generated in the process of connecting the
+      !>         specified name with a handle, the error is signaled by a
+      !>         routine in the call tree of this routine. The value of
+      !>         HANDLE is undefined in this case.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     It is sometimes easier to work with file names (which are
+      !>     meaningful, and often predictable) than with file handles
+      !>     (which are neither), especially in interactive situations.
+      !>     However, nearly every DAF routines requires that you use file
+      !>     handles to refer to files. DAFFNH is provided to bridge the gap
+      !>     between the two representations.
+      !>
+      !> ## Examples
+      !>
+      !>     In the following code fragment, the handle associated with a
+      !>     DAF is recovered using the name of the file.
+      !>
+      !>        CALL DAFOPR ( 'sample.DAF', HANDLE )
+      !>         .
+      !>         .
+      !>
+      !>        CALL DAFFNH ( 'sample.DAF', HANDLE )
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Only file names of DAFs loaded with interfaces present in
+      !>         this entry point umbrella should be passed into this routine.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     J.M. Lynch         (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 8.1.2, 25-NOV-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 8.1.1, 10-OCT-2012 (EDW)
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>        Corrected ordering of header section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
+      !>
+      !>        Fixed a bug, where an error was signaled but the call to
+      !>        CHKOUT and the RETURN statement were omitted.
+      !>
+      !>-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
+      !>
+      !>        This routine was updated to utilize the new handle manager
+      !>        software to manage binary file formats and consolidated
+      !>        I/O code.
+      !>
+      !>        In previous version of DAFAH, this module simply
+      !>        performed an INQUIRE on FNAME and looked in the
+      !>        file table for the logical unit returned.
+      !>
+      !>        The integration of the new handle manager interfaces
+      !>        into this entry point has the possibility of increasing
+      !>        the complexity of this routine when more than UTSIZE
+      !>        files are loaded. Essentially, when given an arbitrary
+      !>        name, a total of FTSIZE INQUIRE statements may be executed
+      !>        to accurately connect FNAME with HANDLE. See ZZDDHFNH and
+      !>        ZZDDHF2H for details.
+      !>
+      !>-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 2.0.1, 29-SEP-1993 (KRG)
+      !>
+      !>        Removed references to specific DAF file open routines in the
+      !>        $Detailed_Input section of the header. This was done in order
+      !>        to minimize documentation changes if these open routines ever
+      !>        change.
+      !>
+      !>-    SPICELIB Version 2.0.0, 25-FEB-1993 (JML)
+      !>
+      !>        The INQUIRE statement that checks if the file is open now also
+      !>        checks that the file exists. Two new exceptions were added as
+      !>        a result of this change.
+      !>
+      !>        A RETURN statement was added after the error signaled when
+      !>        the file is not open.
+      !>
+      !>        The file name is checked to see if it is blank.
+      !>
+      !>        The file name string that is passed to the FORTRAN INQUIRE
+      !>        statement has been chopped at the last non-blank character.
+      !>
+      !>-    SPICELIB Version 1.1.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.1.1, 18-SEP-1991 (HAN)
+      !>
+      !>        The $Revisions section was incorrectly named $Version. This has
+      !>        been fixed.
+      !>
+      !>-    SPICELIB Version 1.1.0, 05-NOV-1990 (HAN)
+      !>
+      !>        Call to CHKIN was corrected. The module was checking in
+      !>        as 'DAFFHN'.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure daffnh
-!! ## Abstract
-!!
-!!     Return handle associated with a file name.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     DAF
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         FNAME
-!!     INTEGER               HANDLE
-!!
-!! ## Detailed Input
-!!
-!!     FNAME    is the name of a previously opened DAF file.
-!!
-!! ## Detailed Output
-!!
-!!     HANDLE   is the handle associated with the file.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the specified name does not specify any file currently
-!!         known to be loaded as a DAF, the error SPICE(DAFNOSUCHFILE) is
-!!         signaled. The value of HANDLE is undefined in this case.
-!!
-!!     2)  If the file does not exist, an error is signaled by a routine
-!!         in the call tree of this routine. The value of HANDLE is
-!!         undefined in this case.
-!!
-!!     3)  If an I/O error is generated in the process of connecting the
-!!         specified name with a handle, the error is signaled by a
-!!         routine in the call tree of this routine. The value of
-!!         HANDLE is undefined in this case.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     It is sometimes easier to work with file names (which are
-!!     meaningful, and often predictable) than with file handles
-!!     (which are neither), especially in interactive situations.
-!!     However, nearly every DAF routines requires that you use file
-!!     handles to refer to files. DAFFNH is provided to bridge the gap
-!!     between the two representations.
-!!
-!! ## Examples
-!!
-!!     In the following code fragment, the handle associated with a
-!!     DAF is recovered using the name of the file.
-!!
-!!        CALL DAFOPR ( 'sample.DAF', HANDLE )
-!!         .
-!!         .
-!!
-!!        CALL DAFFNH ( 'sample.DAF', HANDLE )
-!!
-!! ## Restrictions
-!!
-!!     1)  Only file names of DAFs loaded with interfaces present in
-!!         this entry point umbrella should be passed into this routine.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     J.M. Lynch         (JPL)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 8.1.2, 25-NOV-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 8.1.1, 10-OCT-2012 (EDW)
-!!
-!!        Eliminated unneeded $Revisions section.
-!!
-!!        Corrected ordering of header section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 8.1.0, 02-APR-2002 (FST)
-!!
-!!        Fixed a bug, where an error was signaled but the call to
-!!        CHKOUT and the RETURN statement were omitted.
-!!
-!!-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
-!!
-!!        This routine was updated to utilize the new handle manager
-!!        software to manage binary file formats and consolidated
-!!        I/O code.
-!!
-!!        In previous version of DAFAH, this module simply
-!!        performed an INQUIRE on FNAME and looked in the
-!!        file table for the logical unit returned.
-!!
-!!        The integration of the new handle manager interfaces
-!!        into this entry point has the possibility of increasing
-!!        the complexity of this routine when more than UTSIZE
-!!        files are loaded. Essentially, when given an arbitrary
-!!        name, a total of FTSIZE INQUIRE statements may be executed
-!!        to accurately connect FNAME with HANDLE. See ZZDDHFNH and
-!!        ZZDDHF2H for details.
-!!
-!!-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are WIN-NT
-!!
-!!-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
-!!
-!!        CSPICE environments were added. Some typos were corrected.
-!!
-!!-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!!
-!!-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. Previously,
-!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!!        by the environment label SUN.
-!!
-!!-    SPICELIB Version 2.0.1, 29-SEP-1993 (KRG)
-!!
-!!        Removed references to specific DAF file open routines in the
-!!        $Detailed_Input section of the header. This was done in order
-!!        to minimize documentation changes if these open routines ever
-!!        change.
-!!
-!!-    SPICELIB Version 2.0.0, 25-FEB-1993 (JML)
-!!
-!!        The INQUIRE statement that checks if the file is open now also
-!!        checks that the file exists. Two new exceptions were added as
-!!        a result of this change.
-!!
-!!        A RETURN statement was added after the error signaled when
-!!        the file is not open.
-!!
-!!        The file name is checked to see if it is blank.
-!!
-!!        The file name string that is passed to the FORTRAN INQUIRE
-!!        statement has been chopped at the last non-blank character.
-!!
-!!-    SPICELIB Version 1.1.2, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.1.1, 18-SEP-1991 (HAN)
-!!
-!!        The $Revisions section was incorrectly named $Version. This has
-!!        been fixed.
-!!
-!!-    SPICELIB Version 1.1.0, 05-NOV-1990 (HAN)
-!!
-!!        Call to CHKIN was corrected. The module was checking in
-!!        as 'DAFFHN'.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     file name to DAF handle
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -9400,154 +8706,125 @@ contains
       return
       end procedure daffnh
 
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     FHSET    is a SPICE set containing the file handles of
+      !>              all currently open DAFs.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the set FHSET is not initialized, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     2)  If the set FHSET is too small to accommodate the set of
+      !>         handles to be returned, an error is signaled by a routine in
+      !>         the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine allows subroutines to test file handles for
+      !>     validity before performing operations on them, such as
+      !>     finding the name of the file designated by a handle. Many
+      !>     DAF operations on handles cause errors to be signaled if
+      !>     the handles are invalid.
+      !>
+      !> ## Examples
+      !>
+      !>     1)  Find out how may DAFs are open for writing.
+      !>
+      !>            C
+      !>            C    Find out which DAFs are open.
+      !>            C
+      !>                 CALL DAFHOF  ( FHSET )
+      !>
+      !>            C
+      !>            C    Count the ones open for writing. These have
+      !>            C    negative file handles.
+      !>            C
+      !>                 COUNT = 0
+      !>
+      !>                 DO I = 1, CARDC(FHSET)
+      !>
+      !>                    IF ( FHSET(I) .LT. 0 ) THEN
+      !>                       COUNT = COUNT + 1
+      !>                    END IF
+      !>
+      !>                 END DO
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 8.0.2, 25-NOV-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 8.0.1, 10-OCT-2012 (EDW)
+      !>
+      !>        Corrected ordering of header section.
+      !>
+      !>-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
+      !>
+      !>        This routine was updated to utilize the new handle manager
+      !>        software to manage binary file formats and consolidated
+      !>        I/O code.
+      !>
+      !>-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 03-SEP-1991 (NJB) (WLT)
       module procedure dafhof
-!! ## Abstract
-!!
-!!     Return a SPICE set containing the handles of all currently
-!!     open DAFS.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!     SETS
-!!
-!! ## Keywords
-!!
-!!     DAF
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               LBCELL
-!!     PARAMETER           ( LBCELL = -5 )
-!!
-!!     INTEGER               FHSET ( LBCELL : * )
-!!
-!! ## Detailed Input
-!!
-!!     None.
-!!
-!! ## Detailed Output
-!!
-!!     FHSET    is a SPICE set containing the file handles of
-!!              all currently open DAFs.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the set FHSET is not initialized, an error is signaled by a
-!!         routine in the call tree of this routine.
-!!
-!!     2)  If the set FHSET is too small to accommodate the set of
-!!         handles to be returned, an error is signaled by a routine in
-!!         the call tree of this routine.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine allows subroutines to test file handles for
-!!     validity before performing operations on them, such as
-!!     finding the name of the file designated by a handle. Many
-!!     DAF operations on handles cause errors to be signaled if
-!!     the handles are invalid.
-!!
-!! ## Examples
-!!
-!!     1)  Find out how may DAFs are open for writing.
-!!
-!!            C
-!!            C    Find out which DAFs are open.
-!!            C
-!!                 CALL DAFHOF  ( FHSET )
-!!
-!!            C
-!!            C    Count the ones open for writing. These have
-!!            C    negative file handles.
-!!            C
-!!                 COUNT = 0
-!!
-!!                 DO I = 1, CARDC(FHSET)
-!!
-!!                    IF ( FHSET(I) .LT. 0 ) THEN
-!!                       COUNT = COUNT + 1
-!!                    END IF
-!!
-!!                 END DO
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 8.0.2, 25-NOV-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 8.0.1, 10-OCT-2012 (EDW)
-!!
-!!        Corrected ordering of header section.
-!!
-!!-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
-!!
-!!        This routine was updated to utilize the new handle manager
-!!        software to manage binary file formats and consolidated
-!!        I/O code.
-!!
-!!-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are WIN-NT
-!!
-!!-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
-!!
-!!        CSPICE environments were added. Some typos were corrected.
-!!
-!!-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!!
-!!-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. Previously,
-!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!!        by the environment label SUN.
-!!
-!!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.0, 03-SEP-1991 (NJB) (WLT)
-!!
-!! ## Index Entries
-!!
-!!     return the set of handles for open DAF files
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_arrays, only: shelli
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
@@ -9614,234 +8891,206 @@ contains
       end associate
       end procedure dafhof
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is a DAF handle to validate. For HANDLE to be
+      !>              considered valid, it must specify a DAF that is
+      !>              open for the type of access specified by the input
+      !>              argument ACCESS.
+      !>
+      !>     ACCESS   is a string indicating the type of access that
+      !>              the DAF specified by the input argument HANDLE
+      !>              must be open for. The values of ACCESS may be
+      !>
+      !>                 'READ'      File must be open for read access
+      !>                             by DAF routines. All open DAFs
+      !>                             may be read.
+      !>
+      !>                 'WRITE'     File must be open for write access
+      !>                             by DAF routines.
+      !>
+      !>                             Note that files open for write
+      !>                             access may be read as well as
+      !>                             written.
+      !>
+      !>              Leading and trailing blanks in ACCESS are ignored,
+      !>              and case is not significant.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input argument ACCESS has an unrecognized value,
+      !>         the error SPICE(INVALIDOPTION) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine signals the error SPICE(DAFINVALIDACCESS) if the
+      !>     DAF designated by the input argument HANDLE is not open
+      !>     for the specified type of access. If HANDLE does not designate
+      !>     an open DAF, the error SPICE(DAFNOSUCHHANDLE) is signaled.
+      !>
+      !>     This routine allows subroutines to test file handles for
+      !>     validity before performing operations on them, such as
+      !>     finding the name of the file designated by a handle. Many
+      !>     DAF operations on handles may cause unpredictable program
+      !>     behavior if the handles are invalid. This routine should
+      !>     be used in situations where the appropriate action to take upon
+      !>     determining that a handle is invalid is to signal an error.
+      !>     DAFSIH centralizes the error response for this type of error in a
+      !>     single routine.
+      !>
+      !>     In cases where it is necessary to determine the validity of a
+      !>     file handle, but it is not an error for the handle to refer
+      !>     to a closed file, the entry point DAFHOF should be used instead
+      !>     of DAFSIH.
+      !>
+      !> ## Examples
+      !>
+      !>     1)  Add data to a DAF specified by a file handle. Signal an
+      !>         error if the file is not open for writing. Check the
+      !>         SPICELIB error status function FAILED after calling
+      !>         DAFSIH, so that the routine will return if DAFSIH
+      !>         signaled an error (we're presuming that this code
+      !>         fragment would be used in a subroutine).
+      !>
+      !>            C
+      !>            C     Check that HANDLE is valid, then add data to the
+      !>            C     file specified by HANDLE.
+      !>            C
+      !>                  CALL DAFSIH  (  HANDLE, 'WRITE' )
+      !>
+      !>                  IF ( FAILED() ) THEN
+      !>                     RETURN
+      !>                  END IF
+      !>
+      !>                  CALL DAFBNA (  HANDLE,  SUM,    NAME )
+      !>                  CALL DAFADA (  DATA,    N            )
+      !>                  CALL DAFENA
+      !>
+      !>     2)  Find the size of an array in a DAF specified by a file
+      !>         handle. Signal an error if the file is not open for reading.
+      !>
+      !>            C
+      !>            C     Check that HANDLE is valid, then obtain the
+      !>            C     current array summary and compute the size of
+      !>            C     the current array.
+      !>            C
+      !>                  CALL DAFSIH  ( HANDLE, 'READ' )
+      !>
+      !>                  IF ( FAILED() ) THEN
+      !>                     RETURN
+      !>                  END IF
+      !>
+      !>            C
+      !>            C     Obtain the summary format, then the integer and d.p.
+      !>            C     components of the summary. Finally, compute the
+      !>            C     array length.
+      !>            C
+      !>                  CALL DAFHSF (  HANDLE, ND, NI          )
+      !>                  CALL DAFGS  (  SUMMRY                  )
+      !>                  CALL DAFUS  (  SUMMRY, ND, NI, DC, IC  )
+      !>
+      !>                  IA      =  IC( NI - 1 )
+      !>                  FA      =  IC( NI     )
+      !>                  LENGTH  =  FA  -  IA  +  1
+      !>
+      !>     3)  Make sure that a file handle designates an open DAF. Signal
+      !>         an error if it does not.
+      !>
+      !>         Note that if a DAF is open at all, read access is allowed.
+      !>
+      !>                  CALL DAFSIH ( HANDLE, 'READ' )
+      !>
+      !>                  IF ( FAILED() ) THEN
+      !>                     RETURN
+      !>                  END IF
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     J.M. Lynch         (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 8.0.2, 25-NOV-2021 (JDR)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 8.0.1, 10-OCT-2012 (EDW)
+      !>
+      !>        Corrected ordering of header section.
+      !>
+      !>-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
+      !>
+      !>        This routine was updated to utilize the new handle manager
+      !>        software to manage binary file formats and consolidated
+      !>        I/O code.
+      !>
+      !>-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are WIN-NT
+      !>
+      !>-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
+      !>
+      !>        CSPICE environments were added. Some typos were corrected.
+      !>
+      !>-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. New
+      !>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+      !>
+      !>-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
+      !>
+      !>        The environment lines were expanded so that the supported
+      !>        environments are now explicitly given. Previously,
+      !>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+      !>        by the environment label SUN.
+      !>
+      !>-    SPICELIB Version 1.2.1, 29-SEP-1993 (KRG)
+      !>
+      !>        Removed references to specific DAF file open routines in the
+      !>        $Detailed_Input section of the header. This was done in order
+      !>        to minimize documentation changes if these open routines ever
+      !>        change.
+      !>
+      !>-    SPICELIB Version 1.2.0, 25-FEB-1993 (JML)
+      !>
+      !>        IOSTAT is now checked after the INQUIRE statement.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 03-SEP-1991 (NJB) (WLT)
       module procedure dafsih
-!! ## Abstract
-!!
-!!     Signal an error if a DAF file handle does not designate a DAF
-!!     that is open for a specified type of access.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!     ERROR
-!!     SETS
-!!
-!! ## Keywords
-!!
-!!     DAF
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!     CHARACTER*(*)         ACCESS
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is a DAF handle to validate. For HANDLE to be
-!!              considered valid, it must specify a DAF that is
-!!              open for the type of access specified by the input
-!!              argument ACCESS.
-!!
-!!     ACCESS   is a string indicating the type of access that
-!!              the DAF specified by the input argument HANDLE
-!!              must be open for. The values of ACCESS may be
-!!
-!!                 'READ'      File must be open for read access
-!!                             by DAF routines. All open DAFs
-!!                             may be read.
-!!
-!!                 'WRITE'     File must be open for write access
-!!                             by DAF routines.
-!!
-!!                             Note that files open for write
-!!                             access may be read as well as
-!!                             written.
-!!
-!!              Leading and trailing blanks in ACCESS are ignored,
-!!              and case is not significant.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the input argument ACCESS has an unrecognized value,
-!!         the error SPICE(INVALIDOPTION) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine signals the error SPICE(DAFINVALIDACCESS) if the
-!!     DAF designated by the input argument HANDLE is not open
-!!     for the specified type of access. If HANDLE does not designate
-!!     an open DAF, the error SPICE(DAFNOSUCHHANDLE) is signaled.
-!!
-!!     This routine allows subroutines to test file handles for
-!!     validity before performing operations on them, such as
-!!     finding the name of the file designated by a handle. Many
-!!     DAF operations on handles may cause unpredictable program
-!!     behavior if the handles are invalid. This routine should
-!!     be used in situations where the appropriate action to take upon
-!!     determining that a handle is invalid is to signal an error.
-!!     DAFSIH centralizes the error response for this type of error in a
-!!     single routine.
-!!
-!!     In cases where it is necessary to determine the validity of a
-!!     file handle, but it is not an error for the handle to refer
-!!     to a closed file, the entry point DAFHOF should be used instead
-!!     of DAFSIH.
-!!
-!! ## Examples
-!!
-!!     1)  Add data to a DAF specified by a file handle. Signal an
-!!         error if the file is not open for writing. Check the
-!!         SPICELIB error status function FAILED after calling
-!!         DAFSIH, so that the routine will return if DAFSIH
-!!         signaled an error (we're presuming that this code
-!!         fragment would be used in a subroutine).
-!!
-!!            C
-!!            C     Check that HANDLE is valid, then add data to the
-!!            C     file specified by HANDLE.
-!!            C
-!!                  CALL DAFSIH  (  HANDLE, 'WRITE' )
-!!
-!!                  IF ( FAILED() ) THEN
-!!                     RETURN
-!!                  END IF
-!!
-!!                  CALL DAFBNA (  HANDLE,  SUM,    NAME )
-!!                  CALL DAFADA (  DATA,    N            )
-!!                  CALL DAFENA
-!!
-!!     2)  Find the size of an array in a DAF specified by a file
-!!         handle. Signal an error if the file is not open for reading.
-!!
-!!            C
-!!            C     Check that HANDLE is valid, then obtain the
-!!            C     current array summary and compute the size of
-!!            C     the current array.
-!!            C
-!!                  CALL DAFSIH  ( HANDLE, 'READ' )
-!!
-!!                  IF ( FAILED() ) THEN
-!!                     RETURN
-!!                  END IF
-!!
-!!            C
-!!            C     Obtain the summary format, then the integer and d.p.
-!!            C     components of the summary. Finally, compute the
-!!            C     array length.
-!!            C
-!!                  CALL DAFHSF (  HANDLE, ND, NI          )
-!!                  CALL DAFGS  (  SUMMRY                  )
-!!                  CALL DAFUS  (  SUMMRY, ND, NI, DC, IC  )
-!!
-!!                  IA      =  IC( NI - 1 )
-!!                  FA      =  IC( NI     )
-!!                  LENGTH  =  FA  -  IA  +  1
-!!
-!!     3)  Make sure that a file handle designates an open DAF. Signal
-!!         an error if it does not.
-!!
-!!         Note that if a DAF is open at all, read access is allowed.
-!!
-!!                  CALL DAFSIH ( HANDLE, 'READ' )
-!!
-!!                  IF ( FAILED() ) THEN
-!!                     RETURN
-!!                  END IF
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     J.M. Lynch         (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 8.0.2, 25-NOV-2021 (JDR)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 8.0.1, 10-OCT-2012 (EDW)
-!!
-!!        Corrected ordering of header section.
-!!
-!!-    SPICELIB Version 8.0.0, 13-NOV-2001 (FST)
-!!
-!!        This routine was updated to utilize the new handle manager
-!!        software to manage binary file formats and consolidated
-!!        I/O code.
-!!
-!!-    SPICELIB Version 7.0.4, 08-OCT-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are WIN-NT
-!!
-!!-    SPICELIB Version 7.0.3, 16-SEP-1999 (NJB)
-!!
-!!        CSPICE environments were added. Some typos were corrected.
-!!
-!!-    SPICELIB Version 7.0.2, 28-JUL-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. New
-!!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!!
-!!-    SPICELIB Version 7.0.1, 17-MAR-1999 (WLT)
-!!
-!!        The environment lines were expanded so that the supported
-!!        environments are now explicitly given. Previously,
-!!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!!        by the environment label SUN.
-!!
-!!-    SPICELIB Version 1.2.1, 29-SEP-1993 (KRG)
-!!
-!!        Removed references to specific DAF file open routines in the
-!!        $Detailed_Input section of the header. This was done in order
-!!        to minimize documentation changes if these open routines ever
-!!        change.
-!!
-!!-    SPICELIB Version 1.2.0, 25-FEB-1993 (JML)
-!!
-!!        IOSTAT is now checked after the INQUIRE statement.
-!!
-!!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.0, 03-SEP-1991 (NJB) (WLT)
-!!
-!! ## Index Entries
-!!
-!!     signal an error for invalid DAF handles
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
@@ -9949,104 +9198,79 @@ contains
       end associate
       end procedure dafsih
 
+      !> ## Detailed Input
+      !>
+      !>     RECNO,
+      !>     WORDNO   are the record and word numbers of an arbitrary
+      !>              location within a DAF.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     ADDR     is the corresponding address within the DAF.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If either RECNO or WORDNO is zero or negative, the error
+      !>         SPICE(DAFNOSUCHADDR) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     To the user, the data in a DAF appear to be a contiguous
+      !>     collection of double precision numbers, each of which has an
+      !>     address. To the DAF software, however, the data appear to be
+      !>     a collection of records, each containing 128 double precision
+      !>     words. The routines DAFARW and DAFRWA translate between these
+      !>     two representations.
+      !>
+      !> ## Examples
+      !>
+      !>     Routines DAFRDA and DAFWDA illustrate the use of DAFARW and
+      !>     DAFRWA.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 14-APR-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Moved DAF
+      !>        required reading from $Literature_References to
+      !>        $Required_Reading section.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafrwa
-!! ## Abstract
-!!
-!!     Convert a record/word pair to its equivalent address within
-!!     a DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     FILES
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     RECNO,
-!!     WORDNO   are the record and word numbers of an arbitrary
-!!              location within a DAF.
-!!
-!! ## Detailed Output
-!!
-!!     ADDR     is the corresponding address within the DAF.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If either RECNO or WORDNO is zero or negative, the error
-!!         SPICE(DAFNOSUCHADDR) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     To the user, the data in a DAF appear to be a contiguous
-!!     collection of double precision numbers, each of which has an
-!!     address. To the DAF software, however, the data appear to be
-!!     a collection of records, each containing 128 double precision
-!!     words. The routines DAFARW and DAFRWA translate between these
-!!     two representations.
-!!
-!! ## Examples
-!!
-!!     Routines DAFRDA and DAFWDA illustrate the use of DAFARW and
-!!     DAFRWA.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.1.0, 14-APR-2021 (JDR)
-!!
-!!        Added IMPLICIT NONE statement.
-!!
-!!        Edited the header to comply with NAIF standard. Moved DAF
-!!        required reading from $Literature_References to
-!!        $Required_Reading section.
-!!
-!!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     record/word to DAF address
-!!
-!!     SPICELIB functions
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip
       implicit none
       if ( ctx%failed() ) then
@@ -10069,106 +9293,79 @@ contains
       return
       end procedure dafrwa
 
+      !> ## Detailed Input
+      !>
+      !>     ADDR     is an arbitrary address within a DAF.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     RECNO,
+      !>     WORDNO   are the corresponding record and word numbers
+      !>              within the DAF.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If ADDR is zero or negative, the error SPICE(DAFNOSUCHADDR)
+      !>         is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     To the user, the data in a DAF appear to be a contiguous
+      !>     collection of double precision numbers, each of which has an
+      !>     address. To the DAF software, however, the data appear to be
+      !>     a collection of records, each containing 128 double precision
+      !>     words. The routines DAFARW and DAFRWA translate between these
+      !>     two representations.
+      !>
+      !> ## Examples
+      !>
+      !>     Routines DAFRDA and DAFWDA illustrate the use of DAFARW and
+      !>     DAFRWA.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 14-APR-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Moved DAF
+      !>        required reading from $Literature_References to
+      !>        $Required_Reading section.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafarw
-!! ## Abstract
-!!
-!!     Convert an address within a DAF to its equivalent
-!!     record/word representation.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               ADDR
-!!     INTEGER               RECNO
-!!     INTEGER               WORDNO
-!!
-!! ## Detailed Input
-!!
-!!     ADDR     is an arbitrary address within a DAF.
-!!
-!! ## Detailed Output
-!!
-!!     RECNO,
-!!     WORDNO   are the corresponding record and word numbers
-!!              within the DAF.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If ADDR is zero or negative, the error SPICE(DAFNOSUCHADDR)
-!!         is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     To the user, the data in a DAF appear to be a contiguous
-!!     collection of double precision numbers, each of which has an
-!!     address. To the DAF software, however, the data appear to be
-!!     a collection of records, each containing 128 double precision
-!!     words. The routines DAFARW and DAFRWA translate between these
-!!     two representations.
-!!
-!! ## Examples
-!!
-!!     Routines DAFRDA and DAFWDA illustrate the use of DAFARW and
-!!     DAFRWA.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.1.0, 14-APR-2021 (JDR)
-!!
-!!        Added IMPLICIT NONE statement.
-!!
-!!        Edited the header to comply with NAIF standard. Moved DAF
-!!        required reading from $Literature_References to
-!!        $Required_Reading section.
-!!
-!!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     DAF address to record/word
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip
       implicit none
       if ( ctx%failed() ) then
@@ -10190,275 +9387,246 @@ contains
       return
       end procedure dafarw
 
+      !> ## Detailed Input
+      !>
+      !>     ND       is the number of double precision components in
+      !>              the summary to be packed.
+      !>
+      !>     NI       is the number of integer components in the summary.
+      !>
+      !>     DC       are the double precision components of the summary.
+      !>
+      !>     IC       are the integer components of the summary.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     SUM      is an array summary containing the components in DC
+      !>              and IC. This identifies the contents and location of
+      !>              a single array within a DAF.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If ND is zero or negative, no DP components are stored.
+      !>
+      !>     2)  If NI is zero or negative, no integer components are stored.
+      !>
+      !>     3)  If the total size of the summary is greater than 125 double
+      !>         precision words, some components may not be stored. See
+      !>         $Particulars for details.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The components of array summaries are packed into double
+      !>     precision arrays for reasons outlined in [1]. Two routines,
+      !>     DAFPS (pack summary) and DAFUS (unpack summary) are provided
+      !>     for packing and unpacking summaries.
+      !>
+      !>     The total size of the summary is
+      !>
+      !>             (NI - 1)
+      !>        ND + -------- + 1
+      !>                 2
+      !>
+      !>     double precision words (where ND, NI are nonnegative).
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Replace the body ID code 301 (Moon) with a test body ID,
+      !>        e.g. -999, in every descriptor of an SPK file.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFPS_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     SPICELIB functions.
+      !>        C
+      !>              INTEGER               CARDI
+      !>
+      !>        C
+      !>        C     Local parameters.
+      !>        C
+      !>              INTEGER               LBCELL
+      !>              PARAMETER           ( LBCELL = -5   )
+      !>
+      !>              INTEGER               DSCSIZ
+      !>              PARAMETER           ( DSCSIZ = 5    )
+      !>
+      !>              INTEGER               FILSIZ
+      !>              PARAMETER           ( FILSIZ = 256  )
+      !>
+      !>              INTEGER               MAXOBJ
+      !>              PARAMETER           ( MAXOBJ = 1000 )
+      !>
+      !>              INTEGER               ND
+      !>              PARAMETER           ( ND     = 2    )
+      !>
+      !>              INTEGER               NI
+      !>              PARAMETER           ( NI     = 6    )
+      !>
+      !>              INTEGER               NEWCOD
+      !>              PARAMETER           ( NEWCOD = -999 )
+      !>
+      !>              INTEGER               OLDCOD
+      !>              PARAMETER           ( OLDCOD =  301 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(FILSIZ)    FNAME
+      !>
+      !>              DOUBLE PRECISION      DC     ( ND )
+      !>              DOUBLE PRECISION      SUM    ( DSCSIZ )
+      !>
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               IC     ( NI )
+      !>              INTEGER               IDS    ( LBCELL : MAXOBJ )
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Get the SPK file name.
+      !>        C
+      !>              CALL PROMPT ( 'Enter name of the SPK file > ', FNAME )
+      !>
+      !>        C
+      !>        C     Initialize the set IDS.
+      !>        C
+      !>              CALL SSIZEI ( MAXOBJ, IDS )
+      !>
+      !>        C
+      !>        C     Open for writing the SPK file.
+      !>        C
+      !>              CALL DAFOPW ( FNAME, HANDLE )
+      !>
+      !>        C
+      !>        C     Search the file in forward order.
+      !>        C
+      !>              CALL DAFBFS ( HANDLE )
+      !>              CALL DAFFNA ( FOUND )
+      !>
+      !>              DO WHILE ( FOUND )
+      !>
+      !>        C
+      !>        C        Fetch and unpack the descriptor (aka summary)
+      !>        C        of the current segment.
+      !>        C
+      !>                 CALL DAFGS ( SUM )
+      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>
+      !>        C
+      !>        C        Replace ID codes if necessary.
+      !>        C
+      !>                 IF ( IC(1) .EQ. OLDCOD ) THEN
+      !>
+      !>                    IC(1) = NEWCOD
+      !>
+      !>                 END IF
+      !>
+      !>                 IF ( IC(2) .EQ. OLDCOD ) THEN
+      !>
+      !>                    IC(2) = NEWCOD
+      !>
+      !>                 END IF
+      !>
+      !>        C
+      !>        C        Re-pack the descriptor; replace the descriptor
+      !>        C        in the file.
+      !>        C
+      !>                 CALL DAFPS ( ND, NI, DC, IC, SUM )
+      !>                 CALL DAFRS ( SUM )
+      !>
+      !>        C
+      !>        C        Find the next segment.
+      !>        C
+      !>                 CALL DAFFNA ( FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Close the file.
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Find the set of objects in the SPK file.
+      !>        C
+      !>              CALL SPKOBJ ( FNAME, IDS )
+      !>
+      !>              WRITE(*,'(A)') 'Objects in the DAF file:'
+      !>              WRITE(*,*) ' '
+      !>              WRITE(*,'(20I4)') ( IDS(I), I= 1, CARDI ( IDS ) )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, using the SPK file named de430.bsp, the output was:
+      !>
+      !>        Enter name of the SPK file > de430.bsp
+      !>        Objects in the DAF file:
+      !>
+      !>        -999   1   2   3   4   5   6   7   8   9  10 199 299 399
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Added complete
+      !>        code example.
+      !>
+      !>-    SPICELIB Version 1.0.3, 10-OCT-2012 (EDW)
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>        Corrected ordering of header section.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafps
-!! ## Abstract
-!!
-!!     Pack (assemble) an array summary from its double precision and
-!!     integer components.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     FILES
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     ND       is the number of double precision components in
-!!              the summary to be packed.
-!!
-!!     NI       is the number of integer components in the summary.
-!!
-!!     DC       are the double precision components of the summary.
-!!
-!!     IC       are the integer components of the summary.
-!!
-!! ## Detailed Output
-!!
-!!     SUM      is an array summary containing the components in DC
-!!              and IC. This identifies the contents and location of
-!!              a single array within a DAF.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!!     1)  If ND is zero or negative, no DP components are stored.
-!!
-!!     2)  If NI is zero or negative, no integer components are stored.
-!!
-!!     3)  If the total size of the summary is greater than 125 double
-!!         precision words, some components may not be stored. See
-!!         $Particulars for details.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     The components of array summaries are packed into double
-!!     precision arrays for reasons outlined in [1]. Two routines,
-!!     DAFPS (pack summary) and DAFUS (unpack summary) are provided
-!!     for packing and unpacking summaries.
-!!
-!!     The total size of the summary is
-!!
-!!             (NI - 1)
-!!        ND + -------- + 1
-!!                 2
-!!
-!!     double precision words (where ND, NI are nonnegative).
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Replace the body ID code 301 (Moon) with a test body ID,
-!!        e.g. -999, in every descriptor of an SPK file.
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DAFPS_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     SPICELIB functions.
-!!        C
-!!              INTEGER               CARDI
-!!
-!!        C
-!!        C     Local parameters.
-!!        C
-!!              INTEGER               LBCELL
-!!              PARAMETER           ( LBCELL = -5   )
-!!
-!!              INTEGER               DSCSIZ
-!!              PARAMETER           ( DSCSIZ = 5    )
-!!
-!!              INTEGER               FILSIZ
-!!              PARAMETER           ( FILSIZ = 256  )
-!!
-!!              INTEGER               MAXOBJ
-!!              PARAMETER           ( MAXOBJ = 1000 )
-!!
-!!              INTEGER               ND
-!!              PARAMETER           ( ND     = 2    )
-!!
-!!              INTEGER               NI
-!!              PARAMETER           ( NI     = 6    )
-!!
-!!              INTEGER               NEWCOD
-!!              PARAMETER           ( NEWCOD = -999 )
-!!
-!!              INTEGER               OLDCOD
-!!              PARAMETER           ( OLDCOD =  301 )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(FILSIZ)    FNAME
-!!
-!!              DOUBLE PRECISION      DC     ( ND )
-!!              DOUBLE PRECISION      SUM    ( DSCSIZ )
-!!
-!!              INTEGER               HANDLE
-!!              INTEGER               I
-!!              INTEGER               IC     ( NI )
-!!              INTEGER               IDS    ( LBCELL : MAXOBJ )
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Get the SPK file name.
-!!        C
-!!              CALL PROMPT ( 'Enter name of the SPK file > ', FNAME )
-!!
-!!        C
-!!        C     Initialize the set IDS.
-!!        C
-!!              CALL SSIZEI ( MAXOBJ, IDS )
-!!
-!!        C
-!!        C     Open for writing the SPK file.
-!!        C
-!!              CALL DAFOPW ( FNAME, HANDLE )
-!!
-!!        C
-!!        C     Search the file in forward order.
-!!        C
-!!              CALL DAFBFS ( HANDLE )
-!!              CALL DAFFNA ( FOUND )
-!!
-!!              DO WHILE ( FOUND )
-!!
-!!        C
-!!        C        Fetch and unpack the descriptor (aka summary)
-!!        C        of the current segment.
-!!        C
-!!                 CALL DAFGS ( SUM )
-!!                 CALL DAFUS ( SUM, ND, NI, DC, IC )
-!!
-!!        C
-!!        C        Replace ID codes if necessary.
-!!        C
-!!                 IF ( IC(1) .EQ. OLDCOD ) THEN
-!!
-!!                    IC(1) = NEWCOD
-!!
-!!                 END IF
-!!
-!!                 IF ( IC(2) .EQ. OLDCOD ) THEN
-!!
-!!                    IC(2) = NEWCOD
-!!
-!!                 END IF
-!!
-!!        C
-!!        C        Re-pack the descriptor; replace the descriptor
-!!        C        in the file.
-!!        C
-!!                 CALL DAFPS ( ND, NI, DC, IC, SUM )
-!!                 CALL DAFRS ( SUM )
-!!
-!!        C
-!!        C        Find the next segment.
-!!        C
-!!                 CALL DAFFNA ( FOUND )
-!!
-!!              END DO
-!!
-!!        C
-!!        C     Close the file.
-!!        C
-!!              CALL DAFCLS ( HANDLE )
-!!
-!!        C
-!!        C     Find the set of objects in the SPK file.
-!!        C
-!!              CALL SPKOBJ ( FNAME, IDS )
-!!
-!!              WRITE(*,'(A)') 'Objects in the DAF file:'
-!!              WRITE(*,*) ' '
-!!              WRITE(*,'(20I4)') ( IDS(I), I= 1, CARDI ( IDS ) )
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, using the SPK file named de430.bsp, the output was:
-!!
-!!        Enter name of the SPK file > de430.bsp
-!!        Objects in the DAF file:
-!!
-!!        -999   1   2   3   4   5   6   7   8   9  10 199 299 399
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
-!!
-!!        Added IMPLICIT NONE statement.
-!!
-!!        Edited the header to comply with NAIF standard. Added complete
-!!        code example.
-!!
-!!-    SPICELIB Version 1.0.3, 10-OCT-2012 (EDW)
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!        Corrected ordering of header section.
-!!
-!!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     pack DAF summary
-!!
-!!     Local variables
-!!
-!!     Equivalences
-!!
-!!     Here's the deal: the DP components always precede the integer
-!!     components, avoiding alignment problems. The DP components can
-!!     be stored directly.
-!!
       use pepper_kinds, only: ip, wp
       implicit none
       real(wp)              dequiv   ( 125 )
@@ -10481,266 +9649,239 @@ contains
       return
       end procedure dafps
 
+      !> ## Detailed Input
+      !>
+      !>     SUM      is an array summary. This identifies the contents and
+      !>              location of a single array within a DAF.
+      !>
+      !>     ND       is the number of double precision components in
+      !>              the summary.
+      !>
+      !>     NI       is the number of integer components in the summary.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     DC       are the double precision components of the summary.
+      !>
+      !>     IC       are the integer components of the summary.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     1)  If ND is zero or negative, no double precision components
+      !>         are returned.
+      !>
+      !>     2)  If NI is zero or negative, no integer components are returned.
+      !>
+      !>     3)  If the total size of the summary is greater than 125 double
+      !>         precision words, some components may not be returned.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The components of array summaries are packed into double
+      !>     precision arrays for reasons outlined in [1]. Two routines,
+      !>     DAFPS (pack summary) and DAFUS (unpack summary) are provided
+      !>     for packing and unpacking summaries.
+      !>
+      !>     The total size of the summary is
+      !>
+      !>             (NI - 1)
+      !>        ND + -------- + 1
+      !>                 2
+      !>
+      !>     double precision words (where ND, NI are nonnegative).
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Use a simple routine to output the double precision and
+      !>        integer values stored in an SPK's segments descriptors. This
+      !>        function opens a DAF for read, performs a forwards search for
+      !>        the DAF arrays, prints segments description for each array
+      !>        found, then closes the DAF.
+      !>
+      !>        Use the SPK kernel below as input DAF file for the program.
+      !>
+      !>           de421.bsp
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFUS_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Define the summary parameters appropriate
+      !>        C     for an SPK file.
+      !>        C
+      !>              INTEGER               MAXSUM
+      !>              PARAMETER           ( MAXSUM = 125 )
+      !>
+      !>              INTEGER               ND
+      !>              PARAMETER           ( ND = 2       )
+      !>
+      !>              INTEGER               NI
+      !>              PARAMETER           ( NI = 6       )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(32)        KERNEL
+      !>
+      !>              DOUBLE PRECISION      DC     ( ND     )
+      !>              DOUBLE PRECISION      SUM    ( MAXSUM )
+      !>
+      !>              INTEGER               HANDLE
+      !>              INTEGER               IC     ( NI )
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Open a DAF for read. Return a HANDLE referring to the
+      !>        C     file.
+      !>        C
+      !>              KERNEL = 'de421.bsp'
+      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a forward search on the file.
+      !>        C
+      !>              CALL DAFBFS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Search until a DAF array is found.
+      !>        C
+      !>              CALL DAFFNA ( FOUND )
+      !>
+      !>        C
+      !>        C     Loop while the search finds subsequent DAF arrays.
+      !>        C
+      !>              DO WHILE ( FOUND )
+      !>
+      !>                 CALL DAFGS ( SUM )
+      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>
+      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>
+      !>        C
+      !>        C        Check for another segment.
+      !>        C
+      !>                 CALL DAFFNA ( FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Safely close the DAF.
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        1        0        1        2      641   310404
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        2        0        1        2   310405   423048
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        3        0        1        2   423049   567372
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        4        0        1        2   567373   628976
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        5        0        1        2   628977   674740
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        6        0        1        2   674741   715224
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        7        0        1        2   715225   750428
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        8        0        1        2   750429   785632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        9        0        1        2   785633   820836
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:       10        0        1        2   820837   944040
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      301        3        1        2   944041  1521324
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      399        3        1        2  1521325  2098608
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      199        1        1        2  2098609  2098620
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      299        2        1        2  2098621  2098632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      499        4        1        2  2098633  2098644
+      !>
+      !>        Note, the final entries in the integer array contains the
+      !>        segment start/end indexes. The output indicates the search
+      !>        proceeded from the start of the file (low value index) towards
+      !>        the end (high value index).
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 04-AUG-2020 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard..
+      !>        Added undeclared variables to code example.
+      !>
+      !>-    SPICELIB Version 1.0.3, 10-OCT-2012 (EDW)
+      !>
+      !>        Added a functional code example to the $Examples section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>        Corrected ordering of header section.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 1.1.0, 04-AUG-2020 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>     Just undo whatever DAFPS did.
       module procedure dafus
-!! ## Abstract
-!!
-!!     Unpack an array summary into its double precision and integer
-!!     components.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     DOUBLE PRECISION      SUM      ( * )
-!!     INTEGER               ND
-!!     INTEGER               NI
-!!     DOUBLE PRECISION      DC       ( * )
-!!     INTEGER               IC       ( * )
-!!
-!! ## Detailed Input
-!!
-!!     SUM      is an array summary. This identifies the contents and
-!!              location of a single array within a DAF.
-!!
-!!     ND       is the number of double precision components in
-!!              the summary.
-!!
-!!     NI       is the number of integer components in the summary.
-!!
-!! ## Detailed Output
-!!
-!!     DC       are the double precision components of the summary.
-!!
-!!     IC       are the integer components of the summary.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!!     1)  If ND is zero or negative, no double precision components
-!!         are returned.
-!!
-!!     2)  If NI is zero or negative, no integer components are returned.
-!!
-!!     3)  If the total size of the summary is greater than 125 double
-!!         precision words, some components may not be returned.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     The components of array summaries are packed into double
-!!     precision arrays for reasons outlined in [1]. Two routines,
-!!     DAFPS (pack summary) and DAFUS (unpack summary) are provided
-!!     for packing and unpacking summaries.
-!!
-!!     The total size of the summary is
-!!
-!!             (NI - 1)
-!!        ND + -------- + 1
-!!                 2
-!!
-!!     double precision words (where ND, NI are nonnegative).
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for this example may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) Use a simple routine to output the double precision and
-!!        integer values stored in an SPK's segments descriptors. This
-!!        function opens a DAF for read, performs a forwards search for
-!!        the DAF arrays, prints segments description for each array
-!!        found, then closes the DAF.
-!!
-!!        Use the SPK kernel below as input DAF file for the program.
-!!
-!!           de421.bsp
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DAFUS_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Define the summary parameters appropriate
-!!        C     for an SPK file.
-!!        C
-!!              INTEGER               MAXSUM
-!!              PARAMETER           ( MAXSUM = 125 )
-!!
-!!              INTEGER               ND
-!!              PARAMETER           ( ND = 2       )
-!!
-!!              INTEGER               NI
-!!              PARAMETER           ( NI = 6       )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(32)        KERNEL
-!!
-!!              DOUBLE PRECISION      DC     ( ND     )
-!!              DOUBLE PRECISION      SUM    ( MAXSUM )
-!!
-!!              INTEGER               HANDLE
-!!              INTEGER               IC     ( NI )
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Open a DAF for read. Return a HANDLE referring to the
-!!        C     file.
-!!        C
-!!              KERNEL = 'de421.bsp'
-!!              CALL DAFOPR ( KERNEL, HANDLE )
-!!
-!!        C
-!!        C     Begin a forward search on the file.
-!!        C
-!!              CALL DAFBFS ( HANDLE )
-!!
-!!        C
-!!        C     Search until a DAF array is found.
-!!        C
-!!              CALL DAFFNA ( FOUND )
-!!
-!!        C
-!!        C     Loop while the search finds subsequent DAF arrays.
-!!        C
-!!              DO WHILE ( FOUND )
-!!
-!!                 CALL DAFGS ( SUM )
-!!                 CALL DAFUS ( SUM, ND, NI, DC, IC )
-!!
-!!                 WRITE(*,*)                'Doubles:', DC(1:ND)
-!!                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
-!!
-!!        C
-!!        C        Check for another segment.
-!!        C
-!!                 CALL DAFFNA ( FOUND )
-!!
-!!              END DO
-!!
-!!        C
-!!        C     Safely close the DAF.
-!!        C
-!!              CALL DAFCLS ( HANDLE )
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        1        0        1        2      641   310404
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        2        0        1        2   310405   423048
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        3        0        1        2   423049   567372
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        4        0        1        2   567373   628976
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        5        0        1        2   628977   674740
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        6        0        1        2   674741   715224
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        7        0        1        2   715225   750428
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        8        0        1        2   750429   785632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        9        0        1        2   785633   820836
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:       10        0        1        2   820837   944040
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      301        3        1        2   944041  1521324
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      399        3        1        2  1521325  2098608
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      199        1        1        2  2098609  2098620
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      299        2        1        2  2098621  2098632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      499        4        1        2  2098633  2098644
-!!
-!!        Note, the final entries in the integer array contains the
-!!        segment start/end indexes. The output indicates the search
-!!        proceeded from the start of the file (low value index) towards
-!!        the end (high value index).
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.1.0, 04-AUG-2020 (JDR)
-!!
-!!        Added IMPLICIT NONE statement.
-!!
-!!        Edited the header to comply with NAIF standard..
-!!        Added undeclared variables to code example.
-!!
-!!-    SPICELIB Version 1.0.3, 10-OCT-2012 (EDW)
-!!
-!!        Added a functional code example to the $Examples section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!        Corrected ordering of header section.
-!!
-!!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     unpack DAF summary
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 1.1.0, 04-AUG-2020 (JDR)
-!!
-!!        Added IMPLICIT NONE statement.
-!!
-!!     Just undo whatever DAFPS did.
-!!
       use pepper_kinds, only: ip, wp
       implicit none
       real(wp)              dequiv   ( 125 )
@@ -10772,16 +9913,6 @@ contains
 !     Read, write, and rewrite double precision records to and
 !     from DAFs.
 !
-! $ Required_Reading
-!
-!     DAF
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-
 ! $ Detailed_Input
 !
 !     HANDLE   is the handle associated with a DAF.
@@ -10965,13 +10096,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
 !
-!-&
-
-! $ Index_Entries
-!
-!     read write d.p. DAF
-!
-!-&
 
 ! $ Revisions
 !
@@ -10996,23 +10120,6 @@ contains
 !
 !        Unnecessary CHKIN and CHKOUT calls were removed from entry
 !        point DAFRDR.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
-
-!
-!     Saved variables
-!
-
-!
-!     Initial values
 !
 
 !
@@ -11049,149 +10156,120 @@ contains
 !
 !     Standard SPICE error handling.
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle associated with a DAF.
+      !>
+      !>     RECNO    is the record number of a particular double precision
+      !>              record within the DAF, whose contents are to be read.
+      !>
+      !>     BEGIN    is the first word in the specified record to be
+      !>              returned.
+      !>
+      !>     END      is the final word in the specified record to be
+      !>              returned.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     DATA     contains the specified portion (from BEGIN to END,
+      !>              inclusive) of the specified record from the specified
+      !>              file, specifically.
+      !>
+      !>     FOUND    is .TRUE. when the specified record is found, and is
+      !>              .FALSE. otherwise.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     None.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     DAFGDR checks the record buffer to see if the requested
+      !>     record can be returned without actually reading it from
+      !>     external storage. If not, it reads the record and stores
+      !>     it in the buffer, typically removing another record from
+      !>     the buffer as a result.
+      !>
+      !>     Once in the buffer, the specified portion of the record is
+      !>     returned, using the following control loop.
+      !>
+      !>        J = 1
+      !>        DO I = MAX( 1, BEGIN ), MIN( 128, END )
+      !>           DATA( J ) = Buffered record ( I )
+      !>           J = J + 1
+      !>        END DO
+      !>
+      !>     Therefore bad values for BEGIN and END (BEGIN < 1, END < BEGIN,
+      !>     etc.) are not signaled as errors, but result in the actions
+      !>     implied by the above.
+      !>
+      !> ## Examples
+      !>
+      !>     The following code fragment illustrates one way that DAFGDR
+      !>     and DAFWDR can be used to update part of a double precision
+      !>     record. If the record does not yet exist, we can assume that
+      !>     it is filled with zeros.
+      !>
+      !>        CALL DAFGDR ( HANDLE, RECNO, 1, 128, DREC, FOUND )
+      !>
+      !>        IF ( .NOT. FOUND ) THEN
+      !>           CALL MOVED ( 0.D0, 128, DREC )
+      !>        END IF
+      !>
+      !>        DO I = FIRST, LAST
+      !>           DREC(I) = NEW_VALUE(I)
+      !>        END DO
+      !>
+      !>        CALL DAFWDR ( HANDLE, RECNO, DREC )
+      !>
+      !>     Note that since only entire records may be written using DAFWDR,
+      !>     the entire record needs to be read also.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Bad values for BEGIN and END ( BEGIN < 1, END > 128,
+      !>         END < BEGIN ) are not signaled as errors. The effects of
+      !>         such assignments on the returned data are defined by the
+      !>         following control structure:
+      !>
+      !>            J = 1
+      !>            DO I = MAX( 1, BEGIN ), MIN( 128, END )
+      !>               DATA( J ) = Buffered record ( I )
+      !>               J = J + 1
+      !>            END DO
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     F.S. Turner        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.0, 12-AUG-2021 (NJB) (JDR)
+      !>
+      !>        Bug fix: now NREAD is not incremented once it reaches
+      !>        INTMAX(), if it does.
+      !>
+      !>        Re-ordered header sections. Corrected typos in comments.
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Removed DAF required reading from $Literature_References.
+      !>
+      !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
       module procedure dafgdr
-!! ## Abstract
-!!
-!!     Read a portion of the contents of a double precision record in a
-!!     DAF file.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!     INTEGER               RECNO
-!!     INTEGER               BEGIN
-!!     INTEGER               END
-!!     DOUBLE PRECISION      DATA    ( * )
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle associated with a DAF.
-!!
-!!     RECNO    is the record number of a particular double precision
-!!              record within the DAF, whose contents are to be read.
-!!
-!!     BEGIN    is the first word in the specified record to be
-!!              returned.
-!!
-!!     END      is the final word in the specified record to be
-!!              returned.
-!!
-!! ## Detailed Output
-!!
-!!     DATA     contains the specified portion (from BEGIN to END,
-!!              inclusive) of the specified record from the specified
-!!              file, specifically.
-!!
-!!     FOUND    is .TRUE. when the specified record is found, and is
-!!              .FALSE. otherwise.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     None.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     DAFGDR checks the record buffer to see if the requested
-!!     record can be returned without actually reading it from
-!!     external storage. If not, it reads the record and stores
-!!     it in the buffer, typically removing another record from
-!!     the buffer as a result.
-!!
-!!     Once in the buffer, the specified portion of the record is
-!!     returned, using the following control loop.
-!!
-!!        J = 1
-!!        DO I = MAX( 1, BEGIN ), MIN( 128, END )
-!!           DATA( J ) = Buffered record ( I )
-!!           J = J + 1
-!!        END DO
-!!
-!!     Therefore bad values for BEGIN and END (BEGIN < 1, END < BEGIN,
-!!     etc.) are not signaled as errors, but result in the actions
-!!     implied by the above.
-!!
-!! ## Examples
-!!
-!!     The following code fragment illustrates one way that DAFGDR
-!!     and DAFWDR can be used to update part of a double precision
-!!     record. If the record does not yet exist, we can assume that
-!!     it is filled with zeros.
-!!
-!!        CALL DAFGDR ( HANDLE, RECNO, 1, 128, DREC, FOUND )
-!!
-!!        IF ( .NOT. FOUND ) THEN
-!!           CALL MOVED ( 0.D0, 128, DREC )
-!!        END IF
-!!
-!!        DO I = FIRST, LAST
-!!           DREC(I) = NEW_VALUE(I)
-!!        END DO
-!!
-!!        CALL DAFWDR ( HANDLE, RECNO, DREC )
-!!
-!!     Note that since only entire records may be written using DAFWDR,
-!!     the entire record needs to be read also.
-!!
-!! ## Restrictions
-!!
-!!     1)  Bad values for BEGIN and END ( BEGIN < 1, END > 128,
-!!         END < BEGIN ) are not signaled as errors. The effects of
-!!         such assignments on the returned data are defined by the
-!!         following control structure:
-!!
-!!            J = 1
-!!            DO I = MAX( 1, BEGIN ), MIN( 128, END )
-!!               DATA( J ) = Buffered record ( I )
-!!               J = J + 1
-!!            END DO
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     F.S. Turner        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.1.0, 12-AUG-2021 (NJB) (JDR)
-!!
-!!        Bug fix: now NREAD is not incremented once it reaches
-!!        INTMAX(), if it does.
-!!
-!!        Re-ordered header sections. Corrected typos in comments.
-!!        Edited the header to comply with NAIF standard.
-!!
-!!        Removed DAF required reading from $Literature_References.
-!!
-!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!!
-!! ## Index Entries
-!!
-!!     read DAF d.p. record
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
@@ -11323,160 +10401,132 @@ contains
       end associate
       end procedure dafgdr
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle associated with a DAF.
+      !>
+      !>     RECNO    is the record number of a particular double precision
+      !>              record within the DAF, whose contents are to be read. DAF
+      !>              record numbers start at 1.
+      !>
+      !>     BEGIN    is the first word in the specified record to be returned.
+      !>              Word numbers range from 1 to 128.
+      !>
+      !>     END      is the final word in the specified record to be returned.
+      !>              Word numbers range from 1 to 128.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     DATA     contains the specified portion (from BEGIN to END,
+      !>              inclusive) of the specified record from the specified
+      !>              file.
+      !>
+      !>     FOUND    is .TRUE. when the specified record is found, and is
+      !>              .FALSE. otherwise.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If HANDLE does not belong to any file that is currently open,
+      !>         an error is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !>     2)  If an error occurs while reading the record, the error is
+      !>         signaled by a routine in the call tree of this routine.
+      !>
+      !>     3)  Bad values for BEGIN and END ( BEGIN < 1, END > 128,
+      !>         END < BEGIN ) are not diagnosed. See $Particulars and
+      !>         $Restrictions for the effect of this routine in this case.
+      !>
+      !> ## Files
+      !>
+      !>     The input HANDLE must refer to a DAF file that is open for read
+      !>     or write access.
+      !>
+      !> ## Particulars
+      !>
+      !>     DAFGSR checks the DAF record buffer to see if the requested
+      !>     record can be returned without actually reading it from
+      !>     external storage. If not, it reads the record and stores
+      !>     it in the buffer, typically removing another record from
+      !>     the buffer as a result.
+      !>
+      !>     Once in the buffer, the specified portion of the record is
+      !>     returned, using the following control loop.
+      !>
+      !>        J = 1
+      !>        DO I = MAX( 1, BEGIN ), MIN( 128, END )
+      !>           DATA( J ) = Buffered record ( I )
+      !>           J = J + 1
+      !>        END DO
+      !>
+      !>     Therefore bad values for BEGIN and END (BEGIN < 1, END < BEGIN,
+      !>     etc.) are not signaled as errors, but result in the actions
+      !>     implied by the above.
+      !>
+      !> ## Examples
+      !>
+      !>     The following code fragment illustrates one way that DAFGSR
+      !>     and DAFWDR can be used to update part of a summary record.
+      !>     If the record does not yet exist, we can assume that it is
+      !>     filled with zeros.
+      !>
+      !>        CALL DAFGSR ( HANDLE, RECNO, 1, 128, DREC, FOUND )
+      !>
+      !>        IF ( .NOT. FOUND ) THEN
+      !>           CALL MOVED ( 0.D0, 128, DREC )
+      !>        END IF
+      !>
+      !>        DO I = FIRST, LAST
+      !>           DREC(I) = NEW_VALUE(I)
+      !>        END DO
+      !>
+      !>        CALL DAFWDR ( HANDLE, RECNO, DREC )
+      !>
+      !>     Note that since only entire records may be written using DAFWDR,
+      !>     the entire record needs to be read also.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Bad values for BEGIN and END ( BEGIN < 1, END > 128,
+      !>         END < BEGIN ) are not signaled as errors. The effects of
+      !>         such assignments on the returned data are defined by the
+      !>         following control structure:
+      !>
+      !>            J = 1
+      !>            DO I = MAX( 1, BEGIN ), MIN( 128, END )
+      !>               DATA( J ) = Buffered record ( I )
+      !>               J = J + 1
+      !>            END DO
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     F.S. Turner        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.0, 09-AUG-2021 (NJB) (JDR)
+      !>
+      !>        Bug fix: now NREAD is not incremented once it reaches
+      !>        INTMAX(), if it does.
+      !>
+      !>        Corrected typos in comments. Edited the header to comply with
+      !>        NAIF standard. Added $Exceptions and $Files sections and
+      !>        extended $Detailed_Input.
+      !>
+      !>        Removed DAF required reading from $Literature_References.
+      !>
+      !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
       module procedure dafgsr
-!! ## Abstract
-!!
-!!     Read a portion of the contents of a summary record in a DAF file.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!     INTEGER               RECNO
-!!     INTEGER               BEGIN
-!!     INTEGER               END
-!!     DOUBLE PRECISION      DATA    ( * )
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle associated with a DAF.
-!!
-!!     RECNO    is the record number of a particular double precision
-!!              record within the DAF, whose contents are to be read. DAF
-!!              record numbers start at 1.
-!!
-!!     BEGIN    is the first word in the specified record to be returned.
-!!              Word numbers range from 1 to 128.
-!!
-!!     END      is the final word in the specified record to be returned.
-!!              Word numbers range from 1 to 128.
-!!
-!! ## Detailed Output
-!!
-!!     DATA     contains the specified portion (from BEGIN to END,
-!!              inclusive) of the specified record from the specified
-!!              file.
-!!
-!!     FOUND    is .TRUE. when the specified record is found, and is
-!!              .FALSE. otherwise.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If HANDLE does not belong to any file that is currently open,
-!!         an error is signaled by a routine in the call tree of this
-!!         routine.
-!!
-!!     2)  If an error occurs while reading the record, the error is
-!!         signaled by a routine in the call tree of this routine.
-!!
-!!     3)  Bad values for BEGIN and END ( BEGIN < 1, END > 128,
-!!         END < BEGIN ) are not diagnosed. See $Particulars and
-!!         $Restrictions for the effect of this routine in this case.
-!!
-!! ## Files
-!!
-!!     The input HANDLE must refer to a DAF file that is open for read
-!!     or write access.
-!!
-!! ## Particulars
-!!
-!!     DAFGSR checks the DAF record buffer to see if the requested
-!!     record can be returned without actually reading it from
-!!     external storage. If not, it reads the record and stores
-!!     it in the buffer, typically removing another record from
-!!     the buffer as a result.
-!!
-!!     Once in the buffer, the specified portion of the record is
-!!     returned, using the following control loop.
-!!
-!!        J = 1
-!!        DO I = MAX( 1, BEGIN ), MIN( 128, END )
-!!           DATA( J ) = Buffered record ( I )
-!!           J = J + 1
-!!        END DO
-!!
-!!     Therefore bad values for BEGIN and END (BEGIN < 1, END < BEGIN,
-!!     etc.) are not signaled as errors, but result in the actions
-!!     implied by the above.
-!!
-!! ## Examples
-!!
-!!     The following code fragment illustrates one way that DAFGSR
-!!     and DAFWDR can be used to update part of a summary record.
-!!     If the record does not yet exist, we can assume that it is
-!!     filled with zeros.
-!!
-!!        CALL DAFGSR ( HANDLE, RECNO, 1, 128, DREC, FOUND )
-!!
-!!        IF ( .NOT. FOUND ) THEN
-!!           CALL MOVED ( 0.D0, 128, DREC )
-!!        END IF
-!!
-!!        DO I = FIRST, LAST
-!!           DREC(I) = NEW_VALUE(I)
-!!        END DO
-!!
-!!        CALL DAFWDR ( HANDLE, RECNO, DREC )
-!!
-!!     Note that since only entire records may be written using DAFWDR,
-!!     the entire record needs to be read also.
-!!
-!! ## Restrictions
-!!
-!!     1)  Bad values for BEGIN and END ( BEGIN < 1, END > 128,
-!!         END < BEGIN ) are not signaled as errors. The effects of
-!!         such assignments on the returned data are defined by the
-!!         following control structure:
-!!
-!!            J = 1
-!!            DO I = MAX( 1, BEGIN ), MIN( 128, END )
-!!               DATA( J ) = Buffered record ( I )
-!!               J = J + 1
-!!            END DO
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     F.S. Turner        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.1.0, 09-AUG-2021 (NJB) (JDR)
-!!
-!!        Bug fix: now NREAD is not incremented once it reaches
-!!        INTMAX(), if it does.
-!!
-!!        Corrected typos in comments. Edited the header to comply with
-!!        NAIF standard. Added $Exceptions and $Files sections and
-!!        extended $Detailed_Input.
-!!
-!!        Removed DAF required reading from $Literature_References.
-!!
-!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!!
-!! ## Index Entries
-!!
-!!     read DAF summary record
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
@@ -11611,259 +10661,237 @@ contains
       end associate
       end procedure dafgsr
 
+      !> ## Abstract
+      !>
+      !>     Read a portion of the contents of a double precision record in a
+      !>     DAF file.
+      !>     Obsolete: This routine has been superseded by DAFGDR, and it is
+      !>     supported for purposes of backwards compatibility only.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle associated with a DAF.
+      !>
+      !>     RECNO    is the record number of a particular double precision
+      !>              record within the DAF, whose contents are to be read.
+      !>
+      !>     BEGIN    is the first word in the specified record to be
+      !>              returned.
+      !>
+      !>     END      is the final word in the specified record to be
+      !>              returned.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     DATA     contains the specified portion (from BEGIN to END,
+      !>              inclusive) of the specified record from the specified
+      !>              file, specifically.
+      !>
+      !>     FOUND    is .TRUE. when the specified record is found, and is
+      !>              .FALSE. otherwise.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the file associated with HANDLE is not of the native
+      !>         binary file format, the error SPICE(UNSUPPORTEDBFF) is
+      !>         signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     DAFRDR checks the record buffer to see if the requested
+      !>     record can be returned without actually reading it from
+      !>     external storage. If not, it reads the record and stores
+      !>     it in the buffer, typically removing another record from
+      !>     the buffer as a result.
+      !>
+      !>     Once in the buffer, the specified portion of the record is
+      !>     returned, using the following control loop.
+      !>
+      !>        J = 1
+      !>        DO I = MAX( 1, BEGIN ), MIN( 128, END )
+      !>           DATA( J ) = Buffered record ( I )
+      !>           J = J + 1
+      !>        END DO
+      !>
+      !>     Therefore bad values for BEGIN and END (BEGIN < 1, END < BEGIN,
+      !>     etc.) are not signaled as errors, but result in the actions
+      !>     implied by the above.
+      !>
+      !>     This routine has been made obsolete by the routine DAFGDR,
+      !>     and it is supported for reasons of backwards compatibility
+      !>     only. New software development should utilize DAFGDA.
+      !>
+      !> ## Examples
+      !>
+      !>     The following code fragment illustrates one way that DAFRDR
+      !>     and DAFWDR can be used to update part of a double precision
+      !>     record. If the record does not yet exist, we can assume that
+      !>     it is filled with zeros.
+      !>
+      !>        CALL DAFRDR ( HANDLE, RECNO, 1, 128, DREC, FOUND )
+      !>
+      !>        IF ( .NOT. FOUND ) THEN
+      !>           CALL MOVED ( 0.D0, 128, DREC )
+      !>        END IF
+      !>
+      !>        DO I = FIRST, LAST
+      !>           DREC(I) = NEW_VALUE(I)
+      !>        END DO
+      !>
+      !>        CALL DAFWDR ( HANDLE, RECNO, DREC )
+      !>
+      !>     Note that since only entire records may be written using DAFWDR,
+      !>     the entire record needs to be read also.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  An integer overflow may occur if the number of requests
+      !>         by a single program exceeds the maximum number that can
+      !>         be stored in an integer variable.
+      !>
+      !>     2)  Bad values for BEGIN and END ( BEGIN < 1, END > 128,
+      !>         END < BEGIN ) are not signaled as errors. The effects of
+      !>         such assignments on the returned data are defined by the
+      !>         following control structure:
+      !>
+      !>            J = 1
+      !>            DO I = MAX( 1, BEGIN ), MIN( 128, END )
+      !>               DATA( J ) = Buffered record ( I )
+      !>               J = J + 1
+      !>            END DO
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     J.M. Lynch         (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.0, 12-AUG-2021 (NJB) (JDR)
+      !>
+      !>        Bug fix: now NREAD is not incremented once it reaches
+      !>        INTMAX(), if it does.
+      !>
+      !>        Tweaked one line of code to suppress ftnchek warning.
+      !>
+      !>        Re-ordered header sections. Corrected typos in comments.
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Removed DAF required reading from $Literature_References.
+      !>
+      !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        Added SPICE(UNSUPPORTEDBFF) exception to the routine.
+      !>
+      !>-    SPICELIB Version 1.3.0, 24-MAR-2000 (WLT)
+      !>
+      !>        The loop in DAFRDR that moved buffered d.p.s into the output
+      !>        array DATA was modified to use the routine MOVED.
+      !>
+      !>-    SPICELIB Version 1.2.0, 01-AUG-1997 (NJB)
+      !>
+      !>        Unnecessary CHKIN and CHKOUT calls were removed from entry
+      !>        point DAFRDR.
+      !>
+      !>-    SPICELIB Version 1.1.0, 25-NOV-1992 (JML)
+      !>
+      !>        1) In DAFRDR, the found flag is now set to false if the
+      !>           call to DAFHLU fails.
+      !>
+      !>        2) In the example code fragment in DAFRDR and DAFWDR, the
+      !>           calling sequence to MOVED was corrected.
+      !>
+      !>        3) In the call to MINAI the argument for the minimum value
+      !>           was changed from I to MINVAL.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        The exception SPICE(UNSUPPORTEDBFF) was added to guarantee
+      !>        this routine's functionality remains unchanged as a result
+      !>        of the updates to the underlying DAF software's utilization of
+      !>        the handle manager. In versions of the toolkit prior to this,
+      !>        all DAFs loaded were of the native binary file format.
+      !>        Previously, this routine was used to read the contents of
+      !>        summary records in addition to the usual data records.
+      !>        The non-native to native translation process for these two
+      !>        different types of records in general are not the same.
+      !>        Rather than attempt to interpret the caller's intent, this
+      !>        routine is obsolete and restricted to functioning only on
+      !>        DAFs of the native binary file format.
+      !>
+      !>-    SPICELIB Version 1.3.0, 24-MAR-2000 (WLT)
+      !>
+      !>        The loop in DAFRDR that moved buffered d.p.s into the output
+      !>        array DATA was modified to use the routine MOVED.
+      !>
+      !>-    SPICELIB Version 1.2.0, 01-AUG-1997 (NJB)
+      !>
+      !>        Unnecessary CHKIN and CHKOUT calls were removed from entry
+      !>        point DAFRDR. These calls were placed together prior to
+      !>        a RETURN statement. It's unclear why they were there in the
+      !>        first place.
+      !>
+      !>-    SPICELIB Version 1.1.0, 25-NOV-1992 (JML)
+      !>
+      !>        1) In DAFRDR, the found flag is now set to false if the
+      !>           call to DAFHLU fails.
+      !>
+      !>        2) In the example code fragment in DAFRDR and DAFWDR, the
+      !>           calling sequence to MOVED was corrected.
+      !>
+      !>        3) In the call to MINAI the argument for the minimum value
+      !>           was changed from I to MINVAL.
+      !>
+      !>-     Beta Version 2.0.0, 1-NOV-1989 (RET)
+      !>
+      !>        The function of DAFRDR was changed so that it returns only
+      !>        a specified portion of the record. The calling sequence there-
+      !>        fore changed from
+      !>
+      !>           DAFRDR ( HANDLE, RECNO, DREC, FOUND ) to
+      !>           DAFRDR ( HANDLE, RECNO, BEGIN, END, DATA, FOUND )
+      !>
+      !>        The change was made to cut down on the shuffling of unneeded
+      !>        data.
+      !>
+      !>        Also, DAFRDR now only checks in and checks out if DAFHLU has
+      !>        failed (the only routine called by DAFRDR that could possibly
+      !>        signal an error). The purpose of this change was to help
+      !>        speed up a routine that gets called constantly by higher level
+      !>        DAF routines.
+      !>
+      !>     Standard SPICE error handling.
       module procedure dafrdr
-!! ## Abstract
-!!
-!!     Read a portion of the contents of a double precision record in a
-!!     DAF file.
-!!     Obsolete: This routine has been superseded by DAFGDR, and it is
-!!     supported for purposes of backwards compatibility only.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!     INTEGER               RECNO
-!!     INTEGER               BEGIN
-!!     INTEGER               END
-!!     DOUBLE PRECISION      DATA    ( * )
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle associated with a DAF.
-!!
-!!     RECNO    is the record number of a particular double precision
-!!              record within the DAF, whose contents are to be read.
-!!
-!!     BEGIN    is the first word in the specified record to be
-!!              returned.
-!!
-!!     END      is the final word in the specified record to be
-!!              returned.
-!!
-!! ## Detailed Output
-!!
-!!     DATA     contains the specified portion (from BEGIN to END,
-!!              inclusive) of the specified record from the specified
-!!              file, specifically.
-!!
-!!     FOUND    is .TRUE. when the specified record is found, and is
-!!              .FALSE. otherwise.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the file associated with HANDLE is not of the native
-!!         binary file format, the error SPICE(UNSUPPORTEDBFF) is
-!!         signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     DAFRDR checks the record buffer to see if the requested
-!!     record can be returned without actually reading it from
-!!     external storage. If not, it reads the record and stores
-!!     it in the buffer, typically removing another record from
-!!     the buffer as a result.
-!!
-!!     Once in the buffer, the specified portion of the record is
-!!     returned, using the following control loop.
-!!
-!!        J = 1
-!!        DO I = MAX( 1, BEGIN ), MIN( 128, END )
-!!           DATA( J ) = Buffered record ( I )
-!!           J = J + 1
-!!        END DO
-!!
-!!     Therefore bad values for BEGIN and END (BEGIN < 1, END < BEGIN,
-!!     etc.) are not signaled as errors, but result in the actions
-!!     implied by the above.
-!!
-!!     This routine has been made obsolete by the routine DAFGDR,
-!!     and it is supported for reasons of backwards compatibility
-!!     only. New software development should utilize DAFGDA.
-!!
-!! ## Examples
-!!
-!!     The following code fragment illustrates one way that DAFRDR
-!!     and DAFWDR can be used to update part of a double precision
-!!     record. If the record does not yet exist, we can assume that
-!!     it is filled with zeros.
-!!
-!!        CALL DAFRDR ( HANDLE, RECNO, 1, 128, DREC, FOUND )
-!!
-!!        IF ( .NOT. FOUND ) THEN
-!!           CALL MOVED ( 0.D0, 128, DREC )
-!!        END IF
-!!
-!!        DO I = FIRST, LAST
-!!           DREC(I) = NEW_VALUE(I)
-!!        END DO
-!!
-!!        CALL DAFWDR ( HANDLE, RECNO, DREC )
-!!
-!!     Note that since only entire records may be written using DAFWDR,
-!!     the entire record needs to be read also.
-!!
-!! ## Restrictions
-!!
-!!     1)  An integer overflow may occur if the number of requests
-!!         by a single program exceeds the maximum number that can
-!!         be stored in an integer variable.
-!!
-!!     2)  Bad values for BEGIN and END ( BEGIN < 1, END > 128,
-!!         END < BEGIN ) are not signaled as errors. The effects of
-!!         such assignments on the returned data are defined by the
-!!         following control structure:
-!!
-!!            J = 1
-!!            DO I = MAX( 1, BEGIN ), MIN( 128, END )
-!!               DATA( J ) = Buffered record ( I )
-!!               J = J + 1
-!!            END DO
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     J.M. Lynch         (JPL)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     I.M. Underwood     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.1.0, 12-AUG-2021 (NJB) (JDR)
-!!
-!!        Bug fix: now NREAD is not incremented once it reaches
-!!        INTMAX(), if it does.
-!!
-!!        Tweaked one line of code to suppress ftnchek warning.
-!!
-!!        Re-ordered header sections. Corrected typos in comments.
-!!        Edited the header to comply with NAIF standard.
-!!
-!!        Removed DAF required reading from $Literature_References.
-!!
-!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!!
-!!        Added SPICE(UNSUPPORTEDBFF) exception to the routine.
-!!
-!!-    SPICELIB Version 1.3.0, 24-MAR-2000 (WLT)
-!!
-!!        The loop in DAFRDR that moved buffered d.p.s into the output
-!!        array DATA was modified to use the routine MOVED.
-!!
-!!-    SPICELIB Version 1.2.0, 01-AUG-1997 (NJB)
-!!
-!!        Unnecessary CHKIN and CHKOUT calls were removed from entry
-!!        point DAFRDR.
-!!
-!!-    SPICELIB Version 1.1.0, 25-NOV-1992 (JML)
-!!
-!!        1) In DAFRDR, the found flag is now set to false if the
-!!           call to DAFHLU fails.
-!!
-!!        2) In the example code fragment in DAFRDR and DAFWDR, the
-!!           calling sequence to MOVED was corrected.
-!!
-!!        3) In the call to MINAI the argument for the minimum value
-!!           was changed from I to MINVAL.
-!!
-!!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     read DAF d.p. record
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!!
-!!        The exception SPICE(UNSUPPORTEDBFF) was added to guarantee
-!!        this routine's functionality remains unchanged as a result
-!!        of the updates to the underlying DAF software's utilization of
-!!        the handle manager. In versions of the toolkit prior to this,
-!!        all DAFs loaded were of the native binary file format.
-!!        Previously, this routine was used to read the contents of
-!!        summary records in addition to the usual data records.
-!!        The non-native to native translation process for these two
-!!        different types of records in general are not the same.
-!!        Rather than attempt to interpret the caller's intent, this
-!!        routine is obsolete and restricted to functioning only on
-!!        DAFs of the native binary file format.
-!!
-!!-    SPICELIB Version 1.3.0, 24-MAR-2000 (WLT)
-!!
-!!        The loop in DAFRDR that moved buffered d.p.s into the output
-!!        array DATA was modified to use the routine MOVED.
-!!
-!!-    SPICELIB Version 1.2.0, 01-AUG-1997 (NJB)
-!!
-!!        Unnecessary CHKIN and CHKOUT calls were removed from entry
-!!        point DAFRDR. These calls were placed together prior to
-!!        a RETURN statement. It's unclear why they were there in the
-!!        first place.
-!!
-!!-    SPICELIB Version 1.1.0, 25-NOV-1992 (JML)
-!!
-!!        1) In DAFRDR, the found flag is now set to false if the
-!!           call to DAFHLU fails.
-!!
-!!        2) In the example code fragment in DAFRDR and DAFWDR, the
-!!           calling sequence to MOVED was corrected.
-!!
-!!        3) In the call to MINAI the argument for the minimum value
-!!           was changed from I to MINVAL.
-!!
-!!-     Beta Version 2.0.0, 1-NOV-1989 (RET)
-!!
-!!        The function of DAFRDR was changed so that it returns only
-!!        a specified portion of the record. The calling sequence there-
-!!        fore changed from
-!!
-!!           DAFRDR ( HANDLE, RECNO, DREC, FOUND ) to
-!!           DAFRDR ( HANDLE, RECNO, BEGIN, END, DATA, FOUND )
-!!
-!!        The change was made to cut down on the shuffling of unneeded
-!!        data.
-!!
-!!        Also, DAFRDR now only checks in and checks out if DAFHLU has
-!!        failed (the only routine called by DAFRDR that could possibly
-!!        signal an error). The purpose of this change was to help
-!!        speed up a routine that gets called constantly by higher level
-!!        DAF routines.
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
@@ -12013,142 +11041,116 @@ contains
       end associate
       end procedure dafrdr
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle associated with a DAF.
+      !>
+      !>     RECNO    is the record number of a particular double
+      !>              precision record within the file, whose
+      !>              contents are to be written (if the record does
+      !>              not yet exist) or overwritten (if it does).
+      !>
+      !>     DREC     contains the new contents of the record.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the file is not open for write access, the error
+      !>         SPICE(DAFILLEGWRITE) is signaled.
+      !>
+      !>     2)  If (for some reason) the record cannot be written, the
+      !>         error SPICE(DAFDPWRITEFAIL) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Like DAFRDR, DAFWDR checks the record buffer to see if the
+      !>     requested record is in the buffer. If so, the buffer is
+      !>     updated along with the file. This prevents the buffer from
+      !>     becoming outdated.
+      !>
+      !> ## Examples
+      !>
+      !>     The following code fragment illustrates one way that DAFRDR
+      !>     and DAFWDR can be used to update part of a double precision
+      !>     record. If the record does not yet exist, we can assume that
+      !>     it is filled with zeros.
+      !>
+      !>        CALL DAFRDR ( HANDLE, RECNO, DREC, FOUND )
+      !>
+      !>        IF ( .NOT. FOUND ) THEN
+      !>           CALL MOVED ( 0.D0, 128, DREC )
+      !>        END IF
+      !>
+      !>        DO I = FIRST, LAST
+      !>           DREC(I) = NEW_VALUE(I)
+      !>        END DO
+      !>
+      !>        CALL DAFWDR ( HANDLE, RECNO, DREC )
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     J.M. Lynch         (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.0.1, 09-AUG-2021 (NJB) (JDR)
+      !>
+      !>        Re-ordered header sections. Corrected typos in comments.
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Removed DAF required reading from $Literature_References.
+      !>
+      !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        Replaced the call to DAFHLU to ZZDDHHLU. This prevents
+      !>        DAFWDR from tying up resources in the handle manager.
+      !>
+      !>-    SPICELIB Version 1.3.0, 24-MAR-2000 (WLT)
+      !>
+      !>        The loop in DAFRDR that moved buffered d.p.s into the output
+      !>        array DATA was modified to use the routine MOVED.
+      !>
+      !>-    SPICELIB Version 1.1.0, 25-NOV-1992 (JML)
+      !>
+      !>        In the example code fragment in DAFRDR and DAFWDR, the
+      !>        calling sequence to MOVED was corrected.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafwdr
-!! ## Abstract
-!!
-!!     Write or rewrite the contents of a double precision record in
-!!     a DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!     INTEGER               RECNO
-!!     DOUBLE PRECISION      DREC     ( 128 )
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle associated with a DAF.
-!!
-!!     RECNO    is the record number of a particular double
-!!              precision record within the file, whose
-!!              contents are to be written (if the record does
-!!              not yet exist) or overwritten (if it does).
-!!
-!!     DREC     contains the new contents of the record.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the file is not open for write access, the error
-!!         SPICE(DAFILLEGWRITE) is signaled.
-!!
-!!     2)  If (for some reason) the record cannot be written, the
-!!         error SPICE(DAFDPWRITEFAIL) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     Like DAFRDR, DAFWDR checks the record buffer to see if the
-!!     requested record is in the buffer. If so, the buffer is
-!!     updated along with the file. This prevents the buffer from
-!!     becoming outdated.
-!!
-!! ## Examples
-!!
-!!     The following code fragment illustrates one way that DAFRDR
-!!     and DAFWDR can be used to update part of a double precision
-!!     record. If the record does not yet exist, we can assume that
-!!     it is filled with zeros.
-!!
-!!        CALL DAFRDR ( HANDLE, RECNO, DREC, FOUND )
-!!
-!!        IF ( .NOT. FOUND ) THEN
-!!           CALL MOVED ( 0.D0, 128, DREC )
-!!        END IF
-!!
-!!        DO I = FIRST, LAST
-!!           DREC(I) = NEW_VALUE(I)
-!!        END DO
-!!
-!!        CALL DAFWDR ( HANDLE, RECNO, DREC )
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     J.M. Lynch         (JPL)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     I.M. Underwood     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.0.1, 09-AUG-2021 (NJB) (JDR)
-!!
-!!        Re-ordered header sections. Corrected typos in comments.
-!!        Edited the header to comply with NAIF standard.
-!!
-!!        Removed DAF required reading from $Literature_References.
-!!
-!!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!!
-!!        Replaced the call to DAFHLU to ZZDDHHLU. This prevents
-!!        DAFWDR from tying up resources in the handle manager.
-!!
-!!-    SPICELIB Version 1.3.0, 24-MAR-2000 (WLT)
-!!
-!!        The loop in DAFRDR that moved buffered d.p.s into the output
-!!        array DATA was modified to use the routine MOVED.
-!!
-!!-    SPICELIB Version 1.1.0, 25-NOV-1992 (JML)
-!!
-!!        In the example code fragment in DAFRDR and DAFWDR, the
-!!        calling sequence to MOVED was corrected.
-!!
-!!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     write DAF d.p. record
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip), parameter :: rbsize = 100
@@ -12246,125 +11248,103 @@ contains
       end associate
       end procedure dafwdr
 
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     READS,
+      !>     REQS     are the number of physical reads and the number
+      !>              of requests processed by DAFRDR during the current
+      !>              execution of the calling program.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The ratio of reads to requests tells you something about
+      !>     the effectiveness with which the record buffer is preventing
+      !>     unwanted disk access. In the ideal case, most of the records
+      !>     needed by the calling program can be returned directly from
+      !>     the buffer, and the ratio of reads to requests approaches zero.
+      !>     More realistically, it should be be somewhere between 1/10
+      !>     and 1/2.
+      !>
+      !>     If the ratio is greater than 1/2, you should consider increasing
+      !>     the size of the record buffer (which is controlled by parameter
+      !>     RBSIZE) in order to improve the performance of the DAF package,
+      !>     unless your application is strapped for space.
+      !>
+      !> ## Examples
+      !>
+      !>     In the following code fragment, the ratio of reads to requests
+      !>     is determined following a series of calls to the reader DAFEZ.
+      !>
+      !>        DO I = 1, N
+      !>           CALL DAFEZ ( ..., STATES(1,I), ... )
+      !>        END DO
+      !>
+      !>        CALL DAFNRR ( READS, REQS )
+      !>
+      !>        WRITE (*,*) 'Reads/requests = ', FLOAT( READS ) / FLOAT( REQS )
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J.M. Lynch         (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.3.1, 09-AUG-2021 (NJB)
+      !>
+      !>        Re-ordered header sections. Corrected typos in comments.
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Removed DAF required reading from $Literature_References.
+      !>
+      !>-    SPICELIB Version 1.3.0, 24-MAR-2000 (WLT)
+      !>
+      !>        The loop in DAFRDR that moved buffered d.p.s into the output
+      !>        array DATA was modified to use the routine MOVED.
+      !>
+      !>-    SPICELIB Version 1.1.0, 25-NOV-1992 (JML)
+      !>
+      !>        A cut and paste error in the literature references
+      !>        section of the header was fixed.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafnrr
-!! ## Abstract
-!!
-!!     Return the number of reads and requests fielded by DAFRDR.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               READS
-!!     INTEGER               REQS
-!!
-!! ## Detailed Input
-!!
-!!     None.
-!!
-!! ## Detailed Output
-!!
-!!     READS,
-!!     REQS     are the number of physical reads and the number
-!!              of requests processed by DAFRDR during the current
-!!              execution of the calling program.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     The ratio of reads to requests tells you something about
-!!     the effectiveness with which the record buffer is preventing
-!!     unwanted disk access. In the ideal case, most of the records
-!!     needed by the calling program can be returned directly from
-!!     the buffer, and the ratio of reads to requests approaches zero.
-!!     More realistically, it should be be somewhere between 1/10
-!!     and 1/2.
-!!
-!!     If the ratio is greater than 1/2, you should consider increasing
-!!     the size of the record buffer (which is controlled by parameter
-!!     RBSIZE) in order to improve the performance of the DAF package,
-!!     unless your application is strapped for space.
-!!
-!! ## Examples
-!!
-!!     In the following code fragment, the ratio of reads to requests
-!!     is determined following a series of calls to the reader DAFEZ.
-!!
-!!        DO I = 1, N
-!!           CALL DAFEZ ( ..., STATES(1,I), ... )
-!!        END DO
-!!
-!!        CALL DAFNRR ( READS, REQS )
-!!
-!!        WRITE (*,*) 'Reads/requests = ', FLOAT( READS ) / FLOAT( REQS )
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J.M. Lynch         (JPL)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.3.1, 09-AUG-2021 (NJB)
-!!
-!!        Re-ordered header sections. Corrected typos in comments.
-!!        Edited the header to comply with NAIF standard.
-!!
-!!        Removed DAF required reading from $Literature_References.
-!!
-!!-    SPICELIB Version 1.3.0, 24-MAR-2000 (WLT)
-!!
-!!        The loop in DAFRDR that moved buffered d.p.s into the output
-!!        array DATA was modified to use the routine MOVED.
-!!
-!!-    SPICELIB Version 1.1.0, 25-NOV-1992 (JML)
-!!
-!!        A cut and paste error in the literature references
-!!        section of the header was fixed.
-!!
-!!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     number of DAF read requests
-!!
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip), parameter :: rbsize = 100
@@ -12397,239 +11377,206 @@ contains
       end associate
       end procedure dafnrr
 
-!$Procedure DAFGDA ( DAF, read data from address )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DAF.
+      !>
+      !>     BADDR,
+      !>     EADDR    are the initial and final addresses of a contiguous
+      !>              set of double precision numbers within a DAF.
+      !>              Presumably, these make up all or part of a particular
+      !>              array.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     DATA     are the double precision data contained between
+      !>              the specified addresses within the specified file.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If BADDR is zero or negative, the error SPICE(DAFNEGADDR)
+      !>         is signaled.
+      !>
+      !>     2)  If BADDR > EADDR, the error SPICE(DAFBEGGTEND) is signaled.
+      !>
+      !>     3)  If HANDLE is invalid, an error is signaled by a routine in the
+      !>         call tree of this routine.
+      !>
+      !>     4)  If the range of addresses covered between BADDR and EADDR
+      !>         includes records that do not contain strictly double
+      !>         precision data, then the values returned in DATA are
+      !>         undefined. See the $Restrictions section below for details.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The principal reason that DAFs are so easy to use is that
+      !>     the data in each DAF are considered to be one long contiguous
+      !>     set of double precision numbers. You can grab data from anywhere
+      !>     within a DAF without knowing (or caring) about the physical
+      !>     records in which they are stored.
+      !>
+      !>     This routine replaces DAFRDA as the principle mechanism for
+      !>     reading the contents of DAF arrays.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Open a type 8 SPK for read access, retrieve the data for
+      !>        the first segment and identify the beginning and end addresses,
+      !>        the number of data elements within, the size of the data
+      !>        array, and print the first two records.
+      !>
+      !>        Use the SPK kernel below as input type 8 SPK file for the
+      !>        example.
+      !>
+      !>           mer1_ls_040128_iau2000_v1.bsp
+      !>
+      !>        Each segment contains only two records which provide the start
+      !>        and end position for the MER-1 rover landing site in the
+      !>        IAU_MARS frame. Since the landing site does not change over
+      !>        time, it is expected that both records are equal.
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFGDA_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Local constants.
+      !>        C
+      !>              CHARACTER*(*)         FMT
+      !>              PARAMETER           ( FMT = '(6F10.3)' )
+      !>
+      !>              INTEGER               MAXDAT
+      !>              PARAMETER           ( MAXDAT = 1000 )
+      !>
+      !>              INTEGER               MAXSUM
+      !>              PARAMETER           ( MAXSUM = 125  )
+      !>
+      !>              INTEGER               ND
+      !>              PARAMETER           ( ND     = 2    )
+      !>
+      !>              INTEGER               NI
+      !>              PARAMETER           ( NI     = 6    )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              DOUBLE PRECISION      DAFSUM ( MAXSUM )
+      !>              DOUBLE PRECISION      DATA   ( MAXDAT )
+      !>              DOUBLE PRECISION      DC     ( ND )
+      !>
+      !>              INTEGER               BADDR
+      !>              INTEGER               EADDR
+      !>              INTEGER               HANDLE
+      !>              INTEGER               IC     ( NI )
+      !>              INTEGER               SIZE
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Open the type 8 SPK for read access, then read the
+      !>        C     data from the first segment.
+      !>        C
+      !>              CALL DAFOPR ( 'mer1_ls_040128_iau2000_v1.bsp', HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a forward search; find the first segment; read the
+      !>        C     segment summary.
+      !>        C
+      !>              CALL DAFBFS ( HANDLE )
+      !>              CALL DAFFNA ( FOUND  )
+      !>              CALL DAFGS  ( DAFSUM )
+      !>              CALL DAFUS  ( DAFSUM, ND, NI, DC, IC )
+      !>
+      !>        C
+      !>        C     Retrieve the data begin and end addresses.
+      !>        C
+      !>              BADDR = IC(5)
+      !>              EADDR = IC(6)
+      !>
+      !>              WRITE(*,'(A,I4)') 'Beginning address       : ', BADDR
+      !>              WRITE(*,'(A,I4)') 'Ending address          : ', EADDR
+      !>              WRITE(*,'(A,I4)') 'Number of data elements : ',
+      !>             .                                    EADDR - BADDR + 1
+      !>
+      !>        C
+      !>        C     Extract all data bounded by the begin and end addresses.
+      !>        C
+      !>              CALL DAFGDA ( HANDLE, BADDR, EADDR, DATA )
+      !>
+      !>        C
+      !>        C     Check the data.
+      !>        C
+      !>              WRITE(*,'(A)') 'The first and second states '
+      !>             .            // 'stored in the segment:'
+      !>              WRITE(*,FMT) DATA(1),  DATA(2),  DATA(3),
+      !>             .             DATA(4),  DATA(5),  DATA(6)
+      !>              WRITE(*,FMT) DATA(7),  DATA(8),  DATA(9),
+      !>             .             DATA(10), DATA(11), DATA(12)
+      !>
+      !>        C
+      !>        C     Safely close the file
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>        Beginning address       :  897
+      !>        Ending address          :  912
+      !>        Number of data elements :   16
+      !>        The first and second states stored in the segment:
+      !>          3376.422  -326.649  -115.392     0.000     0.000     0.000
+      !>          3376.422  -326.649  -115.392     0.000     0.000     0.000
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  There are several types of records in a DAF. This routine
+      !>         is only to be used to read double precision data bounded
+      !>         between two DAF addresses. The range of addresses input
+      !>         may not cross data and summary record boundaries.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     F.S. Turner        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
+      !>
+      !>        Changed the input argument names BEGIN and END to BADDR to
+      !>        EADDR for consistency with other routines.
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Added
+      !>        complete code example. Removed unnecessary $Revisions section.
+      !>
+      !>-    SPICELIB Version 1.0.0, 16-NOV-2001 (FST)
       module procedure dafgda
-!! ## Abstract
-!!
-!!     Read the double precision data bounded by two addresses within
-!!     a DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       implicit none
 
-! $ Detailed_Input
-!
-!     HANDLE   is the handle of a DAF.
-!
-!     BADDR,
-!     EADDR    are the initial and final addresses of a contiguous
-!              set of double precision numbers within a DAF.
-!              Presumably, these make up all or part of a particular
-!              array.
-!
-! $ Detailed_Output
-!
-!     DATA     are the double precision data contained between
-!              the specified addresses within the specified file.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If BADDR is zero or negative, the error SPICE(DAFNEGADDR)
-!         is signaled.
-!
-!     2)  If BADDR > EADDR, the error SPICE(DAFBEGGTEND) is signaled.
-!
-!     3)  If HANDLE is invalid, an error is signaled by a routine in the
-!         call tree of this routine.
-!
-!     4)  If the range of addresses covered between BADDR and EADDR
-!         includes records that do not contain strictly double
-!         precision data, then the values returned in DATA are
-!         undefined. See the $Restrictions section below for details.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The principal reason that DAFs are so easy to use is that
-!     the data in each DAF are considered to be one long contiguous
-!     set of double precision numbers. You can grab data from anywhere
-!     within a DAF without knowing (or caring) about the physical
-!     records in which they are stored.
-!
-!     This routine replaces DAFRDA as the principle mechanism for
-!     reading the contents of DAF arrays.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Open a type 8 SPK for read access, retrieve the data for
-!        the first segment and identify the beginning and end addresses,
-!        the number of data elements within, the size of the data
-!        array, and print the first two records.
-!
-!        Use the SPK kernel below as input type 8 SPK file for the
-!        example.
-!
-!           mer1_ls_040128_iau2000_v1.bsp
-!
-!        Each segment contains only two records which provide the start
-!        and end position for the MER-1 rover landing site in the
-!        IAU_MARS frame. Since the landing site does not change over
-!        time, it is expected that both records are equal.
-!
-!        Example code begins here.
-!
-!              PROGRAM DAFGDA_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local constants.
-!        C
-!              CHARACTER*(*)         FMT
-!              PARAMETER           ( FMT = '(6F10.3)' )
-!
-!              INTEGER               MAXDAT
-!              PARAMETER           ( MAXDAT = 1000 )
-!
-!              INTEGER               MAXSUM
-!              PARAMETER           ( MAXSUM = 125  )
-!
-!              INTEGER               ND
-!              PARAMETER           ( ND     = 2    )
-!
-!              INTEGER               NI
-!              PARAMETER           ( NI     = 6    )
-!
-!        C
-!        C     Local variables.
-!        C
-!              DOUBLE PRECISION      DAFSUM ( MAXSUM )
-!              DOUBLE PRECISION      DATA   ( MAXDAT )
-!              DOUBLE PRECISION      DC     ( ND )
-!
-!              INTEGER               BADDR
-!              INTEGER               EADDR
-!              INTEGER               HANDLE
-!              INTEGER               IC     ( NI )
-!              INTEGER               SIZE
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Open the type 8 SPK for read access, then read the
-!        C     data from the first segment.
-!        C
-!              CALL DAFOPR ( 'mer1_ls_040128_iau2000_v1.bsp', HANDLE )
-!
-!        C
-!        C     Begin a forward search; find the first segment; read the
-!        C     segment summary.
-!        C
-!              CALL DAFBFS ( HANDLE )
-!              CALL DAFFNA ( FOUND  )
-!              CALL DAFGS  ( DAFSUM )
-!              CALL DAFUS  ( DAFSUM, ND, NI, DC, IC )
-!
-!        C
-!        C     Retrieve the data begin and end addresses.
-!        C
-!              BADDR = IC(5)
-!              EADDR = IC(6)
-!
-!              WRITE(*,'(A,I4)') 'Beginning address       : ', BADDR
-!              WRITE(*,'(A,I4)') 'Ending address          : ', EADDR
-!              WRITE(*,'(A,I4)') 'Number of data elements : ',
-!             .                                    EADDR - BADDR + 1
-!
-!        C
-!        C     Extract all data bounded by the begin and end addresses.
-!        C
-!              CALL DAFGDA ( HANDLE, BADDR, EADDR, DATA )
-!
-!        C
-!        C     Check the data.
-!        C
-!              WRITE(*,'(A)') 'The first and second states '
-!             .            // 'stored in the segment:'
-!              WRITE(*,FMT) DATA(1),  DATA(2),  DATA(3),
-!             .             DATA(4),  DATA(5),  DATA(6)
-!              WRITE(*,FMT) DATA(7),  DATA(8),  DATA(9),
-!             .             DATA(10), DATA(11), DATA(12)
-!
-!        C
-!        C     Safely close the file
-!        C
-!              CALL DAFCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Beginning address       :  897
-!        Ending address          :  912
-!        Number of data elements :   16
-!        The first and second states stored in the segment:
-!          3376.422  -326.649  -115.392     0.000     0.000     0.000
-!          3376.422  -326.649  -115.392     0.000     0.000     0.000
-!
-! $ Restrictions
-!
-!     1)  There are several types of records in a DAF. This routine
-!         is only to be used to read double precision data bounded
-!         between two DAF addresses. The range of addresses input
-!         may not cross data and summary record boundaries.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     F.S. Turner        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
-!
-!        Changed the input argument names BEGIN and END to BADDR to
-!        EADDR for consistency with other routines.
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Added
-!        complete code example. Removed unnecessary $Revisions section.
-!
-!-    SPICELIB Version 1.0.0, 16-NOV-2001 (FST)
-!
-!-&
-
-! $ Index_Entries
-!
-!     read data from DAF address
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip), parameter :: bsize = 128
 
       integer(ip)           begr
@@ -12713,263 +11660,252 @@ contains
       return
       end procedure dafgda
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     Convert double precision values from one binary file format
+      !>     to another.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     INBFF      is an integer code that indicates the binary file
+      !>                format of INPUT.  Acceptable values are the
+      !>                parameters:
+      !>
+      !>                   BIGI3E
+      !>                   LTLI3E
+      !>                   VAXGFL
+      !>                   VAXDFL
+      !>
+      !>                as defined in the include file 'zzddhman.inc'.
+      !>
+      !>     INPUT      is a string containing a group of d.p. values read
+      !>                from a file as a character string.  The length of
+      !>                this string must be a multiple of the number of
+      !>                bytes used to store a d.p. value in a file utilizing
+      !>                INBFF.
+      !>
+      !>     SPACE      is the number of d.p. values that OUTPUT has room to
+      !>                store.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     OUTPUT     is an array of double precision values containing
+      !>                the translated values from INPUT into the native
+      !>                binary format.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     Error free.
+      !>
+      !>     This routine signals several SPICE(BUG) exceptions.  They are
+      !>     signaled when improperly specified inputs are passed into the
+      !>     routine or if the module or modules in its calling tree are
+      !>     improperly configured to run on this platform.  Callers that
+      !>     prevent invalid inputs from being passed into this routine
+      !>     need not check in.  See the $Restrictions section for a
+      !>     discussion of input argument restrictions.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine translates double precision values from a non-native
+      !>     binary format read from a file as a sequence of characters to the
+      !>     native format.
+      !>
+      !> ## Examples
+      !>
+      !>     See ZZDAFGSR or ZZDAFGDR.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) Numeric data when read as characters from a file preserves
+      !>        the bit patterns present in the file in memory.
+      !>
+      !>     2) The intrinsic ICHAR preserves the bit pattern of the character
+      !>        byte read from a file.  Namely if one examines the integer
+      !>        created the 8 least significant bits will be precisely those
+      !>        found in the character.
+      !>
+      !>     3) The size of double precision values on the target environment
+      !>        are a multiple of some number of bytes.
+      !>
+      !>     4) The length of the INPUT string is a multiple of the number
+      !>        of bytes for a double precision value in the INBFF format.
+      !>
+      !>     5) INBFF is supported for reading on this platform, and not
+      !>        equivalent to NATBFF on this platform.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     F.S. Turner     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.27.0, 28-NOV-2021 (BVS)
+      !>
+      !>        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+      !>
+      !>-    SPICELIB Version 1.26.1, 01-OCT-2021 (NJB)
+      !>
+      !>        Fixed typo in comments.
+      !>
+      !>-    SPICELIB Version 1.26.0, 15-NOV-2015 (EDW)
+      !>
+      !>        Recast J = 8*(-1+I) + 1 as J = -7+8*I to accommodate
+      !>        f2c processing.
+      !>
+      !>-    SPICELIB Version 1.25.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-INTEL.
+      !>
+      !>-    SPICELIB Version 1.24.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.23.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.22.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.21.0, 10-MAR-2014 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 1.20.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL.
+      !>
+      !>-    SPICELIB Version 1.19.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-CC_C.
+      !>
+      !>-    SPICELIB Version 1.18.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+      !>
+      !>-    SPICELIB Version 1.17.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+      !>
+      !>-    SPICELIB Version 1.16.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.15.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.14.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for PC-64BIT-MS_C.
+      !>
+      !>-    SPICELIB Version 1.13.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-INTEL_C.
+      !>
+      !>-    SPICELIB Version 1.12.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-IFORT.
+      !>
+      !>-    SPICELIB Version 1.11.0, 13-MAY-2010 (BVS)
+      !>
+      !>        Updated for MAC-OSX-64BIT-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.10.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for PC-LINUX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.9.0, 18-MAR-2009 (BVS)
+      !>
+      !>        Updated for MAC-OSX-GFORTRAN.
+      !>
+      !>-    SPICELIB Version 1.8.0, 19-FEB-2008 (BVS)
+      !>
+      !>        Updated for PC-LINUX-IFORT.
+      !>
+      !>-    SPICELIB Version 1.7.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-LINUX-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 1.6.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-INTEL_C.
+      !>
+      !>-    SPICELIB Version 1.5.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for MAC-OSX-IFORT.
+      !>
+      !>-    SPICELIB Version 1.4.0, 14-NOV-2006 (BVS)
+      !>
+      !>        Updated for PC-WINDOWS-IFORT.
+      !>
+      !>-    SPICELIB Version 1.3.0, 26-OCT-2005 (BVS)
+      !>
+      !>        Updated for SUN-SOLARIS-64BIT-GCC_C.
+      !>
+      !>-    SPICELIB Version 1.2.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN_C.
+      !>
+      !>-    SPICELIB Version 1.1.0, 03-JAN-2005 (BVS)
+      !>
+      !>        Updated for PC-CYGWIN.
+      !>
+      !>-    SPICELIB Version 1.0.1, 17-JUL-2002 (BVS)
+      !>
+      !>        Added MAC-OSX environments.
+      !>
+      !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
+      !>
+      !>     SPICELIB Functions
+      !>
+      !>     Local Parameters
+      !>
+      !>     Length of the double precision and integer buffers that
+      !>     are equivalenced.
+      !>
+      !>     These parameters are used for arithmetic shifting.
+      !>
+      !>     Local Variables
+      !>
+      !>     Equivalence DPBUFR to INBUFR.
+      !>
+      !>     Statement Functions
+      !>
+      !>     Saved Variables
+      !>
+      !>     Data Statements
+      !>
+      !>     Statement Function Definitions
+      !>
+      !>     This function controls the conversion of characters to integers.
+      !>     On some supported environments, ICHAR is not sufficient to
+      !>     produce the desired results.  This, however, is not the case
+      !>     with this particular environment.
+      !>     Some versions of the g77 implement ICHAR with a signed integer.
+      !>     This function computes the value of ICHAR that this code requires
+      !>     on any version of g77 for x86 Linux.
+      !>
+      !>     Standard SPICE error handling.
       module procedure zzxlated
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Convert double precision values from one binary file format
-!!     to another.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     INBFF      is an integer code that indicates the binary file
-!!                format of INPUT.  Acceptable values are the
-!!                parameters:
-!!
-!!                   BIGI3E
-!!                   LTLI3E
-!!                   VAXGFL
-!!                   VAXDFL
-!!
-!!                as defined in the include file 'zzddhman.inc'.
-!!
-!!     INPUT      is a string containing a group of d.p. values read
-!!                from a file as a character string.  The length of
-!!                this string must be a multiple of the number of
-!!                bytes used to store a d.p. value in a file utilizing
-!!                INBFF.
-!!
-!!     SPACE      is the number of d.p. values that OUTPUT has room to
-!!                store.
-!!
-!! ## Detailed Output
-!!
-!!     OUTPUT     is an array of double precision values containing
-!!                the translated values from INPUT into the native
-!!                binary format.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     Error free.
-!!
-!!     This routine signals several SPICE(BUG) exceptions.  They are
-!!     signaled when improperly specified inputs are passed into the
-!!     routine or if the module or modules in its calling tree are
-!!     improperly configured to run on this platform.  Callers that
-!!     prevent invalid inputs from being passed into this routine
-!!     need not check in.  See the $Restrictions section for a
-!!     discussion of input argument restrictions.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     This routine translates double precision values from a non-native
-!!     binary format read from a file as a sequence of characters to the
-!!     native format.
-!!
-!! ## Examples
-!!
-!!     See ZZDAFGSR or ZZDAFGDR.
-!!
-!! ## Restrictions
-!!
-!!     1) Numeric data when read as characters from a file preserves
-!!        the bit patterns present in the file in memory.
-!!
-!!     2) The intrinsic ICHAR preserves the bit pattern of the character
-!!        byte read from a file.  Namely if one examines the integer
-!!        created the 8 least significant bits will be precisely those
-!!        found in the character.
-!!
-!!     3) The size of double precision values on the target environment
-!!        are a multiple of some number of bytes.
-!!
-!!     4) The length of the INPUT string is a multiple of the number
-!!        of bytes for a double precision value in the INBFF format.
-!!
-!!     5) INBFF is supported for reading on this platform, and not
-!!        equivalent to NATBFF on this platform.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     F.S. Turner     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.27.0, 28-NOV-2021 (BVS)
-!!
-!!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
-!!
-!!-    SPICELIB Version 1.26.1, 01-OCT-2021 (NJB)
-!!
-!!        Fixed typo in comments.
-!!
-!!-    SPICELIB Version 1.26.0, 15-NOV-2015 (EDW)
-!!
-!!        Recast J = 8*(-1+I) + 1 as J = -7+8*I to accommodate
-!!        f2c processing.
-!!
-!!-    SPICELIB Version 1.25.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-64BIT-INTEL.
-!!
-!!-    SPICELIB Version 1.24.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-LINUX-64BIT-IFORT.
-!!
-!!-    SPICELIB Version 1.23.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-CYGWIN-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.22.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.21.0, 10-MAR-2014 (BVS)
-!!
-!!        Updated for PC-CYGWIN-64BIT-GCC_C.
-!!
-!!-    SPICELIB Version 1.20.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-INTEL.
-!!
-!!-    SPICELIB Version 1.19.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-INTEL-CC_C.
-!!
-!!-    SPICELIB Version 1.18.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
-!!
-!!-    SPICELIB Version 1.17.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
-!!
-!!-    SPICELIB Version 1.16.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for PC-WINDOWS-64BIT-IFORT.
-!!
-!!-    SPICELIB Version 1.15.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for PC-LINUX-64BIT-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.14.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for PC-64BIT-MS_C.
-!!
-!!-    SPICELIB Version 1.13.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for MAC-OSX-64BIT-INTEL_C.
-!!
-!!-    SPICELIB Version 1.12.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for MAC-OSX-64BIT-IFORT.
-!!
-!!-    SPICELIB Version 1.11.0, 13-MAY-2010 (BVS)
-!!
-!!        Updated for MAC-OSX-64BIT-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.10.0, 18-MAR-2009 (BVS)
-!!
-!!        Updated for PC-LINUX-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.9.0, 18-MAR-2009 (BVS)
-!!
-!!        Updated for MAC-OSX-GFORTRAN.
-!!
-!!-    SPICELIB Version 1.8.0, 19-FEB-2008 (BVS)
-!!
-!!        Updated for PC-LINUX-IFORT.
-!!
-!!-    SPICELIB Version 1.7.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for PC-LINUX-64BIT-GCC_C.
-!!
-!!-    SPICELIB Version 1.6.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for MAC-OSX-INTEL_C.
-!!
-!!-    SPICELIB Version 1.5.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for MAC-OSX-IFORT.
-!!
-!!-    SPICELIB Version 1.4.0, 14-NOV-2006 (BVS)
-!!
-!!        Updated for PC-WINDOWS-IFORT.
-!!
-!!-    SPICELIB Version 1.3.0, 26-OCT-2005 (BVS)
-!!
-!!        Updated for SUN-SOLARIS-64BIT-GCC_C.
-!!
-!!-    SPICELIB Version 1.2.0, 03-JAN-2005 (BVS)
-!!
-!!        Updated for PC-CYGWIN_C.
-!!
-!!-    SPICELIB Version 1.1.0, 03-JAN-2005 (BVS)
-!!
-!!        Updated for PC-CYGWIN.
-!!
-!!-    SPICELIB Version 1.0.1, 17-JUL-2002 (BVS)
-!!
-!!        Added MAC-OSX environments.
-!!
-!!-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-!!
-!!     SPICELIB Functions
-!!
-!!     Local Parameters
-!!
-!!     Length of the double precision and integer buffers that
-!!     are equivalenced.
-!!
-!!     These parameters are used for arithmetic shifting.
-!!
-!!     Local Variables
-!!
-!!     Equivalence DPBUFR to INBUFR.
-!!
-!!     Statement Functions
-!!
-!!     Saved Variables
-!!
-!!     Data Statements
-!!
-!!     Statement Function Definitions
-!!
-!!     This function controls the conversion of characters to integers.
-!!     On some supported environments, ICHAR is not sufficient to
-!!     produce the desired results.  This, however, is not the case
-!!     with this particular environment.
-!!     Some versions of the g77 implement ICHAR with a signed integer.
-!!     This function computes the value of ICHAR that this code requires
-!!     on any version of g77 for x86 Linux.
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmin
       use pepper_strings, only: ucase
@@ -13674,196 +12610,166 @@ contains
       end associate
       end procedure zzxlated
 
-!$Procedure DAFRDA ( DAF, read data from address )
-
+      !> ## Abstract
+      !>
+      !>     Deprecated: This routine has been superseded by the SPICELIB
+      !>     routines DAFGDA and DAFGSR. This routine is supported for purposes
+      !>     of backward compatibility only.
+      !>
+      !>     Read the double precision data bounded by two addresses within
+      !>     a DAF.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DAF.
+      !>
+      !>     BEGIN,
+      !>     END      are the initial and final addresses of a contiguous
+      !>              set of double precision numbers within a DAF.
+      !>              Presumably, these make up all or part of a particular
+      !>              array.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     DATA     are the double precision data contained between
+      !>              the specified addresses within the specified file.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If BEGIN is zero or negative, the error SPICE(DAFNEGADDR)
+      !>         is signaled.
+      !>
+      !>     2)  If BEGIN > END, the error SPICE(DAFBEGGTEND) is signaled.
+      !>
+      !>     3)  If the file associated with HANDLE is not of the native
+      !>         binary file format, the error SPICE(UNSUPPORTEDBFF) is
+      !>         signaled.
+      !>
+      !>     4)  If HANDLE is invalid, an error is signaled by a routine in
+      !>         the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The principal reason that DAFs are so easy to use is that
+      !>     the data in each DAF are considered to be one long contiguous
+      !>     set of double precision numbers. You can grab data from anywhere
+      !>     within a DAF without knowing (or caring) about the physical
+      !>     records in which they are stored.
+      !>
+      !>     This routine has been made obsolete by the routines DAFGDA and
+      !>     DAFGSR. This routine is supported for reasons of backward
+      !>     compatibility only. New software development should utilize
+      !>     DAFGDA or DAFGSR.
+      !>
+      !> ## Examples
+      !>
+      !>     The following code fragment illustrates the use of DAFRDA
+      !>     to read data from an imaginary array. The array begins with a
+      !>     directory containing 11 epochs. Each pair of epochs bounds
+      !>     an interval, and each interval is covered by a set of eight
+      !>     osculating elements.
+      !>
+      !>        CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>        BEGIN = IC(5)
+      !>        END   = IC(6)
+      !>
+      !>        CALL DAFRDA ( HANDLE, BEGIN, BEGIN+10, EPOCHS )
+      !>
+      !>        DO I = 1, 10
+      !>           IF ( ET .GE. EPOCHS(I)  .AND.  ET .LE. EPOCHS(I+1) ) THEN
+      !>              OFFSET = IC(5) + 11 + (I - 1) * 8
+      !>
+      !>              CALL DAFRDA ( HANDLE, OFFSET+1, OFFSET+8, ELEMENTS )
+      !>              RETURN
+      !>           END IF
+      !>        END DO
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.0, 26-OCT-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 2.0.2, 18-MAY-2010 (BVS)
+      !>
+      !>        Index line now states that this routine is deprecated.
+      !>
+      !>-    SPICELIB Version 2.0.1, 27-OCT-2003 (NJB)
+      !>
+      !>        The header now states that this routine is deprecated.
+      !>        The $Exceptions header section has been extended.
+      !>        Minor additional header updates were made.
+      !>
+      !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        Added SPICE(UNSUPPORTEDBFF) exception to the routine.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        The exception SPICE(UNSUPPORTEDBFF) was added to guarantee
+      !>        this routine's functionality remains unchanged as a result
+      !>        of the updates to the underlying DAF software's utilization of
+      !>        the handle manager. In versions of the Toolkit prior to this,
+      !>        all DAFs loaded were of the native binary file format.
+      !>        While rather unlikely, this routine could be used to read
+      !>        the contents of summary records in addition to the usual
+      !>        data records. The non-native to native translation process
+      !>        for these two different types of records in general are not
+      !>        the same. Rather than attempt to interpret the caller's
+      !>        intent, this routine is deprecated and restricted to
+      !>        functioning only on DAFs of the native binary file format.
+      !>
+      !>-    Beta Version 1.1.0, 1-NOV-1989 (RET)
+      !>
+      !>        DAFRDA now only checks in and checks out if one of the two
+      !>        possible exceptions occurs. The purpose of this change was to
+      !>        help speed up a routine that gets called constantly by higher
+      !>        level DAF routines.
       module procedure dafrda
-!! ## Abstract
-!!
-!!     Deprecated: This routine has been superseded by the SPICELIB
-!!     routines DAFGDA and DAFGSR. This routine is supported for purposes
-!!     of backward compatibility only.
-!!
-!!     Read the double precision data bounded by two addresses within
-!!     a DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       implicit none
 
-! $ Detailed_Input
-!
-!     HANDLE   is the handle of a DAF.
-!
-!     BEGIN,
-!     END      are the initial and final addresses of a contiguous
-!              set of double precision numbers within a DAF.
-!              Presumably, these make up all or part of a particular
-!              array.
-!
-! $ Detailed_Output
-!
-!     DATA     are the double precision data contained between
-!              the specified addresses within the specified file.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If BEGIN is zero or negative, the error SPICE(DAFNEGADDR)
-!         is signaled.
-!
-!     2)  If BEGIN > END, the error SPICE(DAFBEGGTEND) is signaled.
-!
-!     3)  If the file associated with HANDLE is not of the native
-!         binary file format, the error SPICE(UNSUPPORTEDBFF) is
-!         signaled.
-!
-!     4)  If HANDLE is invalid, an error is signaled by a routine in
-!         the call tree of this routine.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The principal reason that DAFs are so easy to use is that
-!     the data in each DAF are considered to be one long contiguous
-!     set of double precision numbers. You can grab data from anywhere
-!     within a DAF without knowing (or caring) about the physical
-!     records in which they are stored.
-!
-!     This routine has been made obsolete by the routines DAFGDA and
-!     DAFGSR. This routine is supported for reasons of backward
-!     compatibility only. New software development should utilize
-!     DAFGDA or DAFGSR.
-!
-! $ Examples
-!
-!     The following code fragment illustrates the use of DAFRDA
-!     to read data from an imaginary array. The array begins with a
-!     directory containing 11 epochs. Each pair of epochs bounds
-!     an interval, and each interval is covered by a set of eight
-!     osculating elements.
-!
-!        CALL DAFUS ( SUM, ND, NI, DC, IC )
-!        BEGIN = IC(5)
-!        END   = IC(6)
-!
-!        CALL DAFRDA ( HANDLE, BEGIN, BEGIN+10, EPOCHS )
-!
-!        DO I = 1, 10
-!           IF ( ET .GE. EPOCHS(I)  .AND.  ET .LE. EPOCHS(I+1) ) THEN
-!              OFFSET = IC(5) + 11 + (I - 1) * 8
-!
-!              CALL DAFRDA ( HANDLE, OFFSET+1, OFFSET+8, ELEMENTS )
-!              RETURN
-!           END IF
-!        END DO
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     H.A. Neilan        (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 26-OCT-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.0.2, 18-MAY-2010 (BVS)
-!
-!        Index line now states that this routine is deprecated.
-!
-!-    SPICELIB Version 2.0.1, 27-OCT-2003 (NJB)
-!
-!        The header now states that this routine is deprecated.
-!        The $Exceptions header section has been extended.
-!        Minor additional header updates were made.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!
-!        Added SPICE(UNSUPPORTEDBFF) exception to the routine.
-!
-!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!
-!        Literature references added to the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     DEPRECATED read data from DAF address
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!
-!        The exception SPICE(UNSUPPORTEDBFF) was added to guarantee
-!        this routine's functionality remains unchanged as a result
-!        of the updates to the underlying DAF software's utilization of
-!        the handle manager. In versions of the Toolkit prior to this,
-!        all DAFs loaded were of the native binary file format.
-!        While rather unlikely, this routine could be used to read
-!        the contents of summary records in addition to the usual
-!        data records. The non-native to native translation process
-!        for these two different types of records in general are not
-!        the same. Rather than attempt to interpret the caller's
-!        intent, this routine is deprecated and restricted to
-!        functioning only on DAFs of the native binary file format.
-!
-!-    Beta Version 1.1.0, 1-NOV-1989 (RET)
-!
-!        DAFRDA now only checks in and checks out if one of the two
-!        possible exceptions occurs. The purpose of this change was to
-!        help speed up a routine that gets called constantly by higher
-!        level DAF routines.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip), parameter :: bsize = 128
 
       integer(ip)           begr
@@ -13969,203 +12875,168 @@ contains
       return
       end procedure dafrda
 
-!$Procedure DAFRFR ( DAF, read file record )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle assigned to a DAF file opened for
+      !>              reading.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     ND,
+      !>     NI       are the numbers of double precision and integer
+      !>              components, respectively, in each array summary in
+      !>              the specified file.
+      !>
+      !>     IFNAME   is the internal file name stored in the first
+      !>              (or file) record of the specified file.
+      !>
+      !>     FWARD    is the forward list pointer. This points to the
+      !>              first summary record in the file. (Records between
+      !>              the first record and the first summary record are
+      !>              reserved when the file is created, and are invisible
+      !>              to DAF routines.)
+      !>
+      !>     BWARD    is the backward list pointer. This points
+      !>              to the final summary record in the file.
+      !>
+      !>     FREE     is the free address pointer. This contains the
+      !>              first free address in the file. (That is, the
+      !>              initial address of the next array to be added
+      !>              to the file.)
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the handle passed to this routine is not the handle of an
+      !>         open DAF file, an error is signaled by a routine in the call
+      !>         tree of this routine.
+      !>
+      !>     2)  If the specified DAF file is not open for read access, an
+      !>         error is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !>     3)  If the specified record cannot (for some reason) be read,
+      !>         the error SPICE(DAFFRNOTFOUND) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The file record of a DAF is the only record that contains
+      !>     any global information about the file. This record is created
+      !>     when the file is created, and is updated only when new arrays
+      !>     are added.
+      !>
+      !>     Like character records, file records are not buffered.
+      !>
+      !> ## Examples
+      !>
+      !>     In the following example, the value of the forward list
+      !>     pointer is examined in order to determine the number of
+      !>     reserved records in the DAF. These records are then read
+      !>     and the contents printed to the screen.
+      !>
+      !>        CALL DAFRFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
+      !>        CALL DAFHLU ( HANDLE, UNIT )
+      !>
+      !>        DO I = 2, FWARD - 1
+      !>           READ  (UNIT,REC=I) PRIVATE(1:1000)
+      !>           WRITE (*,*)        PRIVATE(1:1000)
+      !>        END DO
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.2.0, 02-JUL-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 3.1.0, 30-DEC-2009 (EDW)
+      !>
+      !>        Expanded DAFFRNOTFOUND error message to identify the file
+      !>        handle corresponding to the error condition.
+      !>
+      !>        Reordered header sections to conform to SPICE format.
+      !>        Merged the $Revisions sections, now deleted, with $Version.
+      !>
+      !>-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        Updated this routine to utilize interfaces built on
+      !>        the new handle manager to perform I/O operations.
+      !>
+      !>        This routine now utilizes ZZDAFGFR to retrieve information
+      !>        from the file record. As this private interface takes a
+      !>        handle and performs the necessary logical unit to handle
+      !>        mapping, the call to DAFHLU was removed. The DAFSIH call
+      !>        remains, since this insures that HANDLE is known to DAFAH.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-OCT-1993 (KRG)
+      !>
+      !>        The error SPICE(DAFNOIDWORD) is no longer signaled by this
+      !>        routine. The reason for this is that if DAFSIH returns OK then
+      !>        the handle passed to this routine is indeed a valid DAF file
+      !>        handle, otherwise the error is diagnosed by DAFSIH.
+      !>
+      !>        Added a call to DAFSIH to signal an invalid handle and a test
+      !>        of FAILED () after it. This is to make sure that the DAF file
+      !>        is open for reading. If this call succeeds, we know that we
+      !>        have a valid DAF handle, so there is no need to check FAILED
+      !>        after the call to DAFHLU.
+      !>
+      !>        The variable name DAFWRD was changed to IDWORD.
+      !>
+      !>        Added two new exceptions to the $Exceptions section: 1 and 2.
+      !>        The remaining exception (3) was already present. The exceptions
+      !>        that were added are not new, but are being documented for the
+      !>        first time.
+      !>
+      !>-    SPICELIB Version 1.0.3, 06-OCT-1992 (HAN)
+      !>
+      !>        Corrected a typo in the $Brief_I/O section. ND was listed
+      !>        twice as an input, and NI was not listed.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafrfr
-!! ## Abstract
-!!
-!!     Read the contents of the file record of a DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     HANDLE   is the handle assigned to a DAF file opened for
-!              reading.
-!
-! $ Detailed_Output
-!
-!     ND,
-!     NI       are the numbers of double precision and integer
-!              components, respectively, in each array summary in
-!              the specified file.
-!
-!     IFNAME   is the internal file name stored in the first
-!              (or file) record of the specified file.
-!
-!     FWARD    is the forward list pointer. This points to the
-!              first summary record in the file. (Records between
-!              the first record and the first summary record are
-!              reserved when the file is created, and are invisible
-!              to DAF routines.)
-!
-!     BWARD    is the backward list pointer. This points
-!              to the final summary record in the file.
-!
-!     FREE     is the free address pointer. This contains the
-!              first free address in the file. (That is, the
-!              initial address of the next array to be added
-!              to the file.)
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the handle passed to this routine is not the handle of an
-!         open DAF file, an error is signaled by a routine in the call
-!         tree of this routine.
-!
-!     2)  If the specified DAF file is not open for read access, an
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     3)  If the specified record cannot (for some reason) be read,
-!         the error SPICE(DAFFRNOTFOUND) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The file record of a DAF is the only record that contains
-!     any global information about the file. This record is created
-!     when the file is created, and is updated only when new arrays
-!     are added.
-!
-!     Like character records, file records are not buffered.
-!
-! $ Examples
-!
-!     In the following example, the value of the forward list
-!     pointer is examined in order to determine the number of
-!     reserved records in the DAF. These records are then read
-!     and the contents printed to the screen.
-!
-!        CALL DAFRFR ( HANDLE, ND, NI, IFNAME, FWARD, BWARD, FREE )
-!        CALL DAFHLU ( HANDLE, UNIT )
-!
-!        DO I = 2, FWARD - 1
-!           READ  (UNIT,REC=I) PRIVATE(1:1000)
-!           WRITE (*,*)        PRIVATE(1:1000)
-!        END DO
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     H.A. Neilan        (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!     I.M. Underwood     (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.2.0, 02-JUL-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 3.1.0, 30-DEC-2009 (EDW)
-!
-!        Expanded DAFFRNOTFOUND error message to identify the file
-!        handle corresponding to the error condition.
-!
-!        Reordered header sections to conform to SPICE format.
-!        Merged the $Revisions sections, now deleted, with $Version.
-!
-!-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
-!
-!        Updated this routine to utilize interfaces built on
-!        the new handle manager to perform I/O operations.
-!
-!        This routine now utilizes ZZDAFGFR to retrieve information
-!        from the file record. As this private interface takes a
-!        handle and performs the necessary logical unit to handle
-!        mapping, the call to DAFHLU was removed. The DAFSIH call
-!        remains, since this insures that HANDLE is known to DAFAH.
-!
-!-    SPICELIB Version 2.0.0, 04-OCT-1993 (KRG)
-!
-!        The error SPICE(DAFNOIDWORD) is no longer signaled by this
-!        routine. The reason for this is that if DAFSIH returns OK then
-!        the handle passed to this routine is indeed a valid DAF file
-!        handle, otherwise the error is diagnosed by DAFSIH.
-!
-!        Added a call to DAFSIH to signal an invalid handle and a test
-!        of FAILED () after it. This is to make sure that the DAF file
-!        is open for reading. If this call succeeds, we know that we
-!        have a valid DAF handle, so there is no need to check FAILED
-!        after the call to DAFHLU.
-!
-!        The variable name DAFWRD was changed to IDWORD.
-!
-!        Added two new exceptions to the $Exceptions section: 1 and 2.
-!        The remaining exception (3) was already present. The exceptions
-!        that were added are not new, but are being documented for the
-!        first time.
-!
-!-    SPICELIB Version 1.0.3, 06-OCT-1992 (HAN)
-!
-!        Corrected a typo in the $Brief_I/O section. ND was listed
-!        twice as an input, and NI was not listed.
-!
-!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!
-!        Literature references added to the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     read DAF file record
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local Parameters
-!
       integer(ip), parameter :: idwlen = 8
 
       integer(ip), parameter :: ifnlen = 60
 
-!
-!     Local variables
-!
       character(idwlen)     idword
 
       logical               found
@@ -14218,231 +13089,197 @@ contains
       return
       end procedure dafrfr
 
-!$Procedure DAFWFR ( DAF write file record )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle associated with a DAF file opened for
+      !>              writing.
+      !>
+      !>     ND,
+      !>     NI       are the numbers of double precision and integer
+      !>              components, respectively, in each array summary
+      !>              in the specified file.
+      !>
+      !>     IFNAME   is the internal file name to be stored in the first
+      !>              (or file) record of the specified file.
+      !>
+      !>     FWARD    is the forward list pointer. This points to the
+      !>              first summary record in the file.
+      !>
+      !>     BWARD    is the backward list pointer. This points to the
+      !>              final summary record in the file.
+      !>
+      !>     FREE     is the free address pointer. This contains the
+      !>              first free address in the file.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the handle passed to this routine is not the handle of an
+      !>         open DAF file, an error is signaled by a routine in the call
+      !>         tree of this routine.
+      !>
+      !>     2)  If the specified DAF file is not open for write access, an
+      !>         error is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !>     3)  If the file record cannot (for some reason) be written,
+      !>         the error SPICE(DAFWRITEFAIL) is signaled.
+      !>
+      !>     4)  If the attempt to read the file record fails, the error
+      !>         SPICE(DAFREADFAIL) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The file record of a DAF is the only record that contains
+      !>     any global information about the file. This record is created
+      !>     when the file is created, and is updated only when new arrays
+      !>     are added.
+      !>
+      !>        DO NOT CHANGE THE CONTENTS OF THE FILE RECORD UNLESS
+      !>        YOU ARE ABSOLUTELY SURE YOU KNOW WHAT YOU ARE DOING.
+      !>
+      !>     Like character records, file records are not buffered.
+      !>
+      !> ## Examples
+      !>
+      !>     None.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 4.1.0, 06-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Moved DAF required reading from $Literature_References to
+      !>        $Required_Reading section. Fixed typo in $Brief_I/O: ND
+      !>        argument was listed twice. Second should be NI. Removed
+      !>        unnecessary entries in $Revisions section.
+      !>
+      !>-    SPICELIB Version 4.0.0, 27-NOV-2001 (FST)
+      !>
+      !>        Updated this routine to utilize new handle manager
+      !>        interfaces. Comments were expanded and clarified.
+      !>
+      !>-    SPICELIB Version 3.0.0, 21-MAR-1999 (FST)
+      !>
+      !>        This routine was modified to accommodate the preservation
+      !>        of the FTP validation and binary file format strings that
+      !>        are now part of the DAF file record.
+      !>
+      !>-    SPICELIB Version 2.0.0, 05-OCT-1993 (KRG)
+      !>
+      !>        The error SPICE(DAFNOIDWORD) is no longer signaled by this
+      !>        routine. The reason for this is that if DAFSIH returns OK then
+      !>        the handle passed to this routine is indeed a valid DAF file
+      !>        handle, otherwise the error is diagnosed by DAFSIH.
+      !>
+      !>        Added two new exceptions to the $Exceptions section: 1 and 4.
+      !>        The remaining exceptions (2 and 3) were already present. The
+      !>        exceptions that were added are not new, but are being
+      !>        documented for the first time.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 4.0.0, 27-NOV-2001 (FST)
+      !>
+      !>        The call to DAFHLU has been replaced with a call to
+      !>        ZZDDHHLU, the handle manager interface for retrieving
+      !>        a logical unit. DAFHLU is no longer used, since it
+      !>        locks the unit returned to its HANDLE, tying up resources
+      !>        in the handle manager.
+      !>
+      !>-    SPICELIB Version 3.0.0, 21-MAR-1999 (FST)
+      !>
+      !>        In order to preserve the additional information that
+      !>        now resides in the file record, this routine reads
+      !>        the entire record into local buffers, including the
+      !>        TAILEN characters that follow the actual data content.
+      !>        The contents of the local buffers that correspond to
+      !>        information brought in from the call sequence of the
+      !>        routine are ignored when the record is rewritten.
+      !>        However, the ID word, the file format string, and the
+      !>        trailing TAILEN characters that contain the FTP validation
+      !>        string are rewritten along with the input values.
+      !>
+      !>        This routine does not simply replace the FTP validation
+      !>        string with the components from ZZFTPSTR, since that
+      !>        would possibly validate a corrupt file created using a newer
+      !>        Toolkit.
+      !>
+      !>-    SPICELIB Version 2.0.0, 05-OCT-1993 (KRG)
+      !>
+      !>        The error SPICE(DAFNOIDWORD) is no longer signaled by this
+      !>        routine. The reason for this is that if DAFSIH returns OK then
+      !>        the handle passed to this routine is indeed a valid DAF file
+      !>        handle, otherwise the error is diagnosed by DAFSIH.
+      !>
+      !>        Added a call to DAFSIH to signal an invalid handle and a test
+      !>        of FAILED () after it. This is to make sure that the DAF file
+      !>        is open for writing. If this call succeeds, we know that we
+      !>        have a valid DAF handle, so there is no need to check FAILED
+      !>        after the call to DAFHLU.
+      !>
+      !>        Added code to read the file ID word so that it could be
+      !>        preserved when the file record is written. This supports the ID
+      !>        word format that contains type information.
+      !>
+      !>        Added variable IDWORD to the routine, as well as the parameters
+      !>        IDWLEN and IFNLEN.
+      !>
+      !>        Added two new exceptions to the $Exceptions section: 1 and 4.
+      !>        The remaining exceptions (2 and 3) were already present. The
+      !>        exceptions that were added are not new, but are being
+      !>        documented for the first time.
+      !>
+      !>        Removed code that tested the sign of HANDLE to see if the file
+      !>        was open for write access, HANDLE < 0. This test was no longer
+      !>        necessary, as the call to DASSIH performs this test as well. No
+      !>        sense doing it twice.
       module procedure dafwfr
-!! ## Abstract
-!!
-!!     Write or rewrite the contents of the file record of a DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     HANDLE   is the handle associated with a DAF file opened for
-!              writing.
-!
-!     ND,
-!     NI       are the numbers of double precision and integer
-!              components, respectively, in each array summary
-!              in the specified file.
-!
-!     IFNAME   is the internal file name to be stored in the first
-!              (or file) record of the specified file.
-!
-!     FWARD    is the forward list pointer. This points to the
-!              first summary record in the file.
-!
-!     BWARD    is the backward list pointer. This points to the
-!              final summary record in the file.
-!
-!     FREE     is the free address pointer. This contains the
-!              first free address in the file.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the handle passed to this routine is not the handle of an
-!         open DAF file, an error is signaled by a routine in the call
-!         tree of this routine.
-!
-!     2)  If the specified DAF file is not open for write access, an
-!         error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     3)  If the file record cannot (for some reason) be written,
-!         the error SPICE(DAFWRITEFAIL) is signaled.
-!
-!     4)  If the attempt to read the file record fails, the error
-!         SPICE(DAFREADFAIL) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The file record of a DAF is the only record that contains
-!     any global information about the file. This record is created
-!     when the file is created, and is updated only when new arrays
-!     are added.
-!
-!        DO NOT CHANGE THE CONTENTS OF THE FILE RECORD UNLESS
-!        YOU ARE ABSOLUTELY SURE YOU KNOW WHAT YOU ARE DOING.
-!
-!     Like character records, file records are not buffered.
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     H.A. Neilan        (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 4.1.0, 06-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Moved DAF required reading from $Literature_References to
-!        $Required_Reading section. Fixed typo in $Brief_I/O: ND
-!        argument was listed twice. Second should be NI. Removed
-!        unnecessary entries in $Revisions section.
-!
-!-    SPICELIB Version 4.0.0, 27-NOV-2001 (FST)
-!
-!        Updated this routine to utilize new handle manager
-!        interfaces. Comments were expanded and clarified.
-!
-!-    SPICELIB Version 3.0.0, 21-MAR-1999 (FST)
-!
-!        This routine was modified to accommodate the preservation
-!        of the FTP validation and binary file format strings that
-!        are now part of the DAF file record.
-!
-!-    SPICELIB Version 2.0.0, 05-OCT-1993 (KRG)
-!
-!        The error SPICE(DAFNOIDWORD) is no longer signaled by this
-!        routine. The reason for this is that if DAFSIH returns OK then
-!        the handle passed to this routine is indeed a valid DAF file
-!        handle, otherwise the error is diagnosed by DAFSIH.
-!
-!        Added two new exceptions to the $Exceptions section: 1 and 4.
-!        The remaining exceptions (2 and 3) were already present. The
-!        exceptions that were added are not new, but are being
-!        documented for the first time.
-!
-!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!
-!        Literature references added to the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     write DAF file record
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 4.0.0, 27-NOV-2001 (FST)
-!
-!        The call to DAFHLU has been replaced with a call to
-!        ZZDDHHLU, the handle manager interface for retrieving
-!        a logical unit. DAFHLU is no longer used, since it
-!        locks the unit returned to its HANDLE, tying up resources
-!        in the handle manager.
-!
-!-    SPICELIB Version 3.0.0, 21-MAR-1999 (FST)
-!
-!        In order to preserve the additional information that
-!        now resides in the file record, this routine reads
-!        the entire record into local buffers, including the
-!        TAILEN characters that follow the actual data content.
-!        The contents of the local buffers that correspond to
-!        information brought in from the call sequence of the
-!        routine are ignored when the record is rewritten.
-!        However, the ID word, the file format string, and the
-!        trailing TAILEN characters that contain the FTP validation
-!        string are rewritten along with the input values.
-!
-!        This routine does not simply replace the FTP validation
-!        string with the components from ZZFTPSTR, since that
-!        would possibly validate a corrupt file created using a newer
-!        Toolkit.
-!
-!-    SPICELIB Version 2.0.0, 05-OCT-1993 (KRG)
-!
-!        The error SPICE(DAFNOIDWORD) is no longer signaled by this
-!        routine. The reason for this is that if DAFSIH returns OK then
-!        the handle passed to this routine is indeed a valid DAF file
-!        handle, otherwise the error is diagnosed by DAFSIH.
-!
-!        Added a call to DAFSIH to signal an invalid handle and a test
-!        of FAILED () after it. This is to make sure that the DAF file
-!        is open for writing. If this call succeeds, we know that we
-!        have a valid DAF handle, so there is no need to check FAILED
-!        after the call to DAFHLU.
-!
-!        Added code to read the file ID word so that it could be
-!        preserved when the file record is written. This supports the ID
-!        word format that contains type information.
-!
-!        Added variable IDWORD to the routine, as well as the parameters
-!        IDWLEN and IFNLEN.
-!
-!        Added two new exceptions to the $Exceptions section: 1 and 4.
-!        The remaining exceptions (2 and 3) were already present. The
-!        exceptions that were added are not new, but are being
-!        documented for the first time.
-!
-!        Removed code that tested the sign of HANDLE to see if the file
-!        was open for write access, HANDLE < 0. This test was no longer
-!        necessary, as the call to DASSIH performs this test as well. No
-!        sense doing it twice.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local Parameters
-!
       integer(ip), parameter :: fmtlen = 8
 
       integer(ip), parameter :: idwlen = 8
@@ -14483,9 +13320,6 @@ contains
 !
       integer(ip), parameter :: tailen = 928
 
-!
-!     Local variables
-!
       character(fmtlen)     format
       character(idwlen)     idword
       character(ifnlen)     ifn
@@ -14587,145 +13421,115 @@ contains
       return
       end procedure dafwfr
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DAF.
+      !>
+      !>     BEGIN,
+      !>     END      are the initial and final addresses of a contiguous
+      !>              set of double precision numbers within a DAF.
+      !>              Presumably, these make up all or part of a
+      !>              particular array.
+      !>
+      !>     DATA     are the double precision data to be stored between
+      !>              the specified addresses within the specified file.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If BEGIN is zero or negative, the error SPICE(DAFNEGADDR)
+      !>         is signaled.
+      !>
+      !>     2)  If the BEGIN > END, the error SPICE(DAFBEGGTEND)
+      !>         is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     The principal reason that DAFs are so easy to use is that
+      !>     the data in each DAF are considered to be one long contiguous
+      !>     set of double precision numbers. You can store data anywhere
+      !>     within a DAF without knowing (or caring) about the physical
+      !>     records in which they are stored.
+      !>
+      !>     Of course, if you are merely adding arrays to a DAF,
+      !>     you should not use DAFWDA directly, but should use DAFANA
+      !>     (add new array) and its entry points, since these update
+      !>     the appropriate bookkeeping records automatically.
+      !>
+      !> ## Examples
+      !>
+      !>     The following code fragment illustrates the use of DAFWDA
+      !>     to update an imaginary array. The array begins with a directory
+      !>     containing 11 epochs. Each pair of epochs bounds an
+      !>     interval, and each interval is covered by a set of eight
+      !>     osculating elements.
+      !>
+      !>     By accident, the elements were written with the wrong value for
+      !>     the GM of the central body (the last element in each set). Each
+      !>     set must be retrieved, updated,and rewritten.
+      !>
+      !>        CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>        BEGIN = IC(5)
+      !>
+      !>        DO I = 1, 10
+      !>           OFFSET = BEGIN + 11 + (I - 1) * 8
+      !>
+      !>           CALL DAFRDA ( HANDLE, OFFSET+1, OFFSET+8, ELEMENTS )
+      !>           ELEMENTS(8) = NEW_GM
+      !>
+      !>           CALL DAFWDA ( HANDLE, OFFSET+1, OFFSET+8, ELEMENTS )
+      !>        END DO
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 27-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Local variable BUFFER is now initialized and saved.
+      !>
+      !>        Edited the header to comply with NAIF standard. Moved DAF
+      !>        required reading from $Literature_References to
+      !>        $Required_Reading section.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafwda
-!! ## Abstract
-!!
-!!     Write or rewrite the double precision data bounded by two
-!!     addresses within a DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle of a DAF.
-!!
-!!     BEGIN,
-!!     END      are the initial and final addresses of a contiguous
-!!              set of double precision numbers within a DAF.
-!!              Presumably, these make up all or part of a
-!!              particular array.
-!!
-!!     DATA     are the double precision data to be stored between
-!!              the specified addresses within the specified file.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If BEGIN is zero or negative, the error SPICE(DAFNEGADDR)
-!!         is signaled.
-!!
-!!     2)  If the BEGIN > END, the error SPICE(DAFBEGGTEND)
-!!         is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     The principal reason that DAFs are so easy to use is that
-!!     the data in each DAF are considered to be one long contiguous
-!!     set of double precision numbers. You can store data anywhere
-!!     within a DAF without knowing (or caring) about the physical
-!!     records in which they are stored.
-!!
-!!     Of course, if you are merely adding arrays to a DAF,
-!!     you should not use DAFWDA directly, but should use DAFANA
-!!     (add new array) and its entry points, since these update
-!!     the appropriate bookkeeping records automatically.
-!!
-!! ## Examples
-!!
-!!     The following code fragment illustrates the use of DAFWDA
-!!     to update an imaginary array. The array begins with a directory
-!!     containing 11 epochs. Each pair of epochs bounds an
-!!     interval, and each interval is covered by a set of eight
-!!     osculating elements.
-!!
-!!     By accident, the elements were written with the wrong value for
-!!     the GM of the central body (the last element in each set). Each
-!!     set must be retrieved, updated,and rewritten.
-!!
-!!        CALL DAFUS ( SUM, ND, NI, DC, IC )
-!!        BEGIN = IC(5)
-!!
-!!        DO I = 1, 10
-!!           OFFSET = BEGIN + 11 + (I - 1) * 8
-!!
-!!           CALL DAFRDA ( HANDLE, OFFSET+1, OFFSET+8, ELEMENTS )
-!!           ELEMENTS(8) = NEW_GM
-!!
-!!           CALL DAFWDA ( HANDLE, OFFSET+1, OFFSET+8, ELEMENTS )
-!!        END DO
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.1.0, 27-OCT-2021 (JDR) (NJB)
-!!
-!!        Added IMPLICIT NONE statement.
-!!
-!!        Local variable BUFFER is now initialized and saved.
-!!
-!!        Edited the header to comply with NAIF standard. Moved DAF
-!!        required reading from $Literature_References to
-!!        $Required_Reading section.
-!!
-!!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     write data to DAF address
-!!
-!!     SPICELIB functions
-!!
-!!     Local variables
-!!
-!!     Saved variables
-!!
-!!     Initial values
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip), parameter :: bsize = 128
@@ -14810,233 +13614,198 @@ contains
       end associate
       end procedure dafwda
 
-!$Procedure DAFARR ( DAF, add reserved records )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle associated with a DAF file that has
+      !>              been opened with write access.
+      !>
+      !>     RESV     is the number of reserved records to be added
+      !>              to the specified file.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If RESV is less than one, the file is not changed.
+      !>
+      !> ## Files
+      !>
+      !>     See argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     Normally, the reserved records in an array file are reserved
+      !>     when the file is created. However, it may occasionally become
+      !>     necessary to add reserved records---when the contents of one
+      !>     file are appended to another, for example. (In this case, any
+      !>     information in the reserved records of either file should
+      !>     be included in the resulting file.)
+      !>
+      !>     The new reserved records are appended to the old ones. The new
+      !>     reserved records are also NULL filled.
+      !>
+      !> ## Examples
+      !>
+      !>     In the following call to DAFARR, assume that HANDLE is the file
+      !>     handle for a DAF file that has been opened for write access, and
+      !>     that the DAF file already contains 12 reserved records (located in
+      !>     records 2-13 of the physical file).
+      !>
+      !>        CALL DAFARR ( HANDLE, 7 )
+      !>
+      !>     After this call, the DAF file attached to HANDLE will contain 19
+      !>     reserved records. The new reserved records are located in
+      !>     records 14-20 of the physical file.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine will only add reserved records to DAFs open for
+      !>         write. These files are implicitly of the native binary file
+      !>         format.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.6.0, 13-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.5.0, 16-NOV-2001 (FST)
+      !>
+      !>        Added a call to DAFSIH to prevent this routine from
+      !>        attempting to write to non-native binary file formats.
+      !>        This will provide a more useful error diagnostic with
+      !>        little impact on performance.
+      !>
+      !>-    SPICELIB Version 1.4.0, 08-MAR-1996 (KRG)
+      !>
+      !>        Added code to write NULL filled records to the file for the
+      !>        new reserved records.
+      !>
+      !>-    SPICELIB Version 1.3.0, 12-MAY-1994 (KRG)
+      !>
+      !>        Added a missing call to CHKOUT before the RETURN statement in
+      !>        the test
+      !>
+      !>              IF ( RESV .LT. 1 ) THEN
+      !>                 RETURN
+      !>              END IF
+      !>
+      !>-    SPICELIB Version 1.2.0, 30-SEP-1993 (KRG)
+      !>
+      !>        $Detailed_Input and $Examples section of the header were
+      !>        modified.
+      !>
+      !>        Added calls to the FORTRAN intrinsic functions INT and
+      !>        DBLE in the code that updates the summary record.
+      !>
+      !>        Modified an IF loop to make logic clearer.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 17-JUL-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 1.4.0, 08-MAR-1996 (KRG)
+      !>
+      !>        Added code to write NULL filled records to the file for the
+      !>        new reserved records.
+      !>
+      !>-    SPICELIB Version 1.3.0, 12-MAY-1994 (KRG)
+      !>
+      !>        Added a missing call to CHKOUT before the RETURN statement in
+      !>        the test
+      !>
+      !>              IF ( RESV .LT. 1 ) THEN
+      !>                 RETURN
+      !>              END IF
+      !>
+      !>-    SPICELIB Version 1.2.0, 30-SEP-1993 (KRG)
+      !>
+      !>        $Detailed_Input section was modified. References to any
+      !>        specific routines by name as a method for opening a DAF file
+      !>        for write access were removed. The assumption is that a person
+      !>        using DAF files would already know something about opening and
+      !>        closing the files.
+      !>
+      !>        $Examples section was modified. References to any specific
+      !>        routines by name as a method for opening a DAF file for writing
+      !>        were removed, and the example was reworded in such a way that
+      !>        the use of the subroutine remained clear.
+      !>
+      !>        Added calls to the INT intrinsic function to convert a DP
+      !>        number to an integer before assigning it to NEXT, which is an
+      !>        integer variable. Also added calls to INT in IF statements
+      !>        where comparisons were made between DP numbers and INTEGERs,
+      !>        when integral values were actually being compared.
+      !>
+      !>        Added calls to the intrinsic function DBLE to convert an
+      !>        integer, RESV, into a DP number when doing some arithmetic.
+      !>
+      !>        Took an ELSE IF clause out of the initial IF return  ELSE
+      !>        check in END IF at the beginning of the routine. Replaced the
+      !>        code:
+      !>
+      !>              IF ( RETURN () ) THEN
+      !>                 RETURN
+      !>
+      !>              ELSE IF ( RESV .LT. 1 ) THEN
+      !>                 RETURN
+      !>
+      !>              ELSE
+      !>                 CALL CHKIN ( 'DAFARR' )
+      !>              END IF
+      !>
+      !>        with the equivalent code:
+      !>
+      !>              IF ( RETURN () ) THEN
+      !>                 RETURN
+      !>              ELSE
+      !>                 CALL CHKIN ( 'DAFARR' )
+      !>              END IF
+      !>
+      !>        C
+      !>        C     Check to see if the number of records to be reserved is
+      !>        C     less than one. If so, just return without changing
+      !>        C     anything.
+      !>        C
+      !>              IF ( RESV .LT. 1 ) THEN
+      !>                 RETURN
+      !>              END IF
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 17-JUL-1990 (IMU)
       module procedure dafarr
-!! ## Abstract
-!!
-!!     Add a specified number of reserved records to a Double Precision
-!!     Array File (DAF).
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       implicit none
 
-! $ Detailed_Input
-!
-!     HANDLE   is the handle associated with a DAF file that has
-!              been opened with write access.
-!
-!     RESV     is the number of reserved records to be added
-!              to the specified file.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If RESV is less than one, the file is not changed.
-!
-! $ Files
-!
-!     See argument HANDLE.
-!
-! $ Particulars
-!
-!     Normally, the reserved records in an array file are reserved
-!     when the file is created. However, it may occasionally become
-!     necessary to add reserved records---when the contents of one
-!     file are appended to another, for example. (In this case, any
-!     information in the reserved records of either file should
-!     be included in the resulting file.)
-!
-!     The new reserved records are appended to the old ones. The new
-!     reserved records are also NULL filled.
-!
-! $ Examples
-!
-!     In the following call to DAFARR, assume that HANDLE is the file
-!     handle for a DAF file that has been opened for write access, and
-!     that the DAF file already contains 12 reserved records (located in
-!     records 2-13 of the physical file).
-!
-!        CALL DAFARR ( HANDLE, 7 )
-!
-!     After this call, the DAF file attached to HANDLE will contain 19
-!     reserved records. The new reserved records are located in
-!     records 14-20 of the physical file.
-!
-! $ Restrictions
-!
-!     1)  This routine will only add reserved records to DAFs open for
-!         write. These files are implicitly of the native binary file
-!         format.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.6.0, 13-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.5.0, 16-NOV-2001 (FST)
-!
-!        Added a call to DAFSIH to prevent this routine from
-!        attempting to write to non-native binary file formats.
-!        This will provide a more useful error diagnostic with
-!        little impact on performance.
-!
-!-    SPICELIB Version 1.4.0, 08-MAR-1996 (KRG)
-!
-!        Added code to write NULL filled records to the file for the
-!        new reserved records.
-!
-!-    SPICELIB Version 1.3.0, 12-MAY-1994 (KRG)
-!
-!        Added a missing call to CHKOUT before the RETURN statement in
-!        the test
-!
-!              IF ( RESV .LT. 1 ) THEN
-!                 RETURN
-!              END IF
-!
-!-    SPICELIB Version 1.2.0, 30-SEP-1993 (KRG)
-!
-!        $Detailed_Input and $Examples section of the header were
-!        modified.
-!
-!        Added calls to the FORTRAN intrinsic functions INT and
-!        DBLE in the code that updates the summary record.
-!
-!        Modified an IF loop to make logic clearer.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 17-JUL-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     add DAF reserved records
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.4.0, 08-MAR-1996 (KRG)
-!
-!        Added code to write NULL filled records to the file for the
-!        new reserved records.
-!
-!-    SPICELIB Version 1.3.0, 12-MAY-1994 (KRG)
-!
-!        Added a missing call to CHKOUT before the RETURN statement in
-!        the test
-!
-!              IF ( RESV .LT. 1 ) THEN
-!                 RETURN
-!              END IF
-!
-!-    SPICELIB Version 1.2.0, 30-SEP-1993 (KRG)
-!
-!        $Detailed_Input section was modified. References to any
-!        specific routines by name as a method for opening a DAF file
-!        for write access were removed. The assumption is that a person
-!        using DAF files would already know something about opening and
-!        closing the files.
-!
-!        $Examples section was modified. References to any specific
-!        routines by name as a method for opening a DAF file for writing
-!        were removed, and the example was reworded in such a way that
-!        the use of the subroutine remained clear.
-!
-!        Added calls to the INT intrinsic function to convert a DP
-!        number to an integer before assigning it to NEXT, which is an
-!        integer variable. Also added calls to INT in IF statements
-!        where comparisons were made between DP numbers and INTEGERs,
-!        when integral values were actually being compared.
-!
-!        Added calls to the intrinsic function DBLE to convert an
-!        integer, RESV, into a DP number when doing some arithmetic.
-!
-!        Took an ELSE IF clause out of the initial IF return  ELSE
-!        check in END IF at the beginning of the routine. Replaced the
-!        code:
-!
-!              IF ( RETURN () ) THEN
-!                 RETURN
-!
-!              ELSE IF ( RESV .LT. 1 ) THEN
-!                 RETURN
-!
-!              ELSE
-!                 CALL CHKIN ( 'DAFARR' )
-!              END IF
-!
-!        with the equivalent code:
-!
-!              IF ( RETURN () ) THEN
-!                 RETURN
-!              ELSE
-!                 CALL CHKIN ( 'DAFARR' )
-!              END IF
-!
-!        C
-!        C     Check to see if the number of records to be reserved is
-!        C     less than one. If so, just return without changing
-!        C     anything.
-!        C
-!              IF ( RESV .LT. 1 ) THEN
-!                 RETURN
-!              END IF
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 17-JUL-1990 (IMU)
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
 !     IFNLEN      is the length of a DAF internal file name.
 !
       integer(ip), parameter :: ifnlen = 60
@@ -15060,9 +13829,6 @@ contains
 
       integer(ip), parameter :: maxc = maxd * 8
 
-!
-!     Local variables
-!
       character(maxc)       crec
       character(ifnlen)     ifname
 
@@ -15255,153 +14021,119 @@ contains
       return
       end procedure dafarr
 
-!$Procedure DAFRCR ( DAF, read character record )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle associated with a DAF.
+      !>
+      !>     RECNO    is the record number of a character record within
+      !>              the file.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     CREC     contains the first 1000 characters of the specified
+      !>              record from the specified file.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the declared length of CREC is not 1000 characters,
+      !>         the error SPICE(DAFBADRECLEN) is signaled.
+      !>
+      !>     2)  If the specified record cannot (for some reason) be read,
+      !>         the error SPICE(DAFCRNOTFOUND) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Unlike double precision records, character records are
+      !>     not buffered. Also, while failing to find a specific double
+      !>     precision record is indicated through the calling sequence,
+      !>     failing to find a character record results in an error.
+      !>
+      !> ## Examples
+      !>
+      !>     In the following example, matching summary and name records are
+      !>     read from a DAF:
+      !>
+      !>        CALL DAFGDR ( HANDLE, NEXT,   DREC, FOUND )
+      !>        CALL DAFRCR ( HANDLE, NEXT+1, CREC        )
+      !>
+      !>     Note that a character record always immediately follows a summary
+      !>     record.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine is only used to read records on environments
+      !>         whose characters are a single byte in size. Updates
+      !>         to this routine and routines in its call tree may be
+      !>         required to properly handle other cases.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.0, 17-JUN-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Moved DAF
+      !>        required reading from $Literature_References to
+      !>        $Required_Reading section.
+      !>
+      !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        Updated this routine to make proper use of the new
+      !>        handle manager functionality installed underneath
+      !>        DAF.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        This routine now makes use of the handle manager
+      !>        code. A call to DAFSIH was inserted just after
+      !>        the standard SPICE error handling code at the
+      !>        head of the module. This was done to insure that
+      !>        the caller is referring to a legitimately loaded
+      !>        DAF. The penalty for performing this check is
+      !>        a binary search on the number of loaded files,
+      !>        which should be small compared to the actual READ
+      !>        performed below.
+      !>
+      !>        The call to DAFHLU has been replaced with ZZDDHHLU,
+      !>        since calls to DAFHLU locks handles to their logical
+      !>        units.
       module procedure dafrcr
-!! ## Abstract
-!!
-!!     Read the contents of a character record from a DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     HANDLE   is the handle associated with a DAF.
-!
-!     RECNO    is the record number of a character record within
-!              the file.
-!
-! $ Detailed_Output
-!
-!     CREC     contains the first 1000 characters of the specified
-!              record from the specified file.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the declared length of CREC is not 1000 characters,
-!         the error SPICE(DAFBADRECLEN) is signaled.
-!
-!     2)  If the specified record cannot (for some reason) be read,
-!         the error SPICE(DAFCRNOTFOUND) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     Unlike double precision records, character records are
-!     not buffered. Also, while failing to find a specific double
-!     precision record is indicated through the calling sequence,
-!     failing to find a character record results in an error.
-!
-! $ Examples
-!
-!     In the following example, matching summary and name records are
-!     read from a DAF:
-!
-!        CALL DAFGDR ( HANDLE, NEXT,   DREC, FOUND )
-!        CALL DAFRCR ( HANDLE, NEXT+1, CREC        )
-!
-!     Note that a character record always immediately follows a summary
-!     record.
-!
-! $ Restrictions
-!
-!     1)  This routine is only used to read records on environments
-!         whose characters are a single byte in size. Updates
-!         to this routine and routines in its call tree may be
-!         required to properly handle other cases.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     H.A. Neilan        (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 17-JUN-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Moved DAF
-!        required reading from $Literature_References to
-!        $Required_Reading section.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!
-!        Updated this routine to make proper use of the new
-!        handle manager functionality installed underneath
-!        DAF.
-!
-!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!
-!        Literature references added to the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     read DAF character record
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!
-!        This routine now makes use of the handle manager
-!        code. A call to DAFSIH was inserted just after
-!        the standard SPICE error handling code at the
-!        head of the module. This was done to insure that
-!        the caller is referring to a legitimately loaded
-!        DAF. The penalty for performing this check is
-!        a binary search on the number of loaded files,
-!        which should be small compared to the actual READ
-!        performed below.
-!
-!        The call to DAFHLU has been replaced with ZZDDHHLU,
-!        since calls to DAFHLU locks handles to their logical
-!        units.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           unit
       integer(ip)           iostat
 
@@ -15454,149 +14186,114 @@ contains
       return
       end procedure dafrcr
 
-!$Procedure DAFWCR ( DAF, write character record )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle associated with a DAF.
+      !>
+      !>     RECNO    is the record number of a character record within
+      !>              the file. If the record does not already exist, it
+      !>              is created. Otherwise its contents are overwritten.
+      !>
+      !>     CREC     contains the first 1000 characters of the specified
+      !>              record.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the specified file is not open for write access, an error
+      !>         is signaled by a routine in the call tree of this routine.
+      !>
+      !>     2)  If the declared length of CREC is not 1000 characters,
+      !>         the error SPICE(DAFBADRECLEN) is signaled.
+      !>
+      !>     3)  If the specified record cannot (for some reason) be written,
+      !>         the error SPICE(DAFWRITEFAIL) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     Unlike double precision records, character records are
+      !>     not buffered.
+      !>
+      !> ## Examples
+      !>
+      !>     In the following example, matching summary and name records are
+      !>     written to a DAF:
+      !>
+      !>        CALL DAFWDR ( HANDLE, NEXT,   DREC )
+      !>        CALL DAFWCR ( HANDLE, NEXT+1, CREC )
+      !>
+      !>     Note that a character record always immediately follows a summary
+      !>     record.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.0, 14-APR-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Moved DAF
+      !>        required reading from $Literature_References to
+      !>        $Required_Reading section.
+      !>
+      !>-    SPICELIB Version 2.0.0, 27-NOV-2001 (FST)
+      !>
+      !>        Updated this routine to utilize new handle manager
+      !>        interfaces. Replaced the check of the input handle's
+      !>        sign with the appropriate call to DAFSIH.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 2.0.0, 27-NOV-2001 (FST)
+      !>
+      !>        The call to DAFHLU has been replaced with a call to
+      !>        ZZDDHHLU, the handle manager interface for retrieving
+      !>        a logical unit. DAFHLU is no longer used, since it
+      !>        locks the unit returned to its HANDLE, tying up resources
+      !>        in the handle manager. A call to DAFSIH was inserted to
+      !>        make certain that HANDLE is present in DAFAH's file table,
+      !>        rather than simply checking the sign of HANDLE.
       module procedure dafwcr
-!! ## Abstract
-!!
-!!     Write or rewrite the contents of a character record to
-!!     a DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     HANDLE   is the handle associated with a DAF.
-!
-!     RECNO    is the record number of a character record within
-!              the file. If the record does not already exist, it
-!              is created. Otherwise its contents are overwritten.
-!
-!     CREC     contains the first 1000 characters of the specified
-!              record.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the specified file is not open for write access, an error
-!         is signaled by a routine in the call tree of this routine.
-!
-!     2)  If the declared length of CREC is not 1000 characters,
-!         the error SPICE(DAFBADRECLEN) is signaled.
-!
-!     3)  If the specified record cannot (for some reason) be written,
-!         the error SPICE(DAFWRITEFAIL) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     Unlike double precision records, character records are
-!     not buffered.
-!
-! $ Examples
-!
-!     In the following example, matching summary and name records are
-!     written to a DAF:
-!
-!        CALL DAFWDR ( HANDLE, NEXT,   DREC )
-!        CALL DAFWCR ( HANDLE, NEXT+1, CREC )
-!
-!     Note that a character record always immediately follows a summary
-!     record.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     H.A. Neilan        (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 14-APR-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Moved DAF
-!        required reading from $Literature_References to
-!        $Required_Reading section.
-!
-!-    SPICELIB Version 2.0.0, 27-NOV-2001 (FST)
-!
-!        Updated this routine to utilize new handle manager
-!        interfaces. Replaced the check of the input handle's
-!        sign with the appropriate call to DAFSIH.
-!
-!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!
-!        Literature references added to the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     write DAF character record
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 2.0.0, 27-NOV-2001 (FST)
-!
-!        The call to DAFHLU has been replaced with a call to
-!        ZZDDHHLU, the handle manager interface for retrieving
-!        a logical unit. DAFHLU is no longer used, since it
-!        locks the unit returned to its HANDLE, tying up resources
-!        in the handle manager. A call to DAFSIH was inserted to
-!        make certain that HANDLE is present in DAFAH's file table,
-!        rather than simply checking the sign of HANDLE.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           unit
       integer(ip)           iostat
 
@@ -15644,179 +14341,143 @@ contains
       return
       end procedure dafwcr
 
-!$Procedure DAFRA ( DAF, Re-order arrays )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DAF that has been opened for
+      !>              write access. Use DAFOPW, for example, to open
+      !>              an existing file and get its handle.
+      !>
+      !>     IORDER   is the order vector to be used to re-order the
+      !>              arrays stored in the DAF specified by HANDLE.
+      !>
+      !>              An integer order vector is an array of length
+      !>              N whose elements are the integers 1 through N.
+      !>
+      !>              The first element of IORDER is the index of the
+      !>              first array in the re-ordered file, and so on.
+      !>
+      !>     N        is the number of elements in the order vector.
+      !>              This may be less than the number of arrays in
+      !>              the file.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If IORDER is not an order vector (that is, if it does
+      !>         not contain every integer between 1 and N), the error
+      !>         SPICE(DISORDER) is signaled.
+      !>
+      !>     2)  If N is greater than the number of arrays in the file,
+      !>         the error SPICE(DISARRAY) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     DAFRA does not actually move the elements of the double
+      !>     precision arrays; it works by rearranging the contents
+      !>     of the summary and name records in the file. The result
+      !>     is that the search routines (BFS, FNA, BBS, FPA) will
+      !>     return the arrays in the indicated order.
+      !>
+      !>     After re-ordering, array IORDER(1) of the input file is the
+      !>     first array of the output file, array IORDER(2) of the input
+      !>     file is the second array of the output file, and so on.
+      !>
+      !>     The order vector used by DAFRA is typically created for
+      !>     a related array by one of the ORDER routines, as shown in
+      !>     the example below.
+      !>
+      !> ## Examples
+      !>
+      !>     The following code fragment sorts the arrays in a DAF by name.
+      !>
+      !>        C
+      !>        C     Collect the names of the arrays in the file.
+      !>        C
+      !>              CALL DAFOPW ( FILE, HANDLE )
+      !>
+      !>              N = 0
+      !>              CALL DAFBFS ( HANDLE )
+      !>              CALL DAFFNA ( FOUND  )
+      !>
+      !>              DO WHILE ( FOUND )
+      !>                 N = N + 1
+      !>                 CALL DAFGN  ( NAMES(I) )
+      !>                 CALL DAFFNA ( FOUND    )
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Sort the names.
+      !>        C
+      !>              CALL ORDERC ( NAMES, N, IORDER )
+      !>
+      !>        C
+      !>        C     Re-order the arrays.
+      !>        C
+      !>              CALL DARFA  ( HANDLE, IORDER, N )
+      !>              CALL DAFCLS ( HANDLE            )
+      !>
+      !>     Afterward, a forward search like the one shown below
+      !>
+      !>        CALL DAFBFS ( HANDLE )
+      !>        CALL DAFFNA ( FOUND  )
+      !>
+      !>        DO WHILE ( FOUND )
+      !>           CALL DAFGN ( NAME )
+      !>           WRITE (*,*) NAME
+      !>
+      !>           CALL DAFFNA ( FOUND )
+      !>        END DO
+      !>
+      !>     produces an ordered list of the names in the sorted file.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 27-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 28-MAR-1991 (IMU)
       module procedure dafra
-!! ## Abstract
-!!
-!!     Reorder the arrays in a DAF according to a given order vector.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!     SORT
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isordv
       implicit none
 
-! $ Detailed_Input
-!
-!     HANDLE   is the handle of a DAF that has been opened for
-!              write access. Use DAFOPW, for example, to open
-!              an existing file and get its handle.
-!
-!     IORDER   is the order vector to be used to re-order the
-!              arrays stored in the DAF specified by HANDLE.
-!
-!              An integer order vector is an array of length
-!              N whose elements are the integers 1 through N.
-!
-!              The first element of IORDER is the index of the
-!              first array in the re-ordered file, and so on.
-!
-!     N        is the number of elements in the order vector.
-!              This may be less than the number of arrays in
-!              the file.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If IORDER is not an order vector (that is, if it does
-!         not contain every integer between 1 and N), the error
-!         SPICE(DISORDER) is signaled.
-!
-!     2)  If N is greater than the number of arrays in the file,
-!         the error SPICE(DISARRAY) is signaled.
-!
-! $ Files
-!
-!     See argument HANDLE.
-!
-! $ Particulars
-!
-!     DAFRA does not actually move the elements of the double
-!     precision arrays; it works by rearranging the contents
-!     of the summary and name records in the file. The result
-!     is that the search routines (BFS, FNA, BBS, FPA) will
-!     return the arrays in the indicated order.
-!
-!     After re-ordering, array IORDER(1) of the input file is the
-!     first array of the output file, array IORDER(2) of the input
-!     file is the second array of the output file, and so on.
-!
-!     The order vector used by DAFRA is typically created for
-!     a related array by one of the ORDER routines, as shown in
-!     the example below.
-!
-! $ Examples
-!
-!     The following code fragment sorts the arrays in a DAF by name.
-!
-!        C
-!        C     Collect the names of the arrays in the file.
-!        C
-!              CALL DAFOPW ( FILE, HANDLE )
-!
-!              N = 0
-!              CALL DAFBFS ( HANDLE )
-!              CALL DAFFNA ( FOUND  )
-!
-!              DO WHILE ( FOUND )
-!                 N = N + 1
-!                 CALL DAFGN  ( NAMES(I) )
-!                 CALL DAFFNA ( FOUND    )
-!              END DO
-!
-!        C
-!        C     Sort the names.
-!        C
-!              CALL ORDERC ( NAMES, N, IORDER )
-!
-!        C
-!        C     Re-order the arrays.
-!        C
-!              CALL DARFA  ( HANDLE, IORDER, N )
-!              CALL DAFCLS ( HANDLE            )
-!
-!     Afterward, a forward search like the one shown below
-!
-!        CALL DAFBFS ( HANDLE )
-!        CALL DAFFNA ( FOUND  )
-!
-!        DO WHILE ( FOUND )
-!           CALL DAFGN ( NAME )
-!           WRITE (*,*) NAME
-!
-!           CALL DAFFNA ( FOUND )
-!        END DO
-!
-!     produces an ordered list of the names in the sorted file.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 27-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 28-MAR-1991 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     reorder DAF arrays
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
       integer(ip), parameter :: namlen = 1000
 
       integer(ip), parameter :: sumlen = 128
 
-!
-!     Local variables
-!
       character(namlen)     holdn
       character(namlen)     tempn
 
@@ -15993,168 +14654,133 @@ contains
       return
       end procedure dafra
 
-!$Procedure DAFRRR ( DAF, remove reserved records )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle associated with a DAF that has been
+      !>              opened with write access.
+      !>
+      !>     RESV     is the number of reserved records to be removed
+      !>              from the specified file.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If RESV is less than one, the file is not changed.
+      !>
+      !>     2)  If RESV is greater than the number of reserved records in the
+      !>         file, all of the reserved records are removed.
+      !>
+      !> ## Files
+      !>
+      !>     See argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     Normally, the reserved records in an array file are reserved
+      !>     when the file is created. However, it may occasionally become
+      !>     desirable to remove reserved records---when their contents are
+      !>     significantly reduced, for example.
+      !>
+      !>     The records nearest the end of the file are removed. Note
+      !>     that the physical size of the file is not reduced when reserved
+      !>     records are removed.
+      !>
+      !> ## Examples
+      !>
+      !>     For the following call to DAFRRR, assume that HANDLE is the file
+      !>     handle for a DAF file that has been opened for write access, and
+      !>     that the DAF file already contains 12 reserved records (located in
+      !>     records 2-13 of the physical file).
+      !>
+      !>        CALL DAFRRR ( HANDLE, 7 )
+      !>
+      !>     After this call to DAFRRR, the number of reserved records has been
+      !>     decreased by 7, leaving only the first five of the original
+      !>     reserved records, physical records 2-6.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine will only remove reserve records from DAFs open
+      !>         for write. These files are implicitly of the native binary
+      !>         file format.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.3.0, 02-JUN-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 1.2.0, 16-NOV-2001 (FST)
+      !>
+      !>        Added a call to DAFSIH to prevent this routine from
+      !>        attempting to write to non-native binary file formats.
+      !>        This will provide a more useful error diagnostic with
+      !>        little impact on performance.
+      !>
+      !>-    SPICELIB Version 1.1.0, 30-SEP-1993 (KRG)
+      !>
+      !>        $Detailed_Input and $Examples section of the header were
+      !>        modified.
+      !>
+      !>        Added calls to the FORTRAN intrinsic functions INT and
+      !>        DBLE in the code that updates the summary record.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 18-JUL-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 1.1.0, 30-SEP-1993 (KRG)
+      !>
+      !>        $Detailed_Input section was modified. References to any
+      !>        specific routines by name as a method for opening a DAF file
+      !>        for write access were removed. The assumption is that a person
+      !>        using DAF files would already know something about opening and
+      !>        closing the files.
+      !>
+      !>        $Examples section was modified. References to any specific
+      !>        routines by name as a method for opening a DAF file for writing
+      !>        were removed, and the example was reworded in such a way that
+      !>        the use of the subroutine remained clear.
+      !>
+      !>        Added calls to the INT intrinsic function to convert a DP
+      !>        number to an integer before assigning it to NEXT or ENDBLK,
+      !>        both of which are integer variables. Also added calls to INT
+      !>        in IF statements where comparisons were made between DP numbers
+      !>        and INTEGERs, when integral values were actually being
+      !>        compared.
+      !>
+      !>        Added calls to the intrinsic function DBLE to convert an
+      !>        integer, REMOVE, into a DP number when doing some arithmetic.
       module procedure dafrrr
-!! ## Abstract
-!!
-!!     Remove a specified number of reserved records from a Double
-!!     Precision Array File (DAF).
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       implicit none
 
-! $ Detailed_Input
-!
-!     HANDLE   is the handle associated with a DAF that has been
-!              opened with write access.
-!
-!     RESV     is the number of reserved records to be removed
-!              from the specified file.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If RESV is less than one, the file is not changed.
-!
-!     2)  If RESV is greater than the number of reserved records in the
-!         file, all of the reserved records are removed.
-!
-! $ Files
-!
-!     See argument HANDLE.
-!
-! $ Particulars
-!
-!     Normally, the reserved records in an array file are reserved
-!     when the file is created. However, it may occasionally become
-!     desirable to remove reserved records---when their contents are
-!     significantly reduced, for example.
-!
-!     The records nearest the end of the file are removed. Note
-!     that the physical size of the file is not reduced when reserved
-!     records are removed.
-!
-! $ Examples
-!
-!     For the following call to DAFRRR, assume that HANDLE is the file
-!     handle for a DAF file that has been opened for write access, and
-!     that the DAF file already contains 12 reserved records (located in
-!     records 2-13 of the physical file).
-!
-!        CALL DAFRRR ( HANDLE, 7 )
-!
-!     After this call to DAFRRR, the number of reserved records has been
-!     decreased by 7, leaving only the first five of the original
-!     reserved records, physical records 2-6.
-!
-! $ Restrictions
-!
-!     1)  This routine will only remove reserve records from DAFs open
-!         for write. These files are implicitly of the native binary
-!         file format.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!     I.M. Underwood     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.3.0, 02-JUN-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.2.0, 16-NOV-2001 (FST)
-!
-!        Added a call to DAFSIH to prevent this routine from
-!        attempting to write to non-native binary file formats.
-!        This will provide a more useful error diagnostic with
-!        little impact on performance.
-!
-!-    SPICELIB Version 1.1.0, 30-SEP-1993 (KRG)
-!
-!        $Detailed_Input and $Examples section of the header were
-!        modified.
-!
-!        Added calls to the FORTRAN intrinsic functions INT and
-!        DBLE in the code that updates the summary record.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 18-JUL-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     remove DAF reserved records
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 30-SEP-1993 (KRG)
-!
-!        $Detailed_Input section was modified. References to any
-!        specific routines by name as a method for opening a DAF file
-!        for write access were removed. The assumption is that a person
-!        using DAF files would already know something about opening and
-!        closing the files.
-!
-!        $Examples section was modified. References to any specific
-!        routines by name as a method for opening a DAF file for writing
-!        were removed, and the example was reworded in such a way that
-!        the use of the subroutine remained clear.
-!
-!        Added calls to the INT intrinsic function to convert a DP
-!        number to an integer before assigning it to NEXT or ENDBLK,
-!        both of which are integer variables. Also added calls to INT
-!        in IF statements where comparisons were made between DP numbers
-!        and INTEGERs, when integral values were actually being
-!        compared.
-!
-!        Added calls to the intrinsic function DBLE to convert an
-!        integer, REMOVE, into a DP number when doing some arithmetic.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
 !     IFNLEN      is the length of a DAF internal file name.
 !
       integer(ip), parameter :: ifnlen = 60
@@ -16177,9 +14803,6 @@ contains
 
       integer(ip), parameter :: maxc = maxd * 8
 
-!
-!     Local variables
-!
       character(maxc)       crec
       character(ifnlen)     ifname
 
@@ -16350,343 +14973,305 @@ contains
       return
       end procedure dafrrr
 
-!$Procedure DAFAC ( DAF add comments )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the file handle of a binary DAF which has been opened
+      !>              with write access.
+      !>
+      !>     N        is the number of comments in BUFFER that are to be added
+      !>              to the comment area of the binary DAF attached to HANDLE.
+      !>
+      !>     BUFFER   is a buffer containing comments which are to be added
+      !>              to the comment area of the binary DAF attached to HANDLE.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the number of comments to be added is not positive, the
+      !>         error SPICE(INVALIDARGUMENT) is signaled.
+      !>
+      !>     2)  If a non printing ASCII character is encountered in the
+      !>         comments, the error SPICE(ILLEGALCHARACTER) is signaled.
+      !>
+      !>     3)  If the binary DAF file attached to HANDLE is not open with
+      !>         write access, an error is signaled by a routine in the call
+      !>         tree of this routine.
+      !>
+      !>     4)  If the end of the comments cannot be found, i.e., the end of
+      !>         comments marker is missing on the last comment record, the
+      !>         error SPICE(BADCOMMENTAREA) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See argument HANDLE in $Detailed_Input.
+      !>
+      !> ## Particulars
+      !>
+      !>     A binary DAF contains a data area which is reserved for storing
+      !>     annotations or descriptive textual information about the data
+      !>     contained in a file. This area is referred to as the ``comment
+      !>     area'' of the file. The comment area of a DAF is a line oriented
+      !>     medium for storing textual information. The comment area
+      !>     preserves leading or embedded white space in the line(s) of text
+      !>     which are stored so that the appearance of the information will
+      !>     be unchanged when it is retrieved (extracted) at some other time.
+      !>     Trailing blanks, however, are NOT preserved, due to the way that
+      !>     character strings are represented in standard Fortran 77.
+      !>
+      !>     This routine will take a buffer of text lines and add (append)
+      !>     them to the comment area of a binary DAF. If there are no
+      !>     comments in the comment area of the file, then space will be
+      !>     allocated and the text lines in BUFFER will be placed into the
+      !>     comment area. The text lines may contain only printable ASCII
+      !>     characters (decimal values 32 - 126).
+      !>
+      !>     There is NO maximum length imposed on the significant portion
+      !>     of a text line that may be placed into the comment area of a
+      !>     DAF. The maximum length of a line stored in the comment area
+      !>     should be reasonable, however, so that they may be easily
+      !>     extracted. A good maximum value for this would be 255 characters,
+      !>     as this can easily accommodate ``screen width'' lines as well as
+      !>     long lines which may contain some other form of information.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) This example demonstrates how to append new comments to the
+      !>        comment area of a DAF file.
+      !>
+      !>        Use the SPK kernel below as input DAF file for the program.
+      !>
+      !>           earthstns_itrf93_201023.bsp
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFAC_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     SPICELIB functions
+      !>        C
+      !>              INTEGER               RTRIM
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              CHARACTER*(*)         KERNEL
+      !>              PARAMETER           ( KERNEL =
+      !>             .                         'earthstns_itrf93_201023.bsp' )
+      !>
+      !>              INTEGER               BUFSIZ
+      !>              PARAMETER           ( BUFSIZ = 25 )
+      !>
+      !>              INTEGER               CMTSIZ
+      !>              PARAMETER           ( CMTSIZ = 7  )
+      !>
+      !>              INTEGER               LINLEN
+      !>              PARAMETER           ( LINLEN = 1000 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(LINLEN)    BUFFER ( BUFSIZ )
+      !>              CHARACTER*(LINLEN)    NEWCMT ( CMTSIZ )
+      !>
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               N
+      !>
+      !>              LOGICAL               DONE
+      !>
+      !>        C
+      !>        C     Set the new comments to be added to the DAF file.
+      !>        C
+      !>              DATA                  NEWCMT /
+      !>             .  '================== NEW COMMENTS ==================',
+      !>             .  '',
+      !>             .  '   New comments can be appended to the end of the',
+      !>             .  '   comment area of a DAF file, with a single',
+      !>             .  '   operation.',
+      !>             .  '',
+      !>             .  '================ END NEW COMMENTS ================' /
+      !>
+      !>        C
+      !>        C     Open a DAF for write. Return a HANDLE referring to the
+      !>        C     file.
+      !>        C
+      !>              CALL DAFOPW ( KERNEL, HANDLE )
+      !>
+      !>        C
+      !>        C     Print the end of comment area from the DAF file.
+      !>        C     (Maximum 15 lines.)
+      !>        C
+      !>              DONE = .FALSE.
+      !>
+      !>              DO WHILE ( .NOT. DONE )
+      !>
+      !>                 CALL DAFEC  ( HANDLE, 15, N, BUFFER, DONE )
+      !>
+      !>                 IF ( DONE ) THEN
+      !>
+      !>                    WRITE(*,'(A)') 'End of comment area of input '
+      !>             .                  // 'DAF file (max. 15 lines): '
+      !>                    WRITE(*,'(A)') '-------------------------------'
+      !>             .                  // '-------------------------------'
+      !>
+      !>                    DO I = 1, N
+      !>
+      !>                       WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
+      !>
+      !>                    END DO
+      !>
+      !>                    WRITE(*,'(A)') '-------------------------------'
+      !>             .                  // '-------------------------------'
+      !>
+      !>                 END IF
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Append the new comments to the DAF file.
+      !>        C
+      !>              CALL DAFAC ( HANDLE, CMTSIZ, NEWCMT )
+      !>
+      !>        C
+      !>        C     Safely close the DAF.
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Check if the comments have indeed appended.
+      !>        C
+      !>        C     Open a DAF for read.
+      !>        C
+      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>              DONE = .FALSE.
+      !>
+      !>              DO WHILE ( .NOT. DONE )
+      !>
+      !>                 CALL DAFEC  ( HANDLE, BUFSIZ, N, BUFFER, DONE )
+      !>
+      !>                 IF ( DONE ) THEN
+      !>
+      !>                    WRITE(*,'(A)') 'End of comment area of input '
+      !>             .                  // 'DAF file (max. 25 lines): '
+      !>                    WRITE(*,'(A)') '-------------------------------'
+      !>             .                  // '-------------------------------'
+      !>
+      !>                    DO I = 1, N
+      !>
+      !>                       WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
+      !>
+      !>                    END DO
+      !>
+      !>                    WRITE(*,'(A)') '-------------------------------'
+      !>             .                  // '-------------------------------'
+      !>
+      !>                 END IF
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Safely close the DAF.
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>        End of comment area of input DAF file (max. 15 lines):
+      !>        --------------------------------------------------------------
+      !>            DSS-65_DXYZ       =    (    -0.0100          0.0242     ***
+      !>            DSS-65_TOPO_EPOCH =       @2020-OCT-23/00:00
+      !>            DSS-65_UP         =       'Z'
+      !>            DSS-65_NORTH      =       'X'
+      !>
+      !>         \begintext
+      !>        --------------------------------------------------------------
+      !>        End of comment area of input DAF file (max. 25 lines):
+      !>        --------------------------------------------------------------
+      !>            DSS-65_DXYZ       =    (    -0.0100          0.0242     ***
+      !>            DSS-65_TOPO_EPOCH =       @2020-OCT-23/00:00
+      !>            DSS-65_UP         =       'Z'
+      !>            DSS-65_NORTH      =       'X'
+      !>
+      !>         \begintext
+      !>         ================== NEW COMMENTS ==================
+      !>
+      !>            New comments can be appended to the end of the
+      !>            comment area of a DAF file, with a single
+      !>            operation.
+      !>
+      !>         ================ END NEW COMMENTS ================
+      !>        --------------------------------------------------------------
+      !>
+      !>        Warning: incomplete output. 2 lines extended past the right
+      !>        margin of the header and have been truncated. These lines are
+      !>        marked by "***" at the end of each line.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine uses constants that are specific to the ASCII
+      !>         character sequence. The results of using this routine with
+      !>         a different character sequence are unpredictable.
+      !>
+      !>     2)  This routine is only used to extract records on environments
+      !>         whose characters are a single byte in size. Updates to this
+      !>         routine and routines in its call tree may be required to
+      !>         properly handle other cases.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     F.S. Turner        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.0, 25-NOV-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Added complete code examples from existing code fragments.
+      !>
+      !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        Updated this routine to utilize the new handle manager
+      !>        interfaces.
+      !>
+      !>-    SPICELIB Version 1.0.0, 26-JUL-1994 (KRG)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        The call to DAFHLU has been replaced with a call to ZZDDHHLU,
+      !>        the handle manager interface for retrieving a logical unit.
+      !>        DAFHLU is no longer used, since it locks the unit returned to
+      !>        its HANDLE, tying up resources in the handle manager.
       module procedure dafac
-!! ## Abstract
-!!
-!!     Add comments from a buffer of character strings to the comment
-!!     area of a binary DAF file, appending them to any comments which
-!!     are already present in the file's comment area.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!     UTILITY
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       use pepper_strings, only: cpos, ncpos
       implicit none
 
-! $ Detailed_Input
-!
-!     HANDLE   is the file handle of a binary DAF which has been opened
-!              with write access.
-!
-!     N        is the number of comments in BUFFER that are to be added
-!              to the comment area of the binary DAF attached to HANDLE.
-!
-!     BUFFER   is a buffer containing comments which are to be added
-!              to the comment area of the binary DAF attached to HANDLE.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the number of comments to be added is not positive, the
-!         error SPICE(INVALIDARGUMENT) is signaled.
-!
-!     2)  If a non printing ASCII character is encountered in the
-!         comments, the error SPICE(ILLEGALCHARACTER) is signaled.
-!
-!     3)  If the binary DAF file attached to HANDLE is not open with
-!         write access, an error is signaled by a routine in the call
-!         tree of this routine.
-!
-!     4)  If the end of the comments cannot be found, i.e., the end of
-!         comments marker is missing on the last comment record, the
-!         error SPICE(BADCOMMENTAREA) is signaled.
-!
-! $ Files
-!
-!     See argument HANDLE in $Detailed_Input.
-!
-! $ Particulars
-!
-!     A binary DAF contains a data area which is reserved for storing
-!     annotations or descriptive textual information about the data
-!     contained in a file. This area is referred to as the ``comment
-!     area'' of the file. The comment area of a DAF is a line oriented
-!     medium for storing textual information. The comment area
-!     preserves leading or embedded white space in the line(s) of text
-!     which are stored so that the appearance of the information will
-!     be unchanged when it is retrieved (extracted) at some other time.
-!     Trailing blanks, however, are NOT preserved, due to the way that
-!     character strings are represented in standard Fortran 77.
-!
-!     This routine will take a buffer of text lines and add (append)
-!     them to the comment area of a binary DAF. If there are no
-!     comments in the comment area of the file, then space will be
-!     allocated and the text lines in BUFFER will be placed into the
-!     comment area. The text lines may contain only printable ASCII
-!     characters (decimal values 32 - 126).
-!
-!     There is NO maximum length imposed on the significant portion
-!     of a text line that may be placed into the comment area of a
-!     DAF. The maximum length of a line stored in the comment area
-!     should be reasonable, however, so that they may be easily
-!     extracted. A good maximum value for this would be 255 characters,
-!     as this can easily accommodate ``screen width'' lines as well as
-!     long lines which may contain some other form of information.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) This example demonstrates how to append new comments to the
-!        comment area of a DAF file.
-!
-!        Use the SPK kernel below as input DAF file for the program.
-!
-!           earthstns_itrf93_201023.bsp
-!
-!        Example code begins here.
-!
-!              PROGRAM DAFAC_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              INTEGER               RTRIM
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         KERNEL
-!              PARAMETER           ( KERNEL =
-!             .                         'earthstns_itrf93_201023.bsp' )
-!
-!              INTEGER               BUFSIZ
-!              PARAMETER           ( BUFSIZ = 25 )
-!
-!              INTEGER               CMTSIZ
-!              PARAMETER           ( CMTSIZ = 7  )
-!
-!              INTEGER               LINLEN
-!              PARAMETER           ( LINLEN = 1000 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(LINLEN)    BUFFER ( BUFSIZ )
-!              CHARACTER*(LINLEN)    NEWCMT ( CMTSIZ )
-!
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               N
-!
-!              LOGICAL               DONE
-!
-!        C
-!        C     Set the new comments to be added to the DAF file.
-!        C
-!              DATA                  NEWCMT /
-!             .  '================== NEW COMMENTS ==================',
-!             .  '',
-!             .  '   New comments can be appended to the end of the',
-!             .  '   comment area of a DAF file, with a single',
-!             .  '   operation.',
-!             .  '',
-!             .  '================ END NEW COMMENTS ================' /
-!
-!        C
-!        C     Open a DAF for write. Return a HANDLE referring to the
-!        C     file.
-!        C
-!              CALL DAFOPW ( KERNEL, HANDLE )
-!
-!        C
-!        C     Print the end of comment area from the DAF file.
-!        C     (Maximum 15 lines.)
-!        C
-!              DONE = .FALSE.
-!
-!              DO WHILE ( .NOT. DONE )
-!
-!                 CALL DAFEC  ( HANDLE, 15, N, BUFFER, DONE )
-!
-!                 IF ( DONE ) THEN
-!
-!                    WRITE(*,'(A)') 'End of comment area of input '
-!             .                  // 'DAF file (max. 15 lines): '
-!                    WRITE(*,'(A)') '-------------------------------'
-!             .                  // '-------------------------------'
-!
-!                    DO I = 1, N
-!
-!                       WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
-!
-!                    END DO
-!
-!                    WRITE(*,'(A)') '-------------------------------'
-!             .                  // '-------------------------------'
-!
-!                 END IF
-!
-!              END DO
-!
-!        C
-!        C     Append the new comments to the DAF file.
-!        C
-!              CALL DAFAC ( HANDLE, CMTSIZ, NEWCMT )
-!
-!        C
-!        C     Safely close the DAF.
-!        C
-!              CALL DAFCLS ( HANDLE )
-!
-!        C
-!        C     Check if the comments have indeed appended.
-!        C
-!        C     Open a DAF for read.
-!        C
-!              CALL DAFOPR ( KERNEL, HANDLE )
-!              DONE = .FALSE.
-!
-!              DO WHILE ( .NOT. DONE )
-!
-!                 CALL DAFEC  ( HANDLE, BUFSIZ, N, BUFFER, DONE )
-!
-!                 IF ( DONE ) THEN
-!
-!                    WRITE(*,'(A)') 'End of comment area of input '
-!             .                  // 'DAF file (max. 25 lines): '
-!                    WRITE(*,'(A)') '-------------------------------'
-!             .                  // '-------------------------------'
-!
-!                    DO I = 1, N
-!
-!                       WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
-!
-!                    END DO
-!
-!                    WRITE(*,'(A)') '-------------------------------'
-!             .                  // '-------------------------------'
-!
-!                 END IF
-!
-!              END DO
-!
-!        C
-!        C     Safely close the DAF.
-!        C
-!              CALL DAFCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        End of comment area of input DAF file (max. 15 lines):
-!        --------------------------------------------------------------
-!            DSS-65_DXYZ       =    (    -0.0100          0.0242     ***
-!            DSS-65_TOPO_EPOCH =       @2020-OCT-23/00:00
-!            DSS-65_UP         =       'Z'
-!            DSS-65_NORTH      =       'X'
-!
-!         \begintext
-!        --------------------------------------------------------------
-!        End of comment area of input DAF file (max. 25 lines):
-!        --------------------------------------------------------------
-!            DSS-65_DXYZ       =    (    -0.0100          0.0242     ***
-!            DSS-65_TOPO_EPOCH =       @2020-OCT-23/00:00
-!            DSS-65_UP         =       'Z'
-!            DSS-65_NORTH      =       'X'
-!
-!         \begintext
-!         ================== NEW COMMENTS ==================
-!
-!            New comments can be appended to the end of the
-!            comment area of a DAF file, with a single
-!            operation.
-!
-!         ================ END NEW COMMENTS ================
-!        --------------------------------------------------------------
-!
-!        Warning: incomplete output. 2 lines extended past the right
-!        margin of the header and have been truncated. These lines are
-!        marked by "***" at the end of each line.
-!
-! $ Restrictions
-!
-!     1)  This routine uses constants that are specific to the ASCII
-!         character sequence. The results of using this routine with
-!         a different character sequence are unpredictable.
-!
-!     2)  This routine is only used to extract records on environments
-!         whose characters are a single byte in size. Updates to this
-!         routine and routines in its call tree may be required to
-!         properly handle other cases.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     F.S. Turner        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 25-NOV-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!        Added complete code examples from existing code fragments.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!
-!        Updated this routine to utilize the new handle manager
-!        interfaces.
-!
-!-    SPICELIB Version 1.0.0, 26-JUL-1994 (KRG)
-!
-!-&
-
-! $ Index_Entries
-!
-!     add comments to a binary DAF file
-!     append comments to a DAF file comment area
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-!
-!        The call to DAFHLU has been replaced with a call to ZZDDHHLU,
-!        the handle manager interface for retrieving a logical unit.
-!        DAFHLU is no longer used, since it locks the unit returned to
-!        its HANDLE, tying up resources in the handle manager.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
 !     Length of a DAF file internal filename.
 !
       integer(ip), parameter :: ifnlen = 60
@@ -16710,9 +15295,6 @@ contains
       integer(ip), parameter :: maxpch = 126
 
       integer(ip), parameter :: minpch = 32
-!
-!     Local variables
-!
       character(mxcrec)     crecrd
       character(ifnlen)     ifname
 
@@ -16741,9 +15323,6 @@ contains
 
       logical               empty
       logical               found
-!
-!     Saved variables
-!
 !     Initial values
 !
 !     Constants (SPICELIB computed them on the first call).
@@ -17178,252 +15757,220 @@ contains
       return
       end procedure dafac
 
-!$Procedure DAFDC ( DAF delete comments )
-
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a binary DAF that is to have its entire
+      !>              comment area deleted. The DAF must have been opened
+      !>              with write access.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the binary DAF attached to HANDLE is not open with write
+      !>         access, an error is signaled by a routine in the call tree of
+      !>         this routine.
+      !>
+      !> ## Files
+      !>
+      !>     See argument HANDLE in $Detailed_Input.
+      !>
+      !> ## Particulars
+      !>
+      !>     A binary DAF contains an area which is reserved for storing
+      !>     annotations or descriptive textual information about the data
+      !>     contained in a file. This area is referred to as the ``comment
+      !>     area'' of the file. The comment area of a DAF is a line
+      !>     oriented medium for storing textual information. The comment
+      !>     area preserves any leading or embedded white space in the line(s)
+      !>     of text which are stored, so that the appearance of the of
+      !>     information will be unchanged when it is retrieved (extracted) at
+      !>     some other time. Trailing blanks, however, are NOT preserved,
+      !>     due to the way that character strings are represented in
+      !>     standard Fortran 77.
+      !>
+      !>     This routine will delete the entire comment area from the binary
+      !>     DAF attached to HANDLE. The size of the binary DAF will remain
+      !>     unchanged. The space that was used by the comment records
+      !>     is reclaimed.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for this example may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) Delete the entire comment area of a DAF file. Note that this
+      !>        action should only be performed if fresh new comments are to
+      !>        be placed within the DAF file.
+      !>
+      !>        Use the SPK kernel below as input DAF file for the program.
+      !>
+      !>           earthstns_itrf93_201023.bsp
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFDC_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     SPICELIB functions
+      !>        C
+      !>              INTEGER               RTRIM
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              CHARACTER*(*)         KERNEL
+      !>              PARAMETER           ( KERNEL =
+      !>             .                         'earthstns_itrf93_201023.bsp' )
+      !>
+      !>              INTEGER               BUFFSZ
+      !>              PARAMETER           ( BUFFSZ = 10 )
+      !>
+      !>              INTEGER               LINLEN
+      !>              PARAMETER           ( LINLEN = 1000 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(LINLEN)    BUFFER ( BUFFSZ )
+      !>
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               N
+      !>
+      !>              LOGICAL               DONE
+      !>
+      !>        C
+      !>        C     Open a DAF for write. Return a HANDLE referring to the
+      !>        C     file.
+      !>        C
+      !>              CALL DAFOPW ( KERNEL, HANDLE )
+      !>
+      !>        C
+      !>        C     Print the first 10 lines of comments from the DAF file.
+      !>        C
+      !>              WRITE(*,'(A)') 'Comment area of input DAF file '
+      !>             .            // '(max. 10 lines): '
+      !>              WRITE(*,'(A)') '---------------------------------------'
+      !>             .            // '-----------------------'
+      !>
+      !>              CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
+      !>
+      !>              DO I = 1, N
+      !>
+      !>                 WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
+      !>
+      !>              END DO
+      !>
+      !>              WRITE(*,'(A)') '---------------------------------------'
+      !>             .            // '-----------------------'
+      !>              WRITE(*,*) ' '
+      !>              WRITE(*,*) 'Deleting entire comment area...'
+      !>
+      !>        C
+      !>        C     Delete all the comments from the DAF file.
+      !>        C
+      !>              CALL DAFDC ( HANDLE )
+      !>
+      !>        C
+      !>        C     Close the DAF file and re-open it for read
+      !>        C     access to work around the DAFEC restriction
+      !>        C     on comments not to be modified while they are
+      !>        C     being extracted.
+      !>        C
+      !>              CALL DAFCLS( HANDLE  )
+      !>
+      !>              CALL DAFOPR( KERNEL, HANDLE  )
+      !>
+      !>        C
+      !>        C     Check if the comments have indeed been deleted.
+      !>        C
+      !>              CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
+      !>
+      !>              IF ( DONE .AND. N .EQ. 0 ) THEN
+      !>
+      !>                 WRITE(*,*) ' '
+      !>                 WRITE(*,*) '   Successful operation.'
+      !>
+      !>              ELSE
+      !>
+      !>                 WRITE(*,*) ' '
+      !>                 WRITE(*,*) '   Operation failed.'
+      !>
+      !>              END IF
+      !>
+      !>        C
+      !>        C     Safely close the DAF.
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>        Comment area of input DAF file (max. 10 lines):
+      !>        --------------------------------------------------------------
+      !>
+      !>            SPK for DSN Station Locations
+      !>            ========================================================***
+      !>
+      !>            Original file name:                   earthstns_itrf93_2***
+      !>            Creation date:                        2020 October 28 12:30
+      !>            Created by:                           Nat Bachman  (NAIF***
+      !>
+      !>            Introduction
+      !>        --------------------------------------------------------------
+      !>
+      !>         Deleting entire comment area...
+      !>
+      !>            Successful operation.
+      !>
+      !>        Warning: incomplete output. 3 lines extended past the right
+      !>        margin of the header and have been truncated. These lines are
+      !>        marked by "***" at the end of each line.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.1.0, 25-NOV-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Added complete code example.
+      !>
+      !>-    SPICELIB Version 1.0.0, 23-SEP-1994 (KRG)
       module procedure dafdc
-!! ## Abstract
-!!
-!!     Delete the entire comment area of a previously opened binary
-!!     DAF attached to HANDLE.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     None.
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     HANDLE   is the handle of a binary DAF that is to have its entire
-!              comment area deleted. The DAF must have been opened
-!              with write access.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the binary DAF attached to HANDLE is not open with write
-!         access, an error is signaled by a routine in the call tree of
-!         this routine.
-!
-! $ Files
-!
-!     See argument HANDLE in $Detailed_Input.
-!
-! $ Particulars
-!
-!     A binary DAF contains an area which is reserved for storing
-!     annotations or descriptive textual information about the data
-!     contained in a file. This area is referred to as the ``comment
-!     area'' of the file. The comment area of a DAF is a line
-!     oriented medium for storing textual information. The comment
-!     area preserves any leading or embedded white space in the line(s)
-!     of text which are stored, so that the appearance of the of
-!     information will be unchanged when it is retrieved (extracted) at
-!     some other time. Trailing blanks, however, are NOT preserved,
-!     due to the way that character strings are represented in
-!     standard Fortran 77.
-!
-!     This routine will delete the entire comment area from the binary
-!     DAF attached to HANDLE. The size of the binary DAF will remain
-!     unchanged. The space that was used by the comment records
-!     is reclaimed.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Delete the entire comment area of a DAF file. Note that this
-!        action should only be performed if fresh new comments are to
-!        be placed within the DAF file.
-!
-!        Use the SPK kernel below as input DAF file for the program.
-!
-!           earthstns_itrf93_201023.bsp
-!
-!        Example code begins here.
-!
-!              PROGRAM DAFDC_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              INTEGER               RTRIM
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         KERNEL
-!              PARAMETER           ( KERNEL =
-!             .                         'earthstns_itrf93_201023.bsp' )
-!
-!              INTEGER               BUFFSZ
-!              PARAMETER           ( BUFFSZ = 10 )
-!
-!              INTEGER               LINLEN
-!              PARAMETER           ( LINLEN = 1000 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(LINLEN)    BUFFER ( BUFFSZ )
-!
-!              INTEGER               HANDLE
-!              INTEGER               I
-!              INTEGER               N
-!
-!              LOGICAL               DONE
-!
-!        C
-!        C     Open a DAF for write. Return a HANDLE referring to the
-!        C     file.
-!        C
-!              CALL DAFOPW ( KERNEL, HANDLE )
-!
-!        C
-!        C     Print the first 10 lines of comments from the DAF file.
-!        C
-!              WRITE(*,'(A)') 'Comment area of input DAF file '
-!             .            // '(max. 10 lines): '
-!              WRITE(*,'(A)') '---------------------------------------'
-!             .            // '-----------------------'
-!
-!              CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
-!
-!              DO I = 1, N
-!
-!                 WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
-!
-!              END DO
-!
-!              WRITE(*,'(A)') '---------------------------------------'
-!             .            // '-----------------------'
-!              WRITE(*,*) ' '
-!              WRITE(*,*) 'Deleting entire comment area...'
-!
-!        C
-!        C     Delete all the comments from the DAF file.
-!        C
-!              CALL DAFDC ( HANDLE )
-!
-!        C
-!        C     Close the DAF file and re-open it for read
-!        C     access to work around the DAFEC restriction
-!        C     on comments not to be modified while they are
-!        C     being extracted.
-!        C
-!              CALL DAFCLS( HANDLE  )
-!
-!              CALL DAFOPR( KERNEL, HANDLE  )
-!
-!        C
-!        C     Check if the comments have indeed been deleted.
-!        C
-!              CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
-!
-!              IF ( DONE .AND. N .EQ. 0 ) THEN
-!
-!                 WRITE(*,*) ' '
-!                 WRITE(*,*) '   Successful operation.'
-!
-!              ELSE
-!
-!                 WRITE(*,*) ' '
-!                 WRITE(*,*) '   Operation failed.'
-!
-!              END IF
-!
-!        C
-!        C     Safely close the DAF.
-!        C
-!              CALL DAFCLS ( HANDLE )
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        Comment area of input DAF file (max. 10 lines):
-!        --------------------------------------------------------------
-!
-!            SPK for DSN Station Locations
-!            ========================================================***
-!
-!            Original file name:                   earthstns_itrf93_2***
-!            Creation date:                        2020 October 28 12:30
-!            Created by:                           Nat Bachman  (NAIF***
-!
-!            Introduction
-!        --------------------------------------------------------------
-!
-!         Deleting entire comment area...
-!
-!            Successful operation.
-!
-!        Warning: incomplete output. 3 lines extended past the right
-!        margin of the header and have been truncated. These lines are
-!        marked by "***" at the end of each line.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 25-NOV-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!        Added complete code example.
-!
-!-    SPICELIB Version 1.0.0, 23-SEP-1994 (KRG)
-!
-!-&
-
-! $ Index_Entries
-!
-!     delete DAF comment area
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 !     Local parameters
 !
 !     Length of a DAF file internal filename.
 !
       integer(ip), parameter :: ifnlen = 60
-!
-!     Local variables
-!
       character(ifnlen)     ifname
 
       integer(ip)           bward
@@ -17473,577 +16020,529 @@ contains
       return
       end procedure dafdc
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the file handle of a binary DAF which has been opened
+      !>              with read access.
+      !>
+      !>     BUFSIZ   is the maximum number of comments that may be placed into
+      !>              BUFFER. This would typically be the declared array size
+      !>              for the Fortran character string array passed into this
+      !>              routine.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     N        is the number of comment lines extracted from the comment
+      !>              area of the binary DAF attached to HANDLE. This number
+      !>              will be <= BUFSIZ on output. If N = BUFSIZ and DONE <>
+      !>              .TRUE., then there are more comments left to to extract.
+      !>              If N = 0, then DONE = .TRUE., i.e., there were no
+      !>              comments in the comment area or we have extracted all
+      !>              of the comments. If there are comments in the comment
+      !>              area, or comments remaining after the extraction process
+      !>              has begun, N > 0, always.
+      !>
+      !>     BUFFER   is an array of at most BUFSIZ comments which have been
+      !>              extracted from the comment area of the binary DAF
+      !>              attached to HANDLE.
+      !>
+      !>     DONE     is a logical flag indicating whether or not all of the
+      !>              comment lines from the comment area of the DAF have
+      !>              been read. This variable has the value .TRUE. after the
+      !>              last comment line has been read. It will have the value
+      !>              .FALSE. otherwise.
+      !>
+      !>              If there are no comments in the comment area, this
+      !>              variable will have the value .TRUE., and N = 0.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the size of the output line buffer is is not positive,
+      !>         the error SPICE(INVALIDARGUMENT) is signaled.
+      !>
+      !>     2)  If a comment line in a DAF is longer than the length
+      !>         of a character string array element of BUFFER, the error
+      !>         SPICE(COMMENTTOOLONG) is signaled.
+      !>
+      !>     3)  If the end of the comments cannot be found, i.e., the end of
+      !>         comments marker is missing on the last comment record, the
+      !>         error SPICE(BADCOMMENTAREA) is signaled.
+      !>
+      !>     4)  If the number of comment characters scanned exceeds the
+      !>         number of comment characters computed, the error
+      !>         SPICE(BADCOMMENTAREA) is signaled.
+      !>
+      !>     5)  If the binary DAF attached to HANDLE is not open for reading,
+      !>         an error is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !> ## Files
+      !>
+      !>     See argument HANDLE in $Detailed_Input.
+      !>
+      !> ## Particulars
+      !>
+      !>     A binary DAF contains an area which is reserved for storing
+      !>     annotations or descriptive textual information describing the data
+      !>     contained in a file. This area is referred to as the ``comment
+      !>     area'' of the file. The comment area of a DAF is a line
+      !>     oriented medium for storing textual information. The comment
+      !>     area preserves any leading or embedded white space in the line(s)
+      !>     of text which are stored, so that the appearance of the of
+      !>     information will be unchanged when it is retrieved (extracted) at
+      !>     some other time. Trailing blanks, however, are NOT preserved,
+      !>     due to the way that character strings are represented in
+      !>     standard Fortran 77.
+      !>
+      !>     This routine will read the comments from the comment area of
+      !>     a binary DAF, placing them into a line buffer. If the line
+      !>     buffer is not large enough to hold the entire comment area,
+      !>     the portion read will be returned to the caller, and the DONE
+      !>     flag will be set to .FALSE. This allows the comment area to be
+      !>     read in ``chunks,'' a buffer at a time. After all of the comment
+      !>     lines have been read, the DONE flag will be set to .TRUE.
+      !>
+      !>     This routine can be used to ``simultaneously'' extract comments
+      !>     from the comment areas of multiple binary DAFs. See Example
+      !>     2 in the $Examples section.
+      !>
+      !> ## Examples
+      !>
+      !>     The numerical results shown for these examples may differ across
+      !>     platforms. The results depend on the SPICE kernels used as
+      !>     input, the compiler and supporting libraries, and the machine
+      !>     specific arithmetic implementation.
+      !>
+      !>     1) The following example will extract a maximum of 30 lines
+      !>        from the comment area of a binary DAF, displaying the
+      !>        comments on the terminal screen.
+      !>
+      !>        Although it would be possible to read the 30 lines in one
+      !>        go, for this example, use only a buffer size of 10,
+      !>        demonstrating the use of the DONE logical flag.
+      !>
+      !>        Use the SPK kernel below as input DAF file for the program.
+      !>
+      !>           earthstns_itrf93_201023.bsp
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFEC_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     SPICELIB functions
+      !>        C
+      !>              INTEGER               RTRIM
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              CHARACTER*(*)         KERNEL
+      !>              PARAMETER           ( KERNEL =
+      !>             .                         'earthstns_itrf93_201023.bsp' )
+      !>
+      !>              INTEGER               BUFSIZ
+      !>              PARAMETER           ( BUFSIZ = 10 )
+      !>
+      !>              INTEGER               LINLEN
+      !>              PARAMETER           ( LINLEN = 1000 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(LINLEN)    BUFFER ( BUFSIZ )
+      !>
+      !>              INTEGER               HANDLE
+      !>              INTEGER               I
+      !>              INTEGER               J
+      !>              INTEGER               N
+      !>
+      !>              LOGICAL               DONE
+      !>
+      !>        C
+      !>        C     Open a DAF for read. Return a HANDLE referring to the
+      !>        C     file.
+      !>        C
+      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>
+      !>        C
+      !>        C     Read a maximum of 30 lines of comments.
+      !>        C
+      !>              WRITE(*,'(A)') 'Comment area of input DAF file '
+      !>             .            // '(max. 30 lines): '
+      !>              WRITE(*,'(A)') '---------------------------------------'
+      !>             .            // '-----------------------'
+      !>              DO I = 0, 2
+      !>
+      !>                 CALL DAFEC  ( HANDLE, BUFSIZ, N, BUFFER, DONE )
+      !>
+      !>        C
+      !>        C        Write the N lines to the terminal screen.
+      !>        C
+      !>                 DO J = 1, N
+      !>
+      !>                    WRITE (*,*) BUFFER(J)(:RTRIM(BUFFER(J)))
+      !>
+      !>                 END DO
+      !>
+      !>              END DO
+      !>
+      !>              WRITE(*,'(A)') '---------------------------------------'
+      !>             .            // '-----------------------'
+      !>
+      !>        C
+      !>        C     Have all the comments been read?
+      !>        C
+      !>              IF ( .NOT. DONE ) THEN
+      !>
+      !>                 WRITE(*,*) ' '
+      !>                 WRITE(*,*) 'Warning: Not all comments have been read!'
+      !>
+      !>              END IF
+      !>
+      !>        C
+      !>        C     Safely close the DAF.
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>        Comment area of input DAF file (max. 30 lines):
+      !>        --------------------------------------------------------------
+      !>
+      !>            SPK for DSN Station Locations
+      !>            ========================================================***
+      !>
+      !>            Original file name:                   earthstns_itrf93_2***
+      !>            Creation date:                        2020 October 28 12:30
+      !>            Created by:                           Nat Bachman  (NAIF***
+      !>
+      !>            Introduction
+      !>            ========================================================***
+      !>
+      !>            This file provides geocentric states---locations and vel***
+      !>            set of DSN stations cited in the list below under "Posit***
+      !>            position vectors point from the earth's barycenter to th***
+      !>            velocities are estimates of the derivatives with respect***
+      !>            vectors; in this file, velocities are constant. Station ***
+      !>            magnitudes on the order of a few cm/year.
+      !>
+      !>            The states in this file are given relative to the terres***
+      !>            frame ITRF93.
+      !>
+      !>            This SPK file has a companion file
+      !>
+      !>               earthstns_fx_201023.bsp
+      !>
+      !>            which differs from this one only in that it uses the ref***
+      !>            frame alias 'EARTH_FIXED'. See the comment area of that ***
+      !>            and the Frames Required Reading for details.
+      !>
+      !>        --------------------------------------------------------------
+      !>
+      !>         Warning: Not all comments have been read!
+      !>
+      !>        Warning: incomplete output. 12 lines extended past the right
+      !>        margin of the header and have been truncated. These lines are
+      !>        marked by "***" at the end of each line.
+      !>
+      !>     2) The following example demonstrates the use of this routine to
+      !>        simultaneously read the comment areas of multiple DAFs. For
+      !>        each file, the comments will be displayed on the screen as
+      !>        they are extracted.
+      !>
+      !>        Use the SPK kernel below as the first DAF file for the
+      !>        program.
+      !>
+      !>           earthstns_itrf93_201023.bsp
+      !>
+      !>        Use the CK kernel below as the second DAF file for the
+      !>        program.
+      !>
+      !>           vo2_swu_ck2.bc
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFEC_EX2
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     SPICELIB functions
+      !>        C
+      !>              INTEGER               RTRIM
+      !>
+      !>              LOGICAL               ALLTRU
+      !>
+      !>        C
+      !>        C     Local parameters
+      !>        C
+      !>              INTEGER               BUFSIZ
+      !>              PARAMETER           ( BUFSIZ = 10   )
+      !>
+      !>              INTEGER               FNAMLN
+      !>              PARAMETER           ( FNAMLN = 255  )
+      !>
+      !>              INTEGER               LINLEN
+      !>              PARAMETER           ( LINLEN = 1000 )
+      !>
+      !>              INTEGER               NUMFIL
+      !>              PARAMETER           ( NUMFIL = 2    )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(FNAMLN)    DAFNAM ( NUMFIL )
+      !>              CHARACTER*(LINLEN)    BUFFER ( BUFSIZ )
+      !>
+      !>              INTEGER               HANDLE ( NUMFIL )
+      !>              INTEGER               I
+      !>              INTEGER               J
+      !>              INTEGER               N
+      !>
+      !>              LOGICAL               DONE   ( NUMFIL )
+      !>
+      !>        C
+      !>        C     Set the DAF file names.
+      !>        C
+      !>              DATA                  DAFNAM /
+      !>             .                          'earthstns_itrf93_201023.bsp',
+      !>             .                          'vo2_swu_ck2.bc'          /
+      !>
+      !>        C
+      !>        C     Set the initial values for DONE and HANDLE.
+      !>        C
+      !>              DO I = 1, NUMFIL
+      !>
+      !>                 DONE(I)   = .FALSE.
+      !>                 HANDLE(I) = 0
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Open the DAFs.
+      !>        C
+      !>              DO I = 1, NUMFIL
+      !>
+      !>                 CALL DAFOPR ( DAFNAM(I), HANDLE(I) )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     While there are still some comments left to read in at
+      !>        C     least one of the files, read them and display them.
+      !>        C
+      !>              DO WHILE ( .NOT. ALLTRU( DONE, NUMFIL ) )
+      !>
+      !>                 DO I = 1, NUMFIL
+      !>
+      !>                    IF ( .NOT. DONE(I) ) THEN
+      !>
+      !>                       WRITE (*,*)
+      !>                       WRITE (*,*) 'File: ',
+      !>             .                     DAFNAM(I)(:RTRIM(DAFNAM(I)))
+      !>                       WRITE (*,*) '---------------------------------'
+      !>             .                 //  '-----------------------------'
+      !>                       N = 0
+      !>
+      !>                       CALL DAFEC ( HANDLE(I), BUFSIZ, N,
+      !>             .                      BUFFER,    DONE(I)   )
+      !>
+      !>                       DO J = 1, N
+      !>
+      !>                          WRITE (*,*) BUFFER(J)(:RTRIM(BUFFER(J)))
+      !>
+      !>                       END DO
+      !>
+      !>                    END IF
+      !>
+      !>                 END DO
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Safely close the DAF files.
+      !>        C
+      !>              DO I = 1, NUMFIL
+      !>
+      !>                 CALL DAFCLS ( HANDLE(I) )
+      !>
+      !>              END DO
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         File: earthstns_itrf93_201023.bsp
+      !>         --------------------------------------------------------------
+      !>
+      !>            SPK for DSN Station Locations
+      !>            ========================================================***
+      !>
+      !>            Original file name:                   earthstns_itrf93_2***
+      !>            Creation date:                        2020 October 28 12:30
+      !>            Created by:                           Nat Bachman  (NAIF***
+      !>
+      !>            Introduction
+      !>
+      !>         File: vo2_swu_ck2.bc
+      !>         --------------------------------------------------------------
+      !>         \beginlabel
+      !>         PDS_VERSION_ID               = PDS3
+      !>         RECORD_TYPE                  = FIXED_LENGTH
+      !>         RECORD_BYTES                 = 1024
+      !>         ^SPICE_KERNEL                = "vo2_swu_ck2.bc"
+      !>         MISSION_NAME                 = VIKING
+      !>         SPACECRAFT_NAME              = "VIKING ORBITER 2"
+      !>         DATA_SET_ID                  = "VO1/VO2-M-SPICE-6-V1.0"
+      !>         KERNEL_TYPE_ID               = CK
+      !>         PRODUCT_ID                   = "vo2_swu_ck2.bc"
+      !>
+      !>         File: earthstns_itrf93_201023.bsp
+      !>         --------------------------------------------------------------
+      !>            ========================================================***
+      !>
+      !>            This file provides geocentric states---locations and vel***
+      !>            set of DSN stations cited in the list below under "Posit***
+      !>            position vectors point from the earth's barycenter to th***
+      !>            velocities are estimates of the derivatives with respect***
+      !>            vectors; in this file, velocities are constant. Station ***
+      !>            magnitudes on the order of a few cm/year.
+      !>
+      !>            The states in this file are given relative to the terres***
+      !>
+      !>         File: vo2_swu_ck2.bc
+      !>         --------------------------------------------------------------
+      !>         PRODUCT_CREATION_TIME        = 2008-12-03T14:03:35
+      !>         PRODUCER_ID                  = "NAIF/JPL"
+      !>         MISSION_PHASE_NAME           = {
+      !>                                        PRIMARY_MISSION,
+      !>                                        EXTENDED_MISSION,
+      !>                                        CONTINUATION_MISSION
+      !>                                        }
+      !>         PRODUCT_VERSION_TYPE         = ACTUAL
+      !>         PLATFORM_OR_MOUNTING_NAME    = "SPACECRAFT BUS"
+      !>         START_TIME                   = 1977-01-09T18:33:12.707
+      !>
+      !>         File: earthstns_itrf93_201023.bsp
+      !>         --------------------------------------------------------------
+      !>            frame ITRF93.
+      !>
+      !>            This SPK file has a companion file
+      !>
+      !>               earthstns_fx_201023.bsp
+      !>
+      !>            which differs from this one only in that it uses the ref***
+      !>            frame alias 'EARTH_FIXED'. See the comment area of that ***
+      !>            and the Frames Required Reading for details.
+      !>
+      !>         File: vo2_swu_ck2.bc
+      !>         --------------------------------------------------------------
+      !>         STOP_TIME                    = 1977-11-27T05:55:16.772
+      !>         SPACECRAFT_CLOCK_START_COUNT = "1/0032380393.707"
+      !>         SPACECRAFT_CLOCK_STOP_COUNT  = "1/0060155717.772"
+      !>         TARGET_NAME                  = MARS
+      !>         INSTRUMENT_NAME              = "SCAN PLATFORM"
+      !>         NAIF_INSTRUMENT_ID           = -30000
+      !>         SOURCE_PRODUCT_ID            = "N/A"
+      !>         NOTE                         = "See comments in the file fo***
+      !>         OBJECT                       = SPICE_KERNEL
+      !>           INTERCHANGE_FORMAT         = BINARY
+      !>
+      !>         File: earthstns_itrf93_201023.bsp
+      !>         --------------------------------------------------------------
+      !>
+      !>            Revision description
+      !>            --------------------
+      !>
+      !>            This kernel contains data from a single, current source:***
+      !>
+      !>            This kernel supersedes the kernels
+      !>
+      !>               earthstns_itrf93_050714.bsp
+      !>               dss_53_prelim_itrf93_201018.bsp (data in this kernel ***
+      !>
+      !>         File: vo2_swu_ck2.bc
+      !>         --------------------------------------------------------------
+      !>           KERNEL_TYPE                = POINTING
+      !>           DESCRIPTION                = "VO2 instrument platform ori***
+      !>         reconstructed during cartographic image registration by S. ***
+      !>         Type 2 CK file supersedes the less usable Type 1 CK vo2_swu***
+      !>         END_OBJECT                   = SPICE_KERNEL
+      !>         \endlabel
+      !>
+      !>        [...]
+      !>
+      !>        Warning: incomplete output. Only 100 out of 1049 lines have
+      !>        been provided. 18 lines extended past the right margin of the
+      !>        header and have been truncated. These lines are marked by "***"
+      !>        at the end of each line.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  The comment area may consist only of printing ASCII
+      !>         characters, decimal values 32 - 126.
+      !>
+      !>     2)  There is NO maximum length imposed on the significant portion
+      !>         of a text line that may be placed into the comment area of a
+      !>         DAF. The maximum length of a line stored in the comment area
+      !>         should be kept reasonable, so that they may be easily
+      !>         extracted. A good value for this would be 1000 characters, as
+      !>         this can easily accommodate ``screen width'' lines as well as
+      !>         long lines which may contain some other form of information.
+      !>
+      !>     3)  This routine is only used to read records on environments
+      !>         whose characters are a single byte in size. Updates
+      !>         to this routine and routines in its call tree may be
+      !>         required to properly handle other cases.
+      !>
+      !>     4)  This routine is intended to be used on DAF files whose comment
+      !>         area does not change while this routine is called to extract
+      !>         comments, between the start and end of the extraction process.
+      !>         If the comment area does change (gets updated, reduced,
+      !>         extended, or deleted) between calls to this routine on the
+      !>         same DAF file, the routine's outputs are undefined and
+      !>         subsequent calls to it are likely to trigger an exception.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     B.V. Semenov       (JPL)
+      !>     F.S. Turner        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.2.0, 25-NOV-2021 (JDR) (BVS)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Removed
+      !>        unnecessary $Revisions section.
+      !>
+      !>        Added complete code examples from existing code fragments.
+      !>
+      !>-    SPICELIB Version 1.1.0, 12-APR-2012 (BVS)
+      !>
+      !>        Increased FTSIZE (from 1000 to 5000).
+      !>
+      !>-    SPICELIB Version 1.0.0, 08-NOV-2006 (NJB) (KRG) (FST)
+      !>
+      !>        Based on Support Version 2.0.0, 16-NOV-2001 (FST)
       module procedure dafec
-!! ## Abstract
-!!
-!!     Extract comments from the comment area of a binary DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the file handle of a binary DAF which has been opened
-!!              with read access.
-!!
-!!     BUFSIZ   is the maximum number of comments that may be placed into
-!!              BUFFER. This would typically be the declared array size
-!!              for the Fortran character string array passed into this
-!!              routine.
-!!
-!! ## Detailed Output
-!!
-!!     N        is the number of comment lines extracted from the comment
-!!              area of the binary DAF attached to HANDLE. This number
-!!              will be <= BUFSIZ on output. If N = BUFSIZ and DONE <>
-!!              .TRUE., then there are more comments left to to extract.
-!!              If N = 0, then DONE = .TRUE., i.e., there were no
-!!              comments in the comment area or we have extracted all
-!!              of the comments. If there are comments in the comment
-!!              area, or comments remaining after the extraction process
-!!              has begun, N > 0, always.
-!!
-!!     BUFFER   is an array of at most BUFSIZ comments which have been
-!!              extracted from the comment area of the binary DAF
-!!              attached to HANDLE.
-!!
-!!     DONE     is a logical flag indicating whether or not all of the
-!!              comment lines from the comment area of the DAF have
-!!              been read. This variable has the value .TRUE. after the
-!!              last comment line has been read. It will have the value
-!!              .FALSE. otherwise.
-!!
-!!              If there are no comments in the comment area, this
-!!              variable will have the value .TRUE., and N = 0.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the size of the output line buffer is is not positive,
-!!         the error SPICE(INVALIDARGUMENT) is signaled.
-!!
-!!     2)  If a comment line in a DAF is longer than the length
-!!         of a character string array element of BUFFER, the error
-!!         SPICE(COMMENTTOOLONG) is signaled.
-!!
-!!     3)  If the end of the comments cannot be found, i.e., the end of
-!!         comments marker is missing on the last comment record, the
-!!         error SPICE(BADCOMMENTAREA) is signaled.
-!!
-!!     4)  If the number of comment characters scanned exceeds the
-!!         number of comment characters computed, the error
-!!         SPICE(BADCOMMENTAREA) is signaled.
-!!
-!!     5)  If the binary DAF attached to HANDLE is not open for reading,
-!!         an error is signaled by a routine in the call tree of this
-!!         routine.
-!!
-!! ## Files
-!!
-!!     See argument HANDLE in $Detailed_Input.
-!!
-!! ## Particulars
-!!
-!!     A binary DAF contains an area which is reserved for storing
-!!     annotations or descriptive textual information describing the data
-!!     contained in a file. This area is referred to as the ``comment
-!!     area'' of the file. The comment area of a DAF is a line
-!!     oriented medium for storing textual information. The comment
-!!     area preserves any leading or embedded white space in the line(s)
-!!     of text which are stored, so that the appearance of the of
-!!     information will be unchanged when it is retrieved (extracted) at
-!!     some other time. Trailing blanks, however, are NOT preserved,
-!!     due to the way that character strings are represented in
-!!     standard Fortran 77.
-!!
-!!     This routine will read the comments from the comment area of
-!!     a binary DAF, placing them into a line buffer. If the line
-!!     buffer is not large enough to hold the entire comment area,
-!!     the portion read will be returned to the caller, and the DONE
-!!     flag will be set to .FALSE. This allows the comment area to be
-!!     read in ``chunks,'' a buffer at a time. After all of the comment
-!!     lines have been read, the DONE flag will be set to .TRUE.
-!!
-!!     This routine can be used to ``simultaneously'' extract comments
-!!     from the comment areas of multiple binary DAFs. See Example
-!!     2 in the $Examples section.
-!!
-!! ## Examples
-!!
-!!     The numerical results shown for these examples may differ across
-!!     platforms. The results depend on the SPICE kernels used as
-!!     input, the compiler and supporting libraries, and the machine
-!!     specific arithmetic implementation.
-!!
-!!     1) The following example will extract a maximum of 30 lines
-!!        from the comment area of a binary DAF, displaying the
-!!        comments on the terminal screen.
-!!
-!!        Although it would be possible to read the 30 lines in one
-!!        go, for this example, use only a buffer size of 10,
-!!        demonstrating the use of the DONE logical flag.
-!!
-!!        Use the SPK kernel below as input DAF file for the program.
-!!
-!!           earthstns_itrf93_201023.bsp
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DAFEC_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     SPICELIB functions
-!!        C
-!!              INTEGER               RTRIM
-!!
-!!        C
-!!        C     Local parameters
-!!        C
-!!              CHARACTER*(*)         KERNEL
-!!              PARAMETER           ( KERNEL =
-!!             .                         'earthstns_itrf93_201023.bsp' )
-!!
-!!              INTEGER               BUFSIZ
-!!              PARAMETER           ( BUFSIZ = 10 )
-!!
-!!              INTEGER               LINLEN
-!!              PARAMETER           ( LINLEN = 1000 )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(LINLEN)    BUFFER ( BUFSIZ )
-!!
-!!              INTEGER               HANDLE
-!!              INTEGER               I
-!!              INTEGER               J
-!!              INTEGER               N
-!!
-!!              LOGICAL               DONE
-!!
-!!        C
-!!        C     Open a DAF for read. Return a HANDLE referring to the
-!!        C     file.
-!!        C
-!!              CALL DAFOPR ( KERNEL, HANDLE )
-!!
-!!        C
-!!        C     Read a maximum of 30 lines of comments.
-!!        C
-!!              WRITE(*,'(A)') 'Comment area of input DAF file '
-!!             .            // '(max. 30 lines): '
-!!              WRITE(*,'(A)') '---------------------------------------'
-!!             .            // '-----------------------'
-!!              DO I = 0, 2
-!!
-!!                 CALL DAFEC  ( HANDLE, BUFSIZ, N, BUFFER, DONE )
-!!
-!!        C
-!!        C        Write the N lines to the terminal screen.
-!!        C
-!!                 DO J = 1, N
-!!
-!!                    WRITE (*,*) BUFFER(J)(:RTRIM(BUFFER(J)))
-!!
-!!                 END DO
-!!
-!!              END DO
-!!
-!!              WRITE(*,'(A)') '---------------------------------------'
-!!             .            // '-----------------------'
-!!
-!!        C
-!!        C     Have all the comments been read?
-!!        C
-!!              IF ( .NOT. DONE ) THEN
-!!
-!!                 WRITE(*,*) ' '
-!!                 WRITE(*,*) 'Warning: Not all comments have been read!'
-!!
-!!              END IF
-!!
-!!        C
-!!        C     Safely close the DAF.
-!!        C
-!!              CALL DAFCLS ( HANDLE )
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!        Comment area of input DAF file (max. 30 lines):
-!!        --------------------------------------------------------------
-!!
-!!            SPK for DSN Station Locations
-!!            ========================================================***
-!!
-!!            Original file name:                   earthstns_itrf93_2***
-!!            Creation date:                        2020 October 28 12:30
-!!            Created by:                           Nat Bachman  (NAIF***
-!!
-!!            Introduction
-!!            ========================================================***
-!!
-!!            This file provides geocentric states---locations and vel***
-!!            set of DSN stations cited in the list below under "Posit***
-!!            position vectors point from the earth's barycenter to th***
-!!            velocities are estimates of the derivatives with respect***
-!!            vectors; in this file, velocities are constant. Station ***
-!!            magnitudes on the order of a few cm/year.
-!!
-!!            The states in this file are given relative to the terres***
-!!            frame ITRF93.
-!!
-!!            This SPK file has a companion file
-!!
-!!               earthstns_fx_201023.bsp
-!!
-!!            which differs from this one only in that it uses the ref***
-!!            frame alias 'EARTH_FIXED'. See the comment area of that ***
-!!            and the Frames Required Reading for details.
-!!
-!!        --------------------------------------------------------------
-!!
-!!         Warning: Not all comments have been read!
-!!
-!!        Warning: incomplete output. 12 lines extended past the right
-!!        margin of the header and have been truncated. These lines are
-!!        marked by "***" at the end of each line.
-!!
-!!     2) The following example demonstrates the use of this routine to
-!!        simultaneously read the comment areas of multiple DAFs. For
-!!        each file, the comments will be displayed on the screen as
-!!        they are extracted.
-!!
-!!        Use the SPK kernel below as the first DAF file for the
-!!        program.
-!!
-!!           earthstns_itrf93_201023.bsp
-!!
-!!        Use the CK kernel below as the second DAF file for the
-!!        program.
-!!
-!!           vo2_swu_ck2.bc
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DAFEC_EX2
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     SPICELIB functions
-!!        C
-!!              INTEGER               RTRIM
-!!
-!!              LOGICAL               ALLTRU
-!!
-!!        C
-!!        C     Local parameters
-!!        C
-!!              INTEGER               BUFSIZ
-!!              PARAMETER           ( BUFSIZ = 10   )
-!!
-!!              INTEGER               FNAMLN
-!!              PARAMETER           ( FNAMLN = 255  )
-!!
-!!              INTEGER               LINLEN
-!!              PARAMETER           ( LINLEN = 1000 )
-!!
-!!              INTEGER               NUMFIL
-!!              PARAMETER           ( NUMFIL = 2    )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(FNAMLN)    DAFNAM ( NUMFIL )
-!!              CHARACTER*(LINLEN)    BUFFER ( BUFSIZ )
-!!
-!!              INTEGER               HANDLE ( NUMFIL )
-!!              INTEGER               I
-!!              INTEGER               J
-!!              INTEGER               N
-!!
-!!              LOGICAL               DONE   ( NUMFIL )
-!!
-!!        C
-!!        C     Set the DAF file names.
-!!        C
-!!              DATA                  DAFNAM /
-!!             .                          'earthstns_itrf93_201023.bsp',
-!!             .                          'vo2_swu_ck2.bc'          /
-!!
-!!        C
-!!        C     Set the initial values for DONE and HANDLE.
-!!        C
-!!              DO I = 1, NUMFIL
-!!
-!!                 DONE(I)   = .FALSE.
-!!                 HANDLE(I) = 0
-!!
-!!              END DO
-!!
-!!        C
-!!        C     Open the DAFs.
-!!        C
-!!              DO I = 1, NUMFIL
-!!
-!!                 CALL DAFOPR ( DAFNAM(I), HANDLE(I) )
-!!
-!!              END DO
-!!
-!!        C
-!!        C     While there are still some comments left to read in at
-!!        C     least one of the files, read them and display them.
-!!        C
-!!              DO WHILE ( .NOT. ALLTRU( DONE, NUMFIL ) )
-!!
-!!                 DO I = 1, NUMFIL
-!!
-!!                    IF ( .NOT. DONE(I) ) THEN
-!!
-!!                       WRITE (*,*)
-!!                       WRITE (*,*) 'File: ',
-!!             .                     DAFNAM(I)(:RTRIM(DAFNAM(I)))
-!!                       WRITE (*,*) '---------------------------------'
-!!             .                 //  '-----------------------------'
-!!                       N = 0
-!!
-!!                       CALL DAFEC ( HANDLE(I), BUFSIZ, N,
-!!             .                      BUFFER,    DONE(I)   )
-!!
-!!                       DO J = 1, N
-!!
-!!                          WRITE (*,*) BUFFER(J)(:RTRIM(BUFFER(J)))
-!!
-!!                       END DO
-!!
-!!                    END IF
-!!
-!!                 END DO
-!!
-!!              END DO
-!!
-!!        C
-!!        C     Safely close the DAF files.
-!!        C
-!!              DO I = 1, NUMFIL
-!!
-!!                 CALL DAFCLS ( HANDLE(I) )
-!!
-!!              END DO
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!         File: earthstns_itrf93_201023.bsp
-!!         --------------------------------------------------------------
-!!
-!!            SPK for DSN Station Locations
-!!            ========================================================***
-!!
-!!            Original file name:                   earthstns_itrf93_2***
-!!            Creation date:                        2020 October 28 12:30
-!!            Created by:                           Nat Bachman  (NAIF***
-!!
-!!            Introduction
-!!
-!!         File: vo2_swu_ck2.bc
-!!         --------------------------------------------------------------
-!!         \beginlabel
-!!         PDS_VERSION_ID               = PDS3
-!!         RECORD_TYPE                  = FIXED_LENGTH
-!!         RECORD_BYTES                 = 1024
-!!         ^SPICE_KERNEL                = "vo2_swu_ck2.bc"
-!!         MISSION_NAME                 = VIKING
-!!         SPACECRAFT_NAME              = "VIKING ORBITER 2"
-!!         DATA_SET_ID                  = "VO1/VO2-M-SPICE-6-V1.0"
-!!         KERNEL_TYPE_ID               = CK
-!!         PRODUCT_ID                   = "vo2_swu_ck2.bc"
-!!
-!!         File: earthstns_itrf93_201023.bsp
-!!         --------------------------------------------------------------
-!!            ========================================================***
-!!
-!!            This file provides geocentric states---locations and vel***
-!!            set of DSN stations cited in the list below under "Posit***
-!!            position vectors point from the earth's barycenter to th***
-!!            velocities are estimates of the derivatives with respect***
-!!            vectors; in this file, velocities are constant. Station ***
-!!            magnitudes on the order of a few cm/year.
-!!
-!!            The states in this file are given relative to the terres***
-!!
-!!         File: vo2_swu_ck2.bc
-!!         --------------------------------------------------------------
-!!         PRODUCT_CREATION_TIME        = 2008-12-03T14:03:35
-!!         PRODUCER_ID                  = "NAIF/JPL"
-!!         MISSION_PHASE_NAME           = {
-!!                                        PRIMARY_MISSION,
-!!                                        EXTENDED_MISSION,
-!!                                        CONTINUATION_MISSION
-!!                                        }
-!!         PRODUCT_VERSION_TYPE         = ACTUAL
-!!         PLATFORM_OR_MOUNTING_NAME    = "SPACECRAFT BUS"
-!!         START_TIME                   = 1977-01-09T18:33:12.707
-!!
-!!         File: earthstns_itrf93_201023.bsp
-!!         --------------------------------------------------------------
-!!            frame ITRF93.
-!!
-!!            This SPK file has a companion file
-!!
-!!               earthstns_fx_201023.bsp
-!!
-!!            which differs from this one only in that it uses the ref***
-!!            frame alias 'EARTH_FIXED'. See the comment area of that ***
-!!            and the Frames Required Reading for details.
-!!
-!!         File: vo2_swu_ck2.bc
-!!         --------------------------------------------------------------
-!!         STOP_TIME                    = 1977-11-27T05:55:16.772
-!!         SPACECRAFT_CLOCK_START_COUNT = "1/0032380393.707"
-!!         SPACECRAFT_CLOCK_STOP_COUNT  = "1/0060155717.772"
-!!         TARGET_NAME                  = MARS
-!!         INSTRUMENT_NAME              = "SCAN PLATFORM"
-!!         NAIF_INSTRUMENT_ID           = -30000
-!!         SOURCE_PRODUCT_ID            = "N/A"
-!!         NOTE                         = "See comments in the file fo***
-!!         OBJECT                       = SPICE_KERNEL
-!!           INTERCHANGE_FORMAT         = BINARY
-!!
-!!         File: earthstns_itrf93_201023.bsp
-!!         --------------------------------------------------------------
-!!
-!!            Revision description
-!!            --------------------
-!!
-!!            This kernel contains data from a single, current source:***
-!!
-!!            This kernel supersedes the kernels
-!!
-!!               earthstns_itrf93_050714.bsp
-!!               dss_53_prelim_itrf93_201018.bsp (data in this kernel ***
-!!
-!!         File: vo2_swu_ck2.bc
-!!         --------------------------------------------------------------
-!!           KERNEL_TYPE                = POINTING
-!!           DESCRIPTION                = "VO2 instrument platform ori***
-!!         reconstructed during cartographic image registration by S. ***
-!!         Type 2 CK file supersedes the less usable Type 1 CK vo2_swu***
-!!         END_OBJECT                   = SPICE_KERNEL
-!!         \endlabel
-!!
-!!        [...]
-!!
-!!        Warning: incomplete output. Only 100 out of 1049 lines have
-!!        been provided. 18 lines extended past the right margin of the
-!!        header and have been truncated. These lines are marked by "***"
-!!        at the end of each line.
-!!
-!! ## Restrictions
-!!
-!!     1)  The comment area may consist only of printing ASCII
-!!         characters, decimal values 32 - 126.
-!!
-!!     2)  There is NO maximum length imposed on the significant portion
-!!         of a text line that may be placed into the comment area of a
-!!         DAF. The maximum length of a line stored in the comment area
-!!         should be kept reasonable, so that they may be easily
-!!         extracted. A good value for this would be 1000 characters, as
-!!         this can easily accommodate ``screen width'' lines as well as
-!!         long lines which may contain some other form of information.
-!!
-!!     3)  This routine is only used to read records on environments
-!!         whose characters are a single byte in size. Updates
-!!         to this routine and routines in its call tree may be
-!!         required to properly handle other cases.
-!!
-!!     4)  This routine is intended to be used on DAF files whose comment
-!!         area does not change while this routine is called to extract
-!!         comments, between the start and end of the extraction process.
-!!         If the comment area does change (gets updated, reduced,
-!!         extended, or deleted) between calls to this routine on the
-!!         same DAF file, the routine's outputs are undefined and
-!!         subsequent calls to it are likely to trigger an exception.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     B.V. Semenov       (JPL)
-!!     F.S. Turner        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.2.0, 25-NOV-2021 (JDR) (BVS)
-!!
-!!        Added IMPLICIT NONE statement.
-!!
-!!        Edited the header to comply with NAIF standard. Removed
-!!        unnecessary $Revisions section.
-!!
-!!        Added complete code examples from existing code fragments.
-!!
-!!-    SPICELIB Version 1.1.0, 12-APR-2012 (BVS)
-!!
-!!        Increased FTSIZE (from 1000 to 5000).
-!!
-!!-    SPICELIB Version 1.0.0, 08-NOV-2006 (NJB) (KRG) (FST)
-!!
-!!        Based on Support Version 2.0.0, 16-NOV-2001 (FST)
-!!
-!! ## Index Entries
-!!
-!!     extract comments from a DAF
-!!
-!!     SPICELIB functions
-!!
-!!     Local parameters
-!!
-!!     Length of a DAF internal filename.
-!!
-!!     Decimal value for the DAF comment area end-of-comment (EOC)
-!!     marker.
-!!
-!!     Decimal value for the DAF comment area end-of-line (EOL) marker.
-!!
-!!     The maximum number of DAFs that may be open simultaneously.
-!!
-!!     Length of a DAF character record, in characters.
-!!
-!!     Local variables
-!!
-!!     The file table declarations for keeping track of which files
-!!     are currently in the process of having comments extracted.
-!!
-!!     Saved variables
-!!
-!!     Save all of the file table information.
-!!
-!!     Initial values
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_containers, only: grow
       use pepper_kinds, only: ip
       use pepper_strings, only: cpos, ncpos
@@ -18115,7 +16614,6 @@ contains
          lsthan = 0
          eocmrk = char ( inteoc )
          eolmrk = char ( inteol )
-
 
       end if
 !
@@ -18529,16 +17027,6 @@ contains
 !
 !     Add a new array to an existing DAF.
 !
-! $ Required_Reading
-!
-!     DAF
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-
 ! $ Detailed_Input
 !
 !     HANDLE   is the handle of a DAF opened for write access
@@ -19124,13 +17612,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
 !
-!-&
-
-! $ Index_Entries
-!
-!     add new DAF array
-!
-!-&
 
 ! $ Revisions
 !
@@ -19254,19 +17735,6 @@ contains
 !        for those relating to the state table. Several hard-coded
 !        constants have been replaced by parameters.
 !
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Local variables
-!
 
 !
 !     State variables.
@@ -19339,152 +17807,119 @@ contains
 !
 
 !
-!     Other local variables
-!
-
-!
 !     Save everything between calls
-!
-
-!
-!     Initial values
 !
 
 !
 !     Standard SPICE error handling.
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DAF opened for write access
+      !>              by a previous call to DAFOPW or DAFOPN.
+      !>
+      !>     SUM      is the summary of a new array to be added to the
+      !>              specified file. The addresses (the final two integer
+      !>              components) need not be filled in.
+      !>
+      !>     NAME     is the name of the new array.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input handle is not that of a DAF that is open for
+      !>         writing, an error is signaled by a routine in the call tree of
+      !>         this routine. These files are implicitly of the native binary
+      !>         file format.
+      !>
+      !>     2)  If the input array name is too long to fit in the number
+      !>         of characters allowed by the summary format of the DAF
+      !>         designated by HANDLE, the excess characters are truncated.
+      !>         No error is signaled.
+      !>
+      !>     3)  If there is not enough room in the state table to add
+      !>         the DAF associated with HANDLE, the error SPICE(STFULL)
+      !>         is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See argument HANDLE, above.
+      !>
+      !> ## Particulars
+      !>
+      !>     Only one array can be added to a DAF at any one time, so
+      !>     calling DAFBNA cancels any addition to the file specified
+      !>     by HANDLE that may be in progress. No warning is issued.
+      !>
+      !> ## Examples
+      !>
+      !>     See $Examples in DAFANA.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.1.0, 06-JUL-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        Updated DAFBNA to support changes made to the DAF
+      !>        system that utilize the new handle manager. See
+      !>        the $Revisions section of DAFANA for a detailed
+      !>        discussion of the changes.
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Modified to support simultaneous writes to multiple DAFs.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Modified to support simultaneous writes to multiple DAFs.
+      !>        DAFBNA now adds information about DAFs to the state table,
+      !>        deletes information about closed DAFs from the state table,
+      !>        and initializes the state pool.
+      !>
+      !>     Standard SPICE error handling.
       module procedure dafbna
-!! ## Abstract
-!!
-!!     Begin a new array in a DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     IMPLICIT NONE
-!!
-!!     INTEGER               HANDLE
-!!     DOUBLE PRECISION      SUM     ( * )
-!!     CHARACTER*(*)         NAME
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle of a DAF opened for write access
-!!              by a previous call to DAFOPW or DAFOPN.
-!!
-!!     SUM      is the summary of a new array to be added to the
-!!              specified file. The addresses (the final two integer
-!!              components) need not be filled in.
-!!
-!!     NAME     is the name of the new array.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the input handle is not that of a DAF that is open for
-!!         writing, an error is signaled by a routine in the call tree of
-!!         this routine. These files are implicitly of the native binary
-!!         file format.
-!!
-!!     2)  If the input array name is too long to fit in the number
-!!         of characters allowed by the summary format of the DAF
-!!         designated by HANDLE, the excess characters are truncated.
-!!         No error is signaled.
-!!
-!!     3)  If there is not enough room in the state table to add
-!!         the DAF associated with HANDLE, the error SPICE(STFULL)
-!!         is signaled.
-!!
-!! ## Files
-!!
-!!     See argument HANDLE, above.
-!!
-!! ## Particulars
-!!
-!!     Only one array can be added to a DAF at any one time, so
-!!     calling DAFBNA cancels any addition to the file specified
-!!     by HANDLE that may be in progress. No warning is issued.
-!!
-!! ## Examples
-!!
-!!     See $Examples in DAFANA.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     I.M. Underwood     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 3.1.0, 06-JUL-2021 (JDR)
-!!
-!!        Added IMPLICIT NONE statement.
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
-!!
-!!        Updated DAFBNA to support changes made to the DAF
-!!        system that utilize the new handle manager. See
-!!        the $Revisions section of DAFANA for a detailed
-!!        discussion of the changes.
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Modified to support simultaneous writes to multiple DAFs.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     begin new DAF array
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Modified to support simultaneous writes to multiple DAFs.
-!!        DAFBNA now adds information about DAFs to the state table,
-!!        deletes information about closed DAFs from the state table,
-!!        and initializes the state pool.
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -19542,7 +17977,6 @@ contains
 !     Also initialize the cell used to obtain the set of handles of
 !     open DAFs.
 !
-
 
 !
 !     We know that the beginning of the array will be the first
@@ -19844,131 +18278,106 @@ contains
       end associate
       end procedure dafbna
 
+      !> ## Detailed Input
+      !>
+      !>     DATA     is an arbitrary number of double precision words to
+      !>              be added to the data in the array being created.
+      !>
+      !>     N        is the number of double precision words in DATA.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If there are no DAFs to which data is currently being added,
+      !>         the error SPICE(DAFNOWRITE) is signaled.
+      !>
+      !>     2)  If a new array has not been started in the current DAF (by a
+      !>         call to DAFBNA), the error SPICE(DAFNEWCONFLICT) is signaled.
+      !>
+      !>     3)  If N is less than one, no data are added to the file.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     DAFADA adds data to the last array begun by DAFBNA or selected
+      !>     by DAFCAD.
+      !>
+      !>     Data can be added to a DAF in chunks of any size, so long
+      !>     as the chunks are added in the proper order.
+      !>
+      !> ## Examples
+      !>
+      !>     See $Examples in DAFANA.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.1.0, 06-JUL-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        Updated entry points to support changes made to the DAF
+      !>        system that utilize the new handle manager. See
+      !>        the $Revisions section of DAFANA for a detailed
+      !>        discussion of the changes.
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Updated to work with new DAF routines that allow writing
+      !>        to multiple DAFs simultaneously. Functionality for
+      !>        applications that write to one DAF at a time is unchanged.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Updated to work with new DAF routines that allow writing
+      !>        to multiple DAFs simultaneously. Functionality for
+      !>        applications that write to one DAF at a time is unchanged.
+      !>
+      !>     Standard SPICE error handling.
       module procedure dafada
-!! ## Abstract
-!!
-!!     Add one or more double precision words of data to the newest
-!!     array in the current DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     IMPLICIT NONE
-!!
-!!     DOUBLE PRECISION      DATA     ( * )
-!!     INTEGER               N
-!!
-!! ## Detailed Input
-!!
-!!     DATA     is an arbitrary number of double precision words to
-!!              be added to the data in the array being created.
-!!
-!!     N        is the number of double precision words in DATA.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If there are no DAFs to which data is currently being added,
-!!         the error SPICE(DAFNOWRITE) is signaled.
-!!
-!!     2)  If a new array has not been started in the current DAF (by a
-!!         call to DAFBNA), the error SPICE(DAFNEWCONFLICT) is signaled.
-!!
-!!     3)  If N is less than one, no data are added to the file.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     DAFADA adds data to the last array begun by DAFBNA or selected
-!!     by DAFCAD.
-!!
-!!     Data can be added to a DAF in chunks of any size, so long
-!!     as the chunks are added in the proper order.
-!!
-!! ## Examples
-!!
-!!     See $Examples in DAFANA.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     I.M. Underwood     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 3.1.0, 06-JUL-2021 (JDR)
-!!
-!!        Added IMPLICIT NONE statement.
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
-!!
-!!        Updated entry points to support changes made to the DAF
-!!        system that utilize the new handle manager. See
-!!        the $Revisions section of DAFANA for a detailed
-!!        discussion of the changes.
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Updated to work with new DAF routines that allow writing
-!!        to multiple DAFs simultaneously. Functionality for
-!!        applications that write to one DAF at a time is unchanged.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     add data to DAF array
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Updated to work with new DAF routines that allow writing
-!!        to multiple DAFs simultaneously. Functionality for
-!!        applications that write to one DAF at a time is unchanged.
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -20043,144 +18452,123 @@ contains
       end associate
       end procedure dafada
 
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If there are no DAFs to which data is currently being added,
+      !>         the error SPICE(DAFNOWRITE) is signaled, or the error will
+      !>         be detected by routines called by this routine.
+      !>
+      !>     2)  If a new array has not been started in the current DAF (by a
+      !>         call to DAFBNA), the error SPICE(DAFNEWCONFLICT) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     DAFENA makes the current array a permanent addition to the
+      !>     current DAF.
+      !>
+      !>     The pointers within the file are not changed until an array
+      !>     is ended successfully. If an error occurs or if the current
+      !>     DAF is closed before DAFENA is called, the last array will
+      !>     not be visible to the DAF reader routines.
+      !>
+      !> ## Examples
+      !>
+      !>     See $Examples in DAFANA.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.1.0, 06-JUL-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Removed
+      !>        unnecessary entries from $Revisions section.
+      !>
+      !>-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        Updated entry points to support changes made to the DAF
+      !>        system that utilize the new handle manager. See
+      !>        the $Revisions section of DAFANA for a detailed
+      !>        discussion of the changes.
+      !>
+      !>-    SPICELIB Version 2.1.0, 11-JUL-1995 (KRG)
+      !>
+      !>        Updated to remove potential compiler warnings from the
+      !>        truncation of double precision numbers to integers.
+      !>
+      !>        Also changed was a numeric constant from 1.D0 to the
+      !>        equivalent, but more aesthetically pleasing 1.0D0.
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Updated to work with new DAF routines that allow writing
+      !>        to multiple DAFs simultaneously. Functionality for
+      !>        applications that write to one DAF at a time is unchanged.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 2.1.0, 11-JUL-1995 (KRG)
+      !>
+      !>        Updated to remove potential compiler warnings from the
+      !>        truncation of double precision numbers to integers. Two
+      !>        assignments to NARRAY were updated, being changed from:
+      !>
+      !>           NARRAY = SUMREC(ARYCNT)
+      !>
+      !>        to
+      !>
+      !>           NARRAY = IDINT ( SUMREC(ARYCNT) )
+      !>
+      !>        Also changed was a numeric constant from 1.D0 to the
+      !>        equivalent, but more aesthetically pleasing 1.0D0.
+      !>
+      !>     Standard SPICE error handling.
       module procedure dafena
-!! ## Abstract
-!!
-!!     End the addition of data to the newest array in the current DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     None.
-!!
-!! ## Detailed Input
-!!
-!!     None.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If there are no DAFs to which data is currently being added,
-!!         the error SPICE(DAFNOWRITE) is signaled, or the error will
-!!         be detected by routines called by this routine.
-!!
-!!     2)  If a new array has not been started in the current DAF (by a
-!!         call to DAFBNA), the error SPICE(DAFNEWCONFLICT) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     DAFENA makes the current array a permanent addition to the
-!!     current DAF.
-!!
-!!     The pointers within the file are not changed until an array
-!!     is ended successfully. If an error occurs or if the current
-!!     DAF is closed before DAFENA is called, the last array will
-!!     not be visible to the DAF reader routines.
-!!
-!! ## Examples
-!!
-!!     See $Examples in DAFANA.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     K.R. Gehringer     (JPL)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!     I.M. Underwood     (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 3.1.0, 06-JUL-2021 (JDR)
-!!
-!!        Added IMPLICIT NONE statement.
-!!
-!!        Edited the header to comply with NAIF standard. Removed
-!!        unnecessary entries from $Revisions section.
-!!
-!!-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
-!!
-!!        Updated entry points to support changes made to the DAF
-!!        system that utilize the new handle manager. See
-!!        the $Revisions section of DAFANA for a detailed
-!!        discussion of the changes.
-!!
-!!-    SPICELIB Version 2.1.0, 11-JUL-1995 (KRG)
-!!
-!!        Updated to remove potential compiler warnings from the
-!!        truncation of double precision numbers to integers.
-!!
-!!        Also changed was a numeric constant from 1.D0 to the
-!!        equivalent, but more aesthetically pleasing 1.0D0.
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Updated to work with new DAF routines that allow writing
-!!        to multiple DAFs simultaneously. Functionality for
-!!        applications that write to one DAF at a time is unchanged.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     end new DAF array
-!!
-!! ## Revisions
-!!
-!!-    SPICELIB Version 2.1.0, 11-JUL-1995 (KRG)
-!!
-!!        Updated to remove potential compiler warnings from the
-!!        truncation of double precision numbers to integers. Two
-!!        assignments to NARRAY were updated, being changed from:
-!!
-!!           NARRAY = SUMREC(ARYCNT)
-!!
-!!        to
-!!
-!!           NARRAY = IDINT ( SUMREC(ARYCNT) )
-!!
-!!        Also changed was a numeric constant from 1.D0 to the
-!!        equivalent, but more aesthetically pleasing 1.0D0.
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -20374,157 +18762,130 @@ contains
       end associate
       end procedure dafena
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DAF that is open for write
+      !>              access and in which a new array has been
+      !>              started by a call to DAFBNA.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input handle is not that of a DAF that is open for
+      !>         writing, an error is signaled by a routine in the call tree of
+      !>         this routine.
+      !>
+      !>     2)  If no array is currently being added to in the file indicated
+      !>         by HANDLE, the error SPICE(NOARRAYSTARTED) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     DAFCAD supports simultaneous addition of data to arrays in
+      !>     multiple DAFs. In applications that use this capability,
+      !>     DAFCAD should be called prior to each call to DAFADA or DAFENA
+      !>     to specify which DAF is to be acted upon.
+      !>
+      !>     Here is a code fragment that adds a new array to each of N
+      !>     existing DAFs, simultaneously. The data to be added to each
+      !>     is broken up into M chunks; one chunk is written to each DAF
+      !>     at a time. The data is contained in the array CHUNK, dimensioned
+      !>
+      !>         DOUBLE PRECISION      CHUNK ( MAXDAT, M, N )
+      !>
+      !>     The actual amount of data in the Jth chunk for the Ith file is
+      !>     given by
+      !>
+      !>         AMOUNT (J,I)
+      !>
+      !>         DO I = 1, N
+      !>            CALL DAFOPW ( HANDLE(I) )
+      !>            CALL DAFBNA ( HANDLE(I) )
+      !>         END DO
+      !>
+      !>         DO J = 1, M
+      !>
+      !>            DO I = 1, N
+      !>               CALL DAFCAD  ( HANDLE(I)                  )
+      !>               CALL DAFADA  ( CHUNK(1,J,I),  AMOUNT(J,I) )
+      !>            END DO
+      !>
+      !>         END DO
+      !>
+      !>         DO I = 1, N
+      !>            CALL DAFCAD  ( HANDLE(I) )
+      !>            CALL DAFENA
+      !>         END DO
+      !>
+      !>     Note that if we write all of the data for each array to just one
+      !>     DAF at a time, we don't need to use DAFCAD:
+      !>
+      !>        DO I = 1, N
+      !>
+      !>           CALL DAFOPW ( HANDLE(I) )
+      !>           CALL DAFBNA ( HANDLE(I) )
+      !>
+      !>           DO J = 1, M
+      !>              CALL DAFADA ( CHUNK(1,J,I),  AMOUNT(J,I) )
+      !>           END DO
+      !>
+      !>           CALL DAFENA
+      !>
+      !>        END DO
+      !>
+      !> ## Examples
+      !>
+      !>     See $Examples in DAFANA.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.1.0, 06-JUL-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Edited entry #2
+      !>        in $Exceptions section: No write in progress is detected by
+      !>        this routine.
+      !>
+      !>-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        Updated entry points to support changes made to the DAF
+      !>        system that utilize the new handle manager. See
+      !>        the $Revisions section of DAFANA for a detailed
+      !>        discussion of the changes.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 04-SEP-1991 (NJB) (WLT)
       module procedure dafcad
-!! ## Abstract
-!!
-!!     Select a DAF that already has a new array in progress as the
-!!     one to continue adding data to.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     IMPLICIT NONE
-!!
-!!     INTEGER               HANDLE
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle of a DAF that is open for write
-!!              access and in which a new array has been
-!!              started by a call to DAFBNA.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the input handle is not that of a DAF that is open for
-!!         writing, an error is signaled by a routine in the call tree of
-!!         this routine.
-!!
-!!     2)  If no array is currently being added to in the file indicated
-!!         by HANDLE, the error SPICE(NOARRAYSTARTED) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     DAFCAD supports simultaneous addition of data to arrays in
-!!     multiple DAFs. In applications that use this capability,
-!!     DAFCAD should be called prior to each call to DAFADA or DAFENA
-!!     to specify which DAF is to be acted upon.
-!!
-!!     Here is a code fragment that adds a new array to each of N
-!!     existing DAFs, simultaneously. The data to be added to each
-!!     is broken up into M chunks; one chunk is written to each DAF
-!!     at a time. The data is contained in the array CHUNK, dimensioned
-!!
-!!         DOUBLE PRECISION      CHUNK ( MAXDAT, M, N )
-!!
-!!     The actual amount of data in the Jth chunk for the Ith file is
-!!     given by
-!!
-!!         AMOUNT (J,I)
-!!
-!!         DO I = 1, N
-!!            CALL DAFOPW ( HANDLE(I) )
-!!            CALL DAFBNA ( HANDLE(I) )
-!!         END DO
-!!
-!!         DO J = 1, M
-!!
-!!            DO I = 1, N
-!!               CALL DAFCAD  ( HANDLE(I)                  )
-!!               CALL DAFADA  ( CHUNK(1,J,I),  AMOUNT(J,I) )
-!!            END DO
-!!
-!!         END DO
-!!
-!!         DO I = 1, N
-!!            CALL DAFCAD  ( HANDLE(I) )
-!!            CALL DAFENA
-!!         END DO
-!!
-!!     Note that if we write all of the data for each array to just one
-!!     DAF at a time, we don't need to use DAFCAD:
-!!
-!!        DO I = 1, N
-!!
-!!           CALL DAFOPW ( HANDLE(I) )
-!!           CALL DAFBNA ( HANDLE(I) )
-!!
-!!           DO J = 1, M
-!!              CALL DAFADA ( CHUNK(1,J,I),  AMOUNT(J,I) )
-!!           END DO
-!!
-!!           CALL DAFENA
-!!
-!!        END DO
-!!
-!! ## Examples
-!!
-!!     See $Examples in DAFANA.
-!!
-!! ## Restrictions
-!!
-!!     None.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     W.L. Taber         (JPL)
-!!     F.S. Turner        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 3.1.0, 06-JUL-2021 (JDR)
-!!
-!!        Added IMPLICIT NONE statement.
-!!
-!!        Edited the header to comply with NAIF standard. Edited entry #2
-!!        in $Exceptions section: No write in progress is detected by
-!!        this routine.
-!!
-!!-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
-!!
-!!        Updated entry points to support changes made to the DAF
-!!        system that utilize the new handle manager. See
-!!        the $Revisions section of DAFANA for a detailed
-!!        discussion of the changes.
-!!
-!!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!! ## Index Entries
-!!
-!!     continue adding data to a DAF
-!!     select a DAF to continue adding data to
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -20642,16 +19003,6 @@ contains
 !
 !     Find arrays in a DAF.
 !
-! $ Required_Reading
-!
-!     DAF
-!
-! $ Keywords
-!
-!     FILES
-!
-! $ Declarations
-
 ! $ Detailed_Input
 !
 !     HANDLE   on input is the handle of the DAF to be searched.
@@ -21675,25 +20026,6 @@ contains
 !
 !-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
 !
-!-&
-
-! $ Index_Entries
-!
-!     find DAF array
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
-
-!
-!     Local variables
-!
 
 !
 !     State variables.
@@ -21764,276 +20096,245 @@ contains
 !
 
 !
-!     Other local variables
-!
-
-!
 !     Save everything between calls
-!
-
-!
-!     Initial values
 !
 
 !
 !     Standard SPICE error handling.
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DAF on which a forward
+      !>              search is to be conducted.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input handle is invalid, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     2)  If the first summary record of the DAF file cannot be read,
+      !>         the error SPICE(RECORDNOTFOUND) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     See DAFFA.
+      !>
+      !> ## Examples
+      !>
+      !>     1) See DAFFA.
+      !>
+      !>     2) Create a simple program to output the double precision and
+      !>        integer values stored in an SPK's segment's descriptors. This
+      !>        program opens a DAF for read, performs a forwards search for
+      !>        the DAF arrays, prints the segment description for each array
+      !>        found, then closes the DAF.
+      !>
+      !>        Use the SPK kernel below as input DAF file for the program.
+      !>
+      !>           de421.bsp
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFBFS_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Define the summary parameters appropriate
+      !>        C     for an SPK file.
+      !>        C
+      !>              INTEGER               MAXSUM
+      !>              PARAMETER           ( MAXSUM = 125 )
+      !>
+      !>              INTEGER               ND
+      !>              PARAMETER           ( ND = 2 )
+      !>
+      !>              INTEGER               NI
+      !>              PARAMETER           ( NI = 6 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(32)        KERNEL
+      !>
+      !>              DOUBLE PRECISION      DC ( ND     )
+      !>              DOUBLE PRECISION      SUM( MAXSUM )
+      !>
+      !>              INTEGER               HANDLE
+      !>              INTEGER               IC( NI )
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Open a DAF for read. Return a HANDLE referring to the
+      !>        C     file.
+      !>        C
+      !>              KERNEL = 'de421.bsp'
+      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a forward search on the file.
+      !>        C
+      !>              CALL DAFBFS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Search until a DAF array is found.
+      !>        C
+      !>              CALL DAFFNA ( FOUND )
+      !>
+      !>        C
+      !>        C     Loop while the search finds subsequent DAF arrays.
+      !>        C
+      !>              DO WHILE ( FOUND )
+      !>
+      !>                 CALL DAFGS ( SUM )
+      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>
+      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>
+      !>        C
+      !>        C        Check for another segment.
+      !>        C
+      !>                 CALL DAFFNA ( FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Safely close the DAF.
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        1        0        1        2      641   310404
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        2        0        1        2   310405   423048
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        3        0        1        2   423049   567372
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        4        0        1        2   567373   628976
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        5        0        1        2   628977   674740
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        6        0        1        2   674741   715224
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        7        0        1        2   715225   750428
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        8        0        1        2   750429   785632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        9        0        1        2   785633   820836
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:       10        0        1        2   820837   944040
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      301        3        1        2   944041  1521324
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      399        3        1        2  1521325  2098608
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      199        1        1        2  2098609  2098620
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      299        2        1        2  2098621  2098632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      499        4        1        2  2098633  2098644
+      !>
+      !>        Note, the final entries in the integer array contains the
+      !>        segment start/end indexes. The output indicates the search
+      !>        proceeded from the start of the file (low value index) towards
+      !>        the end (high value index).
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Calls that do or may change DAF addresses of DAF summaries,
+      !>         names, or data of a given DAF file should not be made during
+      !>         a search of that file initiated by either DAFBFS or DAFBBS.
+      !>         No such changes should be made between the start of a search
+      !>         and calls to any entry point that reads or writes to the
+      !>         summary of the "current array" found by that search, or
+      !>         that returns a "found" flag indicating whether the current
+      !>         array exists.
+      !>
+      !>         Changing the size of the comment area while a search is in
+      !>         progress can invalidate record numbers stored in local data
+      !>         structures of this routine. This can cause corrupted array
+      !>         summaries and names to be returned upon read access and file
+      !>         corruption to occur upon write access.
+      !>
+      !>         Adding arrays (aka "segments") while either a forward or
+      !>         backward search is in progress can cause the search to miss
+      !>         the new segments.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.1, 26-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Added undeclared variables to code example.
+      !>
+      !>        Updated $Restrictions section.
+      !>
+      !>-    SPICELIB Version 2.1.0, 10-OCT-2012 (EDW)
+      !>
+      !>        Added a functional code example to the $Examples section.
+      !>
+      !>        Added check on value of "found" boolean returned from
+      !>        DAFGSR calls. Failure to check this value can cause an
+      !>        infinite loop during segment searches on damaged SPKs.
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Updated to support simultaneous searches of multiple DAFs.
+      !>
+      !>        This routine now operates on the current DAF---the one at
+      !>        the head of the active list. All saved state variables
+      !>        used by this routine are now part of the state table, or
+      !>        its associated set of pointers.
+      !>
+      !>        Also, the $Exceptions section was filled out.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafbfs
-!! ## Abstract
-!!
-!!     Begin a forward search for arrays in a DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle of a DAF on which a forward
-!!              search is to be conducted.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the input handle is invalid, an error is signaled by a
-!!         routine in the call tree of this routine.
-!!
-!!     2)  If the first summary record of the DAF file cannot be read,
-!!         the error SPICE(RECORDNOTFOUND) is signaled.
-!!
-!! ## Files
-!!
-!!     See argument HANDLE.
-!!
-!! ## Particulars
-!!
-!!     See DAFFA.
-!!
-!! ## Examples
-!!
-!!     1) See DAFFA.
-!!
-!!     2) Create a simple program to output the double precision and
-!!        integer values stored in an SPK's segment's descriptors. This
-!!        program opens a DAF for read, performs a forwards search for
-!!        the DAF arrays, prints the segment description for each array
-!!        found, then closes the DAF.
-!!
-!!        Use the SPK kernel below as input DAF file for the program.
-!!
-!!           de421.bsp
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DAFBFS_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Define the summary parameters appropriate
-!!        C     for an SPK file.
-!!        C
-!!              INTEGER               MAXSUM
-!!              PARAMETER           ( MAXSUM = 125 )
-!!
-!!              INTEGER               ND
-!!              PARAMETER           ( ND = 2 )
-!!
-!!              INTEGER               NI
-!!              PARAMETER           ( NI = 6 )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(32)        KERNEL
-!!
-!!              DOUBLE PRECISION      DC ( ND     )
-!!              DOUBLE PRECISION      SUM( MAXSUM )
-!!
-!!              INTEGER               HANDLE
-!!              INTEGER               IC( NI )
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Open a DAF for read. Return a HANDLE referring to the
-!!        C     file.
-!!        C
-!!              KERNEL = 'de421.bsp'
-!!              CALL DAFOPR ( KERNEL, HANDLE )
-!!
-!!        C
-!!        C     Begin a forward search on the file.
-!!        C
-!!              CALL DAFBFS ( HANDLE )
-!!
-!!        C
-!!        C     Search until a DAF array is found.
-!!        C
-!!              CALL DAFFNA ( FOUND )
-!!
-!!        C
-!!        C     Loop while the search finds subsequent DAF arrays.
-!!        C
-!!              DO WHILE ( FOUND )
-!!
-!!                 CALL DAFGS ( SUM )
-!!                 CALL DAFUS ( SUM, ND, NI, DC, IC )
-!!
-!!                 WRITE(*,*)                'Doubles:', DC(1:ND)
-!!                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
-!!
-!!        C
-!!        C        Check for another segment.
-!!        C
-!!                 CALL DAFFNA ( FOUND )
-!!
-!!              END DO
-!!
-!!        C
-!!        C     Safely close the DAF.
-!!        C
-!!              CALL DAFCLS ( HANDLE )
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        1        0        1        2      641   310404
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        2        0        1        2   310405   423048
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        3        0        1        2   423049   567372
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        4        0        1        2   567373   628976
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        5        0        1        2   628977   674740
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        6        0        1        2   674741   715224
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        7        0        1        2   715225   750428
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        8        0        1        2   750429   785632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        9        0        1        2   785633   820836
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:       10        0        1        2   820837   944040
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      301        3        1        2   944041  1521324
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      399        3        1        2  1521325  2098608
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      199        1        1        2  2098609  2098620
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      299        2        1        2  2098621  2098632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      499        4        1        2  2098633  2098644
-!!
-!!        Note, the final entries in the integer array contains the
-!!        segment start/end indexes. The output indicates the search
-!!        proceeded from the start of the file (low value index) towards
-!!        the end (high value index).
-!!
-!! ## Restrictions
-!!
-!!     1)  Calls that do or may change DAF addresses of DAF summaries,
-!!         names, or data of a given DAF file should not be made during
-!!         a search of that file initiated by either DAFBFS or DAFBBS.
-!!         No such changes should be made between the start of a search
-!!         and calls to any entry point that reads or writes to the
-!!         summary of the "current array" found by that search, or
-!!         that returns a "found" flag indicating whether the current
-!!         array exists.
-!!
-!!         Changing the size of the comment area while a search is in
-!!         progress can invalidate record numbers stored in local data
-!!         structures of this routine. This can cause corrupted array
-!!         summaries and names to be returned upon read access and file
-!!         corruption to occur upon write access.
-!!
-!!         Adding arrays (aka "segments") while either a forward or
-!!         backward search is in progress can cause the search to miss
-!!         the new segments.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.1.1, 26-OCT-2021 (JDR) (NJB)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Added undeclared variables to code example.
-!!
-!!        Updated $Restrictions section.
-!!
-!!-    SPICELIB Version 2.1.0, 10-OCT-2012 (EDW)
-!!
-!!        Added a functional code example to the $Examples section.
-!!
-!!        Added check on value of "found" boolean returned from
-!!        DAFGSR calls. Failure to check this value can cause an
-!!        infinite loop during segment searches on damaged SPKs.
-!!
-!!        Eliminated unneeded $Revisions section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Updated to support simultaneous searches of multiple DAFs.
-!!
-!!        This routine now operates on the current DAF---the one at
-!!        the head of the active list. All saved state variables
-!!        used by this routine are now part of the state table, or
-!!        its associated set of pointers.
-!!
-!!        Also, the $Exceptions section was filled out.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     begin DAF forward search
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -22187,7 +20488,6 @@ contains
 
       if ( .not. fnd ) then
 
-
          call ctx%setmsg ( 'Attempt to read descriptor record # '    // &
                        'of DAF ''#'' failed; record was '        // &
                        'not found. This condition may indicate ' // &
@@ -22221,270 +20521,247 @@ contains
       end associate
       end procedure dafbfs
 
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     FOUND    is .TRUE. if an array was found, and is .FALSE. if,
+      !>              when this routine is called, the current array is
+      !>              the tail of the array list. (Recall that the
+      !>              arrays in a DAF may be viewed as a doubly linked
+      !>              list, with the tail being the last array in the file.)
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If this routine is called before a search is begun, the
+      !>         error SPICE(DAFNOSEARCH) is signaled.
+      !>
+      !>     2)  If the DAF to be searched has actually been closed, an error
+      !>         is signaled by a routine in the call tree of this routine.
+      !>
+      !>     3)  If the end of the array list has already been reached when
+      !>         this routine is called, this routine has no effect.
+      !>
+      !>     4)  If the summary record of the next array (aka "segment") in
+      !>         the DAF file cannot be read, the error SPICE(RECORDNOTFOUND)
+      !>         is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     See DAFFA.
+      !>
+      !> ## Examples
+      !>
+      !>     1) See DAFFA.
+      !>
+      !>     2) Use a simple routine to output the double precision and
+      !>        integer values stored in an SPK's segment's descriptors. This
+      !>        function opens a DAF for read, performs a forwards search for
+      !>        the DAF arrays, prints the segment descriptor for each array
+      !>        found, then closes the DAF.
+      !>
+      !>        Use the SPK kernel below as input DAF file for the program.
+      !>
+      !>           de421.bsp
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFFNA_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Define the summary parameters appropriate
+      !>        C     for an SPK file.
+      !>        C
+      !>              INTEGER               MAXSUM
+      !>              PARAMETER           ( MAXSUM = 125 )
+      !>
+      !>              INTEGER               ND
+      !>              PARAMETER           ( ND = 2 )
+      !>
+      !>              INTEGER               NI
+      !>              PARAMETER           ( NI = 6 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(32)        KERNEL
+      !>
+      !>              DOUBLE PRECISION      DC ( ND     )
+      !>              DOUBLE PRECISION      SUM( MAXSUM )
+      !>
+      !>              INTEGER               HANDLE
+      !>              INTEGER               IC( NI )
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Open a DAF for read. Return a HANDLE referring to the
+      !>        C     file.
+      !>        C
+      !>              KERNEL = 'de421.bsp'
+      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a forward search on the file.
+      !>        C
+      !>              CALL DAFBFS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Search until a DAF array is found.
+      !>        C
+      !>              CALL DAFFNA ( FOUND )
+      !>
+      !>        C
+      !>        C     Loop while the search finds subsequent DAF arrays.
+      !>        C
+      !>              DO WHILE ( FOUND )
+      !>
+      !>                 CALL DAFGS ( SUM )
+      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>
+      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>
+      !>        C
+      !>        C        Check for another segment.
+      !>        C
+      !>                 CALL DAFFNA ( FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Safely close the DAF.
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        1        0        1        2      641   310404
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        2        0        1        2   310405   423048
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        3        0        1        2   423049   567372
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        4        0        1        2   567373   628976
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        5        0        1        2   628977   674740
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        6        0        1        2   674741   715224
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        7        0        1        2   715225   750428
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        8        0        1        2   750429   785632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        9        0        1        2   785633   820836
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:       10        0        1        2   820837   944040
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      301        3        1        2   944041  1521324
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      399        3        1        2  1521325  2098608
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      199        1        1        2  2098609  2098620
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      299        2        1        2  2098621  2098632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      499        4        1        2  2098633  2098644
+      !>
+      !>        Note, the final entries in the integer array contains the
+      !>        segment start/end indexes. The output indicates the search
+      !>        proceeded from the start of the file (low value index) towards
+      !>        the end (high value index).
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Calls that do or may change DAF addresses of DAF summaries,
+      !>         names, or data of a given DAF file should not be made during
+      !>         a search of that file initiated by either DAFBFS or DAFBBS.
+      !>         No such changes should be made between the start of a search
+      !>         and calls to any entry point that reads or writes to the
+      !>         summary of the "current array" found by that search, or
+      !>         that returns a "found" flag indicating whether the current
+      !>         array exists.
+      !>
+      !>         Changing the size of the comment area while a search is in
+      !>         progress can invalidate record numbers stored in local data
+      !>         structures of this routine. This can cause corrupted array
+      !>         summaries and names to be returned upon read access and file
+      !>         corruption to occur upon write access.
+      !>
+      !>         Adding arrays (aka "segments") while either a forward or
+      !>         backward search is in progress can cause the search to miss
+      !>         the new segments.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.1, 26-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Added undeclared variables to code example.
+      !>
+      !>        Updated $Restrictions section.
+      !>
+      !>-    SPICELIB Version 2.1.0, 10-OCT-2012 (EDW)
+      !>
+      !>        Added a functional code example to the $Examples section.
+      !>
+      !>        Added check on value of "found" boolean returned from
+      !>        DAFGSR calls. Failure to check this value can cause an
+      !>        infinite loop during segment searches on damaged SPKs.
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Updated to support simultaneous searches of multiple DAFs.
+      !>
+      !>        This routine now operates on the current DAF---the one at
+      !>        the head of the active list. All saved state variables
+      !>        used by this routine are now part of the state table, or
+      !>        its associated set of pointers.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure daffna
-!! ## Abstract
-!!
-!!     Find the next (forward) array in the current DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     None.
-!!
-!! ## Detailed Output
-!!
-!!     FOUND    is .TRUE. if an array was found, and is .FALSE. if,
-!!              when this routine is called, the current array is
-!!              the tail of the array list. (Recall that the
-!!              arrays in a DAF may be viewed as a doubly linked
-!!              list, with the tail being the last array in the file.)
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If this routine is called before a search is begun, the
-!!         error SPICE(DAFNOSEARCH) is signaled.
-!!
-!!     2)  If the DAF to be searched has actually been closed, an error
-!!         is signaled by a routine in the call tree of this routine.
-!!
-!!     3)  If the end of the array list has already been reached when
-!!         this routine is called, this routine has no effect.
-!!
-!!     4)  If the summary record of the next array (aka "segment") in
-!!         the DAF file cannot be read, the error SPICE(RECORDNOTFOUND)
-!!         is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     See DAFFA.
-!!
-!! ## Examples
-!!
-!!     1) See DAFFA.
-!!
-!!     2) Use a simple routine to output the double precision and
-!!        integer values stored in an SPK's segment's descriptors. This
-!!        function opens a DAF for read, performs a forwards search for
-!!        the DAF arrays, prints the segment descriptor for each array
-!!        found, then closes the DAF.
-!!
-!!        Use the SPK kernel below as input DAF file for the program.
-!!
-!!           de421.bsp
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DAFFNA_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Define the summary parameters appropriate
-!!        C     for an SPK file.
-!!        C
-!!              INTEGER               MAXSUM
-!!              PARAMETER           ( MAXSUM = 125 )
-!!
-!!              INTEGER               ND
-!!              PARAMETER           ( ND = 2 )
-!!
-!!              INTEGER               NI
-!!              PARAMETER           ( NI = 6 )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(32)        KERNEL
-!!
-!!              DOUBLE PRECISION      DC ( ND     )
-!!              DOUBLE PRECISION      SUM( MAXSUM )
-!!
-!!              INTEGER               HANDLE
-!!              INTEGER               IC( NI )
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Open a DAF for read. Return a HANDLE referring to the
-!!        C     file.
-!!        C
-!!              KERNEL = 'de421.bsp'
-!!              CALL DAFOPR ( KERNEL, HANDLE )
-!!
-!!        C
-!!        C     Begin a forward search on the file.
-!!        C
-!!              CALL DAFBFS ( HANDLE )
-!!
-!!        C
-!!        C     Search until a DAF array is found.
-!!        C
-!!              CALL DAFFNA ( FOUND )
-!!
-!!        C
-!!        C     Loop while the search finds subsequent DAF arrays.
-!!        C
-!!              DO WHILE ( FOUND )
-!!
-!!                 CALL DAFGS ( SUM )
-!!                 CALL DAFUS ( SUM, ND, NI, DC, IC )
-!!
-!!                 WRITE(*,*)                'Doubles:', DC(1:ND)
-!!                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
-!!
-!!        C
-!!        C        Check for another segment.
-!!        C
-!!                 CALL DAFFNA ( FOUND )
-!!
-!!              END DO
-!!
-!!        C
-!!        C     Safely close the DAF.
-!!        C
-!!              CALL DAFCLS ( HANDLE )
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        1        0        1        2      641   310404
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        2        0        1        2   310405   423048
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        3        0        1        2   423049   567372
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        4        0        1        2   567373   628976
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        5        0        1        2   628977   674740
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        6        0        1        2   674741   715224
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        7        0        1        2   715225   750428
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        8        0        1        2   750429   785632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        9        0        1        2   785633   820836
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:       10        0        1        2   820837   944040
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      301        3        1        2   944041  1521324
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      399        3        1        2  1521325  2098608
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      199        1        1        2  2098609  2098620
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      299        2        1        2  2098621  2098632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      499        4        1        2  2098633  2098644
-!!
-!!        Note, the final entries in the integer array contains the
-!!        segment start/end indexes. The output indicates the search
-!!        proceeded from the start of the file (low value index) towards
-!!        the end (high value index).
-!!
-!! ## Restrictions
-!!
-!!     1)  Calls that do or may change DAF addresses of DAF summaries,
-!!         names, or data of a given DAF file should not be made during
-!!         a search of that file initiated by either DAFBFS or DAFBBS.
-!!         No such changes should be made between the start of a search
-!!         and calls to any entry point that reads or writes to the
-!!         summary of the "current array" found by that search, or
-!!         that returns a "found" flag indicating whether the current
-!!         array exists.
-!!
-!!         Changing the size of the comment area while a search is in
-!!         progress can invalidate record numbers stored in local data
-!!         structures of this routine. This can cause corrupted array
-!!         summaries and names to be returned upon read access and file
-!!         corruption to occur upon write access.
-!!
-!!         Adding arrays (aka "segments") while either a forward or
-!!         backward search is in progress can cause the search to miss
-!!         the new segments.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.1.1, 26-OCT-2021 (JDR) (NJB)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Added undeclared variables to code example.
-!!
-!!        Updated $Restrictions section.
-!!
-!!-    SPICELIB Version 2.1.0, 10-OCT-2012 (EDW)
-!!
-!!        Added a functional code example to the $Examples section.
-!!
-!!        Added check on value of "found" boolean returned from
-!!        DAFGSR calls. Failure to check this value can cause an
-!!        infinite loop during segment searches on damaged SPKs.
-!!
-!!        Eliminated unneeded $Revisions section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Updated to support simultaneous searches of multiple DAFs.
-!!
-!!        This routine now operates on the current DAF---the one at
-!!        the head of the active list. All saved state variables
-!!        used by this routine are now part of the state table, or
-!!        its associated set of pointers.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     find next DAF array
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -22591,7 +20868,6 @@ contains
 
             if ( .not. fnd ) then
 
-
                call ctx%setmsg ( 'Attempt to read descriptor record # '   // &
                              'of DAF ''#'' failed; record was '       // &
                              'not found. This condition may indicate '// &
@@ -22626,262 +20902,239 @@ contains
       end associate
       end procedure daffna
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DAF on which a backward
+      !>              search is to be conducted.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input handle is invalid, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     2)  If the last summary record of the DAF file cannot be read,
+      !>         the error SPICE(RECORDNOTFOUND) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See argument HANDLE.
+      !>
+      !> ## Particulars
+      !>
+      !>     See DAFFA.
+      !>
+      !> ## Examples
+      !>
+      !>     1) See DAFFA.
+      !>
+      !>     2) Create a simple routine to output the double precision and
+      !>        integer values stored in an SPK's segment's descriptors. This
+      !>        program opens a DAF for read, performs a backward search for
+      !>        the DAF arrays, prints the segment descriptor for each array
+      !>        found, then closes the DAF.
+      !>
+      !>        Use the SPK kernel below as input DAF file for the program.
+      !>
+      !>           de421.bsp
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFBBS_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Define the summary parameters appropriate
+      !>        C     for an SPK file.
+      !>        C
+      !>              INTEGER               MAXSUM
+      !>              PARAMETER           ( MAXSUM = 125 )
+      !>
+      !>              INTEGER               ND
+      !>              PARAMETER           ( ND = 2 )
+      !>
+      !>              INTEGER               NI
+      !>              PARAMETER           ( NI = 6 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(32)        KERNEL
+      !>
+      !>              DOUBLE PRECISION      DC ( ND     )
+      !>              DOUBLE PRECISION      SUM( MAXSUM )
+      !>
+      !>              INTEGER               HANDLE
+      !>              INTEGER               IC( NI )
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Open a DAF for read. Return a HANDLE referring to the
+      !>        C     file.
+      !>        C
+      !>              KERNEL = 'de421.bsp'
+      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a backward search on the file.
+      !>        C
+      !>              CALL DAFBBS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Search until a DAF array is found.
+      !>        C
+      !>              CALL DAFFPA ( FOUND )
+      !>
+      !>        C
+      !>        C     Loop while the search finds subsequent DAF arrays.
+      !>        C
+      !>              DO WHILE ( FOUND )
+      !>
+      !>                 CALL DAFGS ( SUM )
+      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>
+      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>
+      !>        C
+      !>        C        Check for another segment.
+      !>        C
+      !>                 CALL DAFFPA ( FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Safely close the DAF.
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      499        4        1        2  2098633  2098644
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      299        2        1        2  2098621  2098632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      199        1        1        2  2098609  2098620
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      399        3        1        2  1521325  2098608
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      301        3        1        2   944041  1521324
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:       10        0        1        2   820837   944040
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        9        0        1        2   785633   820836
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        8        0        1        2   750429   785632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        7        0        1        2   715225   750428
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        6        0        1        2   674741   715224
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        5        0        1        2   628977   674740
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        4        0        1        2   567373   628976
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        3        0        1        2   423049   567372
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        2        0        1        2   310405   423048
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        1        0        1        2      641   310404
+      !>
+      !>        Note, the final entries in the integer arrays record the
+      !>        segment start/end indexes. The output indicates the search
+      !>        proceeded from the end of the file (high value index) towards
+      !>        the beginning (low value index).
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Calls that do or may change DAF addresses of DAF summaries,
+      !>         names, or data of a given DAF file should not be made during
+      !>         a search of that file initiated by either DAFBFS or DAFBBS.
+      !>         No such changes should be made between the start of a search
+      !>         and calls to any entry point that reads or writes to the
+      !>         summary of the "current array" found by that search, or
+      !>         that returns a "found" flag indicating whether the current
+      !>         array exists.
+      !>
+      !>         Changing the size of the comment area while a search is in
+      !>         progress can invalidate record numbers stored in local data
+      !>         structures of this routine. This can cause corrupted array
+      !>         summaries and names to be returned upon read access and file
+      !>         corruption to occur upon write access.
+      !>
+      !>         Adding arrays (aka "segments") while either a forward or
+      !>         backward search is in progress can cause the search to miss
+      !>         the new segments.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.1, 26-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Added undeclared variables to code example.
+      !>
+      !>        Updated $Restrictions section.
+      !>
+      !>-    SPICELIB Version 2.1.0, 10-OCT-2012 (EDW)
+      !>
+      !>        Added a functional code example to the $Examples section.
+      !>
+      !>        Added check on value of "found" boolean returned from
+      !>        DAFGSR calls. Failure to check this value can cause an
+      !>        infinite loop during segment searches on damaged SPKs.
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Updated to support simultaneous searches of multiple DAFs.
+      !>
+      !>        This routine now makes the DAF designated by HANDLE the
+      !>        current DAF---the one at the head of the active list. All
+      !>        saved state variables used by this routine are now part of the
+      !>        state table, or its associated set of pointers.
+      !>
+      !>        Also, the $Exceptions section was filled out.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafbbs
-!! ## Abstract
-!!
-!!     Begin a backward search for arrays in a DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle of a DAF on which a backward
-!!              search is to be conducted.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the input handle is invalid, an error is signaled by a
-!!         routine in the call tree of this routine.
-!!
-!!     2)  If the last summary record of the DAF file cannot be read,
-!!         the error SPICE(RECORDNOTFOUND) is signaled.
-!!
-!! ## Files
-!!
-!!     See argument HANDLE.
-!!
-!! ## Particulars
-!!
-!!     See DAFFA.
-!!
-!! ## Examples
-!!
-!!     1) See DAFFA.
-!!
-!!     2) Create a simple routine to output the double precision and
-!!        integer values stored in an SPK's segment's descriptors. This
-!!        program opens a DAF for read, performs a backward search for
-!!        the DAF arrays, prints the segment descriptor for each array
-!!        found, then closes the DAF.
-!!
-!!        Use the SPK kernel below as input DAF file for the program.
-!!
-!!           de421.bsp
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DAFBBS_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Define the summary parameters appropriate
-!!        C     for an SPK file.
-!!        C
-!!              INTEGER               MAXSUM
-!!              PARAMETER           ( MAXSUM = 125 )
-!!
-!!              INTEGER               ND
-!!              PARAMETER           ( ND = 2 )
-!!
-!!              INTEGER               NI
-!!              PARAMETER           ( NI = 6 )
-!!
-!!        C
-!!        C     Local variables
-!!        C
-!!              CHARACTER*(32)        KERNEL
-!!
-!!              DOUBLE PRECISION      DC ( ND     )
-!!              DOUBLE PRECISION      SUM( MAXSUM )
-!!
-!!              INTEGER               HANDLE
-!!              INTEGER               IC( NI )
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Open a DAF for read. Return a HANDLE referring to the
-!!        C     file.
-!!        C
-!!              KERNEL = 'de421.bsp'
-!!              CALL DAFOPR ( KERNEL, HANDLE )
-!!
-!!        C
-!!        C     Begin a backward search on the file.
-!!        C
-!!              CALL DAFBBS ( HANDLE )
-!!
-!!        C
-!!        C     Search until a DAF array is found.
-!!        C
-!!              CALL DAFFPA ( FOUND )
-!!
-!!        C
-!!        C     Loop while the search finds subsequent DAF arrays.
-!!        C
-!!              DO WHILE ( FOUND )
-!!
-!!                 CALL DAFGS ( SUM )
-!!                 CALL DAFUS ( SUM, ND, NI, DC, IC )
-!!
-!!                 WRITE(*,*)                'Doubles:', DC(1:ND)
-!!                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
-!!
-!!        C
-!!        C        Check for another segment.
-!!        C
-!!                 CALL DAFFPA ( FOUND )
-!!
-!!              END DO
-!!
-!!        C
-!!        C     Safely close the DAF.
-!!        C
-!!              CALL DAFCLS ( HANDLE )
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      499        4        1        2  2098633  2098644
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      299        2        1        2  2098621  2098632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      199        1        1        2  2098609  2098620
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      399        3        1        2  1521325  2098608
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      301        3        1        2   944041  1521324
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:       10        0        1        2   820837   944040
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        9        0        1        2   785633   820836
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        8        0        1        2   750429   785632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        7        0        1        2   715225   750428
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        6        0        1        2   674741   715224
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        5        0        1        2   628977   674740
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        4        0        1        2   567373   628976
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        3        0        1        2   423049   567372
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        2        0        1        2   310405   423048
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        1        0        1        2      641   310404
-!!
-!!        Note, the final entries in the integer arrays record the
-!!        segment start/end indexes. The output indicates the search
-!!        proceeded from the end of the file (high value index) towards
-!!        the beginning (low value index).
-!!
-!! ## Restrictions
-!!
-!!     1)  Calls that do or may change DAF addresses of DAF summaries,
-!!         names, or data of a given DAF file should not be made during
-!!         a search of that file initiated by either DAFBFS or DAFBBS.
-!!         No such changes should be made between the start of a search
-!!         and calls to any entry point that reads or writes to the
-!!         summary of the "current array" found by that search, or
-!!         that returns a "found" flag indicating whether the current
-!!         array exists.
-!!
-!!         Changing the size of the comment area while a search is in
-!!         progress can invalidate record numbers stored in local data
-!!         structures of this routine. This can cause corrupted array
-!!         summaries and names to be returned upon read access and file
-!!         corruption to occur upon write access.
-!!
-!!         Adding arrays (aka "segments") while either a forward or
-!!         backward search is in progress can cause the search to miss
-!!         the new segments.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.1.1, 26-OCT-2021 (JDR) (NJB)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Added undeclared variables to code example.
-!!
-!!        Updated $Restrictions section.
-!!
-!!-    SPICELIB Version 2.1.0, 10-OCT-2012 (EDW)
-!!
-!!        Added a functional code example to the $Examples section.
-!!
-!!        Added check on value of "found" boolean returned from
-!!        DAFGSR calls. Failure to check this value can cause an
-!!        infinite loop during segment searches on damaged SPKs.
-!!
-!!        Eliminated unneeded $Revisions section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Updated to support simultaneous searches of multiple DAFs.
-!!
-!!        This routine now makes the DAF designated by HANDLE the
-!!        current DAF---the one at the head of the active list. All
-!!        saved state variables used by this routine are now part of the
-!!        state table, or its associated set of pointers.
-!!
-!!        Also, the $Exceptions section was filled out.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     begin DAF backward search
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -23034,7 +21287,6 @@ contains
 
       if ( .not. fnd ) then
 
-
          call ctx%setmsg ( 'Attempt to read descriptor record # '    // &
                        'of DAF ''#'' failed; record was '        // &
                        'not found. This condition may indicate ' // &
@@ -23063,285 +21315,262 @@ contains
       end associate
       end procedure dafbbs
 
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     FOUND    is .TRUE. if an array was found, and is .FALSE. if,
+      !>              when this routine is called, the current array is
+      !>              the head of the array list. (Recall that the
+      !>              arrays in a DAF may be viewed as a doubly linked
+      !>              list, with the head being the first array in the
+      !>              file.)
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If this routine is called before a search is begun, the
+      !>         error SPICE(DAFNOSEARCH) is signaled.
+      !>
+      !>     2)  If the DAF to be searched has actually been closed, an error
+      !>         is signaled by a routine in the call tree of this routine.
+      !>
+      !>     3)  If the beginning of the array list has already been reached
+      !>         when this routine is called, this routine will not change the
+      !>         current array. FOUND will be false on output.
+      !>
+      !>     4)  If the summary record of the previous array (aka "segment")
+      !>         in the DAF file cannot be read, the error
+      !>         SPICE(RECORDNOTFOUND) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     See DAFFA.
+      !>
+      !> ## Examples
+      !>
+      !>     1) See DAFFA.
+      !>
+      !>     2) Use a simple routine to output the double precision and
+      !>        integer values stored in an SPK's segment's descriptors. This
+      !>        function opens a DAF for read, performs a backward search for
+      !>        the DAF arrays, prints the segment descriptor for each array
+      !>        found, then closes the DAF.
+      !>
+      !>        Use the SPK kernel below as input DAF file for the program.
+      !>
+      !>           de421.bsp
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFFPA_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Define the summary parameters appropriate
+      !>        C     for an SPK file.
+      !>        C
+      !>              INTEGER               MAXSUM
+      !>              PARAMETER           ( MAXSUM = 125 )
+      !>
+      !>              INTEGER               ND
+      !>              PARAMETER           ( ND = 2 )
+      !>
+      !>              INTEGER               NI
+      !>              PARAMETER           ( NI = 6 )
+      !>
+      !>        C
+      !>        C     Local variables
+      !>        C
+      !>              CHARACTER*(32)        KERNEL
+      !>
+      !>              DOUBLE PRECISION      DC ( ND     )
+      !>              DOUBLE PRECISION      SUM( MAXSUM )
+      !>
+      !>              INTEGER               HANDLE
+      !>              INTEGER               IC( NI )
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Open a DAF for read. Return a HANDLE referring to the
+      !>        C     file.
+      !>        C
+      !>              KERNEL = 'de421.bsp'
+      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a backward search on the file.
+      !>        C
+      !>              CALL DAFBBS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Search until a DAF array is found.
+      !>        C
+      !>              CALL DAFFPA ( FOUND )
+      !>
+      !>        C
+      !>        C     Loop while the search finds subsequent DAF arrays.
+      !>        C
+      !>              DO WHILE ( FOUND )
+      !>
+      !>                 CALL DAFGS ( SUM )
+      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>
+      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>
+      !>        C
+      !>        C        Check for another segment.
+      !>        C
+      !>                 CALL DAFFPA ( FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Safely close the DAF.
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      499        4        1        2  2098633  2098644
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      299        2        1        2  2098621  2098632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      199        1        1        2  2098609  2098620
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      399        3        1        2  1521325  2098608
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      301        3        1        2   944041  1521324
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:       10        0        1        2   820837   944040
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        9        0        1        2   785633   820836
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        8        0        1        2   750429   785632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        7        0        1        2   715225   750428
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        6        0        1        2   674741   715224
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        5        0        1        2   628977   674740
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        4        0        1        2   567373   628976
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        3        0        1        2   423049   567372
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        2        0        1        2   310405   423048
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        1        0        1        2      641   310404
+      !>
+      !>        Note, the final entries in the integer arrays record the
+      !>        segment start/end indexes. The output indicates the search
+      !>        proceeded from the end of the file (high value index) towards
+      !>        the beginning (low value index).
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Calls that do or may change DAF addresses of DAF summaries,
+      !>         names, or data of a given DAF file should not be made during
+      !>         a search of that file initiated by either DAFBFS or DAFBBS.
+      !>         No such changes should be made between the start of a search
+      !>         and calls to any entry point that reads or writes to the
+      !>         summary of the "current array" found by that search, or
+      !>         that returns a "found" flag indicating whether the current
+      !>         array exists.
+      !>
+      !>         Changing the size of the comment area while a search is in
+      !>         progress can invalidate record numbers stored in local data
+      !>         structures of this routine. This can cause corrupted array
+      !>         summaries and names to be returned upon read access and file
+      !>         corruption to occur upon write access.
+      !>
+      !>         Adding arrays (aka "segments") while either a forward or
+      !>         backward search is in progress can cause the search to miss
+      !>         the new segments.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.1, 26-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Added undeclared variables to code example.
+      !>
+      !>        Updated $Restrictions section.
+      !>
+      !>-    SPICELIB Version 2.1.0, 10-OCT-2012 (EDW)
+      !>
+      !>        Added a functional code example to the $Examples section.
+      !>
+      !>        Added check on value of "found" boolean returned from
+      !>        DAFGSR calls. Failure to check this value can cause an
+      !>        infinite loop during segment searches on damaged SPKs.
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Updated to support simultaneous searches of multiple DAFs.
+      !>
+      !>        This routine now operates on the current DAF---the one at
+      !>        the head of the active list. All saved state variables
+      !>        used by this routine are now part of the state table, or
+      !>        its associated set of pointers.
+      !>
+      !>        Also, a bug fix was made to the array pointer adjustment
+      !>        algorithm: the pointer is no longer decremented if it
+      !>        is already less than 1 and the array summary pointer
+      !>        is already pointing to the first array summary. In
+      !>        addition, a test made to detect this condition was fixed:
+      !>        the test
+      !>
+      !>           CURR .EQ. 0
+      !>
+      !>        was replaced by
+      !>
+      !>           STCURR(P) .LE. 0
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure daffpa
-!! ## Abstract
-!!
-!!     Find the previous (backward) array in the current DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     LOGICAL               FOUND
-!!
-!! ## Detailed Input
-!!
-!!     None.
-!!
-!! ## Detailed Output
-!!
-!!     FOUND    is .TRUE. if an array was found, and is .FALSE. if,
-!!              when this routine is called, the current array is
-!!              the head of the array list. (Recall that the
-!!              arrays in a DAF may be viewed as a doubly linked
-!!              list, with the head being the first array in the
-!!              file.)
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If this routine is called before a search is begun, the
-!!         error SPICE(DAFNOSEARCH) is signaled.
-!!
-!!     2)  If the DAF to be searched has actually been closed, an error
-!!         is signaled by a routine in the call tree of this routine.
-!!
-!!     3)  If the beginning of the array list has already been reached
-!!         when this routine is called, this routine will not change the
-!!         current array. FOUND will be false on output.
-!!
-!!     4)  If the summary record of the previous array (aka "segment")
-!!         in the DAF file cannot be read, the error
-!!         SPICE(RECORDNOTFOUND) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     See DAFFA.
-!!
-!! ## Examples
-!!
-!!     1) See DAFFA.
-!!
-!!     2) Use a simple routine to output the double precision and
-!!        integer values stored in an SPK's segment's descriptors. This
-!!        function opens a DAF for read, performs a backward search for
-!!        the DAF arrays, prints the segment descriptor for each array
-!!        found, then closes the DAF.
-!!
-!!        Use the SPK kernel below as input DAF file for the program.
-!!
-!!           de421.bsp
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DAFFPA_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Define the summary parameters appropriate
-!!        C     for an SPK file.
-!!        C
-!!              INTEGER               MAXSUM
-!!              PARAMETER           ( MAXSUM = 125 )
-!!
-!!              INTEGER               ND
-!!              PARAMETER           ( ND = 2 )
-!!
-!!              INTEGER               NI
-!!              PARAMETER           ( NI = 6 )
-!!
-!!        C
-!!        C     Local variables
-!!        C
-!!              CHARACTER*(32)        KERNEL
-!!
-!!              DOUBLE PRECISION      DC ( ND     )
-!!              DOUBLE PRECISION      SUM( MAXSUM )
-!!
-!!              INTEGER               HANDLE
-!!              INTEGER               IC( NI )
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Open a DAF for read. Return a HANDLE referring to the
-!!        C     file.
-!!        C
-!!              KERNEL = 'de421.bsp'
-!!              CALL DAFOPR ( KERNEL, HANDLE )
-!!
-!!        C
-!!        C     Begin a backward search on the file.
-!!        C
-!!              CALL DAFBBS ( HANDLE )
-!!
-!!        C
-!!        C     Search until a DAF array is found.
-!!        C
-!!              CALL DAFFPA ( FOUND )
-!!
-!!        C
-!!        C     Loop while the search finds subsequent DAF arrays.
-!!        C
-!!              DO WHILE ( FOUND )
-!!
-!!                 CALL DAFGS ( SUM )
-!!                 CALL DAFUS ( SUM, ND, NI, DC, IC )
-!!
-!!                 WRITE(*,*)                'Doubles:', DC(1:ND)
-!!                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
-!!
-!!        C
-!!        C        Check for another segment.
-!!        C
-!!                 CALL DAFFPA ( FOUND )
-!!
-!!              END DO
-!!
-!!        C
-!!        C     Safely close the DAF.
-!!        C
-!!              CALL DAFCLS ( HANDLE )
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      499        4        1        2  2098633  2098644
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      299        2        1        2  2098621  2098632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      199        1        1        2  2098609  2098620
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      399        3        1        2  1521325  2098608
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      301        3        1        2   944041  1521324
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:       10        0        1        2   820837   944040
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        9        0        1        2   785633   820836
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        8        0        1        2   750429   785632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        7        0        1        2   715225   750428
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        6        0        1        2   674741   715224
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        5        0        1        2   628977   674740
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        4        0        1        2   567373   628976
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        3        0        1        2   423049   567372
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        2        0        1        2   310405   423048
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        1        0        1        2      641   310404
-!!
-!!        Note, the final entries in the integer arrays record the
-!!        segment start/end indexes. The output indicates the search
-!!        proceeded from the end of the file (high value index) towards
-!!        the beginning (low value index).
-!!
-!! ## Restrictions
-!!
-!!     1)  Calls that do or may change DAF addresses of DAF summaries,
-!!         names, or data of a given DAF file should not be made during
-!!         a search of that file initiated by either DAFBFS or DAFBBS.
-!!         No such changes should be made between the start of a search
-!!         and calls to any entry point that reads or writes to the
-!!         summary of the "current array" found by that search, or
-!!         that returns a "found" flag indicating whether the current
-!!         array exists.
-!!
-!!         Changing the size of the comment area while a search is in
-!!         progress can invalidate record numbers stored in local data
-!!         structures of this routine. This can cause corrupted array
-!!         summaries and names to be returned upon read access and file
-!!         corruption to occur upon write access.
-!!
-!!         Adding arrays (aka "segments") while either a forward or
-!!         backward search is in progress can cause the search to miss
-!!         the new segments.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.1.1, 26-OCT-2021 (JDR) (NJB)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Added undeclared variables to code example.
-!!
-!!        Updated $Restrictions section.
-!!
-!!-    SPICELIB Version 2.1.0, 10-OCT-2012 (EDW)
-!!
-!!        Added a functional code example to the $Examples section.
-!!
-!!        Added check on value of "found" boolean returned from
-!!        DAFGSR calls. Failure to check this value can cause an
-!!        infinite loop during segment searches on damaged SPKs.
-!!
-!!        Eliminated unneeded $Revisions section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Updated to support simultaneous searches of multiple DAFs.
-!!
-!!        This routine now operates on the current DAF---the one at
-!!        the head of the active list. All saved state variables
-!!        used by this routine are now part of the state table, or
-!!        its associated set of pointers.
-!!
-!!        Also, a bug fix was made to the array pointer adjustment
-!!        algorithm: the pointer is no longer decremented if it
-!!        is already less than 1 and the array summary pointer
-!!        is already pointing to the first array summary. In
-!!        addition, a test made to detect this condition was fixed:
-!!        the test
-!!
-!!           CURR .EQ. 0
-!!
-!!        was replaced by
-!!
-!!           STCURR(P) .LE. 0
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     find previous DAF array
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -23447,7 +21676,6 @@ contains
 
             if ( .not. fnd ) then
 
-
                call ctx%setmsg ( 'Attempt to read descriptor record # '   // &
                              'of DAF ''#'' failed; record was '       // &
                              'not found. This condition may indicate '// &
@@ -23482,272 +21710,248 @@ contains
       end associate
       end procedure daffpa
 
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     SUM      is the summary for the current array (the array
+      !>              found by the latest call to DAFFNA or DAFFPA).
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If this routine is called when no search is in progress in the
+      !>         the current DAF, the error SPICE(DAFNOSEARCH) is signaled.
+      !>
+      !>     2)  If the DAF for which the "current" array's summary is to be
+      !>         returned has actually been closed, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     3)  If no array is current in the current DAF, the error
+      !>         SPICE(NOCURRENTARRAY) is signaled. There is no current array
+      !>         when a search is started by DAFBFS or DAFBBS, but no calls to
+      !>         DAFFNA or DAFFPA have been made yet, or whenever DAFFNA or
+      !>         DAFFPA return the value .FALSE. in the FOUND argument.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     See DAFFA.
+      !>
+      !> ## Examples
+      !>
+      !>     1) See $Examples in DAFFA.
+      !>
+      !>     2) Use a simple routine to output the double precision and
+      !>        integer values stored in an SPK's segment's descriptors. This
+      !>        function opens a DAF for read, performs a forwards search for
+      !>        the DAF arrays, prints the segment descriptor for each array
+      !>        found, then closes the DAF.
+      !>
+      !>        Use the SPK kernel below as input DAF file for the program.
+      !>
+      !>           de421.bsp
+      !>
+      !>        Example code begins here.
+      !>
+      !>              PROGRAM DAFGS_EX1
+      !>              IMPLICIT NONE
+      !>
+      !>        C
+      !>        C     Define the summary parameters appropriate
+      !>        C     for an SPK file.
+      !>        C
+      !>              INTEGER               MAXSUM
+      !>              PARAMETER           ( MAXSUM = 125 )
+      !>
+      !>              INTEGER               ND
+      !>              PARAMETER           ( ND = 2 )
+      !>
+      !>              INTEGER               NI
+      !>              PARAMETER           ( NI = 6 )
+      !>
+      !>        C
+      !>        C     Local variables.
+      !>        C
+      !>              CHARACTER*(32)        KERNEL
+      !>
+      !>              DOUBLE PRECISION      DC ( ND     )
+      !>              DOUBLE PRECISION      SUM( MAXSUM )
+      !>
+      !>              INTEGER               HANDLE
+      !>              INTEGER               IC( NI )
+      !>
+      !>              LOGICAL               FOUND
+      !>
+      !>        C
+      !>        C     Open a DAF for read. Return a HANDLE referring to the
+      !>        C     file.
+      !>        C
+      !>              KERNEL = 'de421.bsp'
+      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>
+      !>        C
+      !>        C     Begin a forward search on the file.
+      !>        C
+      !>              CALL DAFBFS ( HANDLE )
+      !>
+      !>        C
+      !>        C     Search until a DAF array is found.
+      !>        C
+      !>              CALL DAFFNA ( FOUND )
+      !>
+      !>        C
+      !>        C     Loop while the search finds subsequent DAF arrays.
+      !>        C
+      !>              DO WHILE ( FOUND )
+      !>
+      !>                 CALL DAFGS ( SUM )
+      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>
+      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>
+      !>        C
+      !>        C        Check for another segment.
+      !>        C
+      !>                 CALL DAFFNA ( FOUND )
+      !>
+      !>              END DO
+      !>
+      !>        C
+      !>        C     Safely close the DAF.
+      !>        C
+      !>              CALL DAFCLS ( HANDLE )
+      !>
+      !>              END
+      !>
+      !>        When this program was executed on a Mac/Intel/gfortran/64-bit
+      !>        platform, the output was:
+      !>
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        1        0        1        2      641   310404
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        2        0        1        2   310405   423048
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        3        0        1        2   423049   567372
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        4        0        1        2   567373   628976
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        5        0        1        2   628977   674740
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        6        0        1        2   674741   715224
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        7        0        1        2   715225   750428
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        8        0        1        2   750429   785632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:        9        0        1        2   785633   820836
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:       10        0        1        2   820837   944040
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      301        3        1        2   944041  1521324
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      399        3        1        2  1521325  2098608
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      199        1        1        2  2098609  2098620
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      299        2        1        2  2098621  2098632
+      !>         Doubles:  -3169195200.0000000        1696852800.0000000
+      !>        Integers:      499        4        1        2  2098633  2098644
+      !>
+      !>        Note, the final entries in the integer array contains the
+      !>        segment start/end indexes. The output indicates the search
+      !>        proceeded from the start of the file (low value index) towards
+      !>        the end (high value index).
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Calls that do or may change DAF addresses of DAF summaries,
+      !>         names, or data of a given DAF file should not be made during
+      !>         a search of that file initiated by either DAFBFS or DAFBBS.
+      !>         No such changes should be made between the start of a search
+      !>         and calls to any entry point that reads or writes to the
+      !>         summary of the "current array" found by that search, or
+      !>         that returns a "found" flag indicating whether the current
+      !>         array exists.
+      !>
+      !>         Changing the size of the comment area while a search is in
+      !>         progress can invalidate record numbers stored in local data
+      !>         structures of this routine. This can cause corrupted array
+      !>         summaries and names to be returned upon read access and file
+      !>         corruption to occur upon write access.
+      !>
+      !>         Adding arrays (aka "segments") while either a forward or
+      !>         backward search is in progress can cause the search to miss
+      !>         the new segments.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.0.3, 26-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>        Added undeclared variables to code example.
+      !>
+      !>        Fixed typo in $Exceptions entry #3: DAFFPA is used to find the
+      !>        previous array, not the non existing API DAFBNA.
+      !>
+      !>        Updated $Restrictions section.
+      !>
+      !>-    SPICELIB Version 2.0.2, 10-OCT-2012 (EDW)
+      !>
+      !>        Added a functional code example to the $Examples section.
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Updated to support simultaneous searches of multiple DAFs.
+      !>        Bug fix made to handle case of having no current array.
+      !>
+      !>        This routine now operates on the current DAF---the one at
+      !>        the head of the active list. All saved state variables
+      !>        used by this routine are now part of the state table, or
+      !>        its associated set of pointers.
+      !>
+      !>        In addition, this routine now checks whether an array
+      !>        is current before trying to read its summary. The routine
+      !>        previously crashed under these conditions.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafgs
-!! ## Abstract
-!!
-!!     Return (get) the summary for the current array in the current
-!!     DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     DOUBLE PRECISION      SUM    ( * )
-!!
-!! ## Detailed Input
-!!
-!!     None.
-!!
-!! ## Detailed Output
-!!
-!!     SUM      is the summary for the current array (the array
-!!              found by the latest call to DAFFNA or DAFFPA).
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If this routine is called when no search is in progress in the
-!!         the current DAF, the error SPICE(DAFNOSEARCH) is signaled.
-!!
-!!     2)  If the DAF for which the "current" array's summary is to be
-!!         returned has actually been closed, an error is signaled by a
-!!         routine in the call tree of this routine.
-!!
-!!     3)  If no array is current in the current DAF, the error
-!!         SPICE(NOCURRENTARRAY) is signaled. There is no current array
-!!         when a search is started by DAFBFS or DAFBBS, but no calls to
-!!         DAFFNA or DAFFPA have been made yet, or whenever DAFFNA or
-!!         DAFFPA return the value .FALSE. in the FOUND argument.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     See DAFFA.
-!!
-!! ## Examples
-!!
-!!     1) See $Examples in DAFFA.
-!!
-!!     2) Use a simple routine to output the double precision and
-!!        integer values stored in an SPK's segment's descriptors. This
-!!        function opens a DAF for read, performs a forwards search for
-!!        the DAF arrays, prints the segment descriptor for each array
-!!        found, then closes the DAF.
-!!
-!!        Use the SPK kernel below as input DAF file for the program.
-!!
-!!           de421.bsp
-!!
-!!        Example code begins here.
-!!
-!!              PROGRAM DAFGS_EX1
-!!              IMPLICIT NONE
-!!
-!!        C
-!!        C     Define the summary parameters appropriate
-!!        C     for an SPK file.
-!!        C
-!!              INTEGER               MAXSUM
-!!              PARAMETER           ( MAXSUM = 125 )
-!!
-!!              INTEGER               ND
-!!              PARAMETER           ( ND = 2 )
-!!
-!!              INTEGER               NI
-!!              PARAMETER           ( NI = 6 )
-!!
-!!        C
-!!        C     Local variables.
-!!        C
-!!              CHARACTER*(32)        KERNEL
-!!
-!!              DOUBLE PRECISION      DC ( ND     )
-!!              DOUBLE PRECISION      SUM( MAXSUM )
-!!
-!!              INTEGER               HANDLE
-!!              INTEGER               IC( NI )
-!!
-!!              LOGICAL               FOUND
-!!
-!!        C
-!!        C     Open a DAF for read. Return a HANDLE referring to the
-!!        C     file.
-!!        C
-!!              KERNEL = 'de421.bsp'
-!!              CALL DAFOPR ( KERNEL, HANDLE )
-!!
-!!        C
-!!        C     Begin a forward search on the file.
-!!        C
-!!              CALL DAFBFS ( HANDLE )
-!!
-!!        C
-!!        C     Search until a DAF array is found.
-!!        C
-!!              CALL DAFFNA ( FOUND )
-!!
-!!        C
-!!        C     Loop while the search finds subsequent DAF arrays.
-!!        C
-!!              DO WHILE ( FOUND )
-!!
-!!                 CALL DAFGS ( SUM )
-!!                 CALL DAFUS ( SUM, ND, NI, DC, IC )
-!!
-!!                 WRITE(*,*)                'Doubles:', DC(1:ND)
-!!                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
-!!
-!!        C
-!!        C        Check for another segment.
-!!        C
-!!                 CALL DAFFNA ( FOUND )
-!!
-!!              END DO
-!!
-!!        C
-!!        C     Safely close the DAF.
-!!        C
-!!              CALL DAFCLS ( HANDLE )
-!!
-!!              END
-!!
-!!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!!        platform, the output was:
-!!
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        1        0        1        2      641   310404
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        2        0        1        2   310405   423048
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        3        0        1        2   423049   567372
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        4        0        1        2   567373   628976
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        5        0        1        2   628977   674740
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        6        0        1        2   674741   715224
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        7        0        1        2   715225   750428
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        8        0        1        2   750429   785632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:        9        0        1        2   785633   820836
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:       10        0        1        2   820837   944040
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      301        3        1        2   944041  1521324
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      399        3        1        2  1521325  2098608
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      199        1        1        2  2098609  2098620
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      299        2        1        2  2098621  2098632
-!!         Doubles:  -3169195200.0000000        1696852800.0000000
-!!        Integers:      499        4        1        2  2098633  2098644
-!!
-!!        Note, the final entries in the integer array contains the
-!!        segment start/end indexes. The output indicates the search
-!!        proceeded from the start of the file (low value index) towards
-!!        the end (high value index).
-!!
-!! ## Restrictions
-!!
-!!     1)  Calls that do or may change DAF addresses of DAF summaries,
-!!         names, or data of a given DAF file should not be made during
-!!         a search of that file initiated by either DAFBFS or DAFBBS.
-!!         No such changes should be made between the start of a search
-!!         and calls to any entry point that reads or writes to the
-!!         summary of the "current array" found by that search, or
-!!         that returns a "found" flag indicating whether the current
-!!         array exists.
-!!
-!!         Changing the size of the comment area while a search is in
-!!         progress can invalidate record numbers stored in local data
-!!         structures of this routine. This can cause corrupted array
-!!         summaries and names to be returned upon read access and file
-!!         corruption to occur upon write access.
-!!
-!!         Adding arrays (aka "segments") while either a forward or
-!!         backward search is in progress can cause the search to miss
-!!         the new segments.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.0.3, 26-OCT-2021 (JDR) (NJB)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!        Added undeclared variables to code example.
-!!
-!!        Fixed typo in $Exceptions entry #3: DAFFPA is used to find the
-!!        previous array, not the non existing API DAFBNA.
-!!
-!!        Updated $Restrictions section.
-!!
-!!-    SPICELIB Version 2.0.2, 10-OCT-2012 (EDW)
-!!
-!!        Added a functional code example to the $Examples section.
-!!
-!!        Eliminated unneeded $Revisions section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Updated to support simultaneous searches of multiple DAFs.
-!!        Bug fix made to handle case of having no current array.
-!!
-!!        This routine now operates on the current DAF---the one at
-!!        the head of the active list. All saved state variables
-!!        used by this routine are now part of the state table, or
-!!        its associated set of pointers.
-!!
-!!        In addition, this routine now checks whether an array
-!!        is current before trying to read its summary. The routine
-!!        previously crashed under these conditions.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     get DAF summary
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -23808,7 +22012,6 @@ contains
 !
       if ( stcurr(p) == 0 ) then
 
-
          call ctx%setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
          call ctx%errhan ( '#', stfh(p) )
@@ -23816,7 +22019,6 @@ contains
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
-
 
          call ctx%setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
@@ -23842,146 +22044,123 @@ contains
       end associate
       end procedure dafgs
 
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     NAME     is the name for the current array (the array found by the
+      !>              latest call to DAFFNA or DAFFPA).
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If this routine is called when no search is in progress in the
+      !>         the current DAF, the error SPICE(DAFNOSEARCH) is signaled.
+      !>
+      !>     2)  If the DAF for which the "current" array's name is to be
+      !>         returned has actually been closed, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     3)  If no array is current in the current DAF, the error
+      !>         SPICE(NOCURRENTARRAY) is signaled. There is no current array
+      !>         when a search is started by DAFBFS or DAFBBS, but no calls to
+      !>         DAFFNA or DAFFPA have been made yet, or whenever DAFFNA or
+      !>         DAFFPA return the value .FALSE. in the FOUND argument.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     See DAFFA.
+      !>
+      !> ## Examples
+      !>
+      !>     See $Examples in DAFFA.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Calls that do or may change DAF addresses of DAF summaries,
+      !>         names, or data of a given DAF file should not be made during
+      !>         a search of that file initiated by either DAFBFS or DAFBBS.
+      !>         No such changes should be made between the start of a search
+      !>         and calls to any entry point that reads or writes to the
+      !>         summary of the "current array" found by that search, or
+      !>         that returns a "found" flag indicating whether the current
+      !>         array exists.
+      !>
+      !>         Changing the size of the comment area while a search is in
+      !>         progress can invalidate record numbers stored in local data
+      !>         structures of this routine. This can cause corrupted array
+      !>         summaries and names to be returned upon read access and file
+      !>         corruption to occur upon write access.
+      !>
+      !>         Adding arrays (aka "segments") while either a forward or
+      !>         backward search is in progress can cause the search to miss
+      !>         the new segments.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.0.3, 26-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Fixed typo in $Exceptions entry #3: DAFFPA is used to find the
+      !>        previous array, not the non existing API DAFBNA.
+      !>
+      !>        Updated $Restrictions section.
+      !>
+      !>-    SPICELIB Version 2.0.2, 18-AUG-2011 (EDW)
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Updated to support simultaneous searches of multiple DAFs.
+      !>        Bug fix made to handle case of having no current array.
+      !>
+      !>        This routine now operates on the current DAF---the one at
+      !>        the head of the active list. All saved state variables
+      !>        used by this routine are now part of the state table, or
+      !>        its associated set of pointers.
+      !>
+      !>        In addition, this routine now checks whether an array
+      !>        is current before trying to read its summary. The routine
+      !>        previously crashed under these conditions.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafgn
-!! ## Abstract
-!!
-!!     Return (get) the name for the current array in the current DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         NAME
-!!
-!! ## Detailed Input
-!!
-!!     None.
-!!
-!! ## Detailed Output
-!!
-!!     NAME     is the name for the current array (the array found by the
-!!              latest call to DAFFNA or DAFFPA).
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If this routine is called when no search is in progress in the
-!!         the current DAF, the error SPICE(DAFNOSEARCH) is signaled.
-!!
-!!     2)  If the DAF for which the "current" array's name is to be
-!!         returned has actually been closed, an error is signaled by a
-!!         routine in the call tree of this routine.
-!!
-!!     3)  If no array is current in the current DAF, the error
-!!         SPICE(NOCURRENTARRAY) is signaled. There is no current array
-!!         when a search is started by DAFBFS or DAFBBS, but no calls to
-!!         DAFFNA or DAFFPA have been made yet, or whenever DAFFNA or
-!!         DAFFPA return the value .FALSE. in the FOUND argument.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     See DAFFA.
-!!
-!! ## Examples
-!!
-!!     See $Examples in DAFFA.
-!!
-!! ## Restrictions
-!!
-!!     1)  Calls that do or may change DAF addresses of DAF summaries,
-!!         names, or data of a given DAF file should not be made during
-!!         a search of that file initiated by either DAFBFS or DAFBBS.
-!!         No such changes should be made between the start of a search
-!!         and calls to any entry point that reads or writes to the
-!!         summary of the "current array" found by that search, or
-!!         that returns a "found" flag indicating whether the current
-!!         array exists.
-!!
-!!         Changing the size of the comment area while a search is in
-!!         progress can invalidate record numbers stored in local data
-!!         structures of this routine. This can cause corrupted array
-!!         summaries and names to be returned upon read access and file
-!!         corruption to occur upon write access.
-!!
-!!         Adding arrays (aka "segments") while either a forward or
-!!         backward search is in progress can cause the search to miss
-!!         the new segments.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.0.3, 26-OCT-2021 (JDR) (NJB)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!        Fixed typo in $Exceptions entry #3: DAFFPA is used to find the
-!!        previous array, not the non existing API DAFBNA.
-!!
-!!        Updated $Restrictions section.
-!!
-!!-    SPICELIB Version 2.0.2, 18-AUG-2011 (EDW)
-!!
-!!        Eliminated unneeded $Revisions section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Updated to support simultaneous searches of multiple DAFs.
-!!        Bug fix made to handle case of having no current array.
-!!
-!!        This routine now operates on the current DAF---the one at
-!!        the head of the active list. All saved state variables
-!!        used by this routine are now part of the state table, or
-!!        its associated set of pointers.
-!!
-!!        In addition, this routine now checks whether an array
-!!        is current before trying to read its summary. The routine
-!!        previously crashed under these conditions.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     get DAF array name
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -24045,7 +22224,6 @@ contains
 !
       if ( stcurr(p) == 0 ) then
 
-
          call ctx%setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
          call ctx%errhan ( '#', stfh(p) )
@@ -24053,7 +22231,6 @@ contains
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
-
 
          call ctx%setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
@@ -24093,186 +22270,163 @@ contains
       end associate
       end procedure dafgn
 
+      !> ## Detailed Input
+      !>
+      !>     None.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     HANDLE   is the handle for the current DAF (the handle connected
+      !>              to the DAF that is currently being actively searched).
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If this routine is called when no search is in progress in the
+      !>         the current DAF, the error SPICE(DAFNOSEARCH) is signaled.
+      !>
+      !>     2)  If the DAF whose handle is to be returned has actually been
+      !>         closed, an error is signaled by a routine in the call tree of
+      !>         this routine.
+      !>
+      !> ## Files
+      !>
+      !>     This routine returns the handle of a DAF that is currently
+      !>     being searched.
+      !>
+      !> ## Particulars
+      !>
+      !>     Under rare circumstances, it may be necessary to identify the
+      !>     particular DAF that is being searched (such as when the search is
+      !>     begun by one module and continued by another).
+      !>
+      !> ## Examples
+      !>
+      !>     Consider a program like the following, which examines the
+      !>     individual arrays in a DAF and examines the contents of those
+      !>     meeting certain criteria.
+      !>
+      !>        CALL DAFOPW ( FNAME, HANDLE )
+      !>        CALL DAFBFS ( HANDLE )
+      !>        CALL DAFFNA ( FOUND  )
+      !>
+      !>        DO WHILE ( FOUND )
+      !>
+      !>           CALL CHECK_DAF ( STATUS )
+      !>
+      !>           IF ( STATUS .EQ. 'EXAMINE' ) THEN
+      !>              CALL EXAMINE_DAF
+      !>           END IF
+      !>
+      !>           CALL DAFFNA ( FOUND )
+      !>
+      !>        END DO
+      !>
+      !>     The subroutine CHECK_DAF, which assumes that a search is in
+      !>     progress, gets the summary and name for the current array, and
+      !>     uses them to decide whether the data in the array merit further
+      !>     consideration.
+      !>
+      !>        SUBROUTINE CHECK_DAF ( STATUS )
+      !>
+      !>        CALL DAFGS ( SUM )
+      !>        CALL DAFGN ( NAME )
+      !>        CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>         .
+      !>         .
+      !>
+      !>     The subroutine EXAMINE_DAF needs to examine the data in
+      !>     the array itself. In order to do do, it needs to have access
+      !>     not only to the summary, but to the handle of the file
+      !>     containing the array. This is provided by DAFGH.
+      !>
+      !>        SUBROUTINE EXAMINE_DAF
+      !>
+      !>        CALL DAFGS ( SUM  )
+      !>        CALL DAFGH ( HANDLE )
+      !>        CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>
+      !>        CALL DAFGDA ( HANDLE, BEGIN, END, DATA )
+      !>         .
+      !>         .
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Calls that do or may change DAF addresses of DAF summaries,
+      !>         names, or data of a given DAF file should not be made during
+      !>         a search of that file initiated by either DAFBFS or DAFBBS.
+      !>         No such changes should be made between the start of a search
+      !>         and calls to any entry point that reads or writes to the
+      !>         summary of the "current array" found by that search, or
+      !>         that returns a "found" flag indicating whether the current
+      !>         array exists.
+      !>
+      !>         Changing the size of the comment area while a search is in
+      !>         progress can invalidate record numbers stored in local data
+      !>         structures of this routine. This can cause corrupted array
+      !>         summaries and names to be returned upon read access and file
+      !>         corruption to occur upon write access.
+      !>
+      !>         Adding arrays (aka "segments") while either a forward or
+      !>         backward search is in progress can cause the search to miss
+      !>         the new segments.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.0.4, 26-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Edited the header to comply with NAIF standard. Extended $Files
+      !>        section.
+      !>
+      !>        Updated $Restrictions section.
+      !>
+      !>-    SPICELIB Version 2.0.3, 14-MAR-2017 (NJB)
+      !>
+      !>        Updated header example: changed DAFRDA call to DAFGDA call.
+      !>
+      !>-    SPICELIB Version 2.0.2, 18-AUG-2011 (EDW)
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Updated to support simultaneous searches of multiple DAFs.
+      !>
+      !>        This routine now operates on the current DAF---the one at
+      !>        the head of the active list. All saved state variables
+      !>        used by this routine are now part of the state table, or
+      !>        its associated set of pointers.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafgh
-!! ## Abstract
-!!
-!!     Return (get) the handle of the DAF currently being searched.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!
-!! ## Detailed Input
-!!
-!!     None.
-!!
-!! ## Detailed Output
-!!
-!!     HANDLE   is the handle for the current DAF (the handle connected
-!!              to the DAF that is currently being actively searched).
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If this routine is called when no search is in progress in the
-!!         the current DAF, the error SPICE(DAFNOSEARCH) is signaled.
-!!
-!!     2)  If the DAF whose handle is to be returned has actually been
-!!         closed, an error is signaled by a routine in the call tree of
-!!         this routine.
-!!
-!! ## Files
-!!
-!!     This routine returns the handle of a DAF that is currently
-!!     being searched.
-!!
-!! ## Particulars
-!!
-!!     Under rare circumstances, it may be necessary to identify the
-!!     particular DAF that is being searched (such as when the search is
-!!     begun by one module and continued by another).
-!!
-!! ## Examples
-!!
-!!     Consider a program like the following, which examines the
-!!     individual arrays in a DAF and examines the contents of those
-!!     meeting certain criteria.
-!!
-!!        CALL DAFOPW ( FNAME, HANDLE )
-!!        CALL DAFBFS ( HANDLE )
-!!        CALL DAFFNA ( FOUND  )
-!!
-!!        DO WHILE ( FOUND )
-!!
-!!           CALL CHECK_DAF ( STATUS )
-!!
-!!           IF ( STATUS .EQ. 'EXAMINE' ) THEN
-!!              CALL EXAMINE_DAF
-!!           END IF
-!!
-!!           CALL DAFFNA ( FOUND )
-!!
-!!        END DO
-!!
-!!     The subroutine CHECK_DAF, which assumes that a search is in
-!!     progress, gets the summary and name for the current array, and
-!!     uses them to decide whether the data in the array merit further
-!!     consideration.
-!!
-!!        SUBROUTINE CHECK_DAF ( STATUS )
-!!
-!!        CALL DAFGS ( SUM )
-!!        CALL DAFGN ( NAME )
-!!        CALL DAFUS ( SUM, ND, NI, DC, IC )
-!!         .
-!!         .
-!!
-!!     The subroutine EXAMINE_DAF needs to examine the data in
-!!     the array itself. In order to do do, it needs to have access
-!!     not only to the summary, but to the handle of the file
-!!     containing the array. This is provided by DAFGH.
-!!
-!!        SUBROUTINE EXAMINE_DAF
-!!
-!!        CALL DAFGS ( SUM  )
-!!        CALL DAFGH ( HANDLE )
-!!        CALL DAFUS ( SUM, ND, NI, DC, IC )
-!!
-!!        CALL DAFGDA ( HANDLE, BEGIN, END, DATA )
-!!         .
-!!         .
-!!
-!! ## Restrictions
-!!
-!!     1)  Calls that do or may change DAF addresses of DAF summaries,
-!!         names, or data of a given DAF file should not be made during
-!!         a search of that file initiated by either DAFBFS or DAFBBS.
-!!         No such changes should be made between the start of a search
-!!         and calls to any entry point that reads or writes to the
-!!         summary of the "current array" found by that search, or
-!!         that returns a "found" flag indicating whether the current
-!!         array exists.
-!!
-!!         Changing the size of the comment area while a search is in
-!!         progress can invalidate record numbers stored in local data
-!!         structures of this routine. This can cause corrupted array
-!!         summaries and names to be returned upon read access and file
-!!         corruption to occur upon write access.
-!!
-!!         Adding arrays (aka "segments") while either a forward or
-!!         backward search is in progress can cause the search to miss
-!!         the new segments.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.0.4, 26-OCT-2021 (JDR) (NJB)
-!!
-!!        Edited the header to comply with NAIF standard. Extended $Files
-!!        section.
-!!
-!!        Updated $Restrictions section.
-!!
-!!-    SPICELIB Version 2.0.3, 14-MAR-2017 (NJB)
-!!
-!!        Updated header example: changed DAFRDA call to DAFGDA call.
-!!
-!!-    SPICELIB Version 2.0.2, 18-AUG-2011 (EDW)
-!!
-!!        Eliminated unneeded $Revisions section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Updated to support simultaneous searches of multiple DAFs.
-!!
-!!        This routine now operates on the current DAF---the one at
-!!        the head of the active list. All saved state variables
-!!        used by this routine are now part of the state table, or
-!!        its associated set of pointers.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     get DAF handle
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -24323,154 +22477,131 @@ contains
       end associate
       end procedure dafgh
 
+      !> ## Detailed Input
+      !>
+      !>     SUM      is the new summary for the current array. This
+      !>              replaces the existing summary. However, the addresses
+      !>              (the final two integer components) of the original
+      !>              summary are not changed.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If this routine is called when no search is in progress in the
+      !>         the current DAF, the error SPICE(DAFNOSEARCH) is signaled.
+      !>
+      !>     2)  If the DAF containing the "current" array has actually been
+      !>         closed, an error is signaled by a routine in the call tree of
+      !>         this routine.
+      !>
+      !>     3)  If the DAF containing the "current" array is not open for
+      !>         writing, an error is signaled by a routine in the call tree of
+      !>         this routine.
+      !>
+      !>     4)  If no array is current in the current DAF, the error
+      !>         SPICE(NOCURRENTARRAY) is signaled. There is no current array
+      !>         when a search is started by DAFBFS or DAFBBS, but no calls to
+      !>         DAFFNA or DAFFPA have been made yet, or whenever DAFFNA or
+      !>         DAFFPA return the value .FALSE. in the FOUND argument.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     See DAFFA.
+      !>
+      !> ## Examples
+      !>
+      !>     See $Examples in DAFFA.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Calls that do or may change DAF addresses of DAF summaries,
+      !>         names, or data of a given DAF file should not be made during
+      !>         a search of that file initiated by either DAFBFS or DAFBBS.
+      !>         No such changes should be made between the start of a search
+      !>         and calls to any entry point that reads or writes to the
+      !>         summary of the "current array" found by that search, or
+      !>         that returns a "found" flag indicating whether the current
+      !>         array exists.
+      !>
+      !>         Changing the size of the comment area while a search is in
+      !>         progress can invalidate record numbers stored in local data
+      !>         structures of this routine. This can cause corrupted array
+      !>         summaries and names to be returned upon read access and file
+      !>         corruption to occur upon write access.
+      !>
+      !>         Adding arrays (aka "segments") while either a forward or
+      !>         backward search is in progress can cause the search to miss
+      !>         the new segments.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.0.3, 27-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Fixed typo in the $Declarations section.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Fixed typo in $Exceptions entry #4: DAFFPA is used to find the
+      !>        previous array, not the non existing API DAFBNA.
+      !>
+      !>        Updated $Restrictions section.
+      !>
+      !>-    SPICELIB Version 2.0.2, 18-AUG-2011 (EDW)
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Updated to support simultaneous searches of multiple DAFs.
+      !>        Bug fix made to handle case of having no current array.
+      !>
+      !>        This routine now operates on the current DAF---the one at
+      !>        the head of the active list. All saved state variables
+      !>        used by this routine are now part of the state table, or
+      !>        its associated set of pointers.
+      !>
+      !>        In addition, this routine now checks whether an array
+      !>        is current before trying to read its summary. The routine
+      !>        previously crashed under these conditions.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafrs
-!! ## Abstract
-!!
-!!     Change the summary for the current array in the current DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     DOUBLE PRECISION      SUM    ( * )
-!!
-!! ## Detailed Input
-!!
-!!     SUM      is the new summary for the current array. This
-!!              replaces the existing summary. However, the addresses
-!!              (the final two integer components) of the original
-!!              summary are not changed.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If this routine is called when no search is in progress in the
-!!         the current DAF, the error SPICE(DAFNOSEARCH) is signaled.
-!!
-!!     2)  If the DAF containing the "current" array has actually been
-!!         closed, an error is signaled by a routine in the call tree of
-!!         this routine.
-!!
-!!     3)  If the DAF containing the "current" array is not open for
-!!         writing, an error is signaled by a routine in the call tree of
-!!         this routine.
-!!
-!!     4)  If no array is current in the current DAF, the error
-!!         SPICE(NOCURRENTARRAY) is signaled. There is no current array
-!!         when a search is started by DAFBFS or DAFBBS, but no calls to
-!!         DAFFNA or DAFFPA have been made yet, or whenever DAFFNA or
-!!         DAFFPA return the value .FALSE. in the FOUND argument.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     See DAFFA.
-!!
-!! ## Examples
-!!
-!!     See $Examples in DAFFA.
-!!
-!! ## Restrictions
-!!
-!!     1)  Calls that do or may change DAF addresses of DAF summaries,
-!!         names, or data of a given DAF file should not be made during
-!!         a search of that file initiated by either DAFBFS or DAFBBS.
-!!         No such changes should be made between the start of a search
-!!         and calls to any entry point that reads or writes to the
-!!         summary of the "current array" found by that search, or
-!!         that returns a "found" flag indicating whether the current
-!!         array exists.
-!!
-!!         Changing the size of the comment area while a search is in
-!!         progress can invalidate record numbers stored in local data
-!!         structures of this routine. This can cause corrupted array
-!!         summaries and names to be returned upon read access and file
-!!         corruption to occur upon write access.
-!!
-!!         Adding arrays (aka "segments") while either a forward or
-!!         backward search is in progress can cause the search to miss
-!!         the new segments.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.0.3, 27-OCT-2021 (JDR) (NJB)
-!!
-!!        Fixed typo in the $Declarations section.
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!        Fixed typo in $Exceptions entry #4: DAFFPA is used to find the
-!!        previous array, not the non existing API DAFBNA.
-!!
-!!        Updated $Restrictions section.
-!!
-!!-    SPICELIB Version 2.0.2, 18-AUG-2011 (EDW)
-!!
-!!        Eliminated unneeded $Revisions section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Updated to support simultaneous searches of multiple DAFs.
-!!        Bug fix made to handle case of having no current array.
-!!
-!!        This routine now operates on the current DAF---the one at
-!!        the head of the active list. All saved state variables
-!!        used by this routine are now part of the state table, or
-!!        its associated set of pointers.
-!!
-!!        In addition, this routine now checks whether an array
-!!        is current before trying to read its summary. The routine
-!!        previously crashed under these conditions.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     replace DAF summary
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -24538,7 +22669,6 @@ contains
 !
       if ( stcurr(p) == 0 ) then
 
-
          call ctx%setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
          call ctx%errhan ( '#', stfh(p) )
@@ -24546,7 +22676,6 @@ contains
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
-
 
          call ctx%setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
@@ -24591,147 +22720,124 @@ contains
       end associate
       end procedure dafrs
 
+      !> ## Detailed Input
+      !>
+      !>     NAME     is the new name for the current array.
+      !>              This replaces the existing name.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If this routine is called when no search is in progress in the
+      !>         the current DAF, the error SPICE(DAFNOSEARCH) is signaled.
+      !>
+      !>     2)  If the DAF containing the "current" array has actually been
+      !>         closed, an error is signaled by a routine in the call tree of
+      !>         this routine.
+      !>
+      !>     3)  If the DAF containing the "current" array is not open for
+      !>         writing, an error is signaled by a routine in the call tree of
+      !>         this routine.
+      !>
+      !>     4)  If no array is current in the current DAF, the error
+      !>         SPICE(NOCURRENTARRAY) is signaled. There is no current
+      !>         array when a search is started by DAFBFS or DAFBBS, but no
+      !>         calls to DAFFNA or DAFBNA have been made yet, or whenever
+      !>         DAFFNA or DAFFPA return the value .FALSE. in the FOUND
+      !>         argument.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     See DAFFA.
+      !>
+      !> ## Examples
+      !>
+      !>     See $Examples in DAFFA.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Calls that do or may change DAF addresses of DAF summaries,
+      !>         names, or data of a given DAF file should not be made during
+      !>         a search of that file initiated by either DAFBFS or DAFBBS.
+      !>         No such changes should be made between the start of a search
+      !>         and calls to any entry point that reads or writes to the
+      !>         summary of the "current array" found by that search, or
+      !>         that returns a "found" flag indicating whether the current
+      !>         array exists.
+      !>
+      !>         Changing the size of the comment area while a search is in
+      !>         progress can invalidate record numbers stored in local data
+      !>         structures of this routine. This can cause corrupted array
+      !>         summaries and names to be returned upon read access and file
+      !>         corruption to occur upon write access.
+      !>
+      !>         Adding arrays (aka "segments") while either a forward or
+      !>         backward search is in progress can cause the search to miss
+      !>         the new segments.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.0.3, 26-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Updated $Restrictions section.
+      !>
+      !>-    SPICELIB Version 2.0.2, 18-AUG-2011 (EDW)
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Updated to support simultaneous searches of multiple DAFs.
+      !>
+      !>        This routine now operates on the current DAF---the one at
+      !>        the head of the active list. All saved state variables
+      !>        used by this routine are now part of the state table, or
+      !>        its associated set of pointers.
+      !>
+      !>        In addition, this routine now checks whether an array
+      !>        is current before trying to read its summary. The routine
+      !>        previously crashed under these conditions.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafrn
-!! ## Abstract
-!!
-!!     Replace the name for the current array in the current DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     CHARACTER*(*)         NAME
-!!
-!! ## Detailed Input
-!!
-!!     NAME     is the new name for the current array.
-!!              This replaces the existing name.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If this routine is called when no search is in progress in the
-!!         the current DAF, the error SPICE(DAFNOSEARCH) is signaled.
-!!
-!!     2)  If the DAF containing the "current" array has actually been
-!!         closed, an error is signaled by a routine in the call tree of
-!!         this routine.
-!!
-!!     3)  If the DAF containing the "current" array is not open for
-!!         writing, an error is signaled by a routine in the call tree of
-!!         this routine.
-!!
-!!     4)  If no array is current in the current DAF, the error
-!!         SPICE(NOCURRENTARRAY) is signaled. There is no current
-!!         array when a search is started by DAFBFS or DAFBBS, but no
-!!         calls to DAFFNA or DAFBNA have been made yet, or whenever
-!!         DAFFNA or DAFFPA return the value .FALSE. in the FOUND
-!!         argument.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     See DAFFA.
-!!
-!! ## Examples
-!!
-!!     See $Examples in DAFFA.
-!!
-!! ## Restrictions
-!!
-!!     1)  Calls that do or may change DAF addresses of DAF summaries,
-!!         names, or data of a given DAF file should not be made during
-!!         a search of that file initiated by either DAFBFS or DAFBBS.
-!!         No such changes should be made between the start of a search
-!!         and calls to any entry point that reads or writes to the
-!!         summary of the "current array" found by that search, or
-!!         that returns a "found" flag indicating whether the current
-!!         array exists.
-!!
-!!         Changing the size of the comment area while a search is in
-!!         progress can invalidate record numbers stored in local data
-!!         structures of this routine. This can cause corrupted array
-!!         summaries and names to be returned upon read access and file
-!!         corruption to occur upon write access.
-!!
-!!         Adding arrays (aka "segments") while either a forward or
-!!         backward search is in progress can cause the search to miss
-!!         the new segments.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     H.A. Neilan        (JPL)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.0.3, 26-OCT-2021 (JDR) (NJB)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!        Updated $Restrictions section.
-!!
-!!-    SPICELIB Version 2.0.2, 18-AUG-2011 (EDW)
-!!
-!!        Eliminated unneeded $Revisions section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Updated to support simultaneous searches of multiple DAFs.
-!!
-!!        This routine now operates on the current DAF---the one at
-!!        the head of the active list. All saved state variables
-!!        used by this routine are now part of the state table, or
-!!        its associated set of pointers.
-!!
-!!        In addition, this routine now checks whether an array
-!!        is current before trying to read its summary. The routine
-!!        previously crashed under these conditions.
-!!
-!!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!!
-!!        Literature references added to the header.
-!!
-!!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     change DAF array name
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -24796,7 +22902,6 @@ contains
 !
       if ( stcurr(p) == 0 ) then
 
-
          call ctx%setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
          call ctx%errhan ( '#', stfh(p) )
@@ -24804,7 +22909,6 @@ contains
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
-
 
          call ctx%setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
@@ -24849,149 +22953,126 @@ contains
       end associate
       end procedure dafrn
 
+      !> ## Detailed Input
+      !>
+      !>     SUM      is the new summary for the current array. This
+      !>              replaces the existing summary, including the
+      !>              addresses (the final two integer components) of
+      !>              the original summary.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If this routine is called when no search is in progress in the
+      !>         the current DAF, the error SPICE(DAFNOSEARCH) is signaled.
+      !>
+      !>     2)  If the DAF containing the "current" array has actually been
+      !>         closed, an error is signaled by a routine in the call tree of
+      !>         this routine.
+      !>
+      !>     3)  If the DAF containing the "current" array is not open for
+      !>         writing, an error is signaled by a routine in the call tree of
+      !>         this routine.
+      !>
+      !>     4)  If no array is current in the current DAF, the error
+      !>         SPICE(NOCURRENTARRAY) is signaled. There is no current
+      !>         array when a search is started by DAFBFS or DAFBBS, but no
+      !>         calls to DAFFNA or DAFBNA have been made yet, or whenever
+      !>         DAFFNA or DAFFPA return the value .FALSE. in the FOUND
+      !>         argument.
+      !>
+      !> ## Files
+      !>
+      !>     DAFWS updates the DAF currently being searched. The handle
+      !>     of this DAF can be retrieved using the routine DAFGH.
+      !>
+      !> ## Particulars
+      !>
+      !>     Unless you are reordering the arrays in the file being searched,
+      !>     you should be using DAFRS instead of this routine.
+      !>
+      !>     See also DAFFA, DAFRS.
+      !>
+      !> ## Examples
+      !>
+      !>     None.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Calls that do or may change DAF addresses of DAF summaries,
+      !>         names, or data of a given DAF file should not be made during
+      !>         a search of that file initiated by either DAFBFS or DAFBBS.
+      !>         No such changes should be made between the start of a search
+      !>         and calls to any entry point that reads or writes to the
+      !>         summary of the "current array" found by that search, or
+      !>         that returns a "found" flag indicating whether the current
+      !>         array exists.
+      !>
+      !>         Changing the size of the comment area while a search is in
+      !>         progress can invalidate record numbers stored in local data
+      !>         structures of this routine. This can cause corrupted array
+      !>         summaries and names to be returned upon read access and file
+      !>         corruption to occur upon write access.
+      !>
+      !>         Adding arrays (aka "segments") while either a forward or
+      !>         backward search is in progress can cause the search to miss
+      !>         the new segments.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.0.3, 27-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Updated $Restrictions section.
+      !>
+      !>-    SPICELIB Version 2.0.2, 18-AUG-2011 (EDW)
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>        Removed the obsolete Reference citation to "NAIF
+      !>        Document 167.0."
+      !>
+      !>-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
+      !>
+      !>        Updated to support simultaneous searches of multiple DAFs.
+      !>        Bug fix made to handle case of having no current array.
+      !>
+      !>        This routine now operates on the current DAF---the one at
+      !>        the head of the active list. All saved state variables
+      !>        used by this routine are now part of the state table, or
+      !>        its associated set of pointers.
+      !>
+      !>        In addition, this routine now checks whether an array
+      !>        is current before trying to read its summary. The routine
+      !>        previously crashed under these conditions.
+      !>
+      !>-    SPICELIB Version 1.0.0, 28-MAR-1991 (IMU)
       module procedure dafws
-!! ## Abstract
-!!
-!!     Write a new summary for the current array in the current DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     DOUBLE PRECISION      SUM ( * )
-!!
-!! ## Detailed Input
-!!
-!!     SUM      is the new summary for the current array. This
-!!              replaces the existing summary, including the
-!!              addresses (the final two integer components) of
-!!              the original summary.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If this routine is called when no search is in progress in the
-!!         the current DAF, the error SPICE(DAFNOSEARCH) is signaled.
-!!
-!!     2)  If the DAF containing the "current" array has actually been
-!!         closed, an error is signaled by a routine in the call tree of
-!!         this routine.
-!!
-!!     3)  If the DAF containing the "current" array is not open for
-!!         writing, an error is signaled by a routine in the call tree of
-!!         this routine.
-!!
-!!     4)  If no array is current in the current DAF, the error
-!!         SPICE(NOCURRENTARRAY) is signaled. There is no current
-!!         array when a search is started by DAFBFS or DAFBBS, but no
-!!         calls to DAFFNA or DAFBNA have been made yet, or whenever
-!!         DAFFNA or DAFFPA return the value .FALSE. in the FOUND
-!!         argument.
-!!
-!! ## Files
-!!
-!!     DAFWS updates the DAF currently being searched. The handle
-!!     of this DAF can be retrieved using the routine DAFGH.
-!!
-!! ## Particulars
-!!
-!!     Unless you are reordering the arrays in the file being searched,
-!!     you should be using DAFRS instead of this routine.
-!!
-!!     See also DAFFA, DAFRS.
-!!
-!! ## Examples
-!!
-!!     None.
-!!
-!! ## Restrictions
-!!
-!!     1)  Calls that do or may change DAF addresses of DAF summaries,
-!!         names, or data of a given DAF file should not be made during
-!!         a search of that file initiated by either DAFBFS or DAFBBS.
-!!         No such changes should be made between the start of a search
-!!         and calls to any entry point that reads or writes to the
-!!         summary of the "current array" found by that search, or
-!!         that returns a "found" flag indicating whether the current
-!!         array exists.
-!!
-!!         Changing the size of the comment area while a search is in
-!!         progress can invalidate record numbers stored in local data
-!!         structures of this routine. This can cause corrupted array
-!!         summaries and names to be returned upon read access and file
-!!         corruption to occur upon write access.
-!!
-!!         Adding arrays (aka "segments") while either a forward or
-!!         backward search is in progress can cause the search to miss
-!!         the new segments.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     W.L. Taber         (JPL)
-!!     I.M. Underwood     (JPL)
-!!     E.D. Wright        (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.0.3, 27-OCT-2021 (JDR) (NJB)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!        Updated $Restrictions section.
-!!
-!!-    SPICELIB Version 2.0.2, 18-AUG-2011 (EDW)
-!!
-!!        Eliminated unneeded $Revisions section.
-!!
-!!        Removed the obsolete Reference citation to "NAIF
-!!        Document 167.0."
-!!
-!!-    SPICELIB Version 2.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 2.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!!        Updated to support simultaneous searches of multiple DAFs.
-!!        Bug fix made to handle case of having no current array.
-!!
-!!        This routine now operates on the current DAF---the one at
-!!        the head of the active list. All saved state variables
-!!        used by this routine are now part of the state table, or
-!!        its associated set of pointers.
-!!
-!!        In addition, this routine now checks whether an array
-!!        is current before trying to read its summary. The routine
-!!        previously crashed under these conditions.
-!!
-!!-    SPICELIB Version 1.0.0, 28-MAR-1991 (IMU)
-!!
-!! ## Index Entries
-!!
-!!     write DAF summary
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -25054,7 +23135,6 @@ contains
 !
       if ( stcurr(p) == 0 ) then
 
-
          call ctx%setmsg ( 'No array is current; the `next'' array is '   // &
                        'the first array of DAF #'                      )
          call ctx%errhan ( '#', stfh(p) )
@@ -25062,7 +23142,6 @@ contains
          return
 
       else if ( stcurr(p) > stnseg(p) ) then
-
 
          call ctx%setmsg ( 'No array is current; the `previous'' array is'// &
                        ' the last array of DAF #'                      )
@@ -25093,120 +23172,96 @@ contains
       end associate
       end procedure dafws
 
+      !> ## Detailed Input
+      !>
+      !>     HANDLE   is the handle of a DAF in which either a forward
+      !>              or backward search has already been started by
+      !>              DAFBFS or DAFBBS. The DAF may be open for read
+      !>              or write access.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the input handle is invalid, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     2)  If this routine is called when no search is in progress in the
+      !>         the current DAF, the error SPICE(DAFNOSEARCH) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     None.
+      !>
+      !> ## Particulars
+      !>
+      !>     DAFCS supports simultaneous searching of multiple DAFs. In
+      !>     applications that use this capability, DAFCS should be called
+      !>     prior to each call to DAFFNA, DAFFPA, DAFGN, DAFGS, DAFRS, or
+      !>     DAFWS, to specify which DAF is to be acted upon.
+      !>
+      !> ## Examples
+      !>
+      !>     See $Examples in DAFFA.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  Calls that do or may change DAF addresses of DAF summaries,
+      !>         names, or data of a given DAF file should not be made during
+      !>         a search of that file initiated by either DAFBFS or DAFBBS.
+      !>         No such changes should be made between the start of a search
+      !>         and calls to any entry point that reads or writes to the
+      !>         summary of the "current array" found by that search, or
+      !>         that returns a "found" flag indicating whether the current
+      !>         array exists.
+      !>
+      !>         Changing the size of the comment area while a search is in
+      !>         progress can invalidate record numbers stored in local data
+      !>         structures of this routine. This can cause corrupted array
+      !>         summaries and names to be returned upon read access and file
+      !>         corruption to occur upon write access.
+      !>
+      !>         Adding arrays (aka "segments") while either a forward or
+      !>         backward search is in progress can cause the search to miss
+      !>         the new segments.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman       (JPL)
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     B.V. Semenov       (JPL)
+      !>     W.L. Taber         (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 1.0.3, 26-OCT-2021 (JDR) (NJB)
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>        Updated $Restrictions section.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-FEB-2014 (BVS)
+      !>
+      !>        Added full declaration of HANDLE to the $Declarations section
+      !>        of the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 04-SEP-1991 (NJB) (WLT)
       module procedure dafcs
-!! ## Abstract
-!!
-!!     Select a DAF that already has a search in progress as the
-!!     one to continue searching.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-!!     INTEGER               HANDLE
-!!
-!! ## Detailed Input
-!!
-!!     HANDLE   is the handle of a DAF in which either a forward
-!!              or backward search has already been started by
-!!              DAFBFS or DAFBBS. The DAF may be open for read
-!!              or write access.
-!!
-!! ## Detailed Output
-!!
-!!     None.
-!!
-!! ## Parameters
-!!
-!!     None.
-!!
-!! ## Exceptions
-!!
-!!     1)  If the input handle is invalid, an error is signaled by a
-!!         routine in the call tree of this routine.
-!!
-!!     2)  If this routine is called when no search is in progress in the
-!!         the current DAF, the error SPICE(DAFNOSEARCH) is signaled.
-!!
-!! ## Files
-!!
-!!     None.
-!!
-!! ## Particulars
-!!
-!!     DAFCS supports simultaneous searching of multiple DAFs. In
-!!     applications that use this capability, DAFCS should be called
-!!     prior to each call to DAFFNA, DAFFPA, DAFGN, DAFGS, DAFRS, or
-!!     DAFWS, to specify which DAF is to be acted upon.
-!!
-!! ## Examples
-!!
-!!     See $Examples in DAFFA.
-!!
-!! ## Restrictions
-!!
-!!     1)  Calls that do or may change DAF addresses of DAF summaries,
-!!         names, or data of a given DAF file should not be made during
-!!         a search of that file initiated by either DAFBFS or DAFBBS.
-!!         No such changes should be made between the start of a search
-!!         and calls to any entry point that reads or writes to the
-!!         summary of the "current array" found by that search, or
-!!         that returns a "found" flag indicating whether the current
-!!         array exists.
-!!
-!!         Changing the size of the comment area while a search is in
-!!         progress can invalidate record numbers stored in local data
-!!         structures of this routine. This can cause corrupted array
-!!         summaries and names to be returned upon read access and file
-!!         corruption to occur upon write access.
-!!
-!!         Adding arrays (aka "segments") while either a forward or
-!!         backward search is in progress can cause the search to miss
-!!         the new segments.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman       (JPL)
-!!     J. Diaz del Rio    (ODC Space)
-!!     B.V. Semenov       (JPL)
-!!     W.L. Taber         (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 1.0.3, 26-OCT-2021 (JDR) (NJB)
-!!
-!!        Edited the header to comply with NAIF standard.
-!!
-!!        Updated $Restrictions section.
-!!
-!!-    SPICELIB Version 1.0.2, 10-FEB-2014 (BVS)
-!!
-!!        Added full declaration of HANDLE to the $Declarations section
-!!        of the header.
-!!
-!!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!!
-!!        Comment section for permuted index source lines was added
-!!        following the header.
-!!
-!!-    SPICELIB Version 1.0.0, 04-SEP-1991 (NJB) (WLT)
-!!
-!! ## Index Entries
-!!
-!!     select a DAF to continue searching
-!!
-!!     Standard SPICE error handling.
-!!
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -25299,237 +23354,201 @@ contains
       end associate
       end procedure dafcs
 
-!$Procedure DAFBT ( DAF, convert binary file to transfer file )
-
+      !> ## Detailed Input
+      !>
+      !>     BINFIL   is the name of a binary DAF file which is to be converted
+      !>              to an equivalent DAF transfer file.
+      !>
+      !>     XFRLUN   is the Fortran logical unit number of a previously opened
+      !>              file. The DAF transfer file will be written to the
+      !>              file attached to this logical unit beginning at the
+      !>              current position in the file.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the binary DAF file specified by the filename BINFIL cannot
+      !>         be opened for read access, an error is signaled by a routine
+      !>         in the call tree of this routine.
+      !>
+      !>     2)  If for some reason the DAF transfer file cannot be written
+      !>         to, the error SPICE(FILEWRITEFAILED) is signaled.
+      !>
+      !>     3)  If, for any reason, the DAF file cannot be read, an error is
+      !>         signaled by a routine in the call tree of this routine.
+      !>
+      !>     4)  If the ID word cannot be read from the binary file, the error
+      !>         SPICE(FILEREADFAILED) is signaled.
+      !>
+      !>     5)  The binary DAF file opened by this routine, BINFIL, is only
+      !>         GUARANTEED to be closed upon successful completion of the
+      !>         conversion process. In the event of an error, the caller of
+      !>         this routine is required to close the binary DAF file BINFIL.
+      !>
+      !> ## Files
+      !>
+      !>     See arguments BINFIL, XFRLUN.
+      !>
+      !> ## Particulars
+      !>
+      !>     Any binary DAF file may be transferred between heterogeneous
+      !>     Fortran environments by converting it to an equivalent file
+      !>     containing only ASCII characters. Such a file can be transferred
+      !>     almost universally, using any number of established protocols.
+      !>     Once transferred, the ASCII file can be converted to a binary
+      !>     file, using the representations native to the new host
+      !>     environment.
+      !>
+      !>     This routine provides a mechanism for converting a binary DAF
+      !>     file into an equivalent encoded ASCII file called a DAF transfer
+      !>     file. It is one of a pair of routines for performing conversions
+      !>     between the binary format of a DAF file and the DAF transfer file.
+      !>     The inverse of this routine is the routine DAFTB.
+      !>
+      !>     The contents of the reserved records in a binary DAF file are
+      !>     ignored by this routine. They are not written to the DAF transfer
+      !>     file. The reserved records must be dealt with separately from the
+      !>     data in a DAF file.
+      !>
+      !>     Upon successful completion, the DAF transfer file attached to
+      !>     Fortran logical unit XFRLUN will contain the same data as the
+      !>     binary DAF file BINFIL. The binary DAF file BINFIL will be closed
+      !>     when this routine exits. The DAF transfer file will remain open,
+      !>     as it was on entry, and it will be positioned to write on the
+      !>     first line following the encoded DAF data.
+      !>
+      !> ## Examples
+      !>
+      !>     Let
+      !>
+      !>        BINFIL   be the name of a binary DAF file which is to be
+      !>                 converted to an equivalent DAF transfer file.
+      !>
+      !>        XFRLUN   be the Fortran logical unit to which the DAF transfer
+      !>                 file is to be written.
+      !>
+      !>     The following subroutine call would read the binary DAF
+      !>     file with the name BINFIL, convert its data into an encoded
+      !>     format, and write that data to the DAF transfer file attached
+      !>     to the Fortran logical unit XFRLUN, beginning at the current
+      !>     position in the file.
+      !>
+      !>        CALL DAFBT( BINFIL, XFRLUN )
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     F.S. Turner        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 4.1.0, 13-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 4.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        Updated the routine to utilize the new handle manager
+      !>        interfaces.
+      !>
+      !>-    SPICELIB Version 3.0.0, 25-JAN-1995 (KRG)
+      !>
+      !>        Updated the header and in line comments to reflect the change
+      !>        from calling files text files to calling them transfer files.
+      !>
+      !>        Changed the variable name TXTLUN to XFRLUN to make it
+      !>        compatible with the change in terminology.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-OCT-1993 (KRG)
+      !>
+      !>        No changes to this routine were necessary to incorporate the
+      !>        new file ID word format. This routine already read and copied
+      !>        the ID word to the text file being created.
+      !>
+      !>        Also, all list directed writes in this routine were replaced by
+      !>        formatted writes with FMT = '(A)'. This routine only writes
+      !>        character data.
+      !>
+      !>        Added a test of FAILED() after the call to DAFHLU for
+      !>        completeness.
+      !>
+      !>-    SPICELIB Version 1.0.1, 24-JUN-1993 (KRG)
+      !>
+      !>        Modified the description of the DAF encoded text file format
+      !>        appearing before the program code.
+      !>
+      !>-    SPICELIB Version 1.0.0, 29-OCT-1992 (KRG)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 4.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        This routine still uses a naked READ to retrieve the
+      !>        file IDWORD from the first 8 characters stored in the
+      !>        file record. It may be that future environments
+      !>        will have characters whose storage exceeds 1 byte,
+      !>        in which case this routine will require modification.
+      !>        One possibility is to call the private file record
+      !>        reader ZZDAFGFR, which must address the translation
+      !>        for all supported non-native binary file formats on this
+      !>        platform.
+      !>
+      !>        The existing call to DAFHLU was replaced with ZZDDHHLU.
+      !>        The call to DAFRDA was replaced with a call to the new,
+      !>        translation-aware routine DAFGDA.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-OCT-1993 (KRG)
+      !>
+      !>        No changes to this routine were necessary to incorporate the
+      !>        new file ID word format. This routine already read and copied
+      !>        the ID word to the text file being created.
+      !>
+      !>        Also, all list directed writes in this routine were replaced by
+      !>        formatted writes with FMT = '(A)'. This routine only writes
+      !>        character data.
+      !>
+      !>        Added a test of FAILED() after the call to DAFHLU for
+      !>        completeness.
+      !>
+      !>-    SPICELIB Version 1.0.1, 24-JUN-1993 (KRG)
+      !>
+      !>        Modified the description of the DAF encoded text file format
+      !>        appearing before the program code. Changed the line:
+      !>
+      !>           C        < DAF ND value > < DAF NI value >
+      !>
+      !>        to the lines:
+      !>
+      !>           C        < DAF ND value >
+      !>           C        < DAF NI value >
+      !>
+      !>        This change was necessary because the output format for the
+      !>        low level routines which encode and write the data were
+      !>        modified to fix a problem. See the routines WRENCD and WRENCI
+      !>        for details of the modification.
       module procedure dafbt
-!! ## Abstract
-!!
-!!     Convert the contents of a binary DAF file to an equivalent DAF
-!!     transfer file.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim
       implicit none
 
-! $ Detailed_Input
-!
-!     BINFIL   is the name of a binary DAF file which is to be converted
-!              to an equivalent DAF transfer file.
-!
-!     XFRLUN   is the Fortran logical unit number of a previously opened
-!              file. The DAF transfer file will be written to the
-!              file attached to this logical unit beginning at the
-!              current position in the file.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the binary DAF file specified by the filename BINFIL cannot
-!         be opened for read access, an error is signaled by a routine
-!         in the call tree of this routine.
-!
-!     2)  If for some reason the DAF transfer file cannot be written
-!         to, the error SPICE(FILEWRITEFAILED) is signaled.
-!
-!     3)  If, for any reason, the DAF file cannot be read, an error is
-!         signaled by a routine in the call tree of this routine.
-!
-!     4)  If the ID word cannot be read from the binary file, the error
-!         SPICE(FILEREADFAILED) is signaled.
-!
-!     5)  The binary DAF file opened by this routine, BINFIL, is only
-!         GUARANTEED to be closed upon successful completion of the
-!         conversion process. In the event of an error, the caller of
-!         this routine is required to close the binary DAF file BINFIL.
-!
-! $ Files
-!
-!     See arguments BINFIL, XFRLUN.
-!
-! $ Particulars
-!
-!     Any binary DAF file may be transferred between heterogeneous
-!     Fortran environments by converting it to an equivalent file
-!     containing only ASCII characters. Such a file can be transferred
-!     almost universally, using any number of established protocols.
-!     Once transferred, the ASCII file can be converted to a binary
-!     file, using the representations native to the new host
-!     environment.
-!
-!     This routine provides a mechanism for converting a binary DAF
-!     file into an equivalent encoded ASCII file called a DAF transfer
-!     file. It is one of a pair of routines for performing conversions
-!     between the binary format of a DAF file and the DAF transfer file.
-!     The inverse of this routine is the routine DAFTB.
-!
-!     The contents of the reserved records in a binary DAF file are
-!     ignored by this routine. They are not written to the DAF transfer
-!     file. The reserved records must be dealt with separately from the
-!     data in a DAF file.
-!
-!     Upon successful completion, the DAF transfer file attached to
-!     Fortran logical unit XFRLUN will contain the same data as the
-!     binary DAF file BINFIL. The binary DAF file BINFIL will be closed
-!     when this routine exits. The DAF transfer file will remain open,
-!     as it was on entry, and it will be positioned to write on the
-!     first line following the encoded DAF data.
-!
-! $ Examples
-!
-!     Let
-!
-!        BINFIL   be the name of a binary DAF file which is to be
-!                 converted to an equivalent DAF transfer file.
-!
-!        XFRLUN   be the Fortran logical unit to which the DAF transfer
-!                 file is to be written.
-!
-!     The following subroutine call would read the binary DAF
-!     file with the name BINFIL, convert its data into an encoded
-!     format, and write that data to the DAF transfer file attached
-!     to the Fortran logical unit XFRLUN, beginning at the current
-!     position in the file.
-!
-!        CALL DAFBT( BINFIL, XFRLUN )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     F.S. Turner        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 4.1.0, 13-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 4.0.0, 16-NOV-2001 (FST)
-!
-!        Updated the routine to utilize the new handle manager
-!        interfaces.
-!
-!-    SPICELIB Version 3.0.0, 25-JAN-1995 (KRG)
-!
-!        Updated the header and in line comments to reflect the change
-!        from calling files text files to calling them transfer files.
-!
-!        Changed the variable name TXTLUN to XFRLUN to make it
-!        compatible with the change in terminology.
-!
-!-    SPICELIB Version 2.0.0, 04-OCT-1993 (KRG)
-!
-!        No changes to this routine were necessary to incorporate the
-!        new file ID word format. This routine already read and copied
-!        the ID word to the text file being created.
-!
-!        Also, all list directed writes in this routine were replaced by
-!        formatted writes with FMT = '(A)'. This routine only writes
-!        character data.
-!
-!        Added a test of FAILED() after the call to DAFHLU for
-!        completeness.
-!
-!-    SPICELIB Version 1.0.1, 24-JUN-1993 (KRG)
-!
-!        Modified the description of the DAF encoded text file format
-!        appearing before the program code.
-!
-!-    SPICELIB Version 1.0.0, 29-OCT-1992 (KRG)
-!
-!-&
-
-! $ Index_Entries
-!
-!     convert binary DAF into a DAF transfer file
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 4.0.0, 16-NOV-2001 (FST)
-!
-!        This routine still uses a naked READ to retrieve the
-!        file IDWORD from the first 8 characters stored in the
-!        file record. It may be that future environments
-!        will have characters whose storage exceeds 1 byte,
-!        in which case this routine will require modification.
-!        One possibility is to call the private file record
-!        reader ZZDAFGFR, which must address the translation
-!        for all supported non-native binary file formats on this
-!        platform.
-!
-!        The existing call to DAFHLU was replaced with ZZDDHHLU.
-!        The call to DAFRDA was replaced with a call to the new,
-!        translation-aware routine DAFGDA.
-!
-!-    SPICELIB Version 2.0.0, 04-OCT-1993 (KRG)
-!
-!        No changes to this routine were necessary to incorporate the
-!        new file ID word format. This routine already read and copied
-!        the ID word to the text file being created.
-!
-!        Also, all list directed writes in this routine were replaced by
-!        formatted writes with FMT = '(A)'. This routine only writes
-!        character data.
-!
-!        Added a test of FAILED() after the call to DAFHLU for
-!        completeness.
-!
-!-    SPICELIB Version 1.0.1, 24-JUN-1993 (KRG)
-!
-!        Modified the description of the DAF encoded text file format
-!        appearing before the program code. Changed the line:
-!
-!           C        < DAF ND value > < DAF NI value >
-!
-!        to the lines:
-!
-!           C        < DAF ND value >
-!           C        < DAF NI value >
-!
-!        This change was necessary because the output format for the
-!        low level routines which encode and write the data were
-!        modified to fix a problem. See the routines WRENCD and WRENCI
-!        for details of the modification.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
       character(*), parameter :: quote = ''''
 
       character(*), parameter :: begarr = 'BEGIN_ARRAY'
@@ -25551,9 +23570,6 @@ contains
       integer(ip), parameter :: ifnlen = 60
 
       integer(ip), parameter :: linlen = 80
-!
-!     Local variables
-!
       character(idwlen)     idword
       character(ifnlen)     ifname
       character(linlen)     line
@@ -26053,181 +24069,153 @@ contains
       return
       end procedure dafbt
 
-!$Procedure DAFA2B ( DAF, ASCII to binary )
-
+      !> ## Abstract
+      !>
+      !>     Deprecated: This routine has been superseded by the SPICELIB
+      !>     routine DAFTB. NAIF supports this routine only to provide backward
+      !>     compatibility.
+      !>
+      !>     Convert an ASCII (text) DAF to an equivalent binary DAF.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     ASCII    is the name of an existing ASCII (text) DAF.
+      !>
+      !>     BINARY   is the name of the binary DAF to be created.
+      !>              The binary DAF contains the same data as the
+      !>              ASCII DAF, but in a form more suitable for use
+      !>              by application programs.
+      !>
+      !>     RESV     is the number of records to be reserved in the
+      !>              binary DAF.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If an error occurs while converting the input ASCII text DAF
+      !>         file to binary format, the error is signaled by a routine in
+      !>         the call tree of this routine.
+      !>
+      !>     2)  If an error occurs while writing data to the output binary DAF
+      !>         file, the error is signaled by a routine in the call tree of
+      !>         this routine.
+      !>
+      !> ## Files
+      !>
+      !>     See arguments ASCII, BINARY.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine has been made obsolete by the new DAF text to binary
+      !>     conversion routine DAFTB. This routine remains available for
+      !>     reasons of backward compatibility. We strongly recommend that the
+      !>     conversion routine DAFTB be used for any new software development.
+      !>     Please see the header of the routine DAFTB for details.
+      !>
+      !>     This routine is used for converting older DAF text files, which
+      !>     use a decimal format for numbers, into their equivalent binary
+      !>     formats. Note that the routine DAFTB makes use of a text file
+      !>     format that is incompatible with the text file format expected by
+      !>     the routines called by this routine.
+      !>
+      !>     Note that you must select the number of records to be reserved
+      !>     in the binary DAF. The contents of reserved records are ignored
+      !>     by the normal transfer process.
+      !>
+      !> ## Examples
+      !>
+      !>     DAFB2A and DAFA2B are typically used to transfer files.
+      !>     If file A.DAF is a binary DAF in environment 1, it
+      !>     can be transferred to environment 2 in three steps.
+      !>
+      !>        1) Convert it to ASCII,
+      !>
+      !>              CALL DAFB2A ( 'A.DAF', 'A.ASCII' )
+      !>
+      !>        2) Transfer the ASCII file, using FTP, Kermit, or some other
+      !>           file transfer utility,
+      !>
+      !>              ftp> put a.ascii
+      !>
+      !>        3) Convert it to binary on the new machine,
+      !>
+      !>              CALL DAFA2B ( 'A.ASCII', 'A.DAF', RESV )
+      !>
+      !>     Note that DAFB2A and DAFA2B work in any standard Fortran-77
+      !>     environment.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  DAFA2B cannot be executed while any other DAF is open
+      !>         for writing.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.1.0, 26-OCT-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Updated
+      !>        $Exceptions section to better describe the issues detected by
+      !>        this routine. Moved DAF required reading from
+      !>        $Literature_References to $Required_Reading section.
+      !>
+      !>-    SPICELIB Version 2.0.1, 26-JUL-2012 (EDW)
+      !>
+      !>        Edited $Abstract section to use "Deprecated" keyword
+      !>        and state replacement routine.
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>-    SPICELIB Version 2.0.0, 30-SEP-1993 (KRG)
+      !>
+      !>        This routine was completely rewritten to make use of the
+      !>        routines DAFT2B and TXTOPR, for converting a text file to
+      !>        binary and opening a text file. It now simply calls the
+      !>        routine DAFT2B after opening the text file.
+      !>
+      !>        Added a statement to the $Particulars section to the effect
+      !>        that this routine has been made obsolete by the introduction of
+      !>        the routine DAFTB, and that the use of the new routine is
+      !>        strongly recommended for new software development.
+      !>
+      !>        Modified the $Abstract section to reflect the fact that this
+      !>        routine is obsolete.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafa2b
-!! ## Abstract
-!!
-!!     Deprecated: This routine has been superseded by the SPICELIB
-!!     routine DAFTB. NAIF supports this routine only to provide backward
-!!     compatibility.
-!!
-!!     Convert an ASCII (text) DAF to an equivalent binary DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     ASCII    is the name of an existing ASCII (text) DAF.
-!
-!     BINARY   is the name of the binary DAF to be created.
-!              The binary DAF contains the same data as the
-!              ASCII DAF, but in a form more suitable for use
-!              by application programs.
-!
-!     RESV     is the number of records to be reserved in the
-!              binary DAF.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If an error occurs while converting the input ASCII text DAF
-!         file to binary format, the error is signaled by a routine in
-!         the call tree of this routine.
-!
-!     2)  If an error occurs while writing data to the output binary DAF
-!         file, the error is signaled by a routine in the call tree of
-!         this routine.
-!
-! $ Files
-!
-!     See arguments ASCII, BINARY.
-!
-! $ Particulars
-!
-!     This routine has been made obsolete by the new DAF text to binary
-!     conversion routine DAFTB. This routine remains available for
-!     reasons of backward compatibility. We strongly recommend that the
-!     conversion routine DAFTB be used for any new software development.
-!     Please see the header of the routine DAFTB for details.
-!
-!     This routine is used for converting older DAF text files, which
-!     use a decimal format for numbers, into their equivalent binary
-!     formats. Note that the routine DAFTB makes use of a text file
-!     format that is incompatible with the text file format expected by
-!     the routines called by this routine.
-!
-!     Note that you must select the number of records to be reserved
-!     in the binary DAF. The contents of reserved records are ignored
-!     by the normal transfer process.
-!
-! $ Examples
-!
-!     DAFB2A and DAFA2B are typically used to transfer files.
-!     If file A.DAF is a binary DAF in environment 1, it
-!     can be transferred to environment 2 in three steps.
-!
-!        1) Convert it to ASCII,
-!
-!              CALL DAFB2A ( 'A.DAF', 'A.ASCII' )
-!
-!        2) Transfer the ASCII file, using FTP, Kermit, or some other
-!           file transfer utility,
-!
-!              ftp> put a.ascii
-!
-!        3) Convert it to binary on the new machine,
-!
-!              CALL DAFA2B ( 'A.ASCII', 'A.DAF', RESV )
-!
-!     Note that DAFB2A and DAFA2B work in any standard Fortran-77
-!     environment.
-!
-! $ Restrictions
-!
-!     1)  DAFA2B cannot be executed while any other DAF is open
-!         for writing.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     H.A. Neilan        (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 26-OCT-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Updated
-!        $Exceptions section to better describe the issues detected by
-!        this routine. Moved DAF required reading from
-!        $Literature_References to $Required_Reading section.
-!
-!-    SPICELIB Version 2.0.1, 26-JUL-2012 (EDW)
-!
-!        Edited $Abstract section to use "Deprecated" keyword
-!        and state replacement routine.
-!
-!        Eliminated unneeded $Revisions section.
-!
-!-    SPICELIB Version 2.0.0, 30-SEP-1993 (KRG)
-!
-!        This routine was completely rewritten to make use of the
-!        routines DAFT2B and TXTOPR, for converting a text file to
-!        binary and opening a text file. It now simply calls the
-!        routine DAFT2B after opening the text file.
-!
-!        Added a statement to the $Particulars section to the effect
-!        that this routine has been made obsolete by the introduction of
-!        the routine DAFTB, and that the use of the new routine is
-!        strongly recommended for new software development.
-!
-!        Modified the $Abstract section to reflect the fact that this
-!        routine is obsolete.
-!
-!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!
-!        Literature references added to the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     DEPRECATED ascii DAF to binary
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           unit
 
 !
@@ -26266,178 +24254,150 @@ contains
       return
       end procedure dafa2b
 
-!$Procedure DAFB2A ( DAF, binary to ASCII )
-
+      !> ## Abstract
+      !>
+      !>     Deprecated: This routine has been superseded by the SPICELIB
+      !>     routine DAFBT. NAIF supports this routine only to provide backward
+      !>     compatibility.
+      !>
+      !>     Convert a binary DAF to an equivalent ASCII (text) DAF.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     BINARY   is the name of an existing binary DAF.
+      !>
+      !>     ASCII    is the name of an ASCII (text) DAF to be created.
+      !>              The ASCII file contains the same data as the binary
+      !>              file, but in a form more suitable for transfer
+      !>              between heterogeneous computing environments.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If an error occurs while reading the input binary DAF file,
+      !>         the error is signaled by a routine in the call tree of this
+      !>         routine.
+      !>
+      !>     2)  If an error occurs while converting the input binary DAF file
+      !>         to text format, the error is signaled by a routine in the call
+      !>         tree of this routine.
+      !>
+      !>     3)  If an error occurs while writing data to the output ASCII text
+      !>         DAF file, the error is signaled by a routine in the call tree
+      !>         of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     See arguments BINARY, ASCII.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine has been made obsolete by the new DAF binary to text
+      !>     conversion routine DAFBT. This routine remains available for
+      !>     reasons of backward compatibility. We strongly recommend that the
+      !>     conversion routine DAFBT be used for any new software development.
+      !>     Please see the header of the routine DAFBT for details.
+      !>
+      !>     Note that the contents of reserved records in the binary file
+      !>     are not stored in the ASCII file.
+      !>
+      !> ## Examples
+      !>
+      !>     DAFB2A and DAFA2B are typically used to transfer files.
+      !>     If file A.DAF is a binary DAF in environment 1, it can be
+      !>     transferred to environment 2 in three steps.
+      !>
+      !>        1) Convert it to ASCII,
+      !>
+      !>              CALL DAFB2A ( 'A.DAF', 'A.ASCII' )
+      !>
+      !>        2) Transfer the ASCII file, using FTP, Kermit, or some other
+      !>           file transfer utility,
+      !>
+      !>              ftp> put a.ascii
+      !>
+      !>        3) Convert it to binary on the new machine,
+      !>
+      !>              CALL DAFA2B ( 'A.ASCII', 'A.DAF', RESV )
+      !>
+      !>     Note that DAFB2A and DAFA2B work in any standard Fortran-77
+      !>     environment.
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.2.0, 26-OCT-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Updated
+      !>        $Exceptions section to better describe the issues detected by
+      !>        this routine. Moved DAF required reading from
+      !>        $Literature_References to $Required_Reading section.
+      !>
+      !>-    SPICELIB Version 2.1.1, 26-JUL-2012 (EDW)
+      !>
+      !>        Edited $Abstract section to use "Deprecated" keyword
+      !>        and state replacement routine.
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>-    SPICELIB Version 2.1.0, 18-JUN-1999 (WLT)
+      !>
+      !>        Fixed call to CHKOUT with wrong name.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-OCT-1993 (KRG)
+      !>
+      !>        This routine was completely rewritten to make use of the
+      !>        routines DAFB2T and TXTOPN, for converting a text file to
+      !>        binary and opening a text file. It now simply calls the
+      !>        routine DAFT2B after opening the text file with TXTOPN.
+      !>
+      !>        Added a statement to the $Particulars section to the effect
+      !>        that this routine has been made obsolete by the introduction of
+      !>        the routine DAFBT, and that we strongly recommend the use of
+      !>        the new routine.
+      !>
+      !>        Modified the $Abstract section to reflect the fact that this
+      !>        routine is obsolete.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafb2a
-!! ## Abstract
-!!
-!!     Deprecated: This routine has been superseded by the SPICELIB
-!!     routine DAFBT. NAIF supports this routine only to provide backward
-!!     compatibility.
-!!
-!!     Convert a binary DAF to an equivalent ASCII (text) DAF.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip
       implicit none
 
-! $ Detailed_Input
-!
-!     BINARY   is the name of an existing binary DAF.
-!
-!     ASCII    is the name of an ASCII (text) DAF to be created.
-!              The ASCII file contains the same data as the binary
-!              file, but in a form more suitable for transfer
-!              between heterogeneous computing environments.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If an error occurs while reading the input binary DAF file,
-!         the error is signaled by a routine in the call tree of this
-!         routine.
-!
-!     2)  If an error occurs while converting the input binary DAF file
-!         to text format, the error is signaled by a routine in the call
-!         tree of this routine.
-!
-!     3)  If an error occurs while writing data to the output ASCII text
-!         DAF file, the error is signaled by a routine in the call tree
-!         of this routine.
-!
-! $ Files
-!
-!     See arguments BINARY, ASCII.
-!
-! $ Particulars
-!
-!     This routine has been made obsolete by the new DAF binary to text
-!     conversion routine DAFBT. This routine remains available for
-!     reasons of backward compatibility. We strongly recommend that the
-!     conversion routine DAFBT be used for any new software development.
-!     Please see the header of the routine DAFBT for details.
-!
-!     Note that the contents of reserved records in the binary file
-!     are not stored in the ASCII file.
-!
-! $ Examples
-!
-!     DAFB2A and DAFA2B are typically used to transfer files.
-!     If file A.DAF is a binary DAF in environment 1, it can be
-!     transferred to environment 2 in three steps.
-!
-!        1) Convert it to ASCII,
-!
-!              CALL DAFB2A ( 'A.DAF', 'A.ASCII' )
-!
-!        2) Transfer the ASCII file, using FTP, Kermit, or some other
-!           file transfer utility,
-!
-!              ftp> put a.ascii
-!
-!        3) Convert it to binary on the new machine,
-!
-!              CALL DAFA2B ( 'A.ASCII', 'A.DAF', RESV )
-!
-!     Note that DAFB2A and DAFA2B work in any standard Fortran-77
-!     environment.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     H.A. Neilan        (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.2.0, 26-OCT-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Updated
-!        $Exceptions section to better describe the issues detected by
-!        this routine. Moved DAF required reading from
-!        $Literature_References to $Required_Reading section.
-!
-!-    SPICELIB Version 2.1.1, 26-JUL-2012 (EDW)
-!
-!        Edited $Abstract section to use "Deprecated" keyword
-!        and state replacement routine.
-!
-!        Eliminated unneeded $Revisions section.
-!
-!-    SPICELIB Version 2.1.0, 18-JUN-1999 (WLT)
-!
-!        Fixed call to CHKOUT with wrong name.
-!
-!-    SPICELIB Version 2.0.0, 04-OCT-1993 (KRG)
-!
-!        This routine was completely rewritten to make use of the
-!        routines DAFB2T and TXTOPN, for converting a text file to
-!        binary and opening a text file. It now simply calls the
-!        routine DAFT2B after opening the text file with TXTOPN.
-!
-!        Added a statement to the $Particulars section to the effect
-!        that this routine has been made obsolete by the introduction of
-!        the routine DAFBT, and that we strongly recommend the use of
-!        the new routine.
-!
-!        Modified the $Abstract section to reflect the fact that this
-!        routine is obsolete.
-!
-!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!
-!        Literature references added to the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     DEPRECATED binary DAF to ascii
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local variables
-!
       integer(ip)           unit
 
 !
@@ -26473,283 +24433,252 @@ contains
       return
       end procedure dafb2a
 
-!$Procedure DAFB2T ( DAF, binary to text )
-
+      !> ## Abstract
+      !>
+      !>     Deprecated: This routine has been superseded by the SPICELIB
+      !>     routine DAFBT. NAIF supports this routine only to provide backward
+      !>     compatibility.
+      !>
+      !>     Write the contents of a binary DAF to a text file opened by
+      !>     the calling program.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     BINARY   is the name of an existing binary DAF.
+      !>
+      !>     TEXT     is a logical unit number, to which a text file has
+      !>              been connected by the calling program, and into
+      !>              which the contents of BINARY are to be written
+      !>              (in a form more suitable for transfer between
+      !>              heterogeneous computing environments).
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If for some reason the text file cannot be written,
+      !>         the error SPICE(DAFWRITEFAIL) is signaled.
+      !>
+      !>     2)  If for some reason the ID word cannot be read from the DAF
+      !>         file, the error SPICE(DAFREADFAIL) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See arguments BINARY, TEXT.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine has been made obsolete by the new DAF binary to text
+      !>     conversion routine DAFBT. This routine remains available for
+      !>     reasons of backward compatibility. We strongly recommend that you
+      !>     use the new conversion routines for any new software development.
+      !>     Please see the header of the routine DAFBT for details.
+      !>
+      !>     Any binary DAF may be transferred between heterogeneous
+      !>     Fortran environments by converting it to an equivalent file
+      !>     containing only ASCII characters. Such a file can be transferred
+      !>     almost universally, using any number of established protocols
+      !>     (Kermit, FTP, and so on). Once transferred, the ASCII file can
+      !>     be converted to a binary file, using the representations
+      !>     native to the new host environment.
+      !>
+      !>     There are two pairs of routines that can be used to convert
+      !>     DAFs between binary and text. The first pair, DAFB2A
+      !>     and DAFA2B, works with complete files. That is, DAFB2A creates
+      !>     a complete ASCII file containing all of the information in
+      !>     a particular binary file, and nothing else; this file can
+      !>     be fed directly into DAFA2B to produce a complete binary file.
+      !>     In each case, the names of the files are specified.
+      !>
+      !>     A related pair of routines, DAFB2T and DAFT2B, assume that
+      !>     the ASCII data are to be stored in the midst of a text file.
+      !>     This allows the calling program to surround the data with
+      !>     standardized labels, to append several binary files into a
+      !>     single text file, and so on.
+      !>
+      !>     Note that the contents of reserved records in the binary file
+      !>     are not written by this routine (although they may be stored
+      !>     in the ASCII file by the calling program).
+      !>
+      !> ## Examples
+      !>
+      !>     DAFB2A and DAFA2B are typically used for simple file transfers.
+      !>     If file A.DAF is a binary DAF in environment 1, it can be
+      !>     transferred to environment 2 in three steps.
+      !>
+      !>        1) Convert it to ASCII:
+      !>
+      !>              CALL DAFB2A ( 'A.DAF', 'A.ASCII' )
+      !>
+      !>        2) Transfer the ASCII file, using FTP, Kermit, or some other
+      !>           file transfer utility:
+      !>
+      !>              ftp> put a.ascii
+      !>
+      !>        3) Convert it to binary on the new machine,
+      !>
+      !>              CALL DAFA2B ( 'A.ASCII', 'A.DAF', RESV )
+      !>
+      !>     Note that DAFB2A and DAFA2B work in any standard Fortran-77
+      !>     environment.
+      !>
+      !>     If the file needs to contain other information---a standard
+      !>     label, for instance---the first and third steps must be modified
+      !>     to use DAFB2T and DAFT2B. The first step becomes
+      !>
+      !>        (Open a text file)
+      !>        (Write the label)
+      !>        CALL DAFB2T ( BINARY, UNIT  )
+      !>        (Close the text file)
+      !>
+      !>     The third step becomes
+      !>
+      !>        (Open the text file)
+      !>        (Read the label)
+      !>        CALL DAFT2B ( UNIT, BINARY, RESV )
+      !>        (Close the text file)
+      !>
+      !> ## Restrictions
+      !>
+      !>     None.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     F.S. Turner        (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.1.0, 26-OCT-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Moved DAF
+      !>        required reading from $Literature_References to
+      !>        $Required_Reading section.
+      !>
+      !>-    SPICELIB Version 3.0.1, 26-JUL-2012 (EDW)
+      !>
+      !>        Edited $Abstract section to use "Deprecated" keyword
+      !>        and state replacement routine.
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
+      !>
+      !>        This routine still uses a naked READ to retrieve the
+      !>        file IDWORD from the first 8 characters stored in the
+      !>        file record. It may be that future environments
+      !>        will have characters whose storage exceeds 1 byte,
+      !>        in which case this routine will require modification.
+      !>        One possibility is to call the private file record
+      !>        reader ZZDAFGFR, which must address the translation
+      !>        for all supported non-native binary file formats on this
+      !>        platform.
+      !>
+      !>        The existing call to DAFHLU was replaced with ZZDDHHLU.
+      !>        The call to DAFRDA was replaced with a call to the new,
+      !>        translation-aware routine DAFGDA.
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-OCT-1993 (KRG)
+      !>
+      !>        Added the variable IDWORD to the routine for storing the ID
+      !>        word from the file being converted. This replaces a hard coded
+      !>        value of 'NAIF/DAF', and supports the new interpretation of the
+      !>        ID word.
+      !>
+      !>        Removed the error SPICE(DAFNOIDWORD) as it was no longer
+      !>        relevant.
+      !>
+      !>        There were no checks of the IOSTAT variable after attempting to
+      !>        write to the text file, a single test of the IOSTAT variable
+      !>        was made at the end of the routine. This was not adequate to
+      !>        detect errors when writing to the text file. So after all of
+      !>        these write statements, an IF ... END IF block was added to
+      !>        signal an error if IOSTAT .NE. 0.
+      !>
+      !>           IF ( IOSTAT .NE. 0 ) THEN
+      !>
+      !>              CALL DAFCLS ( HANDLE                                )
+      !>              CALL SETMSG ( 'The attempt to write to file ''#''' //
+      !>        .                   ' failed. IOSTAT = #.'                )
+      !>              CALL ERRFNM ( '#', TEXT                             )
+      !>              CALL SIGERR ( SPICE(DAFWRITEFAIL)                 )
+      !>              CALL CHKOUT ( 'DAFB2T'                              )
+      !>              RETURN
+      !>
+      !>           END IF
+      !>
+      !>        Removed the code from the end of the routine that purported to
+      !>        check for read errors:
+      !>
+      !>           C
+      !>           C     If any write screws up, they should all screw up. Why
+      !>           C     make a billion separate checks?
+      !>           C
+      !>                 IF ( IOSTAT .NE. 0 ) THEN
+      !>                    CALL SETMSG ( 'Value of IOSTAT was: #. ' )
+      !>                    CALL ERRINT ( '#', IOSTAT                )
+      !>                    CALL SIGERR ( SPICE(DAFWRITEFAIL)      )
+      !>                  END IF
+      !>
+      !>        The answer to the question is:
+      !>
+      !>           You have to do a billion separate checks because the IOSTAT
+      !>           value is only valid for the most recently executed write.
+      !>
+      !>        Added the following error message to the routine:
+      !>
+      !>           C     2) If for some reason the ID word cannot be read from
+      !>           C        the DAF file, the error SPICE(DAFREADFAIL) will be
+      !>           C        signaled.
+      !>
+      !>        because the file ID word is now read from the binary DAF file
+      !>        rather than being hard coded as 'NAIF/DAF' in this routine.
+      !>
+      !>        Added a statement to the $Particulars section to the effect
+      !>        that this routine has been made obsolete by the introduction of
+      !>        the routine DAFBT, and that we strongly recommend the use of
+      !>        the new routine.
+      !>
+      !>        Modified the $Abstract section to reflect the fact that this
+      !>        routine is obsolete.
+      !>
+      !>-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafb2t
-!! ## Abstract
-!!
-!!     Deprecated: This routine has been superseded by the SPICELIB
-!!     routine DAFBT. NAIF supports this routine only to provide backward
-!!     compatibility.
-!!
-!!     Write the contents of a binary DAF to a text file opened by
-!!     the calling program.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       implicit none
 
-! $ Detailed_Input
-!
-!     BINARY   is the name of an existing binary DAF.
-!
-!     TEXT     is a logical unit number, to which a text file has
-!              been connected by the calling program, and into
-!              which the contents of BINARY are to be written
-!              (in a form more suitable for transfer between
-!              heterogeneous computing environments).
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If for some reason the text file cannot be written,
-!         the error SPICE(DAFWRITEFAIL) is signaled.
-!
-!     2)  If for some reason the ID word cannot be read from the DAF
-!         file, the error SPICE(DAFREADFAIL) is signaled.
-!
-! $ Files
-!
-!     See arguments BINARY, TEXT.
-!
-! $ Particulars
-!
-!     This routine has been made obsolete by the new DAF binary to text
-!     conversion routine DAFBT. This routine remains available for
-!     reasons of backward compatibility. We strongly recommend that you
-!     use the new conversion routines for any new software development.
-!     Please see the header of the routine DAFBT for details.
-!
-!     Any binary DAF may be transferred between heterogeneous
-!     Fortran environments by converting it to an equivalent file
-!     containing only ASCII characters. Such a file can be transferred
-!     almost universally, using any number of established protocols
-!     (Kermit, FTP, and so on). Once transferred, the ASCII file can
-!     be converted to a binary file, using the representations
-!     native to the new host environment.
-!
-!     There are two pairs of routines that can be used to convert
-!     DAFs between binary and text. The first pair, DAFB2A
-!     and DAFA2B, works with complete files. That is, DAFB2A creates
-!     a complete ASCII file containing all of the information in
-!     a particular binary file, and nothing else; this file can
-!     be fed directly into DAFA2B to produce a complete binary file.
-!     In each case, the names of the files are specified.
-!
-!     A related pair of routines, DAFB2T and DAFT2B, assume that
-!     the ASCII data are to be stored in the midst of a text file.
-!     This allows the calling program to surround the data with
-!     standardized labels, to append several binary files into a
-!     single text file, and so on.
-!
-!     Note that the contents of reserved records in the binary file
-!     are not written by this routine (although they may be stored
-!     in the ASCII file by the calling program).
-!
-! $ Examples
-!
-!     DAFB2A and DAFA2B are typically used for simple file transfers.
-!     If file A.DAF is a binary DAF in environment 1, it can be
-!     transferred to environment 2 in three steps.
-!
-!        1) Convert it to ASCII:
-!
-!              CALL DAFB2A ( 'A.DAF', 'A.ASCII' )
-!
-!        2) Transfer the ASCII file, using FTP, Kermit, or some other
-!           file transfer utility:
-!
-!              ftp> put a.ascii
-!
-!        3) Convert it to binary on the new machine,
-!
-!              CALL DAFA2B ( 'A.ASCII', 'A.DAF', RESV )
-!
-!     Note that DAFB2A and DAFA2B work in any standard Fortran-77
-!     environment.
-!
-!     If the file needs to contain other information---a standard
-!     label, for instance---the first and third steps must be modified
-!     to use DAFB2T and DAFT2B. The first step becomes
-!
-!        (Open a text file)
-!        (Write the label)
-!        CALL DAFB2T ( BINARY, UNIT  )
-!        (Close the text file)
-!
-!     The third step becomes
-!
-!        (Open the text file)
-!        (Read the label)
-!        CALL DAFT2B ( UNIT, BINARY, RESV )
-!        (Close the text file)
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     H.A. Neilan        (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!     I.M. Underwood     (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.1.0, 26-OCT-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Moved DAF
-!        required reading from $Literature_References to
-!        $Required_Reading section.
-!
-!-    SPICELIB Version 3.0.1, 26-JUL-2012 (EDW)
-!
-!        Edited $Abstract section to use "Deprecated" keyword
-!        and state replacement routine.
-!
-!        Eliminated unneeded $Revisions section.
-!
-!-    SPICELIB Version 3.0.0, 16-NOV-2001 (FST)
-!
-!        This routine still uses a naked READ to retrieve the
-!        file IDWORD from the first 8 characters stored in the
-!        file record. It may be that future environments
-!        will have characters whose storage exceeds 1 byte,
-!        in which case this routine will require modification.
-!        One possibility is to call the private file record
-!        reader ZZDAFGFR, which must address the translation
-!        for all supported non-native binary file formats on this
-!        platform.
-!
-!        The existing call to DAFHLU was replaced with ZZDDHHLU.
-!        The call to DAFRDA was replaced with a call to the new,
-!        translation-aware routine DAFGDA.
-!
-!-    SPICELIB Version 2.0.0, 04-OCT-1993 (KRG)
-!
-!        Added the variable IDWORD to the routine for storing the ID
-!        word from the file being converted. This replaces a hard coded
-!        value of 'NAIF/DAF', and supports the new interpretation of the
-!        ID word.
-!
-!        Removed the error SPICE(DAFNOIDWORD) as it was no longer
-!        relevant.
-!
-!        There were no checks of the IOSTAT variable after attempting to
-!        write to the text file, a single test of the IOSTAT variable
-!        was made at the end of the routine. This was not adequate to
-!        detect errors when writing to the text file. So after all of
-!        these write statements, an IF ... END IF block was added to
-!        signal an error if IOSTAT .NE. 0.
-!
-!           IF ( IOSTAT .NE. 0 ) THEN
-!
-!              CALL DAFCLS ( HANDLE                                )
-!              CALL SETMSG ( 'The attempt to write to file ''#''' //
-!        .                   ' failed. IOSTAT = #.'                )
-!              CALL ERRFNM ( '#', TEXT                             )
-!              CALL SIGERR ( SPICE(DAFWRITEFAIL)                 )
-!              CALL CHKOUT ( 'DAFB2T'                              )
-!              RETURN
-!
-!           END IF
-!
-!        Removed the code from the end of the routine that purported to
-!        check for read errors:
-!
-!           C
-!           C     If any write screws up, they should all screw up. Why
-!           C     make a billion separate checks?
-!           C
-!                 IF ( IOSTAT .NE. 0 ) THEN
-!                    CALL SETMSG ( 'Value of IOSTAT was: #. ' )
-!                    CALL ERRINT ( '#', IOSTAT                )
-!                    CALL SIGERR ( SPICE(DAFWRITEFAIL)      )
-!                  END IF
-!
-!        The answer to the question is:
-!
-!           You have to do a billion separate checks because the IOSTAT
-!           value is only valid for the most recently executed write.
-!
-!        Added the following error message to the routine:
-!
-!           C     2) If for some reason the ID word cannot be read from
-!           C        the DAF file, the error SPICE(DAFREADFAIL) will be
-!           C        signaled.
-!
-!        because the file ID word is now read from the binary DAF file
-!        rather than being hard coded as 'NAIF/DAF' in this routine.
-!
-!        Added a statement to the $Particulars section to the effect
-!        that this routine has been made obsolete by the introduction of
-!        the routine DAFBT, and that we strongly recommend the use of
-!        the new routine.
-!
-!        Modified the $Abstract section to reflect the fact that this
-!        routine is obsolete.
-!
-!-    SPICELIB Version 1.0.2, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!
-!        Literature references added to the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     DEPRECATED binary DAF to text
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local parameters
-!
       integer(ip), parameter :: bsize = 100
 
       integer(ip), parameter :: idwlen = 8
 
       character(*), parameter :: quote = ''''
 
-!
-!     Local variables
-!
       character(idwlen)     idword
       character(60)         ifname
       character(1000)       name
@@ -27082,300 +25011,269 @@ contains
       return
       end procedure dafb2t
 
-!$Procedure DAFT2B ( DAF, text to binary )
-
+      !> ## Abstract
+      !>
+      !>     Deprecated: This routine has been superseded by the SPICELIB
+      !>     routine DAFTB. NAIF supports this routine only to provide backward
+      !>     compatibility.
+      !>
+      !>     Reconstruct a binary DAF from a text file opened by
+      !>     the calling program.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     TEXT     is a logical unit number, to which a text file has
+      !>              been connected by the calling program, and into
+      !>              which the contents of binary DAF have been
+      !>              written. The file pointer should be placed just
+      !>              before the file ID word.
+      !>
+      !>     BINARY   is the name of a binary DAF to be created.
+      !>              The binary DAF contains the same data as the
+      !>              text file, but in a form more suitable for use
+      !>              by application programs.
+      !>
+      !>     RESV     is the number of records to be reserved in the
+      !>              binary DAF.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     BSIZE    is the size of the buffer used to read array elements
+      !>              from the text file. No single group of elements should
+      !>              contains more than BSIZE elements.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If for some reason the text file cannot be read,
+      !>         the error SPICE(DAFREADFAIL) is signaled.
+      !>
+      !>     2)  If the architecture of the file is not DAF, as specified by
+      !>         the ID word, the error SPICE(NOTADAFFILE) is signaled.
+      !>
+      !>     3)  If the text file does not contain matching internal file
+      !>         names, the error SPICE(DAFNOIFNMATCH) is signaled.
+      !>
+      !>     4)  If the text file does not contain matching array names,
+      !>         the error SPICE(DAFNONAMEMATCH) is signaled.
+      !>
+      !>     5)  If the buffer size is not sufficient, the error
+      !>         SPICE(DAFOVERFLOW) is signaled.
+      !>
+      !> ## Files
+      !>
+      !>     See arguments TEXT, BINARY.
+      !>
+      !> ## Particulars
+      !>
+      !>     This routine has been made obsolete by the new DAF text to binary
+      !>     conversion routine DAFTB. This routine remains available for
+      !>     reasons of backward compatibility. We strongly recommend that you
+      !>     use the new conversion routines for any new software development.
+      !>     Please see the header of the routine DAFTB for details.
+      !>
+      !>     This routine is necessary for converting older DAF text files into
+      !>     their equivalent binary formats, as DAFTB uses a different text
+      !>     file format that is incompatible with the text file format
+      !>     expected by this routine.
+      !>
+      !>     Any binary DAF may be transferred between heterogeneous
+      !>     Fortran environments by converting it to an equivalent file
+      !>     containing only ASCII characters. Such a file can be transferred
+      !>     almost universally, using any number of established protocols
+      !>     (Kermit, FTP, and so on). Once transferred, the ASCII file can
+      !>     be reconverted to a binary DAF, using the representations
+      !>     native to the new host environment.
+      !>
+      !>     There are two pairs of routines that can be used to convert
+      !>     DAFs between binary and ASCII. The first pair, DAFB2A
+      !>     and DAFA2B, works with complete files. That is, DAFB2A creates
+      !>     a complete ASCII file containing all of the information in
+      !>     a particular binary DAF, and nothing else; this file can
+      !>     be fed directly into DAFA2B to produce a complete binary DAF.
+      !>     In each case, the names of the files are specified.
+      !>
+      !>     A related pair of routines, DAFB2T and DAFT2B, assume that
+      !>     the ASCII data are to be stored in the midst of a text file.
+      !>     This allows the calling program to surround the data with
+      !>     standardized labels, to append several binary DAFs into a
+      !>     single text file, and so on.
+      !>
+      !>     Note that you must select the number of records to be reserved
+      !>     in the binary DAF. The contents of reserved records are ignored
+      !>     by the normal transfer process.
+      !>
+      !> ## Examples
+      !>
+      !>     DAFB2A and DAFA2B are typically used for simple transfers.
+      !>     If A.DAF is a binary DAF in environment 1, it can be transferred
+      !>     to environment 2 in three steps.
+      !>
+      !>        1) Convert it to ASCII:
+      !>
+      !>              CALL DAFB2A ( 'A.DAF', 'A.ASCII' )
+      !>
+      !>        2) Transfer the ASCII file, using FTP, Kermit, or some other
+      !>           file transfer utility:
+      !>
+      !>              ftp> put a.ascii
+      !>
+      !>        3) Convert it to binary on the new machine,
+      !>
+      !>              CALL DAFA2B ( 'A.ASCII', 'A.DAF', RESV )
+      !>
+      !>     Note that DAFB2A and DAFA2B work in any standard Fortran-77
+      !>     environment.
+      !>
+      !>     If the file needs to contain other information---a standard
+      !>     label, for instance---the first and third steps must be modified
+      !>     to use DAFB2T and DAFT2B. The first step becomes
+      !>
+      !>        (Open a text file)
+      !>        (Write the label)
+      !>        CALL DAFB2T ( BINARY, UNIT  )
+      !>        (Close the text file)
+      !>
+      !>     The third step becomes
+      !>
+      !>        (Open the text file)
+      !>        (Read the label)
+      !>        CALL DAFT2B ( UNIT, BINARY, RESV )
+      !>        (Close the text file)
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  DAFT2B cannot be executed while any other DAF is open
+      !>         for writing.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     J.E. McLean        (JPL)
+      !>     H.A. Neilan        (JPL)
+      !>     W.L. Taber         (JPL)
+      !>     I.M. Underwood     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.1.0, 26-OCT-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard. Moved DAF
+      !>        required reading from $Literature_References to
+      !>        $Required_Reading section.
+      !>
+      !>-    SPICELIB Version 3.0.1, 26-JUL-2012 (EDW)
+      !>
+      !>        Edited $Abstract section to use "Deprecated" keyword
+      !>        and state replacement routine.
+      !>
+      !>        Eliminated unneeded $Revisions section.
+      !>
+      !>-    SPICELIB Version 3.0.0, 04-OCT-1993 (KRG)
+      !>
+      !>        Removed the error SPICE(DAFNOIDWORD) as it was no longer
+      !>        relevant.
+      !>
+      !>        Added the error SPICE(NOTADAFFILE) if this routine is called
+      !>        with a file that does not contain an ID word identifying the
+      !>        file as a DAF file.
+      !>
+      !>        There were no checks of the IOSTAT variable after attempting to
+      !>        read from the text file, a single test of the IOSTAT variable
+      !>        was made at the end of the routine. This was not adequate to
+      !>        detect errors when writing to the text file. So after all of
+      !>        these read statements, an IF ... END IF block was added to
+      !>        signal an error if IOSTAT .NE. 0.
+      !>
+      !>            IF ( IOSTAT .NE. 0 ) THEN
+      !>
+      !>               CALL SETMSG ( 'The attempt to read from file ''#''' //
+      !>         .                   ' failed. IOSTAT = #.'                 )
+      !>               CALL ERRFNM ( '#', UNIT                              )
+      !>               CALL SIGERR ( SPICE(DAFREADFAIL)                   )
+      !>               CALL CHKOUT ( 'DAFT2B'                               )
+      !>               RETURN
+      !>
+      !>            END IF
+      !>
+      !>        Removed the code from the end of the routine that purported to
+      !>        check for read errors:
+      !>
+      !>            C
+      !>            C     If any read screws up, they should all screw up. Why
+      !>            C     make a billion separate checks?
+      !>            C
+      !>                  IF ( IOSTAT .NE. 0 ) THEN
+      !>                     CALL SETMSG ( 'Value of IOSTAT was: #. ' )
+      !>                     CALL ERRINT ( '#', IOSTAT                )
+      !>                     CALL SIGERR ( SPICE(DAFREADFAIL)       )
+      !>                   END IF
+      !>
+      !>        The answer to the question is:
+      !>
+      !>            You have to do a billion separate checks because the IOSTAT
+      !>            value is only valid for the most recently executed read.
+      !>
+      !>        Added a statement to the $Particulars section to the effect
+      !>        that this routine has been made obsolete by the introduction of
+      !>        the routine DAFTB, and that we strongly recommend the use of
+      !>        the new routine. This routine must, however, be used when
+      !>        converting older text files to binary, as the old and new
+      !>        formats are not compatible.
+      !>
+      !>        Modified the $Abstract section to reflect the fact that this
+      !>        routine is obsolete and maintained for purposes of backward
+      !>        compatibility only.
+      !>
+      !>-    SPICELIB Version 2.0.2, 10-MAR-1992 (WLT)
+      !>
+      !>        Comment section for permuted index source lines was added
+      !>        following the header.
+      !>
+      !>-    SPICELIB Version 2.0.1, 06-AUG-1990 (HAN)
+      !>
+      !>        Header documentation was corrected. This routine will
+      !>        convert a file containing either ID word, 'NAIF/DAF' or
+      !>        'NAIF/NIP'. (Previous versions of SPICELIB software used
+      !>        the ID word 'NAIF/NIP'.)
+      !>
+      !>-    SPICELIB Version 2.0.0, 02-AUG-1990 (JEM)
+      !>
+      !>        The previous version of this routine always failed and
+      !>        signaled the error SPICE(DAFNOIDWORD) because of a faulty
+      !>        logical expression in an error-checking IF statement.
+      !>        The error SPICE(DAFNOIDWORD) should be signaled if the
+      !>        next non-blank line in the text file does not begin with the
+      !>        word 'NAIF/DAF' AND does not begin with the word 'NAIF/NIP'.
+      !>        Previously the logic was incorrect causing the error to be
+      !>        signaled every time no matter what the word was. The
+      !>        correction consisted of replacing '.OR.' with '.AND.'
+      !>        in the logical expression.
+      !>
+      !>-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
+      !>
+      !>        Literature references added to the header.
+      !>
+      !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure daft2b
-!! ## Abstract
-!!
-!!     Deprecated: This routine has been superseded by the SPICELIB
-!!     routine DAFTB. NAIF supports this routine only to provide backward
-!!     compatibility.
-!!
-!!     Reconstruct a binary DAF from a text file opened by
-!!     the calling program.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       implicit none
 
       integer(ip), parameter :: bsize = 1024
 
-! $ Detailed_Input
-!
-!     TEXT     is a logical unit number, to which a text file has
-!              been connected by the calling program, and into
-!              which the contents of binary DAF have been
-!              written. The file pointer should be placed just
-!              before the file ID word.
-!
-!     BINARY   is the name of a binary DAF to be created.
-!              The binary DAF contains the same data as the
-!              text file, but in a form more suitable for use
-!              by application programs.
-!
-!     RESV     is the number of records to be reserved in the
-!              binary DAF.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     BSIZE    is the size of the buffer used to read array elements
-!              from the text file. No single group of elements should
-!              contains more than BSIZE elements.
-!
-! $ Exceptions
-!
-!     1)  If for some reason the text file cannot be read,
-!         the error SPICE(DAFREADFAIL) is signaled.
-!
-!     2)  If the architecture of the file is not DAF, as specified by
-!         the ID word, the error SPICE(NOTADAFFILE) is signaled.
-!
-!     3)  If the text file does not contain matching internal file
-!         names, the error SPICE(DAFNOIFNMATCH) is signaled.
-!
-!     4)  If the text file does not contain matching array names,
-!         the error SPICE(DAFNONAMEMATCH) is signaled.
-!
-!     5)  If the buffer size is not sufficient, the error
-!         SPICE(DAFOVERFLOW) is signaled.
-!
-! $ Files
-!
-!     See arguments TEXT, BINARY.
-!
-! $ Particulars
-!
-!     This routine has been made obsolete by the new DAF text to binary
-!     conversion routine DAFTB. This routine remains available for
-!     reasons of backward compatibility. We strongly recommend that you
-!     use the new conversion routines for any new software development.
-!     Please see the header of the routine DAFTB for details.
-!
-!     This routine is necessary for converting older DAF text files into
-!     their equivalent binary formats, as DAFTB uses a different text
-!     file format that is incompatible with the text file format
-!     expected by this routine.
-!
-!     Any binary DAF may be transferred between heterogeneous
-!     Fortran environments by converting it to an equivalent file
-!     containing only ASCII characters. Such a file can be transferred
-!     almost universally, using any number of established protocols
-!     (Kermit, FTP, and so on). Once transferred, the ASCII file can
-!     be reconverted to a binary DAF, using the representations
-!     native to the new host environment.
-!
-!     There are two pairs of routines that can be used to convert
-!     DAFs between binary and ASCII. The first pair, DAFB2A
-!     and DAFA2B, works with complete files. That is, DAFB2A creates
-!     a complete ASCII file containing all of the information in
-!     a particular binary DAF, and nothing else; this file can
-!     be fed directly into DAFA2B to produce a complete binary DAF.
-!     In each case, the names of the files are specified.
-!
-!     A related pair of routines, DAFB2T and DAFT2B, assume that
-!     the ASCII data are to be stored in the midst of a text file.
-!     This allows the calling program to surround the data with
-!     standardized labels, to append several binary DAFs into a
-!     single text file, and so on.
-!
-!     Note that you must select the number of records to be reserved
-!     in the binary DAF. The contents of reserved records are ignored
-!     by the normal transfer process.
-!
-! $ Examples
-!
-!     DAFB2A and DAFA2B are typically used for simple transfers.
-!     If A.DAF is a binary DAF in environment 1, it can be transferred
-!     to environment 2 in three steps.
-!
-!        1) Convert it to ASCII:
-!
-!              CALL DAFB2A ( 'A.DAF', 'A.ASCII' )
-!
-!        2) Transfer the ASCII file, using FTP, Kermit, or some other
-!           file transfer utility:
-!
-!              ftp> put a.ascii
-!
-!        3) Convert it to binary on the new machine,
-!
-!              CALL DAFA2B ( 'A.ASCII', 'A.DAF', RESV )
-!
-!     Note that DAFB2A and DAFA2B work in any standard Fortran-77
-!     environment.
-!
-!     If the file needs to contain other information---a standard
-!     label, for instance---the first and third steps must be modified
-!     to use DAFB2T and DAFT2B. The first step becomes
-!
-!        (Open a text file)
-!        (Write the label)
-!        CALL DAFB2T ( BINARY, UNIT  )
-!        (Close the text file)
-!
-!     The third step becomes
-!
-!        (Open the text file)
-!        (Read the label)
-!        CALL DAFT2B ( UNIT, BINARY, RESV )
-!        (Close the text file)
-!
-! $ Restrictions
-!
-!     1)  DAFT2B cannot be executed while any other DAF is open
-!         for writing.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     J.E. McLean        (JPL)
-!     H.A. Neilan        (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.1.0, 26-OCT-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard. Moved DAF
-!        required reading from $Literature_References to
-!        $Required_Reading section.
-!
-!-    SPICELIB Version 3.0.1, 26-JUL-2012 (EDW)
-!
-!        Edited $Abstract section to use "Deprecated" keyword
-!        and state replacement routine.
-!
-!        Eliminated unneeded $Revisions section.
-!
-!-    SPICELIB Version 3.0.0, 04-OCT-1993 (KRG)
-!
-!        Removed the error SPICE(DAFNOIDWORD) as it was no longer
-!        relevant.
-!
-!        Added the error SPICE(NOTADAFFILE) if this routine is called
-!        with a file that does not contain an ID word identifying the
-!        file as a DAF file.
-!
-!        There were no checks of the IOSTAT variable after attempting to
-!        read from the text file, a single test of the IOSTAT variable
-!        was made at the end of the routine. This was not adequate to
-!        detect errors when writing to the text file. So after all of
-!        these read statements, an IF ... END IF block was added to
-!        signal an error if IOSTAT .NE. 0.
-!
-!            IF ( IOSTAT .NE. 0 ) THEN
-!
-!               CALL SETMSG ( 'The attempt to read from file ''#''' //
-!         .                   ' failed. IOSTAT = #.'                 )
-!               CALL ERRFNM ( '#', UNIT                              )
-!               CALL SIGERR ( SPICE(DAFREADFAIL)                   )
-!               CALL CHKOUT ( 'DAFT2B'                               )
-!               RETURN
-!
-!            END IF
-!
-!        Removed the code from the end of the routine that purported to
-!        check for read errors:
-!
-!            C
-!            C     If any read screws up, they should all screw up. Why
-!            C     make a billion separate checks?
-!            C
-!                  IF ( IOSTAT .NE. 0 ) THEN
-!                     CALL SETMSG ( 'Value of IOSTAT was: #. ' )
-!                     CALL ERRINT ( '#', IOSTAT                )
-!                     CALL SIGERR ( SPICE(DAFREADFAIL)       )
-!                   END IF
-!
-!        The answer to the question is:
-!
-!            You have to do a billion separate checks because the IOSTAT
-!            value is only valid for the most recently executed read.
-!
-!        Added a statement to the $Particulars section to the effect
-!        that this routine has been made obsolete by the introduction of
-!        the routine DAFTB, and that we strongly recommend the use of
-!        the new routine. This routine must, however, be used when
-!        converting older text files to binary, as the old and new
-!        formats are not compatible.
-!
-!        Modified the $Abstract section to reflect the fact that this
-!        routine is obsolete and maintained for purposes of backward
-!        compatibility only.
-!
-!-    SPICELIB Version 2.0.2, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 2.0.1, 06-AUG-1990 (HAN)
-!
-!        Header documentation was corrected. This routine will
-!        convert a file containing either ID word, 'NAIF/DAF' or
-!        'NAIF/NIP'. (Previous versions of SPICELIB software used
-!        the ID word 'NAIF/NIP'.)
-!
-!-    SPICELIB Version 2.0.0, 02-AUG-1990 (JEM)
-!
-!        The previous version of this routine always failed and
-!        signaled the error SPICE(DAFNOIDWORD) because of a faulty
-!        logical expression in an error-checking IF statement.
-!        The error SPICE(DAFNOIDWORD) should be signaled if the
-!        next non-blank line in the text file does not begin with the
-!        word 'NAIF/DAF' AND does not begin with the word 'NAIF/NIP'.
-!        Previously the logic was incorrect causing the error to be
-!        signaled every time no matter what the word was. The
-!        correction consisted of replacing '.OR.' with '.AND.'
-!        in the logical expression.
-!
-!-    SPICELIB Version 1.0.1, 22-MAR-1990 (HAN)
-!
-!        Literature references added to the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-!-&
-
-! $ Index_Entries
-!
-!     DEPRECATED text DAF to binary
-!
-!-&
-
-!
-!     SPICELIB functions
-!
-
-!
-!     Local Parameters
-!
       integer(ip), parameter :: idwlen = 8
 
-!
-!     Local variables
-!
       character(1000)       name     ( 2 )
       character(idwlen)     idword
       character(60)         ifname   ( 2 )
@@ -27682,231 +25580,199 @@ contains
       return
       end procedure daft2b
 
-!$Procedure DAFTB ( DAF, convert transfer file to binary file )
-
+      !> ## Detailed Input
+      !>
+      !>     XFRLUN   is the Fortran logical unit number of a previously opened
+      !>              DAF transfer file has been.
+      !>
+      !>              The file pointer should be positioned ready to read
+      !>              the file ID word.
+      !>
+      !>     BINFIL   is the name of the binary DAF file to be created.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     None.
+      !>
+      !> ## Parameters
+      !>
+      !>     None.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If the DAF transfer file cannot be read, the error
+      !>         SPICE(FILEREADFAILED) is signaled.
+      !>
+      !>     2)  If the architecture of the file is not DAF, as specified by
+      !>         the ID word, the error SPICE(NOTADAFFILE) is signaled.
+      !>
+      !>     3)  If an error occurs while attempting to decode data in the DAF
+      !>         transfer file, the error SPICE(BADDAFTRANSFERFILE) is
+      !>         signaled.
+      !>
+      !>     4)  If the DAF file cannot be written, an error is signaled by a
+      !>         routine in the call tree of this routine.
+      !>
+      !>     5)  The binary DAF file opened by this routine, BINFIL, is only
+      !>         GUARANTEED to be closed upon successful completion of the
+      !>         transfer file to binary file conversion process. In the event
+      !>         of an error, the caller of this routine is required to close
+      !>         the binary DAF file BINFIL.
+      !>
+      !> ## Files
+      !>
+      !>     See arguments XFRLUN, BINFIL.
+      !>
+      !> ## Particulars
+      !>
+      !>     Any binary DAF file may be transferred between heterogeneous
+      !>     Fortran environments by converting it to an equivalent file
+      !>     containing only ASCII characters. Such a file can be transferred
+      !>     almost universally, using any number of established protocols.
+      !>     Once transferred, the ASCII file can be converted to a binary
+      !>     file, using the representations native to the new host
+      !>     environment.
+      !>
+      !>     This routine provides a mechanism for converting an DAF transfer
+      !>     file created by DAFBT, or an equivalent procedure, into an
+      !>     equivalent binary DAF file which may be used with the SPICE
+      !>     system. It is one of a pair of routines for performing conversions
+      !>     between the binary format of a DAF file and the DAF transfer file.
+      !>     The inverse of this routine is the routine DAFBT.
+      !>
+      !>     This routine makes NO use of the DAF reserved record area. It
+      !>     can only deal with the data portion of a DAF file in the DAF
+      !>     transfer file.
+      !>
+      !>     Upon successful completion, the binary DAF file specified by
+      !>     BINFIL will have been created. The binary DAF file that was
+      !>     created will be closed when this routine exits. The DAF transfer
+      !>     file will remain open, as it was on entry, and it will be
+      !>     positioned to read the first line after the encoded DAF file data.
+      !>
+      !> ## Examples
+      !>
+      !>     Let
+      !>
+      !>        XFRLUN   be the Fortran logical unit attached to a DAF
+      !>                 transfer file which is to be converted into its binary
+      !>                 DAF equivalent.
+      !>
+      !>        BINFIL   be the name of the binary DAF file which will be
+      !>                 created from the DAF transfer file.
+      !>
+      !>     The following subroutine call would read the DAF transfer file
+      !>     attached to the Fortran logical unit XFRLUN, convert its data into
+      !>     binary format, and write that data to the binary DAF file which
+      !>     has been created:
+      !>
+      !>        CALL DAFTB( XFRLUN, BINFIL )
+      !>
+      !> ## Restrictions
+      !>
+      !>     1)  This routine assumes that it is positioned ready to read the
+      !>         file ID word from the DAF transfer file.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     J. Diaz del Rio    (ODC Space)
+      !>     K.R. Gehringer     (JPL)
+      !>     E.D. Wright        (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 3.1.0, 13-AUG-2021 (JDR)
+      !>
+      !>        Added IMPLICIT NONE statement.
+      !>
+      !>        Edited the header to comply with NAIF standard.
+      !>
+      !>-    SPICELIB Version 3.0.1, 22-AUG-2001 (EDW)
+      !>
+      !>        Corrected ENDIF to END IF.
+      !>
+      !>-    SPICELIB Version 3.0.0, 25-JAN-1995 (KRG)
+      !>
+      !>        Updated the header and in line comments to reflect the change
+      !>        from calling files text files to calling them transfer files.
+      !>
+      !>        Changed the variable name TXTLUN to XFRLUN to make it
+      !>        compatible with the change in terminology.
+      !>
+      !>        Changed the short error message from "BADDAFTEXTFILE" to
+      !>        "BADDAFTRANSFERFILE".
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1993 (KRG)
+      !>
+      !>        This routine was modified to incorporate the file ID word
+      !>        changes which will allow run time identification of the type of
+      !>        data in a SPICE binary file.
+      !>
+      !>        Removed the error SPICE(IDWORDNOTKNOWN) as it was no longer
+      !>        relevant.
+      !>
+      !>        Added the error SPICE(NOTADAFFILE) if this routine is called
+      !>        with a file that does not contain an ID word identifying the
+      !>        file as a DAF file.
+      !>
+      !>-    SPICELIB Version 1.0.1, 24-JUN-1993 (KRG)
+      !>
+      !>        Modified the description of the DAF encoded text file format
+      !>        appearing before the program code.
+      !>
+      !>-    SPICELIB Version 1.0.0, 02-NOV-1992 (KRG)
+      !>
+      !> ## Revisions
+      !>
+      !>-    SPICELIB Version 3.0.0, 25-JAN-1995 (KRG)
+      !>
+      !>        Updated the header and in line comments to reflect the change
+      !>        from calling files text files to calling them transfer files.
+      !>
+      !>        Changed the variable name TXTLUN to XFRLUN to make it
+      !>        compatible with the change in terminology.
+      !>
+      !>        Changed the short error message from "BADDAFTEXTFILE" to
+      !>        "BADDAFTRANSFERFILE".
+      !>
+      !>-    SPICELIB Version 2.0.0, 04-SEP-1993 (KRG)
+      !>
+      !>        This routine was modified to incorporate the file ID word
+      !>        changes which will allow runtime identification of the type of
+      !>        data in a binary file SPICE binary file.
+      !>
+      !>        Removed the error SPICE(IDWORDNOTKNOWN) as it was no longer
+      !>        relevant.
+      !>
+      !>        Added the error SPICE(NOTADAFFILE) if this routine is called
+      !>        with a file that does not contain an ID word identifying the
+      !>        file as a DAF file.
+      !>
+      !>-    SPICELIB Version 1.0.1, 24-JUN-1993 (KRG)
+      !>
+      !>        Modified the description of the DAF encoded text file format
+      !>        appearing before the program code. Changed the line:
+      !>
+      !>           C        < DAF ND value > < DAF NI value >
+      !>
+      !>        to the lines:
+      !>
+      !>           C        < DAF ND value >
+      !>           C        < DAF NI value >
+      !>
+      !>        This change was necessary because the output format for the
+      !>        low level routines which encode and write the data were
+      !>        modified to fix a problem. See the routines WRENCD and WRENCI
+      !>        for details of the modification.
       module procedure daftb
-!! ## Abstract
-!!
-!!     Convert the contents of an DAF transfer file into an equivalent
-!!     binary DAF file.
-!!
-!! ## Required Reading
-!!
-!!     DAF
-!!
-!! ## Keywords
-!!
-!!     CONVERSION
-!!     FILES
-!!
-!! ## Declarations
-!!
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: nextwd, nparsi
       implicit none
 
-! $ Detailed_Input
-!
-!     XFRLUN   is the Fortran logical unit number of a previously opened
-!              DAF transfer file has been.
-!
-!              The file pointer should be positioned ready to read
-!              the file ID word.
-!
-!     BINFIL   is the name of the binary DAF file to be created.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If the DAF transfer file cannot be read, the error
-!         SPICE(FILEREADFAILED) is signaled.
-!
-!     2)  If the architecture of the file is not DAF, as specified by
-!         the ID word, the error SPICE(NOTADAFFILE) is signaled.
-!
-!     3)  If an error occurs while attempting to decode data in the DAF
-!         transfer file, the error SPICE(BADDAFTRANSFERFILE) is
-!         signaled.
-!
-!     4)  If the DAF file cannot be written, an error is signaled by a
-!         routine in the call tree of this routine.
-!
-!     5)  The binary DAF file opened by this routine, BINFIL, is only
-!         GUARANTEED to be closed upon successful completion of the
-!         transfer file to binary file conversion process. In the event
-!         of an error, the caller of this routine is required to close
-!         the binary DAF file BINFIL.
-!
-! $ Files
-!
-!     See arguments XFRLUN, BINFIL.
-!
-! $ Particulars
-!
-!     Any binary DAF file may be transferred between heterogeneous
-!     Fortran environments by converting it to an equivalent file
-!     containing only ASCII characters. Such a file can be transferred
-!     almost universally, using any number of established protocols.
-!     Once transferred, the ASCII file can be converted to a binary
-!     file, using the representations native to the new host
-!     environment.
-!
-!     This routine provides a mechanism for converting an DAF transfer
-!     file created by DAFBT, or an equivalent procedure, into an
-!     equivalent binary DAF file which may be used with the SPICE
-!     system. It is one of a pair of routines for performing conversions
-!     between the binary format of a DAF file and the DAF transfer file.
-!     The inverse of this routine is the routine DAFBT.
-!
-!     This routine makes NO use of the DAF reserved record area. It
-!     can only deal with the data portion of a DAF file in the DAF
-!     transfer file.
-!
-!     Upon successful completion, the binary DAF file specified by
-!     BINFIL will have been created. The binary DAF file that was
-!     created will be closed when this routine exits. The DAF transfer
-!     file will remain open, as it was on entry, and it will be
-!     positioned to read the first line after the encoded DAF file data.
-!
-! $ Examples
-!
-!     Let
-!
-!        XFRLUN   be the Fortran logical unit attached to a DAF
-!                 transfer file which is to be converted into its binary
-!                 DAF equivalent.
-!
-!        BINFIL   be the name of the binary DAF file which will be
-!                 created from the DAF transfer file.
-!
-!     The following subroutine call would read the DAF transfer file
-!     attached to the Fortran logical unit XFRLUN, convert its data into
-!     binary format, and write that data to the binary DAF file which
-!     has been created:
-!
-!        CALL DAFTB( XFRLUN, BINFIL )
-!
-! $ Restrictions
-!
-!     1)  This routine assumes that it is positioned ready to read the
-!         file ID word from the DAF transfer file.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.1.0, 13-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 3.0.1, 22-AUG-2001 (EDW)
-!
-!        Corrected ENDIF to END IF.
-!
-!-    SPICELIB Version 3.0.0, 25-JAN-1995 (KRG)
-!
-!        Updated the header and in line comments to reflect the change
-!        from calling files text files to calling them transfer files.
-!
-!        Changed the variable name TXTLUN to XFRLUN to make it
-!        compatible with the change in terminology.
-!
-!        Changed the short error message from "BADDAFTEXTFILE" to
-!        "BADDAFTRANSFERFILE".
-!
-!-    SPICELIB Version 2.0.0, 04-SEP-1993 (KRG)
-!
-!        This routine was modified to incorporate the file ID word
-!        changes which will allow run time identification of the type of
-!        data in a SPICE binary file.
-!
-!        Removed the error SPICE(IDWORDNOTKNOWN) as it was no longer
-!        relevant.
-!
-!        Added the error SPICE(NOTADAFFILE) if this routine is called
-!        with a file that does not contain an ID word identifying the
-!        file as a DAF file.
-!
-!-    SPICELIB Version 1.0.1, 24-JUN-1993 (KRG)
-!
-!        Modified the description of the DAF encoded text file format
-!        appearing before the program code.
-!
-!-    SPICELIB Version 1.0.0, 02-NOV-1992 (KRG)
-!
-!-&
-
-! $ Index_Entries
-!
-!     convert DAF transfer file to binary
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 3.0.0, 25-JAN-1995 (KRG)
-!
-!        Updated the header and in line comments to reflect the change
-!        from calling files text files to calling them transfer files.
-!
-!        Changed the variable name TXTLUN to XFRLUN to make it
-!        compatible with the change in terminology.
-!
-!        Changed the short error message from "BADDAFTEXTFILE" to
-!        "BADDAFTRANSFERFILE".
-!
-!-    SPICELIB Version 2.0.0, 04-SEP-1993 (KRG)
-!
-!        This routine was modified to incorporate the file ID word
-!        changes which will allow runtime identification of the type of
-!        data in a binary file SPICE binary file.
-!
-!        Removed the error SPICE(IDWORDNOTKNOWN) as it was no longer
-!        relevant.
-!
-!        Added the error SPICE(NOTADAFFILE) if this routine is called
-!        with a file that does not contain an ID word identifying the
-!        file as a DAF file.
-!
-!-    SPICELIB Version 1.0.1, 24-JUN-1993 (KRG)
-!
-!        Modified the description of the DAF encoded text file format
-!        appearing before the program code. Changed the line:
-!
-!           C        < DAF ND value > < DAF NI value >
-!
-!        to the lines:
-!
-!           C        < DAF ND value >
-!           C        < DAF NI value >
-!
-!        This change was necessary because the output format for the
-!        low level routines which encode and write the data were
-!        modified to fix a problem. See the routines WRENCD and WRENCI
-!        for details of the modification.
-!
-!-&
-
-!
-!     SPICELIB functions
-!
 !     Local Parameters
 !
       character(*), parameter :: begarr = 'BEGIN_ARRAY'
@@ -27928,9 +25794,6 @@ contains
       integer(ip), parameter :: crecl = 1000
 
       integer(ip), parameter :: resrec = 0
-!
-!     Local variables
-!
       character(idwlen)     idword
       character(ifnlen)     ifname
       character(errlen)     errmsg

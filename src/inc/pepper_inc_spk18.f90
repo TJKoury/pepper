@@ -10,14 +10,6 @@ module pepper_inc_spk18
 !
 !     Declare parameters specific to SPK type 18.
 !
-! $ Required_Reading
-!
-!     SPK
-!
-! $ Keywords
-!
-!     SPK
-!
 ! $ Restrictions
 !
 !     None.
@@ -34,7 +26,6 @@ module pepper_inc_spk18
 !
 !-    SPICELIB Version 1.0.0, 18-AUG-2002 (NJB)
 !
-!-&
 
 !
 !     SPK type 18 subtype codes:

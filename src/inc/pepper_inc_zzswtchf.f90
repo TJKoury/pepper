@@ -48,7 +48,6 @@ module pepper_inc_zzswtchf
 !
 !-    SPICELIB Version 1.0.0, 03-DEC-2021 (NJB) (BVS)
 !
-!-&
 
    integer               maxfrm
    parameter           ( maxfrm =  1013 )

@@ -77,9 +77,6 @@ module pepper_inc_frmtyp
 !
 !-    SPICELIB Version 1.0.0, 10-DEC-1995 (WLT)
 !
-!-&
-
-
 
    integer               inertl
    parameter           ( inertl = 1 )

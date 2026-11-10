@@ -15,15 +15,6 @@ module pepper_inc_zzgf
 !     This file contains private, global parameter declarations
 !     for the SPICELIB Geometry Finder (GF) subsystem.
 !
-! $ Required_Reading
-!
-!     GF
-!
-! $ Keywords
-!
-!     GEOMETRY
-!     ROOT
-!
 ! $ Restrictions
 !
 !     None.
@@ -41,7 +32,6 @@ module pepper_inc_zzgf
 !
 !-    SPICELIB Version 1.0.0, 17-FEB-2009 (NJB) (EDW)
 !
-!-&
 
 !
 !     The set of supported coordinate systems
@@ -75,7 +65,6 @@ module pepper_inc_zzgf
    character(*), parameter :: geosys = 'GEODETIC'
 
    character(*), parameter :: pgrsys = 'PLANETOGRAPHIC'
-
 
 !
 !     Below we declare names for coordinates. Again, user
@@ -137,7 +126,6 @@ module pepper_inc_zzgf
 !
    character(*), parameter :: sindef = 'SURFACE INTERCEPT POINT'
 
-
 !
 !     Number of workspace windows used by ZZGFREL:
 !
@@ -178,7 +166,6 @@ module pepper_inc_zzgf
 !
    integer               mxmsg
    parameter           ( mxmsg  = mxbegm + mxendm + 10 )
-
 
 !
 !     End of file zzgf.inc.

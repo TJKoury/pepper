@@ -162,8 +162,6 @@ module pepper_inc_dsk02
    integer               ixvert
    parameter           ( ixvert = ixvxsz + 1 )
 
-
-
 !
 !     Integer item keyword parameters used by fetch routines:
 !
@@ -285,8 +283,6 @@ module pepper_inc_dsk02
    integer               maxedg
    parameter           ( maxedg = 120 )
 
-
-
 !     DSK type 2 spatial index parameters
 !     ===================================
 !
@@ -355,7 +351,6 @@ module pepper_inc_dsk02
    integer               ixifix
    parameter           ( ixifix = maxcgr + 7 )
 
-
 !
 !        DSK type 2 spatial index double precision component
 !        ---------------------------------------------------
@@ -393,7 +388,6 @@ module pepper_inc_dsk02
    integer               ixdfix
    parameter           ( ixdfix = 10 )
 
-
 !
 !     The limits below are used to define a suggested maximum
 !     size for the integer component of the spatial index.
@@ -424,7 +418,6 @@ module pepper_inc_dsk02
    parameter           ( spaisz =   ixifix + maxvxp &
    + mxnvls + maxvrt &
    + maxnpv          )
-
 
 !
 !     End of include file dsk02.inc

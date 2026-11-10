@@ -14,130 +14,104 @@ module pepper_errors
 
 contains
 
-!$Procedure EXPLN ( Get Explanation for Short Error Message )
-
        !> Return the explanation of a short error message.
+       !>
+       !> ## Detailed Input
+       !>
+       !>     MSG      is a "short" error message.
+       !>              MSG indicates the type of error that has occurred.
+       !>
+       !>              The exact format that MSG must follow is
+       !>              described in the required reading file, error.req.
+       !>
+       !> ## Detailed Output
+       !>
+       !>     EXPL     is a character string containing an one-line
+       !>              explanation of the short error message, MSG.
+       !>
+       !>              If there is no explanatory text corresponding
+       !>              to the input string, MSG, EXPL is blank.
+       !>
+       !> ## Parameters
+       !>
+       !>     None.
+       !>
+       !> ## Exceptions
+       !>
+       !>     1)  This routine does not detect any errors.
+       !>
+       !>         However, this routine is part of the interface to the SPICELIB
+       !>         error handling mechanism. For this reason, this routine does
+       !>         not participate in the trace scheme, even though it has
+       !>         external references.
+       !>
+       !> ## Files
+       !>
+       !>     None.
+       !>
+       !> ## Particulars
+       !>
+       !>     None.
+       !>
+       !> ## Examples
+       !>
+       !>     C
+       !>     C     We want to find the explanation corresponding to
+       !>     C     the short message, SPICE(ZERORADIUS) :
+       !>     C
+       !>
+       !>            CALL EXPLN ( SPICE(ZERORADIUS), EXPL )
+       !>
+       !>     Now, EXPL  =
+       !>
+       !>     'Invalid Radius--Equatorial or Polar Radius is Zero'
+       !>
+       !> ## Restrictions
+       !>
+       !>     None.
+       !>
+       !> ## Literature References
+       !>
+       !>     None.
+       !>
+       !> ## Author and Institution
+       !>
+       !>     N.J. Bachman       (JPL)
+       !>     J. Diaz del Rio    (ODC Space)
+       !>     B.V. Semenov       (JPL)
+       !>     W.L. Taber         (JPL)
+       !>
+       !> ## Version
+       !>
+       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
+       !>
+       !>        Added IMPLICIT NONE statement.
+       !>
+       !>        Edited the header to comply with NAIF standard.
+       !>
+       !>-    SPICELIB Version 1.0.2, 18-APR-2014 (BVS)
+       !>
+       !>        Minor header edits.
+       !>
+       !>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+       !>
+       !>        Comment section for permuted index source lines was added
+       !>        following the header.
+       !>
+       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (NJB)
+       !>
+       !> ## Revisions
+       !>
+       !>-    Beta Version 1.1.0, 27-OCT-1988 (NJB)
+       !>
+       !>        Removed code used to create upper case, left-justified
+       !>        copy of the short error message. The resulting message
+       !>        was not used.
        elemental subroutine expln ( msg, expl )
-!! ## Abstract
-!!
-!!     Return the explanation of a short error message.
-!!
-!! ## Required Reading
-!!
-!!     ERROR
-!!
-!! ## Keywords
-!!
-!!     ERROR
-!!
-!! ## Declarations
-!!
       implicit none
 
       character(*), intent(in) :: msg  !! A short error message.
       character(*), intent(out) :: expl  !! The explanation of the short error message.
-
-! $ Detailed_Input
-!
-!     MSG      is a "short" error message.
-!              MSG indicates the type of error that has occurred.
-!
-!              The exact format that MSG must follow is
-!              described in the required reading file, error.req.
-!
-! $ Detailed_Output
-!
-!     EXPL     is a character string containing an one-line
-!              explanation of the short error message, MSG.
-!
-!              If there is no explanatory text corresponding
-!              to the input string, MSG, EXPL is blank.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  This routine does not detect any errors.
-!
-!         However, this routine is part of the interface to the SPICELIB
-!         error handling mechanism. For this reason, this routine does
-!         not participate in the trace scheme, even though it has
-!         external references.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     C
-!     C     We want to find the explanation corresponding to
-!     C     the short message, SPICE(ZERORADIUS) :
-!     C
-!
-!            CALL EXPLN ( SPICE(ZERORADIUS), EXPL )
-!
-!     Now, EXPL  =
-!
-!     'Invalid Radius--Equatorial or Polar Radius is Zero'
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.2, 18-APR-2014 (BVS)
-!
-!        Minor header edits.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (NJB)
-!
-!-&
-
-! $ Index_Entries
-!
-!     get explanation for short error message
-!
-!-&
-
-! $ Revisions
-!
-!-    Beta Version 1.1.0, 27-OCT-1988 (NJB)
-!
-!        Removed code used to create upper case, left-justified
-!        copy of the short error message. The resulting message
-!        was not used.
-!
-!-&
 
 !
 !     Executable Code:

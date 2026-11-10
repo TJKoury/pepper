@@ -18,333 +18,304 @@ submodule (pepper_instance) pepper_dynamic
 
 contains
 
-!$Procedure      ZZFRMCH1 (Frame Change)
-
-!$Procedure      ZZREFCH1 (Reference frame Change)
-
-
-!$Procedure ZZSPKSB1 ( S/P Kernel, solar system barycenter )
-
-!$Procedure      ZZFRMCH0 (Frame Change)
-
-
-!$Procedure ZZSPKSB0 ( S/P Kernel, solar system barycenter )
-
-!$Procedure      ZZREFCH0 (Reference frame Change)
-
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     For a specified dynamic frame, find the transformation
+      !>     that maps states from the dynamic frame to its base frame.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     INFRAM      is the frame ID code for a dynamic reference frame.
+      !>                 Note that this interface differs from that of TKFRAM,
+      !>                 which uses a class ID to identify the frame.
+      !>
+      !>                 In this routine, we refer this frame both as the
+      !>                 "input frame" and the "defined frame."
+      !>
+      !>     CENTER      is NAIF ID code for the center of the frame
+      !>                 designated by INFRAM.  This code, although derivable
+      !>                 from INFRAM, is passed in for convenience.
+      !>
+      !>     ET          is an epoch in ephemeris seconds past J2000 for which
+      !>                 the caller requests a state transformation matrix.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     XFORM       is a 6x6 matrix that transforms states relative to
+      !>                 INFRAM to states relative to BASFRM.
+      !>
+      !>     BASFRM      is the frame ID code of the base frame associated
+      !>                 with INFRAM.  The 6x6 matrix XFORM transforms states
+      !>                 relative to INFRAM to states relative to BASFRM. The
+      !>                 state transformation is performed by left-multiplying
+      !>                 by XFORM a state expressed relative to INFRAM. This
+      !>                 is easily accomplished via the subroutine call shown
+      !>                 below.
+      !>
+      !>                    CALL MXVG ( XFORM, STATE, 6, 6, OSTATE )
+      !>
+      !> ## Parameters
+      !>
+      !>     See include file zzdyn.inc.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If a dynamic frame evaluation requires unavailable kernel
+      !>         data, the error will be diagnosed by routines in the call
+      !>         tree of this routine.
+      !>
+      !>     2)  If a precession model is used to implement a frame centered
+      !>         at a body for which the model is not applicable, the error
+      !>         SPICE(INVALIDSELECTION) will be signaled.
+      !>
+      !>     3)  If a nutation model is used to implement a frame centered
+      !>         at a body for which the model is not applicable, the error
+      !>         SPICE(INVALIDSELECTION) will be signaled.
+      !>
+      !>     4)  If an obliquity model is used to implement a frame centered
+      !>         at a body for which the model is not applicable, the error
+      !>         SPICE(INVALIDSELECTION) will be signaled.
+      !>
+      !>     5)  If an unrecognized precession model is specified, the
+      !>         error SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     6)  If an unrecognized nutation model is specified, the
+      !>         error SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     7)  If an unrecognized obliquity model is specified, the
+      !>         error SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     8)  If an attempt to look up the center of a frame does
+      !>         not yield data, the error SPICE(FRAMEDATANOTFOUND) is
+      !>         signaled.
+      !>
+      !>     9)  In a two-vector frame definition, if a constant vector
+      !>         specification method is not recognized, the error
+      !>         SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     10) In a two-vector frame definition, if a vector definition
+      !>         method is not recognized, the error SPICE(NOTSUPPORTED)
+      !>         is signaled.
+      !>
+      !>     11) If an unrecognized dynamic frame family is specified, the
+      !>          error SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     12) If an unrecognized dynamic frame definition style is
+      !>         specified, the error SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     13) If an unrecognized dynamic frame rotation state is
+      !>         specified, the error SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     14) If both a freeze epoch and a rotation state are specified,
+      !>         the error SPICE(FRAMEDEFERROR) is signaled.
+      !>
+      !>     15) If neither a freeze epoch nor a rotation state are specified
+      !>         for an "of date" frame, the error SPICE(FRAMEDEFERROR) is
+      !>         signaled.
+      !>
+      !>     16) In a two-vector frame definition, if an invalid axis
+      !>         specification is encountered, the error SPICE(INVALIDAXIS) is
+      !>         signaled.
+      !>
+      !>     17) In a two-vector frame definition using a target near point
+      !>         vector, if the body-fixed frame associated with the target
+      !>         is not found, the error SPICE(FRAMEDATANOTFOUND) is signaled.
+      !>
+      !>     18) If the state of the near point on a target as seen from
+      !>         an observer cannot be computed, the error
+      !>         SPICE(DEGENERATECASE) is signaled.
+      !>
+      !>     19) If a dynamic frame evaluation requires excessive recursion
+      !>         depth, the error will be diagnosed by routines in the
+      !>         call tree of this routine.
+      !>
+      !>     20) When a two-vector dynamic frame is evaluated, if the
+      !>         primary and secondary vectors have angular separation less
+      !>         than the minimum allowed value, or if the angular separation
+      !>         differs from Pi by less than the minimum allowed value, the
+      !>         error SPICE(DEGENERATECASE) is signaled.  The default minimum
+      !>         separation is given by the parameter LBSEP; this value may be
+      !>         overridden by supplying a different value in the frame
+      !>         definition.
+      !>
+      !>     21) If invalid units occur in a frame definition, the error
+      !>         will be diagnosed by a routine in the call tree of this
+      !>         routine.
+      !>
+      !>     22) If an invalid Euler axis sequence occurs in a frame
+      !>         definition, the error will be diagnosed by a routine in the
+      !>         call tree of this routine.
+      !>
+      !>     23) If a body RADII vector has other than exactly thee elements,
+      !>         the error SPICE(INVALIDCOUNT) is signaled by a routine in
+      !>         the call tree of this routine.
+      !>
+      !>     24) If a body RADII vector has any element less-than or
+      !>         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
+      !>         a routine in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     1) SPK files containing data for each observer and target
+      !>        are required to support two-vector frames.  Note that
+      !>        observer-target pairs can be implicit, as in the case
+      !>        of a constant vector whose frame is evaluated at a
+      !>        light-time corrected epoch:  the light time the frame
+      !>        center to an observer must be computable in this case,
+      !>        which implies the state of the frame center as seen by
+      !>        the observer must be computable.
+      !>
+      !>     2) Any of SPK, CK, PCK, and frame kernels will also be required
+      !>        if any frames referenced in the definition of INFRAM (as a
+      !>        base frame, velocity vector frame, or constant vector frame)
+      !>        require them, or if any vectors used to define INFRAM require
+      !>        these data in order to be computable.
+      !>
+      !>     3) When CK data are required, one or more associated SCLK kernels
+      !>        ---normally, one kernel per spacecraft clock---are
+      !>        required as well.  A leapseconds kernel may be required
+      !>        whenever an SCLK kernel is required.
+      !>
+      !>     4) When a two-vector frame is defined using a target near point,
+      !>        a PCK file giving orientation and providing a triaxial shape
+      !>        model for the target body is required.
+      !>
+      !> ## Particulars
+      !>
+      !>     Currently only parameterized dynamic frames are supported by
+      !>     this routine.
+      !>
+      !>     Currently supported parameterized dynamic families are:
+      !>
+      !>        Two-vector
+      !>        ==========
+      !>
+      !>           Vector definitions
+      !>           ------------------
+      !>           Observer-target position
+      !>           Observer-target velocity
+      !>           Near point on target
+      !>           Constant vector in specified frame
+      !>
+      !>        Mean Equator and Equinox of Date
+      !>        ================================
+      !>
+      !>           Bodies and models
+      !>           -----------------
+      !>           Earth:  1976 IAU precession model
+      !>
+      !>        Mean Ecliptic and Equinox of Date
+      !>        ================================
+      !>
+      !>           Bodies and models
+      !>           -----------------
+      !>           Earth:  1976 IAU precession model
+      !>                   1980 IAU mean obliquity model
+      !>
+      !>        True Equator and Equinox of Date
+      !>        ================================
+      !>
+      !>           Bodies and models
+      !>           -----------------
+      !>           Earth:  1976 IAU precession model
+      !>                   1980 IAU nutation model
+      !>
+      !>        Euler frames
+      !>        ============
+      !>
+      !>           Euler angle definitions
+      !>           -----------------------
+      !>           Polynomial
+      !>
+      !>        Product frames
+      !>        ==============
+      !>
+      !>           Product definitions
+      !>           -------------------
+      !>           Array of "from" frames
+      !>           Array of "to" frames
+      !>
+      !> ## Examples
+      !>
+      !>     See FRMGET.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) This is a SPICE private routine; the routine is subject
+      !>        to change without notice.  User applications should not
+      !>        call this routine.
+      !>
+      !>     2) Many numerical problems can occur when dynamic frames
+      !>        are evaluated.  Users must determine whether dynamic frame
+      !>        definitions are suitable for their applications. See the
+      !>        Exceptions section for a list of possible problems.
+      !>
+      !>     3) Use of aberration corrections may lead to severe loss of
+      !>        accuracy in state transformation derivatives.
+      !>
+      !>     4) Two-vector frame definitions can suffer extreme loss of
+      !>         precision due to near-singular geometry.
+      !>
+      !>     5) Two-vector frame definitions involving velocity vectors
+      !>        require numerical differentiation in order to compute the
+      !>        derivative of the state transformation.  Such derivatives may
+      !>        have low accuracy.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.0.0, 09-OCT-2021 (NJB) (EDW)
+      !>
+      !>        Support for product frames was added. Re-ordered header
+      !>        sections.
+      !>
+      !>        Body radii accessed from kernel pool using ZZGFTREB.
+      !>
+      !>        Bug fix: aberration correction strings for observer-target
+      !>        velocity vectors are now parsed using ZZVALCOR. This improves
+      !>        error checking. Note that aberration correction strings for
+      !>        constant vectors used in two-vector frame specifications are
+      !>        still parsed using ZZPRSCOR.
+      !>
+      !>        Bug fix: calls to FAILED after calls to ZZDYNVAC were added.
+      !>
+      !>        Added some FAILED() calls.
+      !>
+      !>-    SPICELIB Version 1.1.1, 02-MAR-2010 (NJB)
+      !>
+      !>        Typo in Brief_I/O section was corrected: "Class ID"
+      !>        was changed to "Frame ID." Corrected order of header
+      !>        sections.
+      !>
+      !>-    SPICELIB Version 1.1.0, 23-OCT-2005 (NJB)
+      !>
+      !>        Parameters KWX, KWY, KWZ were renamed to KVX, KVY, KVZ.
+      !>
+      !>        Call to ZZBODVCD was replaced with call to BODVCD.
+      !>
+      !>-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
+      !>
+      !>     SPICELIB functions
+      !>
+      !>     Local parameters
+      !>
+      !>     Local variables
+      !>
+      !>     Saved variables
+      !>
+      !>     Initial values
       module procedure zzdynfrm
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     For a specified dynamic frame, find the transformation
-!!     that maps states from the dynamic frame to its base frame.
-!!
-!! ## Required Reading
-!!
-!!     CK
-!!     FRAMES
-!!     PCK
-!!     SPK
-!!
-!! ## Keywords
-!!
-!!     FRAMES
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     INFRAM      is the frame ID code for a dynamic reference frame.
-!!                 Note that this interface differs from that of TKFRAM,
-!!                 which uses a class ID to identify the frame.
-!!
-!!                 In this routine, we refer this frame both as the
-!!                 "input frame" and the "defined frame."
-!!
-!!     CENTER      is NAIF ID code for the center of the frame
-!!                 designated by INFRAM.  This code, although derivable
-!!                 from INFRAM, is passed in for convenience.
-!!
-!!     ET          is an epoch in ephemeris seconds past J2000 for which
-!!                 the caller requests a state transformation matrix.
-!!
-!! ## Detailed Output
-!!
-!!     XFORM       is a 6x6 matrix that transforms states relative to
-!!                 INFRAM to states relative to BASFRM.
-!!
-!!     BASFRM      is the frame ID code of the base frame associated
-!!                 with INFRAM.  The 6x6 matrix XFORM transforms states
-!!                 relative to INFRAM to states relative to BASFRM. The
-!!                 state transformation is performed by left-multiplying
-!!                 by XFORM a state expressed relative to INFRAM. This
-!!                 is easily accomplished via the subroutine call shown
-!!                 below.
-!!
-!!                    CALL MXVG ( XFORM, STATE, 6, 6, OSTATE )
-!!
-!! ## Parameters
-!!
-!!     See include file zzdyn.inc.
-!!
-!! ## Exceptions
-!!
-!!     1)  If a dynamic frame evaluation requires unavailable kernel
-!!         data, the error will be diagnosed by routines in the call
-!!         tree of this routine.
-!!
-!!     2)  If a precession model is used to implement a frame centered
-!!         at a body for which the model is not applicable, the error
-!!         SPICE(INVALIDSELECTION) will be signaled.
-!!
-!!     3)  If a nutation model is used to implement a frame centered
-!!         at a body for which the model is not applicable, the error
-!!         SPICE(INVALIDSELECTION) will be signaled.
-!!
-!!     4)  If an obliquity model is used to implement a frame centered
-!!         at a body for which the model is not applicable, the error
-!!         SPICE(INVALIDSELECTION) will be signaled.
-!!
-!!     5)  If an unrecognized precession model is specified, the
-!!         error SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     6)  If an unrecognized nutation model is specified, the
-!!         error SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     7)  If an unrecognized obliquity model is specified, the
-!!         error SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     8)  If an attempt to look up the center of a frame does
-!!         not yield data, the error SPICE(FRAMEDATANOTFOUND) is
-!!         signaled.
-!!
-!!     9)  In a two-vector frame definition, if a constant vector
-!!         specification method is not recognized, the error
-!!         SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     10) In a two-vector frame definition, if a vector definition
-!!         method is not recognized, the error SPICE(NOTSUPPORTED)
-!!         is signaled.
-!!
-!!     11) If an unrecognized dynamic frame family is specified, the
-!!          error SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     12) If an unrecognized dynamic frame definition style is
-!!         specified, the error SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     13) If an unrecognized dynamic frame rotation state is
-!!         specified, the error SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     14) If both a freeze epoch and a rotation state are specified,
-!!         the error SPICE(FRAMEDEFERROR) is signaled.
-!!
-!!     15) If neither a freeze epoch nor a rotation state are specified
-!!         for an "of date" frame, the error SPICE(FRAMEDEFERROR) is
-!!         signaled.
-!!
-!!     16) In a two-vector frame definition, if an invalid axis
-!!         specification is encountered, the error SPICE(INVALIDAXIS) is
-!!         signaled.
-!!
-!!     17) In a two-vector frame definition using a target near point
-!!         vector, if the body-fixed frame associated with the target
-!!         is not found, the error SPICE(FRAMEDATANOTFOUND) is signaled.
-!!
-!!     18) If the state of the near point on a target as seen from
-!!         an observer cannot be computed, the error
-!!         SPICE(DEGENERATECASE) is signaled.
-!!
-!!     19) If a dynamic frame evaluation requires excessive recursion
-!!         depth, the error will be diagnosed by routines in the
-!!         call tree of this routine.
-!!
-!!     20) When a two-vector dynamic frame is evaluated, if the
-!!         primary and secondary vectors have angular separation less
-!!         than the minimum allowed value, or if the angular separation
-!!         differs from Pi by less than the minimum allowed value, the
-!!         error SPICE(DEGENERATECASE) is signaled.  The default minimum
-!!         separation is given by the parameter LBSEP; this value may be
-!!         overridden by supplying a different value in the frame
-!!         definition.
-!!
-!!     21) If invalid units occur in a frame definition, the error
-!!         will be diagnosed by a routine in the call tree of this
-!!         routine.
-!!
-!!     22) If an invalid Euler axis sequence occurs in a frame
-!!         definition, the error will be diagnosed by a routine in the
-!!         call tree of this routine.
-!!
-!!     23) If a body RADII vector has other than exactly thee elements,
-!!         the error SPICE(INVALIDCOUNT) is signaled by a routine in
-!!         the call tree of this routine.
-!!
-!!     24) If a body RADII vector has any element less-than or
-!!         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
-!!         a routine in the call tree of this routine.
-!!
-!! ## Files
-!!
-!!     1) SPK files containing data for each observer and target
-!!        are required to support two-vector frames.  Note that
-!!        observer-target pairs can be implicit, as in the case
-!!        of a constant vector whose frame is evaluated at a
-!!        light-time corrected epoch:  the light time the frame
-!!        center to an observer must be computable in this case,
-!!        which implies the state of the frame center as seen by
-!!        the observer must be computable.
-!!
-!!     2) Any of SPK, CK, PCK, and frame kernels will also be required
-!!        if any frames referenced in the definition of INFRAM (as a
-!!        base frame, velocity vector frame, or constant vector frame)
-!!        require them, or if any vectors used to define INFRAM require
-!!        these data in order to be computable.
-!!
-!!     3) When CK data are required, one or more associated SCLK kernels
-!!        ---normally, one kernel per spacecraft clock---are
-!!        required as well.  A leapseconds kernel may be required
-!!        whenever an SCLK kernel is required.
-!!
-!!     4) When a two-vector frame is defined using a target near point,
-!!        a PCK file giving orientation and providing a triaxial shape
-!!        model for the target body is required.
-!!
-!! ## Particulars
-!!
-!!     Currently only parameterized dynamic frames are supported by
-!!     this routine.
-!!
-!!     Currently supported parameterized dynamic families are:
-!!
-!!        Two-vector
-!!        ==========
-!!
-!!           Vector definitions
-!!           ------------------
-!!           Observer-target position
-!!           Observer-target velocity
-!!           Near point on target
-!!           Constant vector in specified frame
-!!
-!!        Mean Equator and Equinox of Date
-!!        ================================
-!!
-!!           Bodies and models
-!!           -----------------
-!!           Earth:  1976 IAU precession model
-!!
-!!        Mean Ecliptic and Equinox of Date
-!!        ================================
-!!
-!!           Bodies and models
-!!           -----------------
-!!           Earth:  1976 IAU precession model
-!!                   1980 IAU mean obliquity model
-!!
-!!        True Equator and Equinox of Date
-!!        ================================
-!!
-!!           Bodies and models
-!!           -----------------
-!!           Earth:  1976 IAU precession model
-!!                   1980 IAU nutation model
-!!
-!!        Euler frames
-!!        ============
-!!
-!!           Euler angle definitions
-!!           -----------------------
-!!           Polynomial
-!!
-!!        Product frames
-!!        ==============
-!!
-!!           Product definitions
-!!           -------------------
-!!           Array of "from" frames
-!!           Array of "to" frames
-!!
-!! ## Examples
-!!
-!!     See FRMGET.
-!!
-!! ## Restrictions
-!!
-!!     1) This is a SPICE private routine; the routine is subject
-!!        to change without notice.  User applications should not
-!!        call this routine.
-!!
-!!     2) Many numerical problems can occur when dynamic frames
-!!        are evaluated.  Users must determine whether dynamic frame
-!!        definitions are suitable for their applications. See the
-!!        Exceptions section for a list of possible problems.
-!!
-!!     3) Use of aberration corrections may lead to severe loss of
-!!        accuracy in state transformation derivatives.
-!!
-!!     4) Two-vector frame definitions can suffer extreme loss of
-!!         precision due to near-singular geometry.
-!!
-!!     5) Two-vector frame definitions involving velocity vectors
-!!        require numerical differentiation in order to compute the
-!!        derivative of the state transformation.  Such derivatives may
-!!        have low accuracy.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman    (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.0.0, 09-OCT-2021 (NJB) (EDW)
-!!
-!!        Support for product frames was added. Re-ordered header
-!!        sections.
-!!
-!!        Body radii accessed from kernel pool using ZZGFTREB.
-!!
-!!        Bug fix: aberration correction strings for observer-target
-!!        velocity vectors are now parsed using ZZVALCOR. This improves
-!!        error checking. Note that aberration correction strings for
-!!        constant vectors used in two-vector frame specifications are
-!!        still parsed using ZZPRSCOR.
-!!
-!!        Bug fix: calls to FAILED after calls to ZZDYNVAC were added.
-!!
-!!        Added some FAILED() calls.
-!!
-!!-    SPICELIB Version 1.1.1, 02-MAR-2010 (NJB)
-!!
-!!        Typo in Brief_I/O section was corrected: "Class ID"
-!!        was changed to "Frame ID." Corrected order of header
-!!        sections.
-!!
-!!-    SPICELIB Version 1.1.0, 23-OCT-2005 (NJB)
-!!
-!!        Parameters KWX, KWY, KWZ were renamed to KVX, KVY, KVZ.
-!!
-!!        Call to ZZBODVCD was replaced with call to BODVCD.
-!!
-!!-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
-!!
-!!     SPICELIB functions
-!!
-!!     Local parameters
-!!
-!!     Local variables
-!!
-!!     Saved variables
-!!
-!!     Initial values
-!!
 !
 !     PEPPER: the evaluation (dynamic_frame_xform) may need other dynamic frames,
 !     evaluated by nested calls of this routine through FRMCHG, REFCHG,
@@ -361,300 +332,285 @@ contains
       ctx%ndynamic = ctx%ndynamic - 1
       end procedure zzdynfrm
 
+      !> ## Abstract
+      !>
+      !>     SPICE Private routine intended solely for the support of SPICE
+      !>     routines.  Users should not call this routine directly due
+      !>     to the volatile nature of this routine.
+      !>
+      !>     For a specified dynamic frame, find the rotation that maps
+      !>     positions from the dynamic frame to its base frame.
+      !>
+      !> ## Detailed Input
+      !>
+      !>     INFRAM      is the frame ID code for a dynamic reference frame.
+      !>                 Note that this interface differs from that of TKFRAM,
+      !>                 which uses a class ID to identify the frame.
+      !>
+      !>                 In this routine, we refer this frame both as the
+      !>                 "input frame" and the "defined frame."
+      !>
+      !>     CENTER      is NAIF ID code for the center of the frame
+      !>                 designated by INFRAM.  This code, although derivable
+      !>                 from INFRAM, is passed in for convenience.
+      !>
+      !>     ET          is an epoch in ephemeris seconds past J2000 for which
+      !>                 the caller requests a rotation matrix.
+      !>
+      !> ## Detailed Output
+      !>
+      !>     ROTATE      is a 3x3 rotation matrix that transforms positions
+      !>                 relative to INFRAM to positions relative to BASFRM.
+      !>
+      !>     BASFRM      is the frame ID code of the base frame associated
+      !>                 with INFRAM.  The 3x3 matrix ROTATE transforms
+      !>                 positions relative to INFRAM to positions relative to
+      !>                 BASFRM. The position transformation is performed by
+      !>                 left-multiplying by ROTATE a position expressed
+      !>                 relative to INFRAM. This is easily accomplished via
+      !>                 the subroutine call shown below.
+      !>
+      !>                    CALL MXV ( ROTATE, INPOS, OUTPOS )
+      !>
+      !> ## Parameters
+      !>
+      !>     See include file zzdyn.inc.
+      !>
+      !> ## Exceptions
+      !>
+      !>     1)  If a dynamic frame evaluation requires unavailable kernel
+      !>         data, the error will be diagnosed by routines in the
+      !>         call tree of this routine.
+      !>
+      !>     2)  If a precession model is used to implement a frame centered
+      !>         at a body for which the model is not applicable, the error
+      !>         SPICE(INVALIDSELECTION) will be signaled.
+      !>
+      !>     3)  If a nutation model is used to implement a frame centered
+      !>         at a body for which the model is not applicable, the error
+      !>         SPICE(INVALIDSELECTION) will be signaled.
+      !>
+      !>     4)  If an obliquity model is used to implement a frame centered
+      !>         at a body for which the model is not applicable, the error
+      !>         SPICE(INVALIDSELECTION) will be signaled.
+      !>
+      !>     5)  If an unrecognized precession model is specified, the
+      !>         error SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     6)  If an unrecognized nutation model is specified, the
+      !>         error SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     7)  If an unrecognized obliquity model is specified, the
+      !>         error SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     8)  If an attempt to look up the center of a frame does
+      !>         not yield data, the error SPICE(FRAMEDATANOTFOUND) is
+      !>         signaled.
+      !>
+      !>     9)  In a two-vector frame definition, if a constant vector
+      !>         specification method is not recognized, the error
+      !>         SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     10) In a two-vector frame definition, if a vector definition
+      !>         method is not recognized, the error SPICE(NOTSUPPORTED)
+      !>         is signaled.
+      !>
+      !>     11) If an unrecognized dynamic frame family is specified, the
+      !>          error SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     12) If an unrecognized dynamic frame definition style is
+      !>         specified, the error SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     13) If an unrecognized dynamic frame rotation state is
+      !>         specified, the error SPICE(NOTSUPPORTED) is signaled.
+      !>
+      !>     14) If both a freeze epoch and a rotation state are specified,
+      !>         the error SPICE(FRAMEDEFERROR) is signaled.
+      !>
+      !>     15) If neither a freeze epoch nor a rotation state are specified
+      !>         for an "of date" frame, the error SPICE(FRAMEDEFERROR) is
+      !>         signaled.
+      !>
+      !>     16) In a two-vector frame definition, if an invalid axis
+      !>         specification is encountered, the error SPICE(INVALIDAXIS) is
+      !>         signaled.
+      !>
+      !>     17) In a two-vector frame definition using a target near point
+      !>         vector, if the body-fixed frame associated with the target
+      !>         is not found, the error SPICE(FRAMEDATANOTFOUND) is signaled.
+      !>
+      !>     18) If a dynamic frame evaluation requires excessive recursion
+      !>         depth, the error will be diagnosed by routines in the call
+      !>         tree of this routine.
+      !>
+      !>     19) When a two-vector dynamic frame is evaluated, if the
+      !>         primary and secondary vectors have angular separation less
+      !>         than the minimum allowed value, or if the angular separation
+      !>         differs from Pi by less than the minimum allowed value, the
+      !>         error SPICE(DEGENERATECASE) is signaled.  The default minimum
+      !>         separation is given by the parameter LBSEP; this value may be
+      !>         overridden by supplying a different value in the frame
+      !>         definition.
+      !>
+      !>     20) If invalid units occur in a frame definition, the error
+      !>         will be diagnosed by a routine in the call tree of this
+      !>         routine.
+      !>
+      !>     21) If an invalid Euler axis sequence occurs in a frame
+      !>         definition, the error will be diagnosed by a routine in the
+      !>         call tree of this routine.
+      !>
+      !>     22) If a body RADII vector has other than exactly thee elements,
+      !>         the error SPICE(INVALIDCOUNT) is signaled by a routine in
+      !>         the call tree of this routine.
+      !>
+      !>     23) If a body RADII vector has any element less-than or
+      !>         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
+      !>         a routine in the call tree of this routine.
+      !>
+      !> ## Files
+      !>
+      !>     1) SPK files containing data for each observer and target
+      !>        are required to support two-vector frames.  Note that
+      !>        observer-target pairs can be implicit, as in the case
+      !>        of a constant vector whose frame is evaluated at a
+      !>        light-time corrected epoch:  the light time the frame
+      !>        center to an observer must be computable in this case,
+      !>        which implies the state of the frame center as seen by
+      !>        the observer must be computable.
+      !>
+      !>     2) Any of SPK, CK, PCK, and frame kernels will also be required
+      !>        if any frames referenced in the definition of INFRAM (as a
+      !>        base frame, velocity vector frame, or constant vector frame)
+      !>        require them, or if any vectors used to define INFRAM require
+      !>        these data in order to be computable.
+      !>
+      !>     3) When CK data are required, one or more associated SCLK kernels
+      !>        ---normally, one kernel per spacecraft clock---are
+      !>        required as well.  A leapseconds kernel may be required
+      !>        whenever an SCLK kernel is required.
+      !>
+      !>     4) When a two-vector frame is defined using a target near point,
+      !>        a PCK file giving orientation and providing a triaxial shape
+      !>        model for the target body is required.
+      !>
+      !> ## Particulars
+      !>
+      !>     Currently only parameterized dynamic frames are supported by
+      !>     this routine.
+      !>
+      !>     Currently supported parameterized dynamic families are:
+      !>
+      !>        Two-vector
+      !>        ==========
+      !>
+      !>           Vector definitions
+      !>           ------------------
+      !>           Observer-target position
+      !>           Observer-target velocity
+      !>           Near point on target
+      !>           Constant vector in specified frame
+      !>
+      !>        Mean Equator and Equinox of Date
+      !>        ================================
+      !>
+      !>           Bodies and models
+      !>           -----------------
+      !>           Earth:  1976 IAU precession model
+      !>
+      !>        Mean Ecliptic and Equinox of Date
+      !>        ================================
+      !>
+      !>           Bodies and models
+      !>           -----------------
+      !>           Earth:  1976 IAU precession model
+      !>                   1980 IAU mean obliquity model
+      !>
+      !>        True Equator and Equinox of Date
+      !>        ================================
+      !>
+      !>           Bodies and models
+      !>           -----------------
+      !>           Earth:  1976 IAU precession model
+      !>                   1980 IAU nutation model
+      !>
+      !>        Euler frames
+      !>        ============
+      !>
+      !>           Euler angle definitions
+      !>           -----------------------
+      !>           Polynomial
+      !>
+      !>        Product frames
+      !>        ==============
+      !>
+      !>           Product definitions
+      !>           -------------------
+      !>           Array of "from" frames
+      !>           Array of "to" frames
+      !>
+      !> ## Examples
+      !>
+      !>     See ROTGET.
+      !>
+      !> ## Restrictions
+      !>
+      !>     1) This is a SPICE private routine; the routine is subject
+      !>        to change without notice.  User applications should not
+      !>        call this routine.
+      !>
+      !>     2) Many numerical problems can occur when dynamic frames
+      !>        are evaluated.  Users must determine whether dynamic frame
+      !>        definitions are suitable for their applications. See the
+      !>        Exceptions section for a list of possible problems.
+      !>
+      !>     3) Two-vector frame definitions can suffer extreme loss of
+      !>         precision due to near-singular geometry.
+      !>
+      !> ## Literature References
+      !>
+      !>     None.
+      !>
+      !> ## Author and Institution
+      !>
+      !>     N.J. Bachman    (JPL)
+      !>
+      !> ## Version
+      !>
+      !>-    SPICELIB Version 2.0.0, 09-OCT-2021 (NJB) (EDW)
+      !>
+      !>        Support for product frames was added.
+      !>
+      !>        Body radii accessed from kernel pool using ZZGFTREB.
+      !>
+      !>        Bug fix: aberration correction strings for observer-target
+      !>        velocity vectors are now parsed using ZZVALCOR. This improves
+      !>        error checking. Note that aberration correction strings for
+      !>        constant vectors used in two-vector frame specifications are
+      !>        still parsed using ZZPRSCOR.
+      !>
+      !>        Code clean-up: unnecessary call to ZZPRSCOR was removed.
+      !>
+      !>        Added and removed some FAILED() calls.
+      !>
+      !>-    SPICELIB Version 1.1.0, 24-OCT-2005 (NJB)
+      !>
+      !>        Parameters KWX, KWY, KWZ were renamed to KVX, KVY, KVZ.
+      !>
+      !>        Call to ZZBODVCD was replaced with call to BODVCD.
+      !>
+      !>-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
+      !>
+      !>     SPICELIB functions
+      !>
+      !>     Local parameters
+      !>
+      !>     Local variables
+      !>
+      !>     Saved variables
+      !>
+      !>     Initial values
       module procedure zzdynrot
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     For a specified dynamic frame, find the rotation that maps
-!!     positions from the dynamic frame to its base frame.
-!!
-!! ## Required Reading
-!!
-!!     CK
-!!     FRAMES
-!!     PCK
-!!     SPK
-!!
-!! ## Keywords
-!!
-!!     FRAMES
-!!     PRIVATE
-!!
-!! ## Declarations
-!!
-!! ## Detailed Input
-!!
-!!     INFRAM      is the frame ID code for a dynamic reference frame.
-!!                 Note that this interface differs from that of TKFRAM,
-!!                 which uses a class ID to identify the frame.
-!!
-!!                 In this routine, we refer this frame both as the
-!!                 "input frame" and the "defined frame."
-!!
-!!     CENTER      is NAIF ID code for the center of the frame
-!!                 designated by INFRAM.  This code, although derivable
-!!                 from INFRAM, is passed in for convenience.
-!!
-!!     ET          is an epoch in ephemeris seconds past J2000 for which
-!!                 the caller requests a rotation matrix.
-!!
-!! ## Detailed Output
-!!
-!!     ROTATE      is a 3x3 rotation matrix that transforms positions
-!!                 relative to INFRAM to positions relative to BASFRM.
-!!
-!!     BASFRM      is the frame ID code of the base frame associated
-!!                 with INFRAM.  The 3x3 matrix ROTATE transforms
-!!                 positions relative to INFRAM to positions relative to
-!!                 BASFRM. The position transformation is performed by
-!!                 left-multiplying by ROTATE a position expressed
-!!                 relative to INFRAM. This is easily accomplished via
-!!                 the subroutine call shown below.
-!!
-!!                    CALL MXV ( ROTATE, INPOS, OUTPOS )
-!!
-!! ## Parameters
-!!
-!!     See include file zzdyn.inc.
-!!
-!! ## Exceptions
-!!
-!!     1)  If a dynamic frame evaluation requires unavailable kernel
-!!         data, the error will be diagnosed by routines in the
-!!         call tree of this routine.
-!!
-!!     2)  If a precession model is used to implement a frame centered
-!!         at a body for which the model is not applicable, the error
-!!         SPICE(INVALIDSELECTION) will be signaled.
-!!
-!!     3)  If a nutation model is used to implement a frame centered
-!!         at a body for which the model is not applicable, the error
-!!         SPICE(INVALIDSELECTION) will be signaled.
-!!
-!!     4)  If an obliquity model is used to implement a frame centered
-!!         at a body for which the model is not applicable, the error
-!!         SPICE(INVALIDSELECTION) will be signaled.
-!!
-!!     5)  If an unrecognized precession model is specified, the
-!!         error SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     6)  If an unrecognized nutation model is specified, the
-!!         error SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     7)  If an unrecognized obliquity model is specified, the
-!!         error SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     8)  If an attempt to look up the center of a frame does
-!!         not yield data, the error SPICE(FRAMEDATANOTFOUND) is
-!!         signaled.
-!!
-!!     9)  In a two-vector frame definition, if a constant vector
-!!         specification method is not recognized, the error
-!!         SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     10) In a two-vector frame definition, if a vector definition
-!!         method is not recognized, the error SPICE(NOTSUPPORTED)
-!!         is signaled.
-!!
-!!     11) If an unrecognized dynamic frame family is specified, the
-!!          error SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     12) If an unrecognized dynamic frame definition style is
-!!         specified, the error SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     13) If an unrecognized dynamic frame rotation state is
-!!         specified, the error SPICE(NOTSUPPORTED) is signaled.
-!!
-!!     14) If both a freeze epoch and a rotation state are specified,
-!!         the error SPICE(FRAMEDEFERROR) is signaled.
-!!
-!!     15) If neither a freeze epoch nor a rotation state are specified
-!!         for an "of date" frame, the error SPICE(FRAMEDEFERROR) is
-!!         signaled.
-!!
-!!     16) In a two-vector frame definition, if an invalid axis
-!!         specification is encountered, the error SPICE(INVALIDAXIS) is
-!!         signaled.
-!!
-!!     17) In a two-vector frame definition using a target near point
-!!         vector, if the body-fixed frame associated with the target
-!!         is not found, the error SPICE(FRAMEDATANOTFOUND) is signaled.
-!!
-!!     18) If a dynamic frame evaluation requires excessive recursion
-!!         depth, the error will be diagnosed by routines in the call
-!!         tree of this routine.
-!!
-!!     19) When a two-vector dynamic frame is evaluated, if the
-!!         primary and secondary vectors have angular separation less
-!!         than the minimum allowed value, or if the angular separation
-!!         differs from Pi by less than the minimum allowed value, the
-!!         error SPICE(DEGENERATECASE) is signaled.  The default minimum
-!!         separation is given by the parameter LBSEP; this value may be
-!!         overridden by supplying a different value in the frame
-!!         definition.
-!!
-!!     20) If invalid units occur in a frame definition, the error
-!!         will be diagnosed by a routine in the call tree of this
-!!         routine.
-!!
-!!     21) If an invalid Euler axis sequence occurs in a frame
-!!         definition, the error will be diagnosed by a routine in the
-!!         call tree of this routine.
-!!
-!!     22) If a body RADII vector has other than exactly thee elements,
-!!         the error SPICE(INVALIDCOUNT) is signaled by a routine in
-!!         the call tree of this routine.
-!!
-!!     23) If a body RADII vector has any element less-than or
-!!         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
-!!         a routine in the call tree of this routine.
-!!
-!! ## Files
-!!
-!!     1) SPK files containing data for each observer and target
-!!        are required to support two-vector frames.  Note that
-!!        observer-target pairs can be implicit, as in the case
-!!        of a constant vector whose frame is evaluated at a
-!!        light-time corrected epoch:  the light time the frame
-!!        center to an observer must be computable in this case,
-!!        which implies the state of the frame center as seen by
-!!        the observer must be computable.
-!!
-!!     2) Any of SPK, CK, PCK, and frame kernels will also be required
-!!        if any frames referenced in the definition of INFRAM (as a
-!!        base frame, velocity vector frame, or constant vector frame)
-!!        require them, or if any vectors used to define INFRAM require
-!!        these data in order to be computable.
-!!
-!!     3) When CK data are required, one or more associated SCLK kernels
-!!        ---normally, one kernel per spacecraft clock---are
-!!        required as well.  A leapseconds kernel may be required
-!!        whenever an SCLK kernel is required.
-!!
-!!     4) When a two-vector frame is defined using a target near point,
-!!        a PCK file giving orientation and providing a triaxial shape
-!!        model for the target body is required.
-!!
-!! ## Particulars
-!!
-!!     Currently only parameterized dynamic frames are supported by
-!!     this routine.
-!!
-!!     Currently supported parameterized dynamic families are:
-!!
-!!        Two-vector
-!!        ==========
-!!
-!!           Vector definitions
-!!           ------------------
-!!           Observer-target position
-!!           Observer-target velocity
-!!           Near point on target
-!!           Constant vector in specified frame
-!!
-!!        Mean Equator and Equinox of Date
-!!        ================================
-!!
-!!           Bodies and models
-!!           -----------------
-!!           Earth:  1976 IAU precession model
-!!
-!!        Mean Ecliptic and Equinox of Date
-!!        ================================
-!!
-!!           Bodies and models
-!!           -----------------
-!!           Earth:  1976 IAU precession model
-!!                   1980 IAU mean obliquity model
-!!
-!!        True Equator and Equinox of Date
-!!        ================================
-!!
-!!           Bodies and models
-!!           -----------------
-!!           Earth:  1976 IAU precession model
-!!                   1980 IAU nutation model
-!!
-!!        Euler frames
-!!        ============
-!!
-!!           Euler angle definitions
-!!           -----------------------
-!!           Polynomial
-!!
-!!        Product frames
-!!        ==============
-!!
-!!           Product definitions
-!!           -------------------
-!!           Array of "from" frames
-!!           Array of "to" frames
-!!
-!! ## Examples
-!!
-!!     See ROTGET.
-!!
-!! ## Restrictions
-!!
-!!     1) This is a SPICE private routine; the routine is subject
-!!        to change without notice.  User applications should not
-!!        call this routine.
-!!
-!!     2) Many numerical problems can occur when dynamic frames
-!!        are evaluated.  Users must determine whether dynamic frame
-!!        definitions are suitable for their applications. See the
-!!        Exceptions section for a list of possible problems.
-!!
-!!     3) Two-vector frame definitions can suffer extreme loss of
-!!         precision due to near-singular geometry.
-!!
-!! ## Literature References
-!!
-!!     None.
-!!
-!! ## Author and Institution
-!!
-!!     N.J. Bachman    (JPL)
-!!
-!! ## Version
-!!
-!!-    SPICELIB Version 2.0.0, 09-OCT-2021 (NJB) (EDW)
-!!
-!!        Support for product frames was added.
-!!
-!!        Body radii accessed from kernel pool using ZZGFTREB.
-!!
-!!        Bug fix: aberration correction strings for observer-target
-!!        velocity vectors are now parsed using ZZVALCOR. This improves
-!!        error checking. Note that aberration correction strings for
-!!        constant vectors used in two-vector frame specifications are
-!!        still parsed using ZZPRSCOR.
-!!
-!!        Code clean-up: unnecessary call to ZZPRSCOR was removed.
-!!
-!!        Added and removed some FAILED() calls.
-!!
-!!-    SPICELIB Version 1.1.0, 24-OCT-2005 (NJB)
-!!
-!!        Parameters KWX, KWY, KWZ were renamed to KVX, KVY, KVZ.
-!!
-!!        Call to ZZBODVCD was replaced with call to BODVCD.
-!!
-!!-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
-!!
-!!     SPICELIB functions
-!!
-!!     Local parameters
-!!
-!!     Local variables
-!!
-!!     Saved variables
-!!
-!!     Initial values
-!!
 !
 !     PEPPER: the evaluation (dynamic_frame_rotation) may need other dynamic frames,
 !     evaluated by nested calls of this routine through FRMCHG, REFCHG,
