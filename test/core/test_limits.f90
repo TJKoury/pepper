@@ -41,6 +41,7 @@ program test_limits
    call test_fov_vertices()
    call test_dsk_hits()
    call test_occult_methods()
+   call test_dynamic_frames()
    call test_ek_scratch()
    call test_ek_tables()
    call test_ek_queries()
@@ -861,6 +862,170 @@ contains
       call delete_file(prefix // 'occ_back.bsp')
       call delete_file(prefix // 'occ_obs.bsp')
    end subroutine test_occult_methods
+
+   !> Dynamic frames nested to any depth (SPICELIB: two levels, then
+   !> SPICE(RECURSIONTOODEEP)): a chain of 8 two-vector frames D1..D8,
+   !> each defined by constant vectors in the previous one and rotated by
+   !> 1 degree about Z, so that D8 is J2000 rotated by 8 degrees; a
+   !> circular definition, which is an error; and an SPK segment in a
+   !> dynamic frame that evaluates SPKEZR (velocity vector) while an outer
+   !> SPKEZR is in progress with another aberration correction.
+   subroutine test_dynamic_frames()
+      integer(ip), parameter :: nd = 8, first_id = 1800001
+      real(wp), parameter :: deg = acos(-1.0_wp)/180
+      character(*), parameter :: corrs(5) = [character(5) :: 'NONE', 'LT', 'LT+S', 'XCN+S', 'CN']
+      real(wp) :: rot(3, 3), xform(6, 6), s1(6), s2(6), lt1, lt2, a
+      character(16) :: name, prev
+      character(40) :: short
+      integer(ip) :: k
+      logical :: ok
+      ! the chain D1..D8
+      prev = 'J2000'
+      do k = 1, nd
+         write (name, '(a,i0)') 'TEST_DYN_D', k
+         call define_two_vector(name, first_id + k - 1)
+         call frame_text(first_id + k - 1, 'PRI_VECTOR_DEF', 'CONSTANT')
+         call frame_text(first_id + k - 1, 'PRI_FRAME', prev)
+         call frame_text(first_id + k - 1, 'PRI_SPEC', 'RECTANGULAR')
+         call frame_numbers(first_id + k - 1, 'PRI_VECTOR', [cos(deg), sin(deg), 0.0_wp])
+         call frame_text(first_id + k - 1, 'SEC_VECTOR_DEF', 'CONSTANT')
+         call frame_text(first_id + k - 1, 'SEC_FRAME', prev)
+         call frame_text(first_id + k - 1, 'SEC_SPEC', 'RECTANGULAR')
+         call frame_numbers(first_id + k - 1, 'SEC_VECTOR', [-sin(deg), cos(deg), 0.0_wp])
+         prev = name
+      end do
+      ok = .true.
+      do k = 1, nd
+         write (name, '(a,i0)') 'TEST_DYN_D', k
+         call ctx%pxform(name, 'J2000', 0.0_wp, rot)
+         call ctx%sxform(name, 'J2000', 0.0_wp, xform)
+         a = k*deg
+         ok = ok .and. abs(rot(1, 1) - cos(a)) < 1.0e-13_wp .and. abs(rot(2, 1) - sin(a)) < 1.0e-13_wp &
+                 .and. abs(rot(3, 3) - 1) < 1.0e-13_wp
+         ok = ok .and. maxval(abs(xform(1:3, 1:3) - rot)) < 1.0e-13_wp .and. maxval(abs(xform(4:6, 1:3))) < 1.0e-13_wp
+      end do
+      call check_ok('dynamic frames: 8 levels')
+      call check(ok, 'dynamic frames: D1..D8 are rotations of 1..8 degrees')
+
+      ! a circular definition: C1 is defined in C2, C2 in C1
+      call define_two_vector('TEST_DYN_C1', 1800101_ip)
+      call define_two_vector('TEST_DYN_C2', 1800102_ip)
+      do k = 1800101, 1800102
+         call frame_text(k, 'PRI_VECTOR_DEF', 'CONSTANT')
+         call frame_text(k, 'PRI_SPEC', 'RECTANGULAR')
+         call frame_numbers(k, 'PRI_VECTOR', [1.0_wp, 0.0_wp, 0.0_wp])
+         call frame_text(k, 'SEC_VECTOR_DEF', 'CONSTANT')
+         call frame_text(k, 'SEC_SPEC', 'RECTANGULAR')
+         call frame_numbers(k, 'SEC_VECTOR', [0.0_wp, 1.0_wp, 0.0_wp])
+      end do
+      call frame_text(1800101_ip, 'PRI_FRAME', 'TEST_DYN_C2')
+      call frame_text(1800101_ip, 'SEC_FRAME', 'TEST_DYN_C2')
+      call frame_text(1800102_ip, 'PRI_FRAME', 'TEST_DYN_C1')
+      call frame_text(1800102_ip, 'SEC_FRAME', 'TEST_DYN_C1')
+      call ctx%pxform('TEST_DYN_C1', 'J2000', 0.0_wp, rot)
+      call ctx%getmsg('SHORT', short)
+      call check(ctx%failed() .and. short == 'SPICE(RECURSIONTOODEEP)', 'dynamic frames: a circular definition')
+      call ctx%reset()
+      call ctx%pxform('TEST_DYN_D5', 'J2000', 0.0_wp, rot)
+      call check_ok('dynamic frames: a query after the circular definition')
+      call check(abs(rot(2, 1) - sin(5*deg)) < 1.0e-13_wp, 'dynamic frames: D5 after the error')
+
+      ! an SPK segment in a dynamic frame Q that is J2000 (X along J2000's
+      ! X; Y from the velocity of body 2203, in the XY plane with a
+      ! positive Y component), but whose evaluation calls SPKEZR with LT
+      ! (and so SPKLTC) while the outer SPKLTC, with another correction,
+      ! is in progress: body 2202 (in Q) and body 2201 (the same data in
+      ! J2000) seen from 2204 with several corrections. (This fails if the
+      ! routines use their saved flags after the nested call.)
+      call write_spk(ctx, prefix // 'dyn_j2000.bsp', 2201_ip, 0_ip, 1.0e6_wp, 0.3_wp)
+      call write_spk(ctx, prefix // 'dyn_q.bsp', 2202_ip, 0_ip, 1.0e6_wp, 0.3_wp, frame=1800201_ip)
+      call write_spk(ctx, prefix // 'dyn_vel.bsp', 2203_ip, 0_ip, 2.0e6_wp, 0.0_wp)
+      call write_spk(ctx, prefix // 'dyn_obs.bsp', 2204_ip, 0_ip, 3.0e6_wp, 2.0_wp)
+      call spice%furnsh(prefix // 'dyn_j2000.bsp')
+      call spice%furnsh(prefix // 'dyn_q.bsp')
+      call spice%furnsh(prefix // 'dyn_vel.bsp')
+      call spice%furnsh(prefix // 'dyn_obs.bsp')
+      call define_two_vector('TEST_DYN_Q', 1800201_ip)
+      call frame_text(1800201_ip, 'PRI_VECTOR_DEF', 'CONSTANT')
+      call frame_text(1800201_ip, 'PRI_FRAME', 'J2000')
+      call frame_text(1800201_ip, 'PRI_SPEC', 'RECTANGULAR')
+      call frame_numbers(1800201_ip, 'PRI_VECTOR', [1.0_wp, 0.0_wp, 0.0_wp])
+      call frame_text(1800201_ip, 'SEC_VECTOR_DEF', 'OBSERVER_TARGET_VELOCITY')
+      call frame_text(1800201_ip, 'SEC_FRAME', 'J2000')
+      call frame_text(1800201_ip, 'SEC_OBSERVER', 'SSB')
+      call frame_text(1800201_ip, 'SEC_TARGET', '2203')
+      call frame_text(1800201_ip, 'SEC_ABCORR', 'LT')
+      call check_ok('dynamic frames: the SPKs and Q')
+      ok = .true.
+      do k = 1, size(corrs)
+         call ctx%spkezr('2201', 1000.0_wp, 'J2000', trim(corrs(k)), '2204', s1, lt1)
+         call ctx%spkezr('2202', 1000.0_wp, 'J2000', trim(corrs(k)), '2204', s2, lt2)
+         ok = ok .and. maxval(abs(s2(1:3) - s1(1:3))) < 1.0e-6_wp .and. maxval(abs(s2(4:6) - s1(4:6))) < 1.0e-9_wp &
+                 .and. abs(lt2 - lt1) < 1.0e-12_wp
+      end do
+      call check_ok('dynamic frames: states of a segment in Q')
+      call check(ok, 'dynamic frames: a segment in Q gives the states of the same data in J2000')
+      call spice%unload(prefix // 'dyn_j2000.bsp')
+      call spice%unload(prefix // 'dyn_q.bsp')
+      call spice%unload(prefix // 'dyn_vel.bsp')
+      call spice%unload(prefix // 'dyn_obs.bsp')
+      call delete_file(prefix // 'dyn_j2000.bsp')
+      call delete_file(prefix // 'dyn_q.bsp')
+      call delete_file(prefix // 'dyn_vel.bsp')
+      call delete_file(prefix // 'dyn_obs.bsp')
+      call spice%clpool()
+   end subroutine test_dynamic_frames
+
+   !> Define the common variables of a two-vector dynamic frame relative
+   !> to J2000, centered on the solar system barycenter, axes X (primary)
+   !> and Y (secondary), rotating; the vectors are set by the caller.
+   subroutine define_two_vector(name, id)
+      character(*), intent(in) :: name  !! the frame name
+      integer(ip), intent(in) :: id  !! the frame ID
+      call spice%pipool('FRAME_' // trim(name), 1_ip, [id])
+      call frame_text(id, 'NAME', name)
+      call frame_integer(id, 'CLASS', 5_ip)
+      call frame_integer(id, 'CLASS_ID', id)
+      call frame_integer(id, 'CENTER', 0_ip)
+      call frame_text(id, 'RELATIVE', 'J2000')
+      call frame_text(id, 'DEF_STYLE', 'PARAMETERIZED')
+      call frame_text(id, 'FAMILY', 'TWO-VECTOR')
+      call frame_text(id, 'PRI_AXIS', 'X')
+      call frame_text(id, 'SEC_AXIS', 'Y')
+      call frame_text(id, 'ROTATION_STATE', 'ROTATING')
+   end subroutine define_two_vector
+
+   !> Set FRAME_<id>_<item> to a string.
+   subroutine frame_text(id, item, value)
+      integer(ip), intent(in) :: id  !! the frame ID
+      character(*), intent(in) :: item  !! the item
+      character(*), intent(in) :: value  !! the value
+      call spice%pcpool(frame_var(id, item), 1_ip, [value])
+   end subroutine frame_text
+
+   !> Set FRAME_<id>_<item> to an integer.
+   subroutine frame_integer(id, item, value)
+      integer(ip), intent(in) :: id  !! the frame ID
+      character(*), intent(in) :: item  !! the item
+      integer(ip), intent(in) :: value  !! the value
+      call spice%pipool(frame_var(id, item), 1_ip, [value])
+   end subroutine frame_integer
+
+   !> Set FRAME_<id>_<item> to numbers.
+   subroutine frame_numbers(id, item, values)
+      integer(ip), intent(in) :: id  !! the frame ID
+      character(*), intent(in) :: item  !! the item
+      real(wp), intent(in) :: values(:)  !! the values
+      call spice%pdpool(frame_var(id, item), size(values, kind=ip), values)
+   end subroutine frame_numbers
+
+   !> The name FRAME_<id>_<item>.
+   pure function frame_var(id, item) result(name)
+      integer(ip), intent(in) :: id  !! the frame ID
+      character(*), intent(in) :: item  !! the item
+      character(len(item) + 20) :: name  !! the variable name (blank-padded)
+      write (name, '(a,i0,2a)') 'FRAME_', id, '_', item
+   end function frame_var
 
    !> The EK scratch area past its in-memory part (2500000 integers,
    !> which now grows; beyond it the stack goes to a scratch DAS, opened

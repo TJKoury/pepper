@@ -1395,100 +1395,104 @@
 !--- Case: ------------------------------------------------------
 !
 !
-!     SPKEZR:  catch error when evaluating two-vector frame
-!     defined using velocity vector.
+!     PEPPER: dynamic frames may be nested to any depth (SPICELIB
+!     signaled SPICE(RECURSIONTOODEEP) for RECUR_3 and RECUR_3B, which
+!     need three levels). These cases check the states as the RECUR_2
+!     cases above do: the SPK routines' results in the dynamic frame
+!     against the J2000 states transformed with SXFORM and PXFORM.
 !
-      CALL TCASE ( 'Check SPKEZR using the frame RECUR_3. '    // &
-                   'In this test, the error should be caught ' // &
-                   'in routine ZZSPKEZ1.'                      )
+      CALL TCASE ( 'Check SPKEZR/SPKPOS using the frame RECUR_3 ' // &
+                   '(PEPPER: three levels of dynamic frames).'    )
 
       CALL STR2ET ( '2005 JAN 1', ET )
       CALL CHCKXC ( .FALSE., ' ', OK )
-
-      CALL SPKEZR ( 'PHOBOS', ET,     'RECUR_3', 'LT+S', &
-                    'MARS',   STATE0, LT                  )
-
-      CALL CHCKXC ( .TRUE., 'SPICE(RECURSIONTOODEEP)', OK )
-
-
 !
-!--- Case: ------------------------------------------------------
+!     The light time from the center of RECUR_3 (Phobos) to the
+!     observer (Mars), the aberration corrected epoch, and the
+!     transformations from J2000 at that epoch.
 !
-!
-!     SPKPOS:  catch error when evaluating two-vector frame defined
-!     using velocity vector. Because the error will occur when
-!     obtaining a state vector, the error will be trapped in ZZSPKEZ1
-!     rather than the position-only analog ZZSPKZP1.
-!
-      CALL TCASE ( 'Check SPKEZR using the frame RECUR_3. '    // &
-                   'In this test, the error should be caught ' // &
-                   'in routine ZZSPKEZ1.'                      )
-
-      CALL STR2ET ( '2005 JAN 1', ET )
+      CALL SPKSSB ( 499,    ET, 'J2000',         STOBS )
+      CALL SPKLTC ( 401,    ET, 'J2000', 'LT+S', STOBS, &
+                    STATE0, LT, DLT   )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+      CALL ZZCOREPC ( 'LT+S', ET, LT, ETCORR )
+      CALL CHCKXC   ( .FALSE., ' ', OK )
+      CALL SXFORM ( 'J2000', 'RECUR_3', ETCORR, XFORM )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+      CALL PXFORM ( 'J2000', 'RECUR_3', ETCORR, R )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL SPKPOS ( 'PHOBOS', ET,  'RECUR_3', 'LT+S', &
-                    'MARS',   POS0, LT                  )
+      CALL SPKEZR ( 'PHOBOS', ET, 'RECUR_3', 'LT+S', 'MARS', STATE0, LT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+      CALL SPKPOS ( 'PHOBOS', ET, 'RECUR_3', 'LT+S', 'MARS', POS0,   LT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+      CALL SPKEZR ( 'PHOBOS', ET, 'J2000',   'LT+S', 'MARS', STATE1, LT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+      CALL SPKPOS ( 'PHOBOS', ET, 'J2000',   'LT+S', 'MARS', POS1,   LT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL CHCKXC ( .TRUE., 'SPICE(RECURSIONTOODEEP)', OK )
+      DO ROW = 4, 6
+         DO COL = 1, 3
+            XFORM(ROW,COL) = XFORM(ROW,COL) * ( 1.D0 - DLT )
+         END DO
+      END DO
+      CALL MXVG   ( XFORM, STATE1, 6, 6, STATE2 )
+      CALL MXV    ( R,     POS1,         POS2   )
 
+      CALL CHCKAD ( 'STATE0 position', &
+                     STATE0,    '~/', STATE2,    3, EX13, OK )
+      CALL CHCKAD ( 'STATE0 velocity', &
+                     STATE0(4), '~/', STATE2(4), 3, EX13, OK )
+      CALL CHCKAD ( 'POS0', POS0, '~/', POS2,    3, EX13, OK )
 !
-!     Make sure ZZSPKZP1 can trap the recursion error.  Note:
-!     this case should be excluded in Icy testing.
+!     ZZSPKZP1 (in PEPPER, SPKEZP) evaluates RECUR_1 as well.
 !
       CALL ZZSPKZP1 ( 401, ET, 'RECUR_1', 'LT+S', 499, POS0, LT )
-
-      CALL CHCKXC ( .TRUE., 'SPICE(RECURSIONTOODEEP)', OK )
-
+      CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
 !--- Case: ------------------------------------------------------
 !
-!
-!     SPKEZR:  catch error when evaluating two-vector frame
-!     defined using constant vector.
-!
-      CALL TCASE ( 'Check SPKEZR using the frame RECUR_3B. '    // &
-                   'In this test, the error should be caught ' // &
-                   'in routine ZZFRMCH1.'                      )
+      CALL TCASE ( 'Check SPKEZR/SPKPOS using the frame RECUR_3B ' // &
+                   '(PEPPER: three levels of dynamic frames).'     )
 
       CALL STR2ET ( '2005 JAN 1', ET )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL SPKEZR ( 'PHOBOS', ET,     'RECUR_3B', 'LT+S', &
-                    'MARS',   STATE0, LT                  )
-
-      CALL CHCKXC ( .TRUE., 'SPICE(RECURSIONTOODEEP)', OK )
-
-
-
-!
-!--- Case: ------------------------------------------------------
-!
-!     SPKPOS:  catch error when evaluating two-vector frame
-!     defined using constant vector.
-!
-      CALL TCASE ( 'Check SPKPOS using the frame RECUR_3B. '    // &
-                   'In this test, the error should be caught ' // &
-                   'in routine ZZFRMCH1.'                      )
-
-      CALL STR2ET ( '2005 JAN 1', ET )
+      CALL SPKSSB ( 499,    ET, 'J2000',         STOBS )
+      CALL SPKLTC ( 401,    ET, 'J2000', 'LT+S', STOBS, &
+                    STATE0, LT, DLT   )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+      CALL ZZCOREPC ( 'LT+S', ET, LT, ETCORR )
+      CALL CHCKXC   ( .FALSE., ' ', OK )
+      CALL SXFORM ( 'J2000', 'RECUR_3B', ETCORR, XFORM )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+      CALL PXFORM ( 'J2000', 'RECUR_3B', ETCORR, R )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL SPKPOS ( 'PHOBOS', ET,     'RECUR_3B', 'LT+S', &
-                    'MARS',   POS0,   LT                  )
+      CALL SPKEZR ( 'PHOBOS', ET, 'RECUR_3B', 'LT+S', 'MARS', STATE0, LT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+      CALL SPKPOS ( 'PHOBOS', ET, 'RECUR_3B', 'LT+S', 'MARS', POS0,   LT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+      CALL SPKEZR ( 'PHOBOS', ET, 'J2000',    'LT+S', 'MARS', STATE1, LT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+      CALL SPKPOS ( 'PHOBOS', ET, 'J2000',    'LT+S', 'MARS', POS1,   LT )
+      CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL CHCKXC ( .TRUE., 'SPICE(RECURSIONTOODEEP)', OK )
+      DO ROW = 4, 6
+         DO COL = 1, 3
+            XFORM(ROW,COL) = XFORM(ROW,COL) * ( 1.D0 - DLT )
+         END DO
+      END DO
+      CALL MXVG   ( XFORM, STATE1, 6, 6, STATE2 )
+      CALL MXV    ( R,     POS1,         POS2   )
 
+      CALL CHCKAD ( 'STATE0 position', &
+                     STATE0,    '~/', STATE2,    3, EX13, OK )
+      CALL CHCKAD ( 'STATE0 velocity', &
+                     STATE0(4), '~/', STATE2(4), 3, EX13, OK )
+      CALL CHCKAD ( 'POS0', POS0, '~/', POS2,    3, EX13, OK )
 
-!
-!     Now test the rest of the SPK API routines.  We'll use just
-!     one dynamic frame for each case, since we've already exercised
-!     the low-level code needed to evaluate each family of dynamic
-!     frames.  (Note, however, that we haven't covered every
-!     possible logic branch in the low-level code---the other
-!     dynamic frame test families are responsible for that.)
-!
 !
 !--- Case: ------------------------------------------------------
 !
@@ -2093,14 +2097,26 @@
                    'levels of recursion for evaluation.'   )
 
 !
-!     Look up the state of body 700 relative to the solar system
-!     barycenter in the dynamic frame RECUR_3.  We expect an error
-!     to be signaled.
+!     PEPPER: the segment's base frame RECUR_3 needs three levels of
+!     dynamic frames, which PEPPER evaluates (SPICELIB signaled
+!     SPICE(RECURSIONTOODEEP)). Check the state against the state in
+!     RECUR_3 (the segment's frame) transformed to J2000.
 !
       CALL SPKEZ  (  700,       ET,    'J2000', &
                     'NONE',     10,    STATE0,     LT )
+      CALL CHCKXC ( .FALSE.,    ' ',   OK )
 
-      CALL CHCKXC ( .TRUE.,    'SPICE(RECURSIONTOODEEP)',   OK )
+      CALL SPKEZ  (  700,       ET,    'RECUR_3', &
+                    'NONE',     10,    STATE1,     LT )
+      CALL CHCKXC ( .FALSE.,    ' ',   OK )
+      CALL SXFORM ( 'RECUR_3', 'J2000', ET, XFORM )
+      CALL CHCKXC ( .FALSE.,    ' ',    OK )
+      CALL MXVG   ( XFORM, STATE1, 6, 6, STATE2 )
+
+      CALL CHCKAD ( 'STATE0 position', &
+                     STATE0,    '~/', STATE2,    3, EX13, OK )
+      CALL CHCKAD ( 'STATE0 velocity', &
+                     STATE0(4), '~/', STATE2(4), 3, EX13, OK )
 
 
 !
@@ -2343,13 +2359,34 @@
                    'levels of recursion for evaluation.'       )
 
 !
-!     Look up the state of body 700 relative to the solar system
-!     barycenter in the dynamic frame RECUR_3.  We expect an error
-!     to be signaled.
+!     PEPPER: the segment's base frame RECUR_3 needs three levels of
+!     dynamic frames, which PEPPER evaluates (SPICELIB signaled
+!     SPICE(RECURSIONTOODEEP)). The segment holds the data of
+!     instrument -10000, whose base frame is FK4: the pointing relative
+!     to FK4, after the J2000 to RECUR_3 transformation (as for -9901
+!     and -10001 above, whose base frame is J2000).
 !
       CALL CKGPAV ( -9900,   SCLKDP, 0.D0,   'J2000', &
                     CMAT0,   AV0,    CLKOUT, FOUND           )
-      CALL CHCKXC ( .TRUE.,  'SPICE(RECURSIONTOODEEP)',   OK )
+      CALL CHCKXC ( .FALSE., ' ',    OK                )
+      CALL CHCKSL ( '-9900 FOUND',  FOUND, .TRUE., OK  )
+
+      CALL CKGPAV ( -10000,   SCLKDP, 0.D0,   'FK4',   &
+                    CMAT1,    AV1,    CLKOUT, FOUND     )
+      CALL CHCKXC ( .FALSE., ' ',    OK                 )
+      CALL CHCKSL ( '-10000 FOUND',  FOUND, .TRUE., OK  )
+
+      CALL PXFORM ( 'J2000', 'RECUR_3', ET, R )
+      CALL CHCKXC ( .FALSE., ' ',    OK       )
+      CALL MXM    ( CMAT1,    R,        CMAT2 )
+      CALL CHCKAD ( 'CMAT0', CMAT0, '~', CMAT2, 9, EX13, OK )
+
+      CALL RAV2XF ( CMAT1, AV1, XF2 )
+      CALL SXFORM ( 'J2000', 'RECUR_3', ET, XF3 )
+      CALL CHCKXC ( .FALSE., ' ',    OK         )
+      CALL MXMG   ( XF2, XF3, 6, 6, 6, XF4 )
+      CALL XF2RAV ( XF4, CMAT2, AV2 )
+      CALL CHCKAD ( 'AV0', AV0, '~', AV2, 3, EX13, OK )
 
 !
 !     End of test cases.

@@ -131,6 +131,7 @@ a kernel set to about 2600 TK frames.
 | Surface names (`NAIF_SURFACE_NAME`) | 2000 | SPICE(TOOMANYSURFACES) |
 | Surfaces in a DSK method string (`SURFACES = ...`) | 100 | SPICE(TOOMANYSURFACES) |
 | Base frames of a switch frame | 15000 | SPICE(TOOMANYBASEFRAMES) |
+| Nesting of dynamic frames (a dynamic frame defined by vectors in another dynamic frame, or an SPK or CK segment in one) | 2 levels | SPICE(RECURSIONTOODEEP) |
 | SCLK partitions, and coefficients of one clock | 9999 partitions, 300000 coefficients | SPICE(TOOMANYPARTITIONS), SPICE(TOOMANYCOEFFS) |
 | Nutation and precession angles of a body (PCK) | 200 | Error from BODVCD |
 
@@ -168,8 +169,8 @@ and `getmsg` fills the caller's variable as before.
 Some fixed sizes are part of a file format or of SPICE's conventions, and
 PEPPER keeps them: the DAF and DAS record and segment formats, the 40-character
 DAF segment IDs, the 132-character lines of text kernels (NAIF's documented
-rule), the 10 fields of an SCLK string, and guards such as the recursion limit
-of dynamic frames. Caches whose size affects only speed (record buffers, the 23
+rule), the 10 fields of an SCLK string, and guards against nonsense input (a dynamic
+frame whose definition depends on itself is an error). Caches whose size affects only speed (record buffers, the 23
 open files per context, which can be set with `spice%set_max_open_files`) keep
 a size.
 

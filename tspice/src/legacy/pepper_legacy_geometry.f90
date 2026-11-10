@@ -2093,9 +2093,9 @@
       !> **Deprecated:** This routine has been superseded by SPKAPS. This
       !> routine is supported for purposes of backward compatibility only.
       !>
-      !> Legacy interface: calls zz routine zzspkap0 with the legacy context.
+      !> Legacy interface: calls spkapp (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkap0 ( targ, et, ref, sobs, abcorr, starg, lt )
-      use pepper_instance, only: pepper_context, pepper_zzspkap0 => zzspkap0
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
@@ -2108,15 +2108,15 @@
       real(wp) :: lt  !! One way light time between observer and target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkap0 ( ctx, targ, et, ref, sobs, abcorr, starg, lt )
+      call ctx%spkapp ( targ, et, ref, sobs, abcorr, starg, lt )
       end subroutine zzspkap0
 
       !> **Deprecated:** This routine has been superseded by SPKAPS. This
       !> routine is supported for purposes of backward compatibility only.
       !>
-      !> Legacy interface: calls zz routine zzspkap1 with the legacy context.
+      !> Legacy interface: calls spkapp (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkap1 ( targ, et, ref, sobs, abcorr, starg, lt )
-      use pepper_instance, only: pepper_context, pepper_zzspkap1 => zzspkap1
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
@@ -2129,7 +2129,7 @@
       real(wp) :: lt  !! One way light time between observer and target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkap1 ( ctx, targ, et, ref, sobs, abcorr, starg, lt )
+      call ctx%spkapp ( targ, et, ref, sobs, abcorr, starg, lt )
       end subroutine zzspkap1
 
       !> SPICE Private routine intended solely for the support of SPICE

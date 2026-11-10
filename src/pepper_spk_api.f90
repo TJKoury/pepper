@@ -14484,6 +14484,10 @@ contains
       use pepper_math, only: odd, vequ, vnorm, vsub
       use pepper_strings, only: ljucrs
       implicit none
+      logical :: xmit  !! (PEPPER) copy of the saved flag for this call
+      logical :: uselt  !! (PEPPER) copy of the saved flag for this call
+      logical :: usecn  !! (PEPPER) copy of the saved flag for this call
+      logical :: usestl  !! (PEPPER) copy of the saved flag for this call
       integer(ip), parameter :: corlen = 5
       integer(ip), parameter :: nflags = 9
       integer(ip), parameter :: ixnone = 1
@@ -14506,10 +14510,10 @@ contains
       associate ( first => ctx%spkapo_state%first, &
                   flags => ctx%spkapo_state%flags, &
                   prvcor => ctx%spkapo_state%prvcor, &
-                  usecn => ctx%spkapo_state%usecn, &
-                  usestl => ctx%spkapo_state%usestl, &
-                  uselt => ctx%spkapo_state%uselt, &
-                  xmit => ctx%spkapo_state%xmit )
+                  c_usecn => ctx%spkapo_state%usecn, &
+                  c_usestl => ctx%spkapo_state%usestl, &
+                  c_uselt => ctx%spkapo_state%uselt, &
+                  c_xmit => ctx%spkapo_state%xmit )
       if ( ctx%failed() ) return
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
@@ -14545,19 +14549,28 @@ contains
 !        Set logical flags indicating the attributes of the requested
 !        correction.
 !
-         xmit    =  i > ixcns
+         c_xmit    =  i > ixcns
 
-         uselt   =       ( i == ixlt  ) .or. ( i == ixlts  ) &
+         c_uselt   =       ( i == ixlt  ) .or. ( i == ixlts  ) &
                     .or. ( i == ixxlt ) .or. ( i == ixxlts )
 
-         usestl  =  ( i > 1 )  .and.  odd(i)
+         c_usestl  =  ( i > 1 )  .and.  odd(i)
 
-         usecn   =       ( i == ixcn  ) .or. ( i == ixcns  ) &
+         c_usecn   =       ( i == ixcn  ) .or. ( i == ixcns  ) &
                     .or. ( i == ixxcn ) .or. ( i == ixxcns )
 
          first   = .false.
 
       end if
+      !
+      !     PEPPER: the routine may be called again, for a dynamic frame,
+      !     before it returns (SPICELIB had copies per recursion level); the
+      !     saved flags are copied here, and only the copies are used below.
+      !
+      xmit = c_xmit
+      uselt = c_uselt
+      usecn = c_usecn
+      usestl = c_usestl
 
 !
 !     See if the reference frame is a recognized inertial frame.
@@ -15147,6 +15160,9 @@ contains
       use pepper_math, only: vdot, vlcom, vnorm, vsubg
       use pepper_inc_zzabcorr
       implicit none
+      logical :: xmit  !! (PEPPER) copy of the saved flag for this call
+      logical :: uselt  !! (PEPPER) copy of the saved flag for this call
+      logical :: usecn  !! (PEPPER) copy of the saved flag for this call
       character(*), parameter :: rname = 'SPKLTC'
       real(wp), parameter :: tol = 1.0e-10_wp
       real(wp), parameter :: cnvlim = 1.0e-17_wp
@@ -15170,9 +15186,9 @@ contains
       if ( .not. allocated ( ctx%spkltc_state ) ) allocate ( ctx%spkltc_state )
       associate ( pass1 => ctx%spkltc_state%pass1, &
                   prvcor => ctx%spkltc_state%prvcor, &
-                  usecn => ctx%spkltc_state%usecn, &
-                  uselt => ctx%spkltc_state%uselt, &
-                  xmit => ctx%spkltc_state%xmit )
+                  c_usecn => ctx%spkltc_state%usecn, &
+                  c_uselt => ctx%spkltc_state%uselt, &
+                  c_xmit => ctx%spkltc_state%xmit )
       if ( ctx%failed() ) return
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
@@ -15204,14 +15220,22 @@ contains
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
 !
-         xmit    =  attblk ( xmtidx )
-         uselt   =  attblk ( ltidx )
-         usecn   =  attblk ( cnvidx )
+         c_xmit    =  attblk ( xmtidx )
+         c_uselt   =  attblk ( ltidx )
+         c_usecn   =  attblk ( cnvidx )
          usestl  =  attblk ( stlidx )
 
          pass1   = .false.
 
       end if
+      !
+      !     PEPPER: the routine may be called again, for a dynamic frame,
+      !     before it returns (SPICELIB had copies per recursion level); the
+      !     saved flags are copied here, and only the copies are used below.
+      !
+      xmit = c_xmit
+      uselt = c_uselt
+      usecn = c_usecn
 
 !
 !     See if the reference frame is a recognized inertial frame.
@@ -16850,6 +16874,10 @@ contains
       use pepper_math, only: odd, vequ, vnorm, vsubg
       use pepper_strings, only: ljucrs
       implicit none
+      logical :: xmit  !! (PEPPER) copy of the saved flag for this call
+      logical :: uselt  !! (PEPPER) copy of the saved flag for this call
+      logical :: usecn  !! (PEPPER) copy of the saved flag for this call
+      logical :: usestl  !! (PEPPER) copy of the saved flag for this call
       integer(ip), parameter :: corlen = 5
       integer(ip), parameter :: nflags = 9
       integer(ip), parameter :: ixnone = 1
@@ -16872,10 +16900,10 @@ contains
       associate ( first => ctx%spkapp_state%first, &
                   flags => ctx%spkapp_state%flags, &
                   prvcor => ctx%spkapp_state%prvcor, &
-                  usecn => ctx%spkapp_state%usecn, &
-                  usestl => ctx%spkapp_state%usestl, &
-                  uselt => ctx%spkapp_state%uselt, &
-                  xmit => ctx%spkapp_state%xmit )
+                  c_usecn => ctx%spkapp_state%usecn, &
+                  c_usestl => ctx%spkapp_state%usestl, &
+                  c_uselt => ctx%spkapp_state%uselt, &
+                  c_xmit => ctx%spkapp_state%xmit )
       if ( ctx%failed() ) return
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
@@ -16912,19 +16940,28 @@ contains
 !        Set logical flags indicating the attributes of the requested
 !        correction.
 !
-         xmit    =  i > ixcns
+         c_xmit    =  i > ixcns
 
-         uselt   =       ( i == ixlt  ) .or. ( i == ixlts  ) &
+         c_uselt   =       ( i == ixlt  ) .or. ( i == ixlts  ) &
                     .or. ( i == ixxlt ) .or. ( i == ixxlts )
 
-         usestl  =  ( i > 1 )  .and.  odd(i)
+         c_usestl  =  ( i > 1 )  .and.  odd(i)
 
-         usecn   =       ( i == ixcn  ) .or. ( i == ixcns  ) &
+         c_usecn   =       ( i == ixcn  ) .or. ( i == ixcns  ) &
                     .or. ( i == ixxcn ) .or. ( i == ixxcns )
 
          first   = .false.
 
       end if
+      !
+      !     PEPPER: the routine may be called again, for a dynamic frame,
+      !     before it returns (SPICELIB had copies per recursion level); the
+      !     saved flags are copied here, and only the copies are used below.
+      !
+      xmit = c_xmit
+      uselt = c_uselt
+      usecn = c_usecn
+      usestl = c_usestl
 
 !
 !     See if the reference frame is a recognized inertial frame.
@@ -17586,6 +17623,8 @@ contains
       use pepper_math, only: vadd, vequ
       use pepper_inc_zzabcorr
       implicit none
+      logical :: xmit  !! (PEPPER) copy of the saved flag for this call
+      logical :: usestl  !! (PEPPER) copy of the saved flag for this call
       character(*), parameter :: rname = 'SPKAPS'
       real(wp)              corpos ( 3 )
       real(wp)              corvel ( 3 )
@@ -17596,8 +17635,8 @@ contains
       if ( .not. allocated ( ctx%spkaps_state ) ) allocate ( ctx%spkaps_state )
       associate ( first => ctx%spkaps_state%first, &
                   prvcor => ctx%spkaps_state%prvcor, &
-                  usestl => ctx%spkaps_state%usestl, &
-                  xmit => ctx%spkaps_state%xmit )
+                  c_usestl => ctx%spkaps_state%usestl, &
+                  c_xmit => ctx%spkaps_state%xmit )
       if ( ctx%failed() ) return
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
@@ -17626,12 +17665,19 @@ contains
 !        The above definitions are consistent with those used by
 !        ZZPRSCOR.
 !
-         xmit    =  attblk ( xmtidx )
-         usestl  =  attblk ( stlidx )
+         c_xmit    =  attblk ( xmtidx )
+         c_usestl  =  attblk ( stlidx )
 
          first   = .false.
 
       end if
+      !
+      !     PEPPER: the routine may be called again, for a dynamic frame,
+      !     before it returns (SPICELIB had copies per recursion level); the
+      !     saved flags are copied here, and only the copies are used below.
+      !
+      xmit = c_xmit
+      usestl = c_usestl
 
 !
 !     See if the reference frame is a recognized inertial frame.
@@ -19973,6 +20019,7 @@ contains
       use pepper_arrays, only: cleard
       use pepper_inc_zzabcorr
       implicit none
+      logical :: usestl  !! (PEPPER) copy of the saved flag for this call
       character(*), parameter :: rname = 'SPKACS'
       real(wp), parameter :: delta = 1.0_wp
       integer(ip), parameter :: ssb = 0
@@ -19988,7 +20035,7 @@ contains
       if ( .not. allocated ( ctx%spkacs_state ) ) allocate ( ctx%spkacs_state )
       associate ( first => ctx%spkacs_state%first, &
                   prvcor => ctx%spkacs_state%prvcor, &
-                  usestl => ctx%spkacs_state%usestl )
+                  c_usestl => ctx%spkacs_state%usestl )
       if ( ctx%failed() ) return
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
@@ -20015,11 +20062,17 @@ contains
 !        The above definitions are consistent with those used by
 !        ZZPRSCOR.
 !
-         usestl  =  attblk ( stlidx )
+         c_usestl  =  attblk ( stlidx )
 
          first   = .false.
 
       end if
+      !
+      !     PEPPER: the routine may be called again, for a dynamic frame,
+      !     before it returns (SPICELIB had copies per recursion level); the
+      !     saved flags are copied here, and only the copies are used below.
+      !
+      usestl = c_usestl
 
 !
 !     See if the reference frame is a recognized inertial frame.
@@ -22871,6 +22924,8 @@ contains
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
       implicit none
+      logical :: xmit  !! (PEPPER) copy of the saved flag for this call
+      logical :: usegeo  !! (PEPPER) copy of the saved flag for this call
       character(*), parameter :: rname = 'SPKEZ'
       real(wp) :: state    ( 6    )
       real(wp) :: temp     ( 6    )
@@ -22890,8 +22945,8 @@ contains
       if ( .not. allocated ( ctx%spkez_state ) ) allocate ( ctx%spkez_state )
       associate ( prvcor => ctx%spkez_state%prvcor, &
                   fj2000 => ctx%spkez_state%fj2000, &
-                  usegeo => ctx%spkez_state%usegeo, &
-                  xmit => ctx%spkez_state%xmit, &
+                  c_usegeo => ctx%spkez_state%usegeo, &
+                  c_xmit => ctx%spkez_state%xmit, &
                   svctr1 => ctx%spkez_state%svctr1, &
                   svref => ctx%spkez_state%svref, &
                   svreqf => ctx%spkez_state%svreqf, &
@@ -22936,8 +22991,8 @@ contains
 !        The above definitions are consistent with those used by
 !        ZZVALCOR.
 !
-         xmit    =  attblk ( xmtidx )
-         usegeo  =  attblk ( geoidx )
+         c_xmit    =  attblk ( xmtidx )
+         c_usegeo  =  attblk ( geoidx )
 
 !
 !        Get the frame ID for J2000 on the first call to this routine.
@@ -22951,6 +23006,13 @@ contains
          end if
 
       end if
+      !
+      !     PEPPER: the routine may be called again, for a dynamic frame,
+      !     before it returns (SPICELIB had copies per recursion level); the
+      !     saved flags are copied here, and only the copies are used below.
+      !
+      xmit = c_xmit
+      usegeo = c_usegeo
 
 !
 !     If we only want a geometric state, then use SPKGEO to compute

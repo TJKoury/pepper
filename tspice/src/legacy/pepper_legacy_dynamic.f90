@@ -10,9 +10,9 @@
       !> Find the transformation from a user specified frame to
       !> another frame at a user specified epoch.
       !>
-      !> Legacy interface: calls zz routine zzfrmgt1 with the legacy context.
+      !> Legacy interface: calls frmget (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzfrmgt1 ( infrm, et, xform, outfrm, found )
-      use pepper_instance, only: pepper_context, pepper_zzfrmgt1 => zzfrmgt1
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_frmtyp
@@ -24,15 +24,15 @@
       logical :: found  !! TRUE if a frame transformation can be found.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzfrmgt1 ( ctx, infrm, et, xform, outfrm, found )
+      call ctx%frmget ( infrm, et, xform, outfrm, found )
       end subroutine zzfrmgt1
 
       !> Find the rotation from a user specified frame to another frame at
       !> a user specified epoch.
       !>
-      !> Legacy interface: calls zz routine zzrotgt1 with the legacy context.
+      !> Legacy interface: calls rotget (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzrotgt1 ( infrm, et, rotate, outfrm, found )
-      use pepper_instance, only: pepper_context, pepper_zzrotgt1 => zzrotgt1
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_frmtyp
@@ -44,15 +44,15 @@
       logical :: found  !! TRUE if a rotation can be found.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzrotgt1 ( ctx, infrm, et, rotate, outfrm, found )
+      call ctx%rotget ( infrm, et, rotate, outfrm, found )
       end subroutine zzrotgt1
 
       !> Return the state transformation matrix from one
       !> frame to another.
       !>
-      !> Legacy interface: calls zz routine zzfrmch1 with the legacy context.
+      !> Legacy interface: calls frmchg (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzfrmch1 ( frame1, frame2, et, xform )
-      use pepper_instance, only: pepper_context, pepper_zzfrmch1 => zzfrmch1
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_errhnd
@@ -64,15 +64,15 @@
       real(wp) :: xform ( 6, 6 )  !! a state transformation matrix
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzfrmch1 ( ctx, frame1, frame2, et, xform )
+      call ctx%frmchg ( frame1, frame2, et, xform )
       end subroutine zzfrmch1
 
       !> Return the transformation matrix from one
       !> frame to another.
       !>
-      !> Legacy interface: calls zz routine zzrefch1 with the legacy context.
+      !> Legacy interface: calls refchg (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzrefch1 ( frame1, frame2, et, rotate )
-      use pepper_instance, only: pepper_context, pepper_zzrefch1 => zzrefch1
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_errhnd
@@ -84,16 +84,16 @@
       real(wp) :: rotate ( 3, 3 )  !! a rotation matrix
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzrefch1 ( ctx, frame1, frame2, et, rotate )
+      call ctx%refchg ( frame1, frame2, et, rotate )
       end subroutine zzrefch1
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
-      !> Legacy interface: calls zz routine zzspkgo1 with the legacy context.
+      !> Legacy interface: calls spkgeo (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkgo1 ( targ, et, ref, obs, state, lt )
-      use pepper_instance, only: pepper_context, pepper_zzspkgo1 => zzspkgo1
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_ninert
@@ -107,16 +107,16 @@
       real(wp) :: lt  !! Light time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkgo1 ( ctx, targ, et, ref, obs, state, lt )
+      call ctx%spkgeo ( targ, et, ref, obs, state, lt )
       end subroutine zzspkgo1
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
-      !> Legacy interface: calls zz routine zzspkgp1 with the legacy context.
+      !> Legacy interface: calls spkgps (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkgp1 ( targ, et, ref, obs, pos, lt )
-      use pepper_instance, only: pepper_context, pepper_zzspkgp1 => zzspkgp1
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_ninert
@@ -130,16 +130,16 @@
       real(wp) :: lt  !! Light time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkgp1 ( ctx, targ, et, ref, obs, pos, lt )
+      call ctx%spkgps ( targ, et, ref, obs, pos, lt )
       end subroutine zzspkgp1
 
       !> Return the state (position and velocity) of a target body
       !> relative to an observer, optionally corrected for light time,
       !> expressed relative to an inertial reference frame.
       !>
-      !> Legacy interface: calls zz routine zzspklt1 with the legacy context.
+      !> Legacy interface: calls spkltc (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspklt1 ( targ, et, ref, abcorr, stobs, starg, lt, dlt )
-      use pepper_instance, only: pepper_context, pepper_zzspklt1 => zzspklt1
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
@@ -154,15 +154,15 @@
       real(wp) :: dlt  !! Derivative of light time with respect to time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspklt1 ( ctx, targ, et, ref, abcorr, stobs, starg, lt, dlt )
+      call ctx%spkltc ( targ, et, ref, abcorr, stobs, starg, lt, dlt )
       end subroutine zzspklt1
 
       !> Return the position of a target body relative to an observer,
       !> optionally corrected for light time and stellar aberration.
       !>
-      !> Legacy interface: calls zz routine zzspkpa1 with the legacy context.
+      !> Legacy interface: calls spkapo (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkpa1 ( targ, et, ref, sobs, abcorr, ptarg, lt )
-      use pepper_instance, only: pepper_context, pepper_zzspkpa1 => zzspkpa1
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
@@ -175,16 +175,16 @@
       real(wp) :: lt  !! One way light time between observer and target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkpa1 ( ctx, targ, et, ref, sobs, abcorr, ptarg, lt )
+      call ctx%spkapo ( targ, et, ref, sobs, abcorr, ptarg, lt )
       end subroutine zzspkpa1
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
-      !> Legacy interface: calls zz routine zzspksb1 with the legacy context.
+      !> Legacy interface: calls spkssb (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspksb1 ( targ, et, ref, starg )
-      use pepper_instance, only: pepper_context, pepper_zzspksb1 => zzspksb1
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
@@ -194,7 +194,7 @@
       real(wp) :: starg    ( 6 )  !! State of target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspksb1 ( ctx, targ, et, ref, starg )
+      call ctx%spkssb ( targ, et, ref, starg )
       end subroutine zzspksb1
 
       !> Given the state and acceleration of an observer relative to the
@@ -203,9 +203,9 @@
       !> for light time and stellar aberration. All input and output
       !> vectors are expressed relative to an inertial reference frame.
       !>
-      !> Legacy interface: calls zz routine zzspkas1 with the legacy context.
+      !> Legacy interface: calls spkaps (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkas1 ( targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
-      use pepper_instance, only: pepper_context, pepper_zzspkas1 => zzspkas1
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
@@ -221,16 +221,16 @@
       real(wp) :: dlt  !! Derivative of light time with respect to time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkas1 ( ctx, targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+      call ctx%spkaps ( targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
       end subroutine zzspkas1
 
       !> Return the position of a target body relative to an observing
       !> body, optionally corrected for light time (planetary aberration)
       !> and stellar aberration.
       !>
-      !> Legacy interface: calls zz routine zzspkzp1 with the legacy context.
+      !> Legacy interface: calls spkezp (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkzp1 ( targ, et, ref, abcorr, obs, ptarg, lt )
-      use pepper_instance, only: pepper_context, pepper_zzspkzp1 => zzspkzp1
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_frmtyp
@@ -245,7 +245,7 @@
       real(wp) :: lt  !! One way light time between observer and target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkzp1 ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
+      call ctx%spkezp ( targ, et, ref, abcorr, obs, ptarg, lt )
       end subroutine zzspkzp1
 
       !> Return the state (position and velocity) of a target body
@@ -253,9 +253,9 @@
       !> and stellar aberration, expressed relative to an inertial
       !> reference frame.
       !>
-      !> Legacy interface: calls zz routine zzspkac1 with the legacy context.
+      !> Legacy interface: calls spkacs (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkac1 ( targ, et, ref, abcorr, obs, starg, lt, dlt )
-      use pepper_instance, only: pepper_context, pepper_zzspkac1 => zzspkac1
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
@@ -270,16 +270,16 @@
       real(wp) :: dlt  !! Derivative of light time with respect to time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkac1 ( ctx, targ, et, ref, abcorr, obs, starg, lt, dlt )
+      call ctx%spkacs ( targ, et, ref, abcorr, obs, starg, lt, dlt )
       end subroutine zzspkac1
 
       !> Return the state (position and velocity) of a target body
       !> relative to an observing body, optionally corrected for light
       !> time (planetary aberration) and stellar aberration.
       !>
-      !> Legacy interface: calls zz routine zzspkez1 with the legacy context.
+      !> Legacy interface: calls spkez (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkez1 ( targ, et, ref, abcorr, obs, starg, lt )
-      use pepper_instance, only: pepper_context, pepper_zzspkez1 => zzspkez1
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_frmtyp
@@ -295,16 +295,16 @@
       real(wp) :: lt  !! One way light time between observer and target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkez1 ( ctx, targ, et, ref, abcorr, obs, starg, lt )
+      call ctx%spkez ( targ, et, ref, abcorr, obs, starg, lt )
       end subroutine zzspkez1
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
-      !> Legacy interface: calls zz routine zzdynfr0 with the legacy context.
+      !> Legacy interface: calls zzdynfrm (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzdynfr0 ( infram, center, et, xform, basfrm )
-      use pepper_instance, only: pepper_context, pepper_zzdynfr0 => zzdynfr0
+      use pepper_instance, only: pepper_context, pepper_zzdynfrm => zzdynfrm
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_frmtyp
@@ -318,15 +318,15 @@
       integer(ip) :: basfrm  !! Frame ID of base frame associated with INFRAM.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzdynfr0 ( ctx, infram, center, et, xform, basfrm )
+      call pepper_zzdynfrm ( ctx, infram, center, et, xform, basfrm )
       end subroutine zzdynfr0
 
       !> Find the transformation from a user specified frame to
       !> another frame at a user specified epoch.
       !>
-      !> Legacy interface: calls zz routine zzfrmgt0 with the legacy context.
+      !> Legacy interface: calls frmget (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzfrmgt0 ( infrm, et, xform, outfrm, found )
-      use pepper_instance, only: pepper_context, pepper_zzfrmgt0 => zzfrmgt0
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_frmtyp
@@ -338,15 +338,15 @@
       logical :: found  !! TRUE if a frame transformation can be found.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzfrmgt0 ( ctx, infrm, et, xform, outfrm, found )
+      call ctx%frmget ( infrm, et, xform, outfrm, found )
       end subroutine zzfrmgt0
 
       !> Return the state transformation matrix from one
       !> frame to another.
       !>
-      !> Legacy interface: calls zz routine zzfrmch0 with the legacy context.
+      !> Legacy interface: calls frmchg (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzfrmch0 ( frame1, frame2, et, xform )
-      use pepper_instance, only: pepper_context, pepper_zzfrmch0 => zzfrmch0
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_errhnd
@@ -358,16 +358,16 @@
       real(wp) :: xform ( 6, 6 )  !! a state transformation matrix
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzfrmch0 ( ctx, frame1, frame2, et, xform )
+      call ctx%frmchg ( frame1, frame2, et, xform )
       end subroutine zzfrmch0
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
-      !> Legacy interface: calls zz routine zzspkgo0 with the legacy context.
+      !> Legacy interface: calls spkgeo (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkgo0 ( targ, et, ref, obs, state, lt )
-      use pepper_instance, only: pepper_context, pepper_zzspkgo0 => zzspkgo0
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_ninert
@@ -381,16 +381,16 @@
       real(wp) :: lt  !! Light time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkgo0 ( ctx, targ, et, ref, obs, state, lt )
+      call ctx%spkgeo ( targ, et, ref, obs, state, lt )
       end subroutine zzspkgo0
 
       !> Return the state (position and velocity) of a target body
       !> relative to an observer, optionally corrected for light time,
       !> expressed relative to an inertial reference frame.
       !>
-      !> Legacy interface: calls zz routine zzspklt0 with the legacy context.
+      !> Legacy interface: calls spkltc (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspklt0 ( targ, et, ref, abcorr, stobs, starg, lt, dlt )
-      use pepper_instance, only: pepper_context, pepper_zzspklt0 => zzspklt0
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
@@ -405,16 +405,16 @@
       real(wp) :: dlt  !! Derivative of light time with respect to time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspklt0 ( ctx, targ, et, ref, abcorr, stobs, starg, lt, dlt )
+      call ctx%spkltc ( targ, et, ref, abcorr, stobs, starg, lt, dlt )
       end subroutine zzspklt0
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
-      !> Legacy interface: calls zz routine zzspksb0 with the legacy context.
+      !> Legacy interface: calls spkssb (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspksb0 ( targ, et, ref, starg )
-      use pepper_instance, only: pepper_context, pepper_zzspksb0 => zzspksb0
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
@@ -424,7 +424,7 @@
       real(wp) :: starg    ( 6 )  !! State of target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspksb0 ( ctx, targ, et, ref, starg )
+      call ctx%spkssb ( targ, et, ref, starg )
       end subroutine zzspksb0
 
       !> Given the state and acceleration of an observer relative to the
@@ -433,9 +433,9 @@
       !> for light time and stellar aberration. All input and output
       !> vectors are expressed relative to an inertial reference frame.
       !>
-      !> Legacy interface: calls zz routine zzspkas0 with the legacy context.
+      !> Legacy interface: calls spkaps (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkas0 ( targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
-      use pepper_instance, only: pepper_context, pepper_zzspkas0 => zzspkas0
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
@@ -451,7 +451,7 @@
       real(wp) :: dlt  !! Derivative of light time with respect to time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkas0 ( ctx, targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+      call ctx%spkaps ( targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
       end subroutine zzspkas0
 
       !> Return the state (position and velocity) of a target body
@@ -459,9 +459,9 @@
       !> and stellar aberration, expressed relative to an inertial
       !> reference frame.
       !>
-      !> Legacy interface: calls zz routine zzspkac0 with the legacy context.
+      !> Legacy interface: calls spkacs (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkac0 ( targ, et, ref, abcorr, obs, starg, lt, dlt )
-      use pepper_instance, only: pepper_context, pepper_zzspkac0 => zzspkac0
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
@@ -476,16 +476,16 @@
       real(wp) :: dlt  !! Derivative of light time with respect to time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkac0 ( ctx, targ, et, ref, abcorr, obs, starg, lt, dlt )
+      call ctx%spkacs ( targ, et, ref, abcorr, obs, starg, lt, dlt )
       end subroutine zzspkac0
 
       !> Return the state (position and velocity) of a target body
       !> relative to an observing body, optionally corrected for light
       !> time (planetary aberration) and stellar aberration.
       !>
-      !> Legacy interface: calls zz routine zzspkez0 with the legacy context.
+      !> Legacy interface: calls spkez (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkez0 ( targ, et, ref, abcorr, obs, starg, lt )
-      use pepper_instance, only: pepper_context, pepper_zzspkez0 => zzspkez0
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_frmtyp
@@ -501,16 +501,16 @@
       real(wp) :: lt  !! One way light time between observer and target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkez0 ( ctx, targ, et, ref, abcorr, obs, starg, lt )
+      call ctx%spkez ( targ, et, ref, abcorr, obs, starg, lt )
       end subroutine zzspkez0
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
-      !> Legacy interface: calls zz routine zzdynrt0 with the legacy context.
+      !> Legacy interface: calls zzdynrot (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzdynrt0 ( infram, center, et, rotate, basfrm )
-      use pepper_instance, only: pepper_context, pepper_zzdynrt0 => zzdynrt0
+      use pepper_instance, only: pepper_context, pepper_zzdynrot => zzdynrot
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_frmtyp
@@ -524,15 +524,15 @@
       integer(ip) :: basfrm  !! Frame ID of base frame associated with INFRAM.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzdynrt0 ( ctx, infram, center, et, rotate, basfrm )
+      call pepper_zzdynrot ( ctx, infram, center, et, rotate, basfrm )
       end subroutine zzdynrt0
 
       !> Find the rotation from a user specified frame to another frame at
       !> a user specified epoch.
       !>
-      !> Legacy interface: calls zz routine zzrotgt0 with the legacy context.
+      !> Legacy interface: calls rotget (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzrotgt0 ( infrm, et, rotate, outfrm, found )
-      use pepper_instance, only: pepper_context, pepper_zzrotgt0 => zzrotgt0
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_frmtyp
@@ -544,15 +544,15 @@
       logical :: found  !! TRUE if a rotation can be found.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzrotgt0 ( ctx, infrm, et, rotate, outfrm, found )
+      call ctx%rotget ( infrm, et, rotate, outfrm, found )
       end subroutine zzrotgt0
 
       !> Return the transformation matrix from one
       !> frame to another.
       !>
-      !> Legacy interface: calls zz routine zzrefch0 with the legacy context.
+      !> Legacy interface: calls refchg (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzrefch0 ( frame1, frame2, et, rotate )
-      use pepper_instance, only: pepper_context, pepper_zzrefch0 => zzrefch0
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_errhnd
@@ -564,16 +564,16 @@
       real(wp) :: rotate ( 3, 3 )  !! a rotation matrix
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzrefch0 ( ctx, frame1, frame2, et, rotate )
+      call ctx%refchg ( frame1, frame2, et, rotate )
       end subroutine zzrefch0
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
-      !> Legacy interface: calls zz routine zzspkgp0 with the legacy context.
+      !> Legacy interface: calls spkgps (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkgp0 ( targ, et, ref, obs, pos, lt )
-      use pepper_instance, only: pepper_context, pepper_zzspkgp0 => zzspkgp0
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_ninert
@@ -587,15 +587,15 @@
       real(wp) :: lt  !! Light time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkgp0 ( ctx, targ, et, ref, obs, pos, lt )
+      call ctx%spkgps ( targ, et, ref, obs, pos, lt )
       end subroutine zzspkgp0
 
       !> Return the position of a target body relative to an observer,
       !> optionally corrected for light time and stellar aberration.
       !>
-      !> Legacy interface: calls zz routine zzspkpa0 with the legacy context.
+      !> Legacy interface: calls spkapo (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkpa0 ( targ, et, ref, sobs, abcorr, ptarg, lt )
-      use pepper_instance, only: pepper_context, pepper_zzspkpa0 => zzspkpa0
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
@@ -608,16 +608,16 @@
       real(wp) :: lt  !! One way light time between observer and target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkpa0 ( ctx, targ, et, ref, sobs, abcorr, ptarg, lt )
+      call ctx%spkapo ( targ, et, ref, sobs, abcorr, ptarg, lt )
       end subroutine zzspkpa0
 
       !> Return the position of a target body relative to an observing
       !> body, optionally corrected for light time (planetary aberration)
       !> and stellar aberration.
       !>
-      !> Legacy interface: calls zz routine zzspkzp0 with the legacy context.
+      !> Legacy interface: calls spkezp (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
       subroutine zzspkzp0 ( targ, et, ref, abcorr, obs, ptarg, lt )
-      use pepper_instance, only: pepper_context, pepper_zzspkzp0 => zzspkzp0
+      use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_frmtyp
@@ -632,7 +632,7 @@
       real(wp) :: lt  !! One way light time between observer and target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzspkzp0 ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
+      call ctx%spkezp ( targ, et, ref, abcorr, obs, ptarg, lt )
       end subroutine zzspkzp0
 
       !> SPICE Private routine intended solely for the support of SPICE

@@ -129,8 +129,9 @@ is a limit. They must grow together, or the smallest becomes the limit.
   documented text-kernel rule. Longer lines are silently truncated today.
 - **Built-in data:** `nperm`, `ninert`, `nninrt`, `maxbfr` (fixed tables).
 - **Guards:**
-  - `RECURSIONTOODEEP`: a dynamic frame may not be used at recursion level 1.
-    `plan.md` records the decision to keep it.
+  - `RECURSIONTOODEEP`: SPICELIB evaluated at most two levels of dynamic
+    frames. Removed (`plan.md`, step 14): dynamic frames nest to any depth;
+    the error now means a circular definition.
   - Iteration caps (`nearpt`, `zzcxbrut`).
   - GF progress line lengths (an 80-column display).
 - **Frame chains:** no fixed length (the buffer of 10 nodes is folded).

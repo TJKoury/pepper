@@ -86,15 +86,16 @@ contains
    !> `r` (km) around `center` in J2000, with angular rate 1e-6 rad/s,
    !> phase `phase` (rad) at ET 0, from ET 0 to 1e6 s. The state at `et`
    !> is given by `circle_state`.
-   subroutine write_spk(ctx, file, body, center, r, phase)
+   subroutine write_spk(ctx, file, body, center, r, phase, frame)
       type(pepper_context), intent(inout) :: ctx  !! the context used to write the file
       character(*), intent(in) :: file  !! the file to write
       integer(ip), intent(in) :: body  !! the body
       integer(ip), intent(in) :: center  !! the center of motion
       real(wp), intent(in) :: r  !! the radius (km)
       real(wp), intent(in) :: phase  !! the phase at ET 0 (rad)
+      integer(ip), intent(in), optional :: frame  !! the frame ID of the segment (default J2000)
       real(wp) :: epochs(nstates), states(6, nstates), sum(5)
-      integer(ip) :: h
+      integer(ip) :: h, frid
       integer :: k
       call delete_file(file)
       epochs = [(step*(k - 1), k = 1, nstates)]
@@ -102,7 +103,9 @@ contains
          states(:, k) = circle_state(r, phase, epochs(k))
       end do
       call ctx%dafonw(file, 'SPK', 2_ip, 6_ip, 'PEPPER test SPK', 0_ip, h)
-      call ctx%dafps(2_ip, 6_ip, [epochs(1), epochs(nstates)], [body, center, 1_ip, 9_ip, 0_ip, 0_ip], sum)
+      frid = 1
+      if (present(frame)) frid = frame
+      call ctx%dafps(2_ip, 6_ip, [epochs(1), epochs(nstates)], [body, center, frid, 9_ip, 0_ip, 0_ip], sum)
       call ctx%dafbna(h, sum, 'CIRCLE')
       ! type 9: the states, the epochs, no epoch directory (fewer than 100
       ! epochs), the degree and the number of states

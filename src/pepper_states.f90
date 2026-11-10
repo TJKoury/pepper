@@ -3636,35 +3636,6 @@ module pepper_states
       real(wp) :: svminr = -1.0_wp  !! minimum radius of the bounding spheres for the saved body and surfaces
    end type zzdsksph_state
 
-   ! ------------------------------------------------------------------ ZZDYNFR0
-
-   !> SPICE Private routine intended solely for the support of SPICE
-   !> routines.  Users should not call this routine directly due
-   !> to the volatile nature of this routine.
-   !>
-   !> The saved variables of SPICELIB's ZZDYNFR0 routines (entry points
-   !> zzdynfr0), held in pepper_context (one per thread).
-   type, public :: zzdynfr0_state
-      character(1) :: axes ( 3 ) = [ character(1) :: kvx, kvy, kvz ]  !! axis names 'X', 'Y', 'Z' used to decode an axis kernel variable
-      integer(ip) :: earth = 0  !! NAIF ID code of the Earth (Earth-centered check for precession/nutation frames)
-      logical :: first = .true.  !! first-call setup (J2000 and Earth codes, kernel variable names) not yet done
-      integer(ip) :: j2000 = 0  !! frame ID code of J2000
-      character(kvnmln) :: itmabc ( 2 ) = ' '  !! kernel variable names PRI_ABCORR and SEC_ABCORR
-      character(kvnmln) :: itmaxe ( 2 ) = ' '  !! kernel variable names PRI_AXIS and SEC_AXIS
-      character(kvnmln) :: itmcof ( 3 ) = [ character(kvnmln) :: kweac1, kweac2, kweac3 ]  !! kernel variable names ANGLE_1_COEFFS, ANGLE_2_COEFFS, ANGLE_3_COEFFS (Euler frames)
-      character(kvnmln) :: itmdec ( 2 ) = ' '  !! kernel variable names PRI_DEC and SEC_DEC
-      character(kvnmln) :: itmfrm ( 2 ) = ' '  !! kernel variable names PRI_FRAME and SEC_FRAME
-      character(kvnmln) :: itmlat ( 2 ) = ' '  !! kernel variable names PRI_LATITUDE and SEC_LATITUDE
-      character(kvnmln) :: itmlon ( 2 ) = ' '  !! kernel variable names PRI_LONGITUDE and SEC_LONGITUDE
-      character(kvnmln) :: itmobs ( 2 ) = ' '  !! kernel variable names PRI_OBSERVER and SEC_OBSERVER
-      character(kvnmln) :: itmra ( 2 ) = ' '  !! kernel variable names PRI_RA and SEC_RA
-      character(kvnmln) :: itmsep = kwatol  !! kernel variable name ANGLE_SEP_TOL (minimum angular separation of the defining vectors)
-      character(kvnmln) :: itmspc ( 2 ) = ' '  !! kernel variable names PRI_SPEC and SEC_SPEC
-      character(kvnmln) :: itmtrg ( 2 ) = ' '  !! kernel variable names PRI_TARGET and SEC_TARGET
-      character(kvnmln) :: itmunt ( 2 ) = ' '  !! kernel variable names PRI_UNITS and SEC_UNITS
-      character(kvnmln) :: itmvdf ( 2 ) = ' '  !! kernel variable names PRI_VECTOR_DEF and SEC_VECTOR_DEF
-      character(kvnmln) :: itmvec ( 2 ) = ' '  !! kernel variable names PRI_VECTOR and SEC_VECTOR
-   end type zzdynfr0_state
 
    ! ------------------------------------------------------------------ ZZDYNFRM
 
@@ -3726,35 +3697,6 @@ module pepper_states
       character(kvnmln) :: itmvec ( 2 ) = ' '  !! kernel variable names PRI_VECTOR and SEC_VECTOR
    end type zzdynrot_state
 
-   ! ------------------------------------------------------------------ ZZDYNRT0
-
-   !> SPICE Private routine intended solely for the support of SPICE
-   !> routines.  Users should not call this routine directly due
-   !> to the volatile nature of this routine.
-   !>
-   !> The saved variables of SPICELIB's ZZDYNRT0 routines (entry points
-   !> zzdynrt0), held in pepper_context (one per thread).
-   type, public :: zzdynrt0_state
-      character(1) :: axes ( 3 ) = [ character(1) :: kvx, kvy, kvz ]  !! axis names 'X', 'Y', 'Z' used to decode an axis kernel variable
-      integer(ip) :: earth = 0  !! NAIF ID code of the Earth (Earth-centered check for precession/nutation frames)
-      logical :: first = .true.  !! first-call setup (J2000 and Earth codes, kernel variable names) not yet done
-      integer(ip) :: j2000 = 0  !! frame ID code of J2000
-      character(kvnmln) :: itmabc ( 2 ) = ' '  !! kernel variable names PRI_ABCORR and SEC_ABCORR
-      character(kvnmln) :: itmaxe ( 2 ) = ' '  !! kernel variable names PRI_AXIS and SEC_AXIS
-      character(kvnmln) :: itmcof ( 3 ) = [ character(kvnmln) :: kweac1, kweac2, kweac3 ]  !! kernel variable names ANGLE_1_COEFFS, ANGLE_2_COEFFS, ANGLE_3_COEFFS (Euler frames)
-      character(kvnmln) :: itmdec ( 2 ) = ' '  !! kernel variable names PRI_DEC and SEC_DEC
-      character(kvnmln) :: itmfrm ( 2 ) = ' '  !! kernel variable names PRI_FRAME and SEC_FRAME
-      character(kvnmln) :: itmlat ( 2 ) = ' '  !! kernel variable names PRI_LATITUDE and SEC_LATITUDE
-      character(kvnmln) :: itmlon ( 2 ) = ' '  !! kernel variable names PRI_LONGITUDE and SEC_LONGITUDE
-      character(kvnmln) :: itmobs ( 2 ) = ' '  !! kernel variable names PRI_OBSERVER and SEC_OBSERVER
-      character(kvnmln) :: itmra ( 2 ) = ' '  !! kernel variable names PRI_RA and SEC_RA
-      character(kvnmln) :: itmsep = kwatol  !! kernel variable name ANGLE_SEP_TOL (minimum angular separation of the defining vectors)
-      character(kvnmln) :: itmspc ( 2 ) = ' '  !! kernel variable names PRI_SPEC and SEC_SPEC
-      character(kvnmln) :: itmtrg ( 2 ) = ' '  !! kernel variable names PRI_TARGET and SEC_TARGET
-      character(kvnmln) :: itmunt ( 2 ) = ' '  !! kernel variable names PRI_UNITS and SEC_UNITS
-      character(kvnmln) :: itmvdf ( 2 ) = ' '  !! kernel variable names PRI_VECTOR_DEF and SEC_VECTOR_DEF
-      character(kvnmln) :: itmvec ( 2 ) = ' '  !! kernel variable names PRI_VECTOR and SEC_VECTOR
-   end type zzdynrt0_state
 
    ! ------------------------------------------------------------------ ZZEKAD06
 
@@ -3995,31 +3937,7 @@ module pepper_states
       real(wp), allocatable :: work ( :, : )  !! work: projections of the FOV boundary vectors onto the FOV plane; grows to the number of vectors (SPICELIB: 10000)
    end type zzelvupy_state
 
-   ! ------------------------------------------------------------------ ZZFRMGT0
 
-   !> Find the transformation from a user specified frame to
-   !> another frame at a user specified epoch.
-   !>
-   !> The saved variables of SPICELIB's ZZFRMGT0 routines (entry points
-   !> zzfrmgt0), held in pepper_context (one per thread).
-   type, public :: zzfrmgt0_state
-      real(wp) :: idnt66 ( 6, 6 ) = 0.0_wp  !! 6x6 identity matrix, built on the first call
-      logical :: pass1 = .true.  !! first call: the identity matrix has not been built yet
-      character(6) :: versn = '4.0.0'  !! version string quoted in the unsupported-frame-class error message
-   end type zzfrmgt0_state
-
-   ! ------------------------------------------------------------------ ZZFRMGT1
-
-   !> Find the transformation from a user specified frame to
-   !> another frame at a user specified epoch.
-   !>
-   !> The saved variables of SPICELIB's ZZFRMGT1 routines (entry points
-   !> zzfrmgt1), held in pepper_context (one per thread).
-   type, public :: zzfrmgt1_state
-      real(wp) :: idnt66 ( 6, 6 ) = 0.0_wp  !! 6x6 identity matrix, built on the first call
-      logical :: pass1 = .true.  !! first call: the identity matrix has not been built yet
-      character(6) :: versn = '4.0.0'  !! version string quoted in the unsupported-frame-class error message
-   end type zzfrmgt1_state
 
    ! ------------------------------------------------------------------ ZZFTPCHK
 
@@ -4623,27 +4541,7 @@ module pepper_states
       real(wp) :: voxsiz = 0.0_wp  !! voxel size of the saved segment
    end type zzptpl02_state
 
-   ! ------------------------------------------------------------------ ZZROTGT0
 
-   !> Find the rotation from a user specified frame to another frame at
-   !> a user specified epoch.
-   !>
-   !> The saved variables of SPICELIB's ZZROTGT0 routines (entry points
-   !> zzrotgt0), held in pepper_context (one per thread).
-   type, public :: zzrotgt0_state
-      character(6) :: versn = '4.0.0'  !! version string quoted in the unsupported-frame-class error message
-   end type zzrotgt0_state
-
-   ! ------------------------------------------------------------------ ZZROTGT1
-
-   !> Find the rotation from a user specified frame to another frame at
-   !> a user specified epoch.
-   !>
-   !> The saved variables of SPICELIB's ZZROTGT1 routines (entry points
-   !> zzrotgt1), held in pepper_context (one per thread).
-   type, public :: zzrotgt1_state
-      character(6) :: versn = '4.0.0'  !! version string quoted in the unsupported-frame-class error message
-   end type zzrotgt1_state
 
    ! ------------------------------------------------------------------ ZZRTNMAT
 
@@ -4864,155 +4762,21 @@ module pepper_states
       character(32) :: svshap ( spshpn ) = [ character(32) :: 'POINT', 'SPHERE' ]  !! names of the supported target shapes (POINT, SPHERE), constant
    end type zzspin_state
 
-   ! ------------------------------------------------------------------ ZZSPKAC0
 
-   !> Return the state (position and velocity) of a target body
-   !> relative to an observer, optionally corrected for light time
-   !> and stellar aberration, expressed relative to an inertial
-   !> reference frame.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKAC0 routines (entry points
-   !> zzspkac0), held in pepper_context (one per thread).
-   type, public :: zzspkac0_state
-      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
-      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
-      logical :: usestl = .false.  !! the saved correction includes stellar aberration
-   end type zzspkac0_state
-
-   ! ------------------------------------------------------------------ ZZSPKAC1
-
-   !> Return the state (position and velocity) of a target body
-   !> relative to an observer, optionally corrected for light time
-   !> and stellar aberration, expressed relative to an inertial
-   !> reference frame.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKAC1 routines (entry points
-   !> zzspkac1), held in pepper_context (one per thread).
-   type, public :: zzspkac1_state
-      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
-      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
-      logical :: usestl = .false.  !! the saved correction includes stellar aberration
-   end type zzspkac1_state
 
    ! ------------------------------------------------------------------ ZZSPKAP0
 
-   integer(ip), parameter :: zzspkap0_corlen = 5
-
-   !> **Deprecated:** This routine has been superseded by SPKAPS. This
-   !> routine is supported for purposes of backward compatibility only.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKAP0 routines (entry points
-   !> zzspkap0), held in pepper_context (one per thread).
-   type, public :: zzspkap0_state
-      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
-      !> the recognized aberration correction strings
-      character(zzspkap0_corlen) :: flags ( nflags ) = [ character(zzspkap0_corlen) :: 'NONE', 'LT', 'LT+S', &
-         'CN', 'CN+S', 'XLT', 'XLT+S', 'XCN', 'XCN+S' ]
-      character(zzspkap0_corlen) :: prvcor = ' '  !! aberration correction string of the previous call
-      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
-      logical :: usestl = .false.  !! the saved correction uses stellar aberration
-      logical :: uselt = .false.  !! the saved correction uses light time
-      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
-   end type zzspkap0_state
 
    ! ------------------------------------------------------------------ ZZSPKAP1
 
-   integer(ip), parameter :: zzspkap1_corlen = 5
 
-   !> **Deprecated:** This routine has been superseded by SPKAPS. This
-   !> routine is supported for purposes of backward compatibility only.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKAP1 routines (entry points
-   !> zzspkap1), held in pepper_context (one per thread).
-   type, public :: zzspkap1_state
-      logical :: first = .true.  !! first call: the aberration correction flags are not yet parsed
-      !> constant list of the recognized aberration correction strings
-      character(zzspkap1_corlen) :: flags ( nflags ) = [ character(zzspkap1_corlen) :: 'NONE', 'LT', 'LT+S', &
-         'CN', 'CN+S', 'XLT', 'XLT+S', 'XCN', 'XCN+S' ]
-      character(zzspkap1_corlen) :: prvcor = ' '  !! aberration correction string of the previous call
-      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time (CN)
-      logical :: usestl = .false.  !! the saved correction includes stellar aberration (+S)
-      logical :: uselt = .false.  !! the saved correction uses one-iteration light time (LT)
-      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
-   end type zzspkap1_state
 
-   ! ------------------------------------------------------------------ ZZSPKAS0
-
-   !> Given the state and acceleration of an observer relative to the
-   !> solar system barycenter, return the state (position and velocity)
-   !> of a target body relative to the observer, optionally corrected
-   !> for light time and stellar aberration. All input and output
-   !> vectors are expressed relative to an inertial reference frame.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKAS0 routines (entry points
-   !> zzspkas0), held in pepper_context (one per thread).
-   type, public :: zzspkas0_state
-      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
-      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
-      logical :: uselt = .false.  !! the saved correction includes light time
-      logical :: usestl = .false.  !! the saved correction includes stellar aberration
-      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
-   end type zzspkas0_state
-
-   ! ------------------------------------------------------------------ ZZSPKAS1
-
-   !> Given the state and acceleration of an observer relative to the
-   !> solar system barycenter, return the state (position and velocity)
-   !> of a target body relative to the observer, optionally corrected
-   !> for light time and stellar aberration. All input and output
-   !> vectors are expressed relative to an inertial reference frame.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKAS1 routines (entry points
-   !> zzspkas1), held in pepper_context (one per thread).
-   type, public :: zzspkas1_state
-      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
-      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
-      logical :: uselt = .false.  !! the saved correction includes light time
-      logical :: usestl = .false.  !! the saved correction includes stellar aberration
-      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
-   end type zzspkas1_state
 
    ! ------------------------------------------------------------------ ZZSPKEZ0
 
-   integer(ip), parameter :: zzspkez0_frnmln = 32
-
-   !> Return the state (position and velocity) of a target body
-   !> relative to an observing body, optionally corrected for light
-   !> time (planetary aberration) and stellar aberration.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKEZ0 routines (entry points
-   !> zzspkez0), held in pepper_context (one per thread).
-   type, public :: zzspkez0_state
-      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
-      integer(ip) :: fj2000 = 0  !! frame ID code of J2000
-      logical :: usegeo = .false.  !! the saved correction is geometric (no aberration correction)
-      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
-      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
-      character(zzspkez0_frnmln) :: svref = ' '  !! saved output frame name for the zznamfrm lookup
-      integer(ip) :: svreqf = 0  !! saved output frame ID code for the zznamfrm lookup
-      logical :: first = .true.  !! first call: counter, correction flags and J2000 code not yet set up
-   end type zzspkez0_state
 
    ! ------------------------------------------------------------------ ZZSPKEZ1
 
-   integer(ip), parameter :: zzspkez1_frnmln = 32
-
-   !> Return the state (position and velocity) of a target body
-   !> relative to an observing body, optionally corrected for light
-   !> time (planetary aberration) and stellar aberration.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKEZ1 routines (entry points
-   !> zzspkez1), held in pepper_context (one per thread).
-   type, public :: zzspkez1_state
-      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
-      integer(ip) :: fj2000 = 0  !! frame ID code of J2000
-      logical :: usegeo = .false.  !! the saved correction is geometric (no aberration correction)
-      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
-      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
-      character(zzspkez1_frnmln) :: svref = ' '  !! saved output frame name for the zznamfrm lookup
-      integer(ip) :: svreqf = 0  !! saved output frame ID code for the zznamfrm lookup
-      logical :: first = .true.  !! first call: counter, correction flags and J2000 code not yet set up
-   end type zzspkez1_state
 
    ! ------------------------------------------------------------------ ZZSPKFAO
 
@@ -5109,181 +4873,29 @@ module pepper_states
 
    ! ------------------------------------------------------------------ ZZSPKGO0
 
-   integer(ip), parameter :: zzspkgo0_frnmln = 32
-
-   !> SPICE Private routine intended solely for the support of SPICE
-   !> routines.  Users should not call this routine directly due
-   !> to the volatile nature of this routine.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKGO0 routines (entry points
-   !> zzspkgo0), held in pepper_context (one per thread).
-   type, public :: zzspkgo0_state
-      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
-      character(zzspkgo0_frnmln) :: svref = ' '  !! saved reference frame name for the zznamfrm lookup
-      integer(ip) :: svrefi = 0  !! saved reference frame ID code for the zznamfrm lookup
-      logical :: first = .true.  !! first call: the frame name counter is not yet initialized
-   end type zzspkgo0_state
 
    ! ------------------------------------------------------------------ ZZSPKGO1
 
-   integer(ip), parameter :: zzspkgo1_frnmln = 32
-
-   !> SPICE Private routine intended solely for the support of SPICE
-   !> routines.  Users should not call this routine directly due
-   !> to the volatile nature of this routine.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKGO1 routines (entry points
-   !> zzspkgo1), held in pepper_context (one per thread).
-   type, public :: zzspkgo1_state
-      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
-      character(zzspkgo1_frnmln) :: svref = ' '  !! saved reference frame name for the zznamfrm lookup
-      integer(ip) :: svrefi = 0  !! saved reference frame ID code for the zznamfrm lookup
-      logical :: first = .true.  !! first call: the frame name counter is not yet initialized
-   end type zzspkgo1_state
 
    ! ------------------------------------------------------------------ ZZSPKGP0
 
-   integer(ip), parameter :: zzspkgp0_frnmln = 32
-
-   !> SPICE Private routine intended solely for the support of SPICE
-   !> routines.  Users should not call this routine directly due
-   !> to the volatile nature of this routine.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKGP0 routines (entry points
-   !> zzspkgp0), held in pepper_context (one per thread).
-   type, public :: zzspkgp0_state
-      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
-      character(zzspkgp0_frnmln) :: svref = ' '  !! saved reference frame name for the zznamfrm lookup
-      integer(ip) :: svrefi = 0  !! saved reference frame ID code for the zznamfrm lookup
-      logical :: first = .true.  !! first call: the frame name counter is not yet initialized
-   end type zzspkgp0_state
 
    ! ------------------------------------------------------------------ ZZSPKGP1
 
-   integer(ip), parameter :: zzspkgp1_frnmln = 32
 
-   !> SPICE Private routine intended solely for the support of SPICE
-   !> routines.  Users should not call this routine directly due
-   !> to the volatile nature of this routine.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKGP1 routines (entry points
-   !> zzspkgp1), held in pepper_context (one per thread).
-   type, public :: zzspkgp1_state
-      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
-      character(zzspkgp1_frnmln) :: svref = ' '  !! saved reference frame name for the zznamfrm lookup
-      integer(ip) :: svrefi = 0  !! saved reference frame ID code for the zznamfrm lookup
-      logical :: first = .true.  !! first call: the frame name counter is not yet initialized
-   end type zzspkgp1_state
 
-   ! ------------------------------------------------------------------ ZZSPKLT0
-
-   !> Return the state (position and velocity) of a target body
-   !> relative to an observer, optionally corrected for light time,
-   !> expressed relative to an inertial reference frame.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKLT0 routines (entry points
-   !> zzspklt0), held in pepper_context (one per thread).
-   type, public :: zzspklt0_state
-      logical :: pass1 = .true.  !! first call: no aberration correction has been parsed yet
-      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
-      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
-      logical :: uselt = .false.  !! the saved correction includes light time (normal or converged Newtonian)
-      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
-   end type zzspklt0_state
-
-   ! ------------------------------------------------------------------ ZZSPKLT1
-
-   !> Return the state (position and velocity) of a target body
-   !> relative to an observer, optionally corrected for light time,
-   !> expressed relative to an inertial reference frame.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKLT1 routines (entry points
-   !> zzspklt1), held in pepper_context (one per thread).
-   type, public :: zzspklt1_state
-      logical :: pass1 = .true.  !! first call: no aberration correction has been parsed yet
-      character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
-      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
-      logical :: uselt = .false.  !! the saved correction includes light time (normal or converged Newtonian)
-      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
-   end type zzspklt1_state
 
    ! ------------------------------------------------------------------ ZZSPKPA0
 
-   integer(ip), parameter :: zzspkpa0_corlen = 5
-
-   !> Return the position of a target body relative to an observer,
-   !> optionally corrected for light time and stellar aberration.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKPA0 routines (entry points
-   !> zzspkpa0), held in pepper_context (one per thread).
-   type, public :: zzspkpa0_state
-      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
-      !> list of recognized aberration correction flags ('NONE', 'LT', 'LT+S', ...)
-      character(zzspkpa0_corlen) :: flags ( nflags ) = [ character(zzspkpa0_corlen) :: 'NONE', 'LT', 'LT+S', &
-         'CN', 'CN+S', 'XLT', 'XLT+S', 'XCN', 'XCN+S' ]
-      character(zzspkpa0_corlen) :: prvcor = ' '  !! aberration correction string of the previous call
-      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
-      logical :: usestl = .false.  !! the saved correction includes stellar aberration
-      logical :: uselt = .false.  !! the saved correction uses (single-iteration) light time
-      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
-   end type zzspkpa0_state
 
    ! ------------------------------------------------------------------ ZZSPKPA1
 
-   integer(ip), parameter :: zzspkpa1_corlen = 5
-
-   !> Return the position of a target body relative to an observer,
-   !> optionally corrected for light time and stellar aberration.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKPA1 routines (entry points
-   !> zzspkpa1), held in pepper_context (one per thread).
-   type, public :: zzspkpa1_state
-      logical :: first = .true.  !! first call: no aberration correction has been parsed yet
-      !> list of recognized aberration correction flags ('NONE', 'LT', 'LT+S', ...)
-      character(zzspkpa1_corlen) :: flags ( nflags ) = [ character(zzspkpa1_corlen) :: 'NONE', 'LT', 'LT+S', &
-         'CN', 'CN+S', 'XLT', 'XLT+S', 'XCN', 'XCN+S' ]
-      character(zzspkpa1_corlen) :: prvcor = ' '  !! aberration correction string of the previous call
-      logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
-      logical :: usestl = .false.  !! the saved correction includes stellar aberration
-      logical :: uselt = .false.  !! the saved correction uses (single-iteration) light time
-      logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
-   end type zzspkpa1_state
 
    ! ------------------------------------------------------------------ ZZSPKZP0
 
-   integer(ip), parameter :: zzspkzp0_frnmln = 32
-
-   !> Return the position of a target body relative to an observing
-   !> body, optionally corrected for light time (planetary aberration)
-   !> and stellar aberration.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKZP0 routines (entry points
-   !> zzspkzp0), held in pepper_context (one per thread).
-   type, public :: zzspkzp0_state
-      integer(ip) :: fj2000 = 0  !! frame ID code of J2000
-      logical :: first = .true.  !! first call: J2000 code and counter not yet set up
-      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
-      character(zzspkzp0_frnmln) :: svref = ' '  !! saved output frame name for the zznamfrm lookup
-      integer(ip) :: svreqf = 0  !! saved output frame ID code for the zznamfrm lookup
-   end type zzspkzp0_state
 
    ! ------------------------------------------------------------------ ZZSPKZP1
 
-   integer(ip), parameter :: zzspkzp1_frnmln = 32
-
-   !> Return the position of a target body relative to an observing
-   !> body, optionally corrected for light time (planetary aberration)
-   !> and stellar aberration.
-   !>
-   !> The saved variables of SPICELIB's ZZSPKZP1 routines (entry points
-   !> zzspkzp1), held in pepper_context (one per thread).
-   type, public :: zzspkzp1_state
-      integer(ip) :: fj2000 = 0  !! frame ID code of J2000
-      logical :: first = .true.  !! first call: J2000 code and counter not yet set up
-      integer(ip) :: svctr1 ( ctrsiz ) = 0  !! pool counter of the frame name lookup (ZZNAMFRM) of the reference frame
-      character(zzspkzp1_frnmln) :: svref = ' '  !! saved output frame name for the zznamfrm lookup
-      integer(ip) :: svreqf = 0  !! saved output frame ID code for the zznamfrm lookup
-   end type zzspkzp1_state
 
    ! ------------------------------------------------------------------ ZZSRFKER
 
