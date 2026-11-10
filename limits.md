@@ -620,6 +620,21 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
        for 250000 rows, 12 MB per context). Beyond 250000 rows it still
        sorts through the scratch area, as SPICELIB does.
 
+   - **Loaded EKs** (EKQMGR, instance; step B of the EK work): the
+     five linked list pools (files, segments, column descriptors, column
+     attributes, tables) and their parallel arrays are allocatable and
+     grow: EKLEF makes room for the whole file (its segments and their
+     columns) before loading it (SPICELIB: 20 files, 200 segments, 100
+     tables, 500 column attribute entries, 10000 column descriptors, 0.6
+     MB in the instance; EKFILETABLEFULL, EKSEGTABLEFULL,
+     EKTABLELISTFULL, EKCOLATTRTABLEFULL, COLDESCTABLEFULL). The
+     per-table list of files (TBFILS) is gone: SPICELIB filled and read
+     it wrongly, and unloading worked only through the segment handles
+     (`spicelib_bugs.md`). The nine copies of the pool initialization
+     are one helper. Test: `test_limits` `test_ek_tables` (25 files, 250
+     segments, 126 tables, 6300 column attribute entries, 12500 column
+     descriptors; queries, unloading 10 files, loading one again).
+
    To do:
    - **EK queries:** last. The encoded query is a flat integer cell laid out
      from the maxima, so this is a rewrite of the parser's output, and the

@@ -29865,41 +29865,21 @@ contains
 !!         routine in the call tree of this routine. HANDLE is undefined
 !!         in this case.
 !!
-!!     4)  If loading the input file would cause the maximum number of
-!!         loaded EK files to be exceeded, the error
-!!         SPICE(EKFILETABLEFULL) is signaled. HANDLE is undefined in
-!!         this case. This routine will attempt to unload the file
-!!         from the DAS system.
+!!     4)  PEPPER: there is no maximum number of loaded EK files,
+!!         segments, tables, columns or columns having distinct
+!!         attributes: the tables grow. SPICELIB documented the errors
+!!         SPICE(EKFILETABLEFULL), SPICE(EKSEGMENTTABLEFULL),
+!!         SPICE(EKCOLDESCTABLEFULL), SPICE(EKCOLATTRTABLEFULL) and
+!!         SPICE(EKIDTABLEFULL) here; its code signaled
+!!         SPICE(EKFILETABLEFULL), SPICE(EKSEGTABLEFULL),
+!!         SPICE(EKTABLELISTFULL), SPICE(COLDESCTABLEFULL) and
+!!         SPICE(EKCOLATTRTABLEFULL).
 !!
 !!     5)  If loading the input file would cause the maximum number of
 !!         loaded DAS files to be exceeded, an error is signaled by a
 !!         routine in the call tree of this routine. HANDLE is undefined
 !!         in this case. This routine will attempt to unload the file
 !!         from the DAS system.
-!!
-!!     6)  If loading the input file would cause the maximum number of
-!!         segments allowed in loaded EK files to be exceeded, the error
-!!         SPICE(EKSEGMENTTABLEFULL) is signaled. HANDLE is undefined in
-!!         this case. This routine will attempt to unload the file from
-!!         the DAS system.
-!!
-!!     7)  If loading the input file would cause the maximum number of
-!!         columns allowed in loaded EK files to be exceeded, the error
-!!         SPICE(EKCOLDESCTABLEFULL) is signaled. HANDLE is undefined in
-!!         this case. This routine will attempt to unload the file from
-!!         the DAS system.
-!!
-!!     8)  If loading the input file would cause the maximum allowed
-!!         number of columns having distinct attributes in loaded EK
-!!         files to be exceeded, the error SPICE(EKCOLATTRTABLEFULL) is
-!!         signaled. HANDLE is undefined in this case. This routine will
-!!         attempt to unload the file from the DAS system.
-!!
-!!     9)  If loading the input file would cause the maximum number of
-!!         instrument codes allowed in loaded EK files to be exceeded,
-!!         the error SPICE(EKIDTABLEFULL) is signaled. HANDLE is
-!!         undefined in this case. This routine will attempt to unload
-!!         the file from the DAS system.
 !!
 !!     10) If the input file does not contain at least one segment, the
 !!         error SPICE(EKNOSEGMENTS) is signaled.
@@ -30217,14 +30197,8 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
-      integer(ip), parameter :: ftsize = 20
-      integer(ip), parameter :: stsize = 200
-      integer(ip), parameter :: mxtbld = 100
       integer(ip), parameter :: mxclld = 500
       integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxseg = stsize
-      integer(ip), parameter :: ctsize = mxclld
-      integer(ip), parameter :: dtsize = maxseg * mxclld / 10
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: nil = 0
       integer(ip), parameter :: ntypes = 4
@@ -30261,8 +30235,6 @@ contains
                   tbncol => ctx%spice%ekqmgr%tbncol, &
                   tbnams => ctx%spice%ekqmgr%tbnams, &
                   tbctpt => ctx%spice%ekqmgr%tbctpt, &
-                  tbfils => ctx%spice%ekqmgr%tbfils, &
-                  tbflsz => ctx%spice%ekqmgr%tbflsz, &
                   tbhead => ctx%spice%ekqmgr%tbhead, &
                   stpool => ctx%spice%ekqmgr%stpool, &
                   sthan => ctx%spice%ekqmgr%sthan, &
@@ -30351,11 +30323,7 @@ contains
 !        Initialize the file table pool, segment table pool, column
 !        descriptor pool, column table pool, and table list pool.
 !
-         call lnkini ( ctx, ftsize, ftpool )
-         call lnkini ( ctx, stsize, stpool )
-         call lnkini ( ctx, dtsize, dtpool )
-         call lnkini ( ctx, ctsize, ctpool )
-         call lnkini ( ctx, mxtbld, tbpool )
+         call ekqmgr_lnkini ( ctx )
 
          fthead = 0
          tbhead = 0
@@ -30404,51 +30372,11 @@ contains
       call zzekpgch ( ctx, handle, 'READ' )
 
 !
-!     Before getting too involved with this new EK file, let's check it
-!     out.  We must have enough room to accommodate it in the file
-!     table, segment table, table list, and column table.
-!
-!     Make sure there's enough room in the file table.
-!
-
-      if (  lnknfn( ctx,ftpool) == 0 ) then
-!
-!        Sorry, there are no free file table entries left.
-!
-!        We close the EK AFTER setting the long error message.
-!
-         call ctx%setmsg ( 'The EK file # could not be loaded; the '      // &
-                       'maximum number of loaded EKs has already '    // &
-                       'been reached.'                                 )
-         call ctx%errhan ( '#', handle                                     )
-         call ekcls  ( ctx, handle                                          )
-         call ctx%sigerr ( 'SPICE(EKFILETABLEFULL)'                        )
-         return
-
-      end if
-
-!
-!     Find out how many segments are in the new kernel, and make
-!     sure there's enough room in the segment table.
+!     Find out how many segments are in the new kernel.
 !
       nseg = eknseg ( ctx, handle )
 
-      if ( nseg > lnknfn( ctx,stpool) ) then
-!
-!        There are too many segments for the amount of space we've got
-!        left.
-!
-!        We close the EK AFTER setting the long error message.
-!
-         call ctx%setmsg ( 'The EK file # could not be loaded; the '      // &
-                       'maximum number of loaded segments has '       // &
-                       'already been reached.'                         )
-         call ctx%errhan ( '#', handle                                     )
-         call ekcls  ( ctx, handle                                          )
-         call ctx%sigerr ( 'SPICE(EKSEGTABLEFULL)'                         )
-         return
-
-      else if ( nseg < 1 ) then
+      if ( nseg < 1 ) then
 
          call ctx%setmsg ( 'The EK file # contains no segments.'           )
          call ctx%errhan ( '#',  handle                                    )
@@ -30457,6 +30385,63 @@ contains
          return
 
       end if
+
+!
+!     PEPPER: make room in the file table, segment table, table list,
+!     column attribute table and column descriptor table for the whole
+!     file, so that loading it cannot run out of room (SPICELIB: fixed
+!     tables, EKFILETABLEFULL, EKSEGTABLEFULL, and EKTABLELISTFULL,
+!     EKCOLATTRTABLEFULL, COLDESCTABLEFULL after a partial load, undone).
+!     The tables are reallocated, so the associate names are made again.
+!
+      end associate
+      call ekqmgr_room ( ctx, handle, nseg )
+      if ( ctx%failed() ) then
+         call ekcls ( ctx, handle )
+         return
+      end if
+      associate ( ftpool => ctx%spice%ekqmgr%ftpool, &
+                  fthan => ctx%spice%ekqmgr%fthan, &
+                  fthead => ctx%spice%ekqmgr%fthead, &
+                  tbpool => ctx%spice%ekqmgr%tbpool, &
+                  tbstpt => ctx%spice%ekqmgr%tbstpt, &
+                  tbncol => ctx%spice%ekqmgr%tbncol, &
+                  tbnams => ctx%spice%ekqmgr%tbnams, &
+                  tbctpt => ctx%spice%ekqmgr%tbctpt, &
+                  tbhead => ctx%spice%ekqmgr%tbhead, &
+                  stpool => ctx%spice%ekqmgr%stpool, &
+                  sthan => ctx%spice%ekqmgr%sthan, &
+                  stsidx => ctx%spice%ekqmgr%stsidx, &
+                  stdscs => ctx%spice%ekqmgr%stdscs, &
+                  stnrow => ctx%spice%ekqmgr%stnrow, &
+                  stncol => ctx%spice%ekqmgr%stncol, &
+                  stdtpt => ctx%spice%ekqmgr%stdtpt, &
+                  dtpool => ctx%spice%ekqmgr%dtpool, &
+                  dtdscs => ctx%spice%ekqmgr%dtdscs, &
+                  ctpool => ctx%spice%ekqmgr%ctpool, &
+                  ctnams => ctx%spice%ekqmgr%ctnams, &
+                  ctclas => ctx%spice%ekqmgr%ctclas, &
+                  cttyps => ctx%spice%ekqmgr%cttyps, &
+                  ctlens => ctx%spice%ekqmgr%ctlens, &
+                  ctfixd => ctx%spice%ekqmgr%ctfixd, &
+                  ctsizs => ctx%spice%ekqmgr%ctsizs, &
+                  ctindx => ctx%spice%ekqmgr%ctindx, &
+                  ctnull => ctx%spice%ekqmgr%ctnull, &
+                  first => ctx%spice%ekqmgr%first, &
+                  cnams => ctx%ekqmgr_query%cnams, &
+                  cnmset => ctx%ekqmgr_query%cnmset, &
+                  colnam => ctx%ekqmgr_query%colnam, &
+                  problm => ctx%ekqmgr_query%problm, &
+                  tabnam => ctx%ekqmgr_query%tabnam, &
+                  cdscrs => ctx%ekqmgr_query%cdscrs, &
+                  ncols => ctx%ekqmgr_query%ncols, &
+                  new => ctx%ekqmgr_query%new, &
+                  npcol => ctx%ekqmgr_query%npcol, &
+                  segdsc => ctx%ekqmgr_query%segdsc, &
+                  stnew => ctx%ekqmgr_query%stnew, &
+                  tbcurr => ctx%ekqmgr_query%tbcurr, &
+                  fnd => ctx%ekqmgr_query%fnd, &
+                  presnt => ctx%ekqmgr_query%presnt )
 
 !
 !     At this point, the file has insinuated itself into our confidence,
@@ -30547,13 +30532,6 @@ contains
                   problm = 'COLUMN_NUMBER_MISMATCH'
 
                else
-!
-!                 Add the current file to the list of files containing
-!                 the current table.
-!
-                  tbfils ( 1, tbcurr )  =  handle
-                  tbflsz (    tbcurr )  =  tbflsz(tbcurr) + 1
-
                   state = 'MAKE_SEGMENT_TABLE_ENTRY'
 
                end if
@@ -30599,13 +30577,6 @@ contains
 !              Fill in the table name.
 !
                tbnams ( tbcurr )   =  tabnam
-!
-!              Since this table is new, the file list for this table
-!              contains only the handle of the current EK.
-!
-               tbfils ( 1, tbcurr ) = handle
-               tbflsz (    tbcurr ) = 1
-
 !
 !              Initialize the column count, column table pointer, and
 !              segment list pointer for this table.
@@ -30961,11 +30932,7 @@ contains
 !
 !              There are no files left.  Clean up the whole shebang.
 !
-               call lnkini ( ctx, ftsize, ftpool )
-               call lnkini ( ctx, stsize, stpool )
-               call lnkini ( ctx, dtsize, dtpool )
-               call lnkini ( ctx, ctsize, ctpool )
-               call lnkini ( ctx, mxtbld, tbpool )
+               call ekqmgr_lnkini ( ctx )
 
                fthead  =  0
                tbhead  =  0
@@ -30996,46 +30963,17 @@ contains
 
                do while ( tbcurr > 0 )
 !
-!                 See whether the current table is in the file we're
-!                 unloading.
+!                 PEPPER: every table is examined; its segments from the
+!                 file are removed below. SPICELIB looked for the file in
+!                 the table's list of files (TBFILS), which it never
+!                 filled correctly; FND, a saved value from an earlier
+!                 call, decided which tables were examined, and the
+!                 segment removal below is what unloads the file. The
+!                 list is gone (spicelib_bugs.md).
 !
-                  i  =  1
-
-                  do while (       ( i <=  tbflsz(tbcurr) ) &
-                             .and. (   .not. fnd            )  )
-
-                     if ( tbfils(i,tbcurr) == handle ) then
-!
-!                       This table is affected by unloading the file.
-!
-                        fnd  =  .true.
-
-                     else
-!
-!                       Look at the next file handle.
-!
-                        i    =   i + 1
-
-                     end if
-
-                  end do
+                  fnd = .true.
 
                   if ( fnd ) then
-!
-!                    Update the information for the current table to
-!                    reflect the unloading of the specified EK.
-!
-!                    Unloading the specified EK removes one handle from
-!                    the list of file handles associated with this
-!                    table.  Compress this handle out of the list.
-!
-                     do j  =  i,   tbflsz(tbcurr) - 1
-
-                        tbfils( j, tbcurr )  =  tbfils( j+1, tbcurr )
-
-                     end do
-
-                     tbflsz(tbcurr)  =  tbflsz(tbcurr) - 1
 
 !
 !                    Traverse the segment list for this table, looking
@@ -31186,6 +31124,11 @@ contains
 !
 !           Now that the mess has been arranged, tell the user what the
 !           problem was.
+!
+!
+!           PEPPER: TABLE_LIST_FULL, DESCRIPTOR_TABLE_FULL and
+!           ATTRIBUTE_TABLE_FULL cannot occur: EKQMGR_ROOM made room
+!           for the whole file before it was loaded.
 !
             if ( problm == 'TABLE_LIST_FULL' ) then
 
@@ -31524,14 +31467,8 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
-      integer(ip), parameter :: ftsize = 20
-      integer(ip), parameter :: stsize = 200
-      integer(ip), parameter :: mxtbld = 100
       integer(ip), parameter :: mxclld = 500
       integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxseg = stsize
-      integer(ip), parameter :: ctsize = mxclld
-      integer(ip), parameter :: dtsize = maxseg * mxclld / 10
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: nil = 0
       integer(ip), parameter :: ntypes = 4
@@ -31558,8 +31495,6 @@ contains
                   tbpool => ctx%spice%ekqmgr%tbpool, &
                   tbstpt => ctx%spice%ekqmgr%tbstpt, &
                   tbctpt => ctx%spice%ekqmgr%tbctpt, &
-                  tbfils => ctx%spice%ekqmgr%tbfils, &
-                  tbflsz => ctx%spice%ekqmgr%tbflsz, &
                   tbhead => ctx%spice%ekqmgr%tbhead, &
                   stpool => ctx%spice%ekqmgr%stpool, &
                   sthan => ctx%spice%ekqmgr%sthan, &
@@ -31580,11 +31515,7 @@ contains
 !        Initialize the file table pool, segment table pool, column
 !        descriptor pool, column table pool, and table list pool.
 !
-         call lnkini ( ctx, ftsize, ftpool )
-         call lnkini ( ctx, stsize, stpool )
-         call lnkini ( ctx, dtsize, dtpool )
-         call lnkini ( ctx, ctsize, ctpool )
-         call lnkini ( ctx, mxtbld, tbpool )
+         call ekqmgr_lnkini ( ctx )
 
          fthead = 0
          tbhead = 0
@@ -31630,11 +31561,7 @@ contains
 !
 !           There are no files left.  Clean up the whole shebang.
 !
-            call lnkini ( ctx, ftsize, ftpool )
-            call lnkini ( ctx, stsize, stpool )
-            call lnkini ( ctx, dtsize, dtpool )
-            call lnkini ( ctx, ctsize, ctpool )
-            call lnkini ( ctx, mxtbld, tbpool )
+            call ekqmgr_lnkini ( ctx )
 
             fthead  =  0
             tbhead  =  0
@@ -31674,44 +31601,14 @@ contains
 
       do while ( tbcurr > 0 )
 !
-!        See whether the current table is in the file we're unloading.
+!        PEPPER: every table is examined; its segments from the file
+!        are removed below. SPICELIB looked for the file in the table's
+!        list of files (TBFILS), which EKLEF never filled correctly, and
+!        FND was still set from the search of the file table, so the
+!        search never ran and every table was examined, as now. The list
+!        is gone (spicelib_bugs.md).
 !
-            i  =  1
-
-            do while (  ( i <= tbflsz(tbcurr) ) .and. ( .not. fnd )  )
-
-            if ( tbfils(i,tbcurr) == handle ) then
-!
-!              This table is affected by unloading the file.
-!
-               fnd  =  .true.
-
-            else
-!
-!              Look at the next file handle.
-!
-               i    =   i + 1
-
-            end if
-
-         end do
-
          if ( fnd ) then
-!
-!           Update the information for the current table to reflect
-!           the unloading of the specified EK.
-!
-!           Unloading the specified EK removes one handle from the
-!           list of file handles associated with this table.  Compress
-!           this handle out of the list.
-!
-            do j  =  i,   tbflsz(tbcurr) - 1
-
-               tbfils( j, tbcurr )  =  tbfils( j+1, tbcurr )
-
-            end do
-
-            tbflsz(tbcurr)  =  tbflsz(tbcurr) - 1
 
 !
 !           Traverse the segment list for this table, looking
@@ -32017,15 +31914,9 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
-      integer(ip), parameter :: ftsize = 20
-      integer(ip), parameter :: stsize = 200
-      integer(ip), parameter :: mxtbld = 100
       integer(ip), parameter :: mxclld = 500
       integer(ip), parameter :: lbcell = -5
       logical               return
-      integer(ip), parameter :: maxseg = stsize
-      integer(ip), parameter :: ctsize = mxclld
-      integer(ip), parameter :: dtsize = maxseg * mxclld / 10
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: nil = 0
       integer(ip), parameter :: ntypes = 4
@@ -32050,11 +31941,7 @@ contains
 !        Initialize the file table pool, segment table pool, column
 !        descriptor pool, column table pool, and table list pool.
 !
-         call lnkini ( ctx, ftsize, ftpool )
-         call lnkini ( ctx, stsize, stpool )
-         call lnkini ( ctx, dtsize, dtpool )
-         call lnkini ( ctx, ctsize, ctpool )
-         call lnkini ( ctx, mxtbld, tbpool )
+         call ekqmgr_lnkini ( ctx )
 
          fthead = 0
          tbhead = 0
@@ -32065,7 +31952,7 @@ contains
 !
 !     Return the number of loaded tables.
 !
-      n  =   mxtbld - lnknfn( ctx, tbpool )
+      n  =   ubound ( tbpool, 2, kind=ip ) - lnknfn( ctx, tbpool )
       return
       end associate
       end procedure ekntab
@@ -32289,14 +32176,8 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
-      integer(ip), parameter :: ftsize = 20
-      integer(ip), parameter :: stsize = 200
-      integer(ip), parameter :: mxtbld = 100
       integer(ip), parameter :: mxclld = 500
       integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxseg = stsize
-      integer(ip), parameter :: ctsize = mxclld
-      integer(ip), parameter :: dtsize = maxseg * mxclld / 10
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: nil = 0
       integer(ip), parameter :: ntypes = 4
@@ -32331,11 +32212,7 @@ contains
 !        Initialize the file table pool, segment table pool, column
 !        descriptor pool, column table pool, and table list pool.
 !
-         call lnkini ( ctx, ftsize, ftpool )
-         call lnkini ( ctx, stsize, stpool )
-         call lnkini ( ctx, dtsize, dtpool )
-         call lnkini ( ctx, ctsize, ctpool )
-         call lnkini ( ctx, mxtbld, tbpool )
+         call ekqmgr_lnkini ( ctx )
 
          fthead = 0
          tbhead = 0
@@ -32743,14 +32620,8 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
-      integer(ip), parameter :: ftsize = 20
-      integer(ip), parameter :: stsize = 200
-      integer(ip), parameter :: mxtbld = 100
       integer(ip), parameter :: mxclld = 500
       integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxseg = stsize
-      integer(ip), parameter :: ctsize = mxclld
-      integer(ip), parameter :: dtsize = maxseg * mxclld / 10
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: nil = 0
       integer(ip), parameter :: ntypes = 4
@@ -32790,11 +32661,7 @@ contains
 !        Initialize the file table pool, segment table pool, column
 !        descriptor pool, column table pool, and table list pool.
 !
-         call lnkini ( ctx, ftsize, ftpool )
-         call lnkini ( ctx, stsize, stpool )
-         call lnkini ( ctx, dtsize, dtpool )
-         call lnkini ( ctx, ctsize, ctpool )
-         call lnkini ( ctx, mxtbld, tbpool )
+         call ekqmgr_lnkini ( ctx )
 
          fthead = 0
          tbhead = 0
@@ -33236,14 +33103,8 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
-      integer(ip), parameter :: ftsize = 20
-      integer(ip), parameter :: stsize = 200
-      integer(ip), parameter :: mxtbld = 100
       integer(ip), parameter :: mxclld = 500
       integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxseg = stsize
-      integer(ip), parameter :: ctsize = mxclld
-      integer(ip), parameter :: dtsize = maxseg * mxclld / 10
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: nil = 0
       integer(ip), parameter :: ntypes = 4
@@ -33292,11 +33153,7 @@ contains
 !        Initialize the file table pool, segment table pool, column
 !        descriptor pool, column table pool, and table list pool.
 !
-         call lnkini ( ctx, ftsize, ftpool )
-         call lnkini ( ctx, stsize, stpool )
-         call lnkini ( ctx, dtsize, dtpool )
-         call lnkini ( ctx, ctsize, ctpool )
-         call lnkini ( ctx, mxtbld, tbpool )
+         call ekqmgr_lnkini ( ctx )
 
          fthead = 0
          tbhead = 0
@@ -33542,14 +33399,8 @@ contains
       use pepper_inc_ektype
       implicit none
       integer(ip) :: cjrows_1(1)  !! one-element copy of cjrows (array argument)
-      integer(ip), parameter :: ftsize = 20
-      integer(ip), parameter :: stsize = 200
-      integer(ip), parameter :: mxtbld = 100
       integer(ip), parameter :: mxclld = 500
       integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxseg = stsize
-      integer(ip), parameter :: ctsize = mxclld
-      integer(ip), parameter :: dtsize = maxseg * mxclld / 10
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: nil = 0
       integer(ip), parameter :: ntypes = 4
@@ -33692,11 +33543,7 @@ contains
 !        Initialize the file table pool, segment table pool, column
 !        descriptor pool, column table pool, and table list pool.
 !
-         call lnkini ( ctx, ftsize, ftpool )
-         call lnkini ( ctx, stsize, stpool )
-         call lnkini ( ctx, dtsize, dtpool )
-         call lnkini ( ctx, ctsize, ctpool )
-         call lnkini ( ctx, mxtbld, tbpool )
+         call ekqmgr_lnkini ( ctx )
 
          fthead = 0
          tbhead = 0
@@ -34885,14 +34732,8 @@ contains
       use pepper_inc_ektype
       implicit none
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
-      integer(ip), parameter :: ftsize = 20
-      integer(ip), parameter :: stsize = 200
-      integer(ip), parameter :: mxtbld = 100
       integer(ip), parameter :: mxclld = 500
       integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxseg = stsize
-      integer(ip), parameter :: ctsize = mxclld
-      integer(ip), parameter :: dtsize = maxseg * mxclld / 10
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: nil = 0
       integer(ip), parameter :: ntypes = 4
@@ -35677,14 +35518,8 @@ contains
       use pepper_inc_ektype
       implicit none
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
-      integer(ip), parameter :: ftsize = 20
-      integer(ip), parameter :: stsize = 200
-      integer(ip), parameter :: mxtbld = 100
       integer(ip), parameter :: mxclld = 500
       integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxseg = stsize
-      integer(ip), parameter :: ctsize = mxclld
-      integer(ip), parameter :: dtsize = maxseg * mxclld / 10
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: nil = 0
       integer(ip), parameter :: ntypes = 4
@@ -36683,14 +36518,8 @@ contains
       use pepper_inc_ektype
       implicit none
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
-      integer(ip), parameter :: ftsize = 20
-      integer(ip), parameter :: stsize = 200
-      integer(ip), parameter :: mxtbld = 100
       integer(ip), parameter :: mxclld = 500
       integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxseg = stsize
-      integer(ip), parameter :: ctsize = mxclld
-      integer(ip), parameter :: dtsize = maxseg * mxclld / 10
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: nil = 0
       integer(ip), parameter :: ntypes = 4
@@ -37517,14 +37346,8 @@ contains
       use pepper_inc_ektype
       implicit none
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
-      integer(ip), parameter :: ftsize = 20
-      integer(ip), parameter :: stsize = 200
-      integer(ip), parameter :: mxtbld = 100
       integer(ip), parameter :: mxclld = 500
       integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxseg = stsize
-      integer(ip), parameter :: ctsize = mxclld
-      integer(ip), parameter :: dtsize = maxseg * mxclld / 10
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: nil = 0
       integer(ip), parameter :: ntypes = 4
@@ -45004,5 +44827,95 @@ contains
 
       return
       end procedure stcf01
+
+   !> PEPPER: initialize EKQMGR's five linked list pools (the file table,
+   !> segment table, column descriptor table, column attribute table and
+   !> table list) at their current sizes: SPICELIB's block of five LNKINI
+   !> calls with the fixed sizes, in every entry point.
+   subroutine ekqmgr_lnkini ( ctx )
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      associate ( q => ctx%spice%ekqmgr )
+      call lnkini ( ctx, ubound ( q%ftpool, 2, kind=ip ), q%ftpool )
+      call lnkini ( ctx, ubound ( q%stpool, 2, kind=ip ), q%stpool )
+      call lnkini ( ctx, ubound ( q%dtpool, 2, kind=ip ), q%dtpool )
+      call lnkini ( ctx, ubound ( q%ctpool, 2, kind=ip ), q%ctpool )
+      call lnkini ( ctx, ubound ( q%tbpool, 2, kind=ip ), q%tbpool )
+      end associate
+   end subroutine ekqmgr_lnkini
+
+   !> PEPPER: make room in EKQMGR's tables for loading the EK file HANDLE
+   !> with NSEG segments: a file table entry, NSEG segment table and
+   !> table list entries, and as many column attribute and column
+   !> descriptor entries as the segments have columns. Each pool grows
+   !> (keeping its nodes and lists) with its parallel arrays.
+   subroutine ekqmgr_room ( ctx, handle, nseg )
+      use pepper_containers, only: grow, lnkgrow, grown_capacity
+      use pepper_inc_eksegdsc, only: sdscsz, ncidx
+      use pepper_inc_ekcoldsc, only: cdscsz
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! handle of the EK file being loaded
+      integer(ip), intent(in) :: nseg  !! number of segments in the file
+      integer(ip) :: segdsc ( sdscsz ), ncol, seg, n
+      ncol = 0
+      do seg = 1, nseg
+         call zzeksdsc ( ctx, handle, seg, segdsc )
+         if ( ctx%failed() ) return
+         ncol = ncol + segdsc(ncidx)
+      end do
+      associate ( q => ctx%spice%ekqmgr )
+      n = needed ( q%ftpool, 1_ip )
+      if ( n > 0 ) then
+         call lnkgrow ( q%ftpool, n )
+         call grow ( q%fthan, n )
+      end if
+      n = needed ( q%stpool, nseg )
+      if ( n > 0 ) then
+         call lnkgrow ( q%stpool, n )
+         call grow ( q%sthan, n )
+         call grow ( q%stsidx, n )
+         call grow ( q%stnrow, n )
+         call grow ( q%stncol, n )
+         call grow ( q%stdtpt, n )
+         call grow ( q%stdscs, n, sdscsz )
+      end if
+      n = needed ( q%tbpool, nseg )
+      if ( n > 0 ) then
+         call lnkgrow ( q%tbpool, n )
+         call grow ( q%tbstpt, n )
+         call grow ( q%tbncol, n )
+         call grow ( q%tbctpt, n )
+         call grow ( q%tbnams, n )
+      end if
+      n = needed ( q%ctpool, ncol )
+      if ( n > 0 ) then
+         call lnkgrow ( q%ctpool, n )
+         call grow ( q%ctnams, n )
+         call grow ( q%ctclas, n )
+         call grow ( q%cttyps, n )
+         call grow ( q%ctlens, n )
+         call grow ( q%ctsizs, n )
+         call grow ( q%ctfixd, n )
+         call grow ( q%ctindx, n )
+         call grow ( q%ctnull, n )
+      end if
+      n = needed ( q%dtpool, ncol )
+      if ( n > 0 ) then
+         call lnkgrow ( q%dtpool, n )
+         call grow ( q%dtdscs, n, cdscsz )
+      end if
+      end associate
+   contains
+      !> The size a pool must grow to (at least doubling) for EXTRA more
+      !> nodes, or 0 if it has room.
+      integer(ip) function needed ( pool, extra ) result ( n )
+         integer(ip), intent(in) :: pool ( :, -5: )  !! the pool, pool(2, lbpool:size)
+         integer(ip), intent(in) :: extra  !! the number of nodes to add
+         integer(ip) :: size, free
+         size = ubound ( pool, 2, kind=ip )
+         free = lnknfn ( ctx, pool )
+         n = 0
+         if ( free < extra ) n = grown_capacity ( size, size - free + extra )
+      end function needed
+   end subroutine ekqmgr_room
 
 end submodule pepper_ek

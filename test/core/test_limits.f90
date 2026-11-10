@@ -41,6 +41,7 @@ program test_limits
    call test_fov_vertices()
    call test_dsk_hits()
    call test_ek_scratch()
+   call test_ek_tables()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -805,6 +806,91 @@ contains
       call check(all(back(1:3) == [7, 8, 9]), 'EK scratch: reused after clean up')
       call zzekscln(ctx)
    end subroutine test_ek_scratch
+
+   !> Loaded EKs past EKQMGR's old tables (20 files, 200 segments, 100
+   !> tables, 500 column attribute entries, 10000 column descriptors): 25
+   !> files of 10 segments with 50 integer columns each; segments 1 to 5
+   !> of a file in tables of their own (T<file>_<k>), 6 to 10 in the table
+   !> SHARED of every file. Queries over all files, then after unloading
+   !> 10 of them, and after loading one again.
+   subroutine test_ek_tables()
+      integer(ip), parameter :: nfile = 25, ncol = 50
+      character(32) :: cnames(ncol), table
+      character(80) :: decls(ncol), errmsg
+      character(:), allocatable :: ek
+      integer(ip) :: f, k, c, handle, segno, recno, nrows, n, val, sum, expect
+      logical :: error, null, found
+      do c = 1, ncol
+         write (cnames(c), '(a, i0)') 'C', c
+         decls(c) = 'DATATYPE = INTEGER'
+      end do
+      do f = 1, nfile
+         ek = kernel_name(prefix // 'ek', f, '.bes')
+         call delete_file(ek)
+         call ctx%ekopn(ek, ek, 0_ip, handle)
+         do k = 1, 10
+            if (k <= 5) then
+               write (table, '(a, i0, a, i0)') 'T', f, '_', k
+            else
+               table = 'SHARED'
+            end if
+            call ctx%ekbseg(handle, table, ncol, cnames, decls, segno)
+            call ctx%ekappr(handle, segno, recno)
+            do c = 1, ncol
+               call ctx%ekacei(handle, segno, recno, cnames(c), 1_ip, [1000*f + 10*k + c], .false.)
+            end do
+         end do
+         call ctx%ekcls(handle)
+         call ctx%furnsh(ek)
+         if (ctx%failed()) then
+            call check_ok('EK tables: write and load 25 EKs')
+            return
+         end if
+      end do
+      call ctx%ekntab(n)
+      call check(n == 5*nfile + 1, 'EK tables: 126 tables')
+      ! every file's 5 SHARED rows: C2 = 1000 f + 10 k + 2
+      call ctx%ekfind('SELECT C2 FROM SHARED ORDER BY C2', nrows, error, errmsg)
+      call check_ok('EK tables: query SHARED')
+      call check(.not. error .and. nrows == 5*nfile, 'EK tables: SHARED rows')
+      sum = 0
+      do k = 1, nrows
+         call ctx%ekgi(1_ip, k, 1_ip, val, null, found)
+         sum = sum + val
+      end do
+      expect = 0
+      do f = 1, nfile
+         do k = 6, 10
+            expect = expect + 1000*f + 10*k + 2
+         end do
+      end do
+      call check(sum == expect, 'EK tables: SHARED values')
+      call ctx%ekfind('SELECT C50 FROM T25_5 WHERE C1 = 25051', nrows, error, errmsg)
+      call ctx%ekgi(1_ip, 1_ip, 1_ip, val, null, found)
+      call check(.not. error .and. nrows == 1 .and. val == 25100, 'EK tables: a table of the last file')
+      ! unload files 1 to 10
+      do f = 1, 10
+         call ctx%unload(kernel_name(prefix // 'ek', f, '.bes'))
+      end do
+      call ctx%ekntab(n)
+      call check(n == 5*(nfile - 10) + 1, 'EK tables: tables after unloading')
+      call ctx%ekfind('SELECT C2 FROM SHARED', nrows, error, errmsg)
+      call check(.not. error .and. nrows == 5*(nfile - 10), 'EK tables: SHARED rows after unloading')
+      call ctx%ekfind('SELECT C1 FROM T3_1', nrows, error, errmsg)
+      call check(error, 'EK tables: a table of an unloaded file is gone')
+      call ctx%furnsh(kernel_name(prefix // 'ek', 3_ip, '.bes'))
+      call ctx%ekfind('SELECT C1 FROM T3_1', nrows, error, errmsg)
+      call ctx%ekgi(1_ip, 1_ip, 1_ip, val, null, found)
+      call check(.not. error .and. nrows == 1 .and. val == 3011, 'EK tables: loaded again')
+      call check_ok('EK tables: queries')
+      do f = 1, nfile
+         ek = kernel_name(prefix // 'ek', f, '.bes')
+         call ctx%unload(ek)
+         call delete_file(ek)
+      end do
+      call ctx%ekntab(n)
+      call check(n == 0, 'EK tables: none after unloading all')
+   end subroutine test_ek_tables
 
    !> PCK constants of a body with its own nutation/precession angles
    !> (the first n of ANGLES) and coefficients (the first n of COEF).

@@ -983,13 +983,7 @@ module pepper_states
 
    ! ------------------------------------------------------------------ EKQMGR
 
-   integer(ip), parameter :: ekqmgr_ftsize = 20
-   integer(ip), parameter :: ekqmgr_stsize = 200
-   integer(ip), parameter :: mxtbld = 100
    integer(ip), parameter :: mxclld = 500
-   integer(ip), parameter :: maxseg = ekqmgr_stsize
-   integer(ip), parameter :: ctsize = mxclld
-   integer(ip), parameter :: dtsize = maxseg * mxclld / 10
    integer(ip), parameter :: ekqmgr_short = 80
 
    !> Manage query operations on EK files.
@@ -998,38 +992,42 @@ module pepper_states
    !> ekuef, ekntab, ektnam, ekccnt, ekcii, eksrch, eknelt, ekgc, ekgd, ekgi),
    !> held in pepper_spice (and, for some variables, in pepper_context).
    !>
-   !> No default initialization (596092 bytes): see init_ekqmgr_state.
+   !> PEPPER: the five linked list pools and their parallel arrays grow
+   !> when a file is loaded (EKLEF), allocated by init_ekqmgr_state
+   !> (SPICELIB: 20 files, 200 segments, 100 tables, 500 column attribute
+   !> entries, 10000 column descriptors; EKFILETABLEFULL, EKSEGTABLEFULL,
+   !> EKTABLELISTFULL, EKCOLATTRTABLEFULL, COLDESCTABLEFULL). SPICELIB's
+   !> table of the files of each table (TBFILS, TBFLSZ) is gone: it was
+   !> filled and read wrongly, and unused in effect (spicelib_bugs.md).
    type, public :: ekqmgr_state
-      integer(ip) :: ftpool ( 2,  lbpool : ekqmgr_ftsize )  !! doubly linked list pool of the file list (head: fthead)
-      integer(ip) :: fthan (              ekqmgr_ftsize )  !! handle of each loaded EK file
-      integer(ip) :: fthead  !! head node of the file list (0 if no files are loaded)
-      integer(ip) :: tbpool ( 2,  lbpool : mxtbld )  !! doubly linked list pool of the table list (head: tbhead)
-      integer(ip) :: tbstpt (              mxtbld )  !! head node of the segment list (in stpool) of each table
-      integer(ip) :: tbncol (              mxtbld )  !! number of columns of each table
-      character(tnamsz) :: tbnams (              mxtbld )  !! name of each table
-      integer(ip) :: tbctpt (              mxtbld )  !! head node of the column attribute list (in ctpool) of each table
-      integer(ip) :: tbfils ( ekqmgr_ftsize,      mxtbld )  !! handles of the files that contain segments of each table
-      integer(ip) :: tbflsz (              mxtbld )  !! number of handles in tbfils for each table
-      integer(ip) :: tbhead  !! head node of the table list (0 if no tables are loaded)
-      integer(ip) :: stpool ( 2, lbpool : maxseg )  !! doubly linked list pool of the segment table (one list per table)
-      integer(ip) :: sthan (             maxseg )  !! handle of the EK file of each loaded segment
-      integer(ip) :: stsidx (             maxseg )  !! index of each loaded segment within its EK file
-      integer(ip) :: stdscs ( sdscsz,     maxseg )  !! segment descriptor of each loaded segment
-      integer(ip) :: stnrow (             maxseg )  !! number of rows of each loaded segment
-      integer(ip) :: stncol (             maxseg )  !! number of columns of each loaded segment
-      integer(ip) :: stdtpt (             maxseg )  !! head node of the column descriptor list (in dtpool) of each loaded segment
-      integer(ip) :: dtpool ( 2,       lbpool:dtsize )  !! doubly linked list pool of the column descriptor table (one list per segment)
-      integer(ip) :: dtdscs ( cdscsz,  dtsize        )  !! column descriptor of each entry of the column descriptor table
-      integer(ip) :: ctpool ( 2,       lbpool : ctsize )  !! doubly linked list pool of the column attribute table (one list per table)
-      character(cnamsz) :: ctnams (                   ctsize )  !! column name of each column attribute entry
-      integer(ip) :: ctclas (                   ctsize )  !! class of each column
-      integer(ip) :: cttyps (                   ctsize )  !! data type of each column
-      integer(ip) :: ctlens (                   ctsize )  !! string length of each column (character columns)
-      logical :: ctfixd (                   ctsize )  !! each column has fixed-size entries
-      integer(ip) :: ctsizs (                   ctsize )  !! number of elements per entry of each column (fixed-size columns)
-      logical :: ctindx (                   ctsize )  !! each column is indexed
-      logical :: ctnull (                   ctsize )  !! each column may contain null values
-      logical :: first  !! the linked list pools are not initialized yet (done by the first eklef or eksrch)
+      integer(ip), allocatable :: ftpool ( :, : )  !! doubly linked list pool of the file list (head: fthead), ftpool(2, lbpool:n)
+      integer(ip), allocatable :: fthan ( : )  !! handle of each loaded EK file
+      integer(ip) :: fthead = 0  !! head node of the file list (0 if no files are loaded)
+      integer(ip), allocatable :: tbpool ( :, : )  !! doubly linked list pool of the table list (head: tbhead)
+      integer(ip), allocatable :: tbstpt ( : )  !! head node of the segment list (in stpool) of each table
+      integer(ip), allocatable :: tbncol ( : )  !! number of columns of each table
+      character(tnamsz), allocatable :: tbnams ( : )  !! name of each table
+      integer(ip), allocatable :: tbctpt ( : )  !! head node of the column attribute list (in ctpool) of each table
+      integer(ip) :: tbhead = 0  !! head node of the table list (0 if no tables are loaded)
+      integer(ip), allocatable :: stpool ( :, : )  !! doubly linked list pool of the segment table (one list per table)
+      integer(ip), allocatable :: sthan ( : )  !! handle of the EK file of each loaded segment
+      integer(ip), allocatable :: stsidx ( : )  !! index of each loaded segment within its EK file
+      integer(ip), allocatable :: stdscs ( :, : )  !! segment descriptor of each loaded segment, stdscs(sdscsz, n)
+      integer(ip), allocatable :: stnrow ( : )  !! number of rows of each loaded segment
+      integer(ip), allocatable :: stncol ( : )  !! number of columns of each loaded segment
+      integer(ip), allocatable :: stdtpt ( : )  !! head node of the column descriptor list (in dtpool) of each loaded segment
+      integer(ip), allocatable :: dtpool ( :, : )  !! doubly linked list pool of the column descriptor table (one list per segment)
+      integer(ip), allocatable :: dtdscs ( :, : )  !! column descriptor of each entry of the column descriptor table, dtdscs(cdscsz, n)
+      integer(ip), allocatable :: ctpool ( :, : )  !! doubly linked list pool of the column attribute table (one list per table)
+      character(cnamsz), allocatable :: ctnams ( : )  !! column name of each column attribute entry
+      integer(ip), allocatable :: ctclas ( : )  !! class of each column
+      integer(ip), allocatable :: cttyps ( : )  !! data type of each column
+      integer(ip), allocatable :: ctlens ( : )  !! string length of each column (character columns)
+      logical, allocatable :: ctfixd ( : )  !! each column has fixed-size entries
+      integer(ip), allocatable :: ctsizs ( : )  !! number of elements per entry of each column (fixed-size columns)
+      logical, allocatable :: ctindx ( : )  !! each column is indexed
+      logical, allocatable :: ctnull ( : )  !! each column may contain null values
+      logical :: first = .true.  !! the linked list pools are not initialized yet (done by the first eklef or eksrch)
    end type ekqmgr_state
 
    !> The saved variables of EKQMGR that are per context.
@@ -5836,35 +5834,18 @@ contains
    !> values, and zero for the other components.
    pure subroutine init_ekqmgr_state(state)
       type(ekqmgr_state), intent(inout) :: state  !! the state
-      state%ftpool = 0
-      state%fthan = 0
+      allocate (state%ftpool(2, lbpool:4), state%fthan(4), source=0_ip)
+      allocate (state%tbpool(2, lbpool:8), state%tbstpt(8), state%tbncol(8), state%tbctpt(8), source=0_ip)
+      allocate (state%tbnams(8), source=repeat(' ', tnamsz))
+      allocate (state%stpool(2, lbpool:16), state%sthan(16), state%stsidx(16), state%stnrow(16), &
+                state%stncol(16), state%stdtpt(16), state%stdscs(sdscsz, 16), source=0_ip)
+      allocate (state%dtpool(2, lbpool:64), state%dtdscs(cdscsz, 64), source=0_ip)
+      allocate (state%ctpool(2, lbpool:64), state%ctclas(64), state%cttyps(64), state%ctlens(64), &
+                state%ctsizs(64), source=0_ip)
+      allocate (state%ctnams(64), source=repeat(' ', cnamsz))
+      allocate (state%ctfixd(64), state%ctindx(64), state%ctnull(64), source=.false.)
       state%fthead = 0
-      state%tbpool = 0
-      state%tbstpt = 0
-      state%tbncol = 0
-      state%tbnams = ' '
-      state%tbctpt = 0
-      state%tbfils = 0
-      state%tbflsz = 0
       state%tbhead = 0
-      state%stpool = 0
-      state%sthan = 0
-      state%stsidx = 0
-      state%stdscs = 0
-      state%stnrow = 0
-      state%stncol = 0
-      state%stdtpt = 0
-      state%dtpool = 0
-      state%dtdscs = 0
-      state%ctpool = 0
-      state%ctnams = ' '
-      state%ctclas = 0
-      state%cttyps = 0
-      state%ctlens = 0
-      state%ctfixd = .false.
-      state%ctsizs = 0
-      state%ctindx = .false.
-      state%ctnull = .false.
       state%first = .true.
    end subroutine init_ekqmgr_state
 
