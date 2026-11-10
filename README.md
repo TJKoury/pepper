@@ -51,6 +51,12 @@ if (ctx%failed()) ...
 Load kernels first, then query from any number of threads, one context per
 thread (see `test/core/test_parallel.f90`).
 
+Each context keeps up to 23 files open at a time, as SPICELIB does, and
+reopens a file when it needs it again. A program that queries many kernels in
+turn can raise this before creating its contexts, for example
+`call spice%set_max_open_files(500)`; each context may then use that many file
+descriptors, within the operating system's limit (`ulimit -n`).
+
 The library has no SPICELIB-style interface. One lives in the `tspice`
 package (`tspice/src/legacy/`), where NAIF's test suite uses it: SPICELIB's
 routines as external procedures (`call spkezr(...)`). They are thin wrappers

@@ -21,6 +21,7 @@ module pepper_states
 
    use pepper_kinds, only: ip, wp
    use pepper_containers, only: grow, string, string_map, int_map
+   use pepper_segment_index, only: segment_index, segment_reuse
    use pepper_inc_das, only: ftsize
    use pepper_inc_dla, only: dladsz
    use pepper_inc_dsk02, only: maxcgr, maxplt
@@ -56,14 +57,14 @@ module pepper_states
 
    private
 
-   public :: init_ckbsr_state, init_ckbsr_context_state, init_dafana_state, dafana_grow, &
+   public :: init_dafana_state, dafana_grow, &
        init_dafec_state, init_daffa_state, daffa_grow, init_dafrwd_state, init_dasec_state, &
        init_dasrwr_state, init_dskx02_state, init_ekqmgr_state, init_ekqmgr_context_state, &
-       init_framex_state, init_limbpt_state, init_pckbsr_state, init_pckbsr_context_state, &
-       init_sc01_state, init_spkbsr_state, &
-       init_spkbsr_context_state, init_termpt_state, init_tisbod_state, init_tkfram_state, &
-       init_zzbodblt_state, init_zzbodtrn_state, init_zzdskbsr_state, &
-       init_zzdskbsr_context_state, init_zzdsksbf_state, init_zzekjsrt_state, init_zzekjtst_state, &
+       init_framex_state, init_limbpt_state, &
+       init_sc01_state, &
+       init_termpt_state, init_tisbod_state, init_tkfram_state, &
+       init_zzbodblt_state, init_zzbodtrn_state, &
+       init_zzdsksbf_state, init_zzekjsrt_state, init_zzekjtst_state, &
        init_zzeknrml_state, init_zzeksca_state, init_zzelvupy_state, init_zzgffvu_state, &
        init_zzswfxfm_state
 
@@ -185,67 +186,39 @@ module pepper_states
 
    ! ------------------------------------------------------------------ CKBSR
 
-   integer(ip), parameter :: ckbsr_ftsize = 5000
-   integer(ip), parameter :: itsize = 5000
-   integer(ip), parameter :: ckbsr_stsize = 100000
-   integer(ip), parameter :: nd = 2
-   integer(ip), parameter :: ni = 6
-   integer(ip), parameter :: ckbsr_dscsiz = nd + (ni + 1)/2
-
    !> Load and unload files for use by the readers. Buffer segments
    !> for readers.
    !>
-   !> The saved variables of SPICELIB's CKBSR routines (entry points cklpf,
-   !> ckupf, ckbss, cksns, ckhave), held in pepper_spice (and, for some
-   !> variables, in pepper_context).
+   !> SPICELIB's CKBSR (entry points cklpf, ckupf, ckbss, cksns, ckhave):
+   !> the loaded CK files and the index of their segments by instrument,
+   !> held in pepper_spice.
    !>
-   !> No default initialization (40008 bytes): see init_ckbsr_state.
+   !> PEPPER: SPICELIB found an instrument's segments when it was first
+   !> searched for, reading the summaries of every loaded file, and kept
+   !> them in per-context tables of 5000 instruments and 100000 segments
+   !> (9.9 MB per context). The segments are indexed when a file is loaded.
    type, public :: ckbsr_state
-      integer(ip), allocatable :: fthan ( : )  !! handle of each loaded file (in load order)
-      integer(ip), allocatable :: ftnum ( : )  !! file number of each loaded file: its place in the load (and search) order
-      integer(ip) :: next  !! the file number of the file loaded last
-      integer(ip) :: nft  !! number of loaded files
+      type(segment_index) :: index  !! the segments of the loaded files, by instrument
    end type ckbsr_state
 
-   !> The saved variables of CKBSR that are per context.
-   !>
-   !> No default initialization (9860176 bytes): see init_ckbsr_context_state.
+   !> The per-context state of CKBSR: the search in progress (CKBSS,
+   !> CKSNS), and the segment returned last for each instrument.
    type, public :: ckbsr_context_state
-      real(wp) :: alpha  !! start of the interval of interest (request time minus tolerance) of the search
-      logical :: avneed  !! the search requires angular velocity
-      integer(ip) :: findex  !! index in the file table of the file being searched
-      logical :: fnd  !! a segment was found by the last search
-      logical :: fresub  !! the partial list left by the 'CHECK PARTIAL LIST' state must be freed
-      integer(ip) :: iindex  !! index in the instrument table of the instrument being searched
-      integer(ip) :: itbeg ( itsize )  !! head of the segment list of each instrument
-      logical :: itchkp ( itsize )  !! the segment returned last for each instrument is to be checked first (its re-use interval is valid)
-      integer(ip) :: itexp ( itsize )  !! expense (number of segment descriptors examined) of the segment list of each instrument
-      integer(ip) :: ithfs ( itsize )  !! highest file number searched for the segment list of each instrument
-      integer(ip) :: itins ( itsize )  !! each spacecraft clock/instrument code
-      real(wp) :: itlb ( itsize )  !! lower bound of the re-use interval of the segment returned last for each instrument
-      integer(ip) :: itlfs ( itsize )  !! lowest file number searched for the segment list of each instrument
-      real(wp) :: itprvd ( ckbsr_dscsiz, itsize )  !! descriptor of the segment returned last for each instrument
-      integer(ip) :: itprvf ( itsize )  !! angular velocity flag of the segment returned last for each instrument (non-zero: present)
-      integer(ip) :: itprvh ( itsize )  !! handle of the file of the segment returned last for each instrument
-      character(sidlen) :: itprvi ( itsize )  !! identifier of the segment returned last for each instrument
-      real(wp) :: itub ( itsize )  !! upper bound of the re-use interval of the segment returned last for each instrument
-      integer(ip) :: itruex ( itsize )  !! expense of the re-use interval of each instrument
-      logical :: newsch  !! the search is new (CKBSS was called; CKSNS not yet)
-      integer(ip) :: nit  !! number of instruments in the instrument table
-      real(wp) :: omega  !! end of the interval of interest (request time plus tolerance) of the search
-      real(wp) :: reqt  !! the request time (encoded spacecraft clock) of the search
-      integer(ip) :: savep  !! the segment list node to continue the search from
-      real(wp) :: savtol  !! the time tolerance of the search
-      integer(ip) :: scinst  !! the instrument of the search
-      integer(ip) :: slbeg  !! head of the partial segment list being checked
-      character(slen) :: status  !! the state of the search in progress
-      real(wp) :: stdcd ( nd,          ckbsr_stsize )  !! double precision components of the descriptor of each segment
-      integer(ip) :: sthan (              ckbsr_stsize )  !! handle of the file of each segment in the segment table
-      integer(ip) :: sticd ( ni,          ckbsr_stsize )  !! integer components of the descriptor of each segment
-      character(sidlen) :: stidnt (              ckbsr_stsize )  !! identifier of each segment in the segment table
-      integer(ip) :: stpool ( 2,  lbpool : ckbsr_stsize )  !! doubly linked list pool of the segment table (one list per instrument, in priority order)
-      integer(ip) :: top  !! depth of the stack of interrupted states of the search
-      integer(ip) :: epoch  !! the instance's segment_epoch this cache reflects
+      type(segment_reuse) :: reuse  !! the segment returned last for each instrument, and its re-use interval
+      logical :: active = .false.  !! a search was begun by CKBSS (and no file was loaded or unloaded since)
+      integer(ip) :: epoch = -1  !! the instance's segment_epoch at CKBSS
+      integer(ip) :: scinst = 0  !! the instrument of the search
+      real(wp) :: reqt = 0.0_wp  !! the request time (encoded spacecraft clock) of the search
+      real(wp) :: savtol = 0.0_wp  !! the time tolerance of the search
+      real(wp) :: alpha = 0.0_wp  !! start of the interval of interest (request time minus tolerance)
+      real(wp) :: omega = 0.0_wp  !! end of the interval of interest (request time plus tolerance)
+      logical :: avneed = .false.  !! the search requires angular velocity
+      logical :: newsch = .false.  !! no segment was returned yet by this search
+      logical :: fresh = .false.  !! the re-use interval was not checked yet by this search (CKSNS checks it once, at its first call)
+      integer(ip) :: list = 0  !! the instrument's segment list in the index
+      integer(ip) :: pos = 0  !! the position in the list to continue from (searched downwards)
+      real(wp) :: lb = 0.0_wp  !! lower bound of the re-use interval being built
+      real(wp) :: ub = 0.0_wp  !! upper bound of the re-use interval being built
    end type ckbsr_context_state
 
    ! ------------------------------------------------------------------ CKGP
@@ -1636,48 +1609,24 @@ module pepper_states
 
    ! ------------------------------------------------------------------ PCKBSR
 
-   integer(ip), parameter :: pckbsr_ftsize = 5000
-   integer(ip), parameter :: pckbsr_btsize = 20
-   integer(ip), parameter :: pckbsr_stsize = 5000
-   integer(ip), parameter :: pckbsr_dscsiz = 5
-
-   !> Load and unload PCK binary files for use by the readers.
-   !> Buffer segments for readers.
+   !> Load and unload files for use by the readers. Buffer segments
+   !> for readers.
    !>
-   !> The saved variables of SPICELIB's PCKBSR routines (entry points pcklof,
-   !> pckuof, pcksfs), held in pepper_spice (and, for some variables, in
-   !> pepper_context).
+   !> SPICELIB's PCKBSR (entry points pcklof, pckuof, pcksfs): the loaded
+   !> binary PCK files and the index of their segments by body, held in
+   !> pepper_spice.
    !>
-   !> No default initialization (40008 bytes): see init_pckbsr_state.
+   !> PEPPER: the segments are indexed when a file is loaded (SPICELIB:
+   !> found per body at its first query, in per-context tables of 20 bodies
+   !> and 5000 segments).
    type, public :: pckbsr_state
-      integer(ip), allocatable :: fthan ( : )  !! handle of each loaded file (in load order)
-      integer(ip), allocatable :: ftnum ( : )  !! file number of each loaded file: its place in the load (and search) order
-      integer(ip) :: next  !! the file number of the file loaded last
-      integer(ip) :: nft  !! number of loaded files
+      type(segment_index) :: index  !! the segments of the loaded files, by body
    end type pckbsr_state
 
-   !> The saved variables of PCKBSR that are per context.
-   !>
-   !> No default initialization (462624 bytes): see init_pckbsr_context_state.
+   !> The per-context state of PCKBSR: the segment returned last for each
+   !> body.
    type, public :: pckbsr_context_state
-      integer(ip) :: btbeg ( pckbsr_btsize )  !! head of the segment list of each body
-      integer(ip) :: btbod ( pckbsr_btsize )  !! each body's code
-      logical :: btchkp ( pckbsr_btsize )  !! the segment returned last for each body is to be checked first (its re-use interval is valid)
-      integer(ip) :: btexp ( pckbsr_btsize )  !! expense (number of segment descriptors examined) of the segment list of each body
-      integer(ip) :: bthfs ( pckbsr_btsize )  !! highest file number searched for the segment list of each body
-      real(wp) :: btlb ( pckbsr_btsize )  !! lower bound of the re-use interval of the segment returned last for each body
-      integer(ip) :: btlfs ( pckbsr_btsize )  !! lowest file number searched for the segment list of each body
-      real(wp) :: btprvd ( pckbsr_dscsiz, pckbsr_btsize )  !! descriptor of the segment returned last for each body
-      integer(ip) :: btprvh ( pckbsr_btsize )  !! handle of the file of the segment returned last for each body
-      character(sidlen) :: btprvi ( pckbsr_btsize )  !! identifier of the segment returned last for each body
-      integer(ip) :: btruex ( pckbsr_btsize )  !! expense of the re-use interval of each body
-      real(wp) :: btub ( pckbsr_btsize )  !! upper bound of the re-use interval of the segment returned last for each body
-      integer(ip) :: nbt  !! number of bodies in the body table
-      real(wp) :: stdes ( pckbsr_dscsiz,     pckbsr_stsize )  !! descriptor of each segment in the segment table
-      integer(ip) :: sthan (             pckbsr_stsize )  !! handle of the file of each segment in the segment table
-      character(sidlen) :: stidnt (             pckbsr_stsize )  !! identifier of each segment in the segment table
-      integer(ip) :: stpool ( 2, lbpool : pckbsr_stsize )  !! doubly linked list pool of the segment table (one list per body, in priority order)
-      integer(ip) :: epoch  !! the instance's segment_epoch this cache reflects
+      type(segment_reuse) :: reuse  !! the segment returned last for each body, and its re-use interval
    end type pckbsr_context_state
 
    ! ------------------------------------------------------------------ PGRREC
@@ -2171,48 +2120,25 @@ module pepper_states
 
    ! ------------------------------------------------------------------ SPKBSR
 
-   integer(ip), parameter :: spkbsr_ftsize = 5000
-   integer(ip), parameter :: spkbsr_btsize = 10000
-   integer(ip), parameter :: spkbsr_stsize = 100000
-   integer(ip), parameter :: spkbsr_dscsiz = 5
-
    !> Load and unload files for use by the readers. Buffer segments
    !> for readers.
    !>
-   !> The saved variables of SPICELIB's SPKBSR routines (entry points spklef,
-   !> spkuef, spksfs), held in pepper_spice (and, for some variables, in
-   !> pepper_context).
+   !> SPICELIB's SPKBSR (entry points spklef, spkuef, spksfs): the loaded
+   !> SPK files and the index of their segments by body, held in
+   !> pepper_spice.
    !>
-   !> No default initialization (40008 bytes): see init_spkbsr_state.
+   !> PEPPER: the segments are indexed when a file is loaded (SPICELIB:
+   !> found per body at its first query, reading the summaries of every
+   !> loaded file, in per-context tables of 10000 bodies and 100000
+   !> segments, 10.5 MB per context).
    type, public :: spkbsr_state
-      integer(ip), allocatable :: fthan ( : )  !! handle of each loaded file (in load order)
-      integer(ip), allocatable :: ftnum ( : )  !! file number of each loaded file: its place in the load (and search) order
-      integer(ip) :: next  !! the file number of the file loaded last
-      integer(ip) :: nft  !! number of loaded files
+      type(segment_index) :: index  !! the segments of the loaded files, by body
    end type spkbsr_state
 
-   !> The saved variables of SPKBSR that are per context.
-   !>
-   !> No default initialization (10480064 bytes): see init_spkbsr_context_state.
+   !> The per-context state of SPKBSR: the segment returned last for each
+   !> body.
    type, public :: spkbsr_context_state
-      integer(ip) :: btbeg ( spkbsr_btsize )  !! head of the segment list of each body
-      integer(ip) :: btbod ( spkbsr_btsize )  !! each body's code
-      logical :: btchkp ( spkbsr_btsize )  !! the segment returned last for each body is to be checked first (its re-use interval is valid)
-      integer(ip) :: btexp ( spkbsr_btsize )  !! expense (number of segment descriptors examined) of the segment list of each body
-      integer(ip) :: bthfs ( spkbsr_btsize )  !! highest file number searched for the segment list of each body
-      real(wp) :: btlb ( spkbsr_btsize )  !! lower bound of the re-use interval of the segment returned last for each body
-      integer(ip) :: btlfs ( spkbsr_btsize )  !! lowest file number searched for the segment list of each body
-      real(wp) :: btprvd ( spkbsr_dscsiz, spkbsr_btsize )  !! descriptor of the segment returned last for each body
-      integer(ip) :: btprvh ( spkbsr_btsize )  !! handle of the file of the segment returned last for each body
-      character(sidlen) :: btprvi ( spkbsr_btsize )  !! identifier of the segment returned last for each body
-      integer(ip) :: btruex ( spkbsr_btsize )  !! expense of the re-use interval of each body
-      real(wp) :: btub ( spkbsr_btsize )  !! upper bound of the re-use interval of the segment returned last for each body
-      integer(ip) :: nbt  !! number of bodies in the body table
-      real(wp) :: stdes ( spkbsr_dscsiz,     spkbsr_stsize )  !! descriptor of each segment in the segment table
-      integer(ip) :: sthan (             spkbsr_stsize )  !! handle of the file of each segment in the segment table
-      character(sidlen) :: stidnt (             spkbsr_stsize )  !! identifier of each segment in the segment table
-      integer(ip) :: stpool ( 2, lbpool : spkbsr_stsize )  !! doubly linked list pool of the segment table (one list per body, in priority order)
-      integer(ip) :: epoch  !! the instance's segment_epoch this cache reflects
+      type(segment_reuse) :: reuse  !! the segment returned last for each body, and its re-use interval
    end type spkbsr_context_state
 
    ! ------------------------------------------------------------------ SPKCVO
@@ -3464,6 +3390,10 @@ module pepper_states
    end type zzddhman_state
 
    !> The saved variables of ZZDDHMAN that are per context.
+   !>
+   !> PEPPER: the unit table has the instance's max_open_files entries
+   !> (SPICELIB: UTSIZE, 23), allocated when the context first opens a
+   !> file.
    type, public :: zzddhman_context_state
       logical :: first = .true.  !! the tables of names have not been built yet
       logical :: opnfst = .true.  !! no file has been opened yet (platform check)
@@ -3474,10 +3404,10 @@ module pepper_states
       integer(ip) :: supbff ( numbff ) = 0  !! the supported binary file formats
       integer(ip) :: numsup = 0  !! number of supported binary file formats
       integer(ip) :: nut = 0  !! number of entries in the unit table
-      integer(ip) :: utcst ( utsize ) = 0  !! cost (time of the last request) of each unit
-      integer(ip) :: uthan ( utsize ) = 0  !! handle of the file connected to each unit
-      logical :: utlck ( utsize ) = .false.  !! the unit is locked to its file
-      integer(ip) :: utlun ( utsize ) = 0  !! the units
+      integer(ip), allocatable :: utcst ( : )  !! cost (time of the last request) of each unit
+      integer(ip), allocatable :: uthan ( : )  !! handle of the file connected to each unit
+      logical, allocatable :: utlck ( : )  !! the unit is locked to its file
+      integer(ip), allocatable :: utlun ( : )  !! the units
       integer(ip) :: reqcnt = 0  !! request counter (for the costs)
       integer(ip) :: closegen = 0  !! the instance's close_generation the unit table reflects
    end type zzddhman_context_state
@@ -3578,55 +3508,35 @@ module pepper_states
 
    ! ------------------------------------------------------------------ ZZDSKBSR
 
-   integer(ip), parameter :: zzdskbsr_ftsize = 5000
-   integer(ip), parameter :: zzdskbsr_btsize = 100
-   integer(ip), parameter :: zzdskbsr_stsize = 10000
-
-   !> Load and unload DSK files for use by the readers. Buffer segments
-   !> for readers.
+   !> SPICE Private routine intended solely for the support of SPICE
+   !> routines. Users should not call this routine directly due to the
+   !> volatile nature of this routine.
    !>
-   !> The saved variables of SPICELIB's ZZDSKBSR routines (entry points
-   !> zzdsklsf, zzdskusf, zzdskbss, zzdsksns, zzdskchk), held in pepper_spice
-   !> (and, for some variables, in pepper_context).
+   !> SPICELIB's ZZDSKBSR (entry points zzdsklsf, zzdskusf, zzdskbss,
+   !> zzdsksns, zzdskchk): the loaded DSK files and the index of their
+   !> segments by central body, held in pepper_spice.
    !>
-   !> No default initialization (40020 bytes): see init_zzdskbsr_state.
+   !> PEPPER: the segments are indexed when a file is loaded (SPICELIB:
+   !> found per body at its first search, in per-context tables of 100
+   !> bodies and 10000 segments, 2.4 MB per context; a body with more
+   !> segments than the table signaled SPICE(BUFFEROVERFLOW)).
    type, public :: zzdskbsr_state
-      integer(ip), allocatable :: fthan ( : )  !! handle of each loaded file (in load order)
-      integer(ip), allocatable :: ftnum ( : )  !! file number of each loaded file: its place in the load (and search) order
-      integer(ip) :: next  !! the file number of the file loaded last
-      integer(ip) :: nft  !! number of loaded files
-      integer(ip) :: dskctr ( ctrsiz )  !! counter of changes of the loaded DSK set (checked by ZZDSKCHK)
-      logical :: pass1  !! the counter has not been set up yet
+      type(segment_index) :: index  !! the segments of the loaded files, by central body
+      integer(ip) :: dskctr ( ctrsiz ) = 0  !! counter of changes of the loaded DSK set (checked by ZZDSKCHK)
+      logical :: pass1 = .true.  !! the counter has not been set up yet
    end type zzdskbsr_state
 
-   !> The saved variables of ZZDSKBSR that are per context.
-   !>
-   !> No default initialization (2362128 bytes): see init_zzdskbsr_context_state.
+   !> The per-context state of ZZDSKBSR: the search in progress (ZZDSKBSS,
+   !> ZZDSKSNS).
    type, public :: zzdskbsr_context_state
-      logical :: begsch  !! a search was begun by ZZDSKBSS
-      integer(ip) :: findex  !! index in the file table of the file being searched
-      logical :: fnd  !! a segment was found by the last search
-      integer(ip) :: bindex  !! index in the body table of the body being searched
-      integer(ip) :: btbeg ( zzdskbsr_btsize )  !! head of the segment list of each body
-      integer(ip) :: btexp ( zzdskbsr_btsize )  !! expense (number of segment descriptors examined) of the segment list of each body
-      integer(ip) :: bthfs ( zzdskbsr_btsize )  !! highest file number searched for the segment list of each body
-      integer(ip) :: btbod ( zzdskbsr_btsize )  !! each body's code
-      integer(ip) :: btlfs ( zzdskbsr_btsize )  !! lowest file number searched for the segment list of each body
-      integer(ip) :: nbt  !! number of bodies in the body table
-      integer(ip) :: savep  !! the segment list node to continue the search from
-      integer(ip) :: svbody  !! the body of the search
-      character(slen) :: status  !! the state of the search in progress
-      integer(ip) :: stdlad ( dladsz,     zzdskbsr_stsize )  !! DLA descriptor of each segment in the segment table
-      real(wp) :: stdskd ( dskdsz,     zzdskbsr_stsize )  !! DSK descriptor of each segment in the segment table
-      integer(ip) :: sthan (             zzdskbsr_stsize )  !! handle of the file of each segment in the segment table
-      integer(ip) :: stpool ( 2,  lbpool : zzdskbsr_stsize )  !! doubly linked list pool of the segment table (one list per body, in priority order)
-      integer(ip) :: top  !! depth of the stack of interrupted states of the search
-      integer(ip) :: epoch  !! the instance's segment_epoch this cache reflects
+      logical :: active = .false.  !! a search was begun by ZZDSKBSS (and no file was loaded or unloaded since)
+      integer(ip) :: epoch = -1  !! the instance's segment_epoch at ZZDSKBSS
+      integer(ip) :: list = 0  !! the body's segment list in the index
+      integer(ip) :: pos = 0  !! the position in the list to continue from (searched downwards)
    end type zzdskbsr_context_state
 
    ! ------------------------------------------------------------------ ZZDSKSBF
 
-   integer(ip), parameter :: zzdsksbf_stsize = 10000
    integer(ip), parameter :: zzdsksbf_btsize = 10
 
    !> SPICE Private routine intended solely for the support of SPICE
@@ -3636,7 +3546,12 @@ module pepper_states
    !> The saved variables of SPICELIB's ZZDSKSBF routines (entry points
    !> zzsbfxr, zzsbfxri, zzsbfnrm), held in pepper_context (one per thread).
    !>
-   !> No default initialization (2840144 bytes): see init_zzdsksbf_state.
+   !> PEPPER: the segment table is allocatable; it grows to hold the
+   !> segments of the bodies in the body table (SPICELIB: 10000 segments,
+   !> 2.8 MB per context, and SPICE(SEGMENTTABLEFULL) for a body with
+   !> more).
+   !>
+   !> No default initialization: see init_zzdsksbf_state.
    type, public :: zzdsksbf_state
       integer(ip) :: bsrctr ( ctrsiz )  !! DSK BSR loaded kernel state counter when the tables were last validated
       integer(ip) :: btbody ( zzdsksbf_btsize )  !! body table: body ID codes
@@ -3644,13 +3559,13 @@ module pepper_states
       integer(ip) :: btsegp ( zzdsksbf_btsize )  !! body table: start index of each body's segment list in the segment table
       integer(ip) :: btstsz ( zzdsksbf_btsize )  !! body table: number of segment table entries of each body
       logical :: first  !! first call: BSRCTR not yet initialized
-      real(wp) :: stctr ( 3,      zzdsksbf_stsize )  !! segment table: outer bounding sphere centers (km, segment frame)
-      integer(ip) :: stdlad ( dladsz, zzdsksbf_stsize )  !! segment table: DLA descriptors
-      real(wp) :: stdscr ( dskdsz, zzdsksbf_stsize )  !! segment table: DSK descriptors
+      real(wp), allocatable :: stctr ( :, : )  !! segment table: outer bounding sphere centers (km, segment frame)
+      integer(ip), allocatable :: stdlad ( :, : )  !! segment table: DLA descriptors
+      real(wp), allocatable :: stdscr ( :, : )  !! segment table: DSK descriptors
       integer(ip) :: stfree  !! segment table: index of the first free entry
-      integer(ip) :: sthan ( zzdsksbf_stsize )  !! segment table variables
-      real(wp) :: stoff ( 3,      zzdsksbf_stsize )  !! segment table: offsets of segment frame centers from the central body (km)
-      real(wp) :: strad ( zzdsksbf_stsize )  !! segment table: outer bounding sphere radii (km)
+      integer(ip), allocatable :: sthan ( : )  !! segment table variables
+      real(wp), allocatable :: stoff ( :, : )  !! segment table: offsets of segment frame centers from the central body (km)
+      real(wp), allocatable :: strad ( : )  !! segment table: outer bounding sphere radii (km)
    end type zzdsksbf_state
 
    ! ------------------------------------------------------------------ ZZDSKSEL
@@ -5672,55 +5587,7 @@ module pepper_states
 
 contains
 
-   !> Set the initial values of a new ckbsr_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_ckbsr_state(state)
-      type(ckbsr_state), intent(inout) :: state  !! the state
-      allocate ( state%fthan(16), state%ftnum(16), source=0_ip )  ! PEPPER: they grow (was ckbsr_ftsize)
-      state%next = 0
-      state%nft = 0
-   end subroutine init_ckbsr_state
 
-   !> Set the initial values of a new ckbsr_context_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_ckbsr_context_state(state)
-      type(ckbsr_context_state), intent(inout) :: state  !! the state
-      state%alpha = 0.0_wp
-      state%avneed = .false.
-      state%findex = 0
-      state%fnd = .false.
-      state%fresub = .false.
-      state%iindex = 0
-      state%itbeg = 0
-      state%itchkp = .false.
-      state%itexp = 0
-      state%ithfs = 0
-      state%itins = 0
-      state%itlb = 0.0_wp
-      state%itlfs = 0
-      state%itprvd = 0.0_wp
-      state%itprvf = 0
-      state%itprvh = 0
-      state%itprvi = ' '
-      state%itub = 0.0_wp
-      state%itruex = 0
-      state%newsch = .false.
-      state%nit = 0
-      state%omega = 0.0_wp
-      state%reqt = 0.0_wp
-      state%savep = 0
-      state%savtol = 0.0_wp
-      state%scinst = 0
-      state%slbeg = 0
-      state%status = 'BOGUS ENTRY'
-      state%stdcd = 0.0_wp
-      state%sthan = 0
-      state%sticd = 0
-      state%stidnt = ' '
-      state%stpool = 0
-      state%top = 0
-      state%epoch = 0
-   end subroutine init_ckbsr_context_state
 
    !> Set the initial values of a new dafah_state: SPICELIB's DATA
    !> values, and zero for the other components.
@@ -6260,38 +6127,7 @@ contains
       state%svradi = 0.0_wp
    end subroutine init_limbpt_state
 
-   !> Set the initial values of a new pckbsr_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_pckbsr_state(state)
-      type(pckbsr_state), intent(inout) :: state  !! the state
-      allocate ( state%fthan(16), state%ftnum(16), source=0_ip )  ! PEPPER: they grow (was pckbsr_ftsize)
-      state%next = 0
-      state%nft = 0
-   end subroutine init_pckbsr_state
 
-   !> Set the initial values of a new pckbsr_context_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_pckbsr_context_state(state)
-      type(pckbsr_context_state), intent(inout) :: state  !! the state
-      state%btbeg = 0
-      state%btbod = 0
-      state%btchkp = .false.
-      state%btexp = 0
-      state%bthfs = 0
-      state%btlb = 0.0_wp
-      state%btlfs = 0
-      state%btprvd = 0.0_wp
-      state%btprvh = 0
-      state%btprvi = ' '
-      state%btruex = 0
-      state%btub = 0.0_wp
-      state%nbt = 0
-      state%stdes = 0.0_wp
-      state%sthan = 0
-      state%stidnt = ' '
-      state%stpool = 0
-      state%epoch = 0
-   end subroutine init_pckbsr_context_state
 
    !> The slot of a kernel pool variable: 0 if there is no such variable.
    pure integer(ip) function pool_find(self, name) result(i)
@@ -6438,38 +6274,7 @@ contains
       state%pass1 = .true.
    end subroutine init_sc01_state
 
-   !> Set the initial values of a new spkbsr_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_spkbsr_state(state)
-      type(spkbsr_state), intent(inout) :: state  !! the state
-      allocate ( state%fthan(16), state%ftnum(16), source=0_ip )  ! PEPPER: they grow (was spkbsr_ftsize)
-      state%next = 0
-      state%nft = 0
-   end subroutine init_spkbsr_state
 
-   !> Set the initial values of a new spkbsr_context_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_spkbsr_context_state(state)
-      type(spkbsr_context_state), intent(inout) :: state  !! the state
-      state%btbeg = 0
-      state%btbod = 0
-      state%btchkp = .false.
-      state%btexp = 0
-      state%bthfs = 0
-      state%btlb = 0.0_wp
-      state%btlfs = 0
-      state%btprvd = 0.0_wp
-      state%btprvh = 0
-      state%btprvi = ' '
-      state%btruex = 0
-      state%btub = 0.0_wp
-      state%nbt = 0
-      state%stdes = 0.0_wp
-      state%sthan = 0
-      state%stidnt = ' '
-      state%stpool = 0
-      state%epoch = 0
-   end subroutine init_spkbsr_context_state
 
    !> Set the initial values of a new termpt_state: SPICELIB's DATA
    !> values, and zero for the other components.
@@ -6720,41 +6525,7 @@ contains
       call move_alloc(from%name, to%name)
    end subroutine move_file
 
-   !> Set the initial values of a new zzdskbsr_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_zzdskbsr_state(state)
-      type(zzdskbsr_state), intent(inout) :: state  !! the state
-      allocate ( state%fthan(16), state%ftnum(16), source=0_ip )  ! PEPPER: they grow (was zzdskbsr_ftsize)
-      state%next = 0
-      state%nft = 0
-      state%dskctr = 0
-      state%pass1 = .true.
-   end subroutine init_zzdskbsr_state
 
-   !> Set the initial values of a new zzdskbsr_context_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_zzdskbsr_context_state(state)
-      type(zzdskbsr_context_state), intent(inout) :: state  !! the state
-      state%begsch = .false.
-      state%findex = 0
-      state%fnd = .false.
-      state%bindex = 0
-      state%btbeg = 0
-      state%btexp = 0
-      state%bthfs = 0
-      state%btbod = 0
-      state%btlfs = 0
-      state%nbt = 0
-      state%savep = 0
-      state%svbody = 0
-      state%status = 'BOGUS ENTRY'
-      state%stdlad = 0
-      state%stdskd = 0.0_wp
-      state%sthan = 0
-      state%stpool = 0
-      state%top = 0
-      state%epoch = 0
-   end subroutine init_zzdskbsr_context_state
 
    !> Set the initial values of a new zzdsksbf_state: SPICELIB's DATA
    !> values, and zero for the other components.
@@ -6766,13 +6537,7 @@ contains
       state%btsegp = 0
       state%btstsz = 0
       state%first = .true.
-      state%stctr = 0.0_wp
-      state%stdlad = 0
-      state%stdscr = 0.0_wp
       state%stfree = 1
-      state%sthan = 0
-      state%stoff = 0.0_wp
-      state%strad = 0.0_wp
    end subroutine init_zzdsksbf_state
 
    !> Set the initial values of a new zzekjsrt_state: SPICELIB's DATA

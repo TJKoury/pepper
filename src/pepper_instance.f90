@@ -81,6 +81,11 @@ module pepper_instance
       !> Incremented when a file is closed; contexts then close their units for
       !> handles that no longer exist (see units_check).
       integer(ip) :: close_generation = 0
+      !> Number of files a context keeps open at the same time (its unit
+      !> table; SPICELIB: 23, UTSIZE). A context opens a file again when it
+      !> needs it after it was closed to make room. Set before the contexts
+      !> open files (see set_max_open_files).
+      integer(ip) :: open_files_limit = 23
       !> Incremented by every load and unload of an SPK, CK, PCK or DSK file;
       !> contexts discard their segment caches when it changed.
       integer(ip) :: segment_epoch = 0
@@ -150,6 +155,8 @@ module pepper_instance
       ! <<< generated state components
    contains
       procedure, non_overridable :: new_context
+      procedure, non_overridable :: set_max_open_files
+      procedure, non_overridable :: max_open_files
    end type pepper_spice
 
    !> The per-thread state for using an instance.
@@ -4596,7 +4603,7 @@ module pepper_instance
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
-      module subroutine zzddhf2h ( ctx, fname, ft, utcst, uthan, utlck, utlun, nut, exists, opened, handle, found, mnm )
+      module subroutine zzddhf2h ( ctx, fname, ft, utcst, uthan, utlck, utlun, nut, exists, opened, handle, found, mnm, tabsiz )
       use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: fname  !! Name of the file to convert to a handle.
@@ -4611,6 +4618,7 @@ module pepper_instance
          integer(ip), intent(out) :: handle  !! Handle associated with FNAME.
          logical, intent(out) :: found  !! Logical indicating if FNAME's HANDLE was found.
          real(wp), intent(out) :: mnm  !! Unique DP (Magic NuMber) associated with FNAME.
+         integer(ip), intent(in), optional :: tabsiz  !! PEPPER: size of the unit table (default UTSIZE, 23)
       end subroutine zzddhf2h
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -4626,7 +4634,7 @@ module pepper_instance
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
-      module subroutine zzddhgtu ( ctx, utcst, uthan, utlck, utlun, nut, uindex )
+      module subroutine zzddhgtu ( ctx, utcst, uthan, utlck, utlun, nut, uindex, tabsiz )
       use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(inout) :: utcst  ( * )  !! Unit table.
@@ -4635,6 +4643,7 @@ module pepper_instance
          integer(ip), intent(inout) :: utlun  ( * )  !! Unit table.
          integer(ip), intent(inout) :: nut  !! Number of entries in the unit table.
          integer(ip), intent(out) :: uindex  !! Row in the unit table that can be replaced.
+         integer(ip), intent(in), optional :: tabsiz  !! PEPPER: size of the unit table (default UTSIZE, 23)
       end subroutine zzddhgtu
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -20101,6 +20110,26 @@ module pepper_instance
 contains
 
    !> A new context for this instance.
+   !> Set the number of files each context keeps open at the same time (the
+   !> handle manager's unit table; default 23, as SPICELIB's UTSIZE). More
+   !> makes queries spread over many files faster (fewer files closed and
+   !> opened again), at the cost of file descriptors: up to this number per
+   !> context, within the limit of the operating system. At least 4 (three
+   !> units are reserved). Applies to the contexts that have not opened a
+   !> file yet; set it before creating contexts.
+   subroutine set_max_open_files(this, n)
+      class(pepper_spice), intent(inout) :: this  !! the instance
+      integer(ip), intent(in) :: n  !! the number of files (at least 4)
+      this%open_files_limit = max(n, 4_ip)
+   end subroutine set_max_open_files
+
+   !> The number of files each context keeps open at the same time (see
+   !> set_max_open_files).
+   pure integer(ip) function max_open_files(this) result(n)
+      class(pepper_spice), intent(in) :: this  !! the instance
+      n = this%open_files_limit
+   end function max_open_files
+
    function new_context(this) result(ctx)
       class(pepper_spice), target, intent(in) :: this  !! the instance (must have the target
                                                        !! attribute)

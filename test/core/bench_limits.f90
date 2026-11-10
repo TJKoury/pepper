@@ -154,6 +154,29 @@ contains
       end do
       call report('spkgeo, random body of all files', nqueries, now() - t0)
       call check_ctx(ctx, 'spkgeo, random body')
+
+      ! A context of an instance that keeps every file open (PEPPER: the
+      ! open files per context are a setting, 23 by default).
+      block
+         type(pepper_context) :: wide
+         call spice%set_max_open_files(nspk + 16)
+         wide = spice%new_context()
+         do k = 1, nqueries
+            i = random(nspk)
+            et = 1.0e3_wp*mod(k, 1000_ip)
+            call wide%spkgeo(first_body + i - 1, et, 'J2000', 0_ip, state, lt)
+         end do
+         t0 = now()
+         do k = 1, nqueries
+            i = random(nspk)
+            et = 1.0e3_wp*mod(k, 1000_ip)
+            call wide%spkgeo(first_body + i - 1, et, 'J2000', 0_ip, state, lt)
+            if (k <= 1000) err = max(err, position_error(state, i, et))
+         end do
+         call report('spkgeo, random body, all files open', nqueries, now() - t0)
+         call check_ctx(wide, 'spkgeo, random body, all files open')
+         call spice%set_max_open_files(23_ip)
+      end block
       call check(err < 1.0e-3_wp, 'spkgeo: the states are on the circles')
 
       t0 = now()

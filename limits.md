@@ -500,14 +500,59 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      - `TOOMANYPARTITIONS` and `TOOMANYCOEFFS` go;
      - `f_zzsc01` changes.
    - **TISBOD and BODEUL:** `maxang` (done).
-5. **Segment caches and memory:**
-   - The BSR segment and body tables start small and grow with no cap
-     (decision 3).
-   - The DSK segment table falls back or grows instead of failing:
-     `BUFFEROVERFLOW` and `SEGMENTTABLEFULL` go. `f_zzdskbsr` and `f_sbf`
-     change.
-   - DAFFA follows DAFAH.
-   - Target: a fresh context under 1 MB, from about 40 MB.
+5. **Segment caches and memory** (done):
+   - **Segment index** (`pepper_segment_index`): the segments of the
+     loaded SPK, PCK, CK and DSK files are indexed when a file is loaded,
+     by body (instrument for CK, central body for DSK), in SPICELIB's
+     search order: the file loaded last first, and within a file the last
+     segment first. The index is in the instance and only read by queries
+     (kernels are loaded before queries run).
+     - SPICELIB found a body's segments at its first query in each
+       context, reading the summaries of every loaded file (opening each),
+       and kept them in per-context tables (SPK and CK: 100000 segments,
+       about 10 MB each; PCK: 5000; DSK: 10000 and 100 bodies). Those
+       tables, their eviction and their "search without buffering"
+       fallback are gone: SPKSFS, PCKSFS, CKBSS/CKSNS, ZZDSKBSS/ZZDSKSNS
+       walk the body's list. pepper_segments.f90 went from 12929 to
+       about 6100 lines (NAIF's documentation kept).
+     - A context keeps only the segment returned last for each body and
+       its re-use interval (SPK, PCK, CK), as SPICELIB did, in a map that
+       grows; and the CK and DSK search cursors.
+     - Loading reads all the summaries of the file (SPICELIB read them
+       lazily). A file whose summaries cannot be read is not loaded.
+     - The DSK segment table cannot overflow: `BUFFEROVERFLOW` is gone
+       (`F_ZZDSKBSR` cases 30, 32 and 36 changed).
+     - Test: `test_limits` `test_search_order` (overlapping segments in
+       and across files, re-use intervals, a file loaded twice, unloads;
+       CK segments without data for a covered time) passes with the old
+       code too; `test_many_spks` now queries all 6000 bodies.
+   - **ZZDSKSBF** (per context): its segment table grows to hold the
+     segments of the bodies it buffers (SPICELIB: 10000 segments, 2.8 MB
+     per context, `SEGMENTTABLEFULL`; ZZDSKSBA keeps the check for callers
+     that pass their own arrays, as `F_SBF` does). The body table (10)
+     stays.
+   - **Unit table**: the files a context keeps open are an instance
+     setting, `spice%set_max_open_files(n)` (default 23, SPICELIB's
+     UTSIZE; at least 4), read when a context first opens a file.
+     ZZDDHGTU and ZZDDHF2H take the table's size as an optional argument
+     (default UTSIZE, for `F_DDHGTU` and the legacy interface). Test:
+     `test_limits` `test_open_files`.
+   - DAFFA follows DAFAH (done in phase 2).
+   - **Measured** (`bench-limits` full, release, both builds in temporary
+     worktrees, same session; µs per operation):
+
+     | Operation | Before (`7ac7cc5`) | After |
+     |---|---:|---:|
+     | `furnsh` (SPK) | 76.7 | 68.9 |
+     | `spkgeo`, one body | 0.58 | 0.38 |
+     | `spkgeo`, a random body among 2000 files | 205 | 13.8 |
+     | the same, `set_max_open_files(2016)` | | 0.80 |
+     | `unload` (SPK), 2000 loaded | 8.1 | 7.3 |
+     | first `spkgeo` in a new context | 1560 | 23 |
+
+     Whole run (100 contexts): 157 s → 129 s (system time 40 s → 9.7 s),
+     peak memory 1.11 GB → 0.60 GB. With 23 open files, the random query
+     is now the cost of reopening a file (the setting removes it).
 6. **Algorithm work buffers:**
    - **DSK:** `maxhit` and the `dskx02` voxel and plate lists. `xdda` returns an
      allocatable result, which removes the 1.6 MB stack frame.
@@ -607,10 +652,10 @@ or listed for later.
 | `closed_files` (PEPPER) | A list of every file ever closed, scanned on each open | Done: a string map | 2 |
 | ZZDAFGDR, ZZDAFGSR, ZZDAFGFR, ZZDASGRD, ZZDASGRI | Copy the file's name (255 characters) from the handle manager on every record read, without using it | Done: not copied | 2 |
 | DASCLS | Copies the set of all open DAS handles on every close, to test one | Done: one lookup | 2 |
-| SPKBSR, CKBSR, PCKBSR, ZZDSKBSR | The first query of a body in a context reads the summary records of every file loaded after the one holding it (opening each: the unit table keeps 23 open): O(N) file opens. Measured: a random body among 2000 SPKs, 200 µs against 0.55 µs for a known one; the first queries in `test_limits` (6000 SPKs) took minutes when every 7th body was queried | Index the segments by body when a file is loaded (instance-wide, read-only during queries); this also replaces the per-context segment caches | 5 |
-| DAFFA `dafbfs`, `dafbbs` | Walk the per-context list of searched DAFs (most recent first) to find the handle: O(DAFs searched) per search | Goes with the index above; or a handle map | 5 |
+| SPKBSR, CKBSR, PCKBSR, ZZDSKBSR | The first query of a body in a context reads the summary records of every file loaded after the one holding it (opening each: the unit table keeps 23 open): O(N) file opens. Measured: a random body among 2000 SPKs, 200 µs against 0.55 µs for a known one; the first queries in `test_limits` (6000 SPKs) took minutes when every 7th body was queried | Done: the segment index (205 → 13.8 µs; the rest is reopening files) | 5 |
+| DAFFA `dafbfs`, `dafbbs` | Walk the per-context list of searched DAFs (most recent first) to find the handle: O(DAFs searched) per search | Moot for the segment searches: they no longer search DAFs; loading searches the file just opened, the head of the list | 5 |
 | ZZDDHOPN (`zzddhf2h`) | Opens a file to identify it (inode/name) on every load, including reloads | Follows from the unload fix; consider identifying by name first | 2 |
-| SPKBSR + unit table | A random query among 2000 SPKs takes 192 µs against 1 µs for one body; probably the 23-unit LRU closing and reopening files (to confirm with a profile) | Measure; a larger unit table (an instance setting, decision 3), or keep files open | 5 |
+| SPKBSR + unit table | A random query among 2000 SPKs takes 192 µs against 1 µs for one body; probably the 23-unit LRU closing and reopening files (to confirm with a profile) | Done: `set_max_open_files` (13.8 → 0.80 µs with every file open) | 5 |
 | `wrline` (error reports, `pepper_output`) | Looks up the file by name (`inquire`) for every line written | Keep the unit with the device in the context | later (only when reports go to a file) |
 | POOL (GDPOOL, GCPOOL, GIPOOL, DTPOOL) | Values in linked lists: a lookup walks the list from its head to START, and DTPOOL counts the values by walking them | Done: arrays (slices) | 3 |
 | POOL (GNPOOL, WRPOOL) | Scan all 26003 hash buckets on every call; CCIFRM and KPLFRM page through the matches with START, one scan per page | Done: the slots in use | 3 |
@@ -618,7 +663,7 @@ or listed for later.
 | FRAMEX (NAMFRM) | Adds kernel frame names to its cache as `FRAME_<NAME>` but looks up `<NAME>`: every lookup of a kernel frame by name reads the pool | Done: cached under the name | 4 |
 | ZZBODTRN (BODDEF, `sync_boddefs`) | Each definition rebuilds the maps of all the definitions (SPICELIB's ZZBODINI), and a context replays all of the instance's BODDEFs when they change: O(n**2) for n definitions | Update the maps incrementally | later |
 | ZZBODTRN, FRAMEX (per context) | Every context builds its own tables of body names and kernel frames from the pool | Build them once per instance when the pool changes (read-only during queries) | 5 |
-| BSR tables | 10 MB each, allocated and zeroed in full by the first query of a context: 2.5 ms and about 20 MB per context | Start small, grow (decision 3) | 5 |
+| BSR tables | 10 MB each, allocated and zeroed in full by the first query of a context: 2.5 ms and about 20 MB per context | Done: replaced by the index; a context keeps a growing re-use map (first query 1560 → 23 µs) | 5 |
 | CCIFRM | Scans the pool with GNPOOL in batches of 100 and, because GIPOOL overwrites the batch count, restarts each batch one name later: each `FRAME_*_CLASS` name is examined up to 100 times, and each batch is a full pool scan | Done: names fetched once | 4 |
 
 ## Testing

@@ -4866,7 +4866,7 @@ contains
 !     and then INQUIRE on every file in the table.  To do this, we
 !     need a unit. Get one.
 !
-      call zzddhgtu ( ctx, utcst, uthan, utlck, utlun, nut, uindex )
+      call zzddhgtu ( ctx, utcst, uthan, utlck, utlun, nut, uindex, tabsiz )
 
       if ( ctx%failed() ) then
          handle = 0
@@ -5274,7 +5274,7 @@ contains
 !     Local Variables
 !
       integer(ip)           i
-      integer(ip)           orderv ( utsize )
+      integer(ip), allocatable :: orderv ( : )
 
       logical               done
 
@@ -5319,6 +5319,7 @@ contains
 !     If we reach here, then the table contains at least one entry.
 !     Order the table rows by cost.
 !
+      allocate ( orderv ( max ( nut, 1_ip ) ) )
       call orderi ( utcst, nut, orderv )
 
 !
@@ -5347,7 +5348,7 @@ contains
 !     Now if no '0' cost rows exist, check to see if we can
 !     expand the table.
 !
-      if ( nut < utsize ) then
+      if ( nut < size_of_table ( ) ) then
 
 !
 !        Now increment NUT and set UINDEX.
@@ -5430,6 +5431,12 @@ contains
       if ( utlun(uindex) /= -1 ) close ( unit = utlun(uindex) )
 
       return
+      contains
+         !> The size of the unit table: TABSIZ, or UTSIZE.
+         pure integer(ip) function size_of_table ( ) result ( n )
+            n = utsize
+            if ( present ( tabsiz ) ) n = tabsiz
+         end function size_of_table
       end procedure zzddhgtu
 
 !$Procedure ZZDDHRMU ( Private --- DDH Remove Unit )
@@ -6329,7 +6336,7 @@ contains
       integer(ip)           findex
       integer(ip)           uindex
       if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
-      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
+      call units_ready ( ctx )
       call units_check ( ctx )
       associate ( ft => ctx%spice%zzddhman, &
                   nft => ctx%spice%zzddhman%nft, &
@@ -6467,7 +6474,7 @@ contains
 !
          locked = zzddhclu ( ctx, utlck, nut )
 
-         if ( locked >= (utsize - rsvunt) ) then
+         if ( locked >= (size ( utlun, kind=ip ) - rsvunt) ) then
 
 !
 !           Recall HANDLE was initialized to 0, and this invalid
@@ -6522,7 +6529,7 @@ contains
 !
          call zzddhf2h ( ctx, locfnm,  ft,     utcst, &
                          uthan,   utlck,  utlun,  nut,   inqext, &
-                         inqopn,  inqhan, locfnd, mnm                 )
+                         inqopn,  inqhan, locfnd, mnm, size ( utlun, kind=ip ) )
 
 !
 !        First, check FAILED(), and return if anything has gone awry.
@@ -6693,7 +6700,7 @@ contains
 !
 !     Free up a logical unit in the UNIT table for our usage.
 !
-      call zzddhgtu ( ctx, utcst, uthan, utlck, utlun, nut, uindex )
+      call zzddhgtu ( ctx, utcst, uthan, utlck, utlun, nut, uindex, size ( utlun, kind=ip ) )
 
 !
 !     Check FAILED() since ZZDDHGTU may have invoked GETLUN.
@@ -7203,7 +7210,7 @@ contains
       integer(ip)           findex
       integer(ip)           uindex
       if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
-      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
+      call units_ready ( ctx )
       call units_check ( ctx )
       associate ( ft => ctx%spice%zzddhman, &
                   nft => ctx%spice%zzddhman%nft, &
@@ -7538,7 +7545,7 @@ contains
       integer(ip)           findex
       integer(ip)           uindex
       if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
-      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
+      call units_ready ( ctx )
       call units_check ( ctx )
       associate ( ft => ctx%spice%zzddhman, &
                   nft => ctx%spice%zzddhman%nft, &
@@ -7653,7 +7660,7 @@ contains
 !
 !        We need a unit from the unit table, get one.
 !
-         call zzddhgtu ( ctx, utcst, uthan, utlck, utlun, nut, uindex )
+         call zzddhgtu ( ctx, utcst, uthan, utlck, utlun, nut, uindex, size ( utlun, kind=ip ) )
 
 !
 !        Check FAILED, since ZZDDHGTU may have invoked GETLUN.
@@ -7752,7 +7759,7 @@ contains
 !
          locked = zzddhclu ( ctx, utlck, nut )
 
-         if ( locked >= ( utsize - rsvunt - scrunt ) ) then
+         if ( locked >= ( size ( utlun, kind=ip ) - rsvunt - scrunt ) ) then
 
             unit = 0
 
@@ -7899,7 +7906,7 @@ contains
       integer(ip)           findex
       integer(ip)           uindex
       if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
-      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
+      call units_ready ( ctx )
       call units_check ( ctx )
       associate ( ft => ctx%spice%zzddhman, &
                   nft => ctx%spice%zzddhman%nft, &
@@ -8161,7 +8168,7 @@ contains
       integer(ip)           findex
       integer(ip)           uindex
       if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
-      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
+      call units_ready ( ctx )
       call units_check ( ctx )
       associate ( ft => ctx%spice%zzddhman, &
                   nft => ctx%spice%zzddhman%nft, &
@@ -8340,7 +8347,7 @@ contains
       integer(ip)           findex
       integer(ip)           uindex
       if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
-      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
+      call units_ready ( ctx )
       call units_check ( ctx )
       associate ( ft => ctx%spice%zzddhman, &
                   nft => ctx%spice%zzddhman%nft, &
@@ -8507,7 +8514,7 @@ contains
       integer(ip)           findex
       integer(ip)           uindex
       if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
-      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
+      call units_ready ( ctx )
       call units_check ( ctx )
       associate ( ft => ctx%spice%zzddhman, &
                   nft => ctx%spice%zzddhman%nft, &
@@ -8559,7 +8566,7 @@ contains
 !
       call zzddhf2h ( ctx, locfnm,  ft,    utcst, &
                       uthan,   utlck,  utlun, nut,   inqext, &
-                      inqopn,  inqhan, found, mnm                 )
+                      inqopn,  inqhan, found, mnm, size ( utlun, kind=ip ) )
 
 !
 !     Check found and set HANDLE if we have got one.  No need to
@@ -8685,7 +8692,7 @@ contains
       logical               platok
       integer(ip)           findex
       integer(ip)           uindex
-      if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
+      call units_ready ( ctx )
       call units_check ( ctx )
       associate ( first => ctx%zzddhman_units%first, &
                   stramh => ctx%zzddhman_units%stramh, &
@@ -8744,5 +8751,20 @@ contains
       return
       end associate
       end procedure zzddhluh
+
+
+   !> PEPPER: allocate the unit table of a context, with the instance's
+   !> max_open_files entries (SPICELIB: UTSIZE).
+   subroutine units_ready ( ctx )
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip) :: n
+      if ( allocated ( ctx%zzddhman_units ) ) return
+      allocate ( ctx%zzddhman_units )
+      n = ctx%spice%open_files_limit
+      allocate ( ctx%zzddhman_units%utcst(n), source = 0_ip )
+      allocate ( ctx%zzddhman_units%uthan(n), source = 0_ip )
+      allocate ( ctx%zzddhman_units%utlck(n), source = .false. )
+      allocate ( ctx%zzddhman_units%utlun(n), source = 0_ip )
+   end subroutine units_ready
 
 end submodule pepper_files

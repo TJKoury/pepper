@@ -35,6 +35,8 @@ program test_limits
    call test_sclk()
    call test_nutation()
    call test_frame_names()
+   call test_search_order()
+   call test_open_files()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -218,10 +220,8 @@ contains
    !> summaries of every file loaded after its own, see limits.md.)
    subroutine test_many_spks()
       integer(ip), parameter :: n = 6000, first = 910001
-      integer(ip), parameter :: checked(14) = [1, 2, 1000, 2999, 3000, 4999, 5000, 5001, 5299, &
-                                              5300, 5301, 5302, 5999, 6000]
       real(wp) :: state(6), lt, err
-      integer(ip) :: i, k, count
+      integer(ip) :: i, count
       logical :: ok
       do i = 1, n
          call write_spk(ctx, kernel_name(prefix // 'many_', i, '.bsp'), first + i - 1, 0_ip, &
@@ -235,9 +235,10 @@ contains
       call check_ok('many SPKs: furnsh')
       call ctx%ktotal('SPK', count)
       call check(count == n, 'many SPKs: all loaded')
+      ! Every body (the first query of each read the summaries of every
+      ! file loaded after its own before phase 5).
       err = 0
-      do k = 1, size(checked)
-         i = checked(k)
+      do i = 1, n
          call ctx%spkgeo(first + i - 1, 1.0e3_wp, 'J2000', 0_ip, state, lt)
          err = max(err, position_error(state, 1.0e5_wp, 1.0e-3_wp*i, 1.0e3_wp))
       end do
@@ -251,8 +252,7 @@ contains
       call ctx%ktotal('SPK', count)
       call check(count == n/2, 'many SPKs: half unloaded')
       ok = .true.
-      do k = 1, size(checked)
-         i = checked(k)
+      do i = 1, n
          call ctx%spkgeo(first + i - 1, 1.0e3_wp, 'J2000', 0_ip, state, lt)
          if (mod(i, 2_ip) == 0) then
             ok = ok .and. ctx%failed()
@@ -838,5 +838,183 @@ contains
       call ctx%pipool(trim(f) // 'CENTER', 1_ip, [399_ip])
       call ctx%pcpool(trim(f) // 'ALIGNED_WITH', 1_ip, [base])
    end subroutine define_switch
+
+   !> The number of files a context keeps open (SPICELIB's unit table,
+   !> UTSIZE 23) is an instance setting: a context of an instance set to
+   !> 64 queries 60 SPKs in turn, twice; the setting has a minimum of 4.
+   subroutine test_open_files()
+      integer(ip), parameter :: n = 60, first = 940001
+      type(pepper_spice), target :: spice2
+      type(pepper_context) :: ctx2
+      real(wp) :: state(6), lt, err
+      integer(ip) :: i, pass
+      call check(spice2%max_open_files() == 23, 'open files: default')
+      call spice2%set_max_open_files(2_ip)
+      call check(spice2%max_open_files() == 4, 'open files: minimum')
+      call spice2%set_max_open_files(64_ip)
+      call check(spice2%max_open_files() == 64, 'open files: set')
+      ctx2 = spice2%new_context()
+      do i = 1, n
+         call write_spk(ctx2, kernel_name(prefix // 'open_', i, '.bsp'), first + i - 1, 0_ip, &
+                        1.0e5_wp, 1.0e-3_wp*i)
+         call ctx2%furnsh(kernel_name(prefix // 'open_', i, '.bsp'))
+      end do
+      err = 0
+      do pass = 1, 2
+         do i = 1, n
+            call ctx2%spkgeo(first + i - 1, 1.0e3_wp, 'J2000', 0_ip, state, lt)
+            err = max(err, position_error(state, 1.0e5_wp, 1.0e-3_wp*i, 1.0e3_wp))
+         end do
+      end do
+      call check(.not. ctx2%failed() .and. err < 1.0e-3_wp, 'open files: queries')
+      call ctx2%kclear()
+      do i = 1, n
+         call delete_file(kernel_name(prefix // 'open_', i, '.bsp'))
+      end do
+   end subroutine test_open_files
+
+   !> The order in which segments are searched (SPICELIB's): the file
+   !> loaded last first, and within a file the last segment first; a file
+   !> loaded again moves to the top, and unloading it undoes the last load
+   !> (the file goes back to its first place); unloading a file loaded once
+   !> removes its segments.
+   !> The queries move back and forth so that the segment returned last for
+   !> a body is reused only inside its re-use interval. SPK: the radius of
+   !> the state tells the segment. CK (type 2, whose segments may cover a
+   !> time without data for it, so the search goes on to the next segment):
+   !> the rotation angle tells the segment.
+   subroutine test_search_order()
+      character(*), parameter :: spka = prefix // 'order_a.bsp', spkb = prefix // 'order_b.bsp'
+      character(*), parameter :: cka = prefix // 'order_a.bc', ckb = prefix // 'order_b.bc'
+      integer(ip), parameter :: body = 930001, inst = -930000
+      real(wp), parameter :: times(10) = [100, 600, 850, 950, 1200, 100, 850, 1499, 501, 1600]
+      real(wp), parameter :: radii(10) = [1000, 2000, 3000, 2000, 2000, 1000, 3000, 2000, 2000, 0]
+      integer(ip) :: i
+      logical :: ok
+      call write_segments(spka, body, [0.0_wp, 500.0_wp], [1000.0_wp, 1500.0_wp], [1000.0_wp, 2000.0_wp])
+      call write_segments(spkb, body, [800.0_wp], [900.0_wp], [3000.0_wp])
+      call ctx%furnsh(spka)
+      call ctx%furnsh(spkb)
+      call check_ok('search order: furnsh')
+      ok = .true.
+      do i = 1, size(times)
+         ok = ok .and. radius_at(body, times(i)) == radii(i)
+      end do
+      call check(ok, 'search order: SPK, two files, overlapping segments')
+      call ctx%furnsh(spka)
+      call check(radius_at(body, 850.0_wp) == 2000 .and. radius_at(body, 100.0_wp) == 1000 .and. &
+                 radius_at(body, 880.0_wp) == 2000, 'search order: SPK, a file loaded again is searched first')
+      ! UNLOAD undoes the last load: the file is back below the other.
+      call ctx%unload(spka)
+      call check(radius_at(body, 850.0_wp) == 3000 .and. radius_at(body, 100.0_wp) == 1000 .and. &
+                 radius_at(body, 899.0_wp) == 3000, 'search order: SPK, the second load undone')
+      call ctx%unload(spka)
+      call check(radius_at(body, 850.0_wp) == 3000 .and. radius_at(body, 100.0_wp) == 0 .and. &
+                 radius_at(body, 899.0_wp) == 3000, 'search order: SPK, unloaded')
+      call ctx%kclear()
+      call check_ok('search order: SPK')
+
+      call write_ck(cka, inst, [0.0_wp], [100.0_wp], [0.0_wp], [100.0_wp], [10.0_wp])
+      call write_ck(ckb, inst, [0.0_wp], [100.0_wp], [40.0_wp], [60.0_wp], [30.0_wp])
+      call ctx%furnsh(cka)
+      call ctx%furnsh(ckb)
+      call check_ok('search order: CK furnsh')
+      call check(angle_at(inst, 50.0_wp) == 30 .and. angle_at(inst, 20.0_wp) == 10 .and. angle_at(inst, 55.0_wp) == 30 .and. &
+                 angle_at(inst, 70.0_wp) == 10 .and. angle_at(inst, 150.0_wp) == 0 .and. angle_at(inst, 45.0_wp) == 30, &
+                 'search order: CK, the search goes on past a segment without data')
+      call ctx%furnsh(cka)
+      call check(angle_at(inst, 50.0_wp) == 10 .and. angle_at(inst, 20.0_wp) == 10, 'search order: CK, a file loaded again')
+      call ctx%unload(cka)
+      call check(angle_at(inst, 20.0_wp) == 10 .and. angle_at(inst, 50.0_wp) == 30, &
+                 'search order: CK, the second load undone')
+      call ctx%unload(cka)
+      call check(angle_at(inst, 20.0_wp) == 0 .and. angle_at(inst, 50.0_wp) == 30, 'search order: CK, unloaded')
+      call ctx%kclear()
+      call check_ok('search order: CK')
+      call delete_file(spka)
+      call delete_file(spkb)
+      call delete_file(cka)
+      call delete_file(ckb)
+   end subroutine test_search_order
+
+   !> The radius of the body's state at ET (0 if it has none).
+   real(wp) function radius_at(body, et) result(r)
+      integer(ip), intent(in) :: body  !! the body
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp) :: state(6), lt
+      call ctx%spkgeo(body, et, 'J2000', 0_ip, state, lt)
+      if (ctx%failed()) then
+         call ctx%reset()
+         r = 0
+      else
+         r = anint(norm2(state(1:3)))
+      end if
+   end function radius_at
+
+   !> The rotation angle (degrees) of the instrument at TICKS (0 if it
+   !> has no pointing).
+   real(wp) function angle_at(inst, ticks) result(a)
+      integer(ip), intent(in) :: inst  !! the instrument
+      real(wp), intent(in) :: ticks  !! the encoded SCLK time
+      real(wp) :: cmat(3, 3), clkout
+      logical :: found
+      call ctx%ckgp(inst, ticks, 0.0_wp, 'J2000', cmat, clkout, found)
+      a = 0
+      if (found) a = anint(abs(atan2(cmat(1, 2), cmat(1, 1)))*180/acos(-1.0_wp))
+   end function angle_at
+
+   !> Write an SPK whose segments for the body (in this order) cover
+   !> [T0, T1] with a circle of radius R.
+   subroutine write_segments(file, body, t0, t1, r)
+      character(*), intent(in) :: file  !! the file
+      integer(ip), intent(in) :: body  !! the body
+      real(wp), intent(in) :: t0(:)  !! start of each segment
+      real(wp), intent(in) :: t1(:)  !! end of each segment
+      real(wp), intent(in) :: r(:)  !! radius of each segment
+      integer, parameter :: m = 11
+      real(wp) :: epochs(m), states(6, m), sum(5)
+      integer(ip) :: h
+      integer :: j, k
+      call delete_file(file)
+      call ctx%dafonw(file, 'SPK', 2_ip, 6_ip, 'PEPPER test SPK', 0_ip, h)
+      do j = 1, size(t0)
+         epochs = [(t0(j) + (t1(j) - t0(j))*(k - 1)/(m - 1), k = 1, m)]
+         do k = 1, m
+            states(:, k) = circle_state(r(j), 0.0_wp, epochs(k))
+         end do
+         call ctx%dafps(2_ip, 6_ip, [t0(j), t1(j)], [body, 0_ip, 1_ip, 9_ip, 0_ip, 0_ip], sum)
+         call ctx%dafbna(h, sum, 'ORDER')
+         call ctx%dafada(reshape(states, [6*m]), int(6*m, ip))
+         call ctx%dafada(epochs, int(m, ip))
+         call ctx%dafada([7.0_wp, real(m, wp)], 2_ip)
+         call ctx%dafena()
+      end do
+      call ctx%dafcls(h)
+   end subroutine write_segments
+
+   !> Write a CK (type 2) whose segments for the instrument cover
+   !> [B, E], each with one pointing interval [S, T] of rotation ANGLE
+   !> (degrees) about Z.
+   subroutine write_ck(file, inst, b, e, s, t, angle)
+      character(*), intent(in) :: file  !! the file
+      integer(ip), intent(in) :: inst  !! the instrument
+      real(wp), intent(in) :: b(:)  !! start of each segment
+      real(wp), intent(in) :: e(:)  !! end of each segment
+      real(wp), intent(in) :: s(:)  !! start of each segment's interval
+      real(wp), intent(in) :: t(:)  !! end of each segment's interval
+      real(wp), intent(in) :: angle(:)  !! rotation of each segment (degrees)
+      integer(ip) :: h
+      integer :: j
+      real(wp) :: half
+      call delete_file(file)
+      call ctx%ckopn(file, 'PEPPER test CK', 0_ip, h)
+      do j = 1, size(b)
+         half = angle(j)*acos(-1.0_wp)/360
+         call ctx%ckw02(h, b(j), e(j), inst, 'J2000', 'ORDER', 1_ip, [s(j)], [t(j)], &
+                        reshape([cos(half), 0.0_wp, 0.0_wp, sin(half)], [4, 1]), &
+                        reshape([0.0_wp, 0.0_wp, 0.0_wp], [3, 1]), [1.0_wp])
+      end do
+      call ctx%ckcls(h)
+   end subroutine write_ck
 
 end program test_limits

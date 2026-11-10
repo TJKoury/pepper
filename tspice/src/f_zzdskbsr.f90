@@ -1932,9 +1932,15 @@
 !
 !     Use ZZDSKNOT to force a complete search.
 !
+!     PEPPER: the segments are indexed when the files are loaded, with
+!     no segment table to overflow: the search examines every earth
+!     segment and finds none (ZZDSKNOT accepts none). SPICELIB signaled
+!     SPICE(BUFFEROVERFLOW).
+!
 
       CALL ZZDSKSNS ( ZZDSKNOT, HANDLE, DLADSC, DSKDSC, FOUND )
-      CALL CHCKXC   ( .TRUE., 'SPICE(BUFFEROVERFLOW)', OK )
+      CALL CHCKXC   ( .FALSE., ' ', OK )
+      CALL CHCKSL   ( 'FOUND', FOUND, .FALSE., OK )
 
 
 
@@ -2025,8 +2031,14 @@
       CALL ZZDSKBSS ( BODYID )
       CALL CHCKXC   ( .FALSE., ' ', OK )
 
+!
+!     PEPPER: no segment table to overflow (SPICELIB signaled
+!     SPICE(BUFFEROVERFLOW)); the search finds no segment ZZDSKNOT
+!     accepts.
+!
       CALL ZZDSKSNS ( ZZDSKNOT, HANDLE, DLADSC, DSKDSC, FOUND )
-      CALL CHCKXC   ( .TRUE., 'SPICE(BUFFEROVERFLOW)', OK )
+      CALL CHCKXC   ( .FALSE., ' ', OK )
+      CALL CHCKSL   ( 'FOUND', FOUND, .FALSE., OK )
 
 !
 !     Unload the last earth DSK.
@@ -2280,8 +2292,13 @@
       CALL ZZDSKLSF ( OVRDSK, OVRHAN )
       CALL CHCKXC   ( .FALSE., ' ', OK )
 
+!
+!     PEPPER: the segments of the file are indexed when it is loaded; a
+!     body may have any number of segments (SPICELIB signaled
+!     SPICE(BUFFEROVERFLOW) for more than STSIZE).
+!
       CALL ZZDSKBBL ( BODYID )
-      CALL CHCKXC   ( .TRUE., 'SPICE(BUFFEROVERFLOW)', OK )
+      CALL CHCKXC   ( .FALSE., ' ', OK )
 
 
 !

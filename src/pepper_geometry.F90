@@ -82976,7 +82976,7 @@ contains
       implicit none
       integer(ip), parameter :: maxdc = 1
       integer(ip), parameter :: maxic = 1
-      integer(ip), parameter :: stsize = 10000
+      integer(ip) :: stsize
       integer(ip), parameter :: btsize = 10
       real(wp)              locdc  ( maxdc )
       integer(ip)           bix
@@ -82985,10 +82985,11 @@ contains
       integer(ip)           nseg
       integer(ip)           segidx
       logical               update
-      if ( .not. allocated ( ctx%zzdsksbf_state ) ) then
-         allocate ( ctx%zzdsksbf_state )
-         call init_zzdsksbf_state ( ctx%zzdsksbf_state )
-      end if
+!
+!     PEPPER: the segment table grows to hold the body's segments.
+!
+      call zzdsksbf_room ( ctx, bodyid )
+      stsize = size ( ctx%zzdsksbf_state%sthan, kind=ip )
       associate ( bsrctr => ctx%zzdsksbf_state%bsrctr, &
                   btbody => ctx%zzdsksbf_state%btbody, &
                   btnbod => ctx%zzdsksbf_state%btnbod, &
@@ -83239,7 +83240,7 @@ contains
       implicit none
       integer(ip), parameter :: maxdc = 1
       integer(ip), parameter :: maxic = 1
-      integer(ip), parameter :: stsize = 10000
+      integer(ip) :: stsize
       integer(ip), parameter :: btsize = 10
       real(wp)              locdc  ( maxdc )
       integer(ip)           bix
@@ -83248,10 +83249,11 @@ contains
       integer(ip)           nseg
       integer(ip)           segidx
       logical               update
-      if ( .not. allocated ( ctx%zzdsksbf_state ) ) then
-         allocate ( ctx%zzdsksbf_state )
-         call init_zzdsksbf_state ( ctx%zzdsksbf_state )
-      end if
+!
+!     PEPPER: the segment table grows to hold the body's segments.
+!
+      call zzdsksbf_room ( ctx, bodyid )
+      stsize = size ( ctx%zzdsksbf_state%sthan, kind=ip )
       associate ( bsrctr => ctx%zzdsksbf_state%bsrctr, &
                   btbody => ctx%zzdsksbf_state%btbody, &
                   btnbod => ctx%zzdsksbf_state%btnbod, &
@@ -83489,7 +83491,7 @@ contains
       implicit none
       integer(ip), parameter :: maxdc = 1
       integer(ip), parameter :: maxic = 1
-      integer(ip), parameter :: stsize = 10000
+      integer(ip) :: stsize
       integer(ip), parameter :: btsize = 10
       real(wp)              locdc  ( maxdc )
       integer(ip)           bix
@@ -83498,10 +83500,11 @@ contains
       integer(ip)           nseg
       integer(ip)           segidx
       logical               update
-      if ( .not. allocated ( ctx%zzdsksbf_state ) ) then
-         allocate ( ctx%zzdsksbf_state )
-         call init_zzdsksbf_state ( ctx%zzdsksbf_state )
-      end if
+!
+!     PEPPER: the segment table grows to hold the body's segments.
+!
+      call zzdsksbf_room ( ctx, bodyid )
+      stsize = size ( ctx%zzdsksbf_state%sthan, kind=ip )
       associate ( bsrctr => ctx%zzdsksbf_state%bsrctr, &
                   btbody => ctx%zzdsksbf_state%btbody, &
                   btnbod => ctx%zzdsksbf_state%btnbod, &
@@ -107281,5 +107284,36 @@ contains
       return
       end associate
       end procedure termpt
+
+
+   !> PEPPER: allocate the ZZDSKSBF state of a context, and grow its segment
+   !> table so that the segments of BODYID fit after those already in it
+   !> (the number of the body's segments is known from the index of the
+   !> loaded DSK files).
+   subroutine zzdsksbf_room ( ctx, bodyid )
+      use pepper_inc_dla, only: dladsz
+      use pepper_inc_dskdsc, only: dskdsz
+      use pepper_containers, only: grow
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! the body to be added
+      integer(ip) :: n, need
+      if ( .not. allocated ( ctx%zzdsksbf_state ) ) then
+         allocate ( ctx%zzdsksbf_state )
+         call init_zzdsksbf_state ( ctx%zzdsksbf_state )
+      end if
+      n = 0
+      if ( allocated ( ctx%spice%zzdskbsr ) ) then
+         n = ctx%spice%zzdskbsr%index%count ( ctx%spice%zzdskbsr%index%list ( bodyid ) )
+      end if
+      associate ( st => ctx%zzdsksbf_state )
+         need = max ( 16_ip, st%stfree - 1 + n )
+         call grow ( st%sthan, need )
+         call grow ( st%strad, need )
+         call grow ( st%stctr, need, 3_ip )
+         call grow ( st%stoff, need, 3_ip )
+         call grow ( st%stdlad, need, int ( dladsz, ip ) )
+         call grow ( st%stdscr, need, int ( dskdsz, ip ) )
+      end associate
+   end subroutine zzdsksbf_room
 
 end submodule pepper_geometry
