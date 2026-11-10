@@ -1006,10 +1006,10 @@ contains
       use pepper_inc_frmtyp
       use pepper_inc_zzctr
       implicit none
+      real(wp), allocatable :: sinth(:), costh(:), dsinth(:), dcosth(:)
       real(wp) :: dpval_1(1)  !! one-element copy of dpval (array argument)
       integer(ip) :: pcref_1(1)  !! one-element copy of pcref (array argument)
       real(wp) :: pckepc_1(1)  !! one-element copy of pckepc (array argument)
-      integer(ip), parameter :: maxang = 200
       integer(ip), parameter :: mxphas = 4
       integer(ip), parameter :: mxpoly = 3
       integer(ip), parameter :: namlen = 32
@@ -1074,21 +1074,17 @@ contains
       integer(ip) :: refid
       character(namlen) :: item
       real(wp) :: theta
-      real(wp) :: tcoef  ( mxphas * maxang )
+      real(wp), allocatable :: tcoef(:)
       real(wp) :: tipm   (     3, 3  )
-      real(wp) :: dc     (    maxang )
-      real(wp) :: wc     (    maxang )
+      real(wp), allocatable :: dc(:)
+      real(wp), allocatable :: wc(:)
       real(wp) :: dtipm  (     3,  3 )
-      real(wp) :: ac     (    maxang )
+      real(wp), allocatable :: ac(:)
       if ( .not. allocated ( ctx%tisbod_state ) ) then
          allocate ( ctx%tisbod_state )
          call init_tisbod_state ( ctx%tisbod_state )
       end if
-      associate ( costh => ctx%tisbod_state%costh, &
-                  d => ctx%tisbod_state%d, &
-                  dcosth => ctx%tisbod_state%dcosth, &
-                  dsinth => ctx%tisbod_state%dsinth, &
-                  sinth => ctx%tisbod_state%sinth, &
+      associate ( d => ctx%tisbod_state%d, &
                   t => ctx%tisbod_state%t, &
                   j2code => ctx%tisbod_state%j2code, &
                   first => ctx%tisbod_state%first, &
@@ -1096,20 +1092,17 @@ contains
                   bidlst => ctx%tisbod_state%bidlst, &
                   bidpol => ctx%tisbod_state%bidpol, &
                   bidids => ctx%tisbod_state%bidids, &
-                  bac => ctx%tisbod_state%bac, &
-                  bdc => ctx%tisbod_state%bdc, &
                   bdcoef => ctx%tisbod_state%bdcoef, &
                   bpckep => ctx%tisbod_state%bpckep, &
                   brcoef => ctx%tisbod_state%brcoef, &
-                  btcoef => ctx%tisbod_state%btcoef, &
-                  bwc => ctx%tisbod_state%bwc, &
                   bwcoef => ctx%tisbod_state%bwcoef, &
                   bna => ctx%tisbod_state%bna, &
                   bnd => ctx%tisbod_state%bnd, &
                   bnphas => ctx%tisbod_state%bnphas, &
                   bnphco => ctx%tisbod_state%bnphco, &
                   bnw => ctx%tisbod_state%bnw, &
-                  bpcref => ctx%tisbod_state%bpcref )
+                  bpcref => ctx%tisbod_state%bpcref, &
+                  bang => ctx%tisbod_state%bang )
       if ( ctx%failed() ) return
 
 !
@@ -1392,6 +1385,14 @@ contains
             nd     = 0
             nw     = 0
 
+!
+!           PEPPER: the arrays have the sizes of the kernel variables
+!           (SPICELIB: MAXANG, 200, values per item).
+!
+            allocate ( tcoef(max(1_ip, body_item_size(ctx, refid, 'NUT_PREC_ANGLES'))), source=0.0_wp )
+            allocate ( ac(max(1_ip, body_item_size(ctx, body, 'NUT_PREC_RA'))), source=0.0_wp )
+            allocate ( dc(max(1_ip, body_item_size(ctx, body, 'NUT_PREC_DEC'))), source=0.0_wp )
+            allocate ( wc(max(1_ip, body_item_size(ctx, body, 'NUT_PREC_PM'))), source=0.0_wp )
             item = 'NUT_PREC_ANGLES'
 
             if ( bodfnd ( ctx, refid, item ) ) then
@@ -1441,7 +1442,7 @@ contains
 !              loaded, but we will need the actual limit on the second
 !              dimension. That is --- NTHETA / NPHSCO.
 !
-               call bodvcd ( ctx, refid, item, maxang*mxphas, ntheta, tcoef )
+               call bodvcd ( ctx, refid, item, size(tcoef, kind=ip), ntheta, tcoef )
 
                if ( ctx%failed() ) return
 
@@ -1461,7 +1462,7 @@ contains
 
             if ( bodfnd ( ctx, body, item ) ) then
 
-               call bodvcd ( ctx, body, item, maxang, na, ac )
+               call bodvcd ( ctx, body, item, size(ac, kind=ip), na, ac )
 
                if ( ctx%failed() ) return
 
@@ -1476,7 +1477,7 @@ contains
 
             if ( bodfnd ( ctx, body, item ) ) then
 
-               call bodvcd ( ctx, body, item, maxang, nd, dc )
+               call bodvcd ( ctx, body, item, size(dc, kind=ip), nd, dc )
 
                if ( ctx%failed() ) return
 
@@ -1490,7 +1491,7 @@ contains
 
             if ( bodfnd ( ctx, body, item ) ) then
 
-               call bodvcd ( ctx, body, item, maxang, nw, wc )
+               call bodvcd ( ctx, body, item, size(wc, kind=ip), nw, wc )
 
                if ( ctx%failed() ) return
 
@@ -1540,10 +1541,10 @@ contains
             call moved( rcoef( 0 ), mxpoly,        brcoef( 0, at ) )
             call moved( dcoef( 0 ), mxpoly,        bdcoef( 0, at ) )
             call moved( wcoef( 0 ), mxpoly,        bwcoef( 0, at ) )
-            call moved( tcoef( 1 ), maxang*nphsco, btcoef( 1, at ) )
-            call moved( ac   ( 1 ), maxang,        bac   ( 1, at ) )
-            call moved( dc   ( 1 ), maxang,        bdc   ( 1, at ) )
-            call moved( wc   ( 1 ), maxang,        bwc   ( 1, at ) )
+            bang(at)%t = tcoef(1:ntheta)
+            bang(at)%a = ac(1:na)
+            bang(at)%d = dc(1:nd)
+            bang(at)%w = wc(1:nw)
 
          end if
 
@@ -1575,6 +1576,7 @@ contains
 !        Compute the nutations and librations (and their derivatives)
 !        as appropriate.
 !
+         allocate ( sinth(bnphas(at)), costh(bnphas(at)), dsinth(bnphas(at)), dcosth(bnphas(at)) )
          do i = 1, bnphas(at)
 
             if ( bnphco(at) == 2 ) then
@@ -1586,8 +1588,8 @@ contains
                k = 1 + 2*(i-1)
                m = 1 + k
 
-               theta  = ( btcoef(k,at) + tc * btcoef(m,at) ) * rpd
-               dtheta = ( btcoef(m,at) / t ) * rpd
+               theta  = ( bang(at)%t(k) + tc * bang(at)%t(m) ) * rpd
+               dtheta = ( bang(at)%t(m) / t ) * rpd
 
             else
 !
@@ -1603,7 +1605,7 @@ contains
 !
                   k     = j + bnphco(at)*(i-1)
 
-                  theta = theta  + ( tc**(j-1) * btcoef(k,at) )
+                  theta = theta  + ( tc**(j-1) * bang(at)%t(k) )
 
                end do
 
@@ -1612,7 +1614,7 @@ contains
                k = 1 + bnphco(at)*(i-1)
                m = 1 + k
 
-               dtheta = btcoef(m,at) / t
+               dtheta = bang(at)%t(m) / t
 
                do j = 3, bnphco(at)
 
@@ -1624,7 +1626,7 @@ contains
 !                 the result to the current sum.
 !
                   dtheta = dtheta + &
-                           ( l * tc**(l-1) * btcoef(k,at) ) / t**(l-1)
+                           ( l * tc**(l-1) * bang(at)%t(k) ) / t**(l-1)
                end do
 
                dtheta = dtheta * rpd
@@ -1645,13 +1647,13 @@ contains
 !        Adjust RA, DEC, W and their derivatives by the librations
 !        and nutations.
 !
-         ra  = ra    + vdotg ( bac(1,at), sinth,  bna(at) )
-         dec = dec   + vdotg ( bdc(1,at), costh,  bnd(at) )
-         w   = w     + vdotg ( bwc(1,at), sinth,  bnw(at) )
+         ra  = ra    + vdotg ( bang(at)%a, sinth,  bna(at) )
+         dec = dec   + vdotg ( bang(at)%d, costh,  bnd(at) )
+         w   = w     + vdotg ( bang(at)%w, sinth,  bnw(at) )
 
-         dra  = dra  + vdotg ( bac(1,at), dsinth, bna(at) )
-         ddec = ddec + vdotg ( bdc(1,at), dcosth, bnd(at) )
-         dw   = dw   + vdotg ( bwc(1,at), dsinth, bnw(at) )
+         dra  = dra  + vdotg ( bang(at)%a, dsinth, bna(at) )
+         ddec = ddec + vdotg ( bang(at)%d, dcosth, bnd(at) )
+         dw   = dw   + vdotg ( bang(at)%w, dsinth, bnw(at) )
 
 !
 !        Convert from degrees to radians
@@ -4156,6 +4158,7 @@ contains
       use pepper_strings, only: repmc
       use pepper_inc_zzswtchf
       implicit none
+      integer(ip)           cap
       integer(ip) :: fid_1(1)  !! one-element copy of fid (array argument)
       integer(ip) :: frclid_1(1)  !! one-element copy of frclid (array argument)
       integer(ip) :: frclas_1(1)  !! one-element copy of frclas (array argument)
@@ -4824,7 +4827,13 @@ contains
 !
 !     Compute room for the output data.
 !
-      room = maxbas + 1 - free
+!
+!     PEPPER: the size of the base frame arrays is NROOM if given (the
+!     library's arrays grow); MAXBAS otherwise.
+!
+      cap = maxbas
+      if ( present ( nroom ) ) cap = nroom
+      room = cap + 1 - free
 
 !
 !     Check the available room in the frame ID pool and in the frame
@@ -4843,7 +4852,7 @@ contains
 !        much data to fit in the empty base frame arrays, that's
 !        an error.
 !
-         if ( nbases <= maxbas ) then
+         if ( nbases <= cap ) then
 !
 !           We can fit the frame data in by clearing out the
 !           database.
@@ -4854,7 +4863,7 @@ contains
 !           The database is now initialized.
 !
             free = 1
-            room = maxbas
+            room = cap
 
          else
 !
@@ -4869,7 +4878,7 @@ contains
             //            'can be supported is #.'   )
             call ctx%errint ( '#', framid                )
             call ctx%errint ( '#', nbases                )
-            call ctx%errint ( '#', maxbas                )
+            call ctx%errint ( '#', cap                   )
             call ctx%sigerr ( 'SPICE(TOOMANYBASEFRAMES)' )
             return
 
@@ -7973,6 +7982,7 @@ contains
 !!
 !!     Initial values
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: filld, lstled, moved
       use pepper_math, only: ident, xpose
@@ -8002,6 +8012,31 @@ contains
          allocate ( ctx%zzswfxfm_state )
          call init_zzswfxfm_state ( ctx%zzswfxfm_state )
       end if
+!
+!     PEPPER: make room in the base frame arrays for the base frames of
+!     INFRM after those buffered (before the ASSOCIATE block: the arrays
+!     may be reallocated).
+!
+      block
+         character(40) :: kvalgn
+         character(1) :: bastyp
+         integer(ip) :: nbases
+         logical :: found
+         found = .false.
+         if ( infrm /= ctx%zzswfxfm_state%prvfrm ) then
+            write ( kvalgn, '(a,i0,a)' ) 'FRAME_', infrm, '_ALIGNED_WITH'
+            call ctx%dtpool ( kvalgn, found, nbases, bastyp )
+         end if
+         if ( found ) then
+            associate ( st => ctx%zzswfxfm_state )
+            call grow ( st%baslst, st%free - 1 + nbases )
+            call grow ( st%clsids, size ( st%baslst, kind=ip ) )
+            call grow ( st%clsses, size ( st%baslst, kind=ip ) )
+            call grow ( st%starts, size ( st%baslst, kind=ip ) )
+            call grow ( st%stops,  size ( st%baslst, kind=ip ) )
+            end associate
+         end if
+      end block
       associate ( basbeg => ctx%zzswfxfm_state%basbeg, &
                   bascnt => ctx%zzswfxfm_state%bascnt, &
                   baslst => ctx%zzswfxfm_state%baslst, &
@@ -8117,7 +8152,7 @@ contains
 !
          call zzswffet ( ctx, infrm,  hdfram, frpool, fidlst, basbeg, &
                          free,   bascnt, usetim, binary, clsses, &
-                         clsids, baslst, starts, stops,  framat )
+                         clsids, baslst, starts, stops,  framat , size ( baslst, kind=ip ) )
 
          if (  ctx%failed()  .or.  ( framat == 0 )  ) then
 !

@@ -8840,7 +8840,7 @@ module pepper_instance
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
-      module subroutine zzswffet ( ctx, framid, hdfram, frpool, fidlst, basbeg, free, bascnt, usetim, binary, clsses, clsids, baslst, starts, stops, framat )
+      module subroutine zzswffet ( ctx, framid, hdfram, frpool, fidlst, basbeg, free, bascnt, usetim, binary, clsses, clsids, baslst, starts, stops, framat, nroom )
       use pepper_inc_zzswtchf
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: framid  !! The frame ID of a switch frame.
@@ -8858,6 +8858,7 @@ module pepper_instance
          real(wp), intent(inout) :: starts ( * )  !! Lists of interval start times.
          real(wp), intent(inout) :: stops ( * )  !! Lists of interval stop times.
          integer(ip), intent(out) :: framat  !! Index in FIDLST of input switch frame ID.
+         integer(ip), intent(in), optional :: nroom  !! PEPPER: size of the base frame arrays (default MAXBAS).
       end subroutine zzswffet
 
       !> J2000 to TEME, and TEME to J2000, probably.
@@ -20120,6 +20121,22 @@ contains
       if (ios /= 0 .or. name == ' ') name = '<unavailable from the system>'
       call this%errch(marker, name)
    end subroutine ctx_errfnm
+
+   !> The number of values of the body kernel variable BODY<body>_<item>
+   !> (0 if there is none): the room the callers of BODVCD allocate
+   !> (PEPPER: SPICELIB used fixed sizes, e.g. TISBOD's MAXANG).
+   function body_item_size(ctx, body, item) result(n)
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! the body ID code
+      character(*), intent(in) :: item  !! the item, e.g. 'NUT_PREC_RA'
+      integer(ip) :: n  !! the number of values
+      character(80) :: name
+      character(1) :: type
+      logical :: found
+      write (name, '(a,i0,2a)') 'BODY', body, '_', trim(item)
+      call ctx%dtpool(name, found, n, type)
+      if (.not. found) n = 0
+   end function body_item_size
 
    !> The number of partitions of a spacecraft clock (the size of its
    !> SCLK_PARTITION_START kernel variable), at least 1: the room the

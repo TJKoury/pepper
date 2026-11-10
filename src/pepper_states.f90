@@ -75,7 +75,6 @@ module pepper_states
    integer(ip), parameter :: filsiz = 255
    integer(ip), parameter :: lbcell = -5
    integer(ip), parameter :: lbpool = -5
-   integer(ip), parameter :: maxang = 200
    integer(ip), parameter :: maxivl = 1000
    integer(ip), parameter :: mrklen = 10
    integer(ip), parameter :: mxphas = 4
@@ -141,12 +140,6 @@ module pepper_states
    !> The saved variables of SPICELIB's BODEUL routines (entry points bodeul),
    !> held in pepper_context (one per thread).
    type, public :: bodeul_state
-      real(wp) :: ac ( maxang ) = 0.0_wp  !! coefficients of the nutation/precession terms of the pole RA (NUT_PREC_RA)
-      real(wp) :: costh ( maxang ) = 0.0_wp  !! work: cosines of the nutation/precession angles at the epoch
-      real(wp) :: dc ( maxang   ) = 0.0_wp  !! coefficients of the nutation/precession terms of the pole Dec (NUT_PREC_DEC)
-      real(wp) :: sinth ( maxang ) = 0.0_wp  !! work: sines of the nutation/precession angles at the epoch
-      real(wp) :: tcoef ( mxphas * maxang ) = 0.0_wp  !! polynomial coefficients of the nutation/precession angles (NUT_PREC_ANGLES)
-      real(wp) :: wc ( maxang ) = 0.0_wp  !! coefficients of the nutation/precession terms of the prime meridian (NUT_PREC_PM)
       integer(ip) :: j2code = 0  !! inertial frame code (IRFNUM) of J2000
       integer(ip) :: nphase = 0  !! number of nutation/precession angles (phase polynomials) last loaded
       integer(ip) :: nphsco = 0  !! number of coefficients per nutation/precession angle (max phase degree + 1)
@@ -2990,6 +2983,16 @@ module pepper_states
    integer(ip), parameter :: mxpoly = 3
    integer(ip), parameter :: maxbod = 157
 
+   !> The nutation/precession coefficients of a body buffered by TISBOD.
+   !> PEPPER: arrays of the body's sizes (SPICELIB: MAXANG, 200, per item
+   !> and body, about 1.5 MB per context).
+   type, public :: tisbod_angles
+      real(wp), allocatable :: t(:)  !! the angle (phase) coefficients (NUT_PREC_ANGLES)
+      real(wp), allocatable :: a(:)  !! the RA coefficients (NUT_PREC_RA)
+      real(wp), allocatable :: d(:)  !! the DEC coefficients (NUT_PREC_DEC)
+      real(wp), allocatable :: w(:)  !! the prime meridian coefficients (NUT_PREC_PM)
+   end type tisbod_angles
+
    !> Return a 6x6 matrix that transforms states in inertial
    !> coordinates to states in body-equator-and-prime-meridian
    !> coordinates.
@@ -2999,11 +3002,7 @@ module pepper_states
    !>
    !> No default initialization (1783072 bytes): see init_tisbod_state.
    type, public :: tisbod_state
-      real(wp) :: costh (    maxang )  !! work: cosines of the nutation precession angles
       real(wp) :: d  !! seconds per day
-      real(wp) :: dcosth (    maxang )  !! work: time derivatives of the cosines of the nutation precession angles
-      real(wp) :: dsinth (    maxang )  !! work: time derivatives of the sines of the nutation precession angles
-      real(wp) :: sinth (    maxang )  !! work: sines of the nutation precession angles
       real(wp) :: t  !! seconds per Julian century
       integer(ip) :: j2code  !! frame ID code of J2000
       logical :: first  !! true until the first-call initialization is done
@@ -3011,19 +3010,16 @@ module pepper_states
       integer(ip) :: bidlst (             maxbod )  !! body ID hash: collision list heads
       integer(ip) :: bidpol ( lbpool :    maxbod )  !! body ID hash: collision list pool
       integer(ip) :: bidids (             maxbod )  !! body ID hash: ID codes of the buffered bodies
-      real(wp) :: bac (     maxang, maxbod )  !! buffered RA nutation precession coefficients of each body
-      real(wp) :: bdc (     maxang, maxbod )  !! buffered DEC nutation precession coefficients of each body
       real(wp) :: bdcoef ( 0:mxpoly-1, maxbod )  !! buffered DEC polynomial coefficients of each body
       real(wp) :: bpckep (             maxbod )  !! buffered PCK reference epoch (JED) of each body
       real(wp) :: brcoef ( 0:mxpoly-1, maxbod )  !! buffered RA polynomial coefficients of each body
-      real(wp) :: btcoef ( mxphas * maxang, maxbod )  !! buffered nutation precession angle (phase) coefficients of each body
-      real(wp) :: bwc (     maxang, maxbod )  !! buffered prime meridian (W) nutation precession coefficients of each body
       real(wp) :: bwcoef ( 0:mxpoly-1, maxbod )  !! buffered prime meridian (W) polynomial coefficients of each body
       integer(ip) :: bna (             maxbod )  !! buffered count of RA nutation precession coefficients of each body
       integer(ip) :: bnd (             maxbod )  !! buffered count of DEC nutation precession coefficients of each body
       integer(ip) :: bnphas (             maxbod )  !! buffered number of nutation precession angles of each body
       integer(ip) :: bnphco (             maxbod )  !! buffered number of coefficients per nutation precession angle of each body
       integer(ip) :: bnw (             maxbod )  !! buffered count of W nutation precession coefficients of each body
+      type(tisbod_angles) :: bang ( maxbod )  !! buffered nutation precession coefficients of each body
       integer(ip) :: bpcref (             maxbod )  !! buffered PCK reference frame ID of each body
    end type tisbod_state
 
@@ -5486,11 +5482,16 @@ module pepper_states
    !>
    !> No default initialization (448704 bytes): see init_zzswfxfm_state.
    type, public :: zzswfxfm_state
+      ! PEPPER: the base frame arrays grow (ZZSWFXFM makes room for a
+      ! frame's base frames before buffering it; SPICELIB: MAXBAS, 15000,
+      ! and SPICE(TOOMANYBASEFRAMES) for a frame with more). The table of
+      ! switch frames is still a cache of MAXFRM (1013) frames, emptied
+      ! when full.
       integer(ip) :: basbeg ( maxfrm )  !! start index in baslst of each switch frame's base frame list
       integer(ip) :: bascnt ( maxfrm )  !! number of base frames of each switch frame
-      integer(ip) :: baslst ( maxbas )  !! ID codes of the base frames of the buffered switch frames
-      integer(ip) :: clsids ( maxbas )  !! frame class ID of each base frame in baslst
-      integer(ip) :: clsses ( maxbas )  !! frame class of each base frame in baslst
+      integer(ip), allocatable :: baslst ( : )  !! ID codes of the base frames of the buffered switch frames
+      integer(ip), allocatable :: clsids ( : )  !! frame class ID of each base frame in baslst
+      integer(ip), allocatable :: clsses ( : )  !! frame class of each base frame in baslst
       logical :: binary ( maxfrm )  !! true for each switch frame whose base frame intervals allow a binary search
       integer(ip) :: fidlst ( maxfrm )  !! switch frame ID hash: ID codes of the buffered switch frames
       integer(ip) :: free  !! index of the first free element of baslst and its parallel arrays
@@ -5500,8 +5501,8 @@ module pepper_states
       integer(ip) :: polctr ( ctrsiz )  !! kernel pool state counter
       integer(ip) :: prvat  !! buffer index of the switch frame from the previous successful call
       integer(ip) :: prvfrm  !! switch frame ID from the previous successful call (0 if none)
-      real(wp) :: starts ( maxbas )  !! start time (TDB) of the interval of each base frame of the switch frames
-      real(wp) :: stops ( maxbas )  !! applicability interval stop time of each base frame in baslst
+      real(wp), allocatable :: starts ( : )  !! start time (TDB) of the interval of each base frame of the switch frames
+      real(wp), allocatable :: stops ( : )  !! applicability interval stop time of each base frame in baslst
       logical :: usetim ( maxfrm )  !! true for each switch frame whose base frames have time intervals
       real(wp) :: xident ( 6, 6 )  !! 6x6 identity matrix, set on the first call
    end type zzswfxfm_state
@@ -6521,11 +6522,7 @@ contains
    !> values, and zero for the other components.
    pure subroutine init_tisbod_state(state)
       type(tisbod_state), intent(inout) :: state  !! the state
-      state%costh = 0.0_wp
       state%d = 0.0_wp
-      state%dcosth = 0.0_wp
-      state%dsinth = 0.0_wp
-      state%sinth = 0.0_wp
       state%t = 0.0_wp
       state%j2code = 0
       state%first = .true.
@@ -6533,13 +6530,9 @@ contains
       state%bidlst = 0
       state%bidpol = 0
       state%bidids = 0
-      state%bac = 0.0_wp
-      state%bdc = 0.0_wp
       state%bdcoef = 0.0_wp
       state%bpckep = 0.0_wp
       state%brcoef = 0.0_wp
-      state%btcoef = 0.0_wp
-      state%bwc = 0.0_wp
       state%bwcoef = 0.0_wp
       state%bna = 0
       state%bnd = 0
@@ -6997,9 +6990,7 @@ contains
       type(zzswfxfm_state), intent(inout) :: state  !! the state
       state%basbeg = 0
       state%bascnt = 0
-      state%baslst = 0
-      state%clsids = 0
-      state%clsses = 0
+      allocate (state%baslst(64), state%clsids(64), state%clsses(64), source=0_ip)
       state%binary = .false.
       state%fidlst = 0
       state%free = 1
@@ -7009,8 +7000,7 @@ contains
       state%polctr = 0
       state%prvat = 0
       state%prvfrm = 0
-      state%starts = 0.0_wp
-      state%stops = 0.0_wp
+      allocate (state%starts(64), state%stops(64), source=0.0_wp)
       state%usetim = .false.
       state%xident = 0.0_wp
    end subroutine init_zzswfxfm_state

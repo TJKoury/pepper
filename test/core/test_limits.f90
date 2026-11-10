@@ -5,8 +5,9 @@
 !> read from many DAFs in turn (DAFEC's table), and the kernel pool past
 !> its limits (variables, values, name and string lengths), and more
 !> kernel frames than FRAMEX's caches held (5209), body names past
-!> ZZBODTRN's limits, surface names past ZZSRFTRN's, and type 1 SCLKs past
-!> SC01's.
+!> ZZBODTRN's limits, surface names past ZZSRFTRN's, type 1 SCLKs past
+!> SC01's, and PCK bodies with more nutation/precession terms than TISBOD
+!> and BODEUL held (200).
 program test_limits
 
    use pepper_kinds, only: ip, wp
@@ -32,6 +33,7 @@ program test_limits
    call test_bodies()
    call test_surfaces()
    call test_sclk()
+   call test_nutation()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -626,5 +628,51 @@ contains
       call check(ok, 'sclk: 150 clocks in turn')
       call ctx%clpool()
    end subroutine test_sclk
+
+   !> A body with 300 nutation/precession angles (MAXANG 200) gives the
+   !> same orientation (TISBOD, BODEUL) as the body with only its first
+   !> angle, the coefficients of the other 299 being zero.
+   subroutine test_nutation()
+      real(wp) :: tsipm(6, 6), tsipm1(6, 6), angles(600), ra, dec, w, lambda, ra1, dec1, w1
+      real(wp) :: coef(300)
+      integer(ip) :: i
+      do i = 1, 300
+         angles(2*i - 1) = 10.0_wp*i
+         angles(2*i) = 1000.0_wp*i
+      end do
+      coef = 0
+      coef(1) = 0.5_wp
+      call define_nutation(9001_ip, 300_ip, angles, coef)
+      call define_nutation(9002_ip, 1_ip, angles, coef)
+      call ctx%tisbod('J2000', 9001_ip, 1.0e8_wp, tsipm)
+      call ctx%tisbod('J2000', 9002_ip, 1.0e8_wp, tsipm1)
+      call check_ok('nutation: tisbod with 300 angles')
+      call check(maxval(abs(tsipm - tsipm1)) < 1.0e-14_wp .and. maxval(abs(tsipm)) > 0, &
+                 'nutation: tisbod with 300 angles')
+      call ctx%bodeul(9001_ip, 1.0e8_wp, ra, dec, w, lambda)
+      call ctx%bodeul(9002_ip, 1.0e8_wp, ra1, dec1, w1, lambda)
+      call check_ok('nutation: bodeul with 300 angles')
+      call check(abs(ra - ra1) + abs(dec - dec1) + abs(w - w1) < 1.0e-12_wp, 'nutation: bodeul with 300 angles')
+      call ctx%clpool()
+   end subroutine test_nutation
+
+   !> PCK constants of a body with its own nutation/precession angles
+   !> (the first n of ANGLES) and coefficients (the first n of COEF).
+   subroutine define_nutation(body, n, angles, coef)
+      integer(ip), intent(in) :: body  !! the body ID code
+      integer(ip), intent(in) :: n  !! number of angles
+      real(wp), intent(in) :: angles(:)  !! angle pairs (constant, rate)
+      real(wp), intent(in) :: coef(:)  !! coefficients of the angles
+      character(40) :: b
+      write (b, '(a,i0,a)') 'BODY', body, '_'
+      call ctx%pdpool(trim(b) // 'POLE_RA', 3_ip, [10.0_wp, 0.1_wp, 0.0_wp])
+      call ctx%pdpool(trim(b) // 'POLE_DEC', 3_ip, [60.0_wp, -0.1_wp, 0.0_wp])
+      call ctx%pdpool(trim(b) // 'PM', 3_ip, [20.0_wp, 300.0_wp, 0.0_wp])
+      call ctx%pdpool(trim(b) // 'NUT_PREC_ANGLES', 2*n, angles(1:2*n))
+      call ctx%pdpool(trim(b) // 'NUT_PREC_RA', n, coef(1:n))
+      call ctx%pdpool(trim(b) // 'NUT_PREC_DEC', n, coef(1:n))
+      call ctx%pdpool(trim(b) // 'NUT_PREC_PM', n, coef(1:n))
+      call ctx%pdpool(trim(b) // 'LONG_AXIS', 1_ip, [0.0_wp])
+   end subroutine define_nutation
 
 end program test_limits

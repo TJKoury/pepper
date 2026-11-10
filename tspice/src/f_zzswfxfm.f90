@@ -2471,8 +2471,8 @@
 !
 ! --- Case: ------------------------------------------------------
 !
-      CALL TCASE ( 'Error case: try to load frame that has too ' &
-      //           'many bases to be buffered.' )
+      CALL TCASE ( 'Frame with more bases than SPICELIB''s MAXBAS ' &
+      //           '(PEPPER: no error).' )
 
 
       CALL PIPOOL ( 'FRAME_TOOBIG1',          1, 1400011   )
@@ -2490,7 +2490,11 @@
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL SXFORM ( 'TOOBIG1', 'J2000',  ET, XFORM  )
-      CALL CHCKXC ( .TRUE., 'SPICE(TOOMANYBASEFRAMES)', OK )
+!
+!     PEPPER: the base frame arrays grow (SPICELIB signaled
+!     SPICE(TOOMANYBASEFRAMES) for more than MAXBAS): the frame is used.
+!
+      CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
 ! --- Case: ------------------------------------------------------

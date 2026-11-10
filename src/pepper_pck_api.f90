@@ -1695,11 +1695,13 @@ contains
       use pepper_arrays, only: cleard
       use pepper_math, only: mxm, vdotg
       implicit none
+      ! PEPPER: work arrays of the kernel variables' sizes (SPICELIB: saved
+      ! arrays of MAXANG, 200, values)
+      real(wp), allocatable :: ac(:), dc(:), wc(:), tcoef(:), sinth(:), costh(:)
       real(wp) :: dpval_1(1)  !! one-element copy of dpval (array argument)
       integer(ip) :: ref_1(1)  !! one-element copy of ref (array argument)
       real(wp) :: conepc_1(1)  !! one-element copy of conepc (array argument)
       real(wp) :: lambda_1(1)  !! one-element copy of lambda (array argument)
-      integer(ip), parameter :: maxang = 200
       integer(ip), parameter :: mxphas = 4
       integer(ip), parameter :: mxpoly = 3
       integer(ip), parameter :: namlen = 32
@@ -1738,13 +1740,7 @@ contains
       real(wp) :: conepc
       real(wp) :: rcoef  ( 0:mxpoly-1 )
       if ( .not. allocated ( ctx%bodeul_state ) ) allocate ( ctx%bodeul_state )
-      associate ( ac => ctx%bodeul_state%ac, &
-                  costh => ctx%bodeul_state%costh, &
-                  dc => ctx%bodeul_state%dc, &
-                  sinth => ctx%bodeul_state%sinth, &
-                  tcoef => ctx%bodeul_state%tcoef, &
-                  wc => ctx%bodeul_state%wc, &
-                  j2code => ctx%bodeul_state%j2code, &
+      associate ( j2code => ctx%bodeul_state%j2code, &
                   nphase => ctx%bodeul_state%nphase, &
                   nphsco => ctx%bodeul_state%nphsco, &
                   first => ctx%bodeul_state%first )
@@ -1953,6 +1949,10 @@ contains
          nd     = 0
          nw     = 0
 
+         allocate ( tcoef(max(1_ip, body_item_size(ctx, refid, 'NUT_PREC_ANGLES'))), source=0.0_wp )
+         allocate ( ac(max(1_ip, body_item_size(ctx, body, 'NUT_PREC_RA'))), source=0.0_wp )
+         allocate ( dc(max(1_ip, body_item_size(ctx, body, 'NUT_PREC_DEC'))), source=0.0_wp )
+         allocate ( wc(max(1_ip, body_item_size(ctx, body, 'NUT_PREC_PM'))), source=0.0_wp )
          item = 'NUT_PREC_ANGLES'
 
          if ( bodfnd ( ctx, refid, item ) ) then
@@ -2002,7 +2002,7 @@ contains
 !           loaded, but we will need the actual limit on the second
 !           dimension. That is --- NTHETA / NPHSCO.
 !
-            call bodvcd ( ctx, refid, item, maxang*mxphas, ntheta, tcoef )
+            call bodvcd ( ctx, refid, item, size(tcoef, kind=ip), ntheta, tcoef )
 
             if ( ctx%failed() ) return
 !
@@ -2015,19 +2015,19 @@ contains
          item = 'NUT_PREC_RA'
 
          if ( bodfnd ( ctx, body, item ) ) then
-            call bodvcd ( ctx, body, item, maxang, na, ac )
+            call bodvcd ( ctx, body, item, size(ac, kind=ip), na, ac )
          end if
 
          item = 'NUT_PREC_DEC'
 
          if ( bodfnd ( ctx, body, item ) ) then
-            call bodvcd ( ctx, body, item, maxang, nd, dc )
+            call bodvcd ( ctx, body, item, size(dc, kind=ip), nd, dc )
          end if
 
          item = 'NUT_PREC_PM'
 
          if ( bodfnd ( ctx, body, item ) ) then
-            call bodvcd ( ctx, body, item, maxang, nw, wc )
+            call bodvcd ( ctx, body, item, size(wc, kind=ip), nw, wc )
          end if
 
          if ( ctx%failed() ) return
@@ -2054,6 +2054,7 @@ contains
 !
 !        Add nutation and libration as appropriate.
 !
+         allocate ( sinth(max(1_ip, nphase)), costh(max(1_ip, nphase)), source=0.0_wp )
          do i = 1, nphase
 
             if ( nphsco == 2 ) then

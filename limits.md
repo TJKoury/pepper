@@ -432,6 +432,19 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      (PARTLN was 5 characters: 4 digits and the slash). Tests:
      `test_limits` (100500 records, 12000 partitions, a string in
      partition 10001, 150 clocks); tspice `F_ZZSC01`, `F_SCLK0`.
+   - **Switch frames** (ZZSWFXFM): the base-frame arrays of the frame
+     table start at 64 entries and grow to the size of the frame's
+     `FRAME_<name>_ALIGNED_WITH` variable before it is fetched (MAXBAS
+     15000, `TOOMANYBASEFRAMES`, is gone from the library). ZZSWFFET takes
+     an optional room argument so tspice `F_ZZSWFXFM` still tests the
+     legacy error; its case 16 (15001 base frames) now succeeds.
+   - **TISBOD and BODEUL:** no limit on nutation/precession angles (MAXANG
+     200). The coefficient arrays are sized to the body's kernel variables,
+     and TISBOD's cache keeps each body's angle data in its own allocatable
+     record (SPICELIB held 8 arrays of MAXANG for each of 157 bodies, about
+     1.5 MB per context, plus BODEUL's saved work arrays). Test:
+     `test_limits` (300 angles agree with 1 angle when the other
+     coefficients are zero).
    - **Still fixed:** GF saves the occultation method strings in 500
      characters (`svfmth`, `svbmth`), and the geometry routines save the
      previous method in a fixed buffer (a longer method is only parsed
@@ -449,13 +462,13 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      - ZZSRFTRN grows;
      - method strings take any number of surfaces (`maxsrf`);
      - the 13 `srflst(100)` state arrays become allocatable.
-   - **Switch frames:** `maxbas` per frame.
+   - **Switch frames:** `maxbas` per frame (done).
    - **SCLK:**
      - partitions and coefficients per clock grow;
      - the `scencd`/`scdecd`/`scpars` work arrays follow;
      - `TOOMANYPARTITIONS` and `TOOMANYCOEFFS` go;
      - `f_zzsc01` changes.
-   - **TISBOD and BODEUL:** `maxang`.
+   - **TISBOD and BODEUL:** `maxang` (done).
 5. **Segment caches and memory:**
    - The BSR segment and body tables start small and grow with no cap
      (decision 3).
