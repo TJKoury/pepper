@@ -7939,10 +7939,10 @@ contains
       integer(ip)           ptrloc
       integer(ip)           rc
       integer(ip)           rbase
-      integer(ip)           rowvec ( maxtab+1 )
+      integer(ip), allocatable :: rowvec ( : )
       integer(ip)           rtarg
       integer(ip)           rvsize
-      integer(ip)           segvec ( maxtab )
+      integer(ip), allocatable :: segvec ( : )
       integer(ip)           setbas
       integer(ip)           size
       integer(ip)           sizloc
@@ -7967,6 +7967,7 @@ contains
       size = size_1(1)
       call zzeksrd ( ctx, ntloc, ntloc, ntab_1 )
       ntab = ntab_1(1)
+      allocate ( rowvec(ntab+1), segvec(ntab) )
       call zzeksrd ( ctx, nsvloc, nsvloc, nsv_1 )
       nsv = nsv_1(1)
 
@@ -12690,12 +12691,11 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip
+      use pepper_containers, only: grow
       use pepper_arrays, only: cleari
       integer(ip) :: nsv_1(1)  !! one-element copy of nsv (array argument)
       integer(ip) :: j_1(1)  !! one-element copy of j (array argument)
       integer(ip) :: ntabs_1(1)  !! one-element copy of ntabs (array argument)
-      integer(ip), parameter :: mxjoin = 10
-      integer(ip), parameter :: mxjrs = 200
       integer(ip), parameter :: jszidx = 1
       integer(ip), parameter :: jrcidx = 2
       integer(ip), parameter :: jtcidx = 3
@@ -12706,6 +12706,14 @@ contains
       integer(ip) :: i
       integer(ip) :: top
       if ( .not. allocated ( ctx%zzekvadr_state ) ) allocate ( ctx%zzekvadr_state )
+!
+!     PEPPER: the arrays of the join row sets grow to NJRS (SPICELIB: MXJRS
+!     = 200, a conjunction of the WHERE clause each; also no maximum number
+!     of tables, SPICELIB: MXJOIN = 10).
+!
+      call grow ( ctx%zzekvadr_state%begidx, max ( njrs, 1_ip ) )
+      call grow ( ctx%zzekvadr_state%rbas, max ( njrs, 1_ip ) )
+      call grow ( ctx%zzekvadr_state%svbas, max ( njrs, 1_ip ) )
       associate ( begidx => ctx%zzekvadr_state%begidx, &
                   j => ctx%zzekvadr_state%j, &
                   maxrwv => ctx%zzekvadr_state%maxrwv, &
@@ -12718,12 +12726,11 @@ contains
 !
 !     Validate join row set count.
 !
-      if (  ( njrs < 1 ) .or. ( njrs > mxjrs )  ) then
+      if ( njrs < 1 ) then
 
          call ctx%setmsg ( 'Number of join row sets was #; valid ' // &
-                       'range is 1:#'                           )
+                       'it must be at least 1.'                           )
          call ctx%errint ( '#',  njrs                               )
-         call ctx%errint ( '#',  mxjrs                              )
          call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                    )
          return
 
@@ -12761,12 +12768,11 @@ contains
       call zzeksrd ( ctx, addrss, addrss, ntabs_1 )
       ntabs = ntabs_1(1)
 
-      if (  ( ntabs < 1 ) .or. ( ntabs > mxjoin )  ) then
+      if ( ntabs < 1 ) then
 
          call ctx%setmsg ( 'Table count for first join row set was #; '  // &
-                       'valid range is 1:#'                           )
+                       'it must be at least 1.'                           )
          call ctx%errint ( '#',  ntabs                                    )
-         call ctx%errint ( '#',  mxjoin                                   )
          call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                          )
          return
 
@@ -12798,7 +12804,7 @@ contains
 !     These counts must be in range.  Save the start indices of
 !     the row vectors in each join row set.
 !
-      call cleari ( mxjrs, begidx )
+      begidx = 0
       begidx(1) = 1
 
       do i = 1, njrs
@@ -12964,8 +12970,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlei
       integer(ip) :: sgvbas_1(1)  !! one-element copy of sgvbas (array argument)
-      integer(ip), parameter :: mxjoin = 10
-      integer(ip), parameter :: mxjrs = 200
       logical               return
       integer(ip), parameter :: jszidx = 1
       integer(ip), parameter :: jrcidx = 2
@@ -12975,6 +12979,10 @@ contains
       integer(ip) :: reloff
       integer(ip) :: jrsidx
       if ( .not. allocated ( ctx%zzekvadr_state ) ) allocate ( ctx%zzekvadr_state )
+      if ( .not. allocated ( ctx%zzekvadr_state%begidx ) ) then
+         allocate ( ctx%zzekvadr_state%begidx(1), ctx%zzekvadr_state%rbas(1), &
+                    ctx%zzekvadr_state%svbas(1), source = 0_ip )
+      end if
       associate ( begidx => ctx%zzekvadr_state%begidx, &
                   maxrwv => ctx%zzekvadr_state%maxrwv, &
                   ntabs => ctx%zzekvadr_state%ntabs, &
@@ -15662,18 +15670,6 @@ contains
 
             nrels          =  nrels        + 1
             sizes (nconj)  =  sizes(nconj) + 1
-!
-!           PEPPER: the constraint arrays of EKSRCH have room for MAXCON
-!           constraints; SPICELIB did not check (its relation pool
-!           allowed 10*MAXTOK) and wrote past them.
-!
-            if ( nrels > maxcon ) then
-               error  = .true.
-               prserr = 'Too many constraints in the normalized WHERE ' // &
-                        'clause; max allowed is #.'
-               call repmi ( ctx, prserr, '#', maxcon, prserr )
-               return
-            end if
             relptr         =  cjptrs(cjnode)
 
             tabptr         =  rels(1,relptr)
@@ -18628,10 +18624,10 @@ contains
       integer(ip)           i
       integer(ip)           base
       integer(ip)           cand
-      integer(ip)           candsv ( maxtab )
+      integer(ip), allocatable :: candsv ( : )
       integer(ip)           crv
       integer(ip)           crwbas
-      integer(ip)           crwvec ( maxtab + 1 )
+      integer(ip), allocatable :: crwvec ( : )
       integer(ip)           csgbas
       integer(ip)           csv
       integer(ip)           j
@@ -18646,10 +18642,10 @@ contains
       integer(ip)           nsvloc
       integer(ip)           ntab
       integer(ip)           pred
-      integer(ip)           predsv ( maxtab )
+      integer(ip), allocatable :: predsv ( : )
       integer(ip)           prv
       integer(ip)           prwbas
-      integer(ip)           prwvec ( maxtab + 1 )
+      integer(ip), allocatable :: prwvec ( : )
       integer(ip)           psgbas
       integer(ip)           psv
       integer(ip)           rvsize
@@ -18657,7 +18653,11 @@ contains
 
       logical               hit
 
-      if ( ( njrs < 1 ) .or. ( njrs > mxjrs )  ) then
+!
+!     PEPPER: no maximum number of join row sets (SPICELIB: MXJRS = 200,
+!     a conjunction of the WHERE clause each).
+!
+      if ( njrs < 1 ) then
 
          call ctx%setmsg ( 'The number of join row sets in the union is #' )
          call ctx%errint ( '#', njrs                                       )
@@ -18679,6 +18679,7 @@ contains
 
       call zzeksrd ( ctx, loc, loc, ntab_1 )
       ntab = ntab_1(1)
+      allocate ( candsv(ntab), predsv(ntab), crwvec(ntab+1), prwvec(ntab+1) )
 
       svsize  =  ntab
       rvsize  =  ntab + 1
@@ -20318,36 +20319,29 @@ contains
 !
                ntabs  =   ntabs  +  1
 
-               if ( ntabs > maxtab ) then
+               ! PEPPER: no maximum number of FROM tables (SPICELIB: MAXTAB = 10).
+               i       =   values(toknum)
+               b       =   chbegs(i)
+               e       =   chends(i)
+               l       =   e  -  b   +  1
+               lxb     =   lxbegs(toknum)
+               lxe     =   lxends(toknum)
 
-                  error   =  .true.
-                  errtyp  =  'TOO_MANY_TABLES'
-                  state   =  term
-
-               else
-
-                  i       =   values(toknum)
-                  b       =   chbegs(i)
-                  e       =   chends(i)
-                  l       =   e  -  b   +  1
-                  lxb     =   lxbegs(toknum)
-                  lxe     =   lxends(toknum)
-
-                  call zzekinqc ( ctx, chrbuf( b : e ), &
-                                  l, &
-                                  lxb, &
-                                  lxe, &
-                                  eqryi, &
-                                  eqryc, &
-                                  tabdsc          )
+               call zzekinqc ( ctx, chrbuf( b : e ), &
+                               l, &
+                               lxb, &
+                               lxe, &
+                               eqryi, &
+                               eqryc, &
+                               tabdsc          )
 
 !
 !                 Append the table descriptor to the integer part of the
 !                 query.
 !
-                  do j = 1, eqvdsz
-                     call append_query ( ctx, tabdsc(j), eqryi )
-                  end do
+               do j = 1, eqvdsz
+                  call append_query ( ctx, tabdsc(j), eqryi )
+               end do
 
 !
 !                 Add a place-holder value descriptor to reserve
@@ -20355,21 +20349,20 @@ contains
 !                 actual alias is supplied, we'll update this
 !                 descriptor.
 !
-                  call cleari ( eqvdsz, alsdsc )
-                  alsdsc(eqdtyp)  =  chr
+               call cleari ( eqvdsz, alsdsc )
+               alsdsc(eqdtyp)  =  chr
 
-                  do j = 1, eqvdsz
-                     call append_query ( ctx, alsdsc(j), eqryi )
-                  end do
+               do j = 1, eqvdsz
+                  call append_query ( ctx, alsdsc(j), eqryi )
+               end do
 
 !
 !                 Update the table count in the encoded query.
 !
-                  call zzekweqi ( ctx, 'NUM_TABLES', ntabs, eqryi )
+               call zzekweqi ( ctx, 'NUM_TABLES', ntabs, eqryi )
 
-                  state  =  frmtab
+               state  =  frmtab
 
-               end if
 
             else if ( token == tkeoq ) then
 
@@ -20571,28 +20564,21 @@ contains
 !
                nsel  =  nsel  +  1
 
-               if ( nsel> maxsel ) then
+               ! PEPPER: no maximum number of SELECT columns (SPICELIB: MAXSEL = 50).
+               i       =   values(toknum)
+               b       =   chbegs(i)
+               e       =   chends(i)
+               l       =   e  -  b   +  1
+               lxb     =   lxbegs(toknum)
+               lxe     =   lxends(toknum)
 
-                  error   =  .true.
-                  errtyp  =  'TOO_MANY_SEL_COLS'
-                  state   = term
-
-               else
-
-                  i       =   values(toknum)
-                  b       =   chbegs(i)
-                  e       =   chends(i)
-                  l       =   e  -  b   +  1
-                  lxb     =   lxbegs(toknum)
-                  lxe     =   lxends(toknum)
-
-                  call zzekinqc ( ctx, chrbuf( b : e ), &
-                                  l, &
-                                  lxb, &
-                                  lxe, &
-                                  eqryi, &
-                                  eqryc, &
-                                  namdsc          )
+               call zzekinqc ( ctx, chrbuf( b : e ), &
+                               l, &
+                               lxb, &
+                               lxe, &
+                               eqryi, &
+                               eqryc, &
+                               namdsc          )
 
 !
 !                 Add a place-holder value descriptor to reserve
@@ -20600,21 +20586,20 @@ contains
 !                 turns out that the current name is a table name, we'll
 !                 update this descriptor.
 !
-                  call cleari ( eqvdsz, valdsc )
-                  valdsc(eqdtyp)  =  chr
+               call cleari ( eqvdsz, valdsc )
+               valdsc(eqdtyp)  =  chr
 
-                  do j = 1, eqvdsz
-                     call append_query ( ctx, valdsc(j), eqryi )
-                  end do
+               do j = 1, eqvdsz
+                  call append_query ( ctx, valdsc(j), eqryi )
+               end do
 
 !
 !                 Update the SELECT column count in the encoded query.
 !
-                  call zzekweqi ( ctx, 'NUM_SELECT_COLS', nsel, eqryi )
+               call zzekweqi ( ctx, 'NUM_SELECT_COLS', nsel, eqryi )
 
-                  state  =  selnam
+               state  =  selnam
 
-               end if
 
             else if ( token == tkeoq ) then
 
@@ -20959,28 +20944,21 @@ contains
 !
                norder  =  norder  +  1
 
-               if ( norder > maxord ) then
+               ! PEPPER: no maximum number of ORDER BY columns (SPICELIB: MAXORD = 10).
+               i       =   values(toknum)
+               b       =   chbegs(i)
+               e       =   chends(i)
+               l       =   e  -  b   +  1
+               lxb     =   lxbegs(toknum)
+               lxe     =   lxends(toknum)
 
-                  error   =  .true.
-                  errtyp  =  'TOO_MANY_ORD_COLS'
-                  state   = term
-
-               else
-
-                  i       =   values(toknum)
-                  b       =   chbegs(i)
-                  e       =   chends(i)
-                  l       =   e  -  b   +  1
-                  lxb     =   lxbegs(toknum)
-                  lxe     =   lxends(toknum)
-
-                  call zzekinqc ( ctx, chrbuf( b : e ), &
-                                  l, &
-                                  lxb, &
-                                  lxe, &
-                                  eqryi, &
-                                  eqryc, &
-                                  namdsc          )
+               call zzekinqc ( ctx, chrbuf( b : e ), &
+                               l, &
+                               lxb, &
+                               lxe, &
+                               eqryi, &
+                               eqryc, &
+                               namdsc          )
 
 !
 !                 Add a place-holder value descriptor to reserve
@@ -20988,21 +20966,20 @@ contains
 !                 turns out that the current name is a table name, we'll
 !                 update this descriptor.
 !
-                  call cleari ( eqvdsz, valdsc )
-                  valdsc(eqdtyp)  =  chr
+               call cleari ( eqvdsz, valdsc )
+               valdsc(eqdtyp)  =  chr
 
-                  do j = 1, eqvdsz
-                     call append_query ( ctx, valdsc(j), eqryi )
-                  end do
+               do j = 1, eqvdsz
+                  call append_query ( ctx, valdsc(j), eqryi )
+               end do
 
 !
 !                 Update the order-by column count in the encoded query.
 !
-                  call zzekweqi ( ctx, 'NUM_ORDERBY_COLS', norder, eqryi )
+               call zzekweqi ( ctx, 'NUM_ORDERBY_COLS', norder, eqryi )
 
-                  state  =  ordnam
+               state  =  ordnam
 
-               end if
 
             else if ( token == tkeoq ) then
 
@@ -21453,6 +21430,10 @@ contains
             call repmi ( ctx, prserr, '#', lxb,            prserr )
             call repmc ( prserr, '#', query(lxb:lxe), prserr )
 
+!
+!        PEPPER: the TOO_MANY_* errors cannot occur any more (no maximum
+!        numbers of FROM tables, SELECT and ORDER BY columns).
+!
          else if ( errtyp == 'TOO_MANY_TABLES' ) then
 
             prserr  =  'Number of tables in "FROM" clause exceeds ' // &

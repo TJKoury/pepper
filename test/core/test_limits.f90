@@ -897,7 +897,11 @@ contains
    !> comparisons (about 2700 characters and 600 tokens; SPICELIB:
    !> MAXQRY = 2000, the rest cut off, and MAXTOK = 500), and one whose
    !> normal form (an OR of ANDs) has 128 conjunctions of 7 relations,
-   !> more than its work pools start with (they grow).
+   !> more than its work pools start with (they grow); and past the
+   !> counts: 250 conjunctions (MXJRS 200), 1024 constraints after
+   !> normalization (MAXCON 1000), 60 SELECT and 12 ORDER BY columns
+   !> (MAXSEL 50, MAXORD 10), a join of 11 tables (MAXTAB, MXJOIN 10) with
+   !> 120 join constraints (MXJCON 100).
    subroutine test_ek_queries()
       character(*), parameter :: ek = prefix // 'queries.bes'
       character(:), allocatable :: query
@@ -938,6 +942,50 @@ contains
       call ctx%ekgi(1_ip, 1_ip, 1_ip, val, null, found)
       call check_ok('EK queries: 128 conjunctions')
       call check(.not. error .and. nrows == 1 .and. val == 1, 'EK queries: 128 conjunctions, ' // trim(errmsg))
+      ! 250 conjunctions (SPICELIB: MXJRS = 200 join row sets)
+      query = 'SELECT C1 FROM Q WHERE C1 = 1'
+      do i = 2, 250
+         write (num, '(i0)') i
+         query = query // ' OR C1 = ' // trim(num)
+      end do
+      call ctx%ekfind(query, nrows, error, errmsg)
+      call check_ok('EK queries: 250 conjunctions')
+      call check(.not. error .and. nrows == 250, 'EK queries: 250 conjunctions, ' // trim(errmsg))
+      ! 1024 constraints after normalization (SPICELIB: MAXCON = 1000)
+      query = 'SELECT C1 FROM Q WHERE (C1 = 1 OR C1 = 2)'
+      do i = 3, 9
+         write (num, '(i0)') i
+         query = query // ' AND (C1 = 1 OR C1 = ' // trim(num) // ')'
+      end do
+      call ctx%ekfind(query, nrows, error, errmsg)
+      call ctx%ekgi(1_ip, 1_ip, 1_ip, val, null, found)
+      call check_ok('EK queries: 1024 constraints')
+      call check(.not. error .and. nrows == 1 .and. val == 1, 'EK queries: 1024 constraints, ' // trim(errmsg))
+      ! 60 SELECT columns, 12 ORDER BY columns (SPICELIB: MAXSEL = 50, MAXORD = 10)
+      query = 'SELECT C1' // repeat(', C1', 59) // ' FROM Q WHERE C1 < 4 ORDER BY C1' // repeat(', C1', 11)
+      call ctx%ekfind(query, nrows, error, errmsg)
+      call ctx%ekgi(60_ip, 3_ip, 1_ip, val, null, found)
+      call check_ok('EK queries: 60 SELECT and 12 ORDER BY columns')
+      call check(.not. error .and. nrows == 3 .and. val == 3, 'EK queries: 60 SELECT columns, ' // trim(errmsg))
+      ! 11 tables, with 120 join constraints in one conjunction (SPICELIB:
+      ! MAXTAB = MXJOIN = 10 tables, MXJCON = 100 join constraints)
+      query = 'SELECT A11.C1 FROM Q A1'
+      do i = 2, 11
+         write (num, '(i0)') i
+         query = query // ', Q A' // trim(num)
+      end do
+      query = query // ' WHERE A1.C1 = 7'
+      do i = 2, 11
+         write (num, '(i0)') i
+         query = query // ' AND A' // trim(num) // '.C1 = A1.C1'
+      end do
+      do i = 1, 110
+         query = query // ' AND A2.C1 = A1.C1'
+      end do
+      call ctx%ekfind(query, nrows, error, errmsg)
+      call ctx%ekgi(1_ip, 1_ip, 1_ip, val, null, found)
+      call check_ok('EK queries: 11 tables')
+      call check(.not. error .and. nrows == 1 .and. val == 7, 'EK queries: 11 tables, ' // trim(errmsg))
       call ctx%unload(ek)
       call delete_file(ek)
    end subroutine test_ek_queries

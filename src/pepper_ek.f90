@@ -20905,16 +20905,16 @@ contains
       integer(ip)           row
       integer(ip)           rj
       integer(ip)           rjg
-      integer(ip)           rowvec ( maxtab + 1 )
-      integer(ip)           rvecj  ( maxtab + 1 )
-      integer(ip)           rvecjg ( maxtab + 1 )
+      integer(ip), allocatable :: rowvec ( : )
+      integer(ip), allocatable :: rvecj ( : )
+      integer(ip), allocatable :: rvecjg ( : )
       integer(ip)           rvsize
       integer(ip)           rwvbas
       integer(ip)           seg
-      integer(ip)           segvec ( maxtab )
+      integer(ip), allocatable :: segvec ( : )
       integer(ip)           sgvbas
-      integer(ip)           svecj  ( maxtab )
-      integer(ip)           svecjg ( maxtab )
+      integer(ip), allocatable :: svecj ( : )
+      integer(ip), allocatable :: svecjg ( : )
       integer(ip)           svsize
       integer(ip)           tabloc
       integer(ip)           tprime
@@ -21038,6 +21038,7 @@ contains
 
       call zzeksrd ( ctx, tabloc, tabloc, ntab_1 )
       ntab = ntab_1(1)
+      allocate ( rowvec(ntab+1), rvecj(ntab+1), rvecjg(ntab+1), segvec(ntab), svecj(ntab), svecjg(ntab) )
 
       svsize = ntab
       rvsize = ntab + 1
@@ -23378,6 +23379,7 @@ contains
 !!
       use pepper_kinds, only: ip
       use pepper_arrays, only: movei
+      use pepper_containers, only: grow
       use pepper_inc_ekcoldsc
       use pepper_inc_ekjrs
       use pepper_inc_ekopcd
@@ -23390,6 +23392,7 @@ contains
       integer(ip), parameter :: noluck = 3
       integer(ip), parameter :: empty = 4
       integer(ip) :: tab
+      integer(ip) :: n
       integer(ip) :: ltab
       integer(ip) :: j
       integer(ip) :: rcol
@@ -23413,6 +23416,27 @@ contains
          allocate ( ctx%zzekjtst_state )
          call init_zzekjtst_state ( ctx%zzekjtst_state )
       end if
+!
+!     PEPPER: the arrays of the join constraints grow to NJCNST (SPICELIB:
+!     MXJCON = 100, checked by ZZEKJOIN).
+!
+      associate ( z => ctx%zzekjtst_state )
+      n = max ( njcnst, 1_ip )
+      call grow ( z%ldscrs, n, cdscsz )
+      call grow ( z%rdscrs, n, cdscsz )
+      call grow ( z%lsdsc, n, sdscsz )
+      call grow ( z%rsdsc, n, sdscsz )
+      call grow ( z%lelts, n )
+      call grow ( z%relts, n )
+      call grow ( z%lhans, n )
+      call grow ( z%rhans, n )
+      call grow ( z%lrows, n )
+      call grow ( z%rrows, n )
+      call grow ( z%svcp1, n )
+      call grow ( z%svcp2, n )
+      call grow ( z%svops, n )
+      call grow ( z%locact, n )
+      end associate
       associate ( case => ctx%zzekjtst_state%case, &
                   cnstr => ctx%zzekjtst_state%cnstr, &
                   lbase => ctx%zzekjtst_state%lbase, &
@@ -24681,12 +24705,12 @@ contains
       integer(ip)           b
       integer(ip)           best
       integer(ip)           col
-      integer(ip)           conmap ( maxcon )
+      integer(ip), allocatable :: conmap ( : )
       integer(ip)           dtype
       integer(ip)           e
       integer(ip)           eltidx
       integer(ip)           i
-      integer(ip)           idxset ( lbcell : maxcon )
+      integer(ip), allocatable :: idxset ( : )
       integer(ip)           j
       integer(ip)           lastle
       integer(ip)           lastlt
@@ -24708,23 +24732,25 @@ contains
 !
       found = .false.
 
-      if (  ( ncnstr < 0 ) .or. ( ncnstr > maxcon )  ) then
+      if ( ncnstr < 0 ) then
 
-         call ctx%setmsg ( 'The number of constraints was #; valid '  // &
-                       'range is 0:#'                              )
+         call ctx%setmsg ( 'The number of constraints was #; it must '  // &
+                       'not be negative (PEPPER: no maximum; SPICELIB: '  // &
+                       'MAXCON).'                                   )
          call ctx%errint ( '#',   ncnstr                               )
-         call ctx%errint ( '#',   maxcon                               )
          call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                       )
          return
 
       end if
+
+      allocate ( conmap(max(ncnstr,1)), idxset(lbcell:max(ncnstr,1)) )
 
 !
 !     Make a set out of the indices of indexed columns referenced
 !     in active constraints.  Maintain a mapping from each column
 !     to the index of some constraint that references that column.
 !
-      call ssizei ( ctx, maxcon, idxset )
+      call ssizei ( ctx, max(ncnstr,1_ip), idxset )
 
       do i = 1, ncnstr
 
@@ -26439,11 +26465,11 @@ contains
       integer(ip)           rb1
       integer(ip)           rb2
       integer(ip)           rb3
-      integer(ip)           rowvec ( mxjoin + 1 )
+      integer(ip), allocatable :: rowvec ( : )
       integer(ip)           s1
       integer(ip)           s2
       integer(ip)           s3
-      integer(ip)           segvec ( mxjoin )
+      integer(ip), allocatable :: segvec ( : )
       integer(ip)           sgvbas
       integer(ip)           top
 
@@ -26455,12 +26481,14 @@ contains
 !
 !     Validate constraint count.
 !
-      if (  ( njcnst < 0 ) .or. ( njcnst > mxjcon )  ) then
+!     PEPPER: no maximum (SPICELIB: MXJCON = 100); ZZEKJPRP's arrays
+!     grow to the count.
+!
+      if ( njcnst < 0 ) then
 
-         call ctx%setmsg ( 'Number of join constraints was #; valid ' // &
-                       'range is 0:#'                              )
+         call ctx%setmsg ( 'Number of join constraints was #; it must ' // &
+                       'not be negative.'                           )
          call ctx%errint ( '#',  njcnst                                )
-         call ctx%errint ( '#',  mxjcon                                )
          call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                       )
          return
 
@@ -26486,34 +26514,29 @@ contains
       nt3  =  nt1  +  nt2
       nsv3 =  nsv1 *  nsv2
 
-      if (  ( nt1 < 1 ) .or. ( nt2 > mxjoin-1 )  ) then
+!
+!     PEPPER: no maximum number of tables in a join (SPICELIB: MXJOIN =
+!     10; its first check tested NT2 for NT1's upper bound).
+!
+      if ( nt1 < 1 ) then
 
          call ctx%setmsg ( 'Number tables in first join row set was #; '  // &
-                       'valid range is 1:#'                            )
+                       'it must be at least 1.'                        )
          call ctx%errint ( '#',  nt1                                       )
-         call ctx%errint ( '#',  mxjoin-1                                  )
          call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                           )
          return
 
-      else if (  ( nt2 < 1 ) .or. ( nt2 > mxjoin-1 )  ) then
+      else if ( nt2 < 1 ) then
 
          call ctx%setmsg ( 'Number tables in second join row set was #; ' // &
-                       'valid range is 1:#'                            )
+                       'it must be at least 1.'                        )
          call ctx%errint ( '#',  nt2                                       )
-         call ctx%errint ( '#',  mxjoin-1                                  )
          call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                           )
-         return
-
-      else if ( nt3 > mxjoin ) then
-
-         call ctx%setmsg ( 'Number of crossed tables was #; valid '  // &
-                       'range is 0:#'                              )
-         call ctx%errint ( '#',  nt3                                   )
-         call ctx%errint ( '#',  mxjoin                                )
-         call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                       )
          return
 
       end if
+
+      allocate ( rowvec(nt3+1), segvec(nt3) )
 
 !
 !     Validate cross product indices.  The column indices don't lend
@@ -33410,13 +33433,13 @@ contains
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: tab
       integer(ip) :: sgvbas
-      integer(ip) :: sizes  ( maxcon )
+      integer(ip), allocatable :: sizes ( : )
       integer(ip) :: j
       integer(ip) :: jbase2
       integer(ip) :: col
       integer(ip) :: t
       integer(ip) :: i
-      integer(ip) :: rdscrs ( cdscsz, maxcon )
+      integer(ip), allocatable :: rdscrs ( :, : )
       integer(ip) :: l
       integer(ip) :: lxend
       integer(ip) :: rtotal
@@ -33429,7 +33452,7 @@ contains
       integer(ip) :: k
       integer(ip) :: rwvbas
       integer(ip) :: endidx
-      integer(ip) :: ldscrs ( cdscsz, maxcon )
+      integer(ip), allocatable :: ldscrs ( :, : )
       integer(ip) :: jsize
       character(cnamsz) :: rcname
       integer(ip) :: nconj
@@ -33454,6 +33477,7 @@ contains
       integer(ip) :: nseg
       integer(ip) :: key
       integer(ip) :: keydsc ( cdscsz )
+      integer(ip) :: ncns, ncnj
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
          allocate ( ctx%spice%ekqmgr )
          call init_ekqmgr_state ( ctx%spice%ekqmgr )
@@ -33462,6 +33486,16 @@ contains
          allocate ( ctx%ekqmgr_query )
          call init_ekqmgr_context_state ( ctx%ekqmgr_query )
       end if
+!
+!     PEPPER: the arrays of the query (in the context state and here) are
+!     sized for it (SPICELIB: MAXTAB, MAXSEL, MAXORD, MAXCON, MXJOIN,
+!     MXJRS).
+!
+      call ekqmgr_query_room ( ctx, eqryi )
+      call zzekreqi ( ctx, eqryi, 'NUM_CONSTRAINTS',  ncns )
+      call zzekreqi ( ctx, eqryi, 'NUM_CONJUNCTIONS', ncnj )
+      allocate ( sizes(max(ncnj,1)), source = 0_ip )
+      allocate ( rdscrs(cdscsz, max(ncns,1)), ldscrs(cdscsz, max(ncns,1)), source = 0_ip )
       associate ( ftpool => ctx%spice%ekqmgr%ftpool, &
                   fthead => ctx%spice%ekqmgr%fthead, &
                   tbpool => ctx%spice%ekqmgr%tbpool, &
@@ -33572,8 +33606,8 @@ contains
 !     Initialize the table vectors.  Also initialize a vector of column
 !     list pointers.
 !
-      call ssizec ( ctx, maxtab, tabvec )
-      call ssizei ( ctx, maxtab, tptvec )
+      call ssizec ( ctx, ubound ( tabvec, 1, kind=ip ), tabvec )
+      call ssizei ( ctx, ubound ( tptvec, 1, kind=ip ), tptvec )
 
 !
 !     Fill in the FROM table vector and corresponding column pointer
@@ -33629,7 +33663,7 @@ contains
 !     Get the number of conjunctions and the sizes of the conjunctions.
 !
       call zzekreqi ( ctx, eqryi, 'NUM_CONJUNCTIONS',  nconj  )
-      call cleari   ( maxcon, sizes )
+      sizes = 0
 
       do i = 1, nconj
          call zzekqcnj ( ctx, eqryi, i, sizes(i) )
@@ -33798,7 +33832,7 @@ contains
 !              constraint will be placed in elements LDSCRS(*,I), if
 !              the Ith constraint is active.
 !
-               call cleari ( cdscsz*maxcon, ldscrs )
+               ldscrs = 0
 
                do i = 1, cjsize
 
@@ -33880,8 +33914,8 @@ contains
 !                 on the left hand sides and right hand sides of
 !                 these constraints.
 !
-                  call cleari ( cdscsz*maxcon, ldscrs )
-                  call cleari ( cdscsz*maxcon, rdscrs )
+                  ldscrs = 0
+                  rdscrs = 0
                   nact = 0
 
                   do i = 1, cjsize
@@ -34745,11 +34779,11 @@ contains
       integer(ip) :: sgvbas
       integer(ip) :: col
       integer(ip) :: i
-      integer(ip) :: rowvec ( maxtab )
+      integer(ip), allocatable :: rowvec ( : )
       integer(ip) :: seg
       integer(ip) :: tabidx
       integer(ip) :: rwvbas
-      integer(ip) :: segvec ( maxtab )
+      integer(ip), allocatable :: segvec ( : )
       integer(ip) :: rowidx
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
          allocate ( ctx%spice%ekqmgr )
@@ -34843,6 +34877,7 @@ contains
          call zzekvcal ( ctx, row,         rwvbas,      sgvbas )
       end if
 
+      allocate ( rowvec(ntab), segvec(ntab) )
       call zzeksrd  ( ctx, rwvbas+1, rwvbas+ntab, rowvec )
       call zzeksrd  ( ctx, sgvbas+1, sgvbas+ntab, segvec )
 
@@ -35533,12 +35568,12 @@ contains
       integer(ip) :: j
       integer(ip) :: col
       integer(ip) :: i
-      integer(ip) :: rowvec ( maxtab )
+      integer(ip), allocatable :: rowvec ( : )
       integer(ip) :: seg
       integer(ip) :: tabidx
       integer(ip) :: rwvbas
       integer(ip) :: cvlen
-      integer(ip) :: segvec ( maxtab )
+      integer(ip), allocatable :: segvec ( : )
       integer(ip) :: rowidx
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
          allocate ( ctx%spice%ekqmgr )
@@ -35673,6 +35708,7 @@ contains
          call zzekvcal ( ctx, row,         rwvbas,      sgvbas )
       end if
 
+      allocate ( rowvec(ntab), segvec(ntab) )
       call zzeksrd  ( ctx, rwvbas+1, rwvbas+ntab, rowvec )
       call zzeksrd  ( ctx, sgvbas+1, sgvbas+ntab, segvec )
 
@@ -36533,11 +36569,11 @@ contains
       integer(ip) :: j
       integer(ip) :: col
       integer(ip) :: i
-      integer(ip) :: rowvec ( maxtab )
+      integer(ip), allocatable :: rowvec ( : )
       integer(ip) :: seg
       integer(ip) :: tabidx
       integer(ip) :: rwvbas
-      integer(ip) :: segvec ( maxtab )
+      integer(ip), allocatable :: segvec ( : )
       integer(ip) :: rowidx
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
          allocate ( ctx%spice%ekqmgr )
@@ -36673,6 +36709,7 @@ contains
          call zzekvcal ( ctx, row,         rwvbas,      sgvbas )
       end if
 
+      allocate ( rowvec(ntab), segvec(ntab) )
       call zzeksrd  ( ctx, rwvbas+1, rwvbas+ntab, rowvec )
       call zzeksrd  ( ctx, sgvbas+1, sgvbas+ntab, segvec )
 
@@ -37361,11 +37398,11 @@ contains
       integer(ip) :: j
       integer(ip) :: col
       integer(ip) :: i
-      integer(ip) :: rowvec ( maxtab )
+      integer(ip), allocatable :: rowvec ( : )
       integer(ip) :: seg
       integer(ip) :: tabidx
       integer(ip) :: rwvbas
-      integer(ip) :: segvec ( maxtab )
+      integer(ip), allocatable :: segvec ( : )
       integer(ip) :: rowidx
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
          allocate ( ctx%spice%ekqmgr )
@@ -37500,6 +37537,7 @@ contains
          call zzekvcal ( ctx, row,         rwvbas,      sgvbas )
       end if
 
+      allocate ( rowvec(ntab), segvec(ntab) )
       call zzeksrd  ( ctx, rwvbas+1, rwvbas+ntab, rowvec )
       call zzeksrd  ( ctx, sgvbas+1, sgvbas+ntab, segvec )
 
@@ -40834,9 +40872,9 @@ contains
 !
 !     Local variables
 !
-      character(tnamsz)     alslst ( maxtab )
+      character(tnamsz), allocatable :: alslst ( : )
       character(long)       chrbuf
-      character(tnamsz)     tablst ( maxtab )
+      character(tnamsz), allocatable :: tablst ( : )
       character(cnamsz)     tmpcol
       character(tnamsz)     tmptab
 
@@ -40958,6 +40996,7 @@ contains
 !     aliases from the query.
 !
       call zzekreqi ( ctx, eqryi,  'NUM_TABLES', ntab   )
+      allocate ( alslst(max(ntab,1)), tablst(max(ntab,1)) )
 
       do i = 1, ntab
          call zzekqtab ( ctx, eqryi, eqryc, i, tablst(i), alslst(i) )
@@ -41721,9 +41760,9 @@ contains
 !
 !     Local variables
 !
-      character(tnamsz)     alias  ( maxtab )
+      character(tnamsz)     alias  ( 1 )
       character(cnamsz)     colnam
-      character(tnamsz)     table  ( maxtab )
+      character(tnamsz)     table  ( 1 )
       character(short)      timstr
       character(1)          touchc
 
@@ -42677,12 +42716,12 @@ contains
 !
 !     Local variables
 !
-      character(tnamsz)     alias  ( maxtab )
+      character(tnamsz), allocatable :: alias ( : )
       character(tnamsz)     ltable
-      character(tnamsz)     table  ( maxtab )
+      character(tnamsz), allocatable :: table ( : )
 
       integer(ip)           base
-      integer(ip)           cc     ( maxtab )
+      integer(ip), allocatable :: cc ( : )
       integer(ip)           cnstyp
       integer(ip)           i
       integer(ip)           iparse
@@ -42724,6 +42763,7 @@ contains
 !     Get the important counts from the query.
 !
       call zzekreqi ( ctx, eqryi, 'NUM_TABLES',       ntab )
+      allocate ( alias(max(ntab,1)), table(max(ntab,1)), cc(max(ntab,1)) )
       call zzekreqi ( ctx, eqryi, 'NUM_CONSTRAINTS',  ncns )
       call zzekreqi ( ctx, eqryi, 'NUM_CONJUNCTIONS', ncnj )
       call zzekreqi ( ctx, eqryi, 'NUM_ORDERBY_COLS', nord )
@@ -44955,5 +44995,66 @@ contains
          if ( free < extra ) n = grown_capacity ( size, size - free + extra )
       end function needed
    end subroutine ekqmgr_room
+
+   !> PEPPER: size the per-query arrays of EKQMGR's context state for the
+   !> query EQRYI: its FROM tables, SELECT and ORDER BY columns, the
+   !> constraints of a conjunction (at most all of them) and its
+   !> conjunctions (SPICELIB: MAXTAB, MAXSEL, MAXORD, MAXCON, MXJOIN,
+   !> MXJRS). The element index arrays are all 1, as SPICELIB set them.
+   subroutine ekqmgr_query_room ( ctx, eqryi )
+      use pepper_containers, only: grow, grow_cell
+      use pepper_inc_ektnamsz, only: tnamsz
+      integer(ip), parameter :: lbcell = -5
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: eqryi ( lbcell : * )  !! the encoded query
+      integer(ip) :: ntab, nsel, nord, ncns, ncnj
+      call zzekreqi ( ctx, eqryi, 'NUM_TABLES',       ntab )
+      call zzekreqi ( ctx, eqryi, 'NUM_SELECT_COLS',  nsel )
+      call zzekreqi ( ctx, eqryi, 'NUM_ORDERBY_COLS', nord )
+      call zzekreqi ( ctx, eqryi, 'NUM_CONSTRAINTS',  ncns )
+      call zzekreqi ( ctx, eqryi, 'NUM_CONJUNCTIONS', ncnj )
+      ntab = max ( ntab, 1_ip )
+      nsel = max ( nsel, 1_ip )
+      nord = max ( nord, 1_ip )
+      ncns = max ( ncns, 1_ip )
+      ncnj = max ( ncnj, 1_ip )
+      associate ( q => ctx%ekqmgr_query )
+      call grow ( q%frmals, ntab )
+      call grow ( q%frmtab, ntab )
+      call grow ( q%rbas, ntab )
+      call grow ( q%rsize, ntab )
+      call grow_cell ( q%tptvec, ntab )
+      if ( allocated ( q%tabvec ) ) then
+         if ( ubound ( q%tabvec, 1, kind=ip ) < ntab ) deallocate ( q%tabvec )
+      end if
+      if ( .not. allocated ( q%tabvec ) ) allocate ( q%tabvec(lbcell:ntab), source = repeat ( ' ', tnamsz ) )
+      call grow ( q%selcol, nsel )
+      call grow ( q%selctp, nsel )
+      call grow ( q%seltab, nsel )
+      call grow ( q%ocols, nord )
+      call grow ( q%oelts, nord )
+      call grow ( q%otabs, nord )
+      call grow ( q%sense, nord )
+      call grow ( q%dvals, ncns )
+      call grow ( q%cbegs, ncns )
+      call grow ( q%cends, ncns )
+      call grow ( q%cnstyp, ncns )
+      call grow ( q%dtype, ncns )
+      call grow ( q%ivals, ncns )
+      call grow ( q%lcidx, ncns )
+      call grow ( q%lelts, ncns )
+      call grow ( q%ltbidx, ncns )
+      call grow ( q%ops, ncns )
+      call grow ( q%rcidx, ncns )
+      call grow ( q%relts, ncns )
+      call grow ( q%rtbidx, ncns )
+      call grow ( q%activc, ncns )
+      call grow ( q%activv, ncns )
+      call grow ( q%ubase, ncnj )
+      q%lelts = 1
+      q%oelts = 1
+      q%relts = 1
+      end associate
+   end subroutine ekqmgr_query_room
 
 end submodule pepper_ek

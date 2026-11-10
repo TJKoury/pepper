@@ -29,9 +29,7 @@ module pepper_states
    use pepper_inc_ekcnamsz, only: cnamsz
    use pepper_inc_ekcoldsc, only: cdscsz
    use pepper_inc_ekglimit, only: mxclsg
-   use pepper_inc_ekjrs, only: mxjrs
    use pepper_inc_ekpage, only: pgsizc, pgsizd, pgsizi
-   use pepper_inc_ekqlimit, only: maxcon, maxord, maxsel, maxtab, maxtok, mxjcon, mxjoin
    use pepper_inc_ekquery, only: eqvdsz
    use pepper_inc_eksegdsc, only: sdscsz
    use pepper_inc_ektnamsz, only: tnamsz
@@ -1032,26 +1030,31 @@ module pepper_states
 
    !> The saved variables of EKQMGR that are per context.
    !>
-   !> No default initialization (123296 bytes): see init_ekqmgr_context_state.
+   !> No default initialization: see init_ekqmgr_context_state.
+   !>
+   !> PEPPER: the arrays of the FROM tables, SELECT and ORDER BY columns,
+   !> constraints and conjunctions of a query are sized for it by EKSRCH
+   !> (ekqmgr_query_room; SPICELIB: MAXTAB, MAXSEL, MAXORD, MAXCON, MXJOIN,
+   !> MXJRS).
    type, public :: ekqmgr_context_state
       character(cnamsz) :: cnams ( mxclld )  !! work: names of the columns of the segment being loaded (eklef)
       character(cnamsz) :: cnmset ( lbcell : mxclld )  !! work: set of the segment's column names, to find duplicates (eklef)
       character(cnamsz) :: colnam  !! work: name of a column (for eklef's error messages; of a SELECT column in eksrch)
-      character(tnamsz) :: frmals ( maxtab )  !! work: alias of each FROM table of the query (eksrch)
-      character(tnamsz) :: frmtab ( maxtab )  !! work: name of each FROM table of the query (eksrch)
+      character(tnamsz), allocatable :: frmals ( : )  !! work: alias of each FROM table of the query (eksrch)
+      character(tnamsz), allocatable :: frmtab ( : )  !! work: name of each FROM table of the query (eksrch)
       character(ekqmgr_short) :: problm  !! work: code of the problem that made eklef abort loading the file
       character(tnamsz) :: tabnam  !! work: name of a table (of the segment being loaded, or of a SELECT or order-by column)
-      character(tnamsz) :: tabvec ( lbcell : maxtab )  !! work: cell of the names of the FROM tables of the query (eksrch)
-      real(wp) :: dvals ( maxcon )  !! work: d.p. value of each constraint of the current conjunction (eksrch)
-      integer(ip) :: cbegs ( maxcon )  !! work: start in eqryc of the string value of each constraint of the current conjunction
+      character(tnamsz), allocatable :: tabvec ( : )  !! work: cell of the names of the FROM tables of the query (eksrch)
+      real(wp), allocatable :: dvals ( : )  !! work: d.p. value of each constraint of the current conjunction (eksrch)
+      integer(ip), allocatable :: cbegs ( : )  !! work: start in eqryc of the string value of each constraint of the current conjunction
       integer(ip) :: cdscrs ( cdscsz,  mxclld )  !! work: column descriptors of the segment being loaded (eklef)
-      integer(ip) :: cends ( maxcon )  !! work: end in eqryc of the string value of each constraint of the current conjunction
-      integer(ip) :: cnstyp ( maxcon )  !! work: type (column or value comparison) of each constraint of the current conjunction
-      integer(ip) :: dtype ( maxcon )  !! work: data type of the value of each constraint of the current conjunction
-      integer(ip) :: ivals ( maxcon )  !! work: integer value of each constraint of the current conjunction
-      integer(ip) :: lcidx ( maxcon )  !! work: index (in its table) of the left-hand column of each constraint
-      integer(ip) :: lelts ( maxcon )  !! element indices (all 1) of the left-hand columns of the constraints
-      integer(ip) :: ltbidx ( maxcon )  !! work: FROM table index of the left-hand column of each constraint
+      integer(ip), allocatable :: cends ( : )  !! work: end in eqryc of the string value of each constraint of the current conjunction
+      integer(ip), allocatable :: cnstyp ( : )  !! work: type (column or value comparison) of each constraint of the current conjunction
+      integer(ip), allocatable :: dtype ( : )  !! work: data type of the value of each constraint of the current conjunction
+      integer(ip), allocatable :: ivals ( : )  !! work: integer value of each constraint of the current conjunction
+      integer(ip), allocatable :: lcidx ( : )  !! work: index (in its table) of the left-hand column of each constraint
+      integer(ip), allocatable :: lelts ( : )  !! element indices (all 1) of the left-hand columns of the constraints
+      integer(ip), allocatable :: ltbidx ( : )  !! work: FROM table index of the left-hand column of each constraint
       integer(ip) :: ncols  !! work: number of columns of the segment being loaded (eklef)
       integer(ip) :: new  !! work: file table node of the file being loaded (eklef)
       integer(ip) :: nmatch  !! work: number of matching rows in the current segment (eksrch)
@@ -1059,29 +1062,29 @@ module pepper_states
       integer(ip) :: npcol  !! work: number of columns of the table of the segment being loaded (for an error message)
       integer(ip) :: nsel  !! number of SELECT columns of the last query
       integer(ip) :: ntab  !! number of FROM tables of the last query
-      integer(ip) :: ocols ( maxord )  !! index (in its table's column list) of each order-by column of the last query
-      integer(ip) :: oelts ( maxord )  !! element indices (all 1) of the order-by columns
-      integer(ip) :: ops ( maxcon )  !! work: operator code of each constraint of the current conjunction
+      integer(ip), allocatable :: ocols ( : )  !! index (in its table's column list) of each order-by column of the last query
+      integer(ip), allocatable :: oelts ( : )  !! element indices (all 1) of the order-by columns
+      integer(ip), allocatable :: ops ( : )  !! work: operator code of each constraint of the current conjunction
       integer(ip) :: ordbas  !! base address in the EK scratch area of the order vector of the sorted query results
-      integer(ip) :: otabs ( maxord )  !! FROM table index of each order-by column of the last query
-      integer(ip) :: rbas ( mxjoin )  !! work: scratch area base address of the one-table join row set of each FROM table
-      integer(ip) :: rcidx ( maxcon )  !! work: index (in its table) of the right-hand column of each constraint
-      integer(ip) :: relts ( maxcon )  !! element indices (all 1) of the right-hand columns of the constraints
-      integer(ip) :: rsize ( mxjrs  )  !! work: size of the one-table join row set of each FROM table
-      integer(ip) :: rtbidx ( maxcon )  !! work: FROM table index of the right-hand column of each constraint
-      integer(ip) :: selcol ( maxsel )  !! index (in its table's column list) of each SELECT column of the last query
-      integer(ip) :: selctp ( maxsel )  !! column attribute table entry (ctpool node) of each SELECT column of the last query
-      integer(ip) :: seltab ( maxsel )  !! FROM table index of each SELECT column of the last query
+      integer(ip), allocatable :: otabs ( : )  !! FROM table index of each order-by column of the last query
+      integer(ip), allocatable :: rbas ( : )  !! work: scratch area base address of the one-table join row set of each FROM table
+      integer(ip), allocatable :: rcidx ( : )  !! work: index (in its table) of the right-hand column of each constraint
+      integer(ip), allocatable :: relts ( : )  !! element indices (all 1) of the right-hand columns of the constraints
+      integer(ip), allocatable :: rsize ( : )  !! work: size of the one-table join row set of each FROM table
+      integer(ip), allocatable :: rtbidx ( : )  !! work: FROM table index of the right-hand column of each constraint
+      integer(ip), allocatable :: selcol ( : )  !! index (in its table's column list) of each SELECT column of the last query
+      integer(ip), allocatable :: selctp ( : )  !! column attribute table entry (ctpool node) of each SELECT column of the last query
+      integer(ip), allocatable :: seltab ( : )  !! FROM table index of each SELECT column of the last query
       integer(ip) :: segdsc ( sdscsz )  !! work: descriptor of the segment being loaded (eklef)
-      integer(ip) :: sense ( maxord )  !! sense (ascending or descending) of each order-by column of the last query
+      integer(ip), allocatable :: sense ( : )  !! sense (ascending or descending) of each order-by column of the last query
       integer(ip) :: stnew  !! work: segment table node of the segment being loaded (eklef)
       integer(ip) :: tbcurr  !! work: the current node of the table list
-      integer(ip) :: tptvec ( lbcell : maxtab )  !! cell of the table list nodes of the FROM tables of the last query
-      integer(ip) :: ubase ( mxjrs )  !! base address of the join row set of each conjunction (the join row set union)
+      integer(ip), allocatable :: tptvec ( : )  !! cell of the table list nodes of the FROM tables of the last query
+      integer(ip), allocatable :: ubase ( : )  !! base address of the join row set of each conjunction (the join row set union)
       integer(ip) :: unrows  !! number of rows that matched the last query
       integer(ip) :: usize  !! number of join row sets in the join row set union of the last query
-      logical :: activc ( maxcon )  !! work: each column comparison constraint is active
-      logical :: activv ( maxcon )  !! work: each value comparison constraint is active
+      logical, allocatable :: activc ( : )  !! work: each column comparison constraint is active
+      logical, allocatable :: activv ( : )  !! work: each value comparison constraint is active
       logical :: dosort  !! the results of the last query must be sorted at the next fetch
       logical :: fnd  !! work: the searched for table, file or column was found
       logical :: presnt  !! work: the table of the segment being loaded is in the table list already (eklef)
@@ -3764,35 +3767,37 @@ module pepper_states
    !> The saved variables of SPICELIB's ZZEKJTST routines (entry points
    !> zzekjprp, zzekjnxt), held in pepper_context (one per thread).
    !>
-   !> No default initialization (32088 bytes): see init_zzekjtst_state.
+   !> No default initialization: see init_zzekjtst_state. PEPPER: the arrays
+   !> of the join constraints grow to their number in ZZEKJPRP (SPICELIB:
+   !> MXJCON = 100).
    type, public :: zzekjtst_state
       integer(ip) :: case  !! join strategy chosen by zzekjprp: equi-join, non-equi-join, no key (test all), or empty
       integer(ip) :: cnstr  !! index of the key join constraint used to order the candidate row vectors
       integer(ip) :: lbase  !! scratch-area base of the narrow join row set built for the key constraint LHS column
       integer(ip) :: lcur  !! current LHS order-vector index within the run of equal keys (equi-join case)
-      integer(ip) :: ldscrs ( cdscsz, mxjcon )  !! column descriptor of the LHS column of each active join constraint
+      integer(ip), allocatable :: ldscrs ( :, : )  !! column descriptor of the LHS column of each active join constraint
       integer(ip) :: lelt  !! element index of the key constraint LHS column entry
-      integer(ip) :: lelts (         mxjcon )  !! element index of the LHS column of each constraint (never set, so always 0)
-      integer(ip) :: lhans (         mxjcon )  !! handle of the EK containing the LHS column of each active join constraint
-      logical :: locact (         mxjcon )  !! which join constraints to test, with the key constraint deactivated
+      integer(ip), allocatable :: lelts ( : )  !! element index of the LHS column of each constraint (never set, so always 0)
+      integer(ip), allocatable :: lhans ( : )  !! handle of the EK containing the LHS column of each active join constraint
+      logical, allocatable :: locact ( : )  !! which join constraints to test, with the key constraint deactivated
       integer(ip) :: lovbas  !! scratch-area base of the order vector that sorts the LHS key column
       integer(ip) :: lptr  !! current LHS order-vector index (start of the equal-key run in the equi-join case)
-      integer(ip) :: lrows (         mxjcon )  !! work: LHS row pointer of each active constraint, from the candidate row vector
-      integer(ip) :: lsdsc ( sdscsz, mxjcon )  !! segment descriptor of the LHS column of each active join constraint
+      integer(ip), allocatable :: lrows ( : )  !! work: LHS row pointer of each active constraint, from the candidate row vector
+      integer(ip), allocatable :: lsdsc ( :, : )  !! segment descriptor of the LHS column of each active join constraint
       integer(ip) :: rbase  !! scratch-area base of the narrow join row set built for the key constraint RHS column
-      integer(ip) :: rdscrs ( cdscsz, mxjcon )  !! column descriptor of the RHS column of each active join constraint
+      integer(ip), allocatable :: rdscrs ( :, : )  !! column descriptor of the RHS column of each active join constraint
       integer(ip) :: relt  !! element index of the key constraint RHS column entry
-      integer(ip) :: relts (         mxjcon )  !! element index of the RHS column of each constraint (never set, so always 0)
-      integer(ip) :: rhans (         mxjcon )  !! handle of the EK containing the RHS column of each active join constraint
+      integer(ip), allocatable :: relts ( : )  !! element index of the RHS column of each constraint (never set, so always 0)
+      integer(ip), allocatable :: rhans ( : )  !! handle of the EK containing the RHS column of each active join constraint
       integer(ip) :: rovbas  !! scratch-area base of the order vector that sorts the RHS key column
       integer(ip) :: rptr  !! current RHS order-vector index
-      integer(ip) :: rrows (         mxjcon )  !! work: RHS row pointer of each active constraint, from the candidate row vector
-      integer(ip) :: rsdsc ( sdscsz, mxjcon )  !! segment descriptor of the RHS column of each active join constraint
+      integer(ip), allocatable :: rrows ( : )  !! work: RHS row pointer of each active constraint, from the candidate row vector
+      integer(ip), allocatable :: rsdsc ( :, : )  !! segment descriptor of the RHS column of each active join constraint
       integer(ip) :: svbas1  !! base of the join row set holding the key LHS table (the first set if no key)
       integer(ip) :: svbas2  !! base of the join row set holding the key RHS table (the second set if no key)
-      integer(ip) :: svcp1 ( mxjcon )  !! cross-product index of the LHS table of each join constraint
-      integer(ip) :: svcp2 ( mxjcon )  !! cross-product index of the RHS table of each join constraint
-      integer(ip) :: svops ( mxjcon )  !! relational operator code of each join constraint
+      integer(ip), allocatable :: svcp1 ( : )  !! cross-product index of the LHS table of each join constraint
+      integer(ip), allocatable :: svcp2 ( : )  !! cross-product index of the RHS table of each join constraint
+      integer(ip), allocatable :: svops ( : )  !! relational operator code of each join constraint
       integer(ip) :: svncon  !! number of join constraints
       integer(ip) :: svnr1  !! number of considered row vectors in the svbas1 join row set
       integer(ip) :: svnr2  !! number of considered row vectors in the svbas2 join row set
@@ -3931,7 +3936,6 @@ module pepper_states
 
    ! ------------------------------------------------------------------ ZZEKVADR
 
-   integer(ip), parameter :: zzekvadr_mxjrs = 200
 
    !> Compute the EK scratch area base address of the row vector having
    !> a specified index, given a union of EK join row sets and a row
@@ -3941,12 +3945,12 @@ module pepper_states
    !> The saved variables of SPICELIB's ZZEKVADR routines (entry points
    !> zzekvset, zzekvcal), held in pepper_context (one per thread).
    type, public :: zzekvadr_state
-      integer(ip) :: begidx ( zzekvadr_mxjrs ) = 0  !! index of the first row vector of each join row set in the union
+      integer(ip), allocatable :: begidx ( : )  !! index of the first row vector of each join row set in the union
       integer(ip) :: j = 0  !! work: table or row count read from a join row set
       integer(ip) :: maxrwv = 0  !! largest valid row vector index of the union (computed one too large by zzekvset)
       integer(ip) :: ntabs = 0  !! number of tables in each join row set of the union
-      integer(ip) :: rbas ( zzekvadr_mxjrs ) = 0  !! scratch-area base address of the row vectors of each join row set
-      integer(ip) :: svbas ( zzekvadr_mxjrs ) = 0  !! scratch-area base address of each join row set
+      integer(ip), allocatable :: rbas ( : )  !! scratch-area base address of the row vectors of each join row set
+      integer(ip), allocatable :: svbas ( : )  !! scratch-area base address of each join row set
       integer(ip) :: svnjrs = 0  !! number of join row sets in the union
    end type zzekvadr_state
 
@@ -5816,21 +5820,9 @@ contains
       state%cnams = ' '
       state%cnmset = ' '
       state%colnam = ' '
-      state%frmals = ' '
-      state%frmtab = ' '
       state%problm = ' '
       state%tabnam = ' '
-      state%tabvec = ' '
-      state%dvals = 0.0_wp
-      state%cbegs = 0
       state%cdscrs = 0
-      state%cends = 0
-      state%cnstyp = 0
-      state%dtype = 0
-      state%ivals = 0
-      state%lcidx = 0
-      state%lelts = 1
-      state%ltbidx = 0
       state%ncols = 0
       state%new = 0
       state%nmatch = 0
@@ -5838,29 +5830,12 @@ contains
       state%npcol = 0
       state%nsel = 0
       state%ntab = 0
-      state%ocols = 0
-      state%oelts = 1
-      state%ops = 0
       state%ordbas = 0
-      state%otabs = 0
-      state%rbas = 0
-      state%rcidx = 0
-      state%relts = 1
-      state%rsize = 0
-      state%rtbidx = 0
-      state%selcol = 0
-      state%selctp = 0
-      state%seltab = 0
       state%segdsc = 0
-      state%sense = 0
       state%stnew = 0
       state%tbcurr = 0
-      state%tptvec = 0
-      state%ubase = 0
       state%unrows = 0
       state%usize = 0
-      state%activc = .false.
-      state%activv = .false.
       state%dosort = .false.
       state%fnd = .false.
       state%presnt = .false.
@@ -6450,29 +6425,15 @@ contains
       state%cnstr = 0
       state%lbase = 0
       state%lcur = 0
-      state%ldscrs = 0
       state%lelt = 0
-      state%lelts = 0
-      state%lhans = 0
-      state%locact = .false.
       state%lovbas = 0
       state%lptr = 0
-      state%lrows = 0
-      state%lsdsc = 0
       state%rbase = 0
-      state%rdscrs = 0
       state%relt = 0
-      state%relts = 0
-      state%rhans = 0
       state%rovbas = 0
       state%rptr = 0
-      state%rrows = 0
-      state%rsdsc = 0
       state%svbas1 = 0
       state%svbas2 = 0
-      state%svcp1 = 0
-      state%svcp2 = 0
-      state%svops = 0
       state%svncon = 0
       state%svnr1 = 0
       state%svnr2 = 0

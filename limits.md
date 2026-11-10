@@ -649,22 +649,36 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      count, and its pools grow (SPICELIB: 0.4 MB per context, "Relation
      table is full." and the like); the normalized WHERE clause is
      checked against MAXCON (1000 constraints), which SPICELIB wrote past
-     (`spicelib_bugs.md`), until step C2 sizes EKSRCH's constraint
-     arrays. ZZEKQINI has no minimum sizes; ZZEKPARS, ZZEKNRML and
+     (`spicelib_bugs.md`), until step C2 sized EKSRCH's constraint
+     arrays (the check is gone). ZZEKQINI has no minimum sizes; ZZEKPARS, ZZEKNRML and
      ZZEKENCD take the integer part as an allocatable (the legacy
      interface copies SPICELIB's cell in and out). Test: `test_limits`
      `test_ek_queries` (a 2700-character, 600-token WHERE clause; one
      with 64 conjunctions of 7 relations; the pools were also checked
      starting from 2 nodes).
 
+   - **EK query counts** (step C2 of the EK work): no maximum number of
+     FROM tables (MAXTAB, MXJOIN: 10), SELECT columns (MAXSEL: 50), ORDER
+     BY columns (MAXORD: 10), constraints (MAXCON: 1000), join
+     constraints in a conjunction (MXJCON: 100) or join row sets
+     (conjunctions, MXJRS: 200). The arrays sized by them are sized for
+     the query: EKQMGR's per-query arrays in the context state
+     (ekqmgr_query_room, before EKSRCH's associate) and EKSRCH's locals,
+     ZZEKVSET's join row set arrays and ZZEKJPRP's join constraint arrays
+     (state, grown), and the row and segment vectors of EKNELT, EKGC,
+     EKGD, EKGI, ZZEKJSQZ, ZZEKJSRT, ZZEKWEED, ZZEKJOIN, and the table
+     lists of ZZEKPCOL, ZZEKNRES, ZZEKKEY's constraint arrays (locals,
+     allocated with the count). The parse errors for too many tables,
+     SELECT or ORDER BY columns are gone, and C1's check of the
+     constraints against MAXCON. ZZEKJOIN's check of the first join row
+     set's table count tested the second's (`spicelib_bugs.md`). Test:
+     `test_limits` `test_ek_queries` (250 conjunctions, 1024 constraints,
+     60 SELECT and 12 ORDER BY columns, a join of 11 tables with 120 join
+     constraints in one conjunction).
+
    To do:
-   - **EK queries:** step C2, the counts: FROM tables (MAXTAB 10),
-     SELECT columns (MAXSEL 50), ORDER BY columns (MAXORD 10),
-     constraints (MAXCON 1000, EKSRCH and ZZEKKEY), joins (MXJOIN 10,
-     MXJCON 100) and join row sets (MXJRS 200, a conjunction each), and
-     the arrays sized by them (EKQMGR's per-context query arrays, the
-     row and segment vectors of the fetch routines); step C3, string
-     comparisons cut at MAXSTR (1024) characters. The encoded query is a flat integer cell laid out
+   - **EK queries:** step C3, string comparisons cut at MAXSTR (1024)
+     characters. The encoded query is a flat integer cell laid out
      from the maxima, so this is a rewrite of the parser's output, and the
      least-used subsystem. EKQMGR's tables of loaded EK files, tables,
      segments and columns (from phase 2) go with it.
