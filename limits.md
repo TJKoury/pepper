@@ -403,6 +403,24 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      keeps SPICELIB's interface for `F_ZZBDKR`. Tests: `test_limits`
      (20000 kernel names, 500 BODDEFs, 60-character names); tspice
      `F_BODCOD` (past NROOM and MAXE).
+   - **Surface names** (ZZSRFTRN, per context): a `surface_names` record
+     (names, IDs and bodies in arrays that grow; maps keyed by (name,
+     body) and (ID, body), SPICELIB's precedence). `TOOMANYSURFACES`
+     (2000) is gone; names have any length (SFNMLN was 36). ZZSRFINI is
+     gone; tspice's ZZSRFKER adapter keeps SPICELIB's interface.
+   - **Surface lists in method strings:** no limit (MAXSRF was 100). The
+     12 saved lists are allocatable and grow before their ASSOCIATE
+     blocks (to `len(method)/2+1`: a surface takes at least two
+     characters); GF's lists are automatic arrays of that size; the
+     MAXSRF checks of ZZDSKSIT and ZZSUDSKI are gone. ZZPRSMET's work
+     string and token arrays are sized from the method (SPICELIB: 1000
+     characters, cut without an error, and 100 tokens).
+   - **Tests:** `test_limits` (3000 surface names, a 60-character name, a
+     150-surface method string of about 1100 characters).
+   - **Still fixed:** GF saves the occultation method strings in 500
+     characters (`svfmth`, `svbmth`), and the geometry routines save the
+     previous method in a fixed buffer (a longer method is only parsed
+     again on every call).
 
    The plan for the rest:
    - **Bodies:**

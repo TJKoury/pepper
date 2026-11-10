@@ -26246,6 +26246,7 @@ contains
 !!
 !!     Set return value.
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_arrays, only: shelli
@@ -26273,6 +26274,11 @@ contains
       integer(ip)           surf
       real(wp), parameter :: pi2 = twopi
       if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
+!
+!     PEPPER: the surface list has room for any number of surfaces (it
+!     grows before the ASSOCIATE block; SPICELIB's held MAXSRF, 100).
+!
+      call grow ( ctx%zzdsksel_state%savsrf, max(1_ip, nsurf) )
       associate ( savbid => ctx%zzdsksel_state%savbid, &
                   savet => ctx%zzdsksel_state%savet, &
                   savnsf => ctx%zzdsksel_state%savnsf, &
@@ -26403,6 +26409,7 @@ contains
 !!     Currently, we don't need to access the DSK file in order
 !!     to make this test, but the required inputs are available.
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_arrays, only: bsrchi
@@ -26430,6 +26437,11 @@ contains
       integer(ip)           surf
       real(wp), parameter :: pi2 = twopi
       if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
+!
+!     PEPPER: the surface list has room for any number of surfaces (it
+!     grows before the ASSOCIATE block; SPICELIB's held MAXSRF, 100).
+!
+      call grow ( ctx%zzdsksel_state%savsrf, 1_ip )
       associate ( savbid => ctx%zzdsksel_state%savbid, &
                   savet => ctx%zzdsksel_state%savet, &
                   savnsf => ctx%zzdsksel_state%savnsf, &
@@ -38780,475 +38792,6 @@ contains
       end procedure zzspkap1
 
 !$Procedure ZZSRFINI ( Private --- Surface-Code Hash Initialization )
-
-      module procedure zzsrfini
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due to the
-!!     volatile nature of this routine.
-!!
-!!     Initialize the name-based and ID-based hashes used for efficient
-!!     access to surface-name mapping arrays. This routine should be
-!!     called by ZZSRFTRN and ZZSRFKER only.
-!!
-!! ## Required Reading
-!!
-!!     None.
-!!
-!! ## Keywords
-!!
-!!     UTILITY
-!!
-!! ## Declarations
-!!
-      use pepper_kinds, only: ip
-      use pepper_hash, only: name_hash
-      use pepper_arrays, only: cleari
-      use pepper_strings, only: cmprss
-      use pepper_inc_srftrn
-      use pepper_inc_zzsrftrn
-      implicit none
-
-
-
-! $ Detailed_Input
-!
-!     NORNAM    is the array of normalized surface names, made from
-!               elements of NAMES by upper-casing, left-justifying, and
-!               compressing groups of spaces to a single space. This
-!               represents the canonical member of the equivalence
-!               class to which each parallel entry in NAMES belongs.
-!
-!               This array is parallel to CODES and BODIES.
-!
-!     CODES     is the array of surface codes extracted. This array is
-!               parallel to NAMES and NORNAM.
-!
-!     BODIES    is the array of body ID codes associated with the input
-!               surface names.
-!
-!     NVALS     is the number of items contained in NAMES, NORNAM,
-!               CODES.
-!
-!     MAXVAL    is the output hash size.
-!
-! $ Detailed_Output
-!
-!     All output arrays must be declared with the dimension MAXVAL.
-!     MAXVAL must be greater than or equal to NVALS.
-!
-!     SNMHLS
-!     SNMPOL    are the surface name-based hash head node pointer and
-!               collision lists. Together with the arrays SNMIDX,
-!               NORNAM and BODIES, they enable mapping pairs of
-!               normalized surface names and body ID codes to surface
-!               ID codes.
-!
-!     SNMIDX    is the surface name-based hash index storage array. It
-!               maps nodes in the name collision list to entries in the
-!               parallel NORNAM and BODIES arrays.
-!
-!     SIDHLS
-!     SIDPOL    are the surface ID-based hash head node pointer and
-!               collision lists. Together with the arrays SIDIDX,
-!               CODES and BODIES, they enable mapping pairs of
-!               surface ID codes and body ID codes to surface
-!               names.
-!
-!     SIDIDX    is the surface ID-based hash index storage array. It
-!               maps nodes in the ID collision list to entries in the
-!               parallel CODES and BODIES arrays.
-!
-! $ Parameters
-!
-!     LBSNGL    is the lower bound of the hashes' collision list array.
-!
-!     SFNMLN    is the maximum length of a surface name. Defined in the
-!               include file 'srftrn.inc'.
-!
-! $ Exceptions
-!
-!     This routine is meant to signal no errors under normal
-!     circumstances. The only errors it can signal would be caused by
-!     bugs.
-!
-!     1) If the input number of bodies NVALS is not less than or equal
-!        to the size of the output hash, the error 'SPICE(BUG1)' will be
-!        signaled.
-!
-!     2) If registering an ID in the output ID-based hash fails, the
-!        error 'SPICE(BUG2)' will be signaled.
-!
-!     3) If registering a name in the output name-based hash fails,
-!        the error 'SPICE(BUG3)' will be signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This is a utility routine used for initializing the hashes
-!     facilitating efficient surface name-ID translation in ZZSRFTRN.
-!
-!     The order of mappings in the input arrays determines their
-!     priority, with the mapping having the lowest priority being first
-!     and the mapping with the highest priority being last.
-!
-!     If more than one entry with a particular normalized name and body
-!     ID is present in the input arrays, only the latest entry is
-!     registered in the name-based hash.
-!
-!     If more than one entry with a particular surface ID and body ID
-!     is present in the input arrays, only the latest entry that maps
-!     to a not-yet-registered normalized name is registered in the
-!     ID-based hash. Registering IDs only for not-yet-registered names
-!     achieves masking all IDs with the lower priority in cases when a
-!     single normalized name and body ID map to more than one surface
-!     ID.
-!
-! $ Examples
-!
-!     See the routine ZZSRFTRN.
-!
-! $ Restrictions
-!
-!     1)  This routine is intended only for use by ZZSRFTRN and
-!         ZZSRFKER.
-!
-!     2)  All output hash arrays must be declared with the same
-!         dimension which is greater than or equal to MAXVAL.
-!
-!     3)  The order of mappings in the input arrays determines the
-!         priority, with the mapping with the lowest priority being the
-!         first and the mapping with the highest priority being the
-!         last.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov       (JPL)
-!     M.J. Spencer       (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 05-NOV-2021 (NJB)
-!
-!        Made minor formatting changes to code.
-!        Updated inline comments to clarify logic.
-!
-!-    SPICELIB Version 1.0.0, 03-DEC-2015 (NJB) (BVS) (EDW)
-!
-!-&
-
-!
-!     SPICELIB functions.
-!
-
-!
-!     Hash control area items.
-!
-      integer(ip), parameter :: sizidx = 0
-
-      integer(ip), parameter :: freidx = -1
-
-!
-!     Local Variables
-!
-      character(sfnmln)     sqshnm
-
-      integer(ip)           head
-      integer(ip)           i
-      integer(ip)           itemat
-      integer(ip)           lookat
-      integer(ip)           node
-
-      logical               full
-      logical               idnew
-      logical               lfound
-      logical               namnew
-
-!
-!     Consistency check.
-!
-      if ( maxval < nvals ) then
-
-         call ctx%setmsg ( 'There is an inconsistency between the ' &
-         //            'number of input bodies and the size of ' &
-         //            'the output hashes. The number of input ' &
-         //            'bodies was #. The size of the output ' &
-         //            'hashes was #.'                           )
-         call ctx%errint ( '#', nvals                                )
-         call ctx%errint ( '#', maxval                               )
-         call ctx%sigerr ( 'SPICE(BUG1)'                             )
-         return
-
-      end if
-
-!
-!     Initialize output hashes. Set all collision list pointers
-!     to 0, which is the null value.
-!
-      call zzhsiini ( ctx, maxval, sidhls, sidpol )
-      call zzhscini ( ctx, maxval, snmhls, snmpol )
-
-      call cleari ( sidpol(0), sidpol(1))
-      call cleari ( snmpol(0), snmpol(1))
-
-!
-!     Loop through the input arrays to populate hashes. We do it
-!     backwards to pick and register only the highest priority (latest)
-!     values for each pair of normalized surface name and body ID code.
-!
-!     If multiple surface ID codes are associated with a name, only
-!     the highest priority ID is associated with the name in the
-!     mapping data structures.
-!
-      do i = nvals, 1, -1
-!
-!        Register this normalized surface name and body ID, but only if
-!        the name from this pair is not already in the hash.
-!
-!        We must traverse the collision list for the normalized surface
-!        name "manually," since we have to check the body ID for each
-!        matching name.
-!
-!        Use hash function to get index of the head node. We apply the
-!        hash function to a version of the normalized name that has
-!        all blanks compressed out. (A normalized name may have single
-!        blanks separating words comprising the name.)
-!
-         call cmprss ( ' ', 0, nornam(i), sqshnm )
-
-         lookat = name_hash( sqshnm, snmpol(sizidx) )
-
-         head   = snmhls ( lookat )
-
-!
-!        Indicate name and body were not found to begin with.
-!
-         lfound  = .false.
-         itemat  = 0
-         namnew  = .true.
-
-!
-!        See if this normalized name and corresponding body ID are,
-!        respectively, in the normalized name list and body ID list.
-!        Note that the body ID list is not a parallel array to the
-!        normalized name array: we use the name pool pointer array
-!        SNMIDX to indicate the location of the body ID corresponding
-!        to a name.
-!
-         node = head
-
-         if ( node > 0 ) then
-!
-!           Start at the head node and check each normalized name saved
-!           for this hash value until we find a name and body ID that
-!           match or run out of items in the collision list.
-!
-            do while (  ( node > 0 ) .and. ( .not. lfound )  )
-
-               lfound =       ( nornam( snmidx(node) ) == nornam(i) ) &
-                        .and. ( bodies( snmidx(node) ) == bodies(i) )
-
-               itemat = node
-               node   = snmpol ( node )
-
-            end do
-
-            namnew = .not. lfound
-
-         end if
-
-!
-!        ITEMAT is the node at which a name match was found by the
-!        above loop, if a match was found. ITEMAT is the tail node of
-!        the list if no match was found. It is 0 if the list is empty.
-!
-!        ITEMAT will be used below only if the list is non-empty and
-!        no match was found, in which case ITEMAT is non-zero.
-!
-         if ( namnew ) then
-!
-!           We need to add the current normalized name and BODY ID
-!           to the hash. Make sure there's room.
-!
-            full = ( snmpol(freidx) > snmpol(sizidx) )
-
-            if ( full ) then
-
-               call ctx%setmsg ( 'Could not add name # body ID # ' &
-               //            'to the hash.'                      )
-               call ctx%errch  ( '#', nornam(i)                      )
-               call ctx%errint ( '#', bodies(i)                      )
-               call ctx%sigerr ( 'SPICE(BUG2)'                       )
-               return
-
-            else
-!
-!              Store the item at the first free location in
-!              the collision pool.
-!
-               node           = snmpol(freidx)
-               snmpol(freidx) = snmpol(freidx) + 1
-
-               if ( head > 0 ) then
-!
-!                 Link the new entry at the tail of the applicable
-!                 collision list. The index of the tail node is ITEMAT.
-!
-                  snmpol(itemat) = node
-
-               else
-!
-!                 Insert the new head node into the head list.
-!
-                  snmhls(lookat) = node
-
-               end if
-!
-!              Set the index in the data arrays for the new pool
-!              entry.
-!
-               snmidx(node) = i
-
-            end if
-
-!
-!           NAMNEW indicates that the Ith normalized name and body ID
-!           pair was not in the hash prior to the above block of code.
-!
-!           We may have a situation when a single normalized surface
-!           name and body ID pair maps to more than one surface ID. In
-!           such cases we want to completely mask all surface IDs with
-!           the lower priority. This is easy to do by simply not
-!           attempting to register any more surface IDs if the name was
-!           already registered due to a higher-indexed assignment.
-!
-!           Register this surface ID and body ID pair, but only if it
-!           is not already in the hash.
-!
-!           We must traverse the collision list for the normalized
-!           surface name "manually," since we have to check the body ID
-!           for each matching surface ID.
-!
-!           Use hash function to get index of the head node.
-!
-            lookat = zzhashi( ctx, codes(i), sidpol(sizidx) )
-
-            head   = sidhls ( lookat )
-
-!
-!           Indicate surface ID and body were not found to begin with.
-!
-            lfound  = .false.
-            itemat  = 0
-            idnew   = .true.
-
-!
-!           See if this surface ID and corresponding body ID are,
-!           respectively, in the surface ID list and body ID list.
-!
-            node = head
-
-            if ( node > 0 ) then
-!
-!              Start at the head node and check each surface ID saved
-!              for this hash value until we find a surface ID and body
-!              ID that match or run out of items in this collision
-!              list.
-!
-               do while (  ( node > 0 ) .and. ( .not. lfound )  )
-
-                  lfound =      ( codes (sididx(node)) == codes (i) ) &
-                          .and. ( bodies(sididx(node)) == bodies(i) )
-
-                  itemat = node
-                  node   = sidpol ( node )
-
-               end do
-
-               idnew = .not. lfound
-
-            end if
-
-!
-!           ITEMAT is the node at which a surface ID code match was
-!           found by the above loop, if a match was found. ITEMAT is
-!           the tail node of the list if no match was found. It is 0 if
-!           the list is empty.
-!
-!           ITEMAT will be used below only if the list is non-empty and
-!           no match was found, in which case ITEMAT is non-zero.
-!
-            if ( idnew ) then
-!
-!              We need to add the current surface ID and BODY ID
-!              to the hash. Make sure there's room.
-!
-               full = ( sidpol(freidx) > sidpol(sizidx) )
-
-               if ( full ) then
-
-                  call ctx%setmsg ( 'Could not add surface ID # body ID # ' &
-                  //            'to the hash.'                         )
-                  call ctx%errint ( '#', codes(i)                          )
-                  call ctx%errint ( '#', bodies(i)                         )
-                  call ctx%sigerr ( 'SPICE(BUG3)'                          )
-                  return
-
-               else
-!
-!                 Store the item at the first free location in the
-!                 collision pool.
-!
-                  node           = sidpol(freidx)
-                  sidpol(freidx) = sidpol(freidx) + 1
-
-                  if ( head > 0 ) then
-!
-!                    Link the new entry at the tail of the applicable
-!                    collision list. The index of the tail node is
-!                    ITEMAT.
-!
-                     sidpol(itemat) = node
-
-                  else
-!
-!                    Insert the new head node into the head list.
-!
-                     sidhls(lookat) = node
-
-                  end if
-!
-!                 Set the index in the data arrays for the new pool
-!                 entry.
-!
-                  sididx(node) = i
-
-               end if
-
-            end if
-!
-!           We've processed the new (surface ID, body ID) pair.
-!
-         end if
-!
-!        We've processed the Ith mapping between (surface name, body
-!        ID) and (surface ID, body ID).
-!
-      end do
-
-      return
-      end procedure zzsrfini
 
 !$Procedure ZZTANSLV ( Private --- tangent point solver )
 
@@ -52732,6 +52275,7 @@ contains
 !!
 !!     Initial values
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_arrays, only: cleard, isrchi, movei
@@ -52780,6 +52324,11 @@ contains
       logical               update
       integer(ip) :: prvfid
       if ( .not. allocated ( ctx%zzdsksph_state ) ) allocate ( ctx%zzdsksph_state )
+!
+!     PEPPER: the surface list has room for any number of surfaces (it
+!     grows before the ASSOCIATE block; SPICELIB's held MAXSRF, 100).
+!
+      call grow ( ctx%zzdsksph_state%prvlst, max(1_ip, nsurf) )
       associate ( ctr => ctx%zzdsksph_state%ctr, &
                   first => ctx%zzdsksph_state%first, &
                   prvbod => ctx%zzdsksph_state%prvbod, &
@@ -57300,122 +56849,70 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: ljucrs
       use pepper_inc_srftrn
-      use pepper_inc_zzsrftrn
       implicit none
-      character(*), parameter :: kvsfbd = 'NAIF_SURFACE_BODY'
-      character(*), parameter :: kvsfcd = 'NAIF_SURFACE_CODE'
-      character(*), parameter :: kvsfnm = 'NAIF_SURFACE_NAME'
-      integer(ip), parameter :: kvnmln = 32
       integer(ip), parameter :: nnames = 3
+      character(*), parameter :: kvsfnm = 'NAIF_SURFACE_NAME'
+      character(*), parameter :: kvsfcd = 'NAIF_SURFACE_CODE'
+      character(*), parameter :: kvsfbd = 'NAIF_SURFACE_BODY'
+      character(17), parameter :: names ( nnames ) = [ kvsfnm, kvsfcd, kvsfbd ]
       character(1)          bdtype
       character(1)          cdtype
       character(1)          ndtype
       integer(ip)           i
+      integer(ip)           iname
       integer(ip)           nbody
       integer(ip)           ncode
       integer(ip)           nname
       logical               fndbod
       logical               fndcde
       logical               fndnam
+!
+!     PEPPER: the names are taken whole from the kernel pool (SPICELIB
+!     read them with GCPOOL into SFNMLN-character strings), and there is
+!     no limit on their number (SPICELIB: MXNSRF, SPICE(TOOMANYSURFACES)).
+!
       if ( .not. allocated ( ctx%zzsrfker_state ) ) allocate ( ctx%zzsrfker_state )
-      associate ( pass1 => ctx%zzsrfker_state%pass1, &
-                  names => ctx%zzsrfker_state%names )
+      associate ( pass1 => ctx%zzsrfker_state%pass1 )
       if ( ctx%failed() ) return
-
-!
-!     The primary functions performed inline in this routine are
-!
-!        - Setting a watch on the mapping kernel variables
-!
-!        - Fetching the mapping kernel variables' values
-!
-!        - Performing error checks on the kernel variables that define
-!          the surface name/ID mapping. Initialization of data
-!          structures is delegated to ZZSRFINI.
-!
       if ( pass1 ) then
-!
-!        Set watch on kernel variables used for the surface mapping.
-!
          call swpool ( ctx, 'ZZSRFTRN', nnames, names )
-
          if ( ctx%failed() ) return
-
          pass1 = .false.
-
       end if
-
-!
-!     Indicate that no data are available until we find out
-!     otherwise.
-!
-      extker = .false.
-      nkvar  =  0
-
-!
-!     Fetch attributes of the surface mapping kernel variables.
-!
+      call srf%clear ( )
       call dtpool ( ctx, kvsfnm, fndnam, nname, ndtype )
       call dtpool ( ctx, kvsfcd, fndcde, ncode, cdtype )
       call dtpool ( ctx, kvsfbd, fndbod, nbody, bdtype )
-
       if ( ctx%failed() ) return
-
-!
-!     The variables must all be present or all be absent.
-!
       if ( ( fndcde .neqv. fndnam ) .or. ( fndbod .neqv. fndnam ) ) then
-
          call ctx%setmsg ( 'Surface mapping kernel variables are in an ' &
          //            'inconsistent state. # was #; # was #; # ' &
          //            'was #.'                                      )
-
          call ctx%errch  ( '#', kvsfnm )
-
          if ( fndnam ) then
             call ctx%errch ( '#', 'found' )
          else
             call ctx%errch ( '#', 'not found' )
          end if
-
          call ctx%errch  ( '#', kvsfcd )
-
          if ( fndcde ) then
             call ctx%errch ( '#', 'found' )
          else
             call ctx%errch ( '#', 'not found' )
          end if
-
          call ctx%errch  ( '#', kvsfbd )
-
          if ( fndbod ) then
             call ctx%errch ( '#', 'found' )
          else
             call ctx%errch ( '#', 'not found' )
          end if
-
          call ctx%sigerr ( 'SPICE(BADSURFACEMAP)' )
          return
-
       end if
-
-!
-!     If the variables are not present, leave now.
-!
-      extker = fndnam .and. fndcde .and. fndbod
-
-      if ( .not. extker ) return
-
-!
-!     Make sure the kernel variables aren't larger than our arrays.
-!     Also make sure the variable have matching dimensions.
-!
-!     Check variable types.
-!
+      if ( .not. ( fndnam .and. fndcde .and. fndbod ) ) return
       if (     ( ndtype /= 'C' ) &
           .or. ( cdtype /= 'N' ) &
           .or. ( bdtype /= 'N' ) ) then
-
          call ctx%setmsg ( 'Surface mapping kernel variable types ' &
          //            'are: # = #; # = #; # = #. These types ' &
          //            'must be, respectively, ''C'', ''N'', ' &
@@ -57428,33 +56925,8 @@ contains
          call ctx%errch  ( '#', bdtype                             )
          call ctx%sigerr ( 'SPICE(BADVARIABLETYPE)'                )
          return
-
       end if
-
-!
-!     Check variable dimensions.
-!
-      if (     ( nname > mxnsrf ) &
-          .or. ( ncode > mxnsrf ) &
-          .or. ( nbody > mxnsrf ) ) then
-
-         call ctx%setmsg ( 'Surface mapping kernel variable sizes ' &
-         //            'are: # = #; # = #; # = #. Maximum ' &
-         //            'allowed size is #.'                    )
-         call ctx%errch  ( '#', kvsfnm                             )
-         call ctx%errint ( '#', nname                              )
-         call ctx%errch  ( '#', kvsfcd                             )
-         call ctx%errint ( '#', ncode                              )
-         call ctx%errch  ( '#', kvsfbd                             )
-         call ctx%errint ( '#', nbody                              )
-         call ctx%errint ( '#', mxnsrf                             )
-         call ctx%sigerr ( 'SPICE(TOOMANYSURFACES)'                )
-         return
-
-      end if
-
       if (  ( ncode /= nname ) .or. ( nbody /= nname )  ) then
-
          call ctx%setmsg ( 'Surface variable sizes do not match. Size ' &
          //            'of # is #; size of # is #; size of # is #.'  )
          call ctx%errch  ( '#', kvsfnm                                   )
@@ -57465,53 +56937,45 @@ contains
          call ctx%errint ( '#', nbody                                    )
          call ctx%sigerr ( 'SPICE(ARRAYSIZEMISMATCH)'                    )
          return
-
       end if
-
-!
-!     Fetch mapping variables.
-!
-!     Note that we'll check the variable sizes below.
-!
-      call gcpool ( ctx, kvsfnm, 1, mxnsrf, nname, kernam, fndnam )
-      call gipool ( ctx, kvsfcd, 1, mxnsrf, ncode, kersid, fndcde )
-      call gipool ( ctx, kvsfbd, 1, mxnsrf, nbody, kerbid, fndbod )
-
+      allocate ( srf%ids(nname), srf%bodies(nname), srf%nornam(nname) )
+      call gipool ( ctx, kvsfcd, 1, nname, ncode, srf%ids, fndcde )
+      call gipool ( ctx, kvsfbd, 1, nname, nbody, srf%bodies, fndbod )
       if ( ctx%failed() ) return
-
-      nkvar = nname
-
-!
-!     Produce normalized name array. Check for blank names
-!     as we go.
-!
-      do i = 1, nkvar
-
-         if ( kernam(i) == ' ' ) then
-
+      iname     = ctx%spice%pool%find ( kvsfnm )
+      srf%names = ctx%spice%pool%vars(iname)%cvals(1:nname)
+      srf%n     = nname
+      do i = 1, srf%n
+         if ( srf%names(i)%s == ' ' ) then
             call ctx%setmsg ( 'An attempt to assign the code, #, to ' &
             //            'a blank string was made.  Check loaded ' &
             //            'text kernels for a blank string in ' &
             //            'the NAIF_SURFACE_NAME array.'            )
             call ctx%errint ( '#', i                                    )
             call ctx%sigerr ( 'SPICE(BLANKNAMEASSIGNED)'                )
+            call srf%clear ( )
             return
-
          end if
-
-         call ljucrs ( 1, kernam(i), nornam(i) )
-
+         srf%nornam(i)%s = normalized ( srf%names(i)%s )
       end do
-
-!
-!     Initialize hash data structures.
-!
-      call zzsrfini ( ctx, nornam, kersid, kerbid, nkvar, &
-                      nroom,  snmhls, snmpol, snmidx, &
-                      sidhls, sidpol, sididx         )
-
+      call srf%index ( )
+      srf%extker = .true.
       return
       end associate
+
+      contains
+
+!
+!        A surface name normalized as by LJUCRS (left-justified,
+!        uppercase, single blanks), without trailing blanks.
+!
+         pure function normalized ( name ) result ( nor )
+            character(*), intent(in) :: name
+            character(:), allocatable :: nor
+            character(len(name)) :: buf
+            call ljucrs ( 1, name, buf )
+            nor = trim ( buf )
+         end function normalized
       end procedure zzsrfker
 
 !$Procedure CGV2EL ( Center and generating vectors to ellipse )
@@ -64318,6 +63782,7 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzsrftrn
       implicit none
+      integer(ip)           idx
       integer(ip), parameter :: sizidx = 0
       integer(ip), parameter :: freidx = -1
       integer(ip) :: nkvar
@@ -64326,24 +63791,10 @@ contains
       character(sfnmln) :: nsrfnm
       integer(ip) :: lookat
       logical :: lupdte
-      if ( .not. allocated ( ctx%zzsrftrn_state ) ) then
-         allocate ( ctx%zzsrftrn_state )
-         call init_zzsrftrn_state ( ctx%zzsrftrn_state )
-      end if
-      associate ( kersid => ctx%zzsrftrn_state%kersid, &
-                  kerbid => ctx%zzsrftrn_state%kerbid, &
-                  kernam => ctx%zzsrftrn_state%kernam, &
-                  nornam => ctx%zzsrftrn_state%nornam, &
-                  sidhls => ctx%zzsrftrn_state%sidhls, &
-                  sidpol => ctx%zzsrftrn_state%sidpol, &
-                  sididx => ctx%zzsrftrn_state%sididx, &
-                  snmhls => ctx%zzsrftrn_state%snmhls, &
-                  snmpol => ctx%zzsrftrn_state%snmpol, &
-                  snmidx => ctx%zzsrftrn_state%snmidx, &
-                  itemat => ctx%zzsrftrn_state%itemat, &
+      if ( .not. allocated ( ctx%zzsrftrn_state ) ) allocate ( ctx%zzsrftrn_state )
+      associate ( srf => ctx%zzsrftrn_state%srf, &
                   polctr => ctx%zzsrftrn_state%polctr, &
                   srfctr => ctx%zzsrftrn_state%srfctr, &
-                  extker => ctx%zzsrftrn_state%extker, &
                   pass1 => ctx%zzsrftrn_state%pass1 )
       if ( ctx%failed() ) return
 
@@ -64368,9 +63819,7 @@ contains
 !        call also sets a watch on the surface mapping kernel
 !        variables.
 !
-         call zzsrfker ( ctx, kernam, nornam, kersid, kerbid, &
-                         extker, nkvar,  snmhls, snmpol, &
-                         snmidx, sidhls, sidpol, sididx )
+         call zzsrfker ( ctx, srf )
 !
 !        Sync POLCTR with the kernel pool counter.
 !
@@ -64397,9 +63846,7 @@ contains
 !
 !        Initialize local data structures.
 !
-         call zzsrfker ( ctx, kernam, nornam, kersid, kerbid, &
-                         extker, nkvar,  snmhls, snmpol, &
-                         snmidx, sidhls, sidpol, sididx )
+         call zzsrfker ( ctx, srf )
 
          if ( ctx%failed() ) return
 
@@ -64409,54 +63856,19 @@ contains
 !     No translation can be done if the surface mapping variables
 !     are not in the pool.
 !
-      if ( .not. extker ) return
+      if ( .not. srf%extker ) return
 
 !
 !     Get a "normalized" copy of the input name: left-justified,
 !     compressed, upper case.
 !
-      call ljucrs ( 1, srfnam, nsrfnm )
-
-!
-!     Get a "squished" version of the above name: a version
-!     containing no blanks.
-!
-      call cmprss ( ' ', 0, nsrfnm, sqshnm )
-
-!
-!     Find the hash value of the squished input name.
-!
-      lookat = name_hash( sqshnm, snmpol(sizidx) )
-      node   = snmhls ( lookat )
-
-      found = .false.
-
-      if ( node > 0 ) then
-!
-!        Start at the head node and check each normalized name saved
-!           for this hash value until we find a name and body ID that
-!           match or run out of items in the collision list.
-!
-         do while (  ( node > 0 ) .and. ( .not. found )  )
-
-            found  =       ( nsrfnm  == nornam( snmidx(node) ) ) &
-                     .and. ( bodyid  == kerbid( snmidx(node) ) )
-
-            itemat = node
-            node   = snmpol ( node )
-
-         end do
-!
-!        ITEMAT is the value of the last node checked, or
-!        0 if the list is empty.
-!
-      end if
-
-      if ( found ) then
-
-         surfid = kersid( snmidx(itemat) )
-
-      end if
+      block
+         character(len(srfnam)) :: buf
+         call ljucrs ( 1, srfnam, buf )
+         idx = srf%name_index ( trim(buf), bodyid )
+      end block
+      found = idx > 0
+      if ( found ) surfid = srf%ids(idx)
 
       return
       end associate
@@ -64603,30 +64015,17 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzsrftrn
       implicit none
+      integer(ip)           idx
       integer(ip), parameter :: sizidx = 0
       integer(ip), parameter :: freidx = -1
       integer(ip) :: nkvar
       integer(ip) :: node
       integer(ip) :: lookat
       logical :: lupdte
-      if ( .not. allocated ( ctx%zzsrftrn_state ) ) then
-         allocate ( ctx%zzsrftrn_state )
-         call init_zzsrftrn_state ( ctx%zzsrftrn_state )
-      end if
-      associate ( kersid => ctx%zzsrftrn_state%kersid, &
-                  kerbid => ctx%zzsrftrn_state%kerbid, &
-                  kernam => ctx%zzsrftrn_state%kernam, &
-                  nornam => ctx%zzsrftrn_state%nornam, &
-                  sidhls => ctx%zzsrftrn_state%sidhls, &
-                  sidpol => ctx%zzsrftrn_state%sidpol, &
-                  sididx => ctx%zzsrftrn_state%sididx, &
-                  snmhls => ctx%zzsrftrn_state%snmhls, &
-                  snmpol => ctx%zzsrftrn_state%snmpol, &
-                  snmidx => ctx%zzsrftrn_state%snmidx, &
-                  itemat => ctx%zzsrftrn_state%itemat, &
+      if ( .not. allocated ( ctx%zzsrftrn_state ) ) allocate ( ctx%zzsrftrn_state )
+      associate ( srf => ctx%zzsrftrn_state%srf, &
                   polctr => ctx%zzsrftrn_state%polctr, &
                   srfctr => ctx%zzsrftrn_state%srfctr, &
-                  extker => ctx%zzsrftrn_state%extker, &
                   pass1 => ctx%zzsrftrn_state%pass1 )
       if ( ctx%failed() ) return
 
@@ -64651,9 +64050,7 @@ contains
 !        call also sets a watch on the surface mapping kernel
 !        variables.
 !
-         call zzsrfker ( ctx, kernam, nornam, kersid, kerbid, &
-                         extker, nkvar,  snmhls, snmpol, &
-                         snmidx, sidhls, sidpol, sididx )
+         call zzsrfker ( ctx, srf )
 !
 !        Sync SRFCTR with the kernel pool counter.
 !
@@ -64681,9 +64078,7 @@ contains
 !
 !        Initialize local data structures.
 !
-         call zzsrfker ( ctx, kernam, nornam, kersid, kerbid, &
-                         extker, nkvar,  snmhls, snmpol, &
-                         snmidx, sidhls, sidpol, sididx )
+         call zzsrfker ( ctx, srf )
 
          if ( ctx%failed() ) return
 
@@ -64693,42 +64088,14 @@ contains
 !     No translation can be done if the surface mapping variables
 !     are not in the pool.
 !
-      if ( .not. extker ) return
+      if ( .not. srf%extker ) return
 
 !
 !     Find the hash value of the squished input name.
 !
-      lookat = zzhashi( ctx, surfid, sidpol(sizidx) )
-      node   = sidhls ( lookat )
-
-      found  = .false.
-
-      if ( node > 0 ) then
-!
-!        Start at the head node and check each normalized name saved
-!           for this hash value until we find a name and body ID that
-!           match or run out of items in the collision list.
-!
-         do while (  ( node > 0 ) .and. ( .not. found )  )
-
-            found  =       ( surfid  == kersid( sididx(node) ) ) &
-                     .and. ( bodyid  == kerbid( sididx(node) ) )
-
-            itemat = node
-            node   = sidpol ( node )
-
-         end do
-!
-!        ITEMAT is the value of the last node checked, or
-!        0 if the list is empty.
-!
-      end if
-
-      if ( found ) then
-
-         srfnam = kernam( sididx(itemat) )
-
-      end if
+      idx   = srf%id_index ( surfid, bodyid )
+      found = idx > 0
+      if ( found ) srfnam = srf%names(idx)%s
 
       return
       end associate
@@ -64873,23 +64240,10 @@ contains
       integer(ip), parameter :: freidx = -1
       integer(ip) :: nkvar
       logical :: lupdte
-      if ( .not. allocated ( ctx%zzsrftrn_state ) ) then
-         allocate ( ctx%zzsrftrn_state )
-         call init_zzsrftrn_state ( ctx%zzsrftrn_state )
-      end if
-      associate ( kersid => ctx%zzsrftrn_state%kersid, &
-                  kerbid => ctx%zzsrftrn_state%kerbid, &
-                  kernam => ctx%zzsrftrn_state%kernam, &
-                  nornam => ctx%zzsrftrn_state%nornam, &
-                  sidhls => ctx%zzsrftrn_state%sidhls, &
-                  sidpol => ctx%zzsrftrn_state%sidpol, &
-                  sididx => ctx%zzsrftrn_state%sididx, &
-                  snmhls => ctx%zzsrftrn_state%snmhls, &
-                  snmpol => ctx%zzsrftrn_state%snmpol, &
-                  snmidx => ctx%zzsrftrn_state%snmidx, &
+      if ( .not. allocated ( ctx%zzsrftrn_state ) ) allocate ( ctx%zzsrftrn_state )
+      associate ( srf => ctx%zzsrftrn_state%srf, &
                   polctr => ctx%zzsrftrn_state%polctr, &
                   srfctr => ctx%zzsrftrn_state%srfctr, &
-                  extker => ctx%zzsrftrn_state%extker, &
                   pass1 => ctx%zzsrftrn_state%pass1 )
       if ( ctx%failed() ) return
 
@@ -64911,9 +64265,7 @@ contains
 !        call also sets a watch on the surface mapping kernel
 !        variables.
 !
-         call zzsrfker ( ctx, kernam, nornam, kersid, kerbid, &
-                         extker, nkvar,  snmhls, snmpol, &
-                         snmidx, sidhls, sidpol, sididx )
+         call zzsrfker ( ctx, srf )
 !
 !        Sync SRFCTR with the kernel pool counter.
 !
@@ -64948,9 +64300,7 @@ contains
 !
 !        Update kernel pool mapping lists and hashes.
 !
-         call zzsrfker ( ctx, kernam, nornam, kersid, kerbid, &
-                         extker, nkvar,  snmhls, snmpol, &
-                         snmidx, sidhls, sidpol, sididx )
+         call zzsrfker ( ctx, srf )
 
          if ( ctx%failed() ) return
 
@@ -71670,19 +71020,21 @@ contains
 
       character(*), parameter :: slash = '/'
 
-      integer(ip), parameter :: nmax = 100
 
-      integer(ip), parameter :: metlen = 1000
 
 !
 !     Local variables
 !
       character(1)          chr
-      character(metlen)     locmth
+!
+!     PEPPER: the work string and the token arrays are sized from METHOD
+!     (SPICELIB: 1000 characters, cut without an error, and 100 tokens).
+!
+      character(len(method)+1) locmth
 
-      integer(ip)           begs ( nmax + 2 )
+      integer(ip)           begs ( len(method) + 2 )
       integer(ip)           code
-      integer(ip)           ends ( nmax + 2 )
+      integer(ip)           ends ( len(method) + 2 )
       integer(ip)           i
       integer(ip)           n
       integer(ip)           npri
@@ -71726,7 +71078,7 @@ contains
 !
 !     Tokenize the input method string.
 !
-      call zzlexmet ( ctx, locmth(2:), nmax, n, begs(2), ends(2) )
+      call zzlexmet ( ctx, locmth(2:), int(len(method), ip), n, begs(2), ends(2) )
 
       if ( ctx%failed() ) return
 
@@ -87303,6 +86655,7 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vequ, vminus, vsep
       use pepper_strings, only: eqstr
@@ -87339,6 +86692,11 @@ contains
       integer(ip) :: trgcde
       logical :: pri
       if ( .not. allocated ( ctx%illumg_state ) ) allocate ( ctx%illumg_state )
+!
+!     PEPPER: the surface list has room for any number of surfaces (it
+!     grows before the ASSOCIATE block; SPICELIB's held MAXSRF, 100).
+!
+      call grow ( ctx%illumg_state%srflst, len(method)/2 + 1 )
       associate ( first => ctx%illumg_state%first, &
                   nsurf => ctx%illumg_state%nsurf, &
                   prvcor => ctx%illumg_state%prvcor, &
@@ -87463,7 +86821,7 @@ contains
 !        For DSK shapes, the surface list array and count will be set
 !        if the method string contains a surface list.
 !
-         call zzprsmet ( ctx, trgcde, method, maxsrf, shpstr, subtyp, &
+         call zzprsmet ( ctx, trgcde, method, size(srflst, kind=ip), shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmstr )
 
          if ( ctx%failed() ) return
@@ -88482,6 +87840,7 @@ contains
 !!
 !!     Initial values
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vhatip
       use pepper_strings, only: eqstr
@@ -88516,6 +87875,11 @@ contains
       real(wp) :: maxr
       logical :: pri
       if ( .not. allocated ( ctx%srfnrm_state ) ) allocate ( ctx%srfnrm_state )
+!
+!     PEPPER: the surface list has room for any number of surfaces (it
+!     grows before the ASSOCIATE block; SPICELIB's held MAXSRF, 100).
+!
+      call grow ( ctx%srfnrm_state%srflst, len(method)/2 + 1 )
       associate ( svctr1 => ctx%srfnrm_state%svctr1, &
                   svtarg => ctx%srfnrm_state%svtarg, &
                   svtcde => ctx%srfnrm_state%svtcde, &
@@ -88636,7 +88000,7 @@ contains
 !        For DSK shapes, the surface list array and count will be set
 !        if the method string contains a surface list.
 !
-         call zzprsmet ( ctx, trgcde, method, maxsrf, shpstr, subtyp, &
+         call zzprsmet ( ctx, trgcde, method, size(srflst, kind=ip), shpstr, subtyp, &
                          pri,    nsurf,  srflst, lmbtyp, trmtyp )
 
          if ( ctx%failed() ) return
@@ -89267,6 +88631,7 @@ contains
 !!
 !!     initialize intercept utilities for DSK target
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: cleard, movei
       use pepper_inc_dsk
@@ -89274,6 +88639,11 @@ contains
       integer(ip), parameter :: elltrg = 1
       integer(ip), parameter :: dsktrg = 2
       if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
+!
+!     PEPPER: the surface list has room for any number of surfaces (it
+!     grows before the ASSOCIATE block; SPICELIB's held MAXSRF, 100).
+!
+      call grow ( ctx%zzsinutl_state%savsrf, max(1_ip, nsurf) )
       associate ( savfid => ctx%zzsinutl_state%savfid, &
                   savmnr => ctx%zzsinutl_state%savmnr, &
                   savmxr => ctx%zzsinutl_state%savmxr, &
@@ -89453,12 +88823,18 @@ contains
 !!
 !!     callback for generalized ray surface intercept
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_inc_dsk
       implicit none
       integer(ip), parameter :: elltrg = 1
       integer(ip), parameter :: dsktrg = 2
       if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
+!
+!     PEPPER: the surface list has room for any number of surfaces (it
+!     grows before the ASSOCIATE block; SPICELIB's held MAXSRF, 100).
+!
+      call grow ( ctx%zzsinutl_state%savsrf, 1_ip )
       associate ( savfid => ctx%zzsinutl_state%savfid, &
                   savnsf => ctx%zzsinutl_state%savnsf, &
                   savrad => ctx%zzsinutl_state%savrad, &
@@ -91111,6 +90487,7 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
       use pepper_math, only: vequ, vhatip, vlcom, vminus, vsep
@@ -91155,6 +90532,11 @@ contains
       logical :: pri
       integer(ip) :: nsurf
       if ( .not. allocated ( ctx%illumf_state ) ) allocate ( ctx%illumf_state )
+!
+!     PEPPER: the surface list has room for any number of surfaces (it
+!     grows before the ASSOCIATE block; SPICELIB's held MAXSRF, 100).
+!
+      call grow ( ctx%illumf_state%srflst, len(method)/2 + 1 )
       associate ( first => ctx%illumf_state%first, &
                   prvcor => ctx%illumf_state%prvcor, &
                   prvmth => ctx%illumf_state%prvmth, &
@@ -91279,7 +90661,7 @@ contains
 !        For DSK shapes, the surface list array and count will be set
 !        if the method string contains a surface list.
 !
-         call zzprsmet ( ctx, trgcde, method, maxsrf, shpstr, subtyp, &
+         call zzprsmet ( ctx, trgcde, method, size(srflst, kind=ip), shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmstr )
 
          if ( ctx%failed() ) return
@@ -93457,6 +92839,7 @@ contains
 !!
 !!     Initial values
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr
       use pepper_math, only: latrec, vdot, vminus
@@ -93487,6 +92870,11 @@ contains
       logical               surfup
       logical :: pri
       if ( .not. allocated ( ctx%latsrf_state ) ) allocate ( ctx%latsrf_state )
+!
+!     PEPPER: the surface list has room for any number of surfaces (it
+!     grows before the ASSOCIATE block; SPICELIB's held MAXSRF, 100).
+!
+      call grow ( ctx%latsrf_state%srflst, len(method)/2 + 1 )
       associate ( svctr1 => ctx%latsrf_state%svctr1, &
                   svtarg => ctx%latsrf_state%svtarg, &
                   svtcde => ctx%latsrf_state%svtcde, &
@@ -93605,7 +92993,7 @@ contains
 !        For DSK shapes, the surface list array and count will be set
 !        if the method string contains a surface list.
 !
-         call zzprsmet ( ctx, trgcde, method, maxsrf, shpstr, subtyp, &
+         call zzprsmet ( ctx, trgcde, method, size(srflst, kind=ip), shpstr, subtyp, &
                          pri,    nsurf,  srflst, lmbtyp, trmtyp )
 
          if ( ctx%failed() ) return
@@ -95507,6 +94895,7 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vzero
       use pepper_strings, only: eqstr
@@ -95539,6 +94928,11 @@ contains
       logical               surfup
       logical :: pri
       if ( .not. allocated ( ctx%sincpt_state ) ) allocate ( ctx%sincpt_state )
+!
+!     PEPPER: the surface list has room for any number of surfaces (it
+!     grows before the ASSOCIATE block; SPICELIB's held MAXSRF, 100).
+!
+      call grow ( ctx%sincpt_state%srflst, len(method)/2 + 1 )
       associate ( first => ctx%sincpt_state%first, &
                   nsurf => ctx%sincpt_state%nsurf, &
                   prvcor => ctx%sincpt_state%prvcor, &
@@ -95774,7 +95168,7 @@ contains
 !        For DSK shapes, the surface list array and count will be set
 !        if the method string contains a surface list.
 !
-         call zzprsmet ( ctx, trgcde, method, maxsrf, shpstr, subtyp, &
+         call zzprsmet ( ctx, trgcde, method, size(srflst, kind=ip), shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmstr )
          if ( ctx%failed() ) return
 
@@ -97404,6 +96798,7 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: touchd
@@ -97460,6 +96855,11 @@ contains
       character(sublen) :: subtyp
       logical :: pri
       if ( .not. allocated ( ctx%subpnt_state ) ) allocate ( ctx%subpnt_state )
+!
+!     PEPPER: the surface list has room for any number of surfaces (it
+!     grows before the ASSOCIATE block; SPICELIB's held MAXSRF, 100).
+!
+      call grow ( ctx%subpnt_state%srflst, len(method)/2 + 1 )
       associate ( first => ctx%subpnt_state%first, &
                   near => ctx%subpnt_state%near, &
                   nsurf => ctx%subpnt_state%nsurf, &
@@ -97652,7 +97052,7 @@ contains
 !        For DSK shapes, the surface list array and count will be set
 !        if the method string contains a surface list.
 !
-         call zzprsmet ( ctx, trgcde, method, maxsrf, shpstr, subtyp, &
+         call zzprsmet ( ctx, trgcde, method, size(srflst, kind=ip), shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmstr )
 
          if ( ctx%failed() ) return
@@ -99384,6 +98784,7 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: touchd
@@ -99441,6 +98842,11 @@ contains
       logical :: pri
       logical :: xmit
       if ( .not. allocated ( ctx%subslr_state ) ) allocate ( ctx%subslr_state )
+!
+!     PEPPER: the surface list has room for any number of surfaces (it
+!     grows before the ASSOCIATE block; SPICELIB's held MAXSRF, 100).
+!
+      call grow ( ctx%subslr_state%srflst, len(method)/2 + 1 )
       associate ( first => ctx%subslr_state%first, &
                   near => ctx%subslr_state%near, &
                   nsurf => ctx%subslr_state%nsurf, &
@@ -99644,7 +99050,7 @@ contains
 !        For DSK shapes, the surface list array and count will be set
 !        if the method string contains a surface list.
 !
-         call zzprsmet ( ctx, trgcde, method, maxsrf, shpstr, subtyp, &
+         call zzprsmet ( ctx, trgcde, method, size(srflst, kind=ip), shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmstr )
 
          if ( ctx%failed() ) return
@@ -103517,7 +102923,8 @@ contains
 !!
 !!     Initial values
 !!
-       use pepper_kinds, only: ip, wp
+       use pepper_containers, only: grow
+      use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: cleari, touchd
       use pepper_math, only: el2cgv, mtxv, mxv, ucrss, vadd, vcrss, vdot, vequ, vlcom, vminus, vnorm, vrotv, vsclip, vsub, vzero
@@ -103599,6 +103006,11 @@ contains
          allocate ( ctx%limbpt_state )
          call init_limbpt_state ( ctx%limbpt_state )
       end if
+!
+!     PEPPER: the surface list has room for any number of surfaces (it
+!     grows before the ASSOCIATE block; SPICELIB's held MAXSRF, 100).
+!
+      call grow ( ctx%limbpt_state%srflst, len(method)/2 + 1 )
       associate ( first => ctx%limbpt_state%first, &
                   lmbtyp => ctx%limbpt_state%lmbtyp, &
                   loccde => ctx%limbpt_state%loccde, &
@@ -103815,7 +103227,7 @@ contains
 !        For DSK shapes, the surface list array and count will be set
 !        if the method string contains a surface list.
 !
-         call zzprsmet ( ctx, trgcde, method, maxsrf, shpstr, subtyp, &
+         call zzprsmet ( ctx, trgcde, method, size(srflst, kind=ip), shpstr, subtyp, &
                          pri,    nsurf,  srflst, lmbstr, trmstr )
 
          if ( ctx%failed() ) return
@@ -106701,7 +106113,8 @@ contains
 !!
 !!     Initial values
 !!
-       use pepper_kinds, only: ip, wp
+       use pepper_containers, only: grow
+      use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_arrays, only: cleari, touchd
       use pepper_math, only: mtxv, mxv, vadd, vcrss, vequ, vhat, vminus, vnorm, vrotv, vscl, vsub, vzero
@@ -106775,6 +106188,11 @@ contains
          allocate ( ctx%termpt_state )
          call init_termpt_state ( ctx%termpt_state )
       end if
+!
+!     PEPPER: the surface list has room for any number of surfaces (it
+!     grows before the ASSOCIATE block; SPICELIB's held MAXSRF, 100).
+!
+      call grow ( ctx%termpt_state%srflst, len(method)/2 + 1 )
       associate ( first => ctx%termpt_state%first, &
                   loccde => ctx%termpt_state%loccde, &
                   maxrad => ctx%termpt_state%maxrad, &
@@ -107033,7 +106451,7 @@ contains
 !        For DSK shapes, the surface list array and count will be set
 !        if the method string contains a surface list.
 !
-         call zzprsmet ( ctx, trgcde, method, maxsrf, shpstr, subtyp, &
+         call zzprsmet ( ctx, trgcde, method, size(srflst, kind=ip), shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmstr )
 
          if ( ctx%failed() ) return

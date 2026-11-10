@@ -2133,37 +2133,6 @@
       end subroutine zzspkap1
 
       !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> Legacy interface: calls zz routine zzsrfini with the legacy context.
-      subroutine zzsrfini ( nornam, codes,  bodies, &
-                            nvals,  maxval, snmhls, snmpol, &
-                            snmidx, sidhls, sidpol, sididx )
-      use pepper_instance, only: pepper_context, pepper_zzsrfini => zzsrfini
-      use pepper_legacy_context, only: legacy_context
-      use pepper_kinds, only: ip
-      use pepper_hash, only: name_hash
-      use pepper_inc_srftrn
-      use pepper_inc_zzsrftrn
-      implicit none
-      character(*) :: nornam (          * )  !! Array of normalized surface names
-      integer(ip) :: codes  (          * )  !! Array of surface ID codes for NAMES/NORNAM
-      integer(ip) :: bodies (          * )  !! Array of body ID codes
-      integer(ip) :: nvals  !! Length of NAMES, NORNAM, and CODES arrays
-      integer(ip) :: maxval  !! Size of the hash arrays
-      integer(ip) :: snmhls (          * )  !! Surface name-based hash head node pointer list
-      integer(ip) :: snmpol ( lbsngl : * )  !! Surface name-based hash node collision list
-      integer(ip) :: snmidx (          * )  !! Surface name-based hash index storage array
-      integer(ip) :: sidhls (          * )  !! Surface ID-based hash head node pointer list
-      integer(ip) :: sidpol ( lbsngl : * )  !! Surface ID-based hash node collision list
-      integer(ip) :: sididx (          * )  !! Surface ID-based hash index storage array
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call pepper_zzsrfini ( ctx, nornam, codes, bodies, nvals, maxval, snmhls, snmpol, snmidx, sidhls, sidpol, sididx )
-      end subroutine zzsrfini
-
-      !> SPICE Private routine intended solely for the support of SPICE
       !> routines. Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
@@ -2919,8 +2888,14 @@
       !> volatile nature of this routine.
       !>
       !> Legacy interface: calls zz routine zzsrfker with the legacy context.
+      !> PEPPER's ZZSRFKER fills a surface_names record, with no limit on the
+      !> number or length of the names; this keeps SPICELIB's interface: it
+      !> signals SPICE(TOOMANYSURFACES) when the kernel variables do not fit
+      !> its MXNSRF arrays and copies the names, IDs and bodies into them
+      !> (the hash arrays are not set).
       subroutine zzsrfker ( kernam, nornam, kersid, kerbid, extker, nkvar, snmhls, snmpol, snmidx, sidhls, sidpol, sididx )
       use pepper_instance, only: pepper_context, pepper_zzsrfker => zzsrfker
+      use pepper_states, only: surface_names
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       use pepper_inc_srftrn
@@ -2939,8 +2914,42 @@
       integer(ip) :: sidpol ( lbsngl : * )  !! Surface ID-based hash node collision list
       integer(ip) :: sididx (          * )  !! Surface ID-based hash index storage array
       type(pepper_context), pointer :: ctx
+      type(surface_names) :: srf
+      character(1) :: type(3)
+      integer(ip) :: n(3), i
+      logical :: found(3)
       ctx => legacy_context()
-      call pepper_zzsrfker ( ctx, kernam, nornam, kersid, kerbid, extker, nkvar, snmhls, snmpol, snmidx, sidhls, sidpol, sididx )
+      if ( ctx%failed() ) return
+      extker = .false.
+      nkvar  = 0
+      call ctx%dtpool ( 'NAIF_SURFACE_NAME', found(1), n(1), type(1) )
+      call ctx%dtpool ( 'NAIF_SURFACE_CODE', found(2), n(2), type(2) )
+      call ctx%dtpool ( 'NAIF_SURFACE_BODY', found(3), n(3), type(3) )
+      if (       all ( found ) .and. type(1) == 'C' .and. type(2) == 'N' &
+           .and. type(3) == 'N' .and. any ( n > mxnsrf ) ) then
+         call ctx%setmsg ( 'Surface mapping kernel variable sizes ' &
+         //            'are: # = #; # = #; # = #. Maximum ' &
+         //            'allowed size is #.'                    )
+         call ctx%errch  ( '#', 'NAIF_SURFACE_NAME' )
+         call ctx%errint ( '#', n(1)                )
+         call ctx%errch  ( '#', 'NAIF_SURFACE_CODE' )
+         call ctx%errint ( '#', n(2)                )
+         call ctx%errch  ( '#', 'NAIF_SURFACE_BODY' )
+         call ctx%errint ( '#', n(3)                )
+         call ctx%errint ( '#', mxnsrf              )
+         call ctx%sigerr ( 'SPICE(TOOMANYSURFACES)' )
+         return
+      end if
+      call pepper_zzsrfker ( ctx, srf )
+      if ( ctx%failed() ) return
+      extker = srf%extker
+      nkvar  = srf%n
+      do i = 1, nkvar
+         kernam(i) = srf%names(i)%s
+         nornam(i) = srf%nornam(i)%s
+         kersid(i) = srf%ids(i)
+         kerbid(i) = srf%bodies(i)
+      end do
       end subroutine zzsrfker
 
       !> Form a SPICE ellipse from a center vector and two generating

@@ -12095,7 +12095,7 @@ module pepper_instance
       zzedterm, zzedtmpt, zzellbds, zzelnaxx, zzeprcss, zzgetelm, zzgrav,&
       zzholdd, zzhullax, zzingrd, zzinrec, zzinrypl, zzlatbox, zzlexmet,&
       zzmult, zznrmlon, zzrecbox, zzrtnmat, zzryxsph, zzsecprt, zzsepq,&
-      zzsfxcor, zzsglatx, zzspin, zzspkap0, zzspkap1, zzsrfini, zztanslv,&
+      zzsfxcor, zzsglatx, zzspin, zzspkap0, zzspkap1, zztanslv,&
       zztogrid, zzwind, zzwind2d, zzcnquad, zzdsksph, zzfovaxi, zzinlat0,&
       zzdpinit, zzdpsec, zzdpper, zzpdcmpl, zzpdpltc, zzpdtbox, zzraybox,&
       zzsrfker, zzilusta, zzinlat, zzinpdt0, zzrytrec, zzsegbox, zzsrfn2c,&
@@ -13416,28 +13416,6 @@ module pepper_instance
          real(wp), intent(out) :: lt  !! One way light time between observer and target.
       end subroutine zzspkap1
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> LBSNGL     P   Lower bound of hash pool arrays
-      !> SFNMLN     P   Maximum length of surface name strings
-      module subroutine zzsrfini ( ctx, nornam, codes, bodies, nvals, maxval, snmhls, snmpol, snmidx, sidhls, sidpol, sididx )
-      use pepper_inc_srftrn
-      use pepper_inc_zzsrftrn
-         class(pepper_context), intent(inout) :: ctx  !! the context
-         character(*), intent(in) :: nornam (          * )  !! Array of normalized surface names
-         integer(ip), intent(in) :: codes  (          * )  !! Array of surface ID codes for NAMES/NORNAM
-         integer(ip), intent(in) :: bodies (          * )  !! Array of body ID codes
-         integer(ip), intent(in) :: nvals  !! Length of NAMES, NORNAM, and CODES arrays
-         integer(ip), intent(in) :: maxval  !! Size of the hash arrays
-         integer(ip), intent(out) :: snmhls (          * )  !! Surface name-based hash head node pointer list
-         integer(ip), intent(out) :: snmpol ( lbsngl : * )  !! Surface name-based hash node collision list
-         integer(ip), intent(out) :: snmidx (          * )  !! Surface name-based hash index storage array
-         integer(ip), intent(out) :: sidhls (          * )  !! Surface ID-based hash head node pointer list
-         integer(ip), intent(out) :: sidpol ( lbsngl : * )  !! Surface ID-based hash node collision list
-         integer(ip), intent(out) :: sididx (          * )  !! Surface ID-based hash index storage array
-      end subroutine zzsrfini
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines. Users should not call this routine directly due
@@ -13928,24 +13906,11 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       !>
-      !> LBSNGL     P   Lower bound of hash pool arrays
-      !> SFNMLN     P   Maximum length of surface name strings
-      module subroutine zzsrfker ( ctx, kernam, nornam, kersid, kerbid, extker, nkvar, snmhls, snmpol, snmidx, sidhls, sidpol, sididx )
-      use pepper_inc_srftrn
-      use pepper_inc_zzsrftrn
+      !> PEPPER: fills SRF (SPICELIB returned arrays of MXNSRF entries and
+      !> their hash tables; see surface_names).
+      module subroutine zzsrfker ( ctx, srf )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         character(sfnmln), intent(out) :: kernam (          * )  !! Array of surface names from kernel pool.
-         character(sfnmln), intent(out) :: nornam (          * )  !! Array of normalized surface names.
-         integer(ip), intent(out) :: kersid (          * )  !! Array of surface ID codes from kernel pool.
-         integer(ip), intent(out) :: kerbid (          * )  !! Array of body ID codes from kernel pool.
-         logical, intent(out) :: extker  !! Logical flag indicating kernel data are present.
-         integer(ip), intent(out) :: nkvar  !! Number of surface name, code, body tuples.
-         integer(ip), intent(out) :: snmhls (          * )  !! Surface name-based hash head node pointer list
-         integer(ip), intent(out) :: snmpol ( lbsngl : * )  !! Surface name-based hash node collision list
-         integer(ip), intent(out) :: snmidx (          * )  !! Surface name-based hash index storage array
-         integer(ip), intent(out) :: sidhls (          * )  !! Surface ID-based hash head node pointer list
-         integer(ip), intent(out) :: sidpol ( lbsngl : * )  !! Surface ID-based hash node collision list
-         integer(ip), intent(out) :: sididx (          * )  !! Surface ID-based hash index storage array
+         type(surface_names), intent(inout) :: srf  !! the surface names from the kernel pool
       end subroutine zzsrfker
 
       !> Form a SPICE ellipse from a center vector and two generating

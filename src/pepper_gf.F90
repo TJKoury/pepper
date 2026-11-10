@@ -5838,7 +5838,7 @@ contains
       integer(ip)           nsurf
       integer(ip)           occnum
       integer(ip)           occode
-      integer(ip)           srflst ( maxsrf )
+      integer(ip)           srflst ( max ( len(fshape), len(bshape) ) / 2 + 1 )  ! PEPPER: room for any number of surfaces (SPICELIB: MAXSRF)
       integer(ip)           trgid
       logical               attblk ( nabcor )
       logical               found
@@ -5979,7 +5979,7 @@ contains
 
       else
 
-         call zzprsmet ( ctx, idfrnt, svfmth, maxsrf, shpstr, subtyp, &
+         call zzprsmet ( ctx, idfrnt, svfmth, size(srflst, kind=ip), shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmtyp )
 
          if ( ctx%failed() ) return
@@ -6014,7 +6014,7 @@ contains
 
       else
 
-         call zzprsmet ( ctx, idfrnt, svbmth, maxsrf, shpstr, subtyp, &
+         call zzprsmet ( ctx, idfrnt, svbmth, size(srflst, kind=ip), shpstr, subtyp, &
                          pri,    nsurf,  srflst, pntdef, trmtyp )
 
          if ( ctx%failed() ) return
@@ -6534,7 +6534,6 @@ contains
       integer(ip)           nsurf
       integer(ip)           occnum
       integer(ip)           occode
-      integer(ip)           srflst ( maxsrf )
       integer(ip)           trgid
       logical               attblk ( nabcor )
       logical               found
@@ -17492,7 +17491,7 @@ contains
       integer(ip)           index
       integer(ip)           mltfac
       integer(ip)           nsurf
-      integer(ip)           srflst ( maxsrf )
+      integer(ip)           srflst ( max ( len(shape1), len(shape2) ) / 2 + 1 )  ! PEPPER: room for any number of surfaces (SPICELIB: MAXSRF)
 
       logical               ellps2
       logical               found
@@ -17588,7 +17587,7 @@ contains
 
          end if
 
-         call zzprsmet ( ctx, id1, shap1, maxsrf, prshp1, subtyp, &
+         call zzprsmet ( ctx, id1, shap1, size(srflst, kind=ip), prshp1, subtyp, &
                          pri, nsurf, srflst, pntdef, trmtyp )
 
          if ( ctx%failed() ) return
@@ -17613,7 +17612,7 @@ contains
 
          end if
 
-         call zzprsmet ( ctx, id2, shap2, maxsrf, prshp2, subtyp, &
+         call zzprsmet ( ctx, id2, shap2, size(srflst, kind=ip), prshp2, subtyp, &
                          pri, nsurf, srflst, pntdef, trmtyp )
 
          if ( ctx%failed() ) return

@@ -23,7 +23,6 @@ module pepper_states
    use pepper_containers, only: grow, string, string_map, int_map
    use pepper_inc_das, only: ftsize
    use pepper_inc_dla, only: dladsz
-   use pepper_inc_dsk, only: maxsrf
    use pepper_inc_dsk02, only: maxcgr, maxplt
    use pepper_inc_dskdsc, only: dskdsz, nsypar
    use pepper_inc_dsktol, only: angmrg, lonali, ptmemm, sgpadm, sgreed, xfract
@@ -41,7 +40,6 @@ module pepper_states
    use pepper_inc_nninrt, only: nninrt
    use pepper_inc_sclk, only: mxnfld, mxpart
    use pepper_inc_sgparam, only: mxmeta
-   use pepper_inc_srftrn, only: mxnsrf, sfnmln
    use pepper_inc_zzabcorr, only: corlen, nabcor
    use pepper_inc_zzbodtrn, only: maxe, maxl, nperm
    use pepper_inc_zzctr, only: ctrsiz
@@ -52,7 +50,6 @@ module pepper_states
    use pepper_inc_zzgf, only: cylsys, geosys, latsys, mxbegm, mxendm, pgrsys, radsys, recsys, sphsys
    use pepper_inc_zzholdd, only: nid
    use pepper_inc_zzsc01, only: dbufsz, dplen, ibufsz, lbsngl, mxnclk
-   use pepper_inc_zzsrftrn, only: zzsrftrn_nroom => nroom
    use pepper_inc_zzswtchf, only: maxbas, maxfrm
 
    implicit none
@@ -67,7 +64,7 @@ module pepper_states
        init_spkbsr_context_state, init_termpt_state, init_tisbod_state, init_tkfram_state, &
        init_zzbodblt_state, init_zzbodtrn_state, init_zzdskbsr_state, &
        init_zzdskbsr_context_state, init_zzdsksbf_state, init_zzekjsrt_state, init_zzekjtst_state, &
-       init_zzeknrml_state, init_zzeksca_state, init_zzelvupy_state, init_zzgffvu_state, init_zzsrftrn_state, &
+       init_zzeknrml_state, init_zzeksca_state, init_zzelvupy_state, init_zzgffvu_state, &
        init_zzswfxfm_state
 
    ! parameters of several states
@@ -1425,7 +1422,7 @@ module pepper_states
       character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
       character(mthlen) :: prvmth = ' '  !! method string of the previous call (blank after a parse error)
       integer(ip) :: shape = 0  !! target shape parsed from the saved method (ellipsoid or DSK)
-      integer(ip) :: srflst ( maxsrf ) = 0  !! surface ID list parsed from the saved method
+      integer(ip), allocatable :: srflst (:)  !! (PEPPER: grows; SPICELIB: MAXSRF, 100) surface ID list parsed from the saved method
       logical :: uselt = .false.  !! the saved correction includes light time
       logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
       integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
@@ -1459,7 +1456,7 @@ module pepper_states
       character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
       character(illumg_lnsize) :: prvmth = ' '  !! method string of the previous call (blank after a parse error)
       integer(ip) :: shape = 0  !! target shape parsed from the saved method (ellipsoid or DSK)
-      integer(ip) :: srflst ( maxsrf ) = 0  !! surface ID list parsed from the saved method
+      integer(ip), allocatable :: srflst (:)  !! (PEPPER: grows; SPICELIB: MAXSRF, 100) surface ID list parsed from the saved method
       logical :: uselt = .false.  !! the saved correction includes light time
       logical :: xmit = .false.  !! the saved correction is for transmitted (rather than received) radiation
       integer(ip) :: svctr1 ( ctrsiz ) = 0  !! saved name/ID item declarations.
@@ -1564,7 +1561,7 @@ module pepper_states
       character(mthlen) :: prvmth = ' '  !! METHOD string of the previous call
       integer(ip) :: shape = 0  !! target shape code parsed from the previous METHOD (ellipsoid or DSK)
       integer(ip) :: srfctr ( ctrsiz ) = 0  !! surface name-ID mapping state counter (ZZSRFTRK)
-      integer(ip) :: srflst ( maxsrf ) = 0  !! surface ID list parsed from the previous METHOD string
+      integer(ip), allocatable :: srflst (:)  !! (PEPPER: grows; SPICELIB: MAXSRF, 100) surface ID list parsed from the previous METHOD string
    end type latsrf_state
 
    ! ------------------------------------------------------------------ LIMBPT
@@ -1593,7 +1590,7 @@ module pepper_states
       character(mthlen) :: prvmth  !! method string of the previous call (blank after a parse error)
       integer(ip) :: prvtrg  !! target ID code of the previous call (the radii counter is reset when it changes)
       integer(ip) :: shape  !! target shape parsed from the saved method (ellipsoid or DSK)
-      integer(ip) :: srflst ( maxsrf )  !! surface ID list parsed from the saved method
+      integer(ip), allocatable :: srflst (:)  !! (PEPPER: grows; SPICELIB: MAXSRF, 100) surface ID list parsed from the saved method
       integer(ip) :: svnrad  !! number of target radii returned by the last ZZBODVCD lookup
       logical :: usecn  !! the saved correction uses converged Newtonian light time
       logical :: uselt  !! the saved correction includes light time
@@ -2082,7 +2079,7 @@ module pepper_states
       character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
       character(mthlen) :: prvmth = ' '  !! method string of the previous call
       integer(ip) :: shape = 0  !! target shape parsed from the saved method (ellipsoid or DSK)
-      integer(ip) :: srflst ( maxsrf ) = 0  !! surface ID list parsed from the saved method
+      integer(ip), allocatable :: srflst (:)  !! (PEPPER: grows; SPICELIB: MAXSRF, 100) surface ID list parsed from the saved method
       logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time (CN)
       logical :: uselt = .false.  !! the saved correction uses light time (LT or CN)
       logical :: usestl = .false.  !! the saved correction includes stellar aberration (+S)
@@ -2527,7 +2524,7 @@ module pepper_states
       character(mthlen) :: prvmth = ' '  !! METHOD string of the previous call
       integer(ip) :: shape = 0  !! target shape code parsed from the previous METHOD (ellipsoid or DSK)
       integer(ip) :: srfctr ( ctrsiz ) = 0  !! surface name-ID mapping state counter (ZZSRFTRK)
-      integer(ip) :: srflst ( maxsrf ) = 0  !! surface ID list parsed from the previous METHOD string
+      integer(ip), allocatable :: srflst (:)  !! (PEPPER: grows; SPICELIB: MAXSRF, 100) surface ID list parsed from the previous METHOD string
    end type srfnrm_state
 
    ! ------------------------------------------------------------------ SRFXPT
@@ -2632,7 +2629,7 @@ module pepper_states
       character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
       character(mthlen) :: prvmth = ' '  !! METHOD string of the previous call
       integer(ip) :: shape = -1  !! target shape code parsed from the previous METHOD (ellipsoid or DSK)
-      integer(ip) :: srflst ( maxsrf ) = 0  !! surface ID list parsed from the previous METHOD string
+      integer(ip), allocatable :: srflst (:)  !! (PEPPER: grows; SPICELIB: MAXSRF, 100) surface ID list parsed from the previous METHOD string
       logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time
       logical :: uselt = .false.  !! the saved correction uses light time
       logical :: usestl = .false.  !! the saved correction uses stellar aberration
@@ -2692,7 +2689,7 @@ module pepper_states
       character(corlen) :: prvcor = ' '  !! aberration correction string of the previous call
       character(mthlen) :: prvmth = ' '  !! method string of the previous call
       integer(ip) :: shape = ellshp  !! target shape parsed from the saved method (ellipsoid or DSK)
-      integer(ip) :: srflst ( maxsrf ) = 0  !! surface ID list parsed from the saved method
+      integer(ip), allocatable :: srflst (:)  !! (PEPPER: grows; SPICELIB: MAXSRF, 100) surface ID list parsed from the saved method
       logical :: usecn = .false.  !! the saved correction uses converged Newtonian light time (CN)
       logical :: uselt = .false.  !! the saved correction uses light time (LT or CN)
       logical :: usestl = .false.  !! the saved correction includes stellar aberration (+S)
@@ -2852,7 +2849,7 @@ module pepper_states
       integer(ip) :: prvtrg  !! ID code of the target whose radii were looked up last
       integer(ip) :: shadow  !! shadow type parsed from the previous METHOD (UMBRAL or PENUMBRAL code)
       integer(ip) :: shape  !! target shape code parsed from the previous METHOD (ellipsoid or DSK)
-      integer(ip) :: srflst ( maxsrf )  !! surface ID list parsed from the previous METHOD string
+      integer(ip), allocatable :: srflst (:)  !! (PEPPER: grows; SPICELIB: MAXSRF, 100) surface ID list parsed from the previous METHOD string
       integer(ip) :: svlcod  !! aberration correction locus code parsed from the previous CORLOC
       integer(ip) :: trmtyp  !! terminator point definition parsed from the previous METHOD (TANGENT or GUIDED)
       logical :: uflag  !! the previous METHOD requested the umbral terminator
@@ -3705,7 +3702,7 @@ module pepper_states
       integer(ip) :: savnsf = 0  !! number of surface IDs in the saved surface list
       real(wp) :: savpar ( nsypar ) = 0.0_wp  !! saved coordinate system parameters of the input coordinates
       real(wp) :: savpos ( 3 ) = 0.0_wp  !! saved body-centered position whose lat/lon must lie within the segment bounds
-      integer(ip) :: savsrf ( maxsrf ) = 0  !! saved surface ID list (sorted) to match segments against
+      integer(ip), allocatable :: savsrf (:)  !! (PEPPER: grows; SPICELIB: MAXSRF, 100) saved surface ID list (sorted) to match segments against
       integer(ip) :: savsys = 0  !! saved coordinate system code of the input coordinates
       integer(ip) :: savtrg = 0  !! saved target body ID code to match segments against
    end type zzdsksel_state
@@ -3722,7 +3719,7 @@ module pepper_states
       integer(ip) :: ctr ( ctrsiz ) = -1  !! DSK state change counter (ZZDSKCHK)
       logical :: first = .true.  !! first call: the counter is not yet initialized and nothing is saved
       integer(ip) :: prvbod = 0  !! body ID code of the previous call
-      integer(ip) :: prvlst ( maxsrf ) = 0  !! surface ID list of the previous call
+      integer(ip), allocatable :: prvlst (:)  !! (PEPPER: grows; SPICELIB: MAXSRF, 100) surface ID list of the previous call
       integer(ip) :: prvnls = -1  !! number of surface IDs of the previous call (-1 if the saved radii are invalid)
       real(wp) :: svmaxr = -1.0_wp  !! maximum radius of the bounding spheres for the saved body and surfaces
       real(wp) :: svminr = -1.0_wp  !! minimum radius of the bounding spheres for the saved body and surfaces
@@ -4999,7 +4996,7 @@ module pepper_states
       real(wp) :: savmxr = 0.0_wp  !! maximum radius of the target (ellipsoid radii or DSK bounding radius), km
       integer(ip) :: savnsf = 0  !! number of surface IDs in savsrf, saved by ZZSUDSKI
       real(wp) :: savrad ( 3 ) = 0.0_wp  !! target ellipsoid radii (km), saved by ZZSUELIN (zeroed by ZZSUDSKI)
-      integer(ip) :: savsrf ( maxsrf ) = 0  !! surface ID list of the DSK target, saved by ZZSUDSKI
+      integer(ip), allocatable :: savsrf (:)  !! (PEPPER: grows; SPICELIB: MAXSRF, 100) surface ID list of the DSK target, saved by ZZSUDSKI
       integer(ip) :: savtrg = 0  !! target ID code, saved by ZZSUDSKI
       integer(ip) :: savtyp = 0  !! target shape type: ellipsoid (ZZSUELIN) or DSK (ZZSUDSKI)
    end type zzsinutl_state
@@ -5461,6 +5458,32 @@ module pepper_states
 
    ! ------------------------------------------------------------------ ZZSRFTRN
 
+   !> Surface names, IDs and bodies from the kernel pool
+   !> (NAIF_SURFACE_NAME, NAIF_SURFACE_CODE, NAIF_SURFACE_BODY), as
+   !> ZZSRFKER reads them.
+   !>
+   !> PEPPER: SPICELIB kept them in arrays of MXNSRF (2000) entries with
+   !> hash tables, names of at most SFNMLN (36) characters, and signaled
+   !> SPICE(TOOMANYSURFACES) for more; these grow, and names have any
+   !> length. As in SPICELIB (ZZSRFINI), the last assignment of a name for
+   !> a body counts, and a surface ID of a body maps to the last assignment
+   !> whose name is not assigned again later for that body.
+   type, public :: surface_names
+      type(string), allocatable :: names(:)  !! the surface names, as in the kernel pool
+      type(string), allocatable :: nornam(:)  !! the names, normalized (uppercase, single blanks)
+      integer(ip), allocatable :: ids(:)  !! the surface IDs
+      integer(ip), allocatable :: bodies(:)  !! the body ID codes
+      integer(ip) :: n = 0  !! number of assignments
+      logical :: extker = .false.  !! the kernel pool defines surface names
+      type(string_map) :: name_map  !! the index of each (normalized name, body)
+      type(string_map) :: id_map  !! the index of each (surface ID, body)
+   contains
+      procedure :: clear => surface_names_clear
+      procedure :: index => surface_names_index
+      procedure :: name_index => surface_names_name_index
+      procedure :: id_index => surface_names_id_index
+   end type surface_names
+
    !> SPICE Private routine intended solely for the support of SPICE
    !> routines.  Users should not call this routine directly due to the
    !> volatile nature of this routine.
@@ -5468,23 +5491,11 @@ module pepper_states
    !> The saved variables of SPICELIB's ZZSRFTRN routines (entry points
    !> zzsrfn2c, zzsrfc2n, zzsrftrk), held in pepper_context (one per thread).
    !>
-   !> No default initialization (208148 bytes): see init_zzsrftrn_state.
    type, public :: zzsrftrn_state
-      integer(ip) :: kersid ( mxnsrf )  !! input names:                 KERNAM Input surface IDs:           KERSID Input body IDs:              KERBID
-      integer(ip) :: kerbid ( mxnsrf )  !! body ID codes from the kernel pool (NAIF_SURFACE_BODY)
-      character(sfnmln) :: kernam ( mxnsrf )  !! surface names from the kernel pool (NAIF_SURFACE_NAME)
-      character(sfnmln) :: nornam ( mxnsrf )  !! the surface names, normalized (uppercase, left-justified, single blanks)
-      integer(ip) :: sidhls ( zzsrftrn_nroom )  !! surface ID list heads:       SIDHLS Surface ID pool:             SIDPOL Surface ID name pointers:    SIDIDX
-      integer(ip) :: sidpol ( lbsngl : zzsrftrn_nroom )  !! hash table of the surface IDs: collision lists
-      integer(ip) :: sididx ( zzsrftrn_nroom )  !! hash table of the surface IDs: index of each node's entry in kersid
-      integer(ip) :: snmhls ( zzsrftrn_nroom )  !! surface name list heads:     SNMHLS Surface name pool:           SNMPOL Surface name ID pointers:    SNMIDP
-      integer(ip) :: snmpol ( lbsngl : zzsrftrn_nroom )  !! hash table of the surface names: collision lists
-      integer(ip) :: snmidx ( zzsrftrn_nroom )  !! hash table of the surface names: index of each node's entry in nornam
-      integer(ip) :: itemat  !! work: hash table node of the matching entry found by a lookup
-      integer(ip) :: polctr ( ctrsiz )  !! POLCTR tracks the state of the kernel pool. SRFCTR tracks the state of the surface mapping kernel variables.
-      integer(ip) :: srfctr ( ctrsiz )  !! surface mapping state counter (incremented when the tables are rebuilt)
-      logical :: extker  !! the kernel pool defines surface name/ID mappings
-      logical :: pass1  !! first call: counters and tables not yet initialized
+      type(surface_names) :: srf  !! the surface names from the kernel pool
+      integer(ip) :: polctr ( ctrsiz ) = 0  !! the kernel pool state counter of the last check
+      integer(ip) :: srfctr ( ctrsiz ) = 0  !! surface mapping state counter (incremented when the tables are rebuilt)
+      logical :: pass1 = .true.  !! first call: counters and tables not yet initialized
    end type zzsrftrn_state
 
    ! ------------------------------------------------------------------ ZZSWFXFM
@@ -6252,7 +6263,6 @@ contains
       state%prvmth = ' '
       state%prvtrg = 0
       state%shape = 0
-      state%srflst = 0
       state%svnrad = 0
       state%usecn = .false.
       state%uselt = .false.
@@ -6524,7 +6534,6 @@ contains
       state%prvtrg = 0
       state%shadow = 0
       state%shape = 0
-      state%srflst = 0
       state%svlcod = 0
       state%trmtyp = 0
       state%uflag = .false.
@@ -6958,26 +6967,74 @@ contains
       state%svxmit = .false.
    end subroutine init_zzgffvu_state
 
-   !> Set the initial values of a new zzsrftrn_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_zzsrftrn_state(state)
-      type(zzsrftrn_state), intent(inout) :: state  !! the state
-      state%kersid = 0
-      state%kerbid = 0
-      state%kernam = ' '
-      state%nornam = ' '
-      state%sidhls = 0
-      state%sidpol = 0
-      state%sididx = 0
-      state%snmhls = 0
-      state%snmpol = 0
-      state%snmidx = 0
-      state%itemat = 0
-      state%polctr = 0
-      state%srfctr = 0
-      state%extker = .false.
-      state%pass1 = .true.
-   end subroutine init_zzsrftrn_state
+   !> Remove the surface names.
+   pure subroutine surface_names_clear(self)
+      class(surface_names), intent(inout) :: self  !! the names
+      self%n = 0
+      self%extker = .false.
+      if (allocated(self%names)) deallocate (self%names)
+      if (allocated(self%nornam)) deallocate (self%nornam)
+      if (allocated(self%ids)) deallocate (self%ids)
+      if (allocated(self%bodies)) deallocate (self%bodies)
+      call self%name_map%clear()
+      call self%id_map%clear()
+   end subroutine surface_names_clear
+
+   !> The key of a (normalized name or ID, body) pair in the maps.
+   pure function surface_key(item, body) result(key)
+      character(*), intent(in) :: item  !! the normalized name, or the ID as text
+      integer(ip), intent(in) :: body  !! the body ID code
+      character(:), allocatable :: key
+      character(12) :: b
+      write (b, '(i0)') body
+      key = trim(b) // achar(0) // trim(item)
+   end function surface_key
+
+   !> The ID as text, for surface_key.
+   pure function id_text(id) result(t)
+      integer(ip), intent(in) :: id  !! the ID
+      character(:), allocatable :: t
+      character(12) :: b
+      write (b, '(i0)') id
+      t = trim(b)
+   end function id_text
+
+   !> Build the maps (SPICELIB's ZZSRFINI order: from the last assignment
+   !> to the first, a (name, body) is added if it is new, and then its
+   !> (ID, body) if that is new).
+   pure subroutine surface_names_index(self)
+      class(surface_names), intent(inout) :: self  !! the names
+      integer(ip) :: i, k
+      logical :: found
+      call self%name_map%clear()
+      call self%id_map%clear()
+      do i = self%n, 1, -1
+         call self%name_map%get(surface_key(self%nornam(i)%s, self%bodies(i)), k, found)
+         if (found) cycle
+         call self%name_map%set(surface_key(self%nornam(i)%s, self%bodies(i)), i)
+         call self%id_map%get(surface_key(id_text(self%ids(i)), self%bodies(i)), k, found)
+         if (.not. found) call self%id_map%set(surface_key(id_text(self%ids(i)), self%bodies(i)), i)
+      end do
+   end subroutine surface_names_index
+
+   !> The index of a (normalized name, body): 0 if it is not assigned.
+   pure integer(ip) function surface_names_name_index(self, nornam, body) result(i)
+      class(surface_names), intent(in) :: self  !! the names
+      character(*), intent(in) :: nornam  !! the normalized surface name
+      integer(ip), intent(in) :: body  !! the body ID code
+      logical :: found
+      call self%name_map%get(surface_key(nornam, body), i, found)
+   end function surface_names_name_index
+
+   !> The index of the assignment a (surface ID, body) maps to: 0 if none.
+   pure integer(ip) function surface_names_id_index(self, id, body) result(i)
+      class(surface_names), intent(in) :: self  !! the names
+      integer(ip), intent(in) :: id  !! the surface ID
+      integer(ip), intent(in) :: body  !! the body ID code
+      logical :: found
+      call self%id_map%get(surface_key(id_text(id), body), i, found)
+   end function surface_names_id_index
+
 
    !> Set the initial values of a new zzswfxfm_state: SPICELIB's DATA
    !> values, and zero for the other components.

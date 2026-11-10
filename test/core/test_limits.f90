@@ -4,12 +4,12 @@
 !> unloading, more DAFs written at once than DAFANA's 20, and comments
 !> read from many DAFs in turn (DAFEC's table), and the kernel pool past
 !> its limits (variables, values, name and string lengths), and more
-!> kernel frames than FRAMEX's caches held (5209), and body names past
-!> ZZBODTRN's limits.
+!> kernel frames than FRAMEX's caches held (5209), body names past
+!> ZZBODTRN's limits, and surface names past ZZSRFTRN's.
 program test_limits
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance, only: pepper_spice, pepper_context, zzprsmet
    use pepper_test_kernels, only: write_lsk, write_spk, kernel_name, delete_file, circle_state, &
       write_tk_frames, frame_name, write_body_names, body_name
 
@@ -29,6 +29,7 @@ program test_limits
    call test_pool()
    call test_frames()
    call test_bodies()
+   call test_surfaces()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -496,5 +497,60 @@ contains
       call ctx%clpool()
       call check_ok('bodies')
    end subroutine test_bodies
+
+   !> Surface names past ZZSRFTRN's limits: 3000 surfaces (MXNSRF 2000), a
+   !> 60-character name (SFNMLN 36), and a method string listing 150
+   !> surfaces (MAXSRF 100).
+   subroutine test_surfaces()
+      integer(ip), parameter :: n = 3000, body = 499
+      character(32) :: names(n)
+      character(80) :: name
+      character(:), allocatable :: method
+      character(20) :: shape, subtyp, pntdef, trmtyp
+      integer(ip) :: ids(n), bodies(n), i, code, nsurf
+      integer(ip), allocatable :: srflst(:)
+      logical :: found, pri, ok
+      do i = 1, n
+         write (names(i), '(a,i0)') 'TEST LIMITS SURFACE ', i
+         ids(i) = 1000 + i
+      end do
+      bodies = body
+      call ctx%pcpool('NAIF_SURFACE_NAME', n, names)
+      call ctx%pipool('NAIF_SURFACE_CODE', n, ids)
+      call ctx%pipool('NAIF_SURFACE_BODY', n, bodies)
+      ok = .true.
+      do i = 1, n, 29
+         call ctx%srfs2c('test  limits surface ' // trim(names(i)(21:)), 'MARS', code, found)
+         ok = ok .and. found .and. code == ids(i)
+         call ctx%srfc2s(ids(i), body, name, found)
+         ok = ok .and. found .and. name == names(i)
+      end do
+      call check_ok('surfaces: 3000 names')
+      call check(ok, 'surfaces: 3000 names, both ways')
+
+      call ctx%pcpool('NAIF_SURFACE_NAME', 1_ip, [repeat('S', 60)])
+      call ctx%pipool('NAIF_SURFACE_CODE', 1_ip, [7_ip])
+      call ctx%pipool('NAIF_SURFACE_BODY', 1_ip, [body])
+      call ctx%srfs2c(repeat('s', 60), 'MARS', code, found)
+      call check(found .and. code == 7, 'surfaces: a 60-character name')
+      call ctx%srfc2s(7_ip, body, name, found)
+      call check(found .and. name == repeat('S', 60), 'surfaces: srfc2s of a 60-character name')
+
+      call ctx%pcpool('NAIF_SURFACE_NAME', n, names)
+      call ctx%pipool('NAIF_SURFACE_CODE', n, ids)
+      call ctx%pipool('NAIF_SURFACE_BODY', n, bodies)
+      method = 'INTERCEPT/DSK/UNPRIORITIZED/SURFACES = '
+      do i = 1, 150
+         method = method // '"' // trim(names(i)) // '"'
+         if (i < 150) method = method // ', '
+      end do
+      allocate (srflst(len(method)/2 + 1))
+      call zzprsmet(ctx, body, method, size(srflst, kind=ip), shape, subtyp, pri, nsurf, srflst, &
+                    pntdef, trmtyp)
+      call check_ok('surfaces: parsing 150 surfaces')
+      call check(nsurf == 150 .and. all(srflst(1:150) == ids(1:150)), 'surfaces: a method with 150 surfaces')
+      call ctx%clpool()
+      call check_ok('surfaces')
+   end subroutine test_surfaces
 
 end program test_limits
