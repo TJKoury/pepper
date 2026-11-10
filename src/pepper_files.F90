@@ -4866,6 +4866,17 @@ contains
 !     and then INQUIRE on every file in the table.  To do this, we
 !     need a unit. Get one.
 !
+!
+!     PEPPER: during a load, the result for this file may have been kept
+!     by the previous call (see zzddhman_state): it is not in the table.
+!
+      if ( ft%kept_f2h ( fname(1:rchar) ) ) then
+         handle = 0
+         found  = .false.
+         mnm    = ft%f2h_mnm
+         return
+      end if
+
       call zzddhgtu ( ctx, utcst, uthan, utlck, utlun, nut, uindex, tabsiz )
 
       if ( ctx%failed() ) then
@@ -4922,6 +4933,13 @@ contains
 !     this file.
 !
       mnm = zzddhmnm ( ctx, utlun(uindex) )
+!
+!     PEPPER: keep the start of the first record for GETFAT (see below).
+!
+      if ( ft%reuse_f2h ) then
+         read ( unit=utlun(uindex), rec=1, iostat=iostat ) ft%f2h_word
+         ft%f2h_word_ok = iostat == 0
+      end if
 
 !
 !     Now loop through all the files in the file table. Unfortunately
@@ -5016,6 +5034,14 @@ contains
 !
       if ( .not. found ) then
          handle = 0
+!
+!        PEPPER: keep the result during a load (see zzddhman_state).
+!
+         if ( ft%reuse_f2h ) then
+            ft%f2h_name    = fname(1:rchar)
+            ft%f2h_changes = ft%changes
+            ft%f2h_mnm     = mnm
+         end if
       end if
 
 !

@@ -1213,6 +1213,7 @@ contains
       logical               diropn
       logical               exist
       logical               found
+      logical               kept
       logical               opened
 
 !
@@ -1316,6 +1317,24 @@ contains
 
       end if
 
+!
+!     PEPPER: during a load, ZZDDHF2H (through ZZDDHFNH above) has
+!     opened the file and read the start of its first record (direct
+!     access): use it instead of opening the file again (see
+!     zzddhman_state).
+!
+      kept = .false.
+      if ( .not. opened ) then
+         if ( allocated ( ctx%spice%zzddhman ) ) then
+            if ( ctx%spice%zzddhman%kept_f2h ( file ) ) then
+               kept = ctx%spice%zzddhman%f2h_word_ok
+            end if
+         end if
+      end if
+
+      if ( kept ) then
+         tmpwrd = ctx%spice%zzddhman%f2h_word
+      else
 !
 !     Open the file with a record length of RECL (the length of the
 !     DAF and DAS records). We assume, for now, that opening the file as
@@ -1481,6 +1500,8 @@ contains
 !
       if ( .not. opened ) then
          close ( number )
+      end if
+
       end if
 
 !

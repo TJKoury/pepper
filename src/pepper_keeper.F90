@@ -4407,7 +4407,14 @@ contains
       nofile = 'The attempt to load "#" by the routine FURNSH ' &
       //       'failed. It #'
 
+      !
+      !     PEPPER: ZZDDHF2H may keep its result for the file during the
+      !     load (GETFAT and ZZDDHOPN check the same file; see zzddhman_state).
+      !
+      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
+      ctx%spice%zzddhman%reuse_f2h = .true.
       call zzldker ( ctx, file, nofile, thstyp, myhand )
+      ctx%spice%zzddhman%reuse_f2h = .false.
 
       if ( ctx%failed() ) return
 
@@ -4581,7 +4588,14 @@ contains
          call repmot ( ctx, nofile, '@', filnum, 'L', nofile )
          call repmc  ( nofile, '@', file,        nofile )
 
+         !
+         !     PEPPER: ZZDDHF2H may keep its result for the file during the
+         !     load (GETFAT and ZZDDHOPN check the same file; see zzddhman_state).
+         !
+         if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
+         ctx%spice%zzddhman%reuse_f2h = .true.
          call zzldker( ctx, fil2ld, nofile, thstyp, myhand )
+         ctx%spice%zzddhman%reuse_f2h = .false.
 
          if ( ctx%failed() ) return
 

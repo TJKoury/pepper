@@ -4621,7 +4621,7 @@ module pepper_instance
       use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: fname  !! Name of the file to convert to a handle.
-         type(zzddhman_state), intent(in) :: ft  !! File table.
+         type(zzddhman_state), intent(inout) :: ft  !! File table. (PEPPER: inout, for the result kept during a load)
          integer(ip), intent(inout) :: utcst ( * )  !! Unit table.
          integer(ip), intent(inout) :: uthan ( * )  !! Unit table.
          logical, intent(inout) :: utlck ( * )  !! Unit table.

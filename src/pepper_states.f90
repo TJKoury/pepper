@@ -3394,10 +3394,24 @@ module pepper_states
       integer(ip) :: nft = 0  !! number of files in the file table
       type(ddh_file), allocatable :: files(:)  !! the files (1 to nft are used)
       integer(ip) :: next = 0  !! the next handle number (handles are never reused)
+      ! PEPPER: one load (ZZLDKER) checks the same file twice, in GETFAT and
+      ! in ZZDDHOPN, and GETFAT opens it again to read its ID word; each
+      ! check (ZZDDHF2H) opens the file and reads two records. While
+      ! reuse_f2h is set (by FURNSH around ZZLDKER), ZZDDHF2H keeps its
+      ! result for a file that is not in the table, with the start of its
+      ! first record, until the table changes.
+      integer(ip) :: changes = 0  !! changes of the table (add, remove)
+      logical :: reuse_f2h = .false.  !! ZZDDHF2H may keep and reuse its result
+      character(:), allocatable :: f2h_name  !! the file of the kept result
+      integer(ip) :: f2h_changes = -1  !! the table's changes when it was kept
+      real(wp) :: f2h_mnm = 0.0_wp  !! the file's unique number
+      character(12) :: f2h_word = ' '  !! the first 12 characters of its first record
+      logical :: f2h_word_ok = .false.  !! the first record could be read (direct access)
    contains
       procedure :: find => ddh_find
       procedure :: add => ddh_add
       procedure :: remove => ddh_remove
+      procedure :: kept_f2h => ddh_kept_f2h
    end type zzddhman_state
 
    !> The saved variables of ZZDDHMAN that are per context.
@@ -6025,12 +6039,21 @@ contains
       integer(ip), intent(out) :: i  !! the slot of the variable
       logical, intent(out), optional :: existed  !! the variable existed already
       type(pool_variable), allocatable :: tmp(:)
-      integer(ip) :: k
-      i = self%find(name)
-      if (present(existed)) existed = i > 0
-      if (i > 0) return
+      integer(ip) :: k, n, existing
+      ! the slot a new variable gets, added to the index with one lookup
+      n = len_trim(name)
       if (self%nfree > 0) then
          i = self%free(self%nfree)
+      else
+         i = self%nslots + 1
+      end if
+      call self%index%insert(name(1:n), i, existing)
+      if (present(existed)) existed = existing > 0
+      if (existing > 0) then
+         i = existing
+         return
+      end if
+      if (self%nfree > 0) then
          self%nfree = self%nfree - 1
       else
          if (.not. allocated(self%vars)) allocate (self%vars(64))
@@ -6044,10 +6067,9 @@ contains
          self%nslots = self%nslots + 1
          i = self%nslots
       end if
-      self%vars(i)%name = trim(name)
+      self%vars(i)%name = name(1:n)
       self%vars(i)%kind = pool_none
       self%vars(i)%n = 0
-      call self%index%set(name, i)
    end subroutine pool_create
 
    !> Remove the variable in slot i (its slot becomes free).
@@ -6103,9 +6125,17 @@ contains
    !> Remove all variables (and release the memory).
    pure subroutine pool_clear(self)
       class(pool_state), intent(inout) :: self  !! the pool
-      call self%index%clear()
-      if (allocated(self%vars)) deallocate (self%vars)
-      if (allocated(self%free)) deallocate (self%free)
+      integer(ip) :: i
+      ! The slots and the index keep their capacity: CLPOOL runs on every
+      ! unload of a text kernel, before the others are loaded again.
+      call self%index%clear(keep=.true.)
+      do i = 1, self%nslots
+         if (allocated(self%vars(i)%name)) deallocate (self%vars(i)%name)
+         if (allocated(self%vars(i)%dvals)) deallocate (self%vars(i)%dvals)
+         if (allocated(self%vars(i)%cvals)) deallocate (self%vars(i)%cvals)
+         self%vars(i)%kind = pool_none
+         self%vars(i)%n = 0
+      end do
       self%nslots = 0
       self%nfree = 0
    end subroutine pool_clear
@@ -6388,6 +6418,7 @@ contains
       end if
       self%nft = self%nft + 1
       self%files(self%nft) = file
+      self%changes = self%changes + 1
    end subroutine ddh_add
 
    !> Remove file i from the file table, keeping the order of the others.
@@ -6400,7 +6431,18 @@ contains
       end do
       self%files(self%nft) = ddh_file()
       self%nft = self%nft - 1
+      self%changes = self%changes + 1
    end subroutine ddh_remove
+
+   !> True if ZZDDHF2H kept its result for the file `name` (not in the
+   !> table) during the current load, and the table has not changed since.
+   pure logical function ddh_kept_f2h(self, name) result(kept)
+      class(zzddhman_state), intent(in) :: self  !! the file table
+      character(*), intent(in) :: name  !! the file name
+      kept = .false.
+      if (.not. self%reuse_f2h .or. .not. allocated(self%f2h_name)) return
+      kept = self%f2h_changes == self%changes .and. self%f2h_name == name
+   end function ddh_kept_f2h
 
    !> Move a file record (its name without copying).
    pure subroutine move_file(from, to)

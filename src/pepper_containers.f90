@@ -63,6 +63,7 @@ module pepper_containers
    contains
       procedure :: get => string_map_get
       procedure :: set => string_map_set
+      procedure :: insert => string_map_insert
       procedure :: remove => string_map_remove
       procedure :: count => string_map_count
       procedure :: clear => string_map_clear
@@ -316,16 +317,20 @@ contains
    end subroutine lnkgrow
 
    !> The hash of a string up to its last nonblank character: from 0 to
-   !> `hash_prime` - 1 (a polynomial mod a prime, then mixed).
+   !> `hash_prime` - 1 (a polynomial mod 2**48, reduced mod a prime and
+   !> mixed).
    pure integer(ip) function string_hash(key)
       character(*), intent(in) :: key  !! the string
       integer(int64) :: h
       integer :: i
+      ! The polynomial is kept below 2**48 with a mask (no division per
+      ! character); h*hash_base stays below 2**56.
+      integer(int64), parameter :: mask48 = 2_int64**48 - 1
       h = 0
       do i = 1, len_trim(key)
-         h = mod(h*hash_base + iachar(key(i:i)), hash_prime)
+         h = iand(h*hash_base + iachar(key(i:i)), mask48)
       end do
-      string_hash = int(mod(h*hash_mult, hash_prime), ip)
+      string_hash = int(mod(mod(h, hash_prime)*hash_mult, hash_prime), ip)
    end function string_hash
 
    !> The hash of an integer: from 0 to `hash_prime` - 1. Consecutive
@@ -386,15 +391,18 @@ contains
       type(string_map), intent(in) :: self  !! the map
       character(*), intent(in) :: key  !! the key
       integer(ip), intent(in) :: hash  !! its hash
-      integer(ip) :: nslots
+      integer(ip) :: nslots, n
       i = 0
       if (.not. allocated(self%hashes)) return
       nslots = size(self%hashes, kind=ip)
+      n = len_trim(key)
       i = home_slot(hash, nslots)
       do
          if (self%hashes(i) < 0) return
          if (self%hashes(i) == hash) then
-            if (self%keys(i)%s == key(1:len_trim(key))) return
+            if (len(self%keys(i)%s) == n) then
+               if (self%keys(i)%s == key(1:n)) return
+            end if
          end if
          i = next_slot(i, nslots)
       end do
@@ -416,6 +424,28 @@ contains
       end if
       self%values(i) = value
    end subroutine string_map_set
+
+   !> Add a key with a value, unless the key is in the map already
+   !> (one lookup: SET after GET looks it up twice).
+   pure subroutine string_map_insert(self, key, value, existing)
+      class(string_map), intent(inout) :: self  !! the map
+      character(*), intent(in) :: key  !! the key
+      integer(ip), intent(in) :: value  !! its value, if it is added
+      integer(ip), intent(out) :: existing  !! the key's value if it was in the map; 0 if it was added
+      integer(ip) :: hash, i
+      hash = string_hash(key)
+      call string_map_reserve(self, self%n + 1)
+      i = string_map_slot(self, key, hash)
+      if (self%hashes(i) < 0) then
+         self%n = self%n + 1
+         self%hashes(i) = hash
+         self%keys(i)%s = key(1:len_trim(key))
+         self%values(i) = value
+         existing = 0
+      else
+         existing = self%values(i)
+      end if
+   end subroutine string_map_insert
 
    !> Make room for `n` keys in a string map (rehashing into more slots
    !> if needed).
@@ -485,9 +515,24 @@ contains
       string_map_count = self%n
    end function string_map_count
 
-   !> Remove all keys from a string map (and release its memory).
-   pure subroutine string_map_clear(self)
+   !> Remove all keys from a string map (and release its memory, unless
+   !> `keep` is true: then the map keeps its slots for the next keys).
+   pure subroutine string_map_clear(self, keep)
       class(string_map), intent(inout) :: self  !! the map
+      logical, intent(in), optional :: keep  !! keep the slots (default false)
+      integer(ip) :: i
+      if (present(keep)) then
+         if (keep .and. allocated(self%hashes)) then
+            do i = 1, size(self%hashes, kind=ip)
+               if (self%hashes(i) < 0) cycle
+               self%hashes(i) = -1
+               self%values(i) = 0
+               if (allocated(self%keys(i)%s)) deallocate (self%keys(i)%s)
+            end do
+            self%n = 0
+            return
+         end if
+      end if
       self%n = 0
       if (allocated(self%keys)) deallocate (self%keys)
       if (allocated(self%values)) deallocate (self%values)
