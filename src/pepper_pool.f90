@@ -10,6 +10,137 @@ submodule (pepper_instance) pepper_pool
 
    implicit none
 
+   !> The time-string patterns TPARTV recognizes (ZZTPATS) and their
+   !> meanings are stored in the order of SPICELIB's sort (ORDERC) of
+   !> ZZTPATS's table, so that BSRCHC finds the same entry as in SPICELIB
+   !> (the table has duplicate patterns).
+   !>
+   !> PEPPER: SPICELIB sorted the table on the first call of TPARTV and
+   !> saved it; without the saved copy, TPARTV built and sorted it on
+   !> every call (90 percent of STR2ET's time). test_time checks that
+   !> ORDERC leaves this order unchanged.
+   integer, parameter :: ntpats = 231  !! number of patterns
+   !> the patterns, sorted
+   character(32), parameter :: tpats_known ( 231 ) = [ character(32) :: &
+      'Y-i-it', 'Y-i-iti', 'Y-i-iti:i', 'Y-i-iti:i:i', &
+      'Y-i-iti:i:ix', 'Y-i-iti:i:n', 'Y-i-iti:i:nx', 'Y-i-iti:ix', &
+      'Y-i-iti:n', 'Y-i-iti:nx', 'Y-i-itix', 'Y-i-itn', &
+      'Y-i-itnx', 'Y-i-itx', 'Y-i/', 'Y-i/i:i', &
+      'Y-i/i:i:i', 'Y-i/i:i:n', 'Y-i/i:n', 'Y-id', &
+      'Y-idi:i', 'Y-idi:i:i', 'Y-idi:i:n', 'Y-idi:n', &
+      'Y-it', 'Y-iti', 'Y-iti:i', 'Y-iti:i:i', &
+      'Y-iti:i:ix', 'Y-iti:i:n', 'Y-iti:i:nx', 'Y-iti:ix', &
+      'Y-iti:n', 'Y-iti:nx', 'Y-itix', 'Y-itn', &
+      'Y-itnx', 'Y-itx', 'Yid', 'Yidi:i', &
+      'Yidi:i:i', 'Yidi:i:n', 'Yidi:n', 'Yii', &
+      'Yiii', 'Yiii:i', 'Yiii:i:i', 'Yiii:i:n', &
+      'Yiii:n', 'Yiiii', 'Yiiiii', 'Yiiiin', &
+      'Yiiin', 'Yiin', 'Yim', 'Yimi', &
+      'Yimi:i', 'Yimi:i:i', 'Yimi:i:n', 'Yimi:n', &
+      'Yimn', 'Yin', 'Ymi', 'Ymii', &
+      'Ymii:i', 'Ymii:i:i', 'Ymii:i:n', 'Ymii:n', &
+      'Ymin', 'Ymn', 'Ynm', 'i-Y/', &
+      'i-Y/i:i', 'i-Y/i:i:i', 'i-Y/i:i:n', 'i-Y/i:n', &
+      'i-Yd', 'i-Ydi:i', 'i-Ydi:i:i', 'i-Ydi:i:n', &
+      'i-Ydi:n', 'i-i-Y', 'i-i-Yi:i', 'i-i-Yi:i:i', &
+      'i-i-Yi:i:n', 'i-i-Yi:n', 'i-i-it', 'i-i-iti', &
+      'i-i-iti:i', 'i-i-iti:i:i', 'i-i-iti:i:ix', 'i-i-iti:i:n', &
+      'i-i-iti:i:nx', 'i-i-iti:ix', 'i-i-iti:n', 'i-i-iti:nx', &
+      'i-i-itix', 'i-i-itn', 'i-i-itnx', 'i-i-itx', &
+      'i-i/i:i', 'i-i/i:i:i', 'i-i/i:i:n', 'i-i/i:n', &
+      'i-idi:i', 'i-idi:i:i', 'i-idi:i:n', 'i-idi:n', &
+      'i-it', 'i-iti', 'i-iti:i', 'i-iti:i:i', &
+      'i-iti:i:ix', 'i-iti:i:n', 'i-iti:i:nx', 'i-iti:ix', &
+      'i-iti:n', 'i-iti:nx', 'i-itix', 'i-itn', &
+      'i-itnx', 'i-itx', 'i/i/Y', 'i/i/Y/i:n', &
+      'i/i/Yi:i', 'i/i/Yi:i:i', 'i/i/Yi:i:n', 'i/i/i', &
+      'i/i/ii:i', 'i/i/ii:i:i', 'i/i/ii:i:n', 'i/i/ii:n', &
+      'i/i/ii:n', 'i:i:ii-i-Y', 'i:i:ii/i/Y', 'i:i:ii/i/i', &
+      'i:i:iimY', 'i:i:imiY', 'i:i:ni-i-Y', 'i:i:ni/i/Y', &
+      'i:i:ni/i/i', 'i:i:nimY', 'i:i:nmiY', 'i:ii-i-Y', &
+      'i:ii/i/Y', 'i:ii/i/i', 'i:iimY', 'i:imiY', &
+      'i:ni-i-Y', 'i:ni/i/Y', 'i:ni/i/i', 'i:nimY', &
+      'i:nmiY', 'iYd', 'iYdi:i', 'iYdi:i:i', &
+      'iYdi:i:n', 'iYdi:n', 'iiY', 'iiYi', &
+      'iiYi:i', 'iiYi:i:i', 'iiYi:i:n', 'iiYi:n', &
+      'iiYn', 'iid', 'iidi:i', 'iidi:i:i', &
+      'iidi:i:n', 'iidi:n', 'iim', 'iimi', &
+      'iimi:i', 'iimi:i:i', 'iimi:i:n', 'iimi:n', &
+      'iimii', 'iimiii', 'iimiin', 'iimin', &
+      'iimn', 'imY', 'imYi', 'imYi:i', &
+      'imYi:i:i', 'imYi:i:n', 'imYi:n', 'imYn', &
+      'imi', 'imi:i:iY', 'imi:i:nY', 'imi:iY', &
+      'imi:nY', 'imii', 'imii:i', 'imii:i:i', &
+      'imii:i:n', 'imii:n', 'imiii', 'imiiii', &
+      'imiiin', 'imiin', 'imin', 'imn', &
+      'inY', 'inm', 'miY', 'miYi', &
+      'miYi:i', 'miYi:i:i', 'miYi:i:n', 'miYi:n', &
+      'miYn', 'mii', 'mii:i:iY', 'mii:i:nY', &
+      'mii:iY', 'mii:nY', 'miii', 'miii:i', &
+      'miii:i:i', 'miii:i:n', 'miii:n', 'miiii', &
+      'miiiii', 'miiiin', 'miiin', 'miin', &
+      'mnY', 'mni', 'nmY' ]
+   !> the meaning of each pattern
+   character(32), parameter :: tpats_meaning ( 231 ) = [ character(32) :: &
+      'Y*m*D*', 'Y*m*D*H', 'Y*m*D*H*M', 'Y*m*D*H*M*S', &
+      'Y*m*D*H*M*S*', 'Y*m*D*H*M*S', 'Y*m*D*H*M*S*', 'Y*m*D*H*M*', &
+      'Y*m*D*H*M', 'Y*m*D*H*M*', 'Y*m*D*H*', 'Y*m*D*H', &
+      'Y*m*D*H*', 'Y*m*D**', 'Y*y*', 'Y*y*H*M', &
+      'Y*y*H*M*S', 'Y*y*H*M*S', 'Y*y*H*M', 'Y*y*', &
+      'Y*y*H*M', 'Y*y*H*M*S', 'Y*y*H*M*S', 'Y*y*H*M', &
+      'Y*y*', 'Y*y*H', 'Y*y*H*M', 'Y*y*H*M*S', &
+      'Y*y*H*M*S*', 'Y*y*H*M*S', 'Y*y*H*M*S*', 'Y*y*H*M*', &
+      'Y*y*H*M', 'Y*y*H*M*', 'Y*y*H*', 'Y*y*H', &
+      'Y*y*H*', 'Y*y**', 'Yy*', 'Yy*H*M', &
+      'Yy*H*M*S', 'Yy*H*M*S', 'Yy*H*M', 'YmD', &
+      'YmDH', 'YmDH*M', 'YmDH*M*S', 'YmDH*M*S', &
+      'YmDH*M', 'YmDHM', 'YmDHMS', 'YmDHMS', &
+      'YmDHM', 'YmDH', 'YDm', 'YDmH', &
+      'YDmH*M', 'YDmH*M*S', 'YDmH*M*S', 'YDmH*M', &
+      'YDmH', 'YmD', 'YmD', 'YmDH', &
+      'YmDH*M', 'YmDH*M*S', 'YmDH*M*S', 'YmDH*M', &
+      'YmDH', 'YmD', 'YDm', 'y*Y*', &
+      'y*Y*H*M', 'y*Y*H*M*S', 'y*Y*H*M*S', 'y*Y*H*M', &
+      'y*Y*', 'y*Y*H*M', 'y*Y*H*M*S', 'y*Y*H*M*S', &
+      'y*Y*H*M', 'm*D*Y', 'm*D*YH*M', 'm*D*YH*M*S', &
+      'm*D*YH*M*S', 'm*D*YH*M', 'Y*m*D*', 'Y*m*D*H', &
+      'Y*m*D*H*M', 'Y*m*D*H*M*S', 'Y*m*D*H*M*S*', 'Y*m*D*H*M*S', &
+      'Y*m*D*H*M*S*', 'Y*m*D*H*M*', 'Y*m*D*H*M', 'Y*m*D*H*M*', &
+      'Y*m*D*H*', 'Y*m*D*H', 'Y*m*D*H*', 'Y*m*D**', &
+      'Y*y*H*M', 'Y*y*H*M*S', 'Y*y*H*M*S', 'Y*y*H*M', &
+      'Y*y*H*M', 'Y*y*H*M*S', 'Y*y*H*M*S', 'Y*y*H*M', &
+      'Y*y*', 'Y*y*H', 'Y*y*H*M', 'Y*y*H*M*S', &
+      'Y*y*H*M*S*', 'Y*y*H*M*S', 'Y*y*H*M*S*', 'Y*y*H*M*', &
+      'Y*y*H*M', 'Y*y*H*M*', 'Y*y*H*', 'Y*y*H', &
+      'Y*y*H*', 'Y*y**', 'm*D*Y', 'm*D*Y*H*M', &
+      'm*D*YH*M', 'm*D*YH*M*S', 'm*D*YH*M*S', 'm*D*Y', &
+      'm*D*YH*M', 'm*D*YH*M*S', 'm*D*YH*M*S', 'm*D*YH*M', &
+      'm*D*YH*M', 'H*M*Sm*D*Y', 'H*M*Sm*D*Y', 'H*M*Sm*D*Y', &
+      'H*M*SDmY', 'H*M*SmDY', 'H*M*Sm*D*Y', 'H*M*Sm*D*Y', &
+      'H*M*Sm*D*Y', 'H*M*SDmY', 'H*M*SmDY', 'H*Mm*D*Y', &
+      'H*Mm*D*Y', 'H*Mm*D*Y', 'H*MDmY', 'H*MmDY', &
+      'H*Mm*D*Y', 'H*Mm*D*Y', 'H*Mm*D*Y', 'H*MDmY', &
+      'H*MmDY', 'yY*', 'yY*H*M', 'yY*H*M*S', &
+      'yY*H*M*S', 'yY*H*M', 'mDY', 'mDYH', &
+      'mDYH*M', 'mDYH*M*S', 'mDYH*M*S', 'mDYH*M', &
+      'mDYH', 'Yy*', 'Yy*H*M', 'Yy*H*M*S', &
+      'Yy*H*M*S', 'Yy*H*M', 'YDm', 'YDmH', &
+      'YDmH*M', 'YDmH*M*S', 'YDmH*M*S', 'YDmH*M', &
+      'YDmHM', 'YDmHMS', 'YDmHMS', 'YDmHM', &
+      'YDmH', 'DmY', 'DmYH', 'DmYH*M', &
+      'DmYH*M*S', 'DmYH*M*S', 'DmYH*M', 'DmYH', &
+      'YmD', 'DmH*M*SY', 'DmH*M*SY', 'DmH*MY', &
+      'DmH*MY', 'YmDH', 'YmDH*M', 'YmDH*M*S', &
+      'YmDH*M*S', 'YmDH*M', 'YmDHM', 'YmDHMS', &
+      'YmDHMS', 'YmDHM', 'YmDH', 'YmD', &
+      'mDY', 'YDm', 'mDY', 'mDYH', &
+      'mDYH*M', 'mDYH*M*S', 'mDYH*M*S', 'mDYH*M', &
+      'mDYH', 'mDY', 'mDH*M*SY', 'mDH*M*SY', &
+      'mDH*MY', 'mDH*MY', 'mDYH', 'mDYH*M', &
+      'mDYH*M*S', 'mDYH*M*S', 'mDYH*M', 'mDYHM', &
+      'mDYHMS', 'mDYHMS', 'mDYHM', 'mDYH', &
+      'mDY', 'mDY', 'DmY' ]
+
 contains
 
 !$Procedure ZZCTR ( Manipulate Counter Array )
@@ -4607,11 +4738,10 @@ contains
 !! ## Declarations
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: orderc, reordc
       implicit none
 
       integer(ip)           count
-      parameter           ( count = 231 )
+      parameter           ( count = ntpats )
 
 ! $ Detailed_Input
 !
@@ -4726,183 +4856,24 @@ contains
       parameter           ( wdsize = 32 )
 
       integer(ip)           i
-      integer(ip)           ordvec ( count )
 !
 !     The time format patterns and their meanings (SPICELIB filled
 !     these tables on the first call).
 !
-      character(wdsize), parameter :: myknwn ( count ) = [ character(wdsize) :: &
-         'Y-i-it', 'Y-i-iti:i', 'Y-i-iti:i:i', &
-         'Y-i-iti:i:n', 'Y-i-iti:n', 'Y-i/', &
-         'Y-i/i:i', 'Y-i/i:i:i', 'Y-i/i:i:n', &
-         'Y-i/i:n', 'Y-id', 'Y-idi:i', &
-         'Y-idi:i:i', 'Y-idi:i:n', 'Y-idi:n', &
-         'Y-it', 'Y-iti:i', 'Y-iti:i:i', &
-         'Y-iti:i:n', 'Y-iti:n', 'Yid', &
-         'Yidi:i', 'Yidi:i:i', 'Yidi:i:n', &
-         'Yidi:n', 'Yii', 'Yiii', &
-         'Yiii:i', 'Yiii:i:i', 'Yiii:i:n', &
-         'Yiii:n', 'Yiiii', 'Yiiiii', &
-         'Yiiiin', 'Yiiin', 'Yiin', &
-         'Yim', 'Yimi', 'Yimi:i', &
-         'Yimi:i:i', 'Yimi:i:n', 'Yimi:n', &
-         'Yimn', 'Yin', 'Ymi', &
-         'Ymii', 'Ymii:i', 'Ymii:i:i', &
-         'Ymii:i:n', 'Ymii:n', 'Ymin', &
-         'Ymn', 'Ynm', 'i-Y/', &
-         'i-Y/i:i', 'i-Y/i:i:i', 'i-Y/i:i:n', &
-         'i-Y/i:n', 'i-Yd', 'i-Ydi:i', &
-         'i-Ydi:i:i', 'i-Ydi:i:n', 'i-Ydi:n', &
-         'i-i-it', 'i-i-iti:i', 'i-i-iti:i:i', &
-         'i-i-iti:i:n', 'i-i-iti:n', 'i-i/i:i', &
-         'i-i/i:i:i', 'i-i/i:i:n', 'i-i/i:n', &
-         'i-idi:i', 'i-idi:i:i', 'i-idi:i:n', &
-         'i-idi:n', 'i-it', 'i-iti:i', &
-         'i-iti:i:i', 'i-iti:i:n', 'i-iti:n', &
-         'i:i:iimY', 'i:i:imiY', 'i:i:nimY', &
-         'i:i:nmiY', 'i:iimY', 'i:imiY', &
-         'i:nimY', 'i:nmiY', 'iYd', &
-         'iYdi:i', 'iYdi:i:i', 'iYdi:i:n', &
-         'iYdi:n', 'iiY', 'iiYi', &
-         'iiYi:i', 'iiYi:i:i', 'iiYi:i:n', &
-         'iiYi:n', 'iiYn', 'iid', &
-         'iidi:i', 'iidi:i:i', 'iidi:i:n', &
-         'iidi:n', 'iim', 'iimi', &
-         'iimi:i', 'iimi:i:i', 'iimi:i:n', &
-         'iimi:n', 'iimii', 'iimiii', &
-         'iimiin', 'iimin', 'iimn', &
-         'imY', 'imYi', 'imYi:i', &
-         'imYi:i:i', 'imYi:i:n', 'imYi:n', &
-         'imYn', 'imi', 'imi:i:iY', &
-         'imi:i:nY', 'imi:iY', 'imi:nY', &
-         'imii', 'imii:i', 'imii:i:i', &
-         'imii:i:n', 'imii:n', 'imiii', &
-         'imiiii', 'imiiin', 'imiin', &
-         'imin', 'imn', 'inY', &
-         'inm', 'miY', 'miYi', &
-         'miYi:i', 'miYi:i:i', 'miYi:i:n', &
-         'miYi:n', 'miYn', 'mii', &
-         'mii:i:iY', 'mii:i:nY', 'mii:iY', &
-         'mii:nY', 'miii', 'miii:i', &
-         'miii:i:i', 'miii:i:n', 'miii:n', &
-         'miiii', 'miiiii', 'miiiin', &
-         'miiin', 'miin', 'mnY', &
-         'mni', 'nmY', 'i/i/i', &
-         'i/i/ii:i', 'i/i/ii:n', 'i/i/ii:i:n', &
-         'i/i/ii:i:i', 'i/i/Y', 'i/i/Yi:i', &
-         'i/i/ii:n', 'i/i/Yi:i:n', 'i/i/Yi:i:i', &
-         'Y-i-iti', 'Y-iti', 'Y-i-itn', &
-         'Y-itn', 'i-i-iti', 'i-i-itn', &
-         'i-iti', 'i-itn', 'i:ii/i/i', &
-         'i:ni/i/i', 'i:i:ii/i/i', 'i:i:ni/i/i', &
-         'i:ii/i/Y', 'i:ni/i/Y', 'i:i:ii/i/Y', &
-         'i:i:ni/i/Y', 'i:ii-i-Y', 'i:ni-i-Y', &
-         'i:i:ii-i-Y', 'i:i:ni-i-Y', 'i/i/Y/i:n', &
-         'i-i-Y', 'i-i-Yi:n', 'i-i-Yi:i:n', &
-         'i-i-Yi:i:i', 'i-i-Yi:i', 'Y-i-itx', &
-         'Y-i-iti:ix', 'Y-i-iti:i:ix', 'Y-i-iti:i:nx', &
-         'Y-i-iti:nx', 'Y-itx', 'Y-iti:ix', &
-         'Y-iti:i:ix', 'Y-iti:i:nx', 'Y-iti:nx', &
-         'i-i-itx', 'i-i-iti:ix', 'i-i-iti:i:ix', &
-         'i-i-iti:i:nx', 'i-i-iti:nx', 'i-itx', &
-         'i-iti:ix', 'i-iti:i:ix', 'i-iti:i:nx', &
-         'i-iti:nx', 'Y-i-itix', 'Y-itix', &
-         'Y-i-itnx', 'Y-itnx', 'i-i-itix', &
-         'i-i-itnx', 'i-itix', 'i-itnx' ]
-      character(wdsize), parameter :: mymnng ( count ) = [ character(wdsize) :: &
-         'Y*m*D*', 'Y*m*D*H*M', 'Y*m*D*H*M*S', &
-         'Y*m*D*H*M*S', 'Y*m*D*H*M', 'Y*y*', &
-         'Y*y*H*M', 'Y*y*H*M*S', 'Y*y*H*M*S', &
-         'Y*y*H*M', 'Y*y*', 'Y*y*H*M', &
-         'Y*y*H*M*S', 'Y*y*H*M*S', 'Y*y*H*M', &
-         'Y*y*', 'Y*y*H*M', 'Y*y*H*M*S', &
-         'Y*y*H*M*S', 'Y*y*H*M', 'Yy*', &
-         'Yy*H*M', 'Yy*H*M*S', 'Yy*H*M*S', &
-         'Yy*H*M', 'YmD', 'YmDH', &
-         'YmDH*M', 'YmDH*M*S', 'YmDH*M*S', &
-         'YmDH*M', 'YmDHM', 'YmDHMS', &
-         'YmDHMS', 'YmDHM', 'YmDH', &
-         'YDm', 'YDmH', 'YDmH*M', &
-         'YDmH*M*S', 'YDmH*M*S', 'YDmH*M', &
-         'YDmH', 'YmD', 'YmD', &
-         'YmDH', 'YmDH*M', 'YmDH*M*S', &
-         'YmDH*M*S', 'YmDH*M', 'YmDH', &
-         'YmD', 'YDm', 'y*Y*', &
-         'y*Y*H*M', 'y*Y*H*M*S', 'y*Y*H*M*S', &
-         'y*Y*H*M', 'y*Y*', 'y*Y*H*M', &
-         'y*Y*H*M*S', 'y*Y*H*M*S', 'y*Y*H*M', &
-         'Y*m*D*', 'Y*m*D*H*M', 'Y*m*D*H*M*S', &
-         'Y*m*D*H*M*S', 'Y*m*D*H*M', 'Y*y*H*M', &
-         'Y*y*H*M*S', 'Y*y*H*M*S', 'Y*y*H*M', &
-         'Y*y*H*M', 'Y*y*H*M*S', 'Y*y*H*M*S', &
-         'Y*y*H*M', 'Y*y*', 'Y*y*H*M', &
-         'Y*y*H*M*S', 'Y*y*H*M*S', 'Y*y*H*M', &
-         'H*M*SDmY', 'H*M*SmDY', 'H*M*SDmY', &
-         'H*M*SmDY', 'H*MDmY', 'H*MmDY', &
-         'H*MDmY', 'H*MmDY', 'yY*', &
-         'yY*H*M', 'yY*H*M*S', 'yY*H*M*S', &
-         'yY*H*M', 'mDY', 'mDYH', &
-         'mDYH*M', 'mDYH*M*S', 'mDYH*M*S', &
-         'mDYH*M', 'mDYH', 'Yy*', &
-         'Yy*H*M', 'Yy*H*M*S', 'Yy*H*M*S', &
-         'Yy*H*M', 'YDm', 'YDmH', &
-         'YDmH*M', 'YDmH*M*S', 'YDmH*M*S', &
-         'YDmH*M', 'YDmHM', 'YDmHMS', &
-         'YDmHMS', 'YDmHM', 'YDmH', &
-         'DmY', 'DmYH', 'DmYH*M', &
-         'DmYH*M*S', 'DmYH*M*S', 'DmYH*M', &
-         'DmYH', 'YmD', 'DmH*M*SY', &
-         'DmH*M*SY', 'DmH*MY', 'DmH*MY', &
-         'YmDH', 'YmDH*M', 'YmDH*M*S', &
-         'YmDH*M*S', 'YmDH*M', 'YmDHM', &
-         'YmDHMS', 'YmDHMS', 'YmDHM', &
-         'YmDH', 'YmD', 'mDY', &
-         'YDm', 'mDY', 'mDYH', &
-         'mDYH*M', 'mDYH*M*S', 'mDYH*M*S', &
-         'mDYH*M', 'mDYH', 'mDY', &
-         'mDH*M*SY', 'mDH*M*SY', 'mDH*MY', &
-         'mDH*MY', 'mDYH', 'mDYH*M', &
-         'mDYH*M*S', 'mDYH*M*S', 'mDYH*M', &
-         'mDYHM', 'mDYHMS', 'mDYHMS', &
-         'mDYHM', 'mDYH', 'mDY', &
-         'mDY', 'DmY', 'm*D*Y', &
-         'm*D*YH*M', 'm*D*YH*M', 'm*D*YH*M*S', &
-         'm*D*YH*M*S', 'm*D*Y', 'm*D*YH*M', &
-         'm*D*YH*M', 'm*D*YH*M*S', 'm*D*YH*M*S', &
-         'Y*m*D*H', 'Y*y*H', 'Y*m*D*H', &
-         'Y*y*H', 'Y*m*D*H', 'Y*m*D*H', &
-         'Y*y*H', 'Y*y*H', 'H*Mm*D*Y', &
-         'H*Mm*D*Y', 'H*M*Sm*D*Y', 'H*M*Sm*D*Y', &
-         'H*Mm*D*Y', 'H*Mm*D*Y', 'H*M*Sm*D*Y', &
-         'H*M*Sm*D*Y', 'H*Mm*D*Y', 'H*Mm*D*Y', &
-         'H*M*Sm*D*Y', 'H*M*Sm*D*Y', 'm*D*Y*H*M', &
-         'm*D*Y', 'm*D*YH*M', 'm*D*YH*M*S', &
-         'm*D*YH*M*S', 'm*D*YH*M', 'Y*m*D**', &
-         'Y*m*D*H*M*', 'Y*m*D*H*M*S*', 'Y*m*D*H*M*S*', &
-         'Y*m*D*H*M*', 'Y*y**', 'Y*y*H*M*', &
-         'Y*y*H*M*S*', 'Y*y*H*M*S*', 'Y*y*H*M*', &
-         'Y*m*D**', 'Y*m*D*H*M*', 'Y*m*D*H*M*S*', &
-         'Y*m*D*H*M*S*', 'Y*m*D*H*M*', 'Y*y**', &
-         'Y*y*H*M*', 'Y*y*H*M*S*', 'Y*y*H*M*S*', &
-         'Y*y*H*M*', 'Y*m*D*H*', 'Y*y*H*', &
-         'Y*m*D*H*', 'Y*y*H*', 'Y*m*D*H*', &
-         'Y*m*D*H*', 'Y*y*H*', 'Y*y*H*' ]
 
 !
 !     Copy as many patterns and meanings as the input arrays allow.
 !
       nknown = min ( count, room )
+!
+!     PEPPER: the table (TPATS_KNOWN, TPATS_MEANING, in the submodule) is
+!     stored in the order SPICELIB's sort gave it, so it is not sorted
+!     here.
+!
       do i = 1, nknown
-         known (i) = myknwn(i)
-         meanng(i) = mymnng(i)
+         known (i) = tpats_known(i)
+         meanng(i) = tpats_meaning(i)
       end do
-
-!
-!     Make sure everything is in the proper order.
-!
-      call orderc ( known,  nknown, ordvec )
-      call reordc ( ordvec, nknown, known  )
-      call reordc ( ordvec, nknown, meanng )
 
 !
 !     If there wasn't sufficient room to get all of the patterns
@@ -5501,11 +5472,7 @@ contains
       integer(ip)           wdsize
       parameter           ( wdsize = 12 )
 
-      integer(ip), parameter :: room = 300
 
-      integer(ip)           nknown
-      character(wdsize)     known ( room )
-      character(wdsize)     meanng( room )
       character(wdsize)     rep
 
 !
@@ -5554,19 +5521,11 @@ contains
       end do
 
 !
-!     On the first call to this routine we load the built in
-!     representation patterns.
+!     PEPPER: the built-in representation patterns are the constants
+!     TPATS_KNOWN and TPATS_MEANING of this submodule, sorted (SPICELIB
+!     loaded and sorted them with ZZTPATS on the first call; PEPPER, on
+!     every call, before this change).
 !
-!     PEPPER: SPICELIB got the patterns on the first call only (saved);
-!     they are fetched on every call now.
-!
-      if ( .not. zztpats( ctx, room, nknown, known, meanng ) ) then
-         pictur = ' '
-         succes = .false.
-         error  = 'There is an incompatibility between ZZTPATS ' &
-         //       'and the room allocated for KNOWN in TPARTV.'
-         return
-      end if
 
 !
 !     First step is to tokenize the string.  The new representation
@@ -5838,11 +5797,11 @@ contains
       if ( zzist ( ctx, 't' ) ) then
 
          resolv = zzgrep ( ctx, rep )
-         use    = bsrchc ( rep, nknown, known )
+         use    = bsrchc ( rep, ntpats, tpats_known )
 
          if ( use /= 0 ) then
 
-            resolv = zzrept  ( ctx, known(use), meanng(use), l2r )
+            resolv = zzrept  ( ctx, tpats_known(use), tpats_meaning(use), l2r )
 
             succes = zzunpck ( ctx, string, yabbrv, &
                                tvec,   ntvec, type, pictur, error)
@@ -5970,11 +5929,11 @@ contains
 !     Try our built in formats without any further substitution.
 !
       resolv = zzgrep ( ctx, rep )
-      use    = bsrchc ( rep, nknown, known )
+      use    = bsrchc ( rep, ntpats, tpats_known )
 
       if ( use > 0 ) then
 
-         resolv = zzrept  ( ctx, known(use),   meanng(use), l2r   )
+         resolv = zzrept  ( ctx, tpats_known(use),   tpats_meaning(use), l2r   )
          succes = zzunpck ( ctx, string, yabbrv, &
                             tvec,   ntvec, type, pictur, error )
 
@@ -6067,11 +6026,11 @@ contains
          resolv = zzremt ( ctx, delim(i) )
 
          resolv = zzgrep ( ctx, rep )
-         use    = bsrchc ( rep, nknown, known )
+         use    = bsrchc ( rep, ntpats, tpats_known )
 
          if ( use > 0 ) then
 
-            resolv = zzrept  ( ctx, known(use),   meanng(use), l2r   )
+            resolv = zzrept  ( ctx, tpats_known(use),   tpats_meaning(use), l2r   )
             succes = zzunpck ( ctx, string, yabbrv, &
                                tvec,   ntvec, type, pictur, error )
 

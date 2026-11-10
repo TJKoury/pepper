@@ -6,7 +6,8 @@
 program test_time
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance, only: pepper_spice, pepper_context, zztpats
+   use pepper_arrays, only: orderc
 
    implicit none
 
@@ -83,6 +84,16 @@ program test_time
    call check(.not. b%failed() .and. abs(et - 64.184_wp) < 0.01_wp, 'deltet once the kernel is loaded')
    call a%kclear()
    call delete_file()
+
+   ! TPARTV's patterns are stored sorted (in the order ORDERC gave
+   ! SPICELIB): ORDERC leaves them as they are
+   block
+      character(32) :: known(300), meanng(300)
+      integer(ip) :: n, i, order(300)
+      call check(zztpats(a, 300_ip, n, known, meanng), 'zztpats')
+      call orderc(known, n, order)
+      call check(all(order(1:n) == [(i, i = 1, n)]), 'the time patterns are in ORDERC''s order')
+   end block
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'

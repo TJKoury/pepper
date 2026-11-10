@@ -713,7 +713,7 @@ or listed for later.
 | BSR tables | 10 MB each, allocated and zeroed in full by the first query of a context: 2.5 ms and about 20 MB per context | Done: replaced by the index; a context keeps a growing re-use map (first query 1560 → 23 µs) | 5 |
 | CCIFRM | Scans the pool with GNPOOL in batches of 100 and, because GIPOOL overwrites the batch count, restarts each batch one name later: each `FRAME_*_CLASS` name is examined up to 100 times, and each batch is a full pool scan | Done: names fetched once | 4 |
 | DELTET | Reads its five kernel variables (and copies all the leapseconds) on every call: every UTC/ET conversion; for ET epochs it also computes the ET of every leap epoch (two sines each) on every call | Done: read when the pool changes (pool counter), the ET of each leap epoch computed then; results bitwise identical. `bench-limits` (28 leapseconds): UTC 0.234 → 0.041 µs, ET 0.360 → 0.043 µs | 6 |
-| STR2ET | 21.6 µs per call (`bench-limits`, the same ISO string each time), 45 times ET2UTC (0.48 µs); not profiled yet | Profile (TPARTV, TTRANS) | later |
+| STR2ET (TPARTV, ZZTPATS) | 21.6 µs per call, 45 times ET2UTC: 90 percent of it was ZZTPATS building and sorting TPARTV's table of 231 time-string patterns (ORDERC, REORDC) on every call. SPICELIB did it once and saved the table; PEPPER had dropped the saved copy | Done: the table is a constant in the sorted order (bitwise the same table; `test_time` checks ORDERC leaves it unchanged). 21.6 → 1.8 µs. The rest is SPICELIB's tokenizer (TPARTV ~75%, mostly POS from ZZSUBT): an algorithm rewrite, not worth it at this cost | 6 |
 
 ## Testing
 
