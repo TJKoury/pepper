@@ -246,6 +246,20 @@ contains
       call ctx%furnsh(names_file)
       call report('furnsh (body names, per name)', nnames, now() - t0)
       call check_ctx(ctx, 'loading the body names')
+      other = spice%new_context()
+      t0 = now()
+      call other%bodn2c(body_name(1), code, found)
+      call report('first bodn2c in a new context', 1_ip, now() - t0)
+      call check(found .and. code == first_name, 'bodn2c: a new context')
+      call ctx%bodn2c(body_name(1), code, found)
+      t0 = now()
+      do k = 1, 100
+         call ctx%pdpool('BENCH_UNRELATED', 1_ip, [real(k, wp)])
+         call ctx%bodn2c(body_name(k), code, found)
+      end do
+      call report('bodn2c after another pool change', 100_ip, now() - t0)
+      call check(found .and. code == first_name + 99, 'bodn2c after another pool change')
+      call ctx%dvpool('BENCH_UNRELATED')
       ok = .true.
       t0 = now()
       do k = 1, nqueries
@@ -291,6 +305,7 @@ contains
    subroutine bench_frames()
       real(wp) :: t0, rot(3, 3), err
       integer(ip) :: i, k
+      type(pepper_context) :: other
       call write_tk_frames(frames_file, nframes, first_frame)
       call ctx%furnsh(frames_file)
       call check_ctx(ctx, 'loading the frames')
@@ -308,6 +323,11 @@ contains
          if (k <= 1000) err = max(err, abs(atan2(rot(1, 2), rot(1, 1)) - i/1000.0_wp*rpd))
       end do
       call report('pxform, random frame', nqueries, now() - t0)
+      other = spice%new_context()
+      t0 = now()
+      call other%pxform(frame_name(1), 'J2000', 0.0_wp, rot)
+      call report('first pxform in a new context', 1_ip, now() - t0)
+      call check_ctx(other, 'pxform in a new context')
       call check_ctx(ctx, 'pxform')
       call check(err < 1.0e-12_wp, 'pxform: the rotation angles')
       call ctx%unload(frames_file)

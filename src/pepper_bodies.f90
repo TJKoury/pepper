@@ -7276,8 +7276,12 @@ contains
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-!        PEPPER: the pool's state counter is checked instead of watchers
-!        (see below).
+!        PEPPER: the watch is the context's own (SWPOOL keeps the watches
+!        of each context; phase 3 had checked the pool's state counter
+!        instead, and rebuilt the tables after any change of the pool).
+!
+         call swpool ( ctx, 'ZZBODTRN', 2, &
+                       [character(14) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE'] )
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
@@ -7292,7 +7296,7 @@ contains
 !     LUPDTE.  This ensures that any initial assignments are properly
 !     processed.
 !
-      call zzpctrck ( ctx, pulctr, lupdte )
+      call zzcvpool ( ctx, 'ZZBODTRN', pulctr, lupdte )
 
       if ( lupdte .or. nodata ) then
 
@@ -7636,8 +7640,12 @@ contains
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-!        PEPPER: the pool's state counter is checked instead of watchers
-!        (see below).
+!        PEPPER: the watch is the context's own (SWPOOL keeps the watches
+!        of each context; phase 3 had checked the pool's state counter
+!        instead, and rebuilt the tables after any change of the pool).
+!
+         call swpool ( ctx, 'ZZBODTRN', 2, &
+                       [character(14) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE'] )
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
@@ -7652,7 +7660,7 @@ contains
 !     LUPDTE. This ensures that any initial assignments are properly
 !     processed.
 !
-      call zzpctrck ( ctx, pulctr, lupdte )
+      call zzcvpool ( ctx, 'ZZBODTRN', pulctr, lupdte )
 
       if ( lupdte .or. nodata ) then
 
@@ -8063,8 +8071,12 @@ contains
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-!        PEPPER: the pool's state counter is checked instead of watchers
-!        (see below).
+!        PEPPER: the watch is the context's own (SWPOOL keeps the watches
+!        of each context; phase 3 had checked the pool's state counter
+!        instead, and rebuilt the tables after any change of the pool).
+!
+         call swpool ( ctx, 'ZZBODTRN', 2, &
+                       [character(14) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE'] )
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
@@ -8326,8 +8338,12 @@ contains
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-!        PEPPER: the pool's state counter is checked instead of watchers
-!        (see below).
+!        PEPPER: the watch is the context's own (SWPOOL keeps the watches
+!        of each context; phase 3 had checked the pool's state counter
+!        instead, and rebuilt the tables after any change of the pool).
+!
+         call swpool ( ctx, 'ZZBODTRN', 2, &
+                       [character(14) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE'] )
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
@@ -8342,7 +8358,7 @@ contains
 !     LUPDTE. This ensures that any initial assignments are properly
 !     processed.
 !
-      call zzpctrck ( ctx, pulctr, lupdte )
+      call zzcvpool ( ctx, 'ZZBODTRN', pulctr, lupdte )
 
       if ( lupdte .or. nodata ) then
 
@@ -8507,8 +8523,12 @@ contains
 !        Set up the watchers for the kernel pool name-code mapping
 !        variables.
 !
-!        PEPPER: the pool's state counter is checked instead of watchers
-!        (see below).
+!        PEPPER: the watch is the context's own (SWPOOL keeps the watches
+!        of each context; phase 3 had checked the pool's state counter
+!        instead, and rebuilt the tables after any change of the pool).
+!
+         call swpool ( ctx, 'ZZBODTRN', 2, &
+                       [character(14) :: 'NAIF_BODY_NAME', 'NAIF_BODY_CODE'] )
 
 !
 !        Set FIRST to .FALSE. to not repeat initialization again.
@@ -8724,7 +8744,7 @@ contains
 !
 !     Check for updates to the kernel pool variables.
 !
-      call zzpctrck ( ctx, pulctr, lupdte )
+      call zzcvpool ( ctx, 'ZZBODTRN', pulctr, lupdte )
 
       if ( lupdte .or. nodata ) then
 
