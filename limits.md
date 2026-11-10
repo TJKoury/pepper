@@ -247,7 +247,9 @@ any subsystem uses it.
 Each phase is one or more commits, and each ends with `pixi run tspice` at
 399/399 (with the noted test changes) and `pixi run test` passing.
 
-0. **Foundations** (no change in behavior):
+0. **Foundations** (no change in behavior). Done: the benchmarks (with the
+   baseline below), `pepper_containers` and the test generators. To do: one
+   definition per limit.
    - **Benchmarks:**
      - loading N small kernels;
      - `spkezr`/`pxform` on many bodies and frames;
@@ -285,6 +287,11 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      - EKQMGR's five pools, last and possibly as a separate step;
      - DAFANA.
    - **Each table** becomes an array of records that grows.
+   - **Unloading without reloading:** remove the file from the BSR file
+     tables directly and keep the order of the others, instead of reloading
+     every remaining file of the type. Reloading is needed only when the
+     unloaded file is also loaded under another entry (`single` false). This
+     takes the unload of N files from O(N²) file opens to O(N).
    - **Error codes:** these go away:
      - `FTFULL`, `DAFFTFULL`, `DASFTFULL`;
      - `NOMOREROOM` from `furnsh`;
@@ -357,6 +364,48 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
 Phases 1 to 3 can be done in any order after 0. Phase 2 has the most
 user-visible value (the number of kernels). Phase 5 has the largest memory and
 parallel-startup gain, and it depends on the containers from 0.
+
+## Baseline
+
+`pixi run bench-limits` (test/core/bench_limits.f90), before any change
+(at `fb40b19`), release build, macOS arm64, gfortran 16, under
+`/usr/bin/time -l`. Microseconds per operation:
+
+| Operation | n | µs |
+|---|---:|---:|
+| `furnsh` (SPK, one segment each) | 2000 | 119 |
+| `spkgeo`, one body | 200000 | 1.0 |
+| `spkgeo`, a random body among all files | 200000 | 192 |
+| `unload` (SPK) | 2000 | 16693 |
+| `furnsh` (text kernel), per variable | 20000 | 2.1 |
+| `gdpool`, a random variable | 200000 | 0.45 |
+| `furnsh` (body names), per name | 10000 | 1.4 |
+| `bodn2c`, a random kernel name | 200000 | 0.55 |
+| `bodc2n`, a random kernel code | 200000 | 0.34 |
+| `pxform`, each TK frame once | 2000 | 23 |
+| `pxform`, a random TK frame | 200000 | 13.5 |
+| `new_context` | 100 | 0.67 |
+| first `spkgeo` in a new context | 100 | 2501 |
+
+Whole run: 77 s (19.6 s user, 55.5 s system), peak memory 2.19 GB.
+
+What it shows:
+
+- **Unloading is quadratic:** 16.7 ms per file with 2000 loaded (33 s in
+  total). This is SPICELIB's design, not a table size: after unloading an
+  SPK, KEEPER reloads every remaining SPK (`spklef`) to restore the
+  priority order, and each reload opens the file to identify it
+  (`zzddhopn`/`zzddhf2h`). CK, DSK and PCK do the same.
+- **Queries spread over many files are 190 times slower** than repeated
+  queries of one body. The likely cause (to confirm with a profile): the
+  unit table keeps 23 files open, so most queries close and reopen a file,
+  which would also explain the system time.
+- **A context costs about 20 MB and 2.5 ms** once it makes its first SPK
+  query (the fixed-size BSR tables are allocated and zeroed): 100 contexts
+  take 2 GB.
+- **TK frames use the pool:** each takes 10 variables, so 26003 pool
+  variables limit a kernel set to about 2600 TK frames, well before the
+  frame cache's 5209.
 
 ## Testing
 
