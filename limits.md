@@ -356,16 +356,33 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      - `F_DDHOPN` (FTFULL case), `F_DDHFTSIZE`, `F_PCKBSR` (FTFULL) and
        `F_ZZDSKBSR` (FTFULL) change to expect success;
      - `UTFULL` (unit table, B) stays.
-3. **Kernel pool:**
-   - **Name table:** the hash map.
-   - **Values:** grow with `lnkgrow`, or move to per-variable allocatable arrays
-     (measure `gdpool` and `ldpool`).
-   - **String values:** `maxchr` goes (decision 1).
-   - **Error codes:** `KERNELPOOLFULL` and `NOMOREROOM` go away.
-   - **`szpool`:** reports `huge(0)` (unlimited, decision 4). `MAXAGT` and
-     `MXNOTE` are not enforced already.
-   - **Tests:** 100000 variables, a 10⁶-value variable, and a text kernel with
-     many variables. None exist today.
+3. **Kernel pool.** Done:
+   - **Storage:** each variable is a record (name, type, values in an
+     allocatable array of numbers or of `string`s) in slots that grow, found
+     by name through a `string_map`. SPICELIB's hash table of 26003 names and
+     linked lists of 400000 numbers and 15000 strings (about 9 MB per
+     instance) are gone, with `KERNELPOOLFULL`, `NOMOREROOM` and
+     `BADVARNAME`.
+   - **Names and string values:** any length (decision 1). Text kernel
+     strings are no longer cut at 80 characters; `LMPOOL`'s buffer parser
+     no longer writes past the end of a value (SPICELIB bug).
+   - **Order:** `GNPOOL` and `WRPOOL` list the variables in the order they
+     were created (SPICELIB: its hash table's order); `WRPOOL` writes a long
+     name whole (a line over 132 characters cannot be read back whole).
+   - **`szpool`:** reports `huge(1)` for every limit (decision 4).
+   - **Watches:** agents and watched names have any length; DWPOOL moves
+     the last watch into the deleted one's place instead of shifting all
+     of them.
+   - **Parsers** (ZZRVAR, ZZRVBF): SPICELIB's tokenizing and checks, with
+     the storage replaced; ZZGPNM and ZZCLN are gone.
+   - **Tests:** `test_limits` (100000 variables, 10**6 values, 200-character
+     names and values, a watch on a long name, `szpool`, re-creating a
+     deleted variable); tspice `F_POOL` (whole 81-character strings, long
+     names accepted), `F_TKFRAM` and `F_AAAAPHSH` (SPICELIB's MAXVAR as a
+     constant: they sized loops and a hash divisor with `szpool`).
+   - **Measured** (both builds in temporary worktrees): `gdpool` 0.45 to
+     0.35 µs, `pxform` on TK frames 14 to 6.8 µs, body names loaded 1.43 to
+     1.21 µs per name, text kernels unchanged (1.2 µs per variable).
 4. **Names and definitions:**
    - **Bodies:**
      - ZZBODTRN's kernel-name table is sized to the pool's contents;
@@ -497,6 +514,9 @@ or listed for later.
 | ZZDDHOPN (`zzddhf2h`) | Opens a file to identify it (inode/name) on every load, including reloads | Follows from the unload fix; consider identifying by name first | 2 |
 | SPKBSR + unit table | A random query among 2000 SPKs takes 192 µs against 1 µs for one body; probably the 23-unit LRU closing and reopening files (to confirm with a profile) | Measure; a larger unit table (an instance setting, decision 3), or keep files open | 5 |
 | `wrline` (error reports, `pepper_output`) | Looks up the file by name (`inquire`) for every line written | Keep the unit with the device in the context | later (only when reports go to a file) |
+| POOL (GDPOOL, GCPOOL, GIPOOL, DTPOOL) | Values in linked lists: a lookup walks the list from its head to START, and DTPOOL counts the values by walking them | Done: arrays (slices) | 3 |
+| POOL (GNPOOL, WRPOOL) | Scan all 26003 hash buckets on every call; CCIFRM and KPLFRM page through the matches with START, one scan per page | Done: the slots in use | 3 |
+| Watches (`watch_index`, PEPPER) | Find an agent by a linear search over all watches of the context; TKFRAM keeps one watch per buffered frame (up to 200) and calls CVPOOL on every lookup | A map from agent to watch | 4 |
 | BSR tables | 10 MB each, allocated and zeroed in full by the first query of a context: 2.5 ms and about 20 MB per context | Start small, grow (decision 3) | 5 |
 
 ## Testing

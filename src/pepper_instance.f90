@@ -31,7 +31,7 @@ module pepper_instance
    use pepper_strings, only: dpstr, intstr, lparse, wdcnt, nextwd
    use pepper_hash, only: name_hash
    use pepper_output, only: wrline, byebye
-   use pepper_containers, only: string_map
+   use pepper_containers, only: string, string_map
    ! The state types of the subsystems, and the routines that set the
    ! initial values of the large ones.
    use pepper_states
@@ -42,9 +42,6 @@ module pepper_instance
 
    public :: pepper_spice, pepper_context
 
-   !> Length of the variable names in a context's watch table (the kernel
-   !> pool's maximum name length).
-   integer, parameter :: watch_name_length = 32
    !> Number of entries the kernel pool's change log keeps; when it is full,
    !> the log is emptied and every variable counts as changed.
    integer, parameter :: change_log_size = 10000
@@ -52,8 +49,8 @@ module pepper_instance
    !> A kernel pool watch of a context: the agent, the variables
    !> it watches, and the pool change it has seen last (see swpool_context).
    type :: pool_watch
-      character(watch_name_length) :: agent = ' '  !! the agent
-      character(watch_name_length), allocatable :: names(:)  !! the watched variables
+      character(:), allocatable :: agent  !! the agent (any length)
+      type(string), allocatable :: names(:)  !! the watched variables (names of any length)
       integer :: nnames = 0  !! number of watched variables
       integer(int64) :: seen = -1  !! pool_changes at the last check (-1: a notice is pending)
    end type pool_watch
@@ -92,7 +89,7 @@ module pepper_instance
       ! kernels are loaded or the pool is changed, like the pool itself.
       integer(int64) :: pool_changes = 0  !! number of changes of the kernel pool
       integer(int64) :: all_changed_at = 0  !! the change that counts as a change of every variable
-      character(watch_name_length), allocatable :: changed_names(:)  !! the variables changed (log)
+      type(string), allocatable :: changed_names(:)  !! the variables changed (log)
       integer(int64), allocatable :: changed_at(:)  !! the change number of each logged change
       integer :: nchanged = 0  !! number of entries in the log
       ! Logical units reserved by RESLUN (not given by GETLUN/FNDLUN); 5, 6
@@ -3388,10 +3385,10 @@ module pepper_instance
    end interface
    ! --- end pepper_text
    ! --- pepper_pool
-   public :: zzctruin, zzctrsin, zzctrinc, zzctrchk, zzcln, zztknerr, zzmkpc,&
+   public :: zzctruin, zzctrsin, zzctrinc, zzctrchk, zztknerr, zzmkpc,&
       zzrept, zztpats, zzcmbt, zzgrep, zzispt, zzist, zznote, zzremt,&
       zzsubt, zztokns, zzunpck, zzvalt, zzpini, zzrvar, zzrvbf,&
-      zzgpnm, zzpctrck
+      zzpctrck
 
    interface
 
@@ -3446,24 +3443,6 @@ module pepper_instance
          integer(ip), intent(in) :: iostat  !! The value of IOSTAT returned by ACTION.
       end subroutine ioerr
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      module subroutine zzcln ( ctx, lookat, nameat, namlst, datlst, nmpool, chpool, dppool )
-         class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) :: lbpool
-         parameter ( lbpool = -5 )
-         integer(ip), intent(in) :: lookat  !! The hash value of some name.
-         integer(ip), intent(in) :: nameat  !! The actual node where the name was stored
-         integer(ip), intent(inout) :: namlst ( * )  !! The array of heads of name lists.
-         integer(ip), intent(inout) :: datlst ( * )  !! The array of heads of lists of values
-         integer(ip), intent(inout) :: nmpool ( 2, lbpool:* )  !! The linked list pool of variable
-                                                               !! names.
-         integer(ip), intent(inout) :: chpool ( 2, lbpool:* )  !! The linked list pool of variable
-                                                               !! d.p. values.
-         integer(ip), intent(inout) :: dppool ( 2, lbpool:* )  !! The linked list pool of variable
-                                                               !! string values.
-      end subroutine zzcln
 
       !> Read the next line of text from a text file.
       !>
@@ -3743,111 +3722,41 @@ module pepper_instance
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
-      module subroutine zzpini ( ctx, first, maxvar, maxval, maxlin, begdat, begtxt, nmpool, dppool, chpool, namlst, datlst, subctr )
+      !>
+      !> PEPPER: initializes the pool state PS (SPICELIB passed the arrays).
+      module subroutine zzpini ( ctx, ps )
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) :: lbpool
-         parameter ( lbpool = -5 )
-         logical, intent(inout) :: first  !! Used to determine if this is the first pass
-         integer(ip), intent(in) :: maxvar  !! Maximum number of variables in the pool
-         integer(ip), intent(in) :: maxval  !! Maximum number of d.p. values in the pool
-         integer(ip), intent(in) :: maxlin  !! Maximum number of string values in the pool
-         character(*), intent(out) :: begdat  !! Marker used to begin data section of a kernel
-         character(*), intent(out) :: begtxt  !! Marker used to begin text section of a kernel
-         integer(ip), intent(out) :: nmpool ( 2,  lbpool : maxvar )  !! Linked list for resolving
-                                                                     !! hash collisions of names
-         integer(ip), intent(out) :: dppool ( 2,  lbpool : maxval )  !! Linked list for maintaining
-                                                                     !! d.p. values.
-         integer(ip), intent(out) :: chpool ( 2,  lbpool : maxlin )  !! Linked list for maintaining
-                                                                     !! string values
-         integer(ip), intent(out) :: namlst (              maxvar )  !! Heads of collision
-                                                                     !! resolution lists
-         integer(ip), intent(out) :: datlst (              maxvar )  !! Heads of data values lists
-         integer(ip), intent(out) :: subctr ( ctrsiz )  !! POOL state counter.
+         type(pool_state), intent(inout) :: ps  !! the kernel pool
       end subroutine zzpini
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
-      module subroutine zzrvar ( ctx, namlst, nmpool, names, datlst, dppool, dpvals, chpool, chvals, varnam, eof )
+      !>
+      !> PEPPER: stores into the pool state PS (SPICELIB passed the arrays).
+      module subroutine zzrvar ( ctx, ps, varnam, eof )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) :: lbpool
-         parameter ( lbpool = -5 )
-         integer(ip), intent(inout) :: namlst     (           * )  !! array of collision resolution
-                                                                   !! list heads.
-         integer(ip), intent(inout) :: nmpool     ( 2, lbpool:* )  !! linked list pool of collision
-                                                                   !! resolution lists.
-         character(*), intent(inout) :: names      (           * )  !! array of names of kernel pool
-                                                                    !! variables.
-         integer(ip), intent(inout) :: datlst     (           * )  !! array of heads of lists of
-                                                                   !! variable values.
-         integer(ip), intent(inout) :: dppool     ( 2, lbpool:* )  !! linked list pool of pointer
-                                                                   !! lists to d.p. values.
-         real(wp), intent(inout) :: dpvals     (           * )  !! array of d.p. kernel pool values.
-         integer(ip), intent(inout) :: chpool     ( 2, lbpool:* )  !! linked list pool of pointer
-                                                                   !! lists to string values.
-         character(*), intent(inout) :: chvals     (           * )  !! array of string kernel pool
-                                                                    !! values.
-         character(*), intent(out) :: varnam  !! name of variable parsed.
+         type(pool_state), intent(inout) :: ps  !! the kernel pool
+         character(:), allocatable, intent(out) :: varnam  !! name of variable parsed.
          logical, intent(out) :: eof  !! if TRUE end of input file has been reached.
       end subroutine zzrvar
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
-      module subroutine zzrvbf ( ctx, buffer, bsize, linnum, namlst, nmpool, names, datlst, dppool, dpvals, chpool, chvals, varnam, eof )
+      !>
+      !> PEPPER: stores into the pool state PS (SPICELIB passed the arrays).
+      module subroutine zzrvbf ( ctx, buffer, bsize, linnum, ps, varnam, eof )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) :: lbpool
-         parameter ( lbpool = -5 )
          character(*), intent(in) :: buffer     (  * )  !! Array of text to be read and parsed.
          integer(ip), intent(in) :: bsize  !! Number of lines in text buffer.
          integer(ip), intent(inout) :: linnum  !! line number to begin reading buffer
-         integer(ip), intent(inout) :: namlst     (           * )  !! array of collision resolution
-                                                                   !! list heads
-         integer(ip), intent(inout) :: nmpool     ( 2, lbpool:* )  !! linked list pool of collision
-                                                                   !! resolution lists
-         character(*), intent(inout) :: names      (           * )  !! array of names of kernel pool
-                                                                    !! variables
-         integer(ip), intent(inout) :: datlst     (           * )  !! array of heads of lists of
-                                                                   !! variable values
-         integer(ip), intent(inout) :: dppool     ( 2, lbpool:* )  !! linked list pool of pointer
-                                                                   !! lists to d.p. values
-         real(wp), intent(inout) :: dpvals     (           * )  !! array of d.p. kernel pool values
-         integer(ip), intent(inout) :: chpool     ( 2, lbpool:* )  !! linked list pool of pointer
-                                                                   !! lists to string values
-         character(*), intent(inout) :: chvals     (           * )  !! array of string kernel pool
-                                                                    !! values
-         character(*), intent(out) :: varnam  !! name of variable parsed
+         type(pool_state), intent(inout) :: ps  !! the kernel pool
+         character(:), allocatable, intent(out) :: varnam  !! name of variable parsed
          logical, intent(out) :: eof  !! if TRUE end of input file has been reached.
       end subroutine zzrvbf
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      module subroutine zzgpnm ( ctx, namlst, nmpool, names, datlst, dppool, dpvals, chpool, chvals, varnam, found, lookat, nameat )
-         class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) :: lbpool
-         parameter ( lbpool = -5 )
-         integer(ip), intent(inout) :: namlst     (           * )  !! array of collision resolution
-                                                                   !! list heads
-         integer(ip), intent(inout) :: nmpool     ( 2, lbpool:* )  !! linked list pool of collision
-                                                                   !! resolution lists
-         character(*), intent(inout) :: names      (           * )  !! array of names of kernel pool
-                                                                    !! variables
-         integer(ip), intent(inout) :: datlst     (           * )  !! array of heads of lists of
-                                                                   !! variable values
-         integer(ip), intent(inout) :: dppool     ( 2, lbpool:* )  !! linked list pool of pointer
-                                                                   !! lists to d.p. values
-         real(wp), intent(inout) :: dpvals     (           * )  !! array of d.p. kernel pool values
-         integer(ip), intent(inout) :: chpool     ( 2, lbpool:* )  !! linked list pool of pointer
-                                                                   !! lists to string values
-         character(*), intent(inout) :: chvals     (           * )  !! array of string kernel pool
-                                                                    !! values
-         character(*), intent(in) :: varnam  !! A name to find/put into the kernel pool name list.
-         logical, intent(out) :: found  !! TRUE if VARNAM is already in the list of names
-         integer(ip), intent(out) :: lookat  !! The value ZZHASH(VARNAM).
-         integer(ip), intent(out) :: nameat  !! The location where VARNAM is to be located.
-      end subroutine zzgpnm
 
       !> Remove all kernel variables from the kernel pool. Watches
       !> on kernel variables are retained.
@@ -20422,7 +20331,7 @@ contains
          allocate (spice%changed_names(change_log_size), spice%changed_at(change_log_size))
       end if
       spice%nchanged = spice%nchanged + 1
-      spice%changed_names(spice%nchanged) = name
+      spice%changed_names(spice%nchanged)%s = trim(name)
       spice%changed_at(spice%nchanged) = spice%pool_changes
    end subroutine pool_changed
 
@@ -20451,8 +20360,8 @@ contains
       integer(ip), intent(in) :: nnames  !! number of variables
       character(*), intent(in) :: names(*)  !! the variables to watch
       type(pool_watch), allocatable :: grown(:)
-      character(watch_name_length), allocatable :: more(:)
-      integer :: k, i
+      type(string), allocatable :: more(:)
+      integer :: k, i, j
       k = watch_index(ctx, agent)
       if (k == 0) then
          if (.not. allocated(ctx%watches)) allocate (ctx%watches(8))
@@ -20463,24 +20372,40 @@ contains
          end if
          ctx%nwatches = ctx%nwatches + 1
          k = ctx%nwatches
-         ctx%watches(k)%agent = agent
+         ctx%watches(k)%agent = trim(agent)
          ctx%watches(k)%nnames = 0
          allocate (ctx%watches(k)%names(max(8, int(nnames))))
       end if
       associate (w => ctx%watches(k))
          do i = 1, nnames
-            if (any(w%names(1:w%nnames) == names(i))) cycle
+            if (watches(w, names(i))) cycle
             if (w%nnames == size(w%names)) then
                allocate (more(2*w%nnames))
-               more(1:w%nnames) = w%names(1:w%nnames)
+               do j = 1, w%nnames
+                  call move_alloc(w%names(j)%s, more(j)%s)
+               end do
                call move_alloc(more, w%names)
             end if
             w%nnames = w%nnames + 1
-            w%names(w%nnames) = names(i)
+            w%names(w%nnames)%s = trim(names(i))
          end do
          w%seen = -1
       end associate
    end subroutine swpool_context
+
+   !> True if a watch is on a variable.
+   pure logical function watches(w, name)
+      type(pool_watch), intent(in) :: w  !! the watch
+      character(*), intent(in) :: name  !! the variable
+      integer :: i
+      watches = .false.
+      do i = 1, w%nnames
+         if (w%names(i)%s == name) then
+            watches = .true.
+            return
+         end if
+      end do
+   end function watches
 
    !> True if a variable watched by the context's watch k changed since the
    !> watch's last check (or a notice is pending).
@@ -20494,7 +20419,7 @@ contains
          ! the log is in the order of the changes: look at the newer ones
          do j = s%nchanged, 1, -1
             if (s%changed_at(j) <= w%seen) exit
-            if (any(w%names(1:w%nnames) == s%changed_names(j))) then
+            if (watches(w, s%changed_names(j)%s)) then
                watch_pending = .true.
                return
             end if
@@ -20531,9 +20456,20 @@ contains
          call ctx%sigerr('SPICE(UPDATEPENDING)')
          return
       end if
-      ctx%watches(k:ctx%nwatches - 1) = ctx%watches(k + 1:ctx%nwatches)
-      ! (the vacated last slot is reused by the next new watch)
-      if (allocated(ctx%watches(ctx%nwatches)%names)) deallocate (ctx%watches(ctx%nwatches)%names)
+      ! The last watch takes the place of the deleted one (the order of the
+      ! watches does not matter: an agent has one watch); its components
+      ! are moved, not copied.
+      associate (w => ctx%watches(k), last => ctx%watches(ctx%nwatches))
+         if (k /= ctx%nwatches) then
+            call move_alloc(last%agent, w%agent)
+            call move_alloc(last%names, w%names)
+            w%nnames = last%nnames
+            w%seen = last%seen
+         end if
+         if (allocated(last%agent)) deallocate (last%agent)
+         if (allocated(last%names)) deallocate (last%names)
+         last%nnames = 0
+      end associate
       ctx%nwatches = ctx%nwatches - 1
    end subroutine dwpool_context
 

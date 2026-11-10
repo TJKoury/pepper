@@ -876,175 +876,6 @@ contains
 
 !$Procedure      ZZCLN ( Private --- clean up )
 
-      module procedure zzcln
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     This routine cleans up changes to the kernel pool that were
-!!     made prior to the detection of a parsing error.  It is purely
-!!     a utility for use only by ZZRVAR.
-!!
-!! ## Required Reading
-!!
-!!      None.
-!!
-!! ## Keywords
-!!
-!!       PRIVATE UTILITY
-!!
-!! ## Declarations
-!!
-      use pepper_kinds, only: ip
-      implicit none
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-
-! $ Detailed_Input
-!
-!     LOOKAT      is the hash value of some string.  NAMLST(LOOKAT) is
-!                 the head of some collision resolution list of names.
-!
-!     NAMEAT      is the node in the list headed by NAMLST(LOOKAT) where
-!                 some name has been stored in the kernel pool
-!                 collection of NAMES. The node NAMEAT needs to be
-!                 removed from its list in NMPOOL.
-!
-!     NAMLST      is an array of heads of collision
-!                 resolution lists in NMPOOL.  If NAMLST(LOOKAT) is
-!                 the same as NAMEAT, we need to adjust NAMLST(LOOKAT)
-!                 so that it points to the next node in the list.
-!
-!     DATLST      is an array of heads of data value lists for the
-!                 variables in the kernel pool.  We will need to free
-!                 the data list pointed to by DATLST(NAMEAT) and
-!                 zero out DATLST(NAMEAT).
-!
-!     NMPOOL      is a linked list pool for collision resolutions of
-!                 a string hash function.  The node NAMEAT needs to
-!                 be freed.
-!
-!     CHPOOL      is a linked list pool for string values associated
-!                 with a kernel pool variable  If DATLST(NAMEAT) points
-!                 into CHPOOL, then the list containing this node must
-!                 be freed.
-!
-!     DPPOOL      is a linked list pool for d.p. values associated
-!                 with a kernel pool variable. If DATLST(NAMEAT) points
-!                 into DPPOOL, then the list containing this node must
-!                 be freed.
-!
-! $ Detailed_Output
-!
-!      NAMLST    are the same structures as the input with the
-!      DATLST    corrections made for the freeing of the NMPOOL
-!      NMPOOL    node NAMEAT.
-!      CHPOOL
-!      DPPOOL
-!
-! $ Parameters
-!
-!      None.
-!
-! $ Files
-!
-!      None.
-!
-! $ Exceptions
-!
-!      None.
-!
-! $ Particulars
-!
-!     During the course of reading and parsing a kernel pool variable
-!     it may happen that an error in the input text is encountered after
-!     a kernel pool variable update has been initiated.  This routine
-!     removes all traces of that variable from the kernel pool storage
-!     structures.
-!
-! $ Examples
-!
-!     See ZZRVAR
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!      W.L. Taber      (JPL)
-!
-! $ Literature_References
-!
-!      None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 20-SEP-1995 (WLT)
-!
-!-&
-
-!
-!     Local Parameters and Variables
-!
-      integer(ip)           next
-      parameter           ( next   = 1 )
-
-      integer(ip)           prev
-      parameter           ( prev   = 2 )
-
-      integer(ip)           head
-      integer(ip)           tail
-!
-!     First perform the clean up function. This variable
-!     has been corrupted so there's no point in hanging
-!     on to it.
-!
-!     First remove the data...
-!
-
-      head = datlst( nameat )
-
-      if      ( head < 0 ) then
-
-         head = -head
-         tail = -chpool(prev,head)
-         call lnkfsl ( ctx, head, tail, chpool )
-
-      else if ( head > 0 ) then
-
-         tail = -dppool(prev,head)
-         call lnkfsl ( ctx, head, tail, dppool )
-
-      end if
-!
-!     Remove the sub-list head from the data list.
-!
-      datlst ( nameat ) = 0
-!
-!     If this was a singleton list remove the pointer to
-!     the head of the list.
-!
-      head =  namlst(lookat)
-      tail = -nmpool(prev,head)
-
-      if ( head == tail ) then
-         namlst(lookat) = 0
-      else if ( namlst(lookat) == nameat ) then
-         namlst(lookat) = nmpool(next,nameat)
-      end if
-!
-!     Finally free up this node in the NMPOOL.
-!
-      head = nameat
-      tail = nameat
-
-      call lnkfsl ( ctx, head, tail, nmpool )
-
-      return
-      end procedure zzcln
 
       module procedure rdtext
 !! ## Abstract
@@ -10638,203 +10469,20 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
-
-
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-
-! $ Detailed_Input
-!
-!     FIRST       is a logical indicating whether or not this is
-!                 the first call to this routine.  If FIRST is .TRUE.
-!                 the various items are initialized and FIRST is
-!                 set to .FALSE.  If FIRST is .FALSE. no action is
-!                 taken by this routine.
-!
-!     MAXVAR      is the maximum number of variables that the
-!                 kernel pool may contain at any one time.
-!
-!     MAXVAL      is the maximum number of distinct values that
-!                 may belong to the variables in the kernel pool.
-!
-!     MAXLIN      is the maximum number of character strings that
-!                 can be stored as data for kernel pool variables.
-!
-!     PEPPER: MXNOTE and MAXAGT (the sizes of SPICELIB's watcher
-!     tables) are gone; each context keeps its own watches.
-!
-! $ Detailed_Output
-!
-!      FIRST      is set to .FALSE. on output.
-!
-!      BEGDAT     Marker used to begin data section of a kernel
-!
-!      BEGTXT     Marker used to begin text section of a kernel
-!
-!      NMPOOL     Linked list pool for resolving hash collisions
-!                 of names of kernel pool variables.  Each list
-!                 other than the free list, is a sequence of pointers
-!                 to names that have the same hash value.  On output
-!                 from this routine all nodes of the pool are in the
-!                 free list.
-!
-!      DPPOOL     Linked list pool for maintaining d.p. values.
-!                 On output all nodes in the pool are in the free list
-!                 of DPPOOL
-!
-!      CHPOOL     Linked list pool for maintaining string values.
-!                 On output all nodes in the pool are in the free list
-!                 of CHPOOL
-!
-!      NAMLST     is an array that contains the heads of lists from
-!                 NMPOOL.  NAMLST( ZZHASH( NAME ) ) points to the head
-!                 of the first name in the collision resolution list
-!                 for NAME.  If there is no head for the collision
-!                 resolution list for NAME (i.e. no name with the
-!                 same hash value as name has been stored)
-!                 NAMLST( ZZHASH(NAME) ) will be zero.  On output from
-!                 this routine all values in NAMLST are set to zero.
-!
-!      DATLST     is an array that contains the "heads" of lists of
-!                 pointers to the values associated with a variable.
-!                 Suppose that NAME has been located in the list of
-!                 variable names at location LOC.  Then DATLST(LOC)
-!                 is the head node of the list of pointers to the
-!                 values of NAME.  If DATLST(LOC) is positive then
-!                 the values are d.p.'s If the value of DATLST(LOC)
-!                 is negative, the values are strings.  The absolute
-!                 value of DATLST(LOC) is the head node to the list
-!                 of values associated with NAME.  If DATLST(LOC) is
-!                 zero then no values have been assigned to the variable
-!                 NAME.  On output all entries of DATLST are set to
-!                 zero.
-!
-!      PEPPER: WTVARS, WTPTRS, WTPOOL, WTAGNT, AGENTS, ACTIVE and NOTIFY
-!      (SPICELIB's watcher tables) are gone.
-!
-!      SUBCTR     Initialized POOL state counter.
-!
-! $ Parameters
-!
-!      None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!      None.
-!
-! $ Particulars
-!
-!     This is a utility routine that centralizes the initialization
-!     code that is common to all entry points of POOL.
-!
-! $ Examples
-!
-!     See POOL.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     W.L. Taber      (JPL)
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.0.0, 30-JUL-2013 (BVS)
-!
-!        Added POOL state counter to the argument list, and included
-!        'zzctr.inc' to provide the counter array dimension.
-!
-!-    SPICELIB Version 2.0.0, 19-MAR-2009 (NJB)
-!
-!        Argument list was changed to accommodate re-implementation
-!        of watcher system. Initialization tasks performed by this
-!        routine were updated accordingly.
-!
-!-    SPICELIB Version 1.1.0, 13-OCT-1995 (WLT)
-!
-!        An integer variable was renamed to better indicate
-!        its role in the routine and to make maintenance a bit
-!        easier
-!
-!-    SPICELIB Version 1.0.0, 20-SEP-1995 (WLT)
-!
-!-&
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.1.0, 13-OCT-1995 (WLT)
-!
-!        An integer variable was renamed to better indicate
-!        its role in the routine and to make maintenance a bit
-!        easier.  The integer variable was 'DONE' which looks
-!        a lot like a logical.  It's been changed to 'DUMMY'.
-!
-!-&
-
-!
-!     SPICELIB Functions.
-!
-
-!
-!     Local parameters
-!
       integer(ip), parameter :: shrtln = 9
-
-      integer(ip)           bslash
-      parameter           ( bslash = 92 )
-
-      character(shrtln)     dat
-      parameter           ( dat = 'begindata' )
-
-      character(shrtln)     txt
-      parameter           ( txt = 'begintext' )
-
+      integer(ip), parameter :: bslash = 92
+      character(shrtln), parameter :: dat = 'begindata'
+      character(shrtln), parameter :: txt = 'begintext'
 !
-!     Local variables
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
 !
-
-      integer(ip)           i
-
-      if ( first ) then
-
-         do i = 1, maxvar
-            namlst(i) = 0
-            datlst(i) = 0
-         end do
-
-         begdat = char(bslash) // dat
-         begtxt = char(bslash) // txt
-
-         call lnkini ( ctx, maxvar, nmpool )
-         call lnkini ( ctx, maxval, dppool )
-         call lnkini ( ctx, maxlin, chpool )
-
-         call zzctrsin ( ctx, subctr )
-
-         if ( .not. ctx%failed() ) then
-            first = .false.
-         end if
-
-         return
-
-      end if
-
-      return
+      if ( .not. ps%first ) return
+      ps%begdat = char(bslash) // dat
+      ps%begtxt = char(bslash) // txt
+      call zzctrsin ( ctx, ps%subctr )
+      if ( .not. ctx%failed() ) ps%first = .false.
       end procedure zzpini
 
 !$Procedure ZZRVAR ( Private --- Pool, read the next kernel variable )
@@ -11111,6 +10759,8 @@ contains
 !
 
       character(linlen)     line
+      character(linlen)     cval  ! PEPPER: a string value is no longer than its line
+      integer(ip)           ncval
       character(linlen)     name
       character(filsiz)     file
 
@@ -11224,7 +10874,7 @@ contains
 !
 !     No variable yet and no parsing errors so far.
 !
-      name  = ' '
+      varnam = ' '
       error = ' '
       ncomp = 0
 
@@ -11479,22 +11129,8 @@ contains
 !
             varlen = len( line( begs(1): ends(1) ) )
 
-            if ( varlen > maxlen ) then
-
-               call ctx%setmsg ( 'A kernel pool variable name read from a ' &
-               //            'kernel file exceeds the maximum allowed ' &
-               //            'length #1. The actual length of the ' &
-               //            'variable name is #2, the offending ' &
-               //            'variable name to #3 characters: ' &
-               //            '''#4''.')
-
-               call ctx%errint ( '#1', maxlen                   )
-               call ctx%errint ( '#2', varlen                   )
-               call ctx%errint ( '#3', linlen                   )
-               call ctx%errch  ( '#4', line( begs(1): ends(1) ) )
-               call ctx%sigerr ( 'SPICE(BADVARNAME)'            )
-
-            end if
+            ! PEPPER: names have any length (SPICELIB signaled
+            ! SPICE(BADVARNAME) for more than 32 characters).
 
 !
 !           The variable name is ok. How about the directive.
@@ -11537,73 +11173,7 @@ contains
 !           we will use the variable FOUND to indicate whether or
 !           not it was already present.
 !
-            lookat =  name_hash ( varnam, maxvar )
-            node   =  namlst ( lookat )
-            full   =  lnknfn ( ctx, nmpool ) <= 0
-            found  = .false.
-!
-!           See if this name (or one colliding with it in the
-!           hash scheme) has already been stored in the name list.
-!
-            if ( node > 0 ) then
-
-               head =  node
-               tail = -nmpool(prev,head)
-
-               do while ( node > 0 .and. .not. found )
-
-                  found  =  names (node) == varnam
-                  nameat =  node
-                  node   =  nmpool(next,node)
-
-               end do
-
-               if (       .not. found &
-                    .and. .not. full   ) then
-!
-!                 We didn't find this name on the conflict resolution
-!                 list. Allocate a new slot for it.
-!
-                  call lnkan  ( ctx, nmpool, node         )
-                  call lnkila ( ctx, tail,   node, nmpool )
-
-                  names(node) =  varnam
-                  nameat      =  node
-
-               end if
-
-            else if ( .not. full ) then
-!
-!              Nothing like this variable name (in the hashing sense)
-!              has been loaded so far.  We need to allocate
-!              a name slot for this variable.
-!
-               call lnkan ( ctx, nmpool, node )
-
-               namlst(lookat) =  node
-               names (node  ) =  varnam
-               nameat         =  node
-
-            end if
-!
-!           If the name pool was full and we didn't find this name
-!           we've got an error. Diagnose it and return.
-!
-            if ( full .and. .not. found ) then
-
-               call rdklin ( ctx, file, number )
-               r1 = rtrim  ( file )
-
-               call ctx%setmsg ( 'The kernel pool does not have room ' &
-               //            'for any more variables.  It filled ' &
-               //            'up at line # of the kernel file #. ' )
-
-               call ctx%errint ( '#', number             )
-               call ctx%errch  ( '#', file(1:r1)         )
-               call ctx%sigerr ( 'SPICE(KERNELPOOLFULL)' )
-               return
-
-            end if
+            call ps%create ( varnam, nameat, found )
 
 !
 !           Now depending upon the kind of directive, we will need
@@ -11618,38 +11188,7 @@ contains
 !
                vartyp =  unknwn
 
-               if ( found ) then
-!
-!                 We need to free the data associated with this
-!                 variable.
-!
-                  datahd         = datlst( nameat )
-                  datlst(nameat) = 0
-
-                  if ( datahd < 0 ) then
-!
-!                    This variable was character type we need to
-!                    free a linked list from the character data
-!                    pool.
-!
-                     head = - datahd
-                     tail = - chpool(prev,head)
-
-                     call lnkfsl ( ctx, head, tail, chpool )
-
-                  else
-!
-!                    This variable was numeric type. We need to
-!                    free a linked list from the numeric pool.
-!
-                     head =   datahd
-                     tail = - dppool(prev,head)
-
-                     call lnkfsl ( ctx, head, tail, dppool )
-
-                  end if
-
-               end if
+               if ( found ) call ps%clear_values ( nameat )
 
             else if ( dirctv == eqp ) then
 !
@@ -11657,9 +11196,9 @@ contains
 !
                if ( found ) then
 
-                  if ( datlst(nameat) > 0 ) then
+                  if ( ps%vars(nameat)%kind == pool_numeric ) then
                      vartyp = numtyp
-                  else if ( datlst(nameat) < 0 ) then
+                  else if ( ps%vars(nameat)%kind == pool_character ) then
                      vartyp = strtyp
                   else
                      vartyp = unknwn
@@ -11732,8 +11271,7 @@ contains
 !
 !                 First perform the clean up function.
 !
-                  call zzcln ( ctx, lookat, nameat, &
-                               namlst, datlst, nmpool, chpool, dppool )
+                  call ps%remove ( nameat )
 
                   call rdklin ( ctx, file, number )
                   r1 = rtrim  ( file         )
@@ -11763,8 +11301,7 @@ contains
 !
 !                 First perform the clean up function.
 !
-                  call zzcln ( ctx, lookat, nameat, &
-                               namlst, datlst, nmpool, chpool, dppool )
+                  call ps%remove ( nameat )
 
                   call rdklin ( ctx, file,  number )
                   r1 = rtrim  ( varnam        )
@@ -11793,8 +11330,7 @@ contains
 !
 !                 First perform the clean up function.
 !
-                  call zzcln ( ctx, lookat, nameat, &
-                               namlst, datlst, nmpool, chpool, dppool )
+                  call ps%remove ( nameat )
 
                   call rdklin ( ctx, file,  number )
                   r1 = rtrim  ( file          )
@@ -11814,54 +11350,6 @@ contains
 !              We are ready to go.  Allocate a node for this data
 !              item. First make sure there is room to do so.
 !
-               free = lnknfn ( ctx, chpool )
-
-               if ( free <= 0 ) then
-
-                  call rdklin ( ctx, file,  number )
-                  r1 = rtrim  ( file          )
-
-                  call ctx%setmsg ( 'There is no room available for ' &
-                  //            'adding another character value ' &
-                  //            'to the kernel pool.  The ' &
-                  //            'character values buffer became ' &
-                  //            'full at line # of the text ' &
-                  //            'kernel file ''#''. ' )
-
-                  call ctx%errint ( '#', number       )
-                  call ctx%errch  ( '#', file  (1:r1) )
-                  call ctx%sigerr ( 'SPICE(KERNELPOOLFULL)' )
-                  return
-
-               end if
-!
-!              Allocate a node for storing this string value:
-!
-               call lnkan ( ctx, chpool, chnode )
-
-               if ( datlst(nameat) == 0 ) then
-!
-!                 There was no data for this name yet.  We make
-!                 CHNODE be the head of the data list for this name.
-!
-                  datlst(nameat) = -chnode
-
-               else
-!
-!                 Put this node after the tail of the current list.
-!
-                  head = -datlst(nameat)
-                  tail = -chpool(prev, head )
-
-                  call lnkila ( ctx, tail, chnode, chpool )
-
-               end if
-!
-!              Finally insert this data item in the data buffer
-!              at CHNODE.  Note any quotes will be doubled so we
-!              have to undo this affect when we store the data.
-!
-               chvals(chnode) = ' '
                ncomp          = ncomp + 1
 
 !
@@ -11875,25 +11363,18 @@ contains
                   e = e + 1
                end if
 
-               i = 1
+               ncval = 0
                j = b+1
-
                do while ( j < e )
                   code = ichar(line(j:j))
-
                   if ( isquot(code) ) then
                      j = j+1
                   end if
-
-                  if ( i <= len(chvals(chnode)) ) then
-                     chvals(chnode)(i:i) = line(j:j)
-                     i = i + 1
-                     j = j + 1
-                  else
-                     j = j + 1
-                  end if
-
+                  ncval = ncval + 1
+                  cval(ncval:ncval) = line(j:j)
+                  j = j + 1
                end do
+               call ps%add_string ( nameat, cval(1:ncval) )
 !
 !              That's all for this value. It's now time to loop
 !              back through and get the next value.
@@ -11904,8 +11385,7 @@ contains
 !
 !                 First perform the clean up function.
 !
-                  call zzcln ( ctx, lookat, nameat, &
-                               namlst, datlst, nmpool, chpool, dppool )
+                  call ps%remove ( nameat )
 
                   call rdklin ( ctx, file,  number )
                   r1 = rtrim  ( varnam        )
@@ -11940,8 +11420,7 @@ contains
 !
 !                    First perform the clean up function.
 !
-                     call zzcln ( ctx,lookat, nameat, &
-                                 namlst, datlst, nmpool, chpool, dppool)
+                     call ps%remove ( nameat )
 
                      call rdklin( ctx, file,   number )
                      r1 = rtrim ( varnam        )
@@ -11972,8 +11451,7 @@ contains
 !
 !                    First perform the clean up function.
 !
-                     call zzcln ( ctx,lookat, nameat, &
-                                 namlst, datlst, nmpool, chpool, dppool)
+                     call ps%remove ( nameat )
 
                      call rdklin ( ctx, file, number )
                      r1 = rtrim  ( file )
@@ -12000,8 +11478,7 @@ contains
 
                   if ( error /= ' ' ) then
 
-                     call zzcln ( ctx,lookat, nameat, &
-                                 namlst, datlst, nmpool, chpool, dppool)
+                     call ps%remove ( nameat )
 
                      call rdklin ( ctx, file, number )
 
@@ -12025,53 +11502,7 @@ contains
 !              OK. We have a parsed value.  See if there is room in
 !              the numeric portion of the pool to store this value.
 !
-               free = lnknfn ( ctx, dppool )
-
-               if ( free <= 0 ) then
-
-                  call rdklin ( ctx, file,  number )
-                  r1 = rtrim  ( file          )
-
-                  call ctx%setmsg ( 'There is no room available for ' &
-                  //            'adding another numeric value ' &
-                  //            'to the kernel pool.  The ' &
-                  //            'numeric values buffer became ' &
-                  //            'full at line # of the text ' &
-                  //            'kernel file ''#''. ' )
-
-                  call ctx%errint ( '#', number       )
-                  call ctx%errch  ( '#', file  (1:r1) )
-                  call ctx%sigerr ( 'SPICE(KERNELPOOLFULL)' )
-                  return
-
-               end if
-
-!
-!              Allocate a node for storing this numeric value:
-!
-               call lnkan ( ctx, dppool, dpnode )
-
-               if ( datlst(nameat) == 0 ) then
-!
-!                 There was no data for this name yet.  We make
-!                 DPNODE be the head of the data list for this name.
-!
-                  datlst(nameat) =  dpnode
-
-               else
-!
-!                 Put this node after the tail of the current list.
-!
-                  head =  datlst(nameat)
-                  tail = -dppool(prev, head )
-
-                  call lnkila ( ctx, tail, dpnode, dppool )
-
-               end if
-!
-!              Finally insert this data item into the numeric buffer.
-!
-               dpvals(dpnode) = dvalue
+               call ps%add_number ( nameat, dvalue )
                ncomp          = ncomp + 1
 
             end if
@@ -12104,8 +11535,7 @@ contains
 !
       if ( ncomp < 1 ) then
 
-         call zzcln ( ctx, lookat, nameat, &
-                      namlst, datlst, nmpool, chpool, dppool )
+         call ps%remove ( nameat )
 
          call rdklin ( ctx, file,  number )
          r1 = rtrim  ( file          )
@@ -12128,7 +11558,6 @@ contains
 !
 !     Return the name of the variable.
 !
-      name = varnam
 
       return
       end procedure zzrvar
@@ -12387,6 +11816,8 @@ contains
 !
 
       character(linlen)     line
+      character(linlen)     cval  ! PEPPER: a string value is no longer than its line
+      integer(ip)           ncval
       character(linlen)     name
 
       character(256)        error
@@ -12496,7 +11927,7 @@ contains
 !
 !     No variable yet and no parsing errors so far.
 !
-      name  = ' '
+      varnam = ' '
       error = ' '
       ncomp = 0
 
@@ -12753,22 +12184,8 @@ contains
 !
             varlen = len( line( begs(1): ends(1) ) )
 
-            if ( varlen > maxlen ) then
-
-               call ctx%setmsg ( 'A kernel pool variable name in the ' &
-               //            'input buffer exceeds the maximum ' &
-               //            'allowed length #1. The actual length ' &
-               //            'of the variable name is #2, the ' &
-               //            'offending variable name to #3 characters:' &
-               //            ' ''#4''.')
-
-               call ctx%errint ( '#1', maxlen                   )
-               call ctx%errint ( '#2', varlen                   )
-               call ctx%errint ( '#3', linlen                   )
-               call ctx%errch  ( '#4', line( begs(1): ends(1) ) )
-               call ctx%sigerr ( 'SPICE(BADVARNAME)'            )
-
-            end if
+            ! PEPPER: names have any length (SPICELIB signaled
+            ! SPICE(BADVARNAME) for more than 32 characters).
 
 !
 !           The variable name is ok. How about the directive.
@@ -12806,69 +12223,7 @@ contains
 !           we will use the variable FOUND to indicate whether or
 !           not it was already present.
 !
-            lookat =  name_hash ( varnam, maxvar )
-            node   =  namlst ( lookat )
-            full   =  lnknfn ( ctx, nmpool ) <= 0
-            found  = .false.
-!
-!           See if this name (or one colliding with it in the
-!           hash scheme) has already been stored in the name list.
-!
-            if ( node > 0 ) then
-
-               head =  node
-               tail = -nmpool(prev,head)
-
-               do while ( node > 0 .and. .not. found )
-
-                  found  =  names (node) == varnam
-                  nameat =  node
-                  node   =  nmpool(next,node)
-
-               end do
-
-               if (       .not. found &
-                    .and. .not. full   ) then
-!
-!                 We didn't find this name on the conflict resolution
-!                 list. Allocate a new slot for it.
-!
-                  call lnkan  ( ctx, nmpool, node         )
-                  call lnkila ( ctx, tail,   node, nmpool )
-
-                  names(node) =  varnam
-                  nameat      =  node
-
-               end if
-
-            else if ( .not. full ) then
-!
-!              Nothing like this variable name (in the hashing sense)
-!              has been loaded so far.  We need to allocate
-!              a name slot for this variable.
-!
-               call lnkan ( ctx, nmpool, node )
-
-               namlst(lookat) =  node
-               names (node  ) =  varnam
-               nameat         =  node
-
-            end if
-!
-!           If the name pool was full and we didn't find this name
-!           we've got an error. Diagnose it and return.
-!
-            if ( full .and. .not. found ) then
-
-               call ctx%setmsg ( 'The kernel pool does not have room ' &
-               //            'for any more variables.  It filled ' &
-               //            'up at line # of the text buffer. ' )
-
-               call ctx%errint ( '#', linnum             )
-               call ctx%sigerr ( 'SPICE(KERNELPOOLFULL)' )
-               return
-
-            end if
+            call ps%create ( varnam, nameat, found )
 
 !
 !           Now depending upon the kind of directive, we will need
@@ -12883,38 +12238,7 @@ contains
 !
                vartyp =  unknwn
 
-               if ( found ) then
-!
-!                 We need to free the data associated with this
-!                 variable.
-!
-                  datahd         = datlst( nameat )
-                  datlst(nameat) = 0
-
-                  if ( datahd < 0 ) then
-!
-!                    This variable was character type we need to
-!                    free a linked list from the character data
-!                    pool.
-!
-                     head = - datahd
-                     tail = - chpool(prev,head)
-
-                     call lnkfsl ( ctx, head, tail, chpool )
-
-                  else
-!
-!                    This variable was numeric type. We need to
-!                    free a linked list from the numeric pool.
-!
-                     head =   datahd
-                     tail = - dppool(prev,head)
-
-                     call lnkfsl ( ctx, head, tail, dppool )
-
-                  end if
-
-               end if
+               if ( found ) call ps%clear_values ( nameat )
 
             else if ( dirctv == eqp ) then
 !
@@ -12922,9 +12246,9 @@ contains
 !
                if ( found ) then
 
-                  if ( datlst(nameat) > 0 ) then
+                  if ( ps%vars(nameat)%kind == pool_numeric ) then
                      vartyp = numtyp
-                  else if ( datlst(nameat) < 0 ) then
+                  else if ( ps%vars(nameat)%kind == pool_character ) then
                      vartyp = strtyp
                   else
                      vartyp = unknwn
@@ -12997,8 +12321,7 @@ contains
 !
 !                 First perform the clean up function.
 !
-                  call zzcln ( ctx, lookat, nameat, &
-                               namlst, datlst, nmpool, chpool, dppool )
+                  call ps%remove ( nameat )
 
                   call ctx%setmsg ( 'The first item following the ' &
                   //            'assignment operator should be ' &
@@ -13024,8 +12347,7 @@ contains
 !
 !                 First perform the clean up function.
 !
-                  call zzcln ( ctx, lookat, nameat, &
-                               namlst, datlst, nmpool, chpool, dppool )
+                  call ps%remove ( nameat )
 
                   r1 = rtrim  ( varnam        )
 
@@ -13051,8 +12373,7 @@ contains
 !
 !                 First perform the clean up function.
 !
-                  call zzcln ( ctx, lookat, nameat, &
-                               namlst, datlst, nmpool, chpool, dppool )
+                  call ps%remove ( nameat )
 
                   call ctx%setmsg ( 'There is a quoted string with ' &
                   //            'no characters on line # of the ' &
@@ -13068,66 +12389,20 @@ contains
 !              We are ready to go.  Allocate a node for this data
 !              item. First make sure there is room to do so.
 !
-               free = lnknfn ( ctx, chpool )
-
-               if ( free <= 0 ) then
-
-                  call ctx%setmsg ( 'There is no room available for ' &
-                  //            'adding another character value ' &
-                  //            'to the kernel pool.  The ' &
-                  //            'character values buffer became ' &
-                  //            'full at line # of the text ' &
-                  //            'buffer. ' )
-
-                  call ctx%errint ( '#', linnum       )
-                  call ctx%sigerr ( 'SPICE(KERNELPOOLFULL)' )
-                  return
-
-               end if
-!
-!              Allocate a node for storing this string value:
-!
-               call lnkan ( ctx, chpool, chnode )
-
-               if ( datlst(nameat) == 0 ) then
-!
-!                 There was no data for this name yet.  We make
-!                 CHNODE be the head of the data list for this name.
-!
-                  datlst(nameat) = -chnode
-
-               else
-!
-!                 Put this node after the tail of the current list.
-!
-                  head = -datlst(nameat)
-                  tail = -chpool(prev, head )
-
-                  call lnkila ( ctx, tail, chnode, chpool )
-
-               end if
-!
-!              Finally insert this data item in the data buffer
-!              at CHNODE.  Note any quotes will be doubled so we
-!              have to undo this affect when we store the data.
-!
-               chvals(chnode) = ' '
                ncomp          = ncomp + 1
 
-               i = 1
+               ncval = 0
                j = b+1
-
                do while ( j < e )
                   code = ichar(line(j:j))
-
                   if ( isquot(code) ) then
                      j = j+1
                   end if
-
-                  chvals(chnode)(i:i) = line(j:j)
-                  i = i + 1
+                  ncval = ncval + 1
+                  cval(ncval:ncval) = line(j:j)
                   j = j + 1
                end do
+               call ps%add_string ( nameat, cval(1:ncval) )
 !
 !              That's all for this value. It's now time to loop
 !              back through and get the next value.
@@ -13138,8 +12413,7 @@ contains
 !
 !                 First perform the clean up function.
 !
-                  call zzcln ( ctx, lookat, nameat, &
-                               namlst, datlst, nmpool, chpool, dppool )
+                  call ps%remove ( nameat )
 
                   r1 = rtrim  ( varnam        )
 
@@ -13171,8 +12445,7 @@ contains
 !
 !                    First perform the clean up function.
 !
-                     call zzcln ( ctx,lookat, nameat, &
-                                 namlst, datlst, nmpool, chpool, dppool)
+                     call ps%remove ( nameat )
                      r1 = rtrim (varnam        )
 
                      call ctx%setmsg ( 'At character # of  line # in ' &
@@ -13199,8 +12472,7 @@ contains
 !
 !                    First perform the clean up function.
 !
-                     call zzcln ( ctx,lookat, nameat, &
-                                 namlst, datlst, nmpool, chpool, dppool)
+                     call ps%remove ( nameat )
 
                      call ctx%setmsg ( 'Encountered ''#'' while ' &
                      //            'attempting to parse a time ' &
@@ -13218,8 +12490,7 @@ contains
 
                   if ( error /= ' ' ) then
 
-                     call zzcln ( ctx,lookat, nameat, &
-                                 namlst, datlst, nmpool, chpool, dppool)
+                     call ps%remove ( nameat )
 
                      call ctx%setmsg ( 'Encountered ''#'' while ' &
                      //            'attempting to parse a number on ' &
@@ -13235,49 +12506,7 @@ contains
 !              OK. We have a parsed value.  See if there is room in
 !              the numeric portion of the pool to store this value.
 !
-               free = lnknfn ( ctx, dppool )
-
-               if ( free <= 0 ) then
-
-                  call ctx%setmsg ( 'There is no room available for ' &
-                  //            'adding another numeric value ' &
-                  //            'to the kernel pool.  The ' &
-                  //            'numeric values buffer became ' &
-                  //            'full at line # of the text ' &
-                  //            'buffer.' )
-
-                  call ctx%errint ( '#', linnum       )
-                  call ctx%sigerr ( 'SPICE(KERNELPOOLFULL)' )
-                  return
-
-               end if
-
-!
-!              Allocate a node for storing this numeric value:
-!
-               call lnkan ( ctx, dppool, dpnode )
-
-               if ( datlst(nameat) == 0 ) then
-!
-!                 There was no data for this name yet.  We make
-!                 DPNODE be the head of the data list for this name.
-!
-                  datlst(nameat) =  dpnode
-
-               else
-!
-!                 Put this node after the tail of the current list.
-!
-                  head =  datlst(nameat)
-                  tail = -dppool(prev, head )
-
-                  call lnkila ( ctx, tail, dpnode, dppool )
-
-               end if
-!
-!              Finally insert this data item into the numeric buffer.
-!
-               dpvals(dpnode) = dvalue
+               call ps%add_number ( nameat, dvalue )
                ncomp          = ncomp + 1
 
             end if
@@ -13310,8 +12539,7 @@ contains
 !
       if ( ncomp < 1 ) then
 
-         call zzcln ( ctx, lookat, nameat, &
-                      namlst, datlst, nmpool, chpool, dppool )
+         call ps%remove ( nameat )
 
          call ctx%setmsg ( 'The first item following the ' &
          //            'assignment operator should be ' &
@@ -13330,241 +12558,12 @@ contains
 !
 !     Return the name of the variable.
 !
-      name = varnam
 
       return
       end procedure zzrvbf
 
 !$Procedure      ZZGPNM ( Get position of a name )
 
-      module procedure zzgpnm
-!! ## Abstract
-!!
-!!     SPICE Private routine intended solely for the support of SPICE
-!!     routines.  Users should not call this routine directly due
-!!     to the volatile nature of this routine.
-!!
-!!     Locate the node in the array NAMES where a variable is located
-!!     or will be inserted.
-!!
-!! ## Required Reading
-!!
-!!     PRIVATE KERNEL
-!!
-!! ## Keywords
-!!
-!!     FILES
-!!
-!! ## Declarations
-!!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
-      implicit none
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-
-! $ Detailed_Input
-!
-!     NAMLST    this collection of arrays together with the hash
-!     NMPOOL    function ZZHASH provide the mechanism for storing
-!     NAMES     and retrieving kernel pool variables.
-!     DATLST
-!     DPPOOL    Given a potential variable name NAME the function
-!     DPVALS    ZZHASH(NAME) gives the location in the array in
-!     CHPOOL    NAMLST where one should begin looking for the
-!     CHVALS    kernel pool variable NAME.
-!               If NAMLST( ZZHASH(NAME) ) is zero, there is no kernel
-!               pool variable corresponding to NAME.  If it is non-zero
-!               then NAMLST is the head node of a linked list of names
-!               that evaluate to the same integer under the function
-!               ZZHASH.  Letting NODE = NAMLST( ZZHASH(NAME) ) check
-!               NAMES(NODE) for equality with NAME.  If there is
-!               no match find the next node ( NMPOOL(NEXT,NODE) ) until
-!               a match occurs or all nodes of the list have been
-!               examined.  To insert a new NAME allocate a node NEW from
-!               the free list of NMPOOL and append it to the tail of the
-!               list pointed to by NAMLST ( ZZHASH(NAME) ).
-!
-!               Once a node for NAME is located (call it NAMEAT)
-!               the values for NAME can be found by examining
-!               DATLST(NAMEAT).  If zero, no values have yet been
-!               given to NAME.  If less than zero, -DATLST(NAMEAT)
-!               is the head node of a list in CHPOOL that gives the
-!               indexes of the values of NAME in CHVALS.  If greater
-!               than zero, DATLST(NAMEAT) is the head node of a list
-!               in DPPOOL that gives the indexes of the values of NAME
-!               in DPVALS.
-!
-!     VARNAM    is the name of a variable that is either already present
-!               or that should be placed in the kernel pool
-! $ Detailed_Output
-!
-!     NAMLST     is the same structure as input but updated to
-!     NMPOOL     include the new variable specified by VARNAM if
-!     NAMES      it is a new name.
-!     DATLST
-!     DPPOOL
-!     DPVALS
-!     CHPOOL
-!     CHVALS
-!
-!     FOUND      is TRUE if VARNAM was already present in the name list.
-!
-!     LOOKAT     is the location in NAMLST where the head of the
-!                ZZHASH collision linked list is stored.
-!
-!     NAMEAT     is the location within the array NAMES where VARNAM
-!                is located.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If the NAMES array cannot accomodate any more kernel variable
-!        names, the error 'SPICE(KERNELPOOLFULL)' is signalled.
-!
-! $ Particulars
-!
-!     This is a utility routine designed to assist the kernel pool
-!     entry points PDPOOL, PCPOOL and PIPOOL.  It handles the task
-!     of inserting a new variable name into the kernel pool name
-!     structure and returns information on the location of that
-!     name.
-!
-! $ Examples
-!
-!     See the entry points PDPOOL, PCPOOL or PIPOOL.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber      (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 29-MAR-1999 (WLT)
-!
-!-&
-
-!
-!     SPICELIB Functions
-!
-!     The size of the kernel pool's hash table (MAXVAR in POOL).
-!
-      integer(ip), parameter :: maxvar = 26003
-
-!
-!     Parameters
-!
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-
-      integer(ip)           next
-      parameter           ( next = 1 )
-
-!
-!     Local Variables
-!
-      integer(ip)           node
-      logical               full
-
-      integer(ip)           head
-      integer(ip)           tail
-
-!
-!     Standard SPICE error handling.
-!
-      if ( ctx%failed() ) return
-
-      nameat = 0
-
-!
-!     Locate this variable name in the name pool or insert it
-!     if it isn't there.  The location will be NAMEAT and
-!     we will use the variable FOUND to indicate whether or
-!     not it was already present.
-!
-      lookat =  name_hash ( varnam, maxvar )
-      node   =  namlst ( lookat )
-      full   =  lnknfn ( ctx, nmpool ) <= 0
-      found  = .false.
-
-!
-!     See if this name (or one colliding with it in the
-!     hash scheme) has already been stored in the name list.
-!
-      if ( node > 0 ) then
-
-         head =  node
-         tail = -nmpool(prev,head)
-
-         do while ( node > 0 .and. .not. found )
-
-            found  =  names (node) == varnam
-            nameat =  node
-            node   =  nmpool(next,node)
-
-         end do
-
-         if (        .not. found &
-               .and. .not. full   ) then
-
-!
-!           We didn't find this name on the conflict resolution
-!           list. Allocate a new slot for it.
-!
-            call lnkan  ( ctx, nmpool, node         )
-            call lnkila ( ctx, tail,   node, nmpool )
-
-            names(node) =  varnam
-            nameat      =  node
-
-         end if
-
-      else if ( .not. full ) then
-
-!
-!        Nothing like this variable name (in the hashing sense)
-!        has been loaded so far.  We need to allocate
-!        a name slot for this variable.
-!
-         call lnkan ( ctx, nmpool, node )
-
-         namlst(lookat) =  node
-         names (node  ) =  varnam
-         nameat         =  node
-
-      end if
-
-!
-!     If the name pool was full and we didn't find this name
-!     we've got an error. Diagnose it and return.
-!
-      if ( full .and. .not. found ) then
-
-         call ctx%setmsg ( 'The kernel pool does not have room ' &
-         //            'for any more variables.' )
-         call ctx%sigerr ( 'SPICE(KERNELPOOLFULL)' )
-         return
-
-      end if
-
-      return
-
-      end procedure zzgpnm
 
 !$Procedure POOL ( Maintain a pool of kernel variables )
 !
@@ -14653,139 +13652,21 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
+      use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, subctr )
-
-      end if
-
-!
-!     Increment POOL state counter.
-!
-      call zzctrinc ( ctx, subctr )
-
-!
-!     Wipe out all of the PNAMES data.
-!
-      do i = 1, maxvar
-         namlst(i) = 0
-         datlst(i) = 0
-         pnames(i) = ' '
-      end do
-!
-!     Free up all of the space in all of the linked list pools, except
-!     for the watcher pool.
-!
-      call lnkini ( ctx, maxvar, nmpool )
-      call lnkini ( ctx, maxval, dppool )
-      call lnkini ( ctx, maxlin, chpool )
-!
-!     PEPPER: record the change for the watches of the contexts.
-!
+      if ( ps%first ) call zzpini ( ctx, ps )
+      call zzctrinc ( ctx, ps%subctr )
+      call ps%clear ( )
       call pool_changed ( ctx%spice, ' ' )
-
-
-      return
       end associate
       end procedure clpool
 
@@ -15167,162 +14048,30 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
+      use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
+      character(:), allocatable :: varnam
       logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  chvals => ctx%spice%pool%chvals, &
-                  dpvals => ctx%spice%pool%dpvals, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, subctr )
-
-      end if
-
-!
-!     Increment POOL state counter.
-!
-      call zzctrinc ( ctx, subctr )
-
-!
-!     Open the kernel file and read the first variable.
-!
+      if ( ps%first ) call zzpini ( ctx, ps )
+      call zzctrinc ( ctx, ps%subctr )
       call rdknew ( ctx, fname )
-      call zzrvar ( ctx, namlst, &
-                    nmpool, pnames, datlst, &
-                    dppool, dpvals, &
-                    chpool, chvals, &
-                    varnam, eof )
-
-!
-!     Read the variables in the file, one at a time.
-!
+      call zzrvar ( ctx, ps, varnam, eof )
       do while (  ( .not. eof ) .and. (.not. ctx%failed() )   )
-
          if ( varnam /= ' ' ) then
-!
-!           See if this variable is being watched; if it is, add its
-!           associated agents to the list of AGENTS to be notified of a
-!           watched variable update.
-!
-!           PEPPER: record the change for the watches of the contexts.
             call pool_changed ( ctx%spice, varnam )
-
          end if
-
-         call zzrvar ( ctx, namlst, &
-                       nmpool, pnames, datlst, &
-                       dppool, dpvals, &
-                       chpool, chvals, &
-                       varnam, eof )
-
+         call zzrvar ( ctx, ps, varnam, eof )
       end do
-!
-!     We need to make sure that the kernel file gets closed.  Normally
-!     the calling tree of ZZRVAR take care of this, but if a parsing
-!     or syntax error occurs there,  ZZRVAR just returns and the
-!     closing of the kernel is never handled.  This takes care
-!     of the problem.  If the file has been closed already, this
-!     doesn't hurt anything.
-!
       call cltext ( ctx,  fname  )
-      return
       end associate
       end procedure ldpool
 
@@ -15521,180 +14270,26 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
+      use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
       integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  dpvals => ctx%spice%pool%dpvals, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, subctr )
-
-      end if
-
-!
-!     Compute the hash value of this name.
-!
-      lookat = name_hash ( name, maxvar )
-
-!
-!     Now see if there is a non-empty conflict resolution list for the
-!     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
-!     of the conflict resolution list; this node is a positive value.
-!
-      if ( namlst(lookat) == 0 ) then
-
-         found = .false.
-         return
-
-      end if
-!
-!     If were are still here NAMLST(LOOKAT) is the first node of
-!     a conflict resolution list.  See if the NAME corresponding
-!     to this node is the one we are looking for.
-!
-      node   = namlst( lookat      )
-      succes = name == pnames(node)
-
-      do while ( .not. succes )
-
-         node = nmpool ( next, node )
-
-         if ( node < 0 ) then
-
-            found = .false.
-            return
-
-         end if
-
-         succes = name == pnames(node)
-
-      end do
-!
-!     If you get to this point, the variable NAME is present in the
-!     list of names at PNAMES(NODE), ABS( DATLST(NODE) ) points to the
-!     head of a linked list of values for this NAME.
-!
-!     However, recall that RTPOOL can only return d.p. values.
-!     DATLST(NODE) is the head of a d.p. list of values if it
-!     is positive.  We use negative values to point to character
-!     values.
-!
-      if ( datlst(node) <= 0 ) then
-
-         found = .false.
-
-      else
-
-         found = .true.
-         n     =  0
-         node  =  datlst(node)
-
-         do while ( node > 0 )
-            n         = n + 1
-            values(n) = dpvals(     node)
-            node      = dppool(next,node)
-         end do
-
-      end if
-
-      return
+      if ( ps%first ) call zzpini ( ctx, ps )
+      i     = ps%find ( name )
+      found = .false.
+      if ( i == 0 ) return
+      if ( ps%vars(i)%kind /= pool_numeric ) return
+      found = .true.
+      n     = ps%vars(i)%n
+      values(1:n) = ps%vars(i)%dvals(1:n)
       end associate
       end procedure rtpool
 
@@ -15990,161 +14585,22 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
+      use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
       integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, subctr )
-
-      end if
-
-!
-!     Compute the hash value of this name.
-!
-      lookat = name_hash ( name, maxvar )
-
-!
-!     Now see if there is a non-empty conflict resolution list for the
-!     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
-!     of the conflict resolution list; this node is a positive value.
-!
-      if ( namlst(lookat) == 0 ) then
-
-         found = .false.
-         return
-
-      end if
-!
-!     If were are still here NAMLST(LOOKAT) is the first node of
-!     a conflict resolution list.  See if the NAME corresponding
-!     to this node is the one we are looking for.
-!
-      node   = namlst ( lookat      )
-      succes = name == pnames(node)
-
-      do while ( .not. succes )
-
-         node = nmpool ( next, node )
-
-         if ( node < 0 ) then
-
-            found = .false.
-            return
-
-         end if
-
-         succes = name == pnames(node)
-
-      end do
-!
-!     If you get to this point, the variable NAME is present in the
-!     list of names at PNAMES(NODE), ABS( DATLST(NODE) ) points to the
-!     head of a linked list of values for this NAME.
-!
-!     However, recall that EXPOOL indicates the existence only of
-!     d.p. values.
-!
-      found = datlst(node) > 0
-
-      return
+      if ( ps%first ) call zzpini ( ctx, ps )
+      i     = ps%find ( name )
+      found = .false.
+      if ( i > 0 ) found = ps%vars(i)%kind == pool_numeric
       end associate
       end procedure expool
 
@@ -16426,105 +14882,36 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
-      use pepper_strings, only: rtrim
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
+      integer(ip), parameter :: maxlen = 32
+      character(1), parameter :: quote = char(39)
       character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
+      character(:), allocatable :: line
+      character(:), allocatable :: cvalue
       integer(ip)           i
       integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
       integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
       integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
+      integer(ip)           nm
       logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  chvals => ctx%spice%pool%chvals, &
-                  dpvals => ctx%spice%pool%dpvals, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+!
+!     The variables are written in the order of their slots (the order
+!     in which they were created). PEPPER: a name is padded to MAXLEN
+!     (32) characters as by SPICELIB, or written whole if longer. A line
+!     longer than 132 characters (a long name or string value) cannot be
+!     read back whole: text kernel lines are limited to 132 characters.
+!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
-
-!
-!     Indicate the beginning of a data section.
-!
-      write ( unit, '(1X,A)', iostat=iostat ) begdat
+      write ( unit, '(1X,A)', iostat=iostat ) ps%begdat
       write ( unit, '(1X,A)', iostat=iostat )
-
       if ( iostat /= 0 ) then
          call ioerr ( ctx, 'writing a variable to the output ' &
          //           'kernel file ', &
@@ -16533,148 +14920,55 @@ contains
          call ctx%sigerr ( 'SPICE(WRITEERROR)' )
          return
       end if
-
-!
-!     Next prepare for writing out the data.
-!
-      iquote = ichar ( quote    )
-      margin = maxlen + 6
-
-      do k = 1, maxvar
-!
-!        Get the head of this list.
-!
-         nnode = namlst(k)
-
-         do while ( nnode > 0 )
-
-            line   = pnames( nnode )
-            datahd = datlst( nnode )
-            dp     = datahd > 0
-            chr    = datahd < 0
-            dnode  = abs(datahd)
-!
-!           Determine whether or not this is a vector object.
-!
-            if ( dp ) then
-               vector = dppool( next, dnode ) > 0
-            else if ( chr ) then
-               vector = chpool( next, dnode ) > 0
+      do k = 1, ps%nslots
+         if ( .not. allocated ( ps%vars(k)%name ) ) cycle
+         associate ( v => ps%vars(k) )
+         if ( v%n < 1 ) then
+            call ctx%setmsg ( 'This error is never supposed to ' &
+            //            'occur. No data was available for ' &
+            //            'the variable ''#''. ' )
+            call ctx%errch  ( '#', v%name    )
+            call ctx%sigerr ( 'SPICE(BUG)'   )
+            return
+         end if
+         nm     = max ( maxlen, len(v%name) )
+         margin = nm + 6
+         line   = v%name // repeat ( ' ', margin - len(v%name) )
+         line(nm+2:) = '= '
+         vector = v%n > 1
+         if ( vector ) then
+            line(nm+4:) = '( '
+         end if
+         do i = 1, v%n
+            if ( i < v%n ) then
+               finish = ', '
+            else if ( vector ) then
+               finish = ' )'
             else
-               call ctx%setmsg ( 'This error is never supposed to ' &
-               //            'occur. No data was available for ' &
-               //            'the variable ''#''. ' )
-
-               r = rtrim(pnames(nnode))
-               call ctx%errch  ( '#', pnames(nnode)(1:r) )
-               call ctx%sigerr ( 'SPICE(BUG)'           )
+               finish = ' '
+            end if
+            if ( v%kind == pool_numeric ) then
+               write ( unit, '(1X,A,D25.17,A)', iostat=iostat ) &
+               line, v%dvals(i), finish
+            else
+               cvalue = quote // double_quotes ( v%cvals(i)%s ) // quote
+               write ( unit, '(1X,3A)', iostat=iostat ) &
+               line, cvalue, finish
+            end if
+            if ( iostat /= 0 ) then
+               call ioerr ( ctx, 'writing a variable to the output ' &
+               //           'kernel file ', &
+                             ' ', &
+                             iostat              )
+               call ctx%sigerr ( 'SPICE(WRITEERROR)' )
                return
             end if
-!
-!           If still here, then we can set up the beginning of this
-!           output line.
-!
-            line(maxlen+2:) = '= '
-
-            if ( vector ) then
-               line(maxlen+4:) = '( '
-            end if
-!
-!           Now fetch all of the data associated with this variable.
-!           We'll write them out one per line.
-!
-            do while ( dnode > 0 )
-!
-!              Get the next data value and the address of the next node.
-!
-               if ( dp ) then
-                  dvalue = dpvals(dnode)
-                  dnode  = dppool(next,dnode)
-               else
-                  cvalue = quote
-                  j      = 1
-!
-!                 We have to double up each of the quotes on output.
-!                 For this reason we copy the letters one at a time
-!                 into the output holding area CVALUE.
-!
-                  do i = 1, rtrim(chvals(dnode))
-                     j           = j + 1
-                     cvalue(j:j) = chvals(dnode)(i:i)
-
-                     code = ichar(chvals(dnode)(i:i))
-
-                     if ( isquot(code) ) then
-                        j           = j+1
-                        cvalue(j:j) = chvals(dnode)(i:i)
-                     end if
-                  end do
-
-                  j           = j + 1
-                  cvalue(j:j) = quote
-                  dnode       = chpool(next,dnode)
-               end if
-
-!
-!              We will need to properly finish off this write with
-!              either a comma, a blank or a right parenthesis.
-!
-               if ( dnode > 0 ) then
-                  finish = ', '
-               else if ( vector ) then
-                  finish = ' )'
-               else
-                  finish = ' '
-               end if
-!
-!              Now write out our data.
-!
-               if ( dp ) then
-                  write ( unit, '(1X,A,D25.17,A)', iostat=iostat ) &
-                  line(1:margin), dvalue, finish
-               else
-                  write ( unit, '(1X,3A)', iostat=iostat ) &
-                  line(1:margin), cvalue(1:j), finish
-               end if
-
-!
-!              Check the IOSTAT code.  After all, that's why it's there.
-!
-               if ( iostat /= 0 ) then
-                  call ioerr ( ctx, 'writing a variable to the output ' &
-                  //           'kernel file ', &
-                                ' ', &
-                                iostat              )
-                  call ctx%sigerr ( 'SPICE(WRITEERROR)' )
-                  return
-               end if
-
-!
-!              Blank out the output line so that we'll have
-!              leading blanks for subsequent components of the
-!              vector (if we are in fact writing one).
-!
-               line = ' '
-
-            end do
-!
-!           Get the next name for this node:
-!
-            nnode = nmpool(next,nnode)
-
+            line = repeat ( ' ', margin )
          end do
-!
-!        Get the next node (if there is one).
-!
+         end associate
       end do
-
-!
-!     Indicate the beginning of a text section. Data sections and
-!     text sections must alternate, even if the text section is blank.
-!
       write ( unit, '(1X,A)', iostat=iostat )
-      write ( unit, '(1X,A)', iostat=iostat ) begtxt
-
+      write ( unit, '(1X,A)', iostat=iostat ) ps%begtxt
       if ( iostat /= 0 ) then
          call ioerr ( ctx, 'writing a variable to the output ' &
          //           'kernel file ', &
@@ -16683,9 +14977,24 @@ contains
          call ctx%sigerr ( 'SPICE(WRITEERROR)' )
          return
       end if
-
-      return
       end associate
+
+      contains
+
+!
+!        The string with each quote doubled (as in a kernel's string
+!        values).
+!
+         pure function double_quotes ( str ) result ( out )
+            character(*), intent(in) :: str
+            character(:), allocatable :: out
+            integer :: j
+            out = ''
+            do j = 1, len ( str )
+               out = out // str(j:j)
+               if ( str(j:j) == quote ) out = out // quote
+            end do
+         end function double_quotes
       end procedure wrpool
 
       module procedure swpool
@@ -17507,217 +15816,45 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
-      use pepper_strings, only: rtrim
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
       integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
       integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  chvals => ctx%spice%pool%chvals, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, subctr )
-
-      end if
-
-!
-!     Perform the one obvious error check first.
-!
+      if ( ps%first ) call zzpini ( ctx, ps )
       if ( room < 1 ) then
-
          call ctx%setmsg ( 'The amount of room specified as ' &
          //            'available for output in the output array ' &
          //            'was: #.  The amount of room must be ' &
          //            'positive. ' )
-
          call ctx%errint ( '#', room )
          call ctx%sigerr ( 'SPICE(BADARRAYSIZE)'  )
          return
-
       end if
-
-!
-!     Compute the hash value of this name.
-!
-      lookat = name_hash ( name, maxvar )
-
-!
-!     Now see if there is a non-empty conflict resolution list for the
-!     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
-!     of the conflict resolution list; this node is a positive value.
-!
-      if ( namlst(lookat) == 0 ) then
-
+      i = ps%find ( name )
+      if ( i == 0 ) then
          found = .false.
          return
-
       end if
-!
-!     If were are still here NAMLST(LOOKAT) is the first node of
-!     a conflict resolution list.  See if the NAME corresponding
-!     to this node is the one we are looking for.
-!
-      node   = namlst( lookat      )
-      succes = name == pnames(node)
-
-      do while ( .not. succes )
-
-         node = nmpool ( next, node )
-
-         if ( node < 0 ) then
-
-            found = .false.
-            return
-
-         end if
-
-         succes = name == pnames(node)
-
-      end do
-!
-!     If you get to this point, the variable NAME is present in the
-!     list of names at PNAMES(NODE), ABS( DATLST(NODE) ) points to the
-!     head of a linked list of values for this NAME.
-!
-      datahd = datlst(node)
-
-      if ( datahd > 0 ) then
-
+      if ( ps%vars(i)%kind /= pool_character ) then
          n     =  0
          found = .false.
          return
-
-      else if ( datahd == 0 ) then
-
-         call ctx%setmsg ( 'This is never supposed to happen.  The ' &
-         //            'requested name, ''#'', was found in the ' &
-         //            'name list, but the pointer to the head ' &
-         //            'of the data for this variable is zero. ' &
-         //            'Please note your activities and report ' &
-         //            'this error to NAIF. '   )
-         call ctx%errch  ( '#', name(1:rtrim(name)) )
-         call ctx%sigerr ( 'SPICE(BUG)'             )
-         return
-
       end if
-
       found = .true.
-      k     =  0
       n     =  0
-      begin =  max( start, 1 )
-      node  =  -datahd
-
-      do while ( node > 0  )
-
-         k = k + 1
-
-         if ( k >= begin ) then
-            n        = n+1
-            cvals(n) = chvals(     node)
-
-            if ( n == room ) return
-
-         end if
-
-         node = chpool(next,node)
-
+      do k = max ( start, 1 ), ps%vars(i)%n
+         n = n + 1
+         cvals(n) = ps%vars(i)%cvals(k)%s
+         if ( n == room ) exit
       end do
-
-      return
       end associate
       end procedure gcpool
 
@@ -17934,217 +16071,45 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
-      use pepper_strings, only: rtrim
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
       integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
       integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  dpvals => ctx%spice%pool%dpvals, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, subctr )
-
-      end if
-
-!
-!     Perform the one obvious error check first.
-!
+      if ( ps%first ) call zzpini ( ctx, ps )
       if ( room < 1 ) then
-
          call ctx%setmsg ( 'The amount of room specified as ' &
          //            'available for output in the output array ' &
          //            'was: #.  The amount of room must be ' &
          //            'positive. ' )
-
          call ctx%errint ( '#', room )
          call ctx%sigerr ( 'SPICE(BADARRAYSIZE)'  )
          return
-
       end if
-
-!
-!     Compute the hash value of this name.
-!
-      lookat = name_hash ( name, maxvar )
-
-!
-!     Now see if there is a non-empty conflict resolution list for the
-!     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
-!     of the conflict resolution list; this node is a positive value.
-!
-      if ( namlst(lookat) == 0 ) then
-
+      i = ps%find ( name )
+      if ( i == 0 ) then
          found = .false.
          return
-
       end if
-!
-!     If were are still here NAMLST(LOOKAT) is the first node of
-!     a conflict resolution list.  See if the NAME corresponding
-!     to this node is the one we are looking for.
-!
-      node   = namlst( lookat      )
-      succes = name == pnames(node)
-
-      do while ( .not. succes )
-
-         node = nmpool ( next, node )
-
-         if ( node < 0 ) then
-
-            found = .false.
-            return
-
-         end if
-
-         succes = name == pnames(node)
-
-      end do
-!
-!     If you get to this point, the variable NAME is present in the
-!     list of names at PNAMES(NODE), ABS( DATLST(NODE) ) points to the
-!     head of a linked list of values for this NAME.
-!
-      datahd = datlst(node)
-
-      if ( datahd < 0 ) then
-
+      if ( ps%vars(i)%kind /= pool_numeric ) then
          n     =  0
          found = .false.
          return
-
-      else if ( datahd == 0 ) then
-
-         call ctx%setmsg ( 'This is never supposed to happen.  The ' &
-         //            'requested name, ''#'', was found in the ' &
-         //            'name list, but the pointer to the head ' &
-         //            'of the data for this variable is zero. ' &
-         //            'Please note your activities and report ' &
-         //            'this error to NAIF. '   )
-         call ctx%errch  ( '#', name(1:rtrim(name)) )
-         call ctx%sigerr ( 'SPICE(BUG)'             )
-         return
-
       end if
-
       found = .true.
-      k     =  0
       n     =  0
-      begin =  max( start, 1 )
-      node  =  datahd
-
-      do while ( node > 0  )
-
-         k = k + 1
-
-         if ( k >= begin ) then
-            n = n+1
-            values(n) = dpvals(     node)
-
-            if ( n == room ) return
-
-         end if
-
-         node = dppool(next,node)
-
+      do k = max ( start, 1 ), ps%vars(i)%n
+         n = n + 1
+         values(n) = ps%vars(i)%dvals(k)
+         if ( n == room ) exit
       end do
-
-      return
       end associate
       end procedure gdpool
 
@@ -18367,240 +16332,59 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
       use pepper_constants, only: intmax, intmin
-      use pepper_strings, only: rtrim
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
       integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
       integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  dpvals => ctx%spice%pool%dpvals, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, subctr )
-
-      end if
-
-!
-!     Perform the one obvious error check first.
-!
+      if ( ps%first ) call zzpini ( ctx, ps )
       if ( room < 1 ) then
-
          call ctx%setmsg ( 'The amount of room specified as ' &
          //            'available for output in the output array ' &
          //            'was: #.  The amount of room must be ' &
          //            'positive. ' )
-
          call ctx%errint ( '#', room )
          call ctx%sigerr ( 'SPICE(BADARRAYSIZE)'  )
          return
-
       end if
-
-!
-!     Compute the hash value of this name.
-!
-      lookat = name_hash ( name, maxvar )
-
-!
-!     Now see if there is a non-empty conflict resolution list for the
-!     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
-!     of the conflict resolution list; this node is a positive value.
-!
-      if ( namlst(lookat) == 0 ) then
-
+      i = ps%find ( name )
+      if ( i == 0 ) then
          found = .false.
          return
-
       end if
-!
-!     If were are still here NAMLST(LOOKAT) is the first node of
-!     a conflict resolution list.  See if the NAME corresponding
-!     to this node is the one we are looking for.
-!
-      node   = namlst( lookat      )
-      succes = name == pnames(node)
-
-      do while ( .not. succes )
-
-         node = nmpool ( next, node )
-
-         if ( node < 0 ) then
-
-            found = .false.
-            return
-
-         end if
-
-         succes = name == pnames(node)
-
-      end do
-!
-!     If you get to this point, the variable NAME is present in the
-!     list of names at PNAMES(NODE), ABS( DATLST(NODE) ) points to the
-!     head of a linked list of values for this NAME.
-!
-      datahd = datlst(node)
-
-      if ( datahd < 0 ) then
-
+      if ( ps%vars(i)%kind /= pool_numeric ) then
          n     =  0
          found = .false.
          return
-
-      else if ( datahd == 0 ) then
-
-         call ctx%setmsg ( 'This is never supposed to happen.  The ' &
-         //            'requested name, ''#'', was found in the ' &
-         //            'name list, but the pointer to the head ' &
-         //            'of the data for this variable is zero. ' &
-         //            'Please note your activities and report ' &
-         //            'this error to NAIF. '   )
-         call ctx%errch  ( '#', name(1:rtrim(name)) )
-         call ctx%sigerr ( 'SPICE(BUG)'             )
-         return
-
       end if
-!
-!     Prepare for fetching values.
-!
-      big   =  real( intmax, wp )
-      small =  real( intmin, wp )
       found = .true.
-      k     =  0
       n     =  0
-      begin =  max( start, 1 )
-      node  =  datahd
-
-      do while ( node > 0  )
-
-         k = k + 1
-
-         if ( k >= begin ) then
-            n = n+1
-
-            if (       dpvals(node) >= small &
-                 .and. dpvals(node) <= big   ) then
-
-               ivals(n) = idnint( dpvals( node) )
-
-            else
-
-               call ctx%setmsg ( 'The value associated with index # ' &
-               //            'of the kernel variable # is ' &
-               //            'outside the range of integers. ' &
-               //            'The value stored was: # .'      )
-
-               call ctx%errint ( '#', k                     )
-               call ctx%errch  ( '#', name(1:rtrim(name))   )
-               call ctx%errdp  ( '#', dpvals(node)          )
-               call ctx%sigerr ( 'SPICE(INTOUTOFRANGE)'     )
-               return
-
-            end if
-            if ( n == room ) return
-
+      do k = max ( start, 1 ), ps%vars(i)%n
+         n = n + 1
+         if (       ps%vars(i)%dvals(k) >= real( intmin, wp ) &
+              .and. ps%vars(i)%dvals(k) <= real( intmax, wp )   ) then
+            ivals(n) = idnint( ps%vars(i)%dvals(k) )
+         else
+            call ctx%setmsg ( 'The value associated with index # ' &
+            //            'of the kernel variable # is ' &
+            //            'outside the range of integers. ' &
+            //            'The value stored was: # .'      )
+            call ctx%errint ( '#', k                     )
+            call ctx%errch  ( '#', trim(name)            )
+            call ctx%errdp  ( '#', ps%vars(i)%dvals(k)   )
+            call ctx%sigerr ( 'SPICE(INTOUTOFRANGE)'     )
+            return
          end if
-
-         node = dppool(next,node)
-
+         if ( n == room ) exit
       end do
-
-      return
       end associate
       end procedure gipool
 
@@ -18827,195 +16611,33 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
-      use pepper_strings, only: rtrim
+      use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
       integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, subctr )
-
-      end if
-
-!
-!     Until we find otherwise, we shall assume there is no data
-!     for this variable.
-!
+      if ( ps%first ) call zzpini ( ctx, ps )
       found = .false.
       n     =  0
       type  = 'X'
-
-!
-!     Compute the hash value of this name.
-!
-      lookat = name_hash ( name, maxvar )
-
-!
-!     Now see if there is a non-empty conflict resolution list for the
-!     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
-!     of the conflict resolution list; this node is a positive value.
-!
-      if ( namlst(lookat) == 0 ) return
-!
-!     If were are still here NAMLST(LOOKAT) is the first node of
-!     a conflict resolution list.  See if the NAME corresponding
-!     to this node is the one we are looking for.
-!
-      node   = namlst( lookat      )
-      succes = name == pnames(node)
-
-      do while ( .not. succes )
-
-         node = nmpool ( next, node )
-
-         if ( node < 0 ) return
-
-         succes = name == pnames(node)
-
-      end do
-!
-!     If you get to this point, the variable NAME is present in the
-!     list of names at PNAMES(NODE), ABS( DATLST(NODE) ) points to the
-!     head of a linked list of values for this NAME.
-!
-
-      datahd = datlst(node)
-
-      if ( datahd < 0 ) then
-
+      i = ps%find ( name )
+      if ( i == 0 ) return
+      if ( ps%vars(i)%kind == pool_character ) then
          type  = 'C'
-         found = .true.
-         node  = -datahd
-
-         do while ( node > 0 )
-            n    = n + 1
-            node = chpool(next,node)
-         end do
-
-      else if ( datahd > 0 ) then
-
+      else if ( ps%vars(i)%kind == pool_numeric ) then
          type  = 'N'
-         found = .true.
-         node  =  datahd
-
-         do while ( node > 0 )
-            n    = n + 1
-            node = dppool(next,node)
-         end do
-
-      else if ( datahd == 0 ) then
-
-         call ctx%setmsg ( 'This is never supposed to happen.  The ' &
-         //            'requested name, ''#'', was found in the ' &
-         //            'name list, but the pointer to the head ' &
-         //            'of the data for this variable is zero. ' &
-         //            'Please note your activities and report ' &
-         //            'this error to NAIF. '   )
-         call ctx%errch  ( '#', name(1:rtrim(name)) )
-         call ctx%sigerr ( 'SPICE(BUG)'             )
-
+      else
          return
-
       end if
-
-      return
+      found = .true.
+      n     = ps%vars(i)%n
       end associate
       end procedure dtpool
 
@@ -19249,337 +16871,32 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
-      use pepper_strings, only: lastnb
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
       integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
       integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  chvals => ctx%spice%pool%chvals, &
-                  dpvals => ctx%spice%pool%dpvals, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+!
+!     PEPPER: names have any length (SPICELIB signaled SPICE(BADVARNAME)
+!     for more than 32 characters), and there is no limit on the number
+!     of values (SPICE(NOMOREROOM), SPICE(KERNELPOOLFULL)).
+!
       if ( n <= 0 ) return
-
       if ( ctx%failed() ) return
-
-!
-!     Check the variable name length; signal an error
-!     if longer than MAXLEN.
-!
-      varlen = len( name(1: lastnb(name) )  )
-
-      if ( varlen > maxlen ) then
-
-         call ctx%setmsg ( 'The input kernel pool variable name ' &
-         //            'exceeds the maximum allowed ' &
-         //            'length of #1. The length of the variable ' &
-         //            'name is #2, the offending variable name: ' &
-         //            '''#3''.')
-
-         call ctx%errint ( '#1', maxlen                   )
-         call ctx%errint ( '#2', varlen                   )
-         call ctx%errch  ( '#3', name                     )
-         call ctx%sigerr ( 'SPICE(BADVARNAME)'            )
-         return
-
-      end if
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, subctr )
-
-      end if
-
-!
-!     Increment POOL state counter.
-!
-      call zzctrinc ( ctx, subctr )
-
-!
-!     Find out where the name for this item is located
-!     in the data tables.
-!
-      call zzgpnm ( ctx, namlst, &
-                    nmpool, pnames, datlst, &
-                    dppool, dpvals, &
-                    chpool, chvals, &
-                    name,   gotit,  lookat, nameat )
-
-      if ( ctx%failed() ) return
-!
-!     Determine how much room is available for inserting new d.p.s
-!     values into the kernel pool.
-!
-      avail = lnknfn( ctx,chpool)
-
-      if ( gotit ) then
-!
-!        If we found the specified variable in the kernel pool, we
-!        may be able to free up some space before inserting data.
-!        We need to take this into account when determining
-!        the amount of free room in the pool.
-!
-         datahd         = datlst( nameat )
-
-         if ( datahd > 0 ) then
-!
-!           No extra strings will be freed.  We have whatever
-!           free space is in the CHPOOL right now.
-!
-         else
-!
-!           Find out how many items are in the current
-!           list of strings associated with the variable.
-!
-            tofree =   0
-            node   = - datahd
-
-            do while ( node > 0 )
-               tofree = tofree + 1
-               node   = chpool(next,node)
-            end do
-!
-!           Add the number we will free to the amount currently
-!           free in the dp pool.
-!
-            avail = avail + tofree
-
-         end if
-
-      end if
-
-!
-!     If the AVAIL for new data is less than the number of items
-!     to be added, we just bail out here.
-!
-      if ( avail < n ) then
-
-         if ( .not. gotit ) then
-!
-!           We need to perform some clean up.  We've allocated
-!           a new name but it has nothing in it. On the other hand
-!           if we found it don't need to do anything because we've
-!           only read from the pool. We haven't altered anything.
-!           But in that case we'll never get into this block of code.
-!
-            call zzcln ( ctx, lookat, nameat, &
-                         namlst, datlst, nmpool, chpool, dppool )
-
-         end if
-
-         call ctx%setmsg ( 'There is not sufficient space available ' &
-         //            'in the kernel pool to store the # items ' &
-         //            'associated with the name #.  There is ' &
-         //            'room to store only # items. ' )
-         call ctx%errint ( '#', n  )
-         call ctx%errch  ( '#', name )
-         call ctx%errint ( '#', avail   )
-         call ctx%sigerr ( 'SPICE(NOMOREROOM)' )
-         return
-
-      end if
-
-!
-!     There is room to insert the data.  Free up any required
-!     nodes.
-!
-      if ( gotit ) then
-
-!
-!        We need to free the data associated with this
-!        variable.  But first make sure there will be room
-!        to add data.
-!
-         datahd         = datlst( nameat )
-         datlst(nameat) = 0
-
-         if ( datahd > 0 ) then
-
-!
-!           This variable was character type we need to
-!           free a linked list from the character data
-!           pool.
-!
-            head =   datahd
-            tail = - dppool(prev,head)
-
-            call lnkfsl ( ctx, head, tail, dppool )
-
-         else
-
-!
-!           This variable was character type. We need to
-!           free a linked list from the numeric pool.
-!
-            head = - datahd
-            tail = - chpool(prev,head)
-
-            call lnkfsl ( ctx, head, tail, chpool )
-
-         end if
-
-      end if
-!
-!     We have done all of the freeing and checking that
-!     needs to be done.  Now add the data.
-!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
+      if ( ps%first ) call zzpini ( ctx, ps )
+      call zzctrinc ( ctx, ps%subctr )
+      call ps%create ( name, nameat )
+      call ps%clear_values ( nameat )
       do i = 1, n
-
-!
-!        We are ready to go.  Allocate a node for this data
-!        item. First make sure there is room to do so.
-!
-         free = lnknfn ( ctx, chpool )
-
-         if ( free <= 0 ) then
-
-            call ctx%setmsg ( 'There is no room available for ' &
-            //            'adding another character value ' &
-            //            'to the kernel pool.' )
-            call ctx%sigerr ( 'SPICE(KERNELPOOLFULL)' )
-            return
-
-         end if
-
-!
-!        Allocate a node for storing this string value:
-!
-         call lnkan ( ctx, chpool, chnode )
-
-         if ( datlst(nameat) == 0 ) then
-
-!
-!           There was no data for this name yet.  We make
-!           CHNODE be the head of the data list for this name.
-!
-            datlst(nameat) = -chnode
-
-         else
-
-!
-!           Put this node after the tail of the current list.
-!
-            head = -datlst(nameat)
-            tail = -chpool(prev, head )
-
-            call lnkila ( ctx, tail, chnode, chpool )
-
-         end if
-
-!
-!        Finally insert this data item in the data buffer
-!        at CHNODE.  Note any quotes will be doubled so we
-!        have to undo this affect when we store the data.
-!
-         chvals(chnode) = cvals(i)
-
-!
-!        That's all for this value. It's now time to loop
-!        back through and get the next value.
-!
-
+         call ps%add_string ( nameat, cvals(i) )
       end do
-
-!
-!     One last thing, see if this variable is being watched,
-!     If it is, add its associated agents to the list of
-!     AGENTS to be notified of a watched variable update.
-!
-!     PEPPER: record the change for the watches of the contexts.
       call pool_changed ( ctx%spice, name )
-
-      return
       end associate
       end procedure pcpool
 
@@ -19812,336 +17129,32 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
-      use pepper_strings, only: lastnb
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
       integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
       integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  chvals => ctx%spice%pool%chvals, &
-                  dpvals => ctx%spice%pool%dpvals, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+!
+!     PEPPER: names have any length (SPICELIB signaled SPICE(BADVARNAME)
+!     for more than 32 characters), and there is no limit on the number
+!     of values (SPICE(NOMOREROOM), SPICE(KERNELPOOLFULL)).
+!
       if ( n <= 0 ) return
-
       if ( ctx%failed() ) return
-
-!
-!     Check the variable name length; signal an error
-!     if longer than MAXLEN.
-!
-      varlen = len( name(1: lastnb(name) )  )
-
-      if ( varlen > maxlen ) then
-
-         call ctx%setmsg ( 'The input kernel pool variable name ' &
-         //            'exceeds the maximum allowed ' &
-         //            'length of #1. The length of the variable ' &
-         //            'name is #2, the offending variable name: ' &
-         //            '''#3''.')
-
-         call ctx%errint ( '#1', maxlen                   )
-         call ctx%errint ( '#2', varlen                   )
-         call ctx%errch  ( '#3', name                     )
-         call ctx%sigerr ( 'SPICE(BADVARNAME)'            )
-         return
-
-      end if
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, subctr )
-
-      end if
-
-!
-!     Increment POOL state counter.
-!
-      call zzctrinc ( ctx, subctr )
-
-!
-!     Find out where the name for this item is located
-!     in the data tables.
-!
-      call zzgpnm ( ctx, namlst, &
-                    nmpool, pnames, datlst, &
-                    dppool, dpvals, &
-                    chpool, chvals, &
-                    name,   gotit,  lookat, nameat )
-
-      if ( ctx%failed() ) return
-!
-!     Determine how much room is available for inserting new d.p.s
-!     values into the kernel pool.
-!
-      avail = lnknfn( ctx,dppool)
-
-      if ( gotit ) then
-!
-!        If we found the specified variable in the kernel pool, we
-!        may be able to free up some space before inserting data.
-!        We need to take this into account when determining
-!        the amount of free room in the pool.
-!
-         datahd         = datlst( nameat )
-
-         if ( datahd < 0 ) then
-!
-!           No extra d.p.s will be freed.  We have whatever
-!           free space is in the DPPOOL right now.
-!
-         else
-!
-!           Find out how many items are in the current
-!           list of d.p. associated with the variable.
-!
-            tofree = 0
-            node   =  datahd
-
-            do while ( node > 0 )
-               tofree = tofree + 1
-               node   = dppool(next,node)
-            end do
-!
-!           Add the number we will free to the amount currently
-!           free in the dp pool.
-!
-            avail = avail + tofree
-
-         end if
-
-      end if
-
-!
-!     If the AVAIL for new data is less than the number of items
-!     to be added, we just bail out here.
-!
-      if ( avail < n ) then
-
-         if ( .not. gotit ) then
-!
-!           We need to perform some clean up.  We've allocated
-!           a new name but it has nothing in it. On the other hand
-!           if we found it don't need to do anything because we've
-!           only read from the pool. We haven't altered anything.
-!           But in that case we'll never get into this block of code.
-!
-            call zzcln ( ctx, lookat, nameat, &
-                         namlst, datlst, nmpool, chpool, dppool )
-
-         end if
-
-         call ctx%setmsg ( 'There is not sufficient space available ' &
-         //            'in the kernel pool to store the # items ' &
-         //            'associated with the name #.  There is ' &
-         //            'room to store only # items. ' )
-         call ctx%errint ( '#', n  )
-         call ctx%errch  ( '#', name )
-         call ctx%errint ( '#', avail   )
-         call ctx%sigerr ( 'SPICE(NOMOREROOM)' )
-         return
-
-      end if
-
-!
-!     There is room to insert the data.  Free up any required
-!     nodes.
-!
-      if ( gotit ) then
-
-!
-!        We need to free the data associated with this
-!        variable.  But first make sure there will be room
-!        to add data.
-!
-         datahd         = datlst( nameat )
-         datlst(nameat) = 0
-
-         if ( datahd < 0 ) then
-
-!
-!           This variable was character type we need to
-!           free a linked list from the character data
-!           pool.
-!
-            head = - datahd
-            tail = - chpool(prev,head)
-
-            call lnkfsl ( ctx, head, tail, chpool )
-
-         else
-
-!
-!           This variable was numeric type. We need to
-!           free a linked list from the numeric pool.
-!
-            head =   datahd
-            tail = - dppool(prev,head)
-
-            call lnkfsl ( ctx, head, tail, dppool )
-
-         end if
-
-      end if
-!
-!     We have done all of the freeing and checking that
-!     needs to be done.  Now add the data.
-!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
+      if ( ps%first ) call zzpini ( ctx, ps )
+      call zzctrinc ( ctx, ps%subctr )
+      call ps%create ( name, nameat )
+      call ps%clear_values ( nameat )
       do i = 1, n
-
-!
-!        OK. See if there is room in
-!        the numeric portion of the pool to store this value.
-!
-         free = lnknfn ( ctx, dppool )
-
-         if ( free <= 0 ) then
-!
-!           This branch of the code should never be exercised,
-!           but it doesn't hurt to program in a redundant check.
-!
-            call zzcln ( ctx, lookat, nameat, &
-                         namlst, datlst, nmpool, chpool, dppool )
-
-            call ctx%setmsg ( 'There is no room available for ' &
-            //            'adding another numeric value ' &
-            //            'to the kernel pool.' )
-            call ctx%sigerr ( 'SPICE(KERNELPOOLFULL)' )
-            return
-
-         end if
-
-!
-!        Allocate a node for storing this numeric value:
-!
-         call lnkan ( ctx, dppool, dpnode )
-
-         if ( datlst(nameat) == 0 ) then
-
-!
-!           There was no data for this name yet.  We make
-!           DPNODE be the head of the data list for this name.
-!
-            datlst(nameat) =  dpnode
-
-         else
-
-!
-!           Put this node after the tail of the current list.
-!
-            head =  datlst(nameat)
-            tail = -dppool(prev, head )
-
-            call lnkila ( ctx, tail, dpnode, dppool )
-
-         end if
-
-!
-!        Finally insert this data item into the numeric buffer.
-!
-         dpvals(dpnode) = values(i)
-
+         call ps%add_number ( nameat, values(i) )
       end do
-
-!
-!     One last thing, see if this variable is being watched,
-!     If it is, add its associated agents to the list of
-!     AGENTS to be notified of a watched variable update.
-!
-!     PEPPER: record the change for the watches of the contexts.
       call pool_changed ( ctx%spice, name )
-
-      return
       end associate
       end procedure pdpool
 
@@ -20374,336 +17387,32 @@ contains
 !!     Standard SPICE error handling.
 !!
       use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
-      use pepper_strings, only: lastnb
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
       integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
       integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  chvals => ctx%spice%pool%chvals, &
-                  dpvals => ctx%spice%pool%dpvals, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+!
+!     PEPPER: names have any length (SPICELIB signaled SPICE(BADVARNAME)
+!     for more than 32 characters), and there is no limit on the number
+!     of values (SPICE(NOMOREROOM), SPICE(KERNELPOOLFULL)).
+!
       if ( n <= 0 ) return
-
       if ( ctx%failed() ) return
-
-!
-!     Check the variable name length; signal an error
-!     if longer than MAXLEN.
-!
-      varlen = len( name(1: lastnb(name) )  )
-
-      if ( varlen > maxlen ) then
-
-         call ctx%setmsg ( 'The input kernel pool variable name ' &
-         //            'exceeds the maximum allowed ' &
-         //            'length of #1. The length of the variable ' &
-         //            'name is #2, the offending variable name: ' &
-         //            '''#3''.')
-
-         call ctx%errint ( '#1', maxlen                   )
-         call ctx%errint ( '#2', varlen                   )
-         call ctx%errch  ( '#3', name                     )
-         call ctx%sigerr ( 'SPICE(BADVARNAME)'            )
-         return
-
-      end if
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, subctr )
-
-      end if
-
-!
-!     Increment POOL state counter.
-!
-      call zzctrinc ( ctx, subctr )
-
-!
-!     Find out where the name for this item is located
-!     in the data tables.
-!
-      call zzgpnm ( ctx, namlst, &
-                    nmpool, pnames, datlst, &
-                    dppool, dpvals, &
-                    chpool, chvals, &
-                    name, gotit,  lookat, nameat )
-
-      if ( ctx%failed() ) return
-!
-!     Determine how much room is available for inserting new d.p.s
-!     values into the kernel pool.
-!
-      avail = lnknfn( ctx,dppool)
-
-      if ( gotit ) then
-!
-!        If we found the specified variable in the kernel pool, we
-!        may be able to free up some space before inserting data.
-!        We need to take this into account when determining
-!        the amount of free room in the pool.
-!
-         datahd         = datlst( nameat )
-
-         if ( datahd < 0 ) then
-!
-!           No extra d.p.s will be freed.  We have whatever
-!           free space is in the DPPOOL right now.
-!
-         else
-!
-!           Find out how many items are in the current
-!           list of d.p. associated with the variable.
-!
-            tofree = 0
-            node   =  datahd
-
-            do while ( node > 0 )
-               tofree = tofree + 1
-               node   = dppool(next,node)
-            end do
-!
-!           Add the number we will free to the amount currently
-!           free in the dp pool.
-!
-            avail = avail + tofree
-
-         end if
-
-      end if
-
-!
-!     If the AVAIL for new data is less than the number of items
-!     to be added, we just bail out here.
-!
-      if ( avail < n ) then
-
-         if ( .not. gotit ) then
-!
-!           We need to perform some clean up.  We've allocated
-!           a new name but it has nothing in it. On the other hand
-!           if we found it don't need to do anything because we've
-!           only read from the pool. We haven't altered anything.
-!           But in that case we'll never get into this block of code.
-!
-            call zzcln ( ctx, lookat, nameat, &
-                         namlst, datlst, nmpool, chpool, dppool )
-
-         end if
-
-         call ctx%setmsg ( 'There is not sufficient space available ' &
-         //            'in the kernel pool to store the # items ' &
-         //            'associated with the name #.  There is ' &
-         //            'room to store only # items. ' )
-         call ctx%errint ( '#', n  )
-         call ctx%errch  ( '#', name )
-         call ctx%errint ( '#', avail   )
-         call ctx%sigerr ( 'SPICE(NOMOREROOM)' )
-         return
-
-      end if
-
-!
-!     There is room to insert the data.  Free up any required
-!     nodes.
-!
-      if ( gotit ) then
-
-!
-!        We need to free the data associated with this
-!        variable.  But first make sure there will be room
-!        to add data.
-!
-         datahd         = datlst( nameat )
-         datlst(nameat) = 0
-
-         if ( datahd < 0 ) then
-
-!
-!           This variable was character type we need to
-!           free a linked list from the character data
-!           pool.
-!
-            head = - datahd
-            tail = - chpool(prev,head)
-
-            call lnkfsl ( ctx, head, tail, chpool )
-
-         else
-
-!
-!           This variable was numeric type. We need to
-!           free a linked list from the numeric pool.
-!
-            head =   datahd
-            tail = - dppool(prev,head)
-
-            call lnkfsl ( ctx, head, tail, dppool )
-
-         end if
-
-      end if
-!
-!     We have done all of the freeing and checking that
-!     needs to be done.  Now add the data.
-!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
+      if ( ps%first ) call zzpini ( ctx, ps )
+      call zzctrinc ( ctx, ps%subctr )
+      call ps%create ( name, nameat )
+      call ps%clear_values ( nameat )
       do i = 1, n
-
-!
-!        OK. See if there is room in
-!        the numeric portion of the pool to store this value.
-!
-         free = lnknfn ( ctx, dppool )
-
-         if ( free <= 0 ) then
-!
-!           This branch of the code should never be exercised,
-!           but it doesn't hurt to program in a redundant check.
-!
-            call zzcln ( ctx, lookat, nameat, &
-                         namlst, datlst, nmpool, chpool, dppool )
-
-            call ctx%setmsg ( 'There is no room available for ' &
-            //            'adding another numeric value ' &
-            //            'to the kernel pool.' )
-            call ctx%sigerr ( 'SPICE(KERNELPOOLFULL)' )
-            return
-
-         end if
-
-!
-!        Allocate a node for storing this numeric value:
-!
-         call lnkan ( ctx, dppool, dpnode )
-
-         if ( datlst(nameat) == 0 ) then
-
-!
-!           There was no data for this name yet.  We make
-!           DPNODE be the head of the data list for this name.
-!
-            datlst(nameat) =  dpnode
-
-         else
-
-!
-!           Put this node after the tail of the current list.
-!
-            head =  datlst(nameat)
-            tail = -dppool(prev, head )
-
-            call lnkila ( ctx, tail, dpnode, dppool )
-
-         end if
-
-!
-!        Finally insert this data item into the numeric buffer.
-!
-         dpvals(dpnode) = real( ivals(i), wp )
-
+         call ps%add_number ( nameat, real( ivals(i), wp ) )
       end do
-
-!
-!     One last thing, see if this variable is being watched,
-!     If it is, add its associated agents to the list of
-!     AGENTS to be notified of a watched variable update.
-!
-!     PEPPER: record the change for the watches of the contexts.
       call pool_changed ( ctx%spice, name )
-
-      return
       end associate
       end procedure pipool
 
@@ -20875,157 +17584,30 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
+      use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
+      character(:), allocatable :: varnam
       integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
       logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  chvals => ctx%spice%pool%chvals, &
-                  dpvals => ctx%spice%pool%dpvals, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, subctr )
-
-      end if
-
-!
-!     Increment POOL state counter.
-!
-      call zzctrinc ( ctx, subctr )
-
-!
-!     Read from the internal SPICE pool buffer
-!
+      if ( ps%first ) call zzpini ( ctx, ps )
+      call zzctrinc ( ctx, ps%subctr )
       linnum = 1
-
-      call zzrvbf ( ctx, cvals,  n,      linnum,  namlst, &
-                    nmpool, pnames, datlst, &
-                    dppool, dpvals, &
-                    chpool, chvals, &
-                    varnam, eof )
-
-!
-!     Read the variables in the file, one at a time.
-!
+      call zzrvbf ( ctx, cvals, n, linnum, ps, varnam, eof )
       do while ( .not. eof .and. .not. ctx%failed() )
-
          if ( varnam /= ' ' ) then
-
-!           PEPPER: record the change for the watches of the contexts.
             call pool_changed ( ctx%spice, varnam )
-
          end if
-!
-!        We've processed VARNAM if it was non-blank.
-!
-         call zzrvbf ( ctx, cvals,  n,      linnum,  namlst, &
-                       nmpool, pnames, datlst, &
-                       dppool, dpvals, &
-                       chpool, chvals, &
-                       varnam, eof )
-
+         call zzrvbf ( ctx, cvals, n, linnum, ps, varnam, eof )
       end do
-
-!
-!     That's it, the buffer supplied has been completely parsed
-!     and placed into the kernel pool.
-!
-      return
       end associate
       end procedure lmpool
 
@@ -21170,112 +17752,25 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
+      use pepper_kinds, only: ip
       use pepper_strings, only: eqstr
-      use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxagt
-      parameter           ( maxagt =   1000 )
-      integer(ip)           mxnote
-      parameter           ( mxnote =  maxvar * 5 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
+!
+!     PEPPER: the pool has none of these limits (variables, values,
+!     string values and their length, name length, agents, notices):
+!     each is reported as HUGE(1), "unlimited".
+!
       if ( ctx%failed() ) return
-
       found = .true.
-
-      if ( eqstr( name, 'MAXVAR' ) ) then
-         n = maxvar
-      else if ( eqstr( name, 'MAXVAL' ) ) then
-         n = maxval
-      else if ( eqstr( name, 'MAXLIN' ) ) then
-         n = maxlin
-      else if ( eqstr( name, 'MAXCHR' ) ) then
-         n = maxchr
-      else if ( eqstr( name, 'MXNOTE' ) ) then
-         n = mxnote
-      else if ( eqstr( name, 'MAXLEN' ) ) then
-         n = maxlen
-      else if ( eqstr( name, 'MAXAGT' ) ) then
-         n = maxagt
+      if (      eqstr( name, 'MAXVAR' ) .or. eqstr( name, 'MAXVAL' ) &
+           .or. eqstr( name, 'MAXLIN' ) .or. eqstr( name, 'MAXCHR' ) &
+           .or. eqstr( name, 'MXNOTE' ) .or. eqstr( name, 'MAXLEN' ) &
+           .or. eqstr( name, 'MAXAGT' ) ) then
+         n = huge ( 1_ip )
       else
          n     = 0
          found = .false.
       end if
-
-      return
       end procedure szpool
 
       module procedure dvpool
@@ -21427,176 +17922,24 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
+      use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
       integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, subctr )
-
-      end if
-
-!
-!     Increment POOL state counter.
-!
-      call zzctrinc ( ctx, subctr )
-
-!
-!     Locate the variable name in the hash table.  If the variable
-!     is not present, just return.
-!
-!     Compute the hash value of this name.
-!
-      lookat = name_hash ( name, maxvar )
-
-!
-!     Now see if there is a non-empty conflict resolution list for the
-!     input string NAME.  If so, NAMLST(LOOKAT) contains the head node
-!     of the conflict resolution list; this node is a positive value.
-!
-      if ( namlst(lookat) == 0 ) return
-!
-!     If were are still here NAMLST(LOOKAT) is the first node of
-!     a conflict resolution list.  See if the NAME corresponding
-!     to this node is the one we are looking for.
-!
-      nameat = namlst( lookat )
-      succes = name == pnames(nameat)
-
-      do while ( .not. succes )
-
-         nameat = nmpool ( next, nameat )
-
-         if ( nameat < 0 ) return
-
-         succes = name == pnames(nameat)
-
-      end do
-
-!
-!     Ok, the variable's here.  The head node of its value list is
-!     DATLST(NAMEAT).  Delete the list pointing to the associated
-!     values.  This list is in the numeric pool DPPOOL if the head
-!     node is positive; otherwise the list is in the character pool
-!     CHPOOL.
-!
-      call zzcln ( ctx, lookat, nameat, &
-                   namlst, datlst, nmpool, chpool, dppool )
-
-!
-!     For consistency with CLPOOL, blank out the PNAMES entry containing
-!     the name of this variable.  This is a bit of a flourish since
-!     when errors occur during the population of the kernel pool, PNAMES
-!     is not cleaned out
-!
-      pnames ( nameat )  =  ' '
-
-!
-!     There may be agents watching the variable we just wiped out.  If
-!     so, add these agents to the list of agents to be notified of a
-!     watched variable update.
-!
-!     PEPPER: record the change for the watches of the contexts.
+      if ( ps%first ) call zzpini ( ctx, ps )
+      call zzctrinc ( ctx, ps%subctr )
+      i = ps%find ( name )
+      if ( i == 0 ) return
+      call ps%remove ( i )
       call pool_changed ( ctx%spice, name )
-
-      return
       end associate
       end procedure dvpool
 
@@ -21819,189 +18162,54 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
+      use pepper_kinds, only: ip
       use pepper_strings, only: matchi
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
       integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
       integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( pnames => ctx%spice%pool%pnames, &
-                  namlst => ctx%spice%pool%namlst, &
-                  nmpool => ctx%spice%pool%nmpool, &
-                  datlst => ctx%spice%pool%datlst, &
-                  chpool => ctx%spice%pool%chpool, &
-                  dppool => ctx%spice%pool%dppool, &
-                  first => ctx%spice%pool%first, &
-                  subctr => ctx%spice%pool%subctr, &
-                  begdat => ctx%spice%pool%begdat, &
-                  begtxt => ctx%spice%pool%begtxt )
+!
+!     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
+!     names and values of any length and number; SPICELIB's hash table
+!     and linked lists, and their limits, are gone.
+!
+!
+!     The variables are searched in the order of their slots (the order
+!     in which they were created; SPICELIB's was the order of its hash
+!     table).
+!
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
-
-!
-!     Initialize the pool if necessary.
-!
-      if ( first ) then
-
-         call zzpini ( ctx,  first, &
-                        maxvar, maxval, maxlin, &
-                        begdat, begtxt, &
-                        nmpool, dppool, chpool, &
-                        namlst, datlst, subctr )
-
-      end if
-
-!
-!     Perform the one obvious error check first.
-!
+      if ( ps%first ) call zzpini ( ctx, ps )
       if ( room < 1 ) then
-
          call ctx%setmsg ( 'The amount of room specified as ' &
          //            'available for output in the output array ' &
          //            'was: #.  The amount of room must be ' &
          //            'positive. ' )
-
          call ctx%errint ( '#', room )
          call ctx%sigerr ( 'SPICE(BADARRAYSIZE)'  )
          return
-
       end if
-
-!
-!     So far we've encountered no matching names.
-!
       hits  = 0
       n     = 0
-      begin = max( 1, start )
-
-      do k = 1, maxvar
-!
-!        See if there is any variable associated with this hash value.
-!
-         nnode = namlst(k)
-
-         do while (  nnode > 0 )
-!
-!           There is some name list associated with this node. See if
-!           it the current one matches the supplied template.
-!
-            if ( matchi( pnames(nnode), name, '*', '%' ) ) then
-
-!
-!              We've got a match.  Record this fact and if we have
-!              reached (or passed) the starting point, put this name
-!              on the output list.
-!
-               hits = hits + 1
-
-               if ( hits >= start ) then
-
-                  if ( n < room ) then
-                     n        = n + 1
-                     cvals(n) = pnames(nnode)
-                  end if
-!
-!                 If we've filled up the buffer, we may as well
-!                 quit now.
-!
-                  if ( n == room ) then
-                     found = .true.
-                     return
-                  end if
-
+      do k = 1, ps%nslots
+         if ( .not. allocated ( ps%vars(k)%name ) ) cycle
+         if ( matchi( ps%vars(k)%name, name, '*', '%' ) ) then
+            hits = hits + 1
+            if ( hits >= start ) then
+               if ( n < room ) then
+                  n        = n + 1
+                  cvals(n) = ps%vars(k)%name
                end if
-
+               if ( n == room ) then
+                  found = .true.
+                  return
+               end if
             end if
-
-!
-!           Get the next name for this node.
-!
-            nnode = nmpool(next,nnode)
-
-         end do
-!
-!        Advance to the next hash value.
-!
+         end if
       end do
-
       found = hits > 0
-
-      return
       end associate
       end procedure gnpool
 
@@ -22286,94 +18494,12 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
-      use pepper_kinds, only: ip, wp
-      use pepper_hash, only: name_hash
+      use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           maxvar
-      parameter           ( maxvar =  26003 )
-      integer(ip)           maxval
-      parameter           ( maxval = 400000 )
-      integer(ip)           maxlin
-      parameter           ( maxlin =  15000 )
-      integer(ip)           maxchr
-      parameter           ( maxchr =     80 )
-      integer(ip)           maxlen
-      parameter           ( maxlen =     32 )
-      integer(ip)           lbcell
-      parameter           ( lbcell = -5 )
-      integer(ip)           lbpool
-      parameter           ( lbpool = -5 )
-      character(1)          quote
-      parameter           ( quote = '''' )
-      integer(ip)           lnsize
-      parameter           ( lnsize = 132 )
-      integer(ip)           prev
-      parameter           ( prev = 2 )
-      integer(ip)           next
-      parameter           ( next = 1 )
-      integer(ip)           mrklen
-      parameter           ( mrklen = 10 )
-      character(2)          finish
-      character(lnsize)     cvalue
-      character(lnsize)     line
-      character(maxlen)     varnam
-      real(wp)              big
-      real(wp)              dvalue
-      real(wp)              small
-      integer(ip)           agnode
-      integer(ip)           avail
-      integer(ip)           begin
-      integer(ip)           chnode
-      integer(ip)           code
-      integer(ip)           datahd
-      integer(ip)           dnode
-      integer(ip)           dpnode
-      integer(ip)           free
-      integer(ip)           head
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           iquote
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linnum
-      integer(ip)           lookat
-      integer(ip)           margin
-      integer(ip)           nameat
-      integer(ip)           need
-      integer(ip)           nfetch
-      integer(ip)           nnode
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           nptrs
-      integer(ip)           nvars
-      integer(ip)           nw
-      integer(ip)           r
-      integer(ip)           space
-      integer(ip)           tail
-      integer(ip)           tofree
-      integer(ip)           varlen
-      logical               chr
-      logical               dp
-      logical               eof
-      logical               gotit
-      logical               isquot
-      logical               noagnt
-      logical               succes
-      logical               vector
-      isquot(code) = code == iquote
-      if ( .not. allocated ( ctx%spice%pool ) ) then
-         allocate ( ctx%spice%pool )
-         call init_pool_state ( ctx%spice%pool )
-      end if
-      associate ( subctr => ctx%spice%pool%subctr )
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       if ( ctx%failed() ) return
-
-      call zzctrchk ( ctx, subctr, usrctr, update )
-
-      return
-      end associate
+      call zzctrchk ( ctx, ctx%spice%pool%subctr, usrctr, update )
       end procedure zzpctrck
 
 end submodule pepper_pool

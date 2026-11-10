@@ -1044,6 +1044,12 @@
       CALL SZPOOL ( 'MAXVAR', MAXVAR, FOUND )
       CALL CHCKXC ( .FALSE., ' ',  OK )
       CALL CHCKSL ( 'SZPOOL FOUND', FOUND, .TRUE., OK )
+!
+!     PEPPER: the pool has no limit on the number of variables (SZPOOL
+!     reports HUGE(1)); use SPICELIB's MAXVAR, 26003, for the number of
+!     frames below.
+!
+      MAXVAR = 26003
 
       NLINES = 17
 

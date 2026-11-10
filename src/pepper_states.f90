@@ -20,7 +20,7 @@
 module pepper_states
 
    use pepper_kinds, only: ip, wp
-   use pepper_containers, only: grow
+   use pepper_containers, only: grow, string, string_map
    use pepper_inc_das, only: ftsize
    use pepper_inc_dla, only: dladsz
    use pepper_inc_dsk, only: maxsrf
@@ -63,7 +63,7 @@ module pepper_states
        init_dafec_state, init_daffa_state, daffa_grow, init_dafrwd_state, init_dasec_state, &
        init_dasrwr_state, init_dskx02_state, init_ekqmgr_state, init_ekqmgr_context_state, &
        init_framex_state, init_limbpt_state, init_pckbsr_state, init_pckbsr_context_state, &
-       init_pool_state, init_sc01_state, init_scdecd_state, init_scencd_state, init_spkbsr_state, &
+       init_sc01_state, init_scdecd_state, init_scencd_state, init_spkbsr_state, &
        init_spkbsr_context_state, init_termpt_state, init_tisbod_state, init_tkfram_state, &
        init_zzbodblt_state, init_zzbodtrn_state, init_zzdskbsr_state, &
        init_zzdskbsr_context_state, init_zzdsksbf_state, init_zzekjsrt_state, init_zzekjtst_state, &
@@ -1727,11 +1727,18 @@ module pepper_states
 
    ! ------------------------------------------------------------------ POOL
 
-   integer(ip), parameter :: pool_maxvar = 26003
-   integer(ip), parameter :: maxval = 400000
-   integer(ip), parameter :: maxlin = 15000
-   integer(ip), parameter :: maxchr = 80
-   integer(ip), parameter :: pool_maxlen = 32
+   integer(ip), parameter, public :: pool_none = 0  !! a pool variable without values
+   integer(ip), parameter, public :: pool_numeric = 1  !! a numeric pool variable
+   integer(ip), parameter, public :: pool_character = 2  !! a character pool variable
+
+   !> A kernel pool variable: its name and values, of any length and number.
+   type, public :: pool_variable
+      character(:), allocatable :: name  !! the name (unallocated: a free slot)
+      integer(ip) :: kind = pool_none  !! pool_none, pool_numeric or pool_character
+      integer(ip) :: n = 0  !! number of values
+      real(wp), allocatable :: dvals(:)  !! the numeric values (1 to n)
+      type(string), allocatable :: cvals(:)  !! the character values (1 to n)
+   end type pool_variable
 
    !> Maintain a pool of variables read from SPICE ASCII kernel files.
    !>
@@ -1740,22 +1747,31 @@ module pepper_states
    !> dtpool, pcpool, pdpool, pipool, lmpool, szpool, dvpool, gnpool, dwpool,
    !> zzvupool, zzpctrck), held in pepper_spice.
    !>
-   !> No default initialization (8968320 bytes): see init_pool_state.
+   !> PEPPER: SPICELIB kept the names in a hash table of MAXVAR (26003)
+   !> entries and the values in linked lists of MAXVAL (400000) numbers and
+   !> MAXLIN (15000) strings of MAXCHR (80) characters (about 9 MB). The
+   !> variables are records in slots that grow, found by name through a
+   !> hash map; names and string values have any length. The slots keep the
+   !> order in which the variables were created (a slot freed by DVPOOL is
+   !> reused), which is the order of GNPOOL and WRPOOL.
    type, public :: pool_state
-      character(pool_maxlen) :: pnames (           pool_maxvar )  !! names of the kernel pool variables
-      integer(ip) :: namlst (           pool_maxvar )  !! heads of the hash collision lists (by hash
-                                                       !! value of the name)
-      integer(ip) :: nmpool ( 2, lbpool:pool_maxvar )  !! linked-list pool of the name collision lists
-      integer(ip) :: datlst (           pool_maxvar )  !! heads of the value lists of the variables
-                                                       !! (positive: numeric, negative: character)
-      integer(ip) :: chpool ( 2, lbpool:maxlin )  !! linked-list pool of the character values
-      integer(ip) :: dppool ( 2, lbpool:maxval )  !! linked-list pool of the numeric values
-      character(maxchr) :: chvals (           maxlin )  !! character values
-      real(wp) :: dpvals (           maxval )  !! numeric values
-      logical :: first  !! the pool has not been initialized yet
-      integer(ip) :: subctr ( ctrsiz )  !! pool state counter (changes when the pool changes)
-      character(mrklen) :: begdat  !! the begin-data marker of text kernels
-      character(mrklen) :: begtxt  !! the begin-text marker of text kernels
+      type(string_map) :: index  !! slot of each variable, by name
+      type(pool_variable), allocatable :: vars(:)  !! the variables (slots 1 to nslots)
+      integer(ip) :: nslots = 0  !! number of slots used (some may be free)
+      integer(ip), allocatable :: free(:)  !! the free slots (1 to nfree)
+      integer(ip) :: nfree = 0  !! number of free slots
+      logical :: first = .true.  !! the pool has not been initialized yet
+      integer(ip) :: subctr ( ctrsiz ) = 0  !! pool state counter (changes when the pool changes)
+      character(mrklen) :: begdat = ' '  !! the begin-data marker of text kernels
+      character(mrklen) :: begtxt = ' '  !! the begin-text marker of text kernels
+   contains
+      procedure :: find => pool_find
+      procedure :: create => pool_create
+      procedure :: remove => pool_remove
+      procedure :: clear_values => pool_clear_values
+      procedure :: add_number => pool_add_number
+      procedure :: add_string => pool_add_string
+      procedure :: clear => pool_clear
    end type pool_state
 
    ! ------------------------------------------------------------------ PROP2B
@@ -6239,23 +6255,118 @@ contains
       state%epoch = 0
    end subroutine init_pckbsr_context_state
 
-   !> Set the initial values of a new pool_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_pool_state(state)
-      type(pool_state), intent(inout) :: state  !! the state
-      state%pnames = ' '
-      state%namlst = 0
-      state%nmpool = 0
-      state%datlst = 0
-      state%chpool = 0
-      state%dppool = 0
-      state%chvals = ' '
-      state%dpvals = 0.0_wp
-      state%first = .true.
-      state%subctr = 0
-      state%begdat = ' '
-      state%begtxt = ' '
-   end subroutine init_pool_state
+   !> The slot of a kernel pool variable: 0 if there is no such variable.
+   pure integer(ip) function pool_find(self, name) result(i)
+      class(pool_state), intent(in) :: self  !! the pool
+      character(*), intent(in) :: name  !! the name (trailing blanks are not significant)
+      logical :: found
+      call self%index%get(name, i, found)
+   end function pool_find
+
+   !> The slot of a kernel pool variable, created (without values) if it
+   !> does not exist.
+   pure subroutine pool_create(self, name, i, existed)
+      class(pool_state), intent(inout) :: self  !! the pool
+      character(*), intent(in) :: name  !! the name (trailing blanks are not significant)
+      integer(ip), intent(out) :: i  !! the slot of the variable
+      logical, intent(out), optional :: existed  !! the variable existed already
+      type(pool_variable), allocatable :: tmp(:)
+      integer(ip) :: k
+      i = self%find(name)
+      if (present(existed)) existed = i > 0
+      if (i > 0) return
+      if (self%nfree > 0) then
+         i = self%free(self%nfree)
+         self%nfree = self%nfree - 1
+      else
+         if (.not. allocated(self%vars)) allocate (self%vars(64))
+         if (self%nslots == size(self%vars)) then
+            allocate (tmp(2*size(self%vars)))
+            do k = 1, self%nslots
+               call move_variable(self%vars(k), tmp(k))
+            end do
+            call move_alloc(tmp, self%vars)
+         end if
+         self%nslots = self%nslots + 1
+         i = self%nslots
+      end if
+      self%vars(i)%name = trim(name)
+      self%vars(i)%kind = pool_none
+      self%vars(i)%n = 0
+      call self%index%set(name, i)
+   end subroutine pool_create
+
+   !> Remove the variable in slot i (its slot becomes free).
+   pure subroutine pool_remove(self, i)
+      class(pool_state), intent(inout) :: self  !! the pool
+      integer(ip), intent(in) :: i  !! the slot
+      if (.not. allocated(self%vars(i)%name)) return
+      call self%index%remove(self%vars(i)%name)
+      self%vars(i) = pool_variable()
+      call grow(self%free, self%nfree + 1)
+      self%nfree = self%nfree + 1
+      self%free(self%nfree) = i
+   end subroutine pool_remove
+
+   !> Remove the values of the variable in slot i (it stays, without
+   !> values or type).
+   pure subroutine pool_clear_values(self, i)
+      class(pool_state), intent(inout) :: self  !! the pool
+      integer(ip), intent(in) :: i  !! the slot
+      self%vars(i)%kind = pool_none
+      self%vars(i)%n = 0
+      if (allocated(self%vars(i)%dvals)) deallocate (self%vars(i)%dvals)
+      if (allocated(self%vars(i)%cvals)) deallocate (self%vars(i)%cvals)
+   end subroutine pool_clear_values
+
+   !> Append a number to the variable in slot i (which becomes numeric).
+   pure subroutine pool_add_number(self, i, value)
+      class(pool_state), intent(inout) :: self  !! the pool
+      integer(ip), intent(in) :: i  !! the slot
+      real(wp), intent(in) :: value  !! the value
+      associate (v => self%vars(i))
+         v%kind = pool_numeric
+         call grow(v%dvals, v%n + 1)
+         v%n = v%n + 1
+         v%dvals(v%n) = value
+      end associate
+   end subroutine pool_add_number
+
+   !> Append a string to the variable in slot i (which becomes a character
+   !> variable). Trailing blanks are not kept.
+   pure subroutine pool_add_string(self, i, value)
+      class(pool_state), intent(inout) :: self  !! the pool
+      integer(ip), intent(in) :: i  !! the slot
+      character(*), intent(in) :: value  !! the value
+      associate (v => self%vars(i))
+         v%kind = pool_character
+         call grow(v%cvals, v%n + 1)
+         v%n = v%n + 1
+         v%cvals(v%n)%s = trim(value)
+      end associate
+   end subroutine pool_add_string
+
+   !> Remove all variables (and release the memory).
+   pure subroutine pool_clear(self)
+      class(pool_state), intent(inout) :: self  !! the pool
+      call self%index%clear()
+      if (allocated(self%vars)) deallocate (self%vars)
+      if (allocated(self%free)) deallocate (self%free)
+      self%nslots = 0
+      self%nfree = 0
+   end subroutine pool_clear
+
+   !> Move a pool variable (its name and values without copying).
+   pure subroutine move_variable(from, to)
+      type(pool_variable), intent(inout) :: from  !! the variable moved (left empty)
+      type(pool_variable), intent(inout) :: to  !! the variable replaced
+      to%kind = from%kind
+      to%n = from%n
+      call move_alloc(from%name, to%name)
+      call move_alloc(from%dvals, to%dvals)
+      call move_alloc(from%cvals, to%cvals)
+   end subroutine move_variable
+
 
    !> Set the initial values of a new sc01_state: SPICELIB's DATA
    !> values, and zero for the other components.

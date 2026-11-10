@@ -2,7 +2,8 @@
 !> 255 characters, more kernels than the 5000 (5300 through FURNSH) that
 !> SPICELIB's file tables held, the priority of SPK files after
 !> unloading, more DAFs written at once than DAFANA's 20, and comments
-!> read from many DAFs in turn (DAFEC's table).
+!> read from many DAFs in turn (DAFEC's table), and the kernel pool past
+!> its limits (variables, values, name and string lengths).
 program test_limits
 
    use pepper_kinds, only: ip, wp
@@ -22,6 +23,7 @@ program test_limits
    call test_many_spks()
    call test_many_writers()
    call test_many_comment_readers()
+   call test_pool()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -336,5 +338,69 @@ contains
          call delete_file(kernel_name(prefix // 'comments_', i, '.bsp'))
       end do
    end subroutine test_many_comment_readers
+
+   !> The kernel pool past SPICELIB's limits: 100000 variables (MAXVAR
+   !> 26003), a variable of 10**6 values (MAXVAL 400000), names and string
+   !> values of 200 characters (32 and 80), a watch on a long name, and
+   !> SZPOOL reporting unlimited.
+   subroutine test_pool()
+      integer(ip), parameter :: nvars = 100000, nvals = 1000000
+      character(:), allocatable :: long_name, long_value
+      character(32) :: name
+      character(300) :: cval(1)
+      real(wp), allocatable :: big(:), got(:)
+      real(wp) :: value(1)
+      integer(ip) :: i, n
+      logical :: found, ok, update
+      call ctx%clpool()
+      do i = 1, nvars
+         write (name, '(a,i0)') 'TEST_LIMITS_VAR_', i
+         call ctx%pdpool(name, 1_ip, [real(i, wp)])
+      end do
+      call check_ok('pool: 100000 variables')
+      ok = .true.
+      do i = 1, nvars, 997
+         write (name, '(a,i0)') 'TEST_LIMITS_VAR_', i
+         call ctx%gdpool(name, 1_ip, 1_ip, n, value, found)
+         ok = ok .and. found .and. n == 1 .and. value(1) == i
+      end do
+      call check(ok, 'pool: the values of 100000 variables')
+
+      allocate (big(nvals))
+      do i = 1, nvals
+         big(i) = i
+      end do
+      call ctx%pdpool('TEST_LIMITS_BIG', nvals, big)
+      allocate (got(nvals))
+      call ctx%gdpool('TEST_LIMITS_BIG', 1_ip, nvals, n, got, found)
+      call check(found .and. n == nvals .and. all(got == big), 'pool: a variable of 10**6 values')
+      call ctx%gdpool('TEST_LIMITS_BIG', nvals, 1_ip, n, value, found)
+      call check(found .and. n == 1 .and. value(1) == nvals, 'pool: the last of 10**6 values')
+
+      long_name = 'TEST_LIMITS_' // repeat('N', 188)
+      long_value = repeat('v', 199) // 'w'
+      call ctx%swpool('TEST_LIMITS_AGENT_WITH_A_NAME_LONGER_THAN_32', 1_ip, [long_name])
+      call ctx%cvpool('TEST_LIMITS_AGENT_WITH_A_NAME_LONGER_THAN_32', update)
+      call ctx%pcpool(long_name, 1_ip, [long_value])
+      call ctx%gcpool(long_name, 1_ip, 1_ip, n, cval, found)
+      call check(found .and. n == 1 .and. cval(1) == long_value, 'pool: a 200-character name and value')
+      call ctx%cvpool('TEST_LIMITS_AGENT_WITH_A_NAME_LONGER_THAN_32', update)
+      call check(update, 'pool: a watch on a 200-character name')
+      call ctx%gnpool('TEST_LIMITS_NNN*', 1_ip, 1_ip, n, cval, found)
+      call check(found .and. n == 1 .and. cval(1) == long_name, 'pool: gnpool finds the long name')
+      call ctx%dwpool('TEST_LIMITS_AGENT_WITH_A_NAME_LONGER_THAN_32')
+
+      call ctx%szpool('MAXVAR', n, found)
+      call check(found .and. n == huge(1_ip), 'pool: szpool reports unlimited')
+
+      call ctx%dvpool('TEST_LIMITS_VAR_5')
+      call ctx%gdpool('TEST_LIMITS_VAR_5', 1_ip, 1_ip, n, value, found)
+      call check(.not. found, 'pool: dvpool')
+      call ctx%pipool('TEST_LIMITS_VAR_5', 1_ip, [-5_ip])
+      call ctx%gdpool('TEST_LIMITS_VAR_5', 1_ip, 1_ip, n, value, found)
+      call check(found .and. value(1) == -5, 'pool: a variable re-created after dvpool')
+      call ctx%clpool()
+      call check_ok('pool')
+   end subroutine test_pool
 
 end program test_limits

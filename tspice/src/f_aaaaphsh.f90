@@ -267,6 +267,11 @@
 
       CALL SZPOOL ( 'MAXVAR', MAXVAR, FOUND )
       CALL CHCKSL ( 'POOL MAXVAR FOUND', FOUND, .TRUE.,  OK )
+!
+!     PEPPER: the pool has no limit on the number of variables (SZPOOL
+!     reports HUGE(1)); the hash divisor tested is SPICELIB's MAXVAR.
+!
+      MAXVAR = 26003
 
       TMPINT = ZZSHSH ( MAXVAR )
       CALL CHCKXC ( .FALSE., ' ', OK )

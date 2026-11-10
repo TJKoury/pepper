@@ -2327,9 +2327,13 @@
          CVALS(  2 ) = 'Eighty character long string --------' &
          //            '-------------------------------------' &
          //            '---890'
+!
+!        PEPPER: string values have no length limit (SPICELIB kept 80
+!        characters): the 81-character values 3, 8, 9 and 12 are whole.
+!
          CVALS(  3 ) = 'Eighty-one character long string ----' &
          //            '-------------------------------------' &
-         //            '---890'
+         //            '---8901'
          CVALS(  4 ) = 'Seventy-nine character long string wi' &
          //            'th middle quote ''-------------------' &
          //            '----89'
@@ -2344,10 +2348,10 @@
          //            '---89'''
          CVALS(  8 ) = 'Eighty-one character long string with' &
          //            ' middle quote ''---------------------' &
-         //            '----890'
+         //            '----8901'
          CVALS(  9 ) = 'Eighty-one character long string with' &
          //            ' closing quote ----------------------' &
-         //            '---890'
+         //            '---890'''
          CVALS( 10 ) = 'Seventy-nine character long string wi' &
          //            'th two closing quotes ---------------' &
          //            '--7'''''
@@ -2356,7 +2360,7 @@
          //            '--78'''''
          CVALS( 12 ) = 'Eighty-one character long string with' &
          //            ' two closing quotes -----------------' &
-         //            '--789'''
+         //            '--789'''''
          CVALS( 13 ) = 'Ten space-separated quotes string '' ' &
          //            ''' '' '' '' '' '' '' '' '''
 
@@ -2585,9 +2589,13 @@
 !
 !     Case 37
 !
-      CALL TCASE( 'Confirm an error signal for kernel pool variable ' &
-         //       'names longer than the MAXLEN value defined in ' &
-         //       'pool.f:  PCPOOL, PIPOOL, PDPOOL ...')
+!
+!     PEPPER: names have no length limit (SPICELIB signaled
+!     SPICE(BADVARNAME) for more than MAXLEN, 32, characters): cases 37
+!     to 39 check that a 35-character name is stored and found.
+!
+      CALL TCASE( 'Kernel pool variable names longer than SPICELIB''s ' &
+         //       'MAXLEN (PEPPER: no error):  PCPOOL, PIPOOL, PDPOOL ...')
 
          NAME     = 'ABDEF123456789012345678901234567890'
          N        = 1
@@ -2603,17 +2611,27 @@
          CALL KCLEAR()
 
          CALL PCPOOL ( NAME, N, CVALS )
-         CALL CHCKXC ( .TRUE., 'SPICE(BADVARNAME)',  OK )
+         CALL CHCKXC ( .FALSE., ' ',  OK )
+         CALL DTPOOL ( NAME, FOUND, N, TYPE )
+         CALL CHCKSL ( 'PCPOOL FOUND', FOUND, .TRUE., OK )
+         CALL CHCKSC ( 'PCPOOL TYPE', TYPE, '=', 'C', OK )
+         N = 1
 
          CALL KCLEAR()
 
          CALL PDPOOL ( NAME, N, DVALS )
-         CALL CHCKXC ( .TRUE., 'SPICE(BADVARNAME)',  OK )
+         CALL CHCKXC ( .FALSE., ' ',  OK )
+         CALL DTPOOL ( NAME, FOUND, N, TYPE )
+         CALL CHCKSL ( 'PDPOOL FOUND', FOUND, .TRUE., OK )
+         CALL CHCKSC ( 'PDPOOL TYPE', TYPE, '=', 'N', OK )
+         N = 1
 
          CALL KCLEAR()
 
          CALL PIPOOL ( NAME, N, IVALS )
-         CALL CHCKXC ( .TRUE., 'SPICE(BADVARNAME)',  OK )
+         CALL CHCKXC ( .FALSE., ' ',  OK )
+         CALL DTPOOL ( NAME, FOUND, N, TYPE )
+         CALL CHCKSL ( 'PIPOOL FOUND', FOUND, .TRUE., OK )
 
 
 !
@@ -2625,7 +2643,9 @@
          CALL KCLEAR()
 
          CALL LMPOOL( TEXT(1), 1 )
-         CALL CHCKXC ( .TRUE., 'SPICE(BADVARNAME)',  OK )
+         CALL CHCKXC ( .FALSE., ' ',  OK )
+         CALL DTPOOL ( NAME, FOUND, N, TYPE )
+         CALL CHCKSL ( 'LMPOOL FOUND', FOUND, .TRUE., OK )
 
 
 !
@@ -2650,7 +2670,10 @@
          CLOSE ( UNIT )
 
          CALL FURNSH( 'pool_t.ker' )
-         CALL CHCKXC ( .TRUE., 'SPICE(BADVARNAME)',  OK )
+         CALL CHCKXC ( .FALSE., ' ',  OK )
+         CALL DTPOOL ( 'ABCD123456789012345678901234567890', FOUND, N, TYPE )
+         CALL CHCKSL ( 'FURNSH FOUND', FOUND, .TRUE., OK )
+         CALL KCLEAR()
 
 !
 !     Case 40: test POOL state counter.
