@@ -14,7 +14,7 @@ program test_time
    type(pepper_spice), target :: spice
    type(pepper_context) :: a, b
    integer :: failures = 0
-   real(wp) :: et
+   real(wp) :: et, value_dp
    character(32) :: value
 
    a = spice%new_context()
@@ -55,6 +55,32 @@ program test_time
    value = 'UTC'
    call a%timdef('SET', 'SYSTEM', value)
 
+   ! DELTET keeps its values until the pool changes: b's DELTET sees a's
+   ! change of the leapseconds (one more leap second before 2000)
+   call b%deltet(0.0_wp, 'UTC', et)
+   call check(abs(et - 74.184_wp) < 0.01_wp, 'deltet in b')
+   call a%pdpool('DELTET/DELTA_AT', 2_ip, [33.0_wp, -1.0e8_wp])
+   call b%deltet(0.0_wp, 'UTC', et)
+   call check(abs(et - 75.184_wp) < 0.01_wp, 'deltet in b sees the new DELTET/DELTA_AT')
+   call b%deltet(et, 'ET', value_dp)
+   call check(abs(value_dp - et) < 1.0e-6_wp, 'deltet for an ET epoch')
+
+   call a%kclear()
+   call delete_file()
+
+   ! Without the variables, DELTET signals the error on every call, and
+   ! works once they are defined
+   call b%deltet(0.0_wp, 'UTC', et)
+   call b%getmsg('SHORT', value)
+   call check(b%failed() .and. value == 'SPICE(KERNELVARNOTFOUND)', 'deltet without the variables')
+   call b%reset()
+   call b%deltet(0.0_wp, 'UTC', et)
+   call check(b%failed(), 'deltet without the variables, again')
+   call b%reset()
+   call write_lsk(32.0_wp)
+   call a%furnsh(lsk)
+   call b%deltet(0.0_wp, 'UTC', et)
+   call check(.not. b%failed() .and. abs(et - 64.184_wp) < 0.01_wp, 'deltet once the kernel is loaded')
    call a%kclear()
    call delete_file()
 

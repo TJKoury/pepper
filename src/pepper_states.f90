@@ -700,7 +700,16 @@ module pepper_states
       !> error message templates naming each missing DELTET kernel variable
       character(20) :: missed ( 5 ) = [ character(20) :: 'DELTET/DELTA_T_A, #', 'DELTET/K, #', 'DELTET/EB, #', &
          'DELTET/M, #', 'DELTET/DELTA_AT, #' ]
-      real(wp), allocatable :: dleap ( :, : )  !! work: the leapseconds and their epochs (DELTET/DELTA_AT); grows (SPICELIB: a local buffer of 200)
+      real(wp), allocatable :: dleap ( :, : )  !! the leapseconds and their epochs (DELTET/DELTA_AT); grows (SPICELIB: a local buffer of 200)
+      real(wp), allocatable :: etleap ( : )  !! PEPPER: the ET from which each leapsecond counts, for ET epochs (computed once)
+      integer(ip) :: nleap = 0  !! number of leapseconds in DLEAP
+      real(wp) :: dta = 0.0_wp  !! DELTET/DELTA_T_A
+      real(wp) :: k = 0.0_wp  !! DELTET/K
+      real(wp) :: eb = 0.0_wp  !! DELTET/EB
+      real(wp) :: m ( 0:1 ) = 0.0_wp  !! DELTET/M
+      logical :: valid = .false.  !! the values above were all found in the kernel pool
+      logical :: first = .true.  !! the pool counter is not set up yet
+      integer(ip) :: usrctr ( ctrsiz ) = 0  !! the pool's state when the values were read
    end type deltet_state
 
    ! ------------------------------------------------------------------ DIAGS2

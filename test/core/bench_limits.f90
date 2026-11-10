@@ -60,6 +60,7 @@ program bench_limits
    call bench_pool()
    call bench_names()
    call bench_frames()
+   call bench_time()
    call bench_contexts()
 
    if (failures > 0) then
@@ -291,6 +292,51 @@ contains
       call ctx%unload(frames_file)
       call delete_file(frames_file)
    end subroutine bench_frames
+
+   !> Time conversions with 28 leapseconds (as many as the current LSK):
+   !> DELTET for UTC and ET epochs, ET2UTC and STR2ET.
+   subroutine bench_time()
+      integer(ip), parameter :: nleap = 28
+      real(wp) :: t0, dat(2*nleap), delta, sum, et, err
+      character(40) :: utc
+      integer(ip) :: i
+      do i = 1, nleap
+         dat(2*i - 1) = 9 + i
+         dat(2*i) = (365.0_wp*i - 10000)*86400 - 43200
+      end do
+      call ctx%pdpool('DELTET/DELTA_T_A', 1_ip, [32.184_wp])
+      call ctx%pdpool('DELTET/K', 1_ip, [1.657e-3_wp])
+      call ctx%pdpool('DELTET/EB', 1_ip, [1.671e-2_wp])
+      call ctx%pdpool('DELTET/M', 2_ip, [6.239996_wp, 1.99096871e-7_wp])
+      call ctx%pdpool('DELTET/DELTA_AT', 2*nleap, dat)
+      sum = 0
+      t0 = now()
+      do i = 1, nqueries
+         call ctx%deltet(1.0e3_wp*i, 'UTC', delta)
+         sum = sum + delta
+      end do
+      call report('deltet (UTC)', nqueries, now() - t0)
+      t0 = now()
+      do i = 1, nqueries
+         call ctx%deltet(1.0e3_wp*i, 'ET', delta)
+         sum = sum + delta
+      end do
+      call report('deltet (ET)', nqueries, now() - t0)
+      t0 = now()
+      do i = 1, nqueries
+         call ctx%et2utc(1.0e3_wp*i, 'ISOC', 3_ip, utc)
+      end do
+      call report('et2utc', nqueries, now() - t0)
+      err = 0
+      t0 = now()
+      do i = 1, nqueries
+         call ctx%str2et(utc, et)
+      end do
+      call report('str2et', nqueries, now() - t0)
+      call check_ctx(ctx, 'time conversions')
+      call check(abs(et - 1.0e3_wp*nqueries) < 1.0e-3_wp, 'time: et2utc and str2et agree')
+      print '(a, es24.16)', '   (checksum of the deltas: ', sum
+   end subroutine bench_time
 
    !> Create contexts and make a first SPK query in each.
    subroutine bench_contexts()

@@ -213,27 +213,15 @@ contains
       use pepper_strings, only: ucase
       use pepper_containers, only: grow
       implicit none
-      real(wp) :: eb_1(1)  !! one-element copy of eb (array argument)
-      real(wp) :: k_1(1)  !! one-element copy of k (array argument)
-      real(wp) :: dta_1(1)  !! one-element copy of dta (array argument)
       character(4)          type
-      character(1)          dtype
       real(wp)              aet
-      real(wp)              dta
       real(wp)              ea
-      real(wp)              eb
-      real(wp)              et
       real(wp)              ettai
-      real(wp)              k
       real(wp)              leaps
-      real(wp)              m    ( 0:1 )
       real(wp)              ma
       integer(ip)           i
-      integer(ip)           n
-      integer(ip)           nleap
-      logical               found    ( 5 )
+      logical               update
       if ( .not. allocated ( ctx%deltet_state ) ) allocate ( ctx%deltet_state )
-      associate ( missed => ctx%deltet_state%missed )
       if ( ctx%failed() ) return
 
 !
@@ -242,59 +230,31 @@ contains
       call ucase ( eptype, type )
 
 !
-!     Extract the necessary constants from the kernel pool.
-!     Leap seconds and their epochs are interleaved in DELTA_AT.
+!     PEPPER: the constants and the leapseconds are read from the kernel
+!     pool when it has changed since they were read (SPICELIB read them
+!     on every call), and the ET from which each leapsecond counts is
+!     computed then. While they are missing, they are looked up (and the
+!     error signaled) on every call, as by SPICELIB.
 !
-!     DLEAP(1,i) is the number of leap seconds at DLEAP(2,i) UTC
-!     seconds past J2000.
-!
-      call gdpool ( ctx, 'DELTET/DELTA_T_A', 1, 1, n, dta_1, found(1) )
-      dta = dta_1(1)
-      call gdpool ( ctx, 'DELTET/K', 1, 1, n, k_1, found(2) )
-      k = k_1(1)
-      call gdpool ( ctx, 'DELTET/EB', 1, 1, n, eb_1, found(3) )
-      eb = eb_1(1)
-      call gdpool ( ctx, 'DELTET/M',         1, 2, n, m,   found(4) )
-
-!
-!     PEPPER: the buffer grows to hold the leapseconds (SPICELIB: 200,
-!     SPICE(BUFFERTOOSMALL)).
-!
-      call dtpool ( ctx, 'DELTET/DELTA_AT', found(5), nleap, dtype )
-
-      if ( .not. found(5) ) nleap = 0
-
-      call grow ( ctx%deltet_state%dleap, max ( (nleap + 1) / 2, 1_ip ), 2_ip )
-
-      associate ( dleap => ctx%deltet_state%dleap )
-
-      call gdpool ( ctx, 'DELTET/DELTA_AT',  1,  size( dleap, kind=ip ), &
-                     nleap,             dleap(1,1),   found(5) )
-
-      nleap = nleap / 2
-
-      if ( .not. (       found(1) &
-                   .and. found(2) &
-                   .and. found(3) &
-                   .and. found(4) &
-                   .and. found(5) ) ) then
-
-         call ctx%setmsg ( 'The following, needed to compute '      // &
-                       'Delta ET (ET - UTC), could not be '     // &
-                       'found in the kernel pool: #'               )
-
-         do i = 1, 5
-            if ( .not. found(i) ) then
-               call ctx%errch ( '#', missed(i) )
-            end if
-         end do
-
-         call ctx%errch  ( ', #', '.' )
-         call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)' )
-
-         return
-
+      if ( ctx%deltet_state%first ) then
+         call zzctruin ( ctx, ctx%deltet_state%usrctr )
+         ctx%deltet_state%first = .false.
       end if
+
+      call zzpctrck ( ctx, ctx%deltet_state%usrctr, update )
+
+      if ( update .or. .not. ctx%deltet_state%valid ) then
+         call read_constants ( )
+         if ( ctx%failed() ) return
+      end if
+
+      associate ( dta => ctx%deltet_state%dta, &
+                  k => ctx%deltet_state%k, &
+                  eb => ctx%deltet_state%eb, &
+                  m => ctx%deltet_state%m, &
+                  nleap => ctx%deltet_state%nleap, &
+                  dleap => ctx%deltet_state%dleap, &
+                  etleap => ctx%deltet_state%etleap )
 
 !
 !     There are two separate quantities to be determined. First,
@@ -327,26 +287,16 @@ contains
 !     the computation is reversible, it is always done at the nearest
 !     ET second (the "approximate ET", or AET).
 !
-!     There must be a hundred ways to do this more efficiently.
-!     For now, we'll settle for one that works.
+!     PEPPER: the ET of each leap epoch (ETLEAP) is computed when the
+!     leapseconds are read (SPICELIB computed it on every call).
 !
       else if ( type == 'ET' ) then
 
          do i = 1, nleap
             if ( epoch > dleap(2,i) ) then
-
-               aet   = dnint ( dleap(2,i) + dta + dleap(1,i) )
-
-               ma    = m(0) + m(1) * aet
-               ea    = ma   + eb   * sin ( ma )
-               ettai =        k    * sin ( ea )
-
-               et    = dleap(2,i) + dta + dleap(1,i) + ettai
-
-               if ( epoch >= et ) then
+               if ( epoch >= etleap(i) ) then
                   leaps = dleap(1,i)
                end if
-
             end if
          end do
 
@@ -380,9 +330,87 @@ contains
 
       delta = dta + leaps + ettai
 
+      end associate
       return
-      end associate
-      end associate
+
+      contains
+
+!
+!        Read the constants and the leapseconds from the kernel pool
+!        (SPICELIB's code, run when the pool changed), and compute the
+!        ET of each leap epoch; signal SPICE(KERNELVARNOTFOUND) if any
+!        is missing.
+!
+         subroutine read_constants ( )
+            real(wp) :: v(2)
+            real(wp) :: aet, ea, ettai, ma
+            integer(ip) :: i, n, nval
+            character(1) :: dtype
+            logical :: found ( 5 )
+            associate ( st => ctx%deltet_state )
+            st%valid = .false.
+!
+!           Extract the necessary constants from the kernel pool.
+!           Leap seconds and their epochs are interleaved in DELTA_AT.
+!
+!           DLEAP(1,i) is the number of leap seconds at DLEAP(2,i) UTC
+!           seconds past J2000.
+!
+            call gdpool ( ctx, 'DELTET/DELTA_T_A', 1, 1, n, v, found(1) )
+            st%dta = v(1)
+            call gdpool ( ctx, 'DELTET/K', 1, 1, n, v, found(2) )
+            st%k = v(1)
+            call gdpool ( ctx, 'DELTET/EB', 1, 1, n, v, found(3) )
+            st%eb = v(1)
+            call gdpool ( ctx, 'DELTET/M', 1, 2, n, st%m, found(4) )
+!
+!           PEPPER: the buffer grows to hold the leapseconds (SPICELIB:
+!           200, SPICE(BUFFERTOOSMALL)).
+!
+            call dtpool ( ctx, 'DELTET/DELTA_AT', found(5), nval, dtype )
+            if ( .not. found(5) ) nval = 0
+            call grow ( ctx%deltet_state%dleap, max ( (nval + 1) / 2, 1_ip ), 2_ip )
+            call grow ( ctx%deltet_state%etleap, max ( (nval + 1) / 2, 1_ip ) )
+            call gdpool ( ctx, 'DELTET/DELTA_AT', 1, size ( st%dleap, kind=ip ), &
+                          nval, st%dleap, found(5) )
+            st%nleap = nval / 2
+
+            if ( .not. (       found(1) &
+                         .and. found(2) &
+                         .and. found(3) &
+                         .and. found(4) &
+                         .and. found(5) ) ) then
+
+               call ctx%setmsg ( 'The following, needed to compute '      // &
+                             'Delta ET (ET - UTC), could not be '     // &
+                             'found in the kernel pool: #'               )
+
+               do i = 1, 5
+                  if ( .not. found(i) ) then
+                     call ctx%errch ( '#', st%missed(i) )
+                  end if
+               end do
+
+               call ctx%errch  ( ', #', '.' )
+               call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)' )
+
+               return
+
+            end if
+!
+!           The ET of each leap epoch, at the nearest ET second, as
+!           SPICELIB computed it for ET epochs.
+!
+            do i = 1, st%nleap
+               aet   = dnint ( st%dleap(2,i) + st%dta + st%dleap(1,i) )
+               ma    = st%m(0) + st%m(1) * aet
+               ea    = ma   + st%eb   * sin ( ma )
+               ettai =        st%k    * sin ( ea )
+               st%etleap(i) = st%dleap(2,i) + st%dta + st%dleap(1,i) + ettai
+            end do
+            st%valid = .true.
+            end associate
+         end subroutine read_constants
       end procedure deltet
 
       module procedure et2utc
