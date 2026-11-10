@@ -25,16 +25,14 @@ machine (details in [Speed](#speed)):
 
 | | Speedup over SPICELIB built with NAIF's flags | Speedup over SPICELIB built with -O3 |
 |---|--:|--:|
+| Loading kernels (FURNSH: SPKs, text kernels, names, frames) | 1.5–4.4× | 1.1–2.4× |
 | States (SPKEZR, SPKPOS, SPKGEO; one body, DE421) | 1.4–1.6× | 1.0–1.1× |
 | Frame transformations (PXFORM, SXFORM) | 1.6–2.3× | 1.1–1.4× |
-| Time conversions (STR2ET, ET2UTC, UNITIM) | 3.7–5.0× | 1.2–3.3× |
-| A random body among 1000 loaded SPKs | 7.9× | 6.2× |
-| A random frame among 1000 TK frames | 51× | 31× |
-| Unloading one of 1000 SPKs | 2,013× | 1,779× |
+| Time conversions (STR2ET, ET2UTC, UNITIM) | 3.8–5.1× | 1.2–3.3× |
+| A random body among 1000 loaded SPKs | 8.1× | 6.3× |
+| A random frame among 1000 TK frames | 64× | 39× |
+| Unloading one of 1000 SPKs | 2,074× | 1,814× |
 | Queries from 4 threads (PEPPER only) | | 3.9× over one thread |
-
-PEPPER is slower at two operations: loading an SPK (16 percent) and loading
-TK frames (29 percent).
 
 ## Thread safety
 
@@ -224,7 +222,7 @@ additions).
   variables (4 values each), 10000 body names and 1000 TK frames.
 - **Counts:** 100000 queries of each kind, 20 loads of the real kernel set.
 - **Machine:** Apple M5 (4 performance and 6 efficiency cores), macOS,
-  gfortran 16.2. Each time is the fastest of 3 runs.
+  gfortran 16.2. Each time is the fastest of 7 runs.
 
 To repeat it: `pixi run compare-spicelib --kernels DIR`, where DIR holds the
 real kernels above (`bench/compare_spicelib.py`).
@@ -236,33 +234,37 @@ Microseconds per operation, and PEPPER's speedup over each SPICELIB build:
 | Operation | SPICELIB, NAIF's flags (µs) | SPICELIB, -O3 (µs) | PEPPER (µs) | Speedup over NAIF's build | Speedup over -O3 |
 |---|--:|--:|--:|--:|--:|
 | **Loading** | | | | | |
-| FURNSH of 6 real kernels (LSK, PCK, DE421, Earth and Moon binary PCKs, Moon FK), per set | 4,047 | 2,619 | 2,612 | 1.5× | 1.0× |
-| FURNSH of 1000 SPKs, per file | 67.9 | 65.3 | 75.8 | 0.9× | 0.9× |
-| UNLOAD of 1000 SPKs, per file | 9,298 | 8,218 | 4.62 | 2,013× | 1,779× |
-| FURNSH of a text kernel, per variable (20000 variables) | 3.35 | 1.32 | 1.28 | 2.6× | 1.0× |
-| FURNSH of 10000 body names and the first lookup, per name | 4.47 | 2.26 | 1.1 | 4.1× | 2.1× |
-| FURNSH of 1000 TK frames, per frame | 16.5 | 6.53 | 8.41 | 2.0× | 0.8× |
+| FURNSH of 6 real kernels (LSK, PCK, DE421, Earth and Moon binary PCKs, Moon FK), per set | 4,040 | 2,538 | 2,255 | 1.8× | 1.1× |
+| FURNSH of 1000 SPKs, per file | 67.4 | 67 | 45.2 | 1.5× | 1.5× |
+| UNLOAD of 1000 SPKs, per file | 9,080 | 7,941 | 4.38 | 2,074× | 1,814× |
+| FURNSH of a text kernel, per variable (20000 variables) | 3.2 | 1.48 | 1.24 | 2.6× | 1.2× |
+| FURNSH of 10000 body names and the first lookup, per name | 4.14 | 2.26 | 0.945 | 4.4× | 2.4× |
+| FURNSH of 1000 TK frames, per frame | 13.4 | 9.48 | 6.07 | 2.2× | 1.6× |
 | **States** | | | | | |
-| SPKEZR Moon from Earth, J2000, no correction | 13.8 | 10.2 | 9.99 | 1.4× | 1.0× |
-| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S | 15.3 | 10.6 | 9.76 | 1.6× | 1.1× |
-| SPKPOS Sun from Earth, J2000, CN+S | 14.7 | 10.5 | 9.69 | 1.5× | 1.1× |
-| SPKGEO Moon from Earth, by code | 13.5 | 10.1 | 9.75 | 1.4× | 1.0× |
-| SPKGEO of a random body among 1000 loaded SPKs | 112 | 87.2 | 14.1 | 7.9× | 6.2× |
+| SPKEZR Moon from Earth, J2000, no correction | 13.6 | 10.2 | 9.8 | 1.4× | 1.0× |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S | 15.3 | 10.5 | 9.74 | 1.6× | 1.1× |
+| SPKPOS Sun from Earth, J2000, CN+S | 14.6 | 10.5 | 9.57 | 1.5× | 1.1× |
+| SPKGEO Moon from Earth, by code | 13.5 | 10.1 | 9.71 | 1.4× | 1.0× |
+| SPKGEO of a random body among 1000 loaded SPKs | 110 | 85 | 13.5 | 8.1× | 6.3× |
 | **Frames** | | | | | |
-| PXFORM J2000 to ITRF93 (binary PCK) | 6.26 | 4.17 | 3.82 | 1.6× | 1.1× |
-| PXFORM J2000 to IAU_MARS (text PCK) | 1.37 | 0.85 | 0.598 | 2.3× | 1.4× |
-| PXFORM MOON_ME to J2000 (FK + binary PCK) | 3.54 | 2.33 | 1.85 | 1.9× | 1.3× |
-| SXFORM J2000 to ITRF93 | 6.31 | 4.07 | 3.79 | 1.7× | 1.1× |
-| PXFORM of a random frame among 1000 TK frames | 233 | 144 | 4.59 | 50.7× | 31.4× |
+| PXFORM J2000 to ITRF93 (binary PCK) | 6.09 | 4.14 | 3.77 | 1.6× | 1.1× |
+| PXFORM J2000 to IAU_MARS (text PCK) | 1.38 | 0.855 | 0.589 | 2.3× | 1.4× |
+| PXFORM MOON_ME to J2000 (FK + binary PCK) | 3.52 | 2.31 | 1.78 | 2.0× | 1.3× |
+| SXFORM J2000 to ITRF93 | 6.12 | 4.05 | 3.73 | 1.6× | 1.1× |
+| PXFORM of a random frame among 1000 TK frames | 234 | 143 | 3.67 | 63.8× | 39.1× |
 | **Time** | | | | | |
-| STR2ET of an ISO UTC string | 6.77 | 2.2 | 1.83 | 3.7× | 1.2× |
-| ET2UTC, calendar format | 2.29 | 1.28 | 0.499 | 4.6× | 2.6× |
-| UNITIM TDB to TAI | 0.836 | 0.548 | 0.166 | 5.0× | 3.3× |
+| STR2ET of an ISO UTC string | 6.71 | 2.18 | 1.77 | 3.8× | 1.2× |
+| ET2UTC, calendar format | 2.26 | 1.28 | 0.481 | 4.7× | 2.7× |
+| UNITIM TDB to TAI | 0.832 | 0.547 | 0.163 | 5.1× | 3.3× |
 | **Names and constants** | | | | | |
-| BODN2C of a built-in name | 0.138 | 0.106 | 0.0787 | 1.8× | 1.3× |
-| BODN2C of a random name among 10000 kernel names | 0.506 | 0.426 | 0.399 | 1.3× | 1.1× |
-| BODVRD Earth radii | 0.314 | 0.192 | 0.115 | 2.7× | 1.7× |
-| GDPOOL of a random variable among 20000 | 0.416 | 0.351 | 0.347 | 1.2× | 1.0× |
+| BODN2C of a built-in name | 0.137 | 0.106 | 0.0695 | 2.0× | 1.5× |
+| BODN2C of a random name among 10000 kernel names | 0.495 | 0.43 | 0.359 | 1.4× | 1.2× |
+| BODVRD Earth radii | 0.303 | 0.191 | 0.0859 | 3.5× | 2.2× |
+| GDPOOL of a random variable among 20000 | 0.406 | 0.355 | 0.301 | 1.3× | 1.2× |
+
+The loading times depend on the file system (each load opens files) and
+vary between runs by up to a factor of 2 for all three builds; the table has
+the fastest of 7 runs. The query times vary by a few percent.
 
 ### Where the differences come from
 
@@ -291,9 +293,13 @@ Microseconds per operation, and PEPPER's speedup over each SPICELIB build:
   when the pool changes. ET2UTC and UNITIM go through DELTET.
 - **Body names and constants:** lookups through hash maps, and BODVRD's
   pool lookup by a map.
-- **Slower in PEPPER:** loading an SPK (75.8 against 65.3 µs per file) and
-  loading TK frames (8.4 against 6.5 µs per frame). Both are listed for
-  investigation in `limits.md`.
+- **Loading binary kernels:** SPICELIB opens each file four times during
+  FURNSH (it checks twice whether the file is loaded already, opening it
+  each time, and opens it again to read its type); PEPPER keeps the result
+  of the first check for the rest of the load and opens the file twice.
+- **Loading text kernels:** the kernel pool keeps its variables in a hash
+  map that adds a new name with one lookup, and keeps its capacity when
+  kernels are unloaded.
 
 ### Queries from several threads
 
