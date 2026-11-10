@@ -10,12 +10,13 @@ program test_bodies
    implicit none
 
    type(pepper_spice), target :: spice
-   type(pepper_context) :: a, b
+   type(pepper_context), pointer :: a  !! the instance's context (it loads the kernels)
+   type(pepper_context) :: b
    integer :: failures = 0
    integer(ip) :: code_  !! work: a code
    logical :: found_  !! work: found flag
 
-   a = spice%new_context()
+   a => spice%context()
    b = spice%new_context()
 
    call test_builtin()
@@ -55,23 +56,23 @@ contains
       call check(.not. a%failed() .and. .not. b%failed(), 'no errors')
    end subroutine test_builtin
 
-   !> A name defined through one context is known to all contexts.
+   !> A name defined in the instance is known to all its contexts.
    subroutine test_boddef()
       integer(ip) :: code
       character(36) :: name
       logical :: found
       call b%bodn2c('PEPPER_PROBE', code, found)   ! b's tables exist before the definition
       call check(.not. found, 'not defined yet')
-      call a%boddef('PEPPER_PROBE', -999001_ip)
+      call spice%boddef('PEPPER_PROBE', -999001_ip)
       call a%bodn2c('PEPPER_PROBE', code, found)
-      call check(found .and. code == -999001, 'boddef seen by the defining context')
+      call check(found .and. code == -999001, 'boddef seen by the instance''s context')
       call b%bodn2c('PEPPER_PROBE', code, found)
       call check(found .and. code == -999001, 'boddef seen by another context')
       call b%bodc2n(-999001_ip, name, found)
       call check(found .and. name == 'PEPPER_PROBE', 'bodc2n of the defined code')
    end subroutine test_boddef
 
-   !> Redefinitions and resets, seen by the defining context, by a context
+   !> Redefinitions and resets, seen by the instance's context (a), by a context
    !> that takes up the definitions made since it last looked (b), and by
    !> a new one (c): a code defined twice maps to the later name; a name
    !> given another code no longer holds the old one, which goes back to
@@ -80,18 +81,18 @@ contains
    subroutine test_boddef_changes()
       type(pepper_context) :: c
       call b%bodn2c('EARTH', code_, found_)   ! b is up to date
-      call a%boddef('PEPPER_Y1', -999101_ip)
-      call a%boddef('PEPPER_Y2', -999101_ip)
+      call spice%boddef('PEPPER_Y1', -999101_ip)
+      call spice%boddef('PEPPER_Y2', -999101_ip)
       call expect('code defined twice', 'PEPPER_Y2', -999101_ip)
-      call a%boddef('PEPPER_Y2', -999102_ip)   ! removes the assignment of Y2
-      call a%boddef('pepper_y1', -999101_ip)   ! the same name and code: the name's spelling
-      call a%boddef('PEPPER_Y3', -999103_ip)
+      call spice%boddef('PEPPER_Y2', -999102_ip)   ! removes the assignment of Y2
+      call spice%boddef('pepper_y1', -999101_ip)   ! the same name and code: the name's spelling
+      call spice%boddef('PEPPER_Y3', -999103_ip)
       call expect('code given back', 'pepper_y1', -999101_ip)
       call expect('name with a new code', 'PEPPER_Y2', -999102_ip)
       call expect('new name after a removal', 'PEPPER_Y3', -999103_ip)
       call expect('earlier definition', 'PEPPER_PROBE', -999001_ip)
       call zzbodrst(a)
-      call a%boddef('PEPPER_Y4', -999104_ip)
+      call spice%boddef('PEPPER_Y4', -999104_ip)
       call expect('definition after a reset', 'PEPPER_Y4', -999104_ip)
       c = spice%new_context()
       call c%bodn2c('PEPPER_Y1', code_, found_)
@@ -138,7 +139,7 @@ contains
       write (unit, '(a)') '\begindata', "NAIF_BODY_NAME += 'PEPPER_LANDER'", &
          'NAIF_BODY_CODE += -999002', '\begintext'
       close (unit)
-      call a%ldpool(file)
+      call spice%ldpool(file)
       call a%bodn2c('PEPPER_LANDER', code, found)
       call check(found .and. code == -999002, 'kernel name, loading context')
       call b%bodn2c('PEPPER_LANDER', code, found)

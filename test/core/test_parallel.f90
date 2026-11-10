@@ -27,18 +27,19 @@ program test_parallel
    integer, parameter :: nres = 6 + 1 + 3 + 1 + 9 + 9 + 1  !! results per epoch
    integer, parameter :: nthreads = 4
    type(pepper_spice), target :: spice
-   type(pepper_context) :: setup, serial
+   type(pepper_context), pointer :: setup  !! the instance's context (it loads the kernels)
+   type(pepper_context) :: serial
    real(wp) :: et(nepoch)
    real(wp) :: ref(nres, nepoch), par(nres, nepoch)
    character(40) :: refutc(nepoch), parutc(nepoch)
    integer :: failures = 0, pass, i, nbad, errors
 
-   setup = spice%new_context()
+   setup => spice%context()
    call delete_files()
    call write_kernels()
-   call setup%furnsh(lsk)
-   call setup%furnsh(spk)
-   call setup%furnsh(fk)
+   call spice%furnsh(lsk)
+   call spice%furnsh(spk)
+   call spice%furnsh(fk)
    call check(.not. setup%failed(), 'setup loads the kernels')
 
    et = [(1.0e5_wp + (1.8e6_wp*(i - 1))/(nepoch - 1), i = 1, nepoch)]
@@ -78,7 +79,7 @@ program test_parallel
       call check(nbad == 0, 'parallel results identical to the serial ones')
    end do
 
-   call setup%kclear()
+   call spice%kclear()
    call delete_files()
 
    if (failures > 0) then

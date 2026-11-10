@@ -5,9 +5,9 @@ program bench_pool
    use pepper_instance, only: pepper_spice, pepper_context
    implicit none
    type(pepper_spice), target :: spice
-   type(pepper_context) :: ctx
-   ctx = spice%new_context()
-   call ctx%pdpool('BENCH_X', 3_ip, [1.0_wp, 2.0_wp, 3.0_wp])
+   type(pepper_context), pointer :: ctx  !! the instance's context (it loads the kernels)
+   ctx => spice%context()
+   call spice%pdpool('BENCH_X', 3_ip, [1.0_wp, 2.0_wp, 3.0_wp])
    call run(ctx, 'context')
 contains
    !> Time the lookups and watches in a context.

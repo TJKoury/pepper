@@ -317,6 +317,8 @@ Each phase ends with tspice green, the concurrency tests that apply passing, and
 
 12. **Remove SPICELIB's fixed limits (planned):** the number of kernels, pool variables, body and frame definitions, file name lengths, and so on. The inventory and the plan are in `limits.md`.
 
+13. **Kernels are changed through the instance (done):** the procedures that change the kernels are methods of `pepper_spice`, not of `pepper_context`: `furnsh`, `unload`, `kclear`, `ldpool`, `clpool`, `pcpool`, `pdpool`, `pipool`, `lmpool`, `dvpool`, `boddef`, `spklef`, `spkuef`, `pcklof`, `pckuof`, `cklpf`, `ckupf`, `eklef`, `ekuef` (19 bindings moved). They work through the instance's own context (`spice%context()`, allocated on first use), which holds their errors (`spice%failed()`) and can also be used for queries in the loading thread. Contexts are for queries: they find the changes on their next call, as before. The legacy interface's context is the default instance's own context, so SPICELIB programs see the errors of FURNSH and of their queries in one place. Not moved: opening, writing and closing DAF/DAS/EK files (`dafopr`, `spkopn`, `ekopn`, the writers, ...) and the watches (`swpool`, `cvpool`), which belong to a context; the private `zzboddef`/`zzbodrst` still take a context.
+
 ### Risks
 
 - **Size:** about 1400 routines, so the transformations must be scripted and verified (object-file comparison where the change is purely mechanical; tspice otherwise), and reviewable in subsystem-sized commits.

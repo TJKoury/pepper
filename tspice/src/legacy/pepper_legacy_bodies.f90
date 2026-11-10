@@ -582,17 +582,17 @@
       !> Define a body name/ID code pair for later translation via
       !> BODN2C or BODC2N.
       !>
-      !> Legacy interface: calls ctx%boddef with the legacy context.
+      !> Legacy interface: calls spice%boddef of the legacy instance.
       subroutine boddef ( name, code )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip
       implicit none
       character(*) :: name  !! Common name of some body.
       integer(ip) :: code  !! Integer code for that body.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%boddef ( name, code )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%boddef ( name, code )
       end subroutine boddef
 
       !> Determine whether values exist for some item for any body

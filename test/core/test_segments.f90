@@ -16,11 +16,12 @@ program test_segments
    integer(ip), parameter :: nd = 2, ni = 6
    integer(ip), parameter :: body = 399
    type(pepper_spice), target :: spice
-   type(pepper_context) :: a, b
+   type(pepper_context), pointer :: a  !! the instance's context (it loads the kernels)
+   type(pepper_context) :: b
    integer(ip) :: h1, h2
    integer :: failures = 0
 
-   a = spice%new_context()
+   a => spice%context()
    b = spice%new_context()
 
    call delete_file(file1)
@@ -29,18 +30,18 @@ program test_segments
    call write_spk(file1, 0.0_wp, 100.0_wp, 'SEGMENT 1')
    call write_spk(file2, 40.0_wp, 60.0_wp, 'SEGMENT 2')
 
-   call a%spklef(file1, h1)
+   call spice%spklef(file1, h1)
    call check(.not. a%failed(), 'a loads file 1')
    call expect(b, 50.0_wp, h1, 'SEGMENT 1', 'b finds the segment of file 1')
    call expect(a, 50.0_wp, h1, 'SEGMENT 1', 'a finds the segment of file 1')
 
-   call a%spklef(file2, h2)
+   call spice%spklef(file2, h2)
    call check(.not. a%failed(), 'a loads file 2')
    call expect(b, 50.0_wp, h2, 'SEGMENT 2', 'b finds the segment of file 2 (loaded by a)')
    call expect(b, 80.0_wp, h1, 'SEGMENT 1', 'b finds file 1 outside file 2''s coverage')
    call expect(a, 50.0_wp, h2, 'SEGMENT 2', 'a finds the segment of file 2')
 
-   call a%spkuef(h2)
+   call spice%spkuef(h2)
    call check(.not. a%failed(), 'a unloads file 2')
    call expect(b, 50.0_wp, h1, 'SEGMENT 1', 'b finds file 1 again (file 2 unloaded by a)')
 
@@ -48,7 +49,7 @@ program test_segments
    call expect(b, -10.0_wp, 0_ip, '', 'b finds nothing outside the coverage')
 
    ! with no files loaded, a search is an error (SPICE(NOLOADEDFILES))
-   call a%spkuef(h1)
+   call spice%spkuef(h1)
    call no_files(b, 'b: no files loaded (all unloaded by a)')
    call no_files(a, 'a: no files loaded')
 

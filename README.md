@@ -30,9 +30,18 @@ pixi run docs           # FORD documentation in doc/
 ## Usage
 
 All state belongs to an instance (`type(pepper_spice)`): loaded kernels, the
-kernel pool, file tables. Each thread uses a context (`type(pepper_context)`)
-of the instance; the procedures are type-bound procedures of the context with
-SPICELIB's names and arguments, and errors are reported through the context.
+kernel pool, file tables, the names defined with `boddef`. The kernels are
+changed through the instance: `spice%furnsh`, `unload`, `kclear`, `ldpool`,
+`clpool`, the pool's setters (`pcpool`, `pdpool`, `pipool`, `lmpool`,
+`dvpool`), `boddef` and the low-level loaders (`spklef`, `pcklof`, `cklpf`,
+`eklef` and their unloaders). Their errors are reported through the
+instance's own context (`spice%context()`; `spice%failed()`).
+
+Each thread queries the instance through a context (`type(pepper_context)`,
+from `spice%new_context()`); the procedures are type-bound procedures of the
+context with SPICELIB's names and arguments, and errors are reported through
+the context. A context finds the changes of the kernels on its next call. A
+serial program can also query through the instance's own context.
 
 ```fortran
 use pepper_kinds, only: wp
@@ -42,15 +51,17 @@ type(pepper_spice), target :: spice
 type(pepper_context) :: ctx
 real(wp) :: et, state(6), lt
 
+call spice%furnsh('kernels.tm')
+if (spice%failed()) ...
 ctx = spice%new_context()
-call ctx%furnsh('kernels.tm')
 call ctx%str2et('2026 NOV 8 12:00:00 UTC', et)
 call ctx%spkezr('MOON', et, 'J2000', 'LT+S', 'EARTH', state, lt)
 if (ctx%failed()) ...
 ```
 
 Load kernels first, then query from any number of threads, one context per
-thread (see `test/core/test_parallel.f90`).
+thread (see `test/core/test_parallel.f90`). The kernels must not be changed
+while other threads use contexts of the instance (nothing checks this).
 
 gfortran (at least up to 16.2) keeps the length of a deferred-length
 character function result (a `character(:), allocatable` result) in a static

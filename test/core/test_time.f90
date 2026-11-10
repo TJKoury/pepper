@@ -13,12 +13,13 @@ program test_time
 
    character(*), parameter :: lsk = 'test_time.tls'
    type(pepper_spice), target :: spice
-   type(pepper_context) :: a, b
+   type(pepper_context), pointer :: a  !! the instance's context (it loads the kernels)
+   type(pepper_context) :: b
    integer :: failures = 0
    real(wp) :: et, value_dp
    character(32) :: value
 
-   a = spice%new_context()
+   a => spice%context()
    b = spice%new_context()
 
    ! Without a leapseconds kernel, STR2ET fails (as SPICELIB's does, even
@@ -32,7 +33,7 @@ program test_time
    ! ET 32 + 32.184 (TAI-TDT) + the small TDB-TDT term.
    call delete_file()
    call write_lsk(32.0_wp)
-   call a%furnsh(lsk)
+   call spice%furnsh(lsk)
    call check(.not. a%failed(), 'a loads the leapseconds kernel')
    call b%str2et('2000 JAN 01 12:00:00 UTC', et)
    call check(.not. b%failed() .and. abs(et - 64.184_wp) < 0.01_wp, &
@@ -41,7 +42,7 @@ program test_time
    call check(.not. a%failed() .and. abs(et - 64.184_wp) < 0.01_wp, 'a converts UTC too')
 
    ! a changes DELTA_T_A: both contexts see the change
-   call a%pdpool('DELTET/DELTA_T_A', 1_ip, [42.184_wp])
+   call spice%pdpool('DELTET/DELTA_T_A', 1_ip, [42.184_wp])
    call b%str2et('2000 JAN 01 12:00:00 UTC', et)
    call check(abs(et - 74.184_wp) < 0.01_wp, 'b sees the new DELTET/DELTA_T_A')
    call a%str2et('2000 JAN 01 12:00:00 UTC', et)
@@ -60,13 +61,13 @@ program test_time
    ! change of the leapseconds (one more leap second before 2000)
    call b%deltet(0.0_wp, 'UTC', et)
    call check(abs(et - 74.184_wp) < 0.01_wp, 'deltet in b')
-   call a%pdpool('DELTET/DELTA_AT', 2_ip, [33.0_wp, -1.0e8_wp])
+   call spice%pdpool('DELTET/DELTA_AT', 2_ip, [33.0_wp, -1.0e8_wp])
    call b%deltet(0.0_wp, 'UTC', et)
    call check(abs(et - 75.184_wp) < 0.01_wp, 'deltet in b sees the new DELTET/DELTA_AT')
    call b%deltet(et, 'ET', value_dp)
    call check(abs(value_dp - et) < 1.0e-6_wp, 'deltet for an ET epoch')
 
-   call a%kclear()
+   call spice%kclear()
    call delete_file()
 
    ! Without the variables, DELTET signals the error on every call, and
@@ -79,10 +80,10 @@ program test_time
    call check(b%failed(), 'deltet without the variables, again')
    call b%reset()
    call write_lsk(32.0_wp)
-   call a%furnsh(lsk)
+   call spice%furnsh(lsk)
    call b%deltet(0.0_wp, 'UTC', et)
    call check(.not. b%failed() .and. abs(et - 64.184_wp) < 0.01_wp, 'deltet once the kernel is loaded')
-   call a%kclear()
+   call spice%kclear()
    call delete_file()
 
    ! TPARTV's patterns are stored sorted (in the order ORDERC gave

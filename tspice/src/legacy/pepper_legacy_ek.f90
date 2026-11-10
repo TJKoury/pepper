@@ -2238,10 +2238,10 @@
 
       !> Load an EK file, making it accessible to the EK readers.
       !>
-      !> Legacy interface: calls ctx%eklef with the legacy context.
+      !> Legacy interface: calls spice%eklef of the legacy instance.
       subroutine eklef ( fname, handle )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -2257,19 +2257,19 @@
       implicit none
       character(*) :: fname  !! Name of EK file to load.
       integer(ip) :: handle  !! File handle of loaded EK file.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%eklef ( fname, handle )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%eklef ( fname, handle )
       end subroutine eklef
 
       !> Unload an EK file, making its contents inaccessible to the
       !> EK reader routines, and clearing space in order to allow other
       !> EK files to be loaded.
       !>
-      !> Legacy interface: calls ctx%ekuef with the legacy context.
+      !> Legacy interface: calls spice%ekuef of the legacy instance.
       subroutine ekuef ( handle )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -2284,9 +2284,9 @@
       use pepper_inc_ektype
       implicit none
       integer(ip) :: handle  !! Handle of EK file.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%ekuef ( handle )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%ekuef ( handle )
       end subroutine ekuef
 
       !> Return the number of loaded EK tables.

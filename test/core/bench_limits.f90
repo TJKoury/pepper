@@ -35,7 +35,7 @@ program bench_limits
    real(wp), parameter :: radius = 1.0e6_wp  !! radius of the SPK circles (km)
 
    type(pepper_spice), target :: spice
-   type(pepper_context) :: ctx
+   type(pepper_context), pointer :: ctx  !! the instance's context (it loads the kernels)
    integer(ip) :: nspk, nvars, nnames, nframes, ncontexts, nqueries
    integer :: failures = 0
    logical :: full
@@ -53,7 +53,7 @@ program bench_limits
       nspk = 60; nvars = 500; nnames = 500; nframes = 300; ncontexts = 5; nqueries = 2000
    end if
 
-   ctx = spice%new_context()
+   ctx => spice%context()
    print '(a)', 'bench_limits (' // merge('full ', 'small', full) // ' sizes)'
    print '(a40, a10, a14)', 'operation', 'n', 'us per op'
    call bench_spk()
@@ -129,9 +129,9 @@ contains
       call check_ctx(ctx, 'writing the SPKs')
 
       t0 = now()
-      call ctx%furnsh(lsk)
+      call spice%furnsh(lsk)
       do i = 1, nspk
-         call ctx%furnsh(kernel_name(prefix // 'spk_', i, '.bsp'))
+         call spice%furnsh(kernel_name(prefix // 'spk_', i, '.bsp'))
       end do
       call report('furnsh (SPK)', nspk, now() - t0)
       call check_ctx(ctx, 'loading the SPKs')
@@ -182,7 +182,7 @@ contains
 
       t0 = now()
       do i = 1, nspk
-         call ctx%unload(kernel_name(prefix // 'spk_', i, '.bsp'))
+         call spice%unload(kernel_name(prefix // 'spk_', i, '.bsp'))
       end do
       call report('unload (SPK)', nspk, now() - t0)
       call check_ctx(ctx, 'unloading the SPKs')
@@ -216,7 +216,7 @@ contains
       character(32) :: name
       call write_pool_kernel(pool_file, 'BENCH_VAR_', nvars, 3_ip)
       t0 = now()
-      call ctx%furnsh(pool_file)
+      call spice%furnsh(pool_file)
       call report('furnsh (text kernel, per variable)', nvars, now() - t0)
       call check_ctx(ctx, 'loading the pool kernel')
       ok = .true.
@@ -229,7 +229,7 @@ contains
       end do
       call report('gdpool, random variable', nqueries, now() - t0)
       call check(ok, 'gdpool: the values of the variables')
-      call ctx%unload(pool_file)
+      call spice%unload(pool_file)
       call delete_file(pool_file)
       call check_ctx(ctx, 'the pool')
    end subroutine bench_pool
@@ -243,7 +243,7 @@ contains
       type(pepper_context) :: other
       call write_body_names(names_file, nnames, first_name)
       t0 = now()
-      call ctx%furnsh(names_file)
+      call spice%furnsh(names_file)
       call report('furnsh (body names, per name)', nnames, now() - t0)
       call check_ctx(ctx, 'loading the body names')
       other = spice%new_context()
@@ -254,12 +254,12 @@ contains
       call ctx%bodn2c(body_name(1), code, found)
       t0 = now()
       do k = 1, 100
-         call ctx%pdpool('BENCH_UNRELATED', 1_ip, [real(k, wp)])
+         call spice%pdpool('BENCH_UNRELATED', 1_ip, [real(k, wp)])
          call ctx%bodn2c(body_name(k), code, found)
       end do
       call report('bodn2c after another pool change', 100_ip, now() - t0)
       call check(found .and. code == first_name + 99, 'bodn2c after another pool change')
-      call ctx%dvpool('BENCH_UNRELATED')
+      call spice%dvpool('BENCH_UNRELATED')
       ok = .true.
       t0 = now()
       do k = 1, nqueries
@@ -276,7 +276,7 @@ contains
       end do
       call report('bodc2n, random kernel code', nqueries, now() - t0)
       call check(ok, 'bodn2c/bodc2n: the kernel names')
-      call ctx%unload(names_file)
+      call spice%unload(names_file)
       call delete_file(names_file)
       call check_ctx(ctx, 'the body names')
       ! BODDEF: define the names one by one, then translate one in another
@@ -284,7 +284,7 @@ contains
       other = spice%new_context()
       t0 = now()
       do i = 1, nnames
-         call ctx%boddef(body_name(i), first_name + i - 1)
+         call spice%boddef(body_name(i), first_name + i - 1)
       end do
       call report('boddef (per name)', nnames, now() - t0)
       call check_ctx(ctx, 'boddef')
@@ -292,7 +292,7 @@ contains
       call other%bodn2c(body_name(nnames), code, found)
       call report('first bodn2c in another context (per name)', nnames, now() - t0)
       call check(found .and. code == first_name + nnames - 1, 'boddef: another context')
-      call ctx%boddef('BENCH EXTRA NAME', 1_ip)
+      call spice%boddef('BENCH EXTRA NAME', 1_ip)
       t0 = now()
       call other%bodn2c('BENCH EXTRA NAME', code, found)
       call report('bodn2c in another context, one boddef more', 1_ip, now() - t0)
@@ -307,7 +307,7 @@ contains
       integer(ip) :: i, k
       type(pepper_context) :: other
       call write_tk_frames(frames_file, nframes, first_frame)
-      call ctx%furnsh(frames_file)
+      call spice%furnsh(frames_file)
       call check_ctx(ctx, 'loading the frames')
       err = 0
       t0 = now()
@@ -330,7 +330,7 @@ contains
       call check_ctx(other, 'pxform in a new context')
       call check_ctx(ctx, 'pxform')
       call check(err < 1.0e-12_wp, 'pxform: the rotation angles')
-      call ctx%unload(frames_file)
+      call spice%unload(frames_file)
       call delete_file(frames_file)
    end subroutine bench_frames
 
@@ -345,11 +345,11 @@ contains
          dat(2*i - 1) = 9 + i
          dat(2*i) = (365.0_wp*i - 10000)*86400 - 43200
       end do
-      call ctx%pdpool('DELTET/DELTA_T_A', 1_ip, [32.184_wp])
-      call ctx%pdpool('DELTET/K', 1_ip, [1.657e-3_wp])
-      call ctx%pdpool('DELTET/EB', 1_ip, [1.671e-2_wp])
-      call ctx%pdpool('DELTET/M', 2_ip, [6.239996_wp, 1.99096871e-7_wp])
-      call ctx%pdpool('DELTET/DELTA_AT', 2*nleap, dat)
+      call spice%pdpool('DELTET/DELTA_T_A', 1_ip, [32.184_wp])
+      call spice%pdpool('DELTET/K', 1_ip, [1.657e-3_wp])
+      call spice%pdpool('DELTET/EB', 1_ip, [1.671e-2_wp])
+      call spice%pdpool('DELTET/M', 2_ip, [6.239996_wp, 1.99096871e-7_wp])
+      call spice%pdpool('DELTET/DELTA_AT', 2*nleap, dat)
       sum = 0
       t0 = now()
       do i = 1, nqueries
@@ -386,7 +386,7 @@ contains
       integer(ip) :: i
       character(*), parameter :: spk = prefix // 'context.bsp'
       call write_spk(ctx, spk, first_body, 0_ip, radius, phase(1_ip))
-      call ctx%furnsh(spk)
+      call spice%furnsh(spk)
       call check_ctx(ctx, 'loading the SPK')
       allocate (contexts(ncontexts))
       t0 = now()
@@ -403,7 +403,7 @@ contains
       call check(position_error(state, 1_ip, 0.0_wp) < 1.0e-3_wp, &
                  'first query: the state')
       deallocate (contexts)
-      call ctx%kclear()
+      call spice%kclear()
       call delete_file(spk)
       call delete_file(lsk)
    end subroutine bench_contexts

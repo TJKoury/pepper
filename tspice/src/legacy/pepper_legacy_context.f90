@@ -1,7 +1,10 @@
 !> The default SPICE instance and context of the legacy SPICELIB interface.
 !>
 !> The legacy external procedures (SPICELIB's names and arguments) have no
-!> context argument; they call the module procedures with this context.
+!> context argument; they call the module procedures with this context, the
+!> default instance's own context, or the methods of the instance for the
+!> procedures that change the kernels (FURNSH, LDPOOL, BODDEF, ...), which
+!> signal their errors in the same context.
 !> The legacy error routines (SIGERR, FAILED, ERRACT, ...; in
 !> pepper_legacy_errsys) act on this context's error state, which starts with
 !> SPICELIB's settings (action DEFAULT, output to the screen). Like SPICELIB
@@ -16,11 +19,10 @@ module pepper_legacy_context
 
    private
 
-   public :: legacy_context
+   public :: legacy_context, legacy_spice
 
    type(pepper_spice), target, save :: default_spice  !! the default instance
-   type(pepper_context), target, save :: default_context  !! its legacy context
-   logical, save :: initialized = .false.  !! default_context has been created
+   logical, save :: initialized = .false.  !! the default instance's context has its legacy settings
 
 contains
 
@@ -29,15 +31,24 @@ contains
       type(pepper_context), pointer :: ctx  !! the default context
       character(255) :: setting
       if (.not. initialized) then
-         default_context = default_spice%new_context()
+         ctx => default_spice%context()
          ! SPICELIB's initial error settings
          setting = 'DEFAULT'
-         call default_context%erract('SET', setting)
+         call ctx%erract('SET', setting)
          setting = 'SCREEN'
-         call default_context%errdev('SET', setting)
+         call ctx%errdev('SET', setting)
          initialized = .true.
       end if
-      ctx => default_context
+      ctx => default_spice%context()
    end function legacy_context
+
+   !> The default instance, for the legacy procedures that change the
+   !> kernels (its context, legacy_context, has the legacy settings first).
+   function legacy_spice() result(spice)
+      type(pepper_spice), pointer :: spice  !! the default instance
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      spice => default_spice
+   end function legacy_spice
 
 end module pepper_legacy_context

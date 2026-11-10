@@ -1,7 +1,7 @@
 !> The kernel pool through the module API: each instance has its own pool,
-!> errors go to the context, and text kernels (including @-dates, which
-!> use the time parser) load into the instance of the context. Watches
-!> (SWPOOL, CVPOOL, DWPOOL) belong to the context that sets them.
+!> changed through the instance (errors go to its own context), and text
+!> kernels (including @-dates, which use the time parser) load into it.
+!> Watches (SWPOOL, CVPOOL, DWPOOL) belong to the context that sets them.
 program test_pool
 
    use pepper_kinds, only: ip, wp
@@ -10,11 +10,12 @@ program test_pool
    implicit none
 
    type(pepper_spice), target :: spice, other
-   type(pepper_context) :: ctx, ctx2
+   type(pepper_context), pointer :: ctx  !! spice's own context (it loads the kernels)
+   type(pepper_context), pointer :: ctx2  !! other's own context
    integer :: failures = 0
 
-   ctx = spice%new_context()
-   ctx2 = other%new_context()
+   ctx => spice%context()
+   ctx2 => other%context()
 
    call test_put_get()
    call test_errors()
@@ -61,20 +62,20 @@ contains
       call a%cvpool('OTHER', update)
       call check(.not. update, 'watch: no notice for an unknown agent')
 
-      call a%pdpool('WATCH_Y', 1_ip, [1.0_wp])
+      call spice%pdpool('WATCH_Y', 1_ip, [1.0_wp])
       call a%cvpool('AGENT', update)
       call check(.not. update, 'watch: a does not watch WATCH_Y')
       call b%cvpool('AGENT', update)
       call check(update, 'watch: b watches WATCH_Y')
 
-      call b%pipool('WATCH_X', 1_ip, [1_ip])
-      call a%pdpool('UNWATCHED', 1_ip, [2.0_wp])
+      call spice%pipool('WATCH_X', 1_ip, [1_ip])
+      call spice%pdpool('UNWATCHED', 1_ip, [2.0_wp])
       call a%cvpool('AGENT', update)
       call check(update, 'watch: a sees the update of WATCH_X by b')
       call b%cvpool('AGENT', update)
       call check(update, 'watch: b sees its update of WATCH_X')
 
-      call a%dvpool('WATCH_X')
+      call spice%dvpool('WATCH_X')
       call b%dwpool('AGENT')
       call check(b%failed(), 'watch: dwpool with an unchecked update is an error')
       call b%getmsg('SHORT', short)
@@ -91,7 +92,7 @@ contains
       call b%cvpool('AGENT2', update)
       call check(update .and. .not. b%failed(), 'watch: new watch after dwpool')
 
-      call a%clpool()
+      call spice%clpool()
       call a%cvpool('AGENT', update)
       call check(update, 'watch: clpool posts a notice')
       call check(.not. a%failed() .and. .not. b%failed(), 'watch: no errors')
@@ -102,7 +103,7 @@ contains
       real(wp) :: values(5)
       integer(ip) :: n
       logical :: found
-      call ctx%pdpool('TEST_X', 3_ip, [1.0_wp, 2.0_wp, 3.0_wp])
+      call spice%pdpool('TEST_X', 3_ip, [1.0_wp, 2.0_wp, 3.0_wp])
       call ctx%gdpool('TEST_X', 1_ip, 5_ip, n, values, found)
       call check(found .and. n == 3 .and. all(values(1:3) == [1.0_wp, 2.0_wp, 3.0_wp]), &
                  'pdpool/gdpool')
@@ -137,7 +138,7 @@ contains
          "TEST_DATE    = @2000-01-01T12:00:00", &
          "TEST_NAMES   = ( 'ALPHA', 'BETA' )", '', '\begintext'
       close (unit)
-      call ctx%ldpool(file)
+      call spice%ldpool(file)
       if (ctx%failed()) then
          call ctx%getmsg('SHORT', msg)
          print '(2a)', 'ldpool: ', trim(msg)
@@ -155,7 +156,7 @@ contains
                  'strings from the kernel')
       ! The other instance can load it too (its own reader and time-parser
       ! state).
-      call ctx2%ldpool(file)
+      call other%ldpool(file)
       call ctx2%gdpool('TEST_DATE', 1_ip, 5_ip, n, values, found)
       call check(found .and. values(1) == 0.0_wp, 'second instance loads the kernel')
       open (newunit=unit, file=file, status='old')
@@ -176,7 +177,7 @@ contains
       open (newunit=unit, file=file, status='replace', action='write')
       write (unit, '(a)') '\begindata', line, ')', '\begintext'
       close (unit)
-      call ctx%ldpool(file)
+      call spice%ldpool(file)
       call check(.not. ctx%failed(), 'long line: no error')
       call ctx%gdpool('TEST_LONG', 1_ip, 5_ip, n, values, found)
       call check(found .and. n == 2 .and. all(values(1:2) == [1.0_wp, 2.0_wp]), &

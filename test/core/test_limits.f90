@@ -19,10 +19,10 @@ program test_limits
 
    character(*), parameter :: prefix = 'test_limits_'
    type(pepper_spice), target :: spice
-   type(pepper_context) :: ctx
+   type(pepper_context), pointer :: ctx  !! the instance's context (it loads the kernels)
    integer :: failures = 0
 
-   ctx = spice%new_context()
+   ctx => spice%context()
    call test_long_paths()
    call test_priorities()
    call test_many_spks()
@@ -103,7 +103,7 @@ contains
 
       call write_spk(ctx, spk, 900001_ip, 0_ip, 1.0e5_wp, 0.5_wp)
       call check_ok('long paths: writing the SPK')
-      call ctx%furnsh(spk)
+      call spice%furnsh(spk)
       call check_ok('long paths: furnsh of the SPK')
       call ctx%spkgeo(900001_ip, 1.0e3_wp, 'J2000', 0_ip, state, lt)
       call check_ok('long paths: spkgeo')
@@ -112,18 +112,18 @@ contains
       call check(found .and. filtyp == 'SPK', 'long paths: kinfo by the long name')
       call ctx%kdata(1_ip, 'SPK', file, filtyp, source, handle, found)
       call check(found .and. file == spk, 'long paths: kdata returns the whole name')
-      call ctx%unload(spk)
+      call spice%unload(spk)
       call ctx%ktotal('ALL', count)
       call check(count == 0, 'long paths: unload by the long name')
 
       open (newunit=unit, file=tk, status='replace', action='write')
       write (unit, '(a)') '\begindata', 'TEST_LIMITS_X = ( 1.5, 2.5 )', '\begintext'
       close (unit)
-      call ctx%furnsh(tk)
+      call spice%furnsh(tk)
       call check_ok('long paths: furnsh of the text kernel')
       call ctx%gdpool('TEST_LIMITS_X', 1_ip, 2_ip, n, values, found)
       call check(found .and. n == 2 .and. values(2) == 2.5_wp, 'long paths: the text kernel''s values')
-      call ctx%unload(tk)
+      call spice%unload(tk)
       call ctx%gdpool('TEST_LIMITS_X', 1_ip, 2_ip, n, values, found)
       call check(.not. found, 'long paths: unload of the text kernel')
 
@@ -137,7 +137,7 @@ contains
       call write_continued(unit, tk)
       write (unit, '(a)') ')', '\begintext'
       close (unit)
-      call ctx%furnsh(meta)
+      call spice%furnsh(meta)
       call check_ok('long paths: furnsh of the meta-kernel')
       call ctx%ktotal('ALL', count)
       call check(count == 3, 'long paths: the meta-kernel and its two kernels')
@@ -145,7 +145,7 @@ contains
       call check_ok('long paths: spkgeo through the meta-kernel')
       call ctx%gdpool('TEST_LIMITS_X', 1_ip, 2_ip, n, values, found)
       call check(found, 'long paths: the text kernel through the meta-kernel')
-      call ctx%unload(meta)
+      call spice%unload(meta)
       call ctx%ktotal('ALL', count)
       call check(count == 0, 'long paths: unload of the meta-kernel')
       call check_ok('long paths')
@@ -187,21 +187,21 @@ contains
       call write_spk(ctx, c, body, 0_ip, 3.0e5_wp, 0.0_wp)
       call check_ok('priorities: writing the SPKs')
 
-      call ctx%furnsh(a)
-      call ctx%furnsh(b)
-      call ctx%furnsh(a)
+      call spice%furnsh(a)
+      call spice%furnsh(b)
+      call spice%furnsh(a)
       call check(radius() == 1.0e5_wp, 'priorities: a loaded again wins')
-      call ctx%unload(a)        ! the second load of a: a is back below b
+      call spice%unload(a)        ! the second load of a: a is back below b
       call check(radius() == 2.0e5_wp, 'priorities: b after unloading the second a')
-      call ctx%unload(a)
+      call spice%unload(a)
       call check(radius() == 2.0e5_wp, 'priorities: b after unloading a')
-      call ctx%furnsh(a)
-      call ctx%furnsh(c)
-      call ctx%unload(c)        ! loaded once: a stays above b
+      call spice%furnsh(a)
+      call spice%furnsh(c)
+      call spice%unload(c)        ! loaded once: a stays above b
       call check(radius() == 1.0e5_wp, 'priorities: a after unloading c')
-      call ctx%unload(b)
+      call spice%unload(b)
       call check(radius() == 1.0e5_wp, 'priorities: a after unloading b')
-      call ctx%kclear()
+      call spice%kclear()
       call check_ok('priorities')
       call delete_file(a)
       call delete_file(b)
@@ -236,7 +236,7 @@ contains
       end do
       call check_ok('many SPKs: writing')
       do i = 1, n
-         call ctx%furnsh(kernel_name(prefix // 'many_', i, '.bsp'))
+         call spice%furnsh(kernel_name(prefix // 'many_', i, '.bsp'))
          if (ctx%failed()) exit
       end do
       call check_ok('many SPKs: furnsh')
@@ -253,7 +253,7 @@ contains
       call check(err < 1.0e-3_wp, 'many SPKs: the states')
 
       do i = 2, n, 2
-         call ctx%unload(kernel_name(prefix // 'many_', i, '.bsp'))
+         call spice%unload(kernel_name(prefix // 'many_', i, '.bsp'))
       end do
       call check_ok('many SPKs: unload')
       call ctx%ktotal('SPK', count)
@@ -270,7 +270,7 @@ contains
          end if
       end do
       call check(ok, 'many SPKs: the unloaded bodies are gone, the others found')
-      call ctx%kclear()
+      call spice%kclear()
       call ctx%ktotal('ALL', count)
       call check(count == 0, 'many SPKs: kclear')
       call check_ok('many SPKs')
@@ -310,13 +310,13 @@ contains
       call check_ok('writers: finish the arrays')
       err = 0
       do i = 1, n
-         call ctx%furnsh(kernel_name(prefix // 'writer_', i, '.bsp'))
+         call spice%furnsh(kernel_name(prefix // 'writer_', i, '.bsp'))
          call ctx%spkgeo(first + i - 1, 1.0e3_wp, 'J2000', 0_ip, state, lt)
          err = max(err, position_error(state, 1.0e5_wp, 1.0e-3_wp*i, 1.0e3_wp))
       end do
       call check_ok('writers: read the SPKs')
       call check(err < 1.0e-3_wp, 'writers: the states')
-      call ctx%kclear()
+      call spice%kclear()
       do i = 1, n
          call delete_file(kernel_name(prefix // 'writer_', i, '.bsp'))
       end do
@@ -370,10 +370,10 @@ contains
       real(wp) :: value(1)
       integer(ip) :: i, n
       logical :: found, ok, update
-      call ctx%clpool()
+      call spice%clpool()
       do i = 1, nvars
          write (name, '(a,i0)') 'TEST_LIMITS_VAR_', i
-         call ctx%pdpool(name, 1_ip, [real(i, wp)])
+         call spice%pdpool(name, 1_ip, [real(i, wp)])
       end do
       call check_ok('pool: 100000 variables')
       ok = .true.
@@ -388,7 +388,7 @@ contains
       do i = 1, nvals
          big(i) = i
       end do
-      call ctx%pdpool('TEST_LIMITS_BIG', nvals, big)
+      call spice%pdpool('TEST_LIMITS_BIG', nvals, big)
       allocate (got(nvals))
       call ctx%gdpool('TEST_LIMITS_BIG', 1_ip, nvals, n, got, found)
       call check(found .and. n == nvals .and. all(got == big), 'pool: a variable of 10**6 values')
@@ -399,7 +399,7 @@ contains
       long_value = repeat('v', 199) // 'w'
       call ctx%swpool('TEST_LIMITS_AGENT_WITH_A_NAME_LONGER_THAN_32', 1_ip, [long_name])
       call ctx%cvpool('TEST_LIMITS_AGENT_WITH_A_NAME_LONGER_THAN_32', update)
-      call ctx%pcpool(long_name, 1_ip, [long_value])
+      call spice%pcpool(long_name, 1_ip, [long_value])
       call ctx%gcpool(long_name, 1_ip, 1_ip, n, cval, found)
       call check(found .and. n == 1 .and. cval(1) == long_value, 'pool: a 200-character name and value')
       call ctx%cvpool('TEST_LIMITS_AGENT_WITH_A_NAME_LONGER_THAN_32', update)
@@ -411,13 +411,13 @@ contains
       call ctx%szpool('MAXVAR', n, found)
       call check(found .and. n == huge(1_ip), 'pool: szpool reports unlimited')
 
-      call ctx%dvpool('TEST_LIMITS_VAR_5')
+      call spice%dvpool('TEST_LIMITS_VAR_5')
       call ctx%gdpool('TEST_LIMITS_VAR_5', 1_ip, 1_ip, n, value, found)
       call check(.not. found, 'pool: dvpool')
-      call ctx%pipool('TEST_LIMITS_VAR_5', 1_ip, [-5_ip])
+      call spice%pipool('TEST_LIMITS_VAR_5', 1_ip, [-5_ip])
       call ctx%gdpool('TEST_LIMITS_VAR_5', 1_ip, 1_ip, n, value, found)
       call check(found .and. value(1) == -5, 'pool: a variable re-created after dvpool')
-      call ctx%clpool()
+      call spice%clpool()
       call check_ok('pool')
    end subroutine test_pool
 
@@ -433,7 +433,7 @@ contains
       integer(ip) :: i, code, cent, frclss, clssid
       logical :: found, ok
       call write_tk_frames(file, n, first)
-      call ctx%furnsh(file)
+      call spice%furnsh(file)
       call check_ok('frames: loading 20000 TK frames')
       ok = .true.
       do i = 1, n
@@ -453,7 +453,7 @@ contains
       end do
       call check_ok('frames: pxform')
       call check(ok, 'frames: rotations')
-      call ctx%unload(file)
+      call spice%unload(file)
       call delete_file(file)
    end subroutine test_frames
 
@@ -468,7 +468,7 @@ contains
       integer(ip) :: i, code
       logical :: found, ok
       call write_body_names(file, n, first)
-      call ctx%furnsh(file)
+      call spice%furnsh(file)
       call check_ok('bodies: loading 20000 names')
       ok = .true.
       do i = 1, n, 37
@@ -478,12 +478,12 @@ contains
          ok = ok .and. found .and. name == body_name(i)
       end do
       call check(ok, 'bodies: 20000 kernel names')
-      call ctx%unload(file)
+      call spice%unload(file)
       call delete_file(file)
 
       do i = 1, ndef
          write (name, '(a,i0)') 'TEST_LIMITS_BODDEF_', i
-         call ctx%boddef(name, 3000000 + i)
+         call spice%boddef(name, 3000000 + i)
       end do
       call check_ok('bodies: 500 boddef definitions')
       ok = .true.
@@ -495,18 +495,18 @@ contains
       call check(ok, 'bodies: 500 boddef definitions found')
 
       long = 'A Body Name Of Sixty Characters ' // repeat('X', 28)
-      call ctx%boddef(long, 3100001)
+      call spice%boddef(long, 3100001)
       call ctx%bodn2c('  a body  name of sixty characters ' // repeat('x', 28), code, found)
       call check(found .and. code == 3100001, 'bodies: a 60-character boddef name, normalized')
       call ctx%bodc2n(3100001, name, found)
       call check(found .and. name == long, 'bodies: bodc2n returns the 60-character name')
-      call ctx%pcpool('NAIF_BODY_NAME', 1_ip, [repeat('K', 60)])
-      call ctx%pipool('NAIF_BODY_CODE', 1_ip, [3100002_ip])
+      call spice%pcpool('NAIF_BODY_NAME', 1_ip, [repeat('K', 60)])
+      call spice%pipool('NAIF_BODY_CODE', 1_ip, [3100002_ip])
       call ctx%bodn2c(repeat('k', 60), code, found)
       call check(found .and. code == 3100002, 'bodies: a 60-character kernel name')
       call ctx%bodc2n(3100002, name, found)
       call check(found .and. name == repeat('K', 60), 'bodies: bodc2n of a 60-character kernel name')
-      call ctx%clpool()
+      call spice%clpool()
       call check_ok('bodies')
    end subroutine test_bodies
 
@@ -527,9 +527,9 @@ contains
          ids(i) = 1000 + i
       end do
       bodies = body
-      call ctx%pcpool('NAIF_SURFACE_NAME', n, names)
-      call ctx%pipool('NAIF_SURFACE_CODE', n, ids)
-      call ctx%pipool('NAIF_SURFACE_BODY', n, bodies)
+      call spice%pcpool('NAIF_SURFACE_NAME', n, names)
+      call spice%pipool('NAIF_SURFACE_CODE', n, ids)
+      call spice%pipool('NAIF_SURFACE_BODY', n, bodies)
       ok = .true.
       do i = 1, n, 29
          call ctx%srfs2c('test  limits surface ' // trim(names(i)(21:)), 'MARS', code, found)
@@ -540,17 +540,17 @@ contains
       call check_ok('surfaces: 3000 names')
       call check(ok, 'surfaces: 3000 names, both ways')
 
-      call ctx%pcpool('NAIF_SURFACE_NAME', 1_ip, [repeat('S', 60)])
-      call ctx%pipool('NAIF_SURFACE_CODE', 1_ip, [7_ip])
-      call ctx%pipool('NAIF_SURFACE_BODY', 1_ip, [body])
+      call spice%pcpool('NAIF_SURFACE_NAME', 1_ip, [repeat('S', 60)])
+      call spice%pipool('NAIF_SURFACE_CODE', 1_ip, [7_ip])
+      call spice%pipool('NAIF_SURFACE_BODY', 1_ip, [body])
       call ctx%srfs2c(repeat('s', 60), 'MARS', code, found)
       call check(found .and. code == 7, 'surfaces: a 60-character name')
       call ctx%srfc2s(7_ip, body, name, found)
       call check(found .and. name == repeat('S', 60), 'surfaces: srfc2s of a 60-character name')
 
-      call ctx%pcpool('NAIF_SURFACE_NAME', n, names)
-      call ctx%pipool('NAIF_SURFACE_CODE', n, ids)
-      call ctx%pipool('NAIF_SURFACE_BODY', n, bodies)
+      call spice%pcpool('NAIF_SURFACE_NAME', n, names)
+      call spice%pipool('NAIF_SURFACE_CODE', n, ids)
+      call spice%pipool('NAIF_SURFACE_BODY', n, bodies)
       method = 'INTERCEPT/DSK/UNPRIORITIZED/SURFACES = '
       do i = 1, 150
          method = method // '"' // trim(names(i)) // '"'
@@ -561,7 +561,7 @@ contains
                     pntdef, trmtyp)
       call check_ok('surfaces: parsing 150 surfaces')
       call check(nsurf == 150 .and. all(srflst(1:150) == ids(1:150)), 'surfaces: a method with 150 surfaces')
-      call ctx%clpool()
+      call spice%clpool()
       call check_ok('surfaces')
    end subroutine test_surfaces
 
@@ -586,15 +586,15 @@ contains
       end do
       pstart = 0
       pend = 102400
-      call ctx%pipool('SCLK_DATA_TYPE_' // trim(id), 1_ip, [1_ip])
-      call ctx%pipool('SCLK01_TIME_SYSTEM_' // trim(id), 1_ip, [1_ip])
-      call ctx%pipool('SCLK01_N_FIELDS_' // trim(id), 1_ip, [2_ip])
-      call ctx%pdpool('SCLK01_MODULI_' // trim(id), 2_ip, [1000000.0_wp, 256.0_wp])
-      call ctx%pdpool('SCLK01_OFFSETS_' // trim(id), 2_ip, [0.0_wp, 0.0_wp])
-      call ctx%pipool('SCLK01_OUTPUT_DELIM_' // trim(id), 1_ip, [1_ip])
-      call ctx%pdpool('SCLK_PARTITION_START_' // trim(id), npart, pstart)
-      call ctx%pdpool('SCLK_PARTITION_END_' // trim(id), npart, pend)
-      call ctx%pdpool('SCLK01_COEFFICIENTS_' // trim(id), 3*nrec, coef)
+      call spice%pipool('SCLK_DATA_TYPE_' // trim(id), 1_ip, [1_ip])
+      call spice%pipool('SCLK01_TIME_SYSTEM_' // trim(id), 1_ip, [1_ip])
+      call spice%pipool('SCLK01_N_FIELDS_' // trim(id), 1_ip, [2_ip])
+      call spice%pdpool('SCLK01_MODULI_' // trim(id), 2_ip, [1000000.0_wp, 256.0_wp])
+      call spice%pdpool('SCLK01_OFFSETS_' // trim(id), 2_ip, [0.0_wp, 0.0_wp])
+      call spice%pipool('SCLK01_OUTPUT_DELIM_' // trim(id), 1_ip, [1_ip])
+      call spice%pdpool('SCLK_PARTITION_START_' // trim(id), npart, pstart)
+      call spice%pdpool('SCLK_PARTITION_END_' // trim(id), npart, pend)
+      call spice%pdpool('SCLK01_COEFFICIENTS_' // trim(id), 3*nrec, coef)
    end subroutine define_clock
 
    !> Type 1 SCLKs past SC01's limits: a clock with 100500 coefficient
@@ -634,7 +634,7 @@ contains
       end do
       call check_ok('sclk: 150 clocks')
       call check(ok, 'sclk: 150 clocks in turn')
-      call ctx%clpool()
+      call spice%clpool()
    end subroutine test_sclk
 
    !> A body with 300 nutation/precession angles (MAXANG 200) gives the
@@ -661,7 +661,7 @@ contains
       call ctx%bodeul(9002_ip, 1.0e8_wp, ra1, dec1, w1, lambda)
       call check_ok('nutation: bodeul with 300 angles')
       call check(abs(ra - ra1) + abs(dec - dec1) + abs(w - w1) < 1.0e-12_wp, 'nutation: bodeul with 300 angles')
-      call ctx%clpool()
+      call spice%clpool()
    end subroutine test_nutation
 
    !> 300 leapseconds (SPICELIB: DELTET's buffer of 200, BUFFERTOOSMALL;
@@ -678,12 +678,12 @@ contains
          dat(2*i - 1) = 9 + i
          dat(2*i) = (180.0_wp*i - 10000)*86400 - 43200
       end do
-      call ctx%clpool()
-      call ctx%pdpool('DELTET/DELTA_T_A', 1_ip, [32.184_wp])
-      call ctx%pdpool('DELTET/K', 1_ip, [1.657e-3_wp])
-      call ctx%pdpool('DELTET/EB', 1_ip, [1.671e-2_wp])
-      call ctx%pdpool('DELTET/M', 2_ip, [6.239996_wp, 1.99096871e-7_wp])
-      call ctx%pdpool('DELTET/DELTA_AT', 2*n, dat)
+      call spice%clpool()
+      call spice%pdpool('DELTET/DELTA_T_A', 1_ip, [32.184_wp])
+      call spice%pdpool('DELTET/K', 1_ip, [1.657e-3_wp])
+      call spice%pdpool('DELTET/EB', 1_ip, [1.671e-2_wp])
+      call spice%pdpool('DELTET/M', 2_ip, [6.239996_wp, 1.99096871e-7_wp])
+      call spice%pdpool('DELTET/DELTA_AT', 2*n, dat)
       call ctx%deltet(dat(2*n) + 1.0e6_wp, 'UTC', delta)
       call check_ok('leapseconds: deltet')
       call check(abs(delta - (32.184_wp + 9 + n)) < 0.01_wp, 'leapseconds: deltet after the last one')
@@ -697,7 +697,7 @@ contains
       call ctx%str2et(utc, et)
       call check_ok('leapseconds: str2et')
       call check(abs(et - (sp2000 + delta)) < 1.0e-3_wp, 'leapseconds: str2et after the last one')
-      call ctx%clpool()
+      call spice%clpool()
    end subroutine test_leapseconds
 
    !> A polygonal FOV with 12000 boundary vectors (SPICELIB: MAXVRT and
@@ -713,11 +713,11 @@ contains
          a = 2*acos(-1.0_wp)*(i - 1)/n
          bounds(:, i) = [sin(half)*cos(a), sin(half)*sin(a), cos(half)]
       end do
-      call ctx%clpool()
-      call ctx%pcpool('INS-900001_FOV_SHAPE', 1_ip, ['POLYGON'])
-      call ctx%pcpool('INS-900001_FOV_FRAME', 1_ip, ['J2000'])
-      call ctx%pdpool('INS-900001_BORESIGHT', 3_ip, [0.0_wp, 0.0_wp, 1.0_wp])
-      call ctx%pdpool('INS-900001_FOV_BOUNDARY_CORNERS', 3*n, reshape(bounds, [3*n]))
+      call spice%clpool()
+      call spice%pcpool('INS-900001_FOV_SHAPE', 1_ip, ['POLYGON'])
+      call spice%pcpool('INS-900001_FOV_FRAME', 1_ip, ['J2000'])
+      call spice%pdpool('INS-900001_BORESIGHT', 3_ip, [0.0_wp, 0.0_wp, 1.0_wp])
+      call spice%pdpool('INS-900001_FOV_BOUNDARY_CORNERS', 3*n, reshape(bounds, [3*n]))
       call ctx%fovray('-900001', [0.1_wp, 0.0_wp, 1.0_wp], 'J2000', 'NONE', '399', 0.0_wp, visible)
       call check_ok('FOV vertices: fovray')
       call check(visible, 'FOV vertices: a ray inside')
@@ -730,7 +730,7 @@ contains
       call ctx%cgv2el([50.0_wp, 0.0_wp, 100.0_wp], [1.0_wp, 0.0_wp, 0.0_wp], [0.0_wp, 1.0_wp, 0.0_wp], ellips)
       call zzelvupy(ctx, ellips, [0.0_wp, 0.0_wp, 0.0_wp], [0.0_wp, 0.0_wp, 1.0_wp], n, bounds, found)
       call check(.not. found, 'FOV vertices: an ellipse outside')
-      call ctx%clpool()
+      call spice%clpool()
    end subroutine test_fov_vertices
 
    !> 1100 DSK segments of one body that all contain a point
@@ -762,7 +762,7 @@ contains
       end do
       call ctx%dskcls(handle, .true.)
       call check_ok('DSK hits: write')
-      call ctx%furnsh(dsk)
+      call spice%furnsh(dsk)
       call ctx%srfnrm('DSK/UNPRIORITIZED', '499', 0.0_wp, 'IAU_MARS', 1_ip, [r/3, r/3, r/3], normal)
       call check_ok('DSK hits: srfnrm')
       call check(maxval(abs(normal - 1/sqrt(3.0_wp))) < 1.0e-9_wp, 'DSK hits: srfnrm normal')
@@ -770,7 +770,7 @@ contains
                      [-1.0_wp, -1.0_wp, -1.0_wp], xpt, found)
       call check_ok('DSK hits: dskxv')
       call check(found(1) .and. maxval(abs(xpt - r/3)) < 1.0e-6_wp, 'DSK hits: dskxv intercept')
-      call ctx%unload(dsk)
+      call spice%unload(dsk)
       call delete_file(dsk)
    end subroutine test_dsk_hits
 
@@ -843,7 +843,7 @@ contains
             end do
          end do
          call ctx%ekcls(handle)
-         call ctx%furnsh(ek)
+         call spice%furnsh(ek)
          if (ctx%failed()) then
             call check_ok('EK tables: write and load 25 EKs')
             return
@@ -872,7 +872,7 @@ contains
       call check(.not. error .and. nrows == 1 .and. val == 25100, 'EK tables: a table of the last file')
       ! unload files 1 to 10
       do f = 1, 10
-         call ctx%unload(kernel_name(prefix // 'ek', f, '.bes'))
+         call spice%unload(kernel_name(prefix // 'ek', f, '.bes'))
       end do
       call ctx%ekntab(n)
       call check(n == 5*(nfile - 10) + 1, 'EK tables: tables after unloading')
@@ -880,14 +880,14 @@ contains
       call check(.not. error .and. nrows == 5*(nfile - 10), 'EK tables: SHARED rows after unloading')
       call ctx%ekfind('SELECT C1 FROM T3_1', nrows, error, errmsg)
       call check(error, 'EK tables: a table of an unloaded file is gone')
-      call ctx%furnsh(kernel_name(prefix // 'ek', 3_ip, '.bes'))
+      call spice%furnsh(kernel_name(prefix // 'ek', 3_ip, '.bes'))
       call ctx%ekfind('SELECT C1 FROM T3_1', nrows, error, errmsg)
       call ctx%ekgi(1_ip, 1_ip, 1_ip, val, null, found)
       call check(.not. error .and. nrows == 1 .and. val == 3011, 'EK tables: loaded again')
       call check_ok('EK tables: queries')
       do f = 1, nfile
          ek = kernel_name(prefix // 'ek', f, '.bes')
-         call ctx%unload(ek)
+         call spice%unload(ek)
          call delete_file(ek)
       end do
       call ctx%ekntab(n)
@@ -918,7 +918,7 @@ contains
          call ctx%ekacei(handle, segno, recno, 'C1', 1_ip, [i], .false.)
       end do
       call ctx%ekcls(handle)
-      call ctx%furnsh(ek)
+      call spice%furnsh(ek)
       call check_ok('EK queries: write and load')
       query = 'SELECT C1 FROM Q WHERE C1 = 1'
       do i = 2, 150
@@ -987,7 +987,7 @@ contains
       call ctx%ekgi(1_ip, 1_ip, 1_ip, val, null, found)
       call check_ok('EK queries: 11 tables')
       call check(.not. error .and. nrows == 1 .and. val == 7, 'EK queries: 11 tables, ' // trim(errmsg))
-      call ctx%unload(ek)
+      call spice%unload(ek)
       call delete_file(ek)
    end subroutine test_ek_queries
 
@@ -1031,7 +1031,7 @@ contains
       call ctx%ekaclc(handle, segno, 'L', fixed, [1_ip, 1_ip, 1_ip], [.false., .false., .false.], rcptrs, wkindx)
       call ctx%ekffld(handle, segno, rcptrs)
       call ctx%ekcls(handle)
-      call ctx%furnsh(ek)
+      call spice%furnsh(ek)
       call check_ok('EK strings: write and load')
       ! an indexed and a plain column: =, LIKE
       query = 'SELECT V FROM S WHERE V = ''' // base // 'b'''
@@ -1079,7 +1079,7 @@ contains
       call check_ok('EK strings: = 1500 characters')
       call check(.not. error .and. nrows == 1 .and. cdata(1201:1201) == 'b', &
                  'EK strings: = 1500 characters, ' // trim(errmsg))
-      call ctx%unload(ek)
+      call spice%unload(ek)
       call delete_file(ek)
    end subroutine test_ek_strings
 
@@ -1092,14 +1092,14 @@ contains
       real(wp), intent(in) :: coef(:)  !! coefficients of the angles
       character(40) :: b
       write (b, '(a,i0,a)') 'BODY', body, '_'
-      call ctx%pdpool(trim(b) // 'POLE_RA', 3_ip, [10.0_wp, 0.1_wp, 0.0_wp])
-      call ctx%pdpool(trim(b) // 'POLE_DEC', 3_ip, [60.0_wp, -0.1_wp, 0.0_wp])
-      call ctx%pdpool(trim(b) // 'PM', 3_ip, [20.0_wp, 300.0_wp, 0.0_wp])
-      call ctx%pdpool(trim(b) // 'NUT_PREC_ANGLES', 2*n, angles(1:2*n))
-      call ctx%pdpool(trim(b) // 'NUT_PREC_RA', n, coef(1:n))
-      call ctx%pdpool(trim(b) // 'NUT_PREC_DEC', n, coef(1:n))
-      call ctx%pdpool(trim(b) // 'NUT_PREC_PM', n, coef(1:n))
-      call ctx%pdpool(trim(b) // 'LONG_AXIS', 1_ip, [0.0_wp])
+      call spice%pdpool(trim(b) // 'POLE_RA', 3_ip, [10.0_wp, 0.1_wp, 0.0_wp])
+      call spice%pdpool(trim(b) // 'POLE_DEC', 3_ip, [60.0_wp, -0.1_wp, 0.0_wp])
+      call spice%pdpool(trim(b) // 'PM', 3_ip, [20.0_wp, 300.0_wp, 0.0_wp])
+      call spice%pdpool(trim(b) // 'NUT_PREC_ANGLES', 2*n, angles(1:2*n))
+      call spice%pdpool(trim(b) // 'NUT_PREC_RA', n, coef(1:n))
+      call spice%pdpool(trim(b) // 'NUT_PREC_DEC', n, coef(1:n))
+      call spice%pdpool(trim(b) // 'NUT_PREC_PM', n, coef(1:n))
+      call spice%pdpool(trim(b) // 'LONG_AXIS', 1_ip, [0.0_wp])
    end subroutine define_nutation
 
    !> Frame names longer than 32 characters (FRNMLN), which differ only
@@ -1149,7 +1149,7 @@ contains
                  'frame names: pxform of the dynamic frame')
       ! Frames of an object (OBJECT_<ID or name>_FRAME), by class, and
       ! the list of TK frames.
-      call ctx%pcpool('OBJECT_900001_FRAME', 1_ip, [stem // '2'])
+      call spice%pcpool('OBJECT_900001_FRAME', 1_ip, [stem // '2'])
       call ctx%cidfrm(900001_ip, code, name, found)
       call check(found .and. code == 1800002 .and. name == stem // '2', 'frame names: cidfrm')
       call ctx%cnmfrm('900001', code, name, found)
@@ -1175,7 +1175,7 @@ contains
       call check_ok('frame names: switch frame')
       call check(maxval(abs(rot - rot2)) < 1.0e-15_wp, 'frame names: switch frame')
       call write_spk(ctx, spk, 900001_ip, 0_ip, 1.0e5_wp, 0.0_wp)
-      call ctx%furnsh(spk)
+      call spice%furnsh(spk)
       call ctx%spkezr('900001', 0.0_wp, stem // '1', 'NONE', '0', st, lt)
       call ctx%spkezr('900001', 0.0_wp, stem // '2', 'NONE', '0', st2, lt)
       call check_ok('frame names: spkezr')
@@ -1186,9 +1186,9 @@ contains
       call check_ok('frame names: spkpos')
       call check(abs(atan2(st(2), st(1))*dpr - 10) < 1.0e-9_wp .and. abs(atan2(st2(2), st2(1))*dpr - 20) < 1.0e-9_wp, &
                  'frame names: spkpos')
-      call ctx%unload(spk)
+      call spice%unload(spk)
       call delete_file(spk)
-      call ctx%clpool()
+      call spice%clpool()
       call check_ok('frame names: cleanup')
    end subroutine test_frame_names
 
@@ -1201,16 +1201,16 @@ contains
       character(40) :: f, t
       write (f, '(a,i0,a)') 'FRAME_', id, '_'
       write (t, '(a,i0,a)') 'TKFRAME_', id, '_'
-      call ctx%pipool('FRAME_' // name, 1_ip, [id])
-      call ctx%pcpool(trim(f) // 'NAME', 1_ip, [name])
-      call ctx%pipool(trim(f) // 'CLASS', 1_ip, [4_ip])
-      call ctx%pipool(trim(f) // 'CLASS_ID', 1_ip, [id])
-      call ctx%pipool(trim(f) // 'CENTER', 1_ip, [399_ip])
-      call ctx%pcpool(trim(t) // 'RELATIVE', 1_ip, [relto])
-      call ctx%pcpool(trim(t) // 'SPEC', 1_ip, ['ANGLES'])
-      call ctx%pcpool(trim(t) // 'UNITS', 1_ip, ['DEGREES'])
-      call ctx%pipool(trim(t) // 'AXES', 3_ip, [3_ip, 1_ip, 3_ip])
-      call ctx%pdpool(trim(t) // 'ANGLES', 3_ip, [angle, 0.0_wp, 0.0_wp])
+      call spice%pipool('FRAME_' // name, 1_ip, [id])
+      call spice%pcpool(trim(f) // 'NAME', 1_ip, [name])
+      call spice%pipool(trim(f) // 'CLASS', 1_ip, [4_ip])
+      call spice%pipool(trim(f) // 'CLASS_ID', 1_ip, [id])
+      call spice%pipool(trim(f) // 'CENTER', 1_ip, [399_ip])
+      call spice%pcpool(trim(t) // 'RELATIVE', 1_ip, [relto])
+      call spice%pcpool(trim(t) // 'SPEC', 1_ip, ['ANGLES'])
+      call spice%pcpool(trim(t) // 'UNITS', 1_ip, ['DEGREES'])
+      call spice%pipool(trim(t) // 'AXES', 3_ip, [3_ip, 1_ip, 3_ip])
+      call spice%pdpool(trim(t) // 'ANGLES', 3_ip, [angle, 0.0_wp, 0.0_wp])
    end subroutine define_tk
 
    !> Define a mean-of-date dynamic frame (Earth, IAU 1976) by its name.
@@ -1219,16 +1219,16 @@ contains
       integer(ip), intent(in) :: id  !! the frame ID
       character(40) :: f
       write (f, '(a,i0,a)') 'FRAME_', id, '_'
-      call ctx%pipool('FRAME_' // name, 1_ip, [id])
-      call ctx%pcpool(trim(f) // 'NAME', 1_ip, [name])
-      call ctx%pipool(trim(f) // 'CLASS', 1_ip, [5_ip])
-      call ctx%pipool(trim(f) // 'CLASS_ID', 1_ip, [id])
-      call ctx%pipool(trim(f) // 'CENTER', 1_ip, [399_ip])
-      call ctx%pcpool('FRAME_' // name // '_RELATIVE', 1_ip, ['J2000'])
-      call ctx%pcpool('FRAME_' // name // '_DEF_STYLE', 1_ip, ['PARAMETERIZED'])
-      call ctx%pcpool('FRAME_' // name // '_FAMILY', 1_ip, ['MEAN_EQUATOR_AND_EQUINOX_OF_DATE'])
-      call ctx%pcpool('FRAME_' // name // '_PREC_MODEL', 1_ip, ['EARTH_IAU_1976'])
-      call ctx%pcpool('FRAME_' // name // '_ROTATION_STATE', 1_ip, ['ROTATING'])
+      call spice%pipool('FRAME_' // name, 1_ip, [id])
+      call spice%pcpool(trim(f) // 'NAME', 1_ip, [name])
+      call spice%pipool(trim(f) // 'CLASS', 1_ip, [5_ip])
+      call spice%pipool(trim(f) // 'CLASS_ID', 1_ip, [id])
+      call spice%pipool(trim(f) // 'CENTER', 1_ip, [399_ip])
+      call spice%pcpool('FRAME_' // name // '_RELATIVE', 1_ip, ['J2000'])
+      call spice%pcpool('FRAME_' // name // '_DEF_STYLE', 1_ip, ['PARAMETERIZED'])
+      call spice%pcpool('FRAME_' // name // '_FAMILY', 1_ip, ['MEAN_EQUATOR_AND_EQUINOX_OF_DATE'])
+      call spice%pcpool('FRAME_' // name // '_PREC_MODEL', 1_ip, ['EARTH_IAU_1976'])
+      call spice%pcpool('FRAME_' // name // '_ROTATION_STATE', 1_ip, ['ROTATING'])
    end subroutine define_mod
 
    !> Define a product frame (a dynamic frame) from FACTOR to J2000.
@@ -1238,16 +1238,16 @@ contains
       character(*), intent(in) :: factor  !! the "from" frame
       character(40) :: f
       write (f, '(a,i0,a)') 'FRAME_', id, '_'
-      call ctx%pipool('FRAME_' // name, 1_ip, [id])
-      call ctx%pcpool(trim(f) // 'NAME', 1_ip, [name])
-      call ctx%pipool(trim(f) // 'CLASS', 1_ip, [5_ip])
-      call ctx%pipool(trim(f) // 'CLASS_ID', 1_ip, [id])
-      call ctx%pipool(trim(f) // 'CENTER', 1_ip, [399_ip])
-      call ctx%pcpool(trim(f) // 'RELATIVE', 1_ip, ['J2000'])
-      call ctx%pcpool(trim(f) // 'DEF_STYLE', 1_ip, ['PARAMETERIZED'])
-      call ctx%pcpool(trim(f) // 'FAMILY', 1_ip, ['PRODUCT'])
-      call ctx%pcpool(trim(f) // 'FROM_FRAMES', 1_ip, [factor])
-      call ctx%pcpool(trim(f) // 'TO_FRAMES', 1_ip, ['J2000'])
+      call spice%pipool('FRAME_' // name, 1_ip, [id])
+      call spice%pcpool(trim(f) // 'NAME', 1_ip, [name])
+      call spice%pipool(trim(f) // 'CLASS', 1_ip, [5_ip])
+      call spice%pipool(trim(f) // 'CLASS_ID', 1_ip, [id])
+      call spice%pipool(trim(f) // 'CENTER', 1_ip, [399_ip])
+      call spice%pcpool(trim(f) // 'RELATIVE', 1_ip, ['J2000'])
+      call spice%pcpool(trim(f) // 'DEF_STYLE', 1_ip, ['PARAMETERIZED'])
+      call spice%pcpool(trim(f) // 'FAMILY', 1_ip, ['PRODUCT'])
+      call spice%pcpool(trim(f) // 'FROM_FRAMES', 1_ip, [factor])
+      call spice%pcpool(trim(f) // 'TO_FRAMES', 1_ip, ['J2000'])
    end subroutine define_product
 
    !> Define a switch frame aligned with a single base frame.
@@ -1257,12 +1257,12 @@ contains
       character(*), intent(in) :: base  !! the base frame
       character(40) :: f
       write (f, '(a,i0,a)') 'FRAME_', id, '_'
-      call ctx%pipool('FRAME_' // name, 1_ip, [id])
-      call ctx%pcpool(trim(f) // 'NAME', 1_ip, [name])
-      call ctx%pipool(trim(f) // 'CLASS', 1_ip, [6_ip])
-      call ctx%pipool(trim(f) // 'CLASS_ID', 1_ip, [id])
-      call ctx%pipool(trim(f) // 'CENTER', 1_ip, [399_ip])
-      call ctx%pcpool(trim(f) // 'ALIGNED_WITH', 1_ip, [base])
+      call spice%pipool('FRAME_' // name, 1_ip, [id])
+      call spice%pcpool(trim(f) // 'NAME', 1_ip, [name])
+      call spice%pipool(trim(f) // 'CLASS', 1_ip, [6_ip])
+      call spice%pipool(trim(f) // 'CLASS_ID', 1_ip, [id])
+      call spice%pipool(trim(f) // 'CENTER', 1_ip, [399_ip])
+      call spice%pcpool(trim(f) // 'ALIGNED_WITH', 1_ip, [base])
    end subroutine define_switch
 
    !> The number of files a context keeps open (SPICELIB's unit table,
@@ -1271,7 +1271,7 @@ contains
    subroutine test_open_files()
       integer(ip), parameter :: n = 60, first = 940001
       type(pepper_spice), target :: spice2
-      type(pepper_context) :: ctx2
+      type(pepper_context), pointer :: ctx2  !! the instance's context (it loads the kernels)
       real(wp) :: state(6), lt, err
       integer(ip) :: i, pass
       call check(spice2%max_open_files() == 23, 'open files: default')
@@ -1279,11 +1279,11 @@ contains
       call check(spice2%max_open_files() == 4, 'open files: minimum')
       call spice2%set_max_open_files(64_ip)
       call check(spice2%max_open_files() == 64, 'open files: set')
-      ctx2 = spice2%new_context()
+      ctx2 => spice2%context()
       do i = 1, n
          call write_spk(ctx2, kernel_name(prefix // 'open_', i, '.bsp'), first + i - 1, 0_ip, &
                         1.0e5_wp, 1.0e-3_wp*i)
-         call ctx2%furnsh(kernel_name(prefix // 'open_', i, '.bsp'))
+         call spice2%furnsh(kernel_name(prefix // 'open_', i, '.bsp'))
       end do
       err = 0
       do pass = 1, 2
@@ -1293,7 +1293,7 @@ contains
          end do
       end do
       call check(.not. ctx2%failed() .and. err < 1.0e-3_wp, 'open files: queries')
-      call ctx2%kclear()
+      call spice2%kclear()
       do i = 1, n
          call delete_file(kernel_name(prefix // 'open_', i, '.bsp'))
       end do
@@ -1319,43 +1319,43 @@ contains
       logical :: ok
       call write_segments(spka, body, [0.0_wp, 500.0_wp], [1000.0_wp, 1500.0_wp], [1000.0_wp, 2000.0_wp])
       call write_segments(spkb, body, [800.0_wp], [900.0_wp], [3000.0_wp])
-      call ctx%furnsh(spka)
-      call ctx%furnsh(spkb)
+      call spice%furnsh(spka)
+      call spice%furnsh(spkb)
       call check_ok('search order: furnsh')
       ok = .true.
       do i = 1, size(times)
          ok = ok .and. radius_at(body, times(i)) == radii(i)
       end do
       call check(ok, 'search order: SPK, two files, overlapping segments')
-      call ctx%furnsh(spka)
+      call spice%furnsh(spka)
       call check(radius_at(body, 850.0_wp) == 2000 .and. radius_at(body, 100.0_wp) == 1000 .and. &
                  radius_at(body, 880.0_wp) == 2000, 'search order: SPK, a file loaded again is searched first')
       ! UNLOAD undoes the last load: the file is back below the other.
-      call ctx%unload(spka)
+      call spice%unload(spka)
       call check(radius_at(body, 850.0_wp) == 3000 .and. radius_at(body, 100.0_wp) == 1000 .and. &
                  radius_at(body, 899.0_wp) == 3000, 'search order: SPK, the second load undone')
-      call ctx%unload(spka)
+      call spice%unload(spka)
       call check(radius_at(body, 850.0_wp) == 3000 .and. radius_at(body, 100.0_wp) == 0 .and. &
                  radius_at(body, 899.0_wp) == 3000, 'search order: SPK, unloaded')
-      call ctx%kclear()
+      call spice%kclear()
       call check_ok('search order: SPK')
 
       call write_ck(cka, inst, [0.0_wp], [100.0_wp], [0.0_wp], [100.0_wp], [10.0_wp])
       call write_ck(ckb, inst, [0.0_wp], [100.0_wp], [40.0_wp], [60.0_wp], [30.0_wp])
-      call ctx%furnsh(cka)
-      call ctx%furnsh(ckb)
+      call spice%furnsh(cka)
+      call spice%furnsh(ckb)
       call check_ok('search order: CK furnsh')
       call check(angle_at(inst, 50.0_wp) == 30 .and. angle_at(inst, 20.0_wp) == 10 .and. angle_at(inst, 55.0_wp) == 30 .and. &
                  angle_at(inst, 70.0_wp) == 10 .and. angle_at(inst, 150.0_wp) == 0 .and. angle_at(inst, 45.0_wp) == 30, &
                  'search order: CK, the search goes on past a segment without data')
-      call ctx%furnsh(cka)
+      call spice%furnsh(cka)
       call check(angle_at(inst, 50.0_wp) == 10 .and. angle_at(inst, 20.0_wp) == 10, 'search order: CK, a file loaded again')
-      call ctx%unload(cka)
+      call spice%unload(cka)
       call check(angle_at(inst, 20.0_wp) == 10 .and. angle_at(inst, 50.0_wp) == 30, &
                  'search order: CK, the second load undone')
-      call ctx%unload(cka)
+      call spice%unload(cka)
       call check(angle_at(inst, 20.0_wp) == 0 .and. angle_at(inst, 50.0_wp) == 30, 'search order: CK, unloaded')
-      call ctx%kclear()
+      call spice%kclear()
       call check_ok('search order: CK')
       call delete_file(spka)
       call delete_file(spkb)

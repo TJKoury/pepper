@@ -18,17 +18,18 @@ program test_spk
    real(wp), parameter :: p0(3) = [1.0e6_wp, 2.0e6_wp, 3.0e6_wp]
    real(wp), parameter :: v(3) = [10.0_wp, -20.0_wp, 5.0_wp]
    type(pepper_spice), target :: spice
-   type(pepper_context) :: a, b
+   type(pepper_context), pointer :: a  !! the instance's context (it loads the kernels)
+   type(pepper_context) :: b
    integer :: failures = 0
    real(wp) :: sa(6), sb(6), pa(3), pb(3), lta, ltb, rot(3, 3), x(3)
    character(80) :: msg
 
-   a = spice%new_context()
+   a => spice%context()
    b = spice%new_context()
 
    call delete_file()
    call write_spk()
-   call a%furnsh(spk)
+   call spice%furnsh(spk)
    call check(.not. a%failed(), 'a loads the SPK')
 
    ! geometric state: exact for linear motion
@@ -60,7 +61,7 @@ program test_spk
    call b%reset()
 
    ! a unloads the file: b has no data
-   call a%unload(spk)
+   call spice%unload(spk)
    call b%spkezr('1000', 150.0_wp, 'J2000', 'NONE', '0', sb, ltb)
    call check(b%failed(), 'b: no data after a unloads the SPK')
    call b%reset()

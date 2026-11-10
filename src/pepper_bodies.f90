@@ -11924,7 +11924,7 @@ contains
       end procedure zzbodrst
 
       !> Bring this context's table of defined body names up to date with the
-      !> instance: if names were defined or reset (through any context) since
+      !> instance: if names were defined or reset (through the instance) since
       !> this context last looked, apply the definitions made since, or after
       !> a reset rebuild the table from the built-in names and the instance's
       !> record of definitions.

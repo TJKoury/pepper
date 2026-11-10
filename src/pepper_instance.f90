@@ -1,15 +1,24 @@
 !> The SPICE instance and the per-thread context.
 !>
 !> All PEPPER state belongs to an instance, type(pepper_spice): the loaded
-!> kernels, the kernel pool, ... (added in the coming phases). Each thread
-!> that uses an instance works through its own type(pepper_context),
-!> created with spice%new_context(). A context holds the per-call mutable
-!> state, starting with the error status and messages. A context must not
-!> be used by two threads at the same time, and the instance must outlive
-!> its contexts:
+!> kernels, the kernel pool, the file tables, the names defined with
+!> boddef. The kernels are changed through the instance: spice%furnsh,
+!> unload, kclear, ldpool, clpool, the pool's setters (pcpool, pdpool,
+!> pipool, lmpool, dvpool), boddef and the low-level loaders (spklef,
+!> pcklof, cklpf, eklef and their unloaders). These work through the
+!> instance's own context (spice%context()), where they signal their
+!> errors. Each thread that queries an instance works through its own
+!> type(pepper_context), created with spice%new_context(): a context holds
+!> the per-call mutable state (the error status and messages, the caches,
+!> the open files) and finds the changes of the kernels on its next call.
+!> The kernels must not be changed while contexts are in use in other
+!> threads; a context must not be used by two threads at the same time;
+!> the instance must outlive its contexts:
 !>
 !>     type(pepper_spice), target :: spice
 !>     type(pepper_context) :: ctx
+!>     call spice%furnsh('kernels.tm')
+!>     if (spice%failed()) ...
 !>     ctx = spice%new_context()
 !>
 !> Errors work as in SPICELIB, but per context and without a traceback: a
@@ -153,10 +162,36 @@ module pepper_instance
       type(ekqmgr_state), allocatable :: ekqmgr  !! state of EKQMGR
       ! --- end pepper_ek
       ! <<< generated state components
+      !> The instance's own context: the loading methods (furnsh, unload,
+      !> ldpool, boddef, ...) work and signal their errors through it (see
+      !> instance_context).
+      type(pepper_context), allocatable :: own
    contains
       procedure, non_overridable :: new_context
+      procedure, non_overridable :: context => instance_context
+      procedure, non_overridable :: failed => instance_failed
       procedure, non_overridable :: set_max_open_files
       procedure, non_overridable :: max_open_files
+      ! Changes of the kernels: methods of the instance, not of its contexts
+      procedure, non_overridable :: furnsh => spice_furnsh
+      procedure, non_overridable :: unload => spice_unload
+      procedure, non_overridable :: kclear => spice_kclear
+      procedure, non_overridable :: ldpool => spice_ldpool
+      procedure, non_overridable :: clpool => spice_clpool
+      procedure, non_overridable :: pcpool => spice_pcpool
+      procedure, non_overridable :: pdpool => spice_pdpool
+      procedure, non_overridable :: pipool => spice_pipool
+      procedure, non_overridable :: lmpool => spice_lmpool
+      procedure, non_overridable :: dvpool => spice_dvpool
+      procedure, non_overridable :: boddef => spice_boddef
+      procedure, non_overridable :: spklef => spice_spklef
+      procedure, non_overridable :: spkuef => spice_spkuef
+      procedure, non_overridable :: pcklof => spice_pcklof
+      procedure, non_overridable :: pckuof => spice_pckuof
+      procedure, non_overridable :: cklpf => spice_cklpf
+      procedure, non_overridable :: ckupf => spice_ckupf
+      procedure, non_overridable :: eklef => spice_eklef
+      procedure, non_overridable :: ekuef => spice_ekuef
    end type pepper_spice
 
    !> The per-thread state for using an instance.
@@ -687,8 +722,6 @@ module pepper_instance
       procedure, non_overridable :: tsetyr
       procedure, non_overridable :: tpartv
       procedure, non_overridable :: tparse
-      procedure, non_overridable :: clpool
-      procedure, non_overridable :: ldpool
       procedure, non_overridable :: rtpool
       procedure, non_overridable :: expool
       procedure, non_overridable :: wrpool
@@ -700,12 +733,7 @@ module pepper_instance
       procedure, non_overridable :: gdpool
       procedure, non_overridable :: gipool
       procedure, non_overridable :: dtpool
-      procedure, non_overridable :: pcpool
-      procedure, non_overridable :: pdpool
-      procedure, non_overridable :: pipool
-      procedure, non_overridable :: lmpool
       procedure, non_overridable :: szpool
-      procedure, non_overridable :: dvpool
       procedure, non_overridable :: gnpool
       procedure, non_overridable :: dwpool
       ! --- end pepper_pool
@@ -714,7 +742,6 @@ module pepper_instance
       procedure, non_overridable :: bodc2n
       procedure, non_overridable :: bods2c
       procedure, non_overridable :: bodc2s
-      procedure, non_overridable :: boddef
       procedure, non_overridable :: bodfnd
       procedure, non_overridable :: bodvar
       procedure, non_overridable :: bodvcd
@@ -881,14 +908,8 @@ module pepper_instance
       procedure, non_overridable :: dsksrf
       ! --- end pepper_dsk_files
       ! --- pepper_segments
-      procedure, non_overridable :: spklef
-      procedure, non_overridable :: spkuef
       procedure, non_overridable :: spksfs
-      procedure, non_overridable :: pcklof
-      procedure, non_overridable :: pckuof
       procedure, non_overridable :: pcksfs
-      procedure, non_overridable :: cklpf
-      procedure, non_overridable :: ckupf
       procedure, non_overridable :: ckbss
       procedure, non_overridable :: cksns
       procedure, non_overridable :: ckhave
@@ -901,12 +922,9 @@ module pepper_instance
       procedure, non_overridable :: stpool
       procedure, non_overridable :: tkvrsn
       procedure, non_overridable :: exists
-      procedure, non_overridable :: furnsh
       procedure, non_overridable :: ktotal
       procedure, non_overridable :: kdata
       procedure, non_overridable :: kinfo
-      procedure, non_overridable :: kclear
-      procedure, non_overridable :: unload
       ! --- end pepper_keeper
       ! --- pepper_time
       procedure, non_overridable :: badkpv
@@ -1397,8 +1415,6 @@ module pepper_instance
       procedure, non_overridable :: ekacec
       procedure, non_overridable :: ekaced
       procedure, non_overridable :: ekacei
-      procedure, non_overridable :: eklef
-      procedure, non_overridable :: ekuef
       procedure, non_overridable :: ekntab
       procedure, non_overridable :: ektnam
       procedure, non_overridable :: ekccnt
@@ -20133,6 +20149,341 @@ contains
       type(pepper_context) :: ctx
       ctx%spice => this
    end function new_context
+
+   !> The instance's own context, created on first use. The methods of the
+   !> instance that change its kernels (furnsh, unload, kclear, the kernel
+   !> pool's setters, boddef, ...) work through it and signal their errors
+   !> in it: check them with this context (or failed), and set its error
+   !> action and device here. It can also be used for queries, in the
+   !> thread that loads the kernels (as the only context of a serial
+   !> program, or of SPICELIB's interface).
+   function instance_context(this) result(ctx)
+      class(pepper_spice), target, intent(inout) :: this  !! the instance (must have the target
+                                                          !! attribute)
+      type(pepper_context), pointer :: ctx  !! the instance's context
+      if (.not. allocated(this%own)) allocate (this%own)
+      this%own%spice => this
+      ctx => this%own
+   end function instance_context
+
+   !> True if an error has been signaled in the instance's context (by a
+   !> change of the kernels) and not reset.
+   logical function instance_failed(this)
+      class(pepper_spice), intent(in) :: this  !! the instance
+      instance_failed = .false.
+      if (allocated(this%own)) instance_failed = this%own%failed()
+   end function instance_failed
+
+   !> Load one or more SPICE kernels into a program. Lines of text
+   !> kernels and meta-kernels have at most 132 characters; a longer
+   !> line is cut without an error (see Restrictions).
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's FURNSH changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_furnsh(this, file)
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: file  !! SPICE kernel file (text or binary).
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call furnsh(ctx, file)
+   end subroutine spice_furnsh
+
+   !> Unload a SPICE kernel.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's UNLOAD changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_unload(this, file)
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: file  !! The name of a kernel to unload.
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call unload(ctx, file)
+   end subroutine spice_unload
+
+   !> Clear the KEEPER subsystem: unload all kernels, clear the kernel
+   !> pool, and re-initialize the subsystem. Existing watches on kernel
+   !> variables are retained.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's KCLEAR changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_kclear(this)
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call kclear(ctx)
+   end subroutine spice_kclear
+
+   !> Load the variables contained in a NAIF ASCII kernel file into the
+   !> kernel pool. Lines have at most 132 characters; a longer line is
+   !> cut without an error (see Restrictions).
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's LDPOOL changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_ldpool(this, fname)
+      use pepper_inc_zzctr
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: fname  !! Name of the text kernel file.
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call ldpool(ctx, fname)
+   end subroutine spice_ldpool
+
+   !> Remove all kernel variables from the kernel pool. Watches
+   !> on kernel variables are retained.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's CLPOOL changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_clpool(this)
+      use pepper_inc_zzctr
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call clpool(ctx)
+   end subroutine spice_clpool
+
+   !> Provide toolkit programmers a method for programmatically
+   !> inserting character data into the kernel pool.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's PCPOOL changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_pcpool(this, name, n, cvals)
+      use pepper_inc_zzctr
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: name  !! The kernel pool name to associate with CVALS.
+      integer(ip), intent(in) :: n  !! The number of values to insert.
+      character(*), intent(in) :: cvals     ( * )  !! An array of strings to insert into the
+      !! kernel pool.
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call pcpool(ctx, name, n, cvals)
+   end subroutine spice_pcpool
+
+   !> Provide toolkit programmers a method for programmatically
+   !> inserting double precision data into the kernel pool.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's PDPOOL changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_pdpool(this, name, n, values)
+      use pepper_inc_zzctr
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: name  !! The kernel pool name to associate with VALUES.
+      integer(ip), intent(in) :: n  !! The number of values to insert.
+      real(wp), intent(in) :: values    ( * )  !! An array of values to insert into the kernel
+      !! pool.
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call pdpool(ctx, name, n, values)
+   end subroutine spice_pdpool
+
+   !> Provide toolkit programmers a method for programmatically
+   !> inserting integer data into the kernel pool.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's PIPOOL changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_pipool(this, name, n, ivals)
+      use pepper_inc_zzctr
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: name  !! The kernel pool name to associate with IVALS.
+      integer(ip), intent(in) :: n  !! The number of values to insert.
+      integer(ip), intent(in) :: ivals     ( * )  !! An array of integers to insert into the
+      !! pool.
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call pipool(ctx, name, n, ivals)
+   end subroutine spice_pipool
+
+   !> Load the variables contained in an internal buffer into the
+   !> kernel pool.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's LMPOOL changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_lmpool(this, cvals, n)
+      use pepper_inc_zzctr
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      integer(ip), intent(in) :: n  !! The number of entries in CVALS.
+      character(*), intent(in) :: cvals     ( * )  !! An array that contains a SPICE text kernel
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call lmpool(ctx, cvals, n)
+   end subroutine spice_lmpool
+
+   !> Delete a variable from the kernel pool.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's DVPOOL changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_dvpool(this, name)
+      use pepper_inc_zzctr
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: name  !! Name of the variable to be deleted.
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call dvpool(ctx, name)
+   end subroutine spice_dvpool
+
+   !> Define a body name/ID code pair for later translation via
+   !> BODN2C or BODC2N.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's BODDEF changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_boddef(this, name, code)
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: name  !! Common name of some body.
+      integer(ip), intent(in) :: code  !! Integer code for that body.
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call boddef(ctx, name, code)
+   end subroutine spice_boddef
+
+   !> Load an ephemeris file for use by the readers. Return that file's
+   !> handle, to be used by other SPK routines to refer to the file.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's SPKLEF changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_spklef(this, fname, handle)
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: fname  !! Name of the file to be loaded.
+      integer(ip), intent(out) :: handle  !! Loaded file's handle.
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call spklef(ctx, fname, handle)
+   end subroutine spice_spklef
+
+   !> Unload an ephemeris file so that it will no longer be searched by
+   !> the readers.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's SPKUEF changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_spkuef(this, handle)
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      integer(ip), intent(in) :: handle  !! Handle of file to be unloaded
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call spkuef(ctx, handle)
+   end subroutine spice_spkuef
+
+   !> Load a binary PCK file for use by the readers. Return the
+   !> handle of the loaded file which is used by other PCK routines to
+   !> refer to the file.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's PCKLOF changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_pcklof(this, fname, handle)
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: fname  !! Name of the file to be loaded.
+      integer(ip), intent(out) :: handle  !! Loaded file's handle.
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call pcklof(ctx, fname, handle)
+   end subroutine spice_pcklof
+
+   !> Unload a binary PCK file so that it will no longer be searched by
+   !> the readers.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's PCKUOF changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_pckuof(this, handle)
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      integer(ip), intent(in) :: handle  !! Handle of file to be unloaded
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call pckuof(ctx, handle)
+   end subroutine spice_pckuof
+
+   !> Load a CK pointing file for use by the CK readers. Return that
+   !> file's handle, to be used by other CK routines to refer to the
+   !> file.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's CKLPF changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_cklpf(this, fname, handle)
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: fname  !! Name of the CK file to be loaded.
+      integer(ip), intent(out) :: handle  !! Loaded file's handle.
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call cklpf(ctx, fname, handle)
+   end subroutine spice_cklpf
+
+   !> Unload a CK pointing file so that it will no longer be searched
+   !> by the readers.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's CKUPF changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_ckupf(this, handle)
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      integer(ip), intent(in) :: handle  !! Handle of CK file to be unloaded
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call ckupf(ctx, handle)
+   end subroutine spice_ckupf
+
+   !> Load an EK file, making it accessible to the EK readers.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's EKLEF changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_eklef(this, fname, handle)
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: fname  !! Name of EK file to load.
+      integer(ip), intent(out) :: handle  !! File handle of loaded EK file.
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call eklef(ctx, fname, handle)
+   end subroutine spice_eklef
+
+   !> Unload an EK file, making its contents inaccessible to the
+   !> EK reader routines, and clearing space in order to allow other
+   !> EK files to be loaded.
+   !>
+   !> PEPPER: a method of the instance (SPICELIB's EKUEF changes the
+   !> kernels of the program); errors are signaled in the instance's
+   !> context (see instance_context).
+   subroutine spice_ekuef(this, handle)
+      use pepper_inc_ekattdsc
+      use pepper_inc_ekbool
+      use pepper_inc_ekcnamsz
+      use pepper_inc_ekcoldsc
+      use pepper_inc_ekjrs
+      use pepper_inc_ekopcd
+      use pepper_inc_ekqlimit
+      use pepper_inc_ekquery
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektnamsz
+      use pepper_inc_ektype
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      integer(ip), intent(in) :: handle  !! Handle of EK file.
+      type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      call ekuef(ctx, handle)
+   end subroutine spice_ekuef
 
    !> The instance this context belongs to.
    function instance(this) result(spice)

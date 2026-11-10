@@ -3109,7 +3109,7 @@ contains
 
          if ( mytype == 'EK' ) then
 
-            call ctx%eklef ( file, handle )
+            call eklef ( ctx, file, handle )
 
          else if ( mytype == 'DSK' ) then
 
@@ -6171,7 +6171,7 @@ contains
 
          else if ( kt%kernels(i)%type == 'EK' ) then
 
-            call ctx%ekuef ( kt%kernels(i)%handle )
+            call ekuef ( ctx, kt%kernels(i)%handle )
 
          else if ( kt%kernels(i)%type == 'DSK' ) then
 
@@ -6849,7 +6849,7 @@ contains
       else if ( kt%kernels(i)%type == 'EK' ) then
 
          if ( single ) then
-            call ctx%ekuef ( kt%kernels(i)%handle )
+            call ekuef ( ctx, kt%kernels(i)%handle )
          else
             didek = .true.
          end if
@@ -6956,7 +6956,7 @@ contains
                else if ( kt%kernels(j)%type == 'EK' ) then
 
                   if ( single ) then
-                     call ctx%ekuef ( kt%kernels(j)%handle )
+                     call ekuef ( ctx, kt%kernels(j)%handle )
                   else
                      didek = .true.
                   end if
@@ -7127,7 +7127,7 @@ contains
 
          do i = 1, loaded
             if ( kt%kernels(i)%type == 'EK' ) then
-               call ctx%eklef ( kt%kernels(i)%name, kt%kernels(i)%handle )
+               call eklef ( ctx, kt%kernels(i)%name, kt%kernels(i)%handle )
             end if
          end do
 

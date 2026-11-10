@@ -14,13 +14,14 @@ program test_frames
    character(*), parameter :: fk = 'test_frames.tf'
    integer(ip), parameter :: tkid = 1500001
    type(pepper_spice), target :: spice
-   type(pepper_context) :: a, b
+   type(pepper_context), pointer :: a  !! the instance's context (it loads the kernels)
+   type(pepper_context) :: b
    integer :: failures = 0
    real(wp) :: ra(3, 3), rb(3, 3)
    integer(ip) :: code
    character(32) :: name
 
-   a = spice%new_context()
+   a => spice%context()
    b = spice%new_context()
 
    ! A built-in frame needs no kernels: ECLIPJ2000 is J2000 rotated about
@@ -36,7 +37,7 @@ program test_frames
 
    call delete_file()
    call write_fk(30.0_wp)
-   call a%furnsh(fk)
+   call spice%furnsh(fk)
    call check(.not. a%failed(), 'a loads the frame kernel')
 
    call b%namfrm('PEPPER_TK', code)
@@ -52,14 +53,14 @@ program test_frames
               abs(abs(rb(1, 2)) - sin(30.0_wp * rpd)) < 1.0e-14_wp, 'the rotation is 30 degrees about Z')
 
    ! a changes the frame's angle: both see it
-   call a%pdpool('TKFRAME_1500001_ANGLES', 3_ip, [0.0_wp, 0.0_wp, 60.0_wp])
+   call spice%pdpool('TKFRAME_1500001_ANGLES', 3_ip, [0.0_wp, 0.0_wp, 60.0_wp])
    call b%pxform('J2000', 'PEPPER_TK', 0.0_wp, rb)
    call check(abs(abs(rb(1, 2)) - sin(60.0_wp * rpd)) < 1.0e-14_wp, 'b sees the new angle')
    call a%pxform('J2000', 'PEPPER_TK', 0.0_wp, ra)
    call check(all(ra == rb), 'a sees the new angle too')
 
    ! after kclear the frame is gone in both
-   call a%kclear()
+   call spice%kclear()
    call b%namfrm('PEPPER_TK', code)
    call check(.not. b%failed() .and. code == 0, 'b: PEPPER_TK is unknown after kclear')
    call b%pxform('J2000', 'PEPPER_TK', 0.0_wp, rb)

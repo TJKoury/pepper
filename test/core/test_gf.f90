@@ -16,13 +16,14 @@ program test_gf
    character(*), parameter :: spk = 'test_gf.bsp'
    integer(ip), parameter :: lbcell = -5, mw = 200, nw = 15
    type(pepper_spice), target :: spice
-   type(pepper_context) :: a, b
+   type(pepper_context), pointer :: a  !! the instance's context (it loads the kernels)
+   type(pepper_context) :: b
    integer :: failures = 0
    real(wp) :: cnfine(lbcell:2), result(lbcell:mw), ra(lbcell:mw), rb(lbcell:mw)
    real(wp) :: work(lbcell:mw, nw), left, right
    integer(ip) :: k
 
-   a = spice%new_context()
+   a => spice%context()
    b = spice%new_context()
 
    ! GFUDS: f(t) = sin(2 pi t / 1000) > 0.5 on [0, 3000] holds on
@@ -44,7 +45,7 @@ program test_gf
    ! |x| < 4e5 km, for t in [600, 1400].
    call delete_file()
    call write_spk()
-   call a%furnsh(spk)
+   call spice%furnsh(spk)
    call a%ssized(2_ip, cnfine)
    call a%wninsd(10.0_wp, 1990.0_wp, cnfine)
    call a%ssized(mw, ra)
@@ -61,7 +62,7 @@ program test_gf
    call check(a%wncard(ra) == b%wncard(rb), 'gfdist: same windows in a and b')
    if (a%wncard(ra) == b%wncard(rb)) call check(all(ra(1:2*a%wncard(ra)) == rb(1:2*b%wncard(rb))), &
                                                 'gfdist: same windows in a and b')
-   call a%kclear()
+   call spice%kclear()
    call delete_file()
 
    if (failures > 0) then

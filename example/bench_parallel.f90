@@ -20,16 +20,16 @@ program bench_parallel
    integer, parameter :: nepoch = 200000
    integer, parameter :: threads(4) = [1, 2, 4, 8]
    type(pepper_spice), target :: spice
-   type(pepper_context) :: setup
+   type(pepper_context), pointer :: setup  !! the instance's context (it loads the kernels)
    real(wp) :: et(nepoch), sums(8), t0, t1, base
    integer :: i, k
 
-   setup = spice%new_context()
+   setup => spice%context()
    call delete_files()
    call write_kernels()
-   call setup%furnsh(lsk)
-   call setup%furnsh(spk)
-   call setup%furnsh(fk)
+   call spice%furnsh(lsk)
+   call spice%furnsh(spk)
+   call spice%furnsh(fk)
    if (setup%failed()) error stop 'loading the kernels failed'
    et = [(1.0e5_wp + (1.8e6_wp*(i - 1))/(nepoch - 1), i = 1, nepoch)]
 

@@ -10,32 +10,32 @@
       !> Load an ephemeris file for use by the readers. Return that file's
       !> handle, to be used by other SPK routines to refer to the file.
       !>
-      !> Legacy interface: calls ctx%spklef with the legacy context.
+      !> Legacy interface: calls spice%spklef of the legacy instance.
       subroutine spklef ( fname, handle )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       implicit none
       character(*) :: fname  !! Name of the file to be loaded.
       integer(ip) :: handle  !! Loaded file's handle.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%spklef ( fname, handle )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%spklef ( fname, handle )
       end subroutine spklef
 
       !> Unload an ephemeris file so that it will no longer be searched by
       !> the readers.
       !>
-      !> Legacy interface: calls ctx%spkuef with the legacy context.
+      !> Legacy interface: calls spice%spkuef of the legacy instance.
       subroutine spkuef ( handle )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip) :: handle  !! Handle of file to be unloaded
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%spkuef ( handle )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%spkuef ( handle )
       end subroutine spkuef
 
       !> Search through loaded SPK files to find the highest-priority
@@ -64,32 +64,32 @@
       !> handle of the loaded file which is used by other PCK routines to
       !> refer to the file.
       !>
-      !> Legacy interface: calls ctx%pcklof with the legacy context.
+      !> Legacy interface: calls spice%pcklof of the legacy instance.
       subroutine pcklof ( fname, handle )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       implicit none
       character(*) :: fname  !! Name of the file to be loaded.
       integer(ip) :: handle  !! Loaded file's handle.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%pcklof ( fname, handle )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%pcklof ( fname, handle )
       end subroutine pcklof
 
       !> Unload a binary PCK file so that it will no longer be searched by
       !> the readers.
       !>
-      !> Legacy interface: calls ctx%pckuof with the legacy context.
+      !> Legacy interface: calls spice%pckuof of the legacy instance.
       subroutine pckuof ( handle )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip) :: handle  !! Handle of file to be unloaded
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%pckuof ( handle )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%pckuof ( handle )
       end subroutine pckuof
 
       !> Search through loaded files to find the first segment applicable
@@ -117,32 +117,32 @@
       !> file's handle, to be used by other CK routines to refer to the
       !> file.
       !>
-      !> Legacy interface: calls ctx%cklpf with the legacy context.
+      !> Legacy interface: calls spice%cklpf of the legacy instance.
       subroutine cklpf ( fname, handle )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       implicit none
       character(*) :: fname  !! Name of the CK file to be loaded.
       integer(ip) :: handle  !! Loaded file's handle.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%cklpf ( fname, handle )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%cklpf ( fname, handle )
       end subroutine cklpf
 
       !> Unload a CK pointing file so that it will no longer be searched
       !> by the readers.
       !>
-      !> Legacy interface: calls ctx%ckupf with the legacy context.
+      !> Legacy interface: calls spice%ckupf of the legacy instance.
       subroutine ckupf ( handle )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip) :: handle  !! Handle of CK file to be unloaded
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%ckupf ( handle )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%ckupf ( handle )
       end subroutine ckupf
 
       !> Initiate search through loaded files to find segments applicable

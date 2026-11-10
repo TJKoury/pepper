@@ -171,16 +171,16 @@
 
       !> Load one or more SPICE kernels into a program.
       !>
-      !> Legacy interface: calls ctx%furnsh with the legacy context.
+      !> Legacy interface: calls spice%furnsh of the legacy instance.
       subroutine furnsh ( file )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip
       implicit none
       character(*) :: file  !! SPICE kernel file (text or binary).
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%furnsh ( file )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%furnsh ( file )
       end subroutine furnsh
 
       !> Return the number of kernels of a specified type that are
@@ -242,29 +242,29 @@
       !> pool, and re-initialize the subsystem. Existing watches on kernel
       !> variables are retained.
       !>
-      !> Legacy interface: calls ctx%kclear with the legacy context.
+      !> Legacy interface: calls spice%kclear of the legacy instance.
       subroutine kclear (  )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip
       implicit none
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%kclear (  )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%kclear (  )
       end subroutine kclear
 
       !> Unload a SPICE kernel.
       !>
-      !> Legacy interface: calls ctx%unload with the legacy context.
+      !> Legacy interface: calls spice%unload of the legacy instance.
       subroutine unload ( file )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip
       implicit none
       character(*) :: file  !! The name of a kernel to unload.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%unload ( file )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%unload ( file )
       end subroutine unload
 
       !> Umbrella of the KEEPER routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.

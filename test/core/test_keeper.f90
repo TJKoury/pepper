@@ -1,7 +1,8 @@
-!> The kernel manager through the module API: context a loads a meta-kernel
-!> (which loads an SPK and a text kernel), unloads kernels and clears them;
-!> the kernel table, the pool and the loaded files belong to the instance,
-!> so context b sees each change.
+!> The kernel manager through the module API: the instance loads a
+!> meta-kernel (which loads an SPK and a text kernel), unloads kernels and
+!> clears them (its own context a reports the errors); the kernel table, the
+!> pool and the loaded files belong to the instance, so context b sees each
+!> change.
 program test_keeper
 
    use pepper_kinds, only: ip, wp
@@ -17,10 +18,11 @@ program test_keeper
    integer(ip), parameter :: nd = 2, ni = 6
    integer(ip), parameter :: body = 399
    type(pepper_spice), target :: spice
-   type(pepper_context) :: a, b
+   type(pepper_context), pointer :: a  !! the instance's context (it loads the kernels)
+   type(pepper_context) :: b
    integer :: failures = 0
 
-   a = spice%new_context()
+   a => spice%context()
    b = spice%new_context()
 
    call delete_files()
@@ -29,7 +31,7 @@ program test_keeper
    call write_text(meta, [character(80) :: '\begindata', &
                           'KERNELS_TO_LOAD = ( ''' // spk // ''', ''' // text // ''' )'])
 
-   call a%furnsh(meta)
+   call spice%furnsh(meta)
    call check(.not. a%failed(), 'a loads the meta-kernel')
    call count_is(b, 'ALL', 3, 'b counts the meta-kernel and its two kernels')
    call count_is(b, 'SPK', 1, 'b counts the SPK')
@@ -38,24 +40,27 @@ program test_keeper
    call variable_is(b, .true., 'b sees the text kernel''s variable')
    call segment_found(b, .true., 'b finds the SPK''s segment')
 
-   call a%unload(text)
+   call spice%unload(text)
    call check(.not. a%failed(), 'a unloads the text kernel')
    call count_is(b, 'TEXT', 0, 'b: the text kernel is gone')
    call variable_is(b, .false., 'b: the text kernel''s variable is gone')
    call segment_found(b, .true., 'b still finds the SPK''s segment')
 
-   call a%furnsh(text)
-   call a%kclear()
+   call spice%furnsh(text)
+   call spice%kclear()
    call check(.not. a%failed(), 'a clears all kernels')
    call count_is(b, 'ALL', 0, 'b: no kernels after kclear')
    call variable_is(b, .false., 'b: the pool is empty after kclear')
    call segment_found(b, .false., 'b: no SPK loaded after kclear')
 
-   ! b loads a kernel; a sees it
-   call b%furnsh(spk)
-   call count_is(a, 'SPK', 1, 'a counts the SPK loaded by b')
-   call segment_found(a, .true., 'a finds the segment of the SPK loaded by b')
-   call b%kclear()
+   ! a load after both contexts have looked: both see it
+   call spice%furnsh(spk)
+   call check(.not. spice%failed(), 'the instance loads the SPK')
+   call count_is(a, 'SPK', 1, 'a counts the SPK loaded again')
+   call segment_found(a, .true., 'a finds the segment of the SPK loaded again')
+   call count_is(b, 'SPK', 1, 'b counts the SPK loaded again')
+   call segment_found(b, .true., 'b finds the segment of the SPK loaded again')
+   call spice%kclear()
 
    call delete_files()
 

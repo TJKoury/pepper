@@ -548,34 +548,34 @@
       !> Remove all kernel variables from the kernel pool. Watches
       !> on kernel variables are retained.
       !>
-      !> Legacy interface: calls ctx%clpool with the legacy context.
+      !> Legacy interface: calls spice%clpool of the legacy instance.
       subroutine clpool (  )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_inc_zzctr
       implicit none
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%clpool (  )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%clpool (  )
       end subroutine clpool
 
       !> Load the variables contained in a NAIF ASCII kernel file into the
       !> kernel pool.
       !>
-      !> Legacy interface: calls ctx%ldpool with the legacy context.
+      !> Legacy interface: calls spice%ldpool of the legacy instance.
       subroutine ldpool ( fname )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_inc_zzctr
       implicit none
       character(*) :: fname  !! Name of the text kernel file.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%ldpool ( fname )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%ldpool ( fname )
       end subroutine ldpool
 
       !> Return the value of a kernel variable from the kernel pool.
@@ -758,10 +758,10 @@
       !> Provide toolkit programmers a method for programmatically
       !> inserting character data into the kernel pool.
       !>
-      !> Legacy interface: calls ctx%pcpool with the legacy context.
+      !> Legacy interface: calls spice%pcpool of the legacy instance.
       subroutine pcpool ( name, n, cvals )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_inc_zzctr
@@ -769,18 +769,18 @@
       character(*) :: name  !! The kernel pool name to associate with CVALS.
       integer(ip) :: n  !! The number of values to insert.
       character(*) :: cvals     ( * )  !! An array of strings to insert into the kernel pool.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%pcpool ( name, n, cvals )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%pcpool ( name, n, cvals )
       end subroutine pcpool
 
       !> Provide toolkit programmers a method for programmatically
       !> inserting double precision data into the kernel pool.
       !>
-      !> Legacy interface: calls ctx%pdpool with the legacy context.
+      !> Legacy interface: calls spice%pdpool of the legacy instance.
       subroutine pdpool ( name, n, values )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_inc_zzctr
@@ -788,18 +788,18 @@
       character(*) :: name  !! The kernel pool name to associate with VALUES.
       integer(ip) :: n  !! The number of values to insert.
       real(wp) :: values    ( * )  !! An array of values to insert into the kernel pool.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%pdpool ( name, n, values )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%pdpool ( name, n, values )
       end subroutine pdpool
 
       !> Provide toolkit programmers a method for programmatically
       !> inserting integer data into the kernel pool.
       !>
-      !> Legacy interface: calls ctx%pipool with the legacy context.
+      !> Legacy interface: calls spice%pipool of the legacy instance.
       subroutine pipool ( name, n, ivals )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_inc_zzctr
@@ -807,27 +807,27 @@
       character(*) :: name  !! The kernel pool name to associate with IVALS.
       integer(ip) :: n  !! The number of values to insert.
       integer(ip) :: ivals     ( * )  !! An array of integers to insert into the pool.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%pipool ( name, n, ivals )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%pipool ( name, n, ivals )
       end subroutine pipool
 
       !> Load the variables contained in an internal buffer into the
       !> kernel pool.
       !>
-      !> Legacy interface: calls ctx%lmpool with the legacy context.
+      !> Legacy interface: calls spice%lmpool of the legacy instance.
       subroutine lmpool ( cvals, n )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_inc_zzctr
       implicit none
       integer(ip) :: n  !! The number of entries in CVALS.
       character(*) :: cvals     ( * )  !! An array that contains a SPICE text kernel
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%lmpool ( cvals, n )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%lmpool ( cvals, n )
       end subroutine lmpool
 
       !> Return the kernel pool size limitations.
@@ -850,18 +850,18 @@
 
       !> Delete a variable from the kernel pool.
       !>
-      !> Legacy interface: calls ctx%dvpool with the legacy context.
+      !> Legacy interface: calls spice%dvpool of the legacy instance.
       subroutine dvpool ( name )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_inc_zzctr
       implicit none
       character(*) :: name  !! Name of the variable to be deleted.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%dvpool ( name )
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%dvpool ( name )
       end subroutine dvpool
 
       !> Return names of kernel variables matching a specified template.
