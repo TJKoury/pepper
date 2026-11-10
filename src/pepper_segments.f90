@@ -902,6 +902,7 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       use pepper_arrays, only: isrchi
@@ -958,6 +959,13 @@ contains
 !     this context's cache is updated by the code below.
       ctx%spice%segment_epoch = ctx%spice%segment_epoch + 1
       ctx%spkbsr_cache%epoch = ctx%spice%segment_epoch
+!
+!     PEPPER: make room in the file table for one more file (before the
+!     ASSOCIATE block: the arrays may be reallocated).
+!
+      call grow ( ctx%spice%spkbsr%fthan, ctx%spice%spkbsr%nft + 1 )
+      call grow ( ctx%spice%spkbsr%ftnum, ctx%spice%spkbsr%nft + 1 )
+
       associate ( fthan => ctx%spice%spkbsr%fthan, &
                   ftnum => ctx%spice%spkbsr%ftnum, &
                   next => ctx%spice%spkbsr%next, &
@@ -1102,21 +1110,8 @@ contains
 !        This is a new file.  Make sure that there are unused slots
 !        in the file table.
 !
-         if ( nft == ftsize ) then
-!
-!           This error case can occur only if FTSIZE is larger than
-!           the maximum number of open DAF files.  Currently FTSIZE
-!           is equal to this limit.
-!
-            call dafcls ( ctx, handle )
-
-            call ctx%setmsg ( 'The internal file table is already full, ' // &
-                          'with # entries.'         )
-            call ctx%errint ( '#', ftsize               )
-            call ctx%sigerr ( 'SPICE(SPKFILETABLEFULL)' )
-            return
-
-         end if
+         ! PEPPER: the file table grows (SPICELIB signaled an error here
+         ! when it had FTSIZE files).
 
       end if
 
@@ -4066,6 +4061,7 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       use pepper_arrays, only: isrchi
@@ -4122,6 +4118,13 @@ contains
 !     this context's cache is updated by the code below.
       ctx%spice%segment_epoch = ctx%spice%segment_epoch + 1
       ctx%pckbsr_cache%epoch = ctx%spice%segment_epoch
+!
+!     PEPPER: make room in the file table for one more file (before the
+!     ASSOCIATE block: the arrays may be reallocated).
+!
+      call grow ( ctx%spice%pckbsr%fthan, ctx%spice%pckbsr%nft + 1 )
+      call grow ( ctx%spice%pckbsr%ftnum, ctx%spice%pckbsr%nft + 1 )
+
       associate ( fthan => ctx%spice%pckbsr%fthan, &
                   ftnum => ctx%spice%pckbsr%ftnum, &
                   next => ctx%spice%pckbsr%next, &
@@ -4266,21 +4269,8 @@ contains
 !        This is a new file.  Make sure that there are unused slots
 !        in the file table.
 !
-         if ( nft == ftsize ) then
-!
-!           This error case can occur only if FTSIZE is larger than
-!           the maximum number of open DAF files.  Currently FTSIZE
-!           is equal to this limit.
-!
-            call dafcls ( ctx, handle )
-
-            call ctx%setmsg ( 'The internal file table is already full, ' // &
-                          'with # entries.'         )
-            call ctx%errint ( '#', ftsize               )
-            call ctx%sigerr ( 'SPICE(PCKFILETABLEFULL)' )
-            return
-
-         end if
+         ! PEPPER: the file table grows (SPICELIB signaled an error here
+         ! when it had FTSIZE files).
 
       end if
 
@@ -7278,6 +7268,7 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       use pepper_arrays, only: isrchi
@@ -7329,6 +7320,13 @@ contains
 !     this context's cache is updated by the code below.
       ctx%spice%segment_epoch = ctx%spice%segment_epoch + 1
       ctx%ckbsr_cache%epoch = ctx%spice%segment_epoch
+!
+!     PEPPER: make room in the file table for one more file (before the
+!     ASSOCIATE block: the arrays may be reallocated).
+!
+      call grow ( ctx%spice%ckbsr%fthan, ctx%spice%ckbsr%nft + 1 )
+      call grow ( ctx%spice%ckbsr%ftnum, ctx%spice%ckbsr%nft + 1 )
+
       associate ( fthan => ctx%spice%ckbsr%fthan, &
                   ftnum => ctx%spice%ckbsr%ftnum, &
                   next => ctx%spice%ckbsr%next, &
@@ -7502,20 +7500,8 @@ contains
 !        This is a new file.  Make sure that there are unused slots
 !        in the file table.
 !
-         if ( nft == ftsize ) then
-
-            call dafcls ( ctx, handle )
-
-            call ctx%setmsg ( 'Number of files loaded is at a maximum, ' // &
-                          'as specified by the parameter FTSIZE, '   // &
-                          'the value of which is #. You will need '  // &
-                          'to either load fewer files, or change '   // &
-                          'the parameter FTSIZE.'                     )
-            call ctx%errint ( '#', ftsize                                 )
-            call ctx%sigerr ( 'SPICE(CKTOOMANYFILES)'                     )
-            return
-
-         end if
+         ! PEPPER: the file table grows (SPICELIB signaled an error here
+         ! when it had FTSIZE files).
 
       end if
 
@@ -10811,6 +10797,7 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
+      use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       use pepper_arrays, only: isrchi
@@ -10862,6 +10849,13 @@ contains
 !     this context's cache is updated by the code below.
       ctx%spice%segment_epoch = ctx%spice%segment_epoch + 1
       ctx%zzdskbsr_cache%epoch = ctx%spice%segment_epoch
+!
+!     PEPPER: make room in the file table for one more file (before the
+!     ASSOCIATE block: the arrays may be reallocated).
+!
+      call grow ( ctx%spice%zzdskbsr%fthan, ctx%spice%zzdskbsr%nft + 1 )
+      call grow ( ctx%spice%zzdskbsr%ftnum, ctx%spice%zzdskbsr%nft + 1 )
+
       associate ( fthan => ctx%spice%zzdskbsr%fthan, &
                   ftnum => ctx%spice%zzdskbsr%ftnum, &
                   next => ctx%spice%zzdskbsr%next, &
@@ -11006,20 +11000,8 @@ contains
 !        This is a new file.  Make sure that there are unused slots
 !        in the file table.
 !
-         if ( nft == ftsize ) then
-
-            call dascls ( ctx, handle )
-
-            call ctx%setmsg ( 'Number of files loaded is at a maximum, ' // &
-                          'as specified by the parameter FTSIZE, '   // &
-                          'the value of which is #. You will need '  // &
-                          'to load fewer files. Consider unloading ' // &
-                          'any files that are not needed.'            )
-            call ctx%errint ( '#', ftsize                                 )
-            call ctx%sigerr ( 'SPICE(DSKTOOMANYFILES)'                    )
-            return
-
-         end if
+         ! PEPPER: the file table grows (SPICELIB signaled an error here
+         ! when it had FTSIZE files).
 
       end if
 

@@ -1539,10 +1539,12 @@ contains
       integer(ip)         iostat
       integer(ip)         i
       logical             same
-      if ( .not. allocated ( ctx%spice%rdtext ) ) allocate ( ctx%spice%rdtext )
+      if ( .not. allocated ( ctx%spice%rdtext ) ) then
+         allocate ( ctx%spice%rdtext )
+         ctx%spice%rdtext%lstfil = ' '
+      end if
       associate ( units => ctx%spice%rdtext%units, &
                   n => ctx%spice%rdtext%n, &
-                  lstfil => ctx%spice%rdtext%lstfil, &
                   lstunt => ctx%spice%rdtext%lstunt, &
                   index => ctx%spice%rdtext%index )
       if ( ctx%failed() ) return
@@ -1562,7 +1564,7 @@ contains
 !
 !     Are we reading the same file?
 !
-      same = ( lstfil == file )  .and. ( lstfil /= ' ' )
+      same = ( ctx%spice%rdtext%lstfil == file )  .and. ( ctx%spice%rdtext%lstfil /= ' ' )
 
       if ( .not. same ) then
 
@@ -1644,7 +1646,7 @@ contains
 
          end if
 
-         lstfil = file
+         ctx%spice%rdtext%lstfil = trim ( file )
          lstunt = units(index)
 
       end if
@@ -1681,7 +1683,7 @@ contains
 !
 !        LSTFIL is no longer valid
 !
-         lstfil = ' '
+         ctx%spice%rdtext%lstfil = ' '
 
 !
 !        If this is just the end of the file, don't report an error.
@@ -1880,10 +1882,12 @@ contains
       integer(ip)         iostat
       integer(ip)         i
       logical             same
-      if ( .not. allocated ( ctx%spice%rdtext ) ) allocate ( ctx%spice%rdtext )
+      if ( .not. allocated ( ctx%spice%rdtext ) ) then
+         allocate ( ctx%spice%rdtext )
+         ctx%spice%rdtext%lstfil = ' '
+      end if
       associate ( units => ctx%spice%rdtext%units, &
                   n => ctx%spice%rdtext%n, &
-                  lstfil => ctx%spice%rdtext%lstfil, &
                   lstunt => ctx%spice%rdtext%lstunt, &
                   index => ctx%spice%rdtext%index )
       number = 0
@@ -1912,7 +1916,7 @@ contains
          close ( units(index) )
 
          if ( units(index) == lstunt ) then
-            lstfil = ' '
+            ctx%spice%rdtext%lstfil = ' '
          end if
 
 !
@@ -2426,9 +2430,11 @@ contains
       integer(ip)           i
       integer(ip)           r
       logical               end
-      if ( .not. allocated ( ctx%spice%rdker ) ) allocate ( ctx%spice%rdker )
-      associate ( file => ctx%spice%rdker%file, &
-                  linnum => ctx%spice%rdker%linnum, &
+      if ( .not. allocated ( ctx%spice%rdker ) ) then
+         allocate ( ctx%spice%rdker )
+         ctx%spice%rdker%file = ' '
+      end if
+      associate ( linnum => ctx%spice%rdker%linnum, &
                   status => ctx%spice%rdker%status, &
                   frstim => ctx%spice%rdker%frstim, &
                   begdat => ctx%spice%rdker%begdat, &
@@ -2449,7 +2455,7 @@ contains
 !
 !        Close the previous file, if it hasn't been closed already.
 !
-         call cltext ( ctx, file )
+         call cltext ( ctx, ctx%spice%rdker%file )
 
       end if
 
@@ -2508,7 +2514,7 @@ contains
 !
 !     Save the name of the file for future reference.
 !
-      file = kernel
+      ctx%spice%rdker%file = trim ( kernel )
 
       return
       end associate
@@ -2717,9 +2723,11 @@ contains
       integer(ip)           i
       integer(ip)           r
       logical               end
-      if ( .not. allocated ( ctx%spice%rdker ) ) allocate ( ctx%spice%rdker )
-      associate ( file => ctx%spice%rdker%file, &
-                  linnum => ctx%spice%rdker%linnum, &
+      if ( .not. allocated ( ctx%spice%rdker ) ) then
+         allocate ( ctx%spice%rdker )
+         ctx%spice%rdker%file = ' '
+      end if
+      associate ( linnum => ctx%spice%rdker%linnum, &
                   status => ctx%spice%rdker%status, &
                   begdat => ctx%spice%rdker%begdat, &
                   begtxt => ctx%spice%rdker%begtxt )
@@ -2748,7 +2756,7 @@ contains
       do while ( ( .not. ctx%failed() )          .and. &
                  ( status == intext  .or.  line == blank ) )
 
-         call rdtext ( ctx, file, line, eof )
+         call rdtext ( ctx, ctx%spice%rdker%file, line, eof )
 
 !
 !        Replace any tab characters with blanks.
@@ -2770,7 +2778,7 @@ contains
 
          if ( eof ) then
             status = endoff
-            call cltext ( ctx, file )
+            call cltext ( ctx, ctx%spice%rdker%file )
             return
 
          else if ( line == begtxt ) then
@@ -2934,10 +2942,12 @@ contains
       integer(ip)           i
       integer(ip)           r
       logical               end
-      if ( .not. allocated ( ctx%spice%rdker ) ) allocate ( ctx%spice%rdker )
-      associate ( file => ctx%spice%rdker%file, &
-                  linnum => ctx%spice%rdker%linnum )
-      kernel = file
+      if ( .not. allocated ( ctx%spice%rdker ) ) then
+         allocate ( ctx%spice%rdker )
+         ctx%spice%rdker%file = ' '
+      end if
+      associate ( linnum => ctx%spice%rdker%linnum )
+      kernel = ctx%spice%rdker%file
       number = linnum
 
       return

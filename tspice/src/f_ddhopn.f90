@@ -1128,7 +1128,12 @@
 !
 ! --- Case: ------------------------------------------------------
 !
-      CALL TCASE ( 'File Table Full Exception.' )
+!
+!     PEPPER: the file table grows (SPICELIB's held FTSIZE files and
+!     signaled SPICE(FTFULL) for one more): opening one more file than
+!     FTSIZE succeeds.
+!
+      CALL TCASE ( 'File Table Past FTSIZE (PEPPER: no FTFULL).' )
 
 !
 !     Setup the inputs and outputs.
@@ -1150,14 +1155,12 @@
       CALL ZZDDHOPN ( FNAME, METHOD, ARCH, HANDLE )
 
 !
-!     Check for the exception.
+!     Check that there is no exception, and that the handle is the
+!     next one (negative: the file is open for writing).
 !
-      CALL CHCKXC ( .TRUE., 'SPICE(FTFULL)', OK )
+      CALL CHCKXC ( .FALSE., ' ', OK )
 
-!
-!     Check HANDLE.
-!
-      CALL CHCKSI ( 'HANDLE', HANDLE, '=', 0, 0, OK )
+      CALL CHCKSI ( 'HANDLE', HANDLE, '=', HANTST(FTSIZE)-1, 0, OK )
 
 !
 !     Close and remove the file.

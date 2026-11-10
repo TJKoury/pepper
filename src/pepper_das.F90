@@ -4497,31 +4497,10 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( fthan => ctx%spice%dasfm%fthan, &
-                  ftacc => ctx%spice%dasfm%ftacc, &
-                  ftlnk => ctx%spice%dasfm%ftlnk, &
-                  ftsum => ctx%spice%dasfm%ftsum, &
-                  pool => ctx%spice%dasfm%pool, &
-                  fthead => ctx%spice%dasfm%fthead, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
-!
-!     Initialize the file table pool and handle list, if necessary.
-!
-      if ( pass1 ) then
-
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     Try to open the file for READ access.
@@ -4539,26 +4518,16 @@ contains
 !     Determine whether this file is already in the file table.
 !     Search for a matching handle.
 !
-      findex = fthead
-      found  = .false.
-
-      do while (  ( .not. found )  .and.  ( findex > 0 )  )
-
-         if ( fthan(findex) == handle ) then
-            found = .true.
-         else
-            findex = lnknxt ( ctx, findex, pool )
-         end if
-
-      end do
+      findex  =  ft%find ( handle )
+      found   =  findex > 0
 
       if ( found ) then
 !
 !        The file is already open for read access. Increment the number
 !        of links to this file.
 !
-         ftlnk(findex) = ftlnk(findex) + 1
-         handle        = fthan(findex)
+         ft%files(findex)%links = ft%files(findex)%links + 1
+         handle        = ft%files(findex)%handle
 !
 !        There's nothing else to do.
 !
@@ -4570,16 +4539,10 @@ contains
 !     This file has no entry in the file table. We need to
 !     create a new entry. See whether there's room for it.
 !
-      if ( lnknfn( ctx,pool) == 0  ) then
-
-         call ctx%setmsg ( 'The file table is full, with # entries. ' &
-         //            'Could not open ''#''.'                    )
-         call ctx%errint ( '#', ftsize                                )
-         call ctx%errch  ( '#', fname                                 )
-         call ctx%sigerr ( 'SPICE(DASFTFULL)'                         )
-         return
-
-      end if
+!
+!     PEPPER: the file table grows as needed; SPICELIB signaled
+!     SPICE(DASFTFULL) here when it had FTSIZE (5000) DASs.
+!
 
 !
 !     Read the file's file record.
@@ -4594,13 +4557,10 @@ contains
 !     opened DAS file. Link the information for this file at the
 !     head of the file table list.
 !
-      call lnkan  ( ctx, pool, new          )
-      call lnkilb ( ctx, new,  fthead, pool )
-
-      fthead           =   new
-      fthan (fthead)   =   handle
-      ftacc (fthead)   =   read
-      ftlnk (fthead)   =   1
+      call ft%add ( das_file ( handle = handle ) )
+      new = ft%find ( handle )
+      ft%files(new)%access   =   read
+      ft%files(new)%links   =   1
 
 !
 !     Fill in the file summary. We already know how many reserved
@@ -4610,12 +4570,11 @@ contains
 !     the directory records. We do not assume that the data records in
 !     the DAS file have been segregated.
 !
-      call cleari ( sumsiz, ftsum (1,fthead) )
 
-      ftsum ( rrcidx, fthead )  =  locrrc
-      ftsum ( rchidx, fthead )  =  locrch
-      ftsum ( crcidx, fthead )  =  loccrc
-      ftsum ( cchidx, fthead )  =  loccch
+      ft%files(new)%summary(rrcidx)  =  locrrc
+      ft%files(new)%summary(rchidx)  =  locrch
+      ft%files(new)%summary(crcidx)  =  loccrc
+      ft%files(new)%summary(cchidx)  =  loccch
 
 !
 !     We'll find the values for each data type separately.
@@ -4670,12 +4629,12 @@ contains
 !
 !        MAXADR is the maximum logical address of TYPE.
 !
-         ftsum ( llabas + type,  fthead )  =  maxadr
+         ft%files(new)%summary(llabas + type)  =  maxadr
 
          if ( maxadr > 0 ) then
-            ftsum ( lrcbas + type,  fthead )  =  nrec
+            ft%files(new)%summary(lrcbas + type)  =  nrec
          else
-            ftsum ( lrcbas + type,  fthead )  =  0
+            ft%files(new)%summary(lrcbas + type)  =  0
          end if
 !
 !        We still need to set the word location of the final
@@ -4729,14 +4688,14 @@ contains
 !           descriptor of TYPE, and ENDREC is the record number
 !           of the last data record of TYPE.
 !
-            ftsum ( lwdbas + type, fthead )  =  pos
+            ft%files(new)%summary(lwdbas + type)  =  pos
             ldrec ( type )                   =  endrec
 
          else
 !
 !           There's no data of TYPE in the file.
 !
-            ftsum ( lwdbas + type, fthead )  =  0
+            ft%files(new)%summary(lwdbas + type)  =  0
             ldrec ( type )                   =  0
 
          end if
@@ -4770,12 +4729,8 @@ contains
 !
 !     Now NREC is the last directory record.
 !
-      ftsum ( freidx, fthead)   =   max ( ldrmax, nrec )  +  1
+      ft%files(new)%summary(freidx)   =   max ( ldrmax, nrec )  +  1
 
-!
-!     Insert the new handle into our handle set.
-!
-      call insrti ( ctx, handle, fhlist )
 
       return
       end associate
@@ -5215,42 +5170,15 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( fthan => ctx%spice%dasfm%fthan, &
-                  ftacc => ctx%spice%dasfm%ftacc, &
-                  ftlnk => ctx%spice%dasfm%ftlnk, &
-                  ftsum => ctx%spice%dasfm%ftsum, &
-                  pool => ctx%spice%dasfm%pool, &
-                  fthead => ctx%spice%dasfm%fthead, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
+
 !
-!     Initialize the file table pool and handle list, if necessary.
+!     PEPPER: the file table grows as needed; SPICELIB signaled
+!     SPICE(DASFTFULL) here when it had FTSIZE (5000) DASs.
 !
-      if ( pass1 ) then
-
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
-
-         pass1 = .false.
-
-      end if
-
-      if ( lnknfn( ctx,pool) == 0  ) then
-
-         call ctx%setmsg ( 'The file table is full, with # entries. '     // &
-                       'Could not open ''#''.'                         )
-         call ctx%errint ( '#', ftsize                                     )
-         call ctx%errch  ( '#', fname                                      )
-         call ctx%sigerr ( 'SPICE(DASFTFULL)'                              )
-         return
-
-      end if
 
 !
 !     Open the file for writing:   open the file, get the
@@ -5276,13 +5204,10 @@ contains
 !
 !     Set the output argument HANDLE as well.
 !
-      call lnkan  ( ctx, pool, new          )
-      call lnkilb ( ctx, new,  fthead, pool )
-
-      fthead           =   new
-      fthan (fthead)   =   handle
-      ftacc (fthead)   =   write
-      ftlnk (fthead)   =   1
+      call ft%add ( das_file ( handle = handle ) )
+      new = ft%find ( handle )
+      ft%files(new)%access   =   write
+      ft%files(new)%links   =   1
 
 !
 !     Fill in the file summary. We already know how many reserved
@@ -5292,12 +5217,11 @@ contains
 !     the directory records. We do not assume that the data records in
 !     the DAS file have been segregated.
 !
-      call cleari ( sumsiz, ftsum (1,fthead) )
 
-      ftsum ( rrcidx, fthead )  =  locrrc
-      ftsum ( rchidx, fthead )  =  locrch
-      ftsum ( crcidx, fthead )  =  loccrc
-      ftsum ( cchidx, fthead )  =  loccch
+      ft%files(new)%summary(rrcidx)  =  locrrc
+      ft%files(new)%summary(rchidx)  =  locrch
+      ft%files(new)%summary(crcidx)  =  loccrc
+      ft%files(new)%summary(cchidx)  =  loccch
 
 !
 !     We'll need the logical unit connected to the file, so
@@ -5360,12 +5284,12 @@ contains
 !
 !        MAXADR is the maximum logical address of TYPE.
 !
-         ftsum ( llabas + type,  fthead )  =  maxadr
+         ft%files(new)%summary(llabas + type)  =  maxadr
 
          if ( maxadr > 0 ) then
-            ftsum ( lrcbas + type,  fthead )  =  nrec
+            ft%files(new)%summary(lrcbas + type)  =  nrec
          else
-            ftsum ( lrcbas + type,  fthead )  =  0
+            ft%files(new)%summary(lrcbas + type)  =  0
          end if
 !
 !        We still need to set the word location of the final
@@ -5419,14 +5343,14 @@ contains
 !           descriptor of TYPE, and ENDREC is the record number
 !           of the last data record of TYPE.
 !
-            ftsum ( lwdbas + type, fthead )  =  pos
+            ft%files(new)%summary(lwdbas + type)  =  pos
             ldrec ( type )                   =  endrec
 
          else
 !
 !           There's no data of TYPE in the file.
 !
-            ftsum ( lwdbas + type, fthead )  =  0
+            ft%files(new)%summary(lwdbas + type)  =  0
             ldrec ( type )                   =  0
 
          end if
@@ -5460,12 +5384,8 @@ contains
 !
 !     Now NREC is the last directory record.
 !
-      ftsum ( freidx, fthead)  =  max ( ldrmax, nrec )  +  1
+      ft%files(new)%summary(freidx)  =  max ( ldrmax, nrec )  +  1
 
-!
-!     Insert the new handle into our handle set.
-!
-      call insrti ( ctx, handle, fhlist )
 
       return
       end associate
@@ -5845,31 +5765,11 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( fthan => ctx%spice%dasfm%fthan, &
-                  ftacc => ctx%spice%dasfm%ftacc, &
-                  ftlnk => ctx%spice%dasfm%ftlnk, &
-                  ftsum => ctx%spice%dasfm%ftsum, &
-                  pool => ctx%spice%dasfm%pool, &
-                  fthead => ctx%spice%dasfm%fthead, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
-!
-!     Initialize the file table pool and handle list, if necessary.
-!
-      if ( pass1 ) then
 
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
-
-         pass1 = .false.
-
-      end if
 !
 !     Check to see whether the filename is blank. If it is, signal an
 !     error, check out, and return.
@@ -5936,16 +5836,10 @@ contains
 !
 !     The file can be opened only if there is room for another file.
 !
-      if ( lnknfn( ctx,pool) == 0  ) then
-
-         call ctx%setmsg ( 'The file table is full, with # entries. '     // &
-                       'Could not open ''#''.'                         )
-         call ctx%errint ( '#', ftsize                                     )
-         call ctx%errch  ( '#', fname                                      )
-         call ctx%sigerr ( 'SPICE(DASFTFULL)'                              )
-         return
-
-      end if
+!
+!     PEPPER: the file table grows as needed; SPICELIB signaled
+!     SPICE(DASFTFULL) here when it had FTSIZE (5000) DASs.
+!
 
 !
 !     Open a new file.
@@ -6033,28 +5927,21 @@ contains
 !
 !     Set the output argument HANDLE as well.
 !
-      call lnkan  ( ctx, pool,   new             )
-      call lnkilb ( ctx, new,    fthead,   pool  )
+      call ft%add ( das_file ( handle = handle ) )
+      new = ft%find ( handle )
 
 !
 !     Clear out the file summary, except for the number of comment
 !     records and the free record pointer. The free record pointer
 !     should point to the first record AFTER the first directory.
 !
-      fthead                     =   new
 
-      call cleari ( sumsiz, ftsum(1,fthead) )
 
-      fthan (         fthead )   =   handle
-      ftacc (         fthead )   =   write
-      ftlnk (         fthead )   =   1
-      ftsum ( freidx, fthead )   =   ncomr + 3
-      ftsum ( crcidx, fthead )   =   ncomr
+      ft%files(new)%access   =   write
+      ft%files(new)%links   =   1
+      ft%files(new)%summary(freidx)   =   ncomr + 3
+      ft%files(new)%summary(crcidx)   =   ncomr
 
-!
-!     Insert the new handle into our handle set.
-!
-      call insrti ( ctx, handle, fhlist )
 
       return
       end associate
@@ -6421,31 +6308,11 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( fthan => ctx%spice%dasfm%fthan, &
-                  ftacc => ctx%spice%dasfm%ftacc, &
-                  ftlnk => ctx%spice%dasfm%ftlnk, &
-                  ftsum => ctx%spice%dasfm%ftsum, &
-                  pool => ctx%spice%dasfm%pool, &
-                  fthead => ctx%spice%dasfm%fthead, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
-!
-!     Initialize the file table pool and handle list, if necessary.
-!
-      if ( pass1 ) then
 
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
-
-         pass1 = .false.
-
-      end if
 !
 !     Check to see whether the filename is blank. If it is, signal an
 !     error, check out, and return.
@@ -6461,16 +6328,10 @@ contains
 !
 !     The file can be opened only if there is room for another file.
 !
-      if ( lnknfn( ctx,pool) == 0  ) then
-
-         call ctx%setmsg ( 'The file table is full, with # entries. '     // &
-                       'Could not open ''#''.'                         )
-         call ctx%errint ( '#', ftsize                                     )
-         call ctx%errch  ( '#', fname                                      )
-         call ctx%sigerr ( 'SPICE(DASFTFULL)'                              )
-         return
-
-      end if
+!
+!     PEPPER: the file table grows as needed; SPICELIB signaled
+!     SPICE(DASFTFULL) here when it had FTSIZE (5000) DASs.
+!
 
 !
 !     To open a new file: get a free unit, open the file, write
@@ -6554,27 +6415,20 @@ contains
 !
 !     Set the output argument HANDLE as well.
 !
-      call lnkan  ( ctx, pool,   new             )
-      call lnkilb ( ctx, new,    fthead,   pool  )
+      call ft%add ( das_file ( handle = handle ) )
+      new = ft%find ( handle )
 
 !
 !     Clear out the file summary, except for the free record pointer.
 !     The free record pointer should point to the first record AFTER
 !     the first directory.
 !
-      fthead                     =   new
 
-      call cleari ( sumsiz, ftsum(1,fthead) )
 
-      fthan (         fthead )   =   handle
-      ftacc (         fthead )   =   write
-      ftlnk (         fthead )   =   1
-      ftsum ( freidx, fthead )   =   3
+      ft%files(new)%access   =   write
+      ft%files(new)%links   =   1
+      ft%files(new)%summary(freidx)   =   3
 
-!
-!     Insert the new handle into our handle set.
-!
-      call insrti ( ctx, handle, fhlist )
 
       return
       end associate
@@ -6934,50 +6788,18 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( fthan => ctx%spice%dasfm%fthan, &
-                  ftacc => ctx%spice%dasfm%ftacc, &
-                  ftlnk => ctx%spice%dasfm%ftlnk, &
-                  ftsum => ctx%spice%dasfm%ftsum, &
-                  pool => ctx%spice%dasfm%pool, &
-                  fthead => ctx%spice%dasfm%fthead, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
-!
-!     Initialize the file table pool and handle list, if necessary.
-!
-      if ( pass1 ) then
-
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     The file can be opened only if there is room for another file.
 !
-      if ( lnknfn( ctx,pool) == 0  ) then
-
-         call ctx%setmsg ( 'The file table is full, with # entries.'      // &
-                       ' Could not open a scratch file. If a call'    // &
-                       ' to DASOPS was not made and this error'       // &
-                       ' occurred, it is likely that the DAS file'    // &
-                       ' table was full and an attempt to close a'    // &
-                       ' file opened with write access was made. See' // &
-                       ' the DAS required reading and DASFM for'      // &
-                       ' details.'                                     )
-         call ctx%errint ( '#', ftsize                                     )
-         call ctx%sigerr ( 'SPICE(DASFTFULL)'                              )
-         return
-
-      end if
+!
+!     PEPPER: the file table grows as needed; SPICELIB signaled
+!     SPICE(DASFTFULL) here when it had FTSIZE (5000) DASs.
+!
 
 !
 !     Assign a name to the scratch file. This name is required
@@ -7046,27 +6868,18 @@ contains
 !
 !     Set the output argument HANDLE as well.
 !
-      call lnkan  ( ctx, pool,   new             )
-      call lnkilb ( ctx, new,    fthead,   pool  )
-
-      fthead                     =   new
+      call ft%add ( das_file ( handle = handle ) )
+      new = ft%find ( handle )
 
 !
 !     Clear out the file summary, except for the free record pointer.
 !     The free record pointer should point to the first record AFTER
 !     the first directory.
 !
-      call cleari ( sumsiz, ftsum(1,fthead) )
+      ft%files(new)%access   =   write
+      ft%files(new)%links   =   1
+      ft%files(new)%summary(freidx)   =   3
 
-      fthan (         fthead )   =   handle
-      ftacc (         fthead )   =   write
-      ftlnk (         fthead )   =   1
-      ftsum ( freidx, fthead )   =   3
-
-!
-!     Insert the new handle into our handle set.
-!
-      call insrti ( ctx, handle, fhlist )
 
       return
       end associate
@@ -7583,46 +7396,17 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( fthan => ctx%spice%dasfm%fthan, &
-                  ftlnk => ctx%spice%dasfm%ftlnk, &
-                  pool => ctx%spice%dasfm%pool, &
-                  fthead => ctx%spice%dasfm%fthead, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
-!
-!     Initialize the file table pool and handle list, if necessary.
-!
-      if ( pass1 ) then
-
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     Is this file even open?  Peruse the `handle' column of the file
 !     table; see whether this handle is present.
 !
-      findex  =  fthead
-      found   = .false.
-
-      do while (  ( .not. found )  .and.  ( findex > 0 )  )
-
-         if ( fthan(findex) == handle ) then
-            found = .true.
-         else
-            findex = lnknxt ( ctx, findex, pool )
-         end if
-
-      end do
+      findex  =  ft%find ( handle )
+      found   =  findex > 0
 
 !
 !     If the file is not open: no harm, no foul.  Otherwise, decrement
@@ -7632,9 +7416,9 @@ contains
 !
       if ( found ) then
 
-         ftlnk(findex) = ftlnk(findex) - 1
+         ft%files(findex)%links = ft%files(findex)%links - 1
 
-         if ( ftlnk(findex) == 0 ) then
+         if ( ft%files(findex)%links == 0 ) then
 !
 !           Close this file and delete it from the active list.
 !           If this was the head node of the list, the head node
@@ -7645,13 +7429,7 @@ contains
 
             if ( ctx%failed() ) return
 
-            if ( findex == fthead ) then
-               fthead = lnknxt ( ctx, findex, pool )
-            end if
-
-            call lnkfsl ( ctx, findex, findex, pool )
-
-            call removi ( ctx, handle, fhlist       )
+            call ft%remove ( findex )
 
          end if
 
@@ -8186,57 +7964,30 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( fthan => ctx%spice%dasfm%fthan, &
-                  ftsum => ctx%spice%dasfm%ftsum, &
-                  pool => ctx%spice%dasfm%pool, &
-                  fthead => ctx%spice%dasfm%fthead, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
-!
-!     Initialize the file table pool and handle list, if necessary.
-!
-      if ( pass1 ) then
 
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
+      findex  =  ft%find ( handle )
 
-         pass1 = .false.
 
-      end if
-
-      findex  =  fthead
-      found   = .false.
-
-      do while (  ( .not. found )  .and.  ( findex > 0 )  )
-
-         if ( fthan(findex) == handle ) then
-            found = .true.
-         else
-            findex = lnknxt ( ctx, findex, pool )
-         end if
-
-      end do
+      found   =  findex > 0
 
       if ( found ) then
 !
 !        Give the caller the current summary from the file table.
 !
-         nresvr  =  ftsum ( rrcidx, findex )
-         nresvc  =  ftsum ( rchidx, findex )
-         ncomr   =  ftsum ( crcidx, findex )
-         ncomc   =  ftsum ( cchidx, findex )
-         free    =  ftsum ( freidx, findex )
+         nresvr  =  ft%files(findex)%summary(rrcidx)
+         nresvc  =  ft%files(findex)%summary(rchidx)
+         ncomr   =  ft%files(findex)%summary(crcidx)
+         ncomc   =  ft%files(findex)%summary(cchidx)
+         free    =  ft%files(findex)%summary(freidx)
 
          do i = 1, 3
-            lastla(i)  =  ftsum ( llabas + i,  findex )
-            lastrc(i)  =  ftsum ( lrcbas + i,  findex )
-            lastwd(i)  =  ftsum ( lwdbas + i,  findex )
+            lastla(i)  =  ft%files(findex)%summary(llabas + i)
+            lastrc(i)  =  ft%files(findex)%summary(lrcbas + i)
+            lastwd(i)  =  ft%files(findex)%summary(lwdbas + i)
          end do
 
       else
@@ -8573,46 +8324,16 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( fthan => ctx%spice%dasfm%fthan, &
-                  ftacc => ctx%spice%dasfm%ftacc, &
-                  ftsum => ctx%spice%dasfm%ftsum, &
-                  pool => ctx%spice%dasfm%pool, &
-                  fthead => ctx%spice%dasfm%fthead, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
-!
-!     Initialize the file table pool and handle list, if necessary.
-!
-      if ( pass1 ) then
-
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     Find the file table entries for this file.
 !
-      findex  =  fthead
-      found   = .false.
-
-      do while (  ( .not. found )  .and.  ( findex > 0 )  )
-
-         if ( fthan(findex) == handle ) then
-            found  = .true.
-         else
-            findex = lnknxt ( ctx, findex, pool )
-         end if
-
-      end do
+      findex  =  ft%find ( handle )
+      found   =  findex > 0
 
       if ( found ) then
 !
@@ -8627,7 +8348,7 @@ contains
 !        no business updating a file summary for files that are
 !        open for read access only.
 !
-         if ( ftacc(findex) /= write ) then
+         if ( ft%files(findex)%access /= write ) then
 
             call ctx%setmsg ( 'DAS file not open for writing. Handle = #,' &
             //            ' file = ''#''.'                             )
@@ -8643,10 +8364,10 @@ contains
 !        the comment area were changed, we need to record the new
 !        counts in the file record.  Otherwise, leave the file alone.
 !
-         if (      (  nresvr /= ftsum( rrcidx, findex )  ) &
-              .or. (  nresvc /= ftsum( rchidx, findex )  ) &
-              .or. (  ncomr  /= ftsum( crcidx, findex )  ) &
-              .or. (  ncomc  /= ftsum( cchidx, findex )  )   )  then
+         if (      (  nresvr /= ft%files(findex)%summary(rrcidx)  ) &
+              .or. (  nresvc /= ft%files(findex)%summary(rchidx)  ) &
+              .or. (  ncomr  /= ft%files(findex)%summary(crcidx)  ) &
+              .or. (  ncomc  /= ft%files(findex)%summary(cchidx)  )   )  then
 
 !
 !           Read the file record.
@@ -8714,16 +8435,16 @@ contains
 !
 !        Update the file table.
 !
-         ftsum ( rrcidx, findex )  =  nresvr
-         ftsum ( rchidx, findex )  =  nresvc
-         ftsum ( crcidx, findex )  =  ncomr
-         ftsum ( cchidx, findex )  =  ncomc
-         ftsum ( freidx, findex )  =  free
+         ft%files(findex)%summary(rrcidx)  =  nresvr
+         ft%files(findex)%summary(rchidx)  =  nresvc
+         ft%files(findex)%summary(crcidx)  =  ncomr
+         ft%files(findex)%summary(cchidx)  =  ncomc
+         ft%files(findex)%summary(freidx)  =  free
 
          do i = 1, 3
-            ftsum ( llabas + i,  findex )  =  lastla(i)
-            ftsum ( lrcbas + i,  findex )  =  lastrc(i)
-            ftsum ( lwdbas + i,  findex )  =  lastwd(i)
+            ft%files(findex)%summary(llabas + i)  =  lastla(i)
+            ft%files(findex)%summary(lrcbas + i)  =  lastrc(i)
+            ft%files(findex)%summary(lwdbas + i)  =  lastwd(i)
          end do
 
       else
@@ -8963,44 +8684,16 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( fthan => ctx%spice%dasfm%fthan, &
-                  pool => ctx%spice%dasfm%pool, &
-                  fthead => ctx%spice%dasfm%fthead, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
-!
-!     Initialize the file table pool and handle list, if necessary.
-!
-      if ( pass1 ) then
-
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     Find the file table entries for this file.
 !
-      findex  =  fthead
-      found   = .false.
-
-      do while (  ( .not. found )  .and.  ( findex > 0 )  )
-
-         if ( fthan(findex) == handle ) then
-            found = .true.
-         else
-            findex = lnknxt ( ctx, findex, pool )
-         end if
-
-      end do
+      findex  =  ft%find ( handle )
+      found   =  findex > 0
 
       if ( found ) then
 !
@@ -9232,26 +8925,10 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( pool => ctx%spice%dasfm%pool, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
-!
-!     Initialize the file table pool and handle list, if necessary.
-!
-      if ( pass1 ) then
-
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     Try to locate the handle associated with this unit.
@@ -9538,44 +9215,16 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( fthan => ctx%spice%dasfm%fthan, &
-                  pool => ctx%spice%dasfm%pool, &
-                  fthead => ctx%spice%dasfm%fthead, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
-!
-!     Initialize the file table pool and handle list, if necessary.
-!
-      if ( pass1 ) then
-
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     Find the file table entries for this file.
 !
-      findex  =  fthead
-      found   = .false.
-
-      do while (  ( .not. found )  .and.  ( findex > 0 )  )
-
-         if ( fthan(findex) == handle ) then
-            found  = .true.
-         else
-            findex = lnknxt ( ctx, findex, pool )
-         end if
-
-      end do
+      findex  =  ft%find ( handle )
+      found   =  findex > 0
 
       if ( found ) then
 
@@ -9808,26 +9457,10 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( pool => ctx%spice%dasfm%pool, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
-!
-!     Initialize the file table pool and handle list, if necessary.
-!
-      if ( pass1 ) then
-
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
-
-         pass1 = .false.
-
-      end if
 
       call zzddhfnh ( ctx, fname, handle, found )
 
@@ -9981,6 +9614,7 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
+      use pepper_arrays, only: shelli
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
@@ -10051,31 +9685,31 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( pool => ctx%spice%dasfm%pool, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
-!
-!     Initialize the file table pool and handle list, if necessary.
-!
-      if ( pass1 ) then
-
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     Just stuff our local list into the set.
 !
-      call copyi ( ctx, fhlist, fhset )
+      block
+!
+!        PEPPER: the set is built from the file table (SPICELIB kept it
+!        as FHLIST); COPYI signals SPICE(CELLTOOSMALL) as before if
+!        FHSET has no room.
+!
+         integer(ip), allocatable :: set(:)
+         integer(ip) :: k
+         allocate ( set(lbcell:max(1_ip, ft%nft)) )
+         call ssizei ( ctx, max(1_ip, ft%nft), set )
+         do k = 1, ft%nft
+            set(k) = ft%files(k)%handle
+         end do
+         call shelli ( ft%nft, set(1:) )
+         call scardi ( ctx, ft%nft, set )
+         call copyi ( ctx, set, fhset )
+      end block
 
       return
       end associate
@@ -10341,29 +9975,10 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( fthan => ctx%spice%dasfm%fthan, &
-                  ftacc => ctx%spice%dasfm%ftacc, &
-                  pool => ctx%spice%dasfm%pool, &
-                  fthead => ctx%spice%dasfm%fthead, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
-!
-!     Initialize the file table pool and handle list, if necessary.
-!
-      if ( pass1 ) then
-
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     Get an upper case, left-justified copy of ACCESS.
@@ -10387,7 +10002,7 @@ contains
 !     See whether the input handle is in our list at all.  It's
 !     unlawful for the handle to be absent.
 !
-      if (  .not.  elemi ( ctx, handle, fhlist )  )  then
+      if (  ft%find ( handle ) == 0  )  then
 
          call ctx%setmsg ( 'Handle # is not attached to an open DAS file.' )
          call ctx%errint ( '#', handle                                     )
@@ -10399,25 +10014,15 @@ contains
 !        Find the file table entries for this file.  We know they
 !        must exist.
 !
-         findex  =  fthead
-         found   = .false.
-
-         do while (  ( .not. found )  .and.  ( findex > 0 )  )
-
-            if ( fthan(findex) == handle ) then
-               found  = .true.
-            else
-               findex = lnknxt ( ctx, findex, pool )
-            end if
-
-         end do
+         findex  =  ft%find ( handle )
+         found   =  findex > 0
 !
 !        At this point, FINDEX points to the file table entries
 !        for this file.
 !
 
          if (       ( acc           == 'WRITE' ) &
-              .and. ( ftacc(findex) /=  write  )  ) then
+              .and. ( ft%files(findex)%access /=  write  )  ) then
 !
 !           If the access type is 'WRITE', the DAS file must be open
 !           for writing.
@@ -10660,46 +10265,17 @@ contains
       integer(ip)           prvtyp
       integer(ip)           type
       logical               found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) then
-         allocate ( ctx%spice%dasfm )
-         call init_dasfm_state ( ctx%spice%dasfm )
-      end if
-      associate ( fthan => ctx%spice%dasfm%fthan, &
-                  ftacc => ctx%spice%dasfm%ftacc, &
-                  pool => ctx%spice%dasfm%pool, &
-                  fthead => ctx%spice%dasfm%fthead, &
-                  fhlist => ctx%spice%dasfm%fhlist, &
-                  pass1 => ctx%spice%dasfm%pass1 )
+      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
+      associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
-!
-!     Initialize the file table pool and handle list, if necessary.
-!
-      if ( pass1 ) then
-
-         call lnkini ( ctx, ftsize, pool   )
-         call ssizei ( ctx, ftsize, fhlist )
-
-         pass1 = .false.
-
-      end if
 
 !
 !     See whether the input handle is in our list at all.  It's
 !     unlawful for the handle to be absent.
 !
-      findex  =  fthead
-      found   = .false.
-
-      do while (  ( .not. found )  .and.  ( findex > 0 )  )
-
-         if ( fthan(findex) == handle ) then
-            found  = .true.
-         else
-            findex = lnknxt ( ctx, findex, pool )
-         end if
-
-      end do
+      findex  =  ft%find ( handle )
+      found   =  findex > 0
 
       if ( .not. found ) then
 
@@ -10715,7 +10291,7 @@ contains
 !     We know about the file if we got this far.  Set the output
 !     argument accordingly.
 !
-      if (  ftacc(findex) == read ) then
+      if (  ft%files(findex)%access == read ) then
          access = 'READ'
       else
          access = 'WRITE'
@@ -24130,18 +23706,8 @@ contains
       integer(ip)           iostat
       integer(ip)           unit
       logical               notscr
-      if ( .not. allocated ( ctx%dascls_state ) ) then
-         allocate ( ctx%dascls_state )
-         call init_dascls_state ( ctx%dascls_state )
-      end if
-      associate ( fhset => ctx%dascls_state%fhset, &
-                  pass1 => ctx%dascls_state%pass1 )
       if ( ctx%failed() ) return
 
-      if ( pass1 ) then
-         call ssizei ( ctx, ftsize, fhset )
-         pass1 = .false.
-      end if
 
 !
 !     There are only four items on our worklist:
@@ -24163,9 +23729,13 @@ contains
 !     See whether the input handle designates an open DAS file.  If not,
 !     return now.
 !
-      call dashof ( ctx, fhset )
 
-      if (  .not.  elemi( ctx, handle, fhset )  ) return
+!
+!     PEPPER: look the handle up in the DAS file table (SPICELIB copied
+!     the set of all open handles, DASHOF, on each call).
+!
+      if ( .not. allocated ( ctx%spice%dasfm ) ) return
+      if ( ctx%spice%dasfm%find ( handle ) == 0 ) return
 
 !
 !     If the file is open for writing, flush any buffered
@@ -24225,7 +23795,6 @@ contains
       call dasllc ( ctx, handle )
 
       return
-      end associate
       end procedure dascls
 
 !$Procedure DASRFR ( DAS, read file record )

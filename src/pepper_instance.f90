@@ -31,6 +31,7 @@ module pepper_instance
    use pepper_strings, only: dpstr, intstr, lparse, wdcnt, nextwd
    use pepper_hash, only: name_hash
    use pepper_output, only: wrline, byebye
+   use pepper_containers, only: string_map
    ! The state types of the subsystems, and the routines that set the
    ! initial values of the large ones.
    use pepper_states
@@ -109,8 +110,7 @@ module pepper_instance
          .false., .false., .false., .false., .false., .false., .false., .false., .false. ]  !! the reserved units
       integer :: last_unit = 1  !! the unit FNDLUN gave last
       integer(ip) :: hash_divisor = -1  !! divisor of ZZHASH (set by ZZSHSH; -1: not set)
-      character(255), allocatable :: closed_files(:)  !! names of the files closed so far
-      integer(ip) :: nclosed = 0  !! number of names in closed_files
+      type(string_map) :: closed_files  !! names of the files closed so far (the values are unused)
       ! The state of the subsystems (allocated when first used).
       ! >>> generated state components (tools/modularize_ctx.py)
       ! --- pepper_pool
@@ -223,7 +223,6 @@ module pepper_instance
       type(dasadc_state), allocatable :: dasadc_state  !! state of DASADC
       type(dasadd_state), allocatable :: dasadd_state  !! state of DASADD
       type(dasadi_state), allocatable :: dasadi_state  !! state of DASADI
-      type(dascls_state), allocatable :: dascls_state  !! state of DASCLS
       type(dasec_state), allocatable :: dasec_state  !! state of DASEC
       ! --- end pepper_das
       ! --- pepper_dsk_files
@@ -4682,19 +4681,11 @@ module pepper_instance
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
-      module subroutine zzddhf2h ( ctx, fname, ftabs, ftamh, ftarc, ftbff, fthan, ftnam, ftrtm, ftmnm, nft, utcst, uthan, utlck, utlun, nut, exists, opened, handle, found, mnm )
+      module subroutine zzddhf2h ( ctx, fname, ft, utcst, uthan, utlck, utlun, nut, exists, opened, handle, found, mnm )
       use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: fname  !! Name of the file to convert to a handle.
-         integer(ip), intent(in) :: ftabs ( * )  !! File table.
-         integer(ip), intent(in) :: ftamh ( * )  !! File table.
-         integer(ip), intent(in) :: ftarc ( * )  !! File table.
-         integer(ip), intent(in) :: ftbff ( * )  !! File table.
-         integer(ip), intent(in) :: fthan ( * )  !! File table.
-         character(*), intent(in) :: ftnam ( * )  !! File table.
-         integer(ip), intent(in) :: ftrtm ( * )  !! File table.
-         real(wp), intent(in) :: ftmnm ( * )  !! File table.
-         integer(ip), intent(in) :: nft  !! Number of entries in the file table.
+         type(zzddhman_state), intent(in) :: ft  !! File table.
          integer(ip), intent(inout) :: utcst ( * )  !! Unit table.
          integer(ip), intent(inout) :: uthan ( * )  !! Unit table.
          logical, intent(inout) :: utlck ( * )  !! Unit table.
@@ -20381,9 +20372,9 @@ contains
             associate (u => ctx%zzddhman_units, ft => ctx%spice%zzddhman)
                do k = 1, u%nut
                   if (u%uthan(k) == 0 .or. u%utlck(k)) cycle
-                  f = findloc(ft%fthan(1:ft%nft), u%uthan(k), dim=1)
+                  f = ft%find(u%uthan(k))
                   if (f == 0) cycle
-                  if (ft%ftamh(f) == 3) cycle      ! SCRATCH access
+                  if (ft%files(f)%method == 3) cycle      ! SCRATCH access
                   close (unit=u%utlun(k), iostat=ios)
                   u%uthan(k) = 0
                   u%utcst(k) = 0
@@ -20401,17 +20392,7 @@ contains
    subroutine file_closed(spice, name)
       type(pepper_spice), intent(inout) :: spice  !! the instance
       character(*), intent(in) :: name  !! name of the file
-      character(255), allocatable :: names(:)
-      if (.not. was_closed(spice, name)) then
-         if (.not. allocated(spice%closed_files)) allocate (spice%closed_files(16))
-         if (spice%nclosed == size(spice%closed_files)) then
-            allocate (names(2*spice%nclosed))
-            names(1:spice%nclosed) = spice%closed_files
-            call move_alloc(names, spice%closed_files)
-         end if
-         spice%nclosed = spice%nclosed + 1
-         spice%closed_files(spice%nclosed) = name
-      end if
+      call spice%closed_files%set(name, 1_ip)
       spice%close_generation = spice%close_generation + 1
    end subroutine file_closed
 
@@ -20549,9 +20530,8 @@ contains
    logical function was_closed(spice, name)
       type(pepper_spice), intent(in) :: spice  !! the instance
       character(*), intent(in) :: name  !! name of the file
-      was_closed = .false.
-      if (allocated(spice%closed_files)) &
-         was_closed = any(spice%closed_files(1:spice%nclosed) == name)
+      integer(ip) :: value
+      call spice%closed_files%get(name, value, was_closed)
    end function was_closed
 
    !> If files were closed (through any context) since this context last
@@ -20569,7 +20549,7 @@ contains
          do k = 1, u%nut
             if (u%uthan(k) == 0) cycle
             if (allocated(ctx%spice%zzddhman)) then
-               if (any(ctx%spice%zzddhman%fthan(1:ctx%spice%zzddhman%nft) == u%uthan(k))) cycle
+               if (ctx%spice%zzddhman%find(u%uthan(k)) > 0) cycle
             end if
             close (unit=u%utlun(k), iostat=ios)
             u%uthan(k) = 0

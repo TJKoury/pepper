@@ -261,11 +261,14 @@
       !> to the volatile nature of this routine.
       !>
       !> Legacy interface: calls zz routine zzddhf2h with the legacy context.
+      !> PEPPER's ZZDDHF2H takes the file table as records
+      !> (zzddhman_state); this builds them from SPICELIB's arrays.
       subroutine zzddhf2h ( fname,  ftabs,  ftamh, ftarc, ftbff, &
                             fthan,  ftnam,  ftrtm, ftmnm, nft,   utcst, &
                             uthan,  utlck,  utlun, nut,   exists, &
                             opened, handle, found, mnm                 )
       use pepper_instance, only: pepper_context, pepper_zzddhf2h => zzddhf2h
+      use pepper_states, only: zzddhman_state, ddh_file
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
@@ -291,8 +294,14 @@
       logical :: found  !! Logical indicating if FNAME's HANDLE was found.
       real(wp) :: mnm  !! Unique DP (Magic NuMber) associated with FNAME.
       type(pepper_context), pointer :: ctx
+      type(zzddhman_state) :: ft
+      integer(ip) :: i
+      do i = 1, nft
+         call ft%add ( ddh_file ( handle = fthan(i), method = ftamh(i), arch = ftarc(i), &
+                                  bff = ftbff(i), mnm = ftmnm(i), name = ftnam(i)(1:ftrtm(i)) ) )
+      end do
       ctx => legacy_context()
-      call pepper_zzddhf2h ( ctx, fname, ftabs, ftamh, ftarc, ftbff, fthan, ftnam, ftrtm, ftmnm, nft, utcst, uthan, utlck, utlun, nut, exists, opened, handle, found, mnm )
+      call pepper_zzddhf2h ( ctx, fname, ft, utcst, uthan, utlck, utlun, nut, exists, opened, handle, found, mnm )
       end subroutine zzddhf2h
 
       !> SPICE Private routine intended solely for the support of SPICE

@@ -20,6 +20,7 @@
 module pepper_states
 
    use pepper_kinds, only: ip, wp
+   use pepper_containers, only: grow
    use pepper_inc_das, only: ftsize
    use pepper_inc_dla, only: dladsz
    use pepper_inc_dsk, only: maxsrf
@@ -44,7 +45,7 @@ module pepper_states
    use pepper_inc_zzabcorr, only: corlen, nabcor
    use pepper_inc_zzbodtrn, only: maxe, maxl, nperm, zzbodtrn_nroom => nroom
    use pepper_inc_zzctr, only: ctrsiz
-   use pepper_inc_zzddhman, only: filen, numamh, numarc, numbff, strsiz, utsize
+   use pepper_inc_zzddhman, only: numamh, numarc, numbff, strsiz, utsize
    use pepper_inc_zzdsk, only: acllen, ellshp, mthlen
    use pepper_inc_zzdyn, only: kvnmln, kvx, kvy, kvz, kwatol, kweac1, kweac2, kweac3
    use pepper_inc_zzftprms, only: sizdlm, sizend, sizftp, sizstr
@@ -58,13 +59,13 @@ module pepper_states
 
    private
 
-   public :: init_ckbsr_state, init_ckbsr_context_state, init_dafah_state, init_dafana_state, &
-       init_dafec_state, init_daffa_state, init_dafrwd_state, init_dascls_state, init_dasec_state, &
-       init_dasfm_state, init_dasrwr_state, init_dskx02_state, init_ekqmgr_state, init_ekqmgr_context_state, &
-       init_framex_state, init_keeper_state, init_limbpt_state, init_pckbsr_state, init_pckbsr_context_state, &
+   public :: init_ckbsr_state, init_ckbsr_context_state, init_dafana_state, &
+       init_dafec_state, init_daffa_state, daffa_grow, init_dafrwd_state, init_dasec_state, &
+       init_dasrwr_state, init_dskx02_state, init_ekqmgr_state, init_ekqmgr_context_state, &
+       init_framex_state, init_limbpt_state, init_pckbsr_state, init_pckbsr_context_state, &
        init_pool_state, init_sc01_state, init_scdecd_state, init_scencd_state, init_spkbsr_state, &
        init_spkbsr_context_state, init_termpt_state, init_tisbod_state, init_tkfram_state, &
-       init_zzbodblt_state, init_zzbodtrn_state, init_zzddhman_state, init_zzdskbsr_state, &
+       init_zzbodblt_state, init_zzbodtrn_state, init_zzdskbsr_state, &
        init_zzdskbsr_context_state, init_zzdsksbf_state, init_zzekjsrt_state, init_zzekjtst_state, &
        init_zzeknrml_state, init_zzeksca_state, init_zzelvupy_state, init_zzgffvu_state, init_zzsrftrn_state, &
        init_zzswfxfm_state
@@ -210,8 +211,8 @@ module pepper_states
    !>
    !> No default initialization (40008 bytes): see init_ckbsr_state.
    type, public :: ckbsr_state
-      integer(ip) :: fthan ( ckbsr_ftsize )  !! handle of each loaded file (in load order)
-      integer(ip) :: ftnum ( ckbsr_ftsize )  !! file number of each loaded file: its place in the load (and search) order
+      integer(ip), allocatable :: fthan ( : )  !! handle of each loaded file (in load order)
+      integer(ip), allocatable :: ftnum ( : )  !! file number of each loaded file: its place in the load (and search) order
       integer(ip) :: next  !! the file number of the file loaded last
       integer(ip) :: nft  !! number of loaded files
    end type ckbsr_state
@@ -379,15 +380,25 @@ module pepper_states
    !> dafopw, dafonw, dafopn, dafcls, dafhsf, dafhlu, dafluh, dafhfn, daffnh,
    !> dafhof, dafsih), held in pepper_spice.
    !>
-   !> No default initialization (100032 bytes): see init_dafah_state.
+   !> PEPPER: SPICELIB's file table was four parallel arrays of FTSIZE
+   !> (5000) entries, plus a set (FHLIST) of the same handles; it is an
+   !> array of these records that grows as DAFs are opened.
+   type, public :: daf_file
+      integer(ip) :: handle = 0  !! the handle
+      integer(ip) :: links = 0  !! number of links (opens) of the DAF
+      integer(ip) :: nd = 0  !! number of double precision components of the summaries
+      integer(ip) :: ni = 0  !! number of integer components of the summaries
+   end type daf_file
+
+   !> The DAF file table: the open DAFs in increasing order of
+   !> abs(handle), so that a handle is found by binary search.
    type, public :: dafah_state
-      integer(ip) :: nft  !! number of DAFs in the file table
-      integer(ip) :: fthan ( ftsize )  !! handle of each DAF
-      integer(ip) :: ftlnk ( ftsize )  !! number of links (opens) of each DAF
-      integer(ip) :: ftnd ( ftsize )  !! number of double precision components of the summaries
-      integer(ip) :: ftni ( ftsize )  !! number of integer components of the summaries
-      integer(ip) :: fhlist ( lbcell : ftsize )  !! set of the handles of the open DAFs
-      logical :: first  !! the handle set has not been initialized yet
+      integer(ip) :: nft = 0  !! number of DAFs in the file table
+      type(daf_file), allocatable :: files(:)  !! the DAFs (1 to nft are used)
+   contains
+      procedure :: find => daf_find
+      procedure :: add => daf_add
+      procedure :: remove => daf_remove
    end type dafah_state
 
    ! ------------------------------------------------------------------ DAFANA
@@ -451,7 +462,7 @@ module pepper_states
 
    ! ------------------------------------------------------------------ DAFFA
 
-   integer(ip), parameter :: daffa_tbsize = ftsize
+   integer(ip), parameter :: daffa_tbsize = 16  !! PEPPER: initial size of the state table (it grows)
    integer(ip), parameter :: dprsiz = 128
 
    !> Find arrays in a DAF.
@@ -460,28 +471,29 @@ module pepper_states
    !> daffna, dafbbs, daffpa, dafgs, dafgn, dafgh, dafrs, dafrn, dafws,
    !> dafcs), held in pepper_context (one per thread).
    !>
-   !> No default initialization (10280016 bytes): see init_daffa_state.
+   !> init_daffa_state allocates the state table (SPICELIB's was 10280016
+   !> bytes per context).
    type, public :: daffa_state
-      integer(ip) :: stfh (         daffa_tbsize )  !! handle of each DAF being searched
-      integer(ip) :: stprev (         daffa_tbsize )  !! record number of the previous summary record of
-                                                      !! each search
-      integer(ip) :: stthis (         daffa_tbsize )  !! record number of the current summary record of
-                                                      !! each search
-      integer(ip) :: stnext (         daffa_tbsize )  !! record number of the next summary record of each
-                                                      !! search
-      integer(ip) :: stnseg (         daffa_tbsize )  !! number of summaries in the current summary record
-                                                      !! of each search
-      integer(ip) :: stcurr (         daffa_tbsize )  !! index of the current summary within its record,
-                                                      !! for each search
-      character(crlen) :: stnr (         daffa_tbsize )  !! the name record read last, for each search
-      logical :: sthvnr (         daffa_tbsize )  !! the name record of the current array is buffered
-                                                  !! (stnr), for each search
-      real(wp) :: stsr ( dprsiz, daffa_tbsize )  !! the summary record read last, for each search
-      integer(ip) :: stpool ( daffa_tbsize )  !! linked-list pool of the state table (active and free
+      ! PEPPER: SPICELIB's state table had FTSIZE (5000) entries in each
+      ! context (about 10 MB); it starts with DAFFA_TBSIZE entries and
+      ! doubles when it is full of searches of open DAFs (daffa_grow).
+      integer(ip), allocatable :: stfh (:)  !! handle of each DAF being searched
+      integer(ip), allocatable :: stprev (:)  !! record number of the previous summary record of each search
+      integer(ip), allocatable :: stthis (:)  !! record number of the current summary record of each search
+      integer(ip), allocatable :: stnext (:)  !! record number of the next summary record of each search
+      integer(ip), allocatable :: stnseg (:)  !! number of summaries in the current summary record of
+                                              !! each search
+      integer(ip), allocatable :: stcurr (:)  !! index of the current summary within its record, for
+                                              !! each search
+      character(crlen), allocatable :: stnr (:)  !! the name record read last, for each search
+      logical, allocatable :: sthvnr (:)  !! the name record of the current array is buffered (stnr),
+                                          !! for each search
+      real(wp), allocatable :: stsr (:, :)  !! the summary record read last, for each search
+                                            !! (dprsiz, entries)
+      integer(ip), allocatable :: stpool (:)  !! linked-list pool of the state table (active and free
                                               !! entries)
-      integer(ip) :: sthead  !! head of the list of active entries of the state table
-      integer(ip) :: stfptr  !! head of the list of free entries of the state table
-      logical :: first  !! the state table has not been initialized yet
+      integer(ip) :: sthead = nil  !! head of the list of active entries of the state table
+      integer(ip) :: stfptr = nil  !! head of the list of free entries of the state table
    end type daffa_state
 
    ! ------------------------------------------------------------------ DAFRWD
@@ -601,18 +613,6 @@ module pepper_states
 
    ! ------------------------------------------------------------------ DASCLS
 
-   !> Close a DAS file.
-   !>
-   !> The saved variables of SPICELIB's DASCLS routines (entry points dascls),
-   !> held in pepper_context (one per thread).
-   !>
-   !> No default initialization (20028 bytes): see init_dascls_state.
-   type, public :: dascls_state
-      integer(ip) :: fhset ( lbcell : ftsize )  !! set of the handles of the open DAS files (sized
-                                                !! once)
-      logical :: pass1  !! the handle set has not been sized yet
-   end type dascls_state
-
    ! ------------------------------------------------------------------ DASEC
 
    integer(ip), parameter :: dasec_mxcrec = 1024
@@ -654,18 +654,27 @@ module pepper_states
    !> dasopw, dasonw, dasopn, dasops, dasllc, dashfs, dasufs, dashlu, dasluh,
    !> dashfn, dasfnh, dashof, dassih, dasham), held in pepper_spice.
    !>
-   !> No default initialization (400080 bytes): see init_dasfm_state.
+   !> PEPPER: SPICELIB's file table was parallel arrays of FTSIZE (5000)
+   !> entries linked into a list (most recently opened first, searched
+   !> from the head), plus a set (FHLIST) of the same handles; it is an
+   !> array of these records that grows as DASs are opened.
+   type, public :: das_file
+      integer(ip) :: handle = 0  !! the handle
+      integer(ip) :: access = -1  !! access method (READ, WRITE)
+      integer(ip) :: links = -1  !! number of links (opens) of the DAS
+      integer(ip) :: summary ( sumsiz ) = 0  !! file summary (free records and addresses, last
+                                             !! records and words of each data type)
+   end type das_file
+
+   !> The DAS file table: the open DASs in increasing order of
+   !> abs(handle), so that a handle is found by binary search.
    type, public :: dasfm_state
-      integer(ip) :: fthan (         ftsize )  !! handle of each DAS
-      integer(ip) :: ftacc (         ftsize )  !! access method of each DAS
-      integer(ip) :: ftlnk (         ftsize )  !! number of links (opens) of each DAS
-      integer(ip) :: ftsum ( sumsiz, ftsize )  !! file summary of each DAS (free records and
-                                               !! addresses, last records and words of each data
-                                               !! type)
-      integer(ip) :: pool ( 2,  lbpool : ftsize )  !! linked-list pool of the file table
-      integer(ip) :: fthead  !! head of the list of the file table's entries
-      integer(ip) :: fhlist ( lbcell : ftsize )  !! set of the handles of the open DASs
-      logical :: pass1  !! the file table has not been initialized yet
+      integer(ip) :: nft = 0  !! number of DASs in the file table
+      type(das_file), allocatable :: files(:)  !! the DASs (1 to nft are used)
+   contains
+      procedure :: find => das_find
+      procedure :: add => das_add
+      procedure :: remove => das_remove
    end type dasfm_state
 
    ! ------------------------------------------------------------------ DASRWR
@@ -1487,9 +1496,6 @@ module pepper_states
 
    ! ------------------------------------------------------------------ KEEPER
 
-   integer(ip), parameter :: keeper_ftsize = 5000
-   integer(ip), parameter :: maxtxt = 300
-   integer(ip), parameter :: keeper_maxfil = keeper_ftsize + maxtxt
    integer(ip), parameter :: keeper_wdsize = 32
    integer(ip), parameter :: nknown = 3
 
@@ -1500,15 +1506,27 @@ module pepper_states
    !> The saved variables of SPICELIB's KEEPER routines (entry points furnsh,
    !> ktotal, kdata, kinfo, kclear, unload), held in pepper_spice.
    !>
-   !> No default initialization (1436404 bytes): see init_keeper_state.
+   !> PEPPER: SPICELIB's table was four parallel arrays of MAXFIL (5300)
+   !> entries, with names of at most FILSIZ (255) characters; it is an
+   !> array of these records that grows, with names of any length.
+   type, public :: keeper_kernel
+      character(:), allocatable :: name  !! the file name (as given to FURNSH or in KERNELS_TO_LOAD)
+      character(typlen) :: type = ' '  !! SPK, CK, PCK, DSK, EK, TEXT or META
+      integer(ip) :: handle = 0  !! handle of the kernel (0 for a text kernel)
+      integer(ip) :: source = 0  !! index of the meta-kernel it was loaded from (0: loaded directly)
+   end type keeper_kernel
+
+   !> The kernels loaded through FURNSH, in load order.
    type, public :: keeper_state
-      character(filsiz) :: files ( keeper_maxfil )  !! name of each kernel loaded through FURNSH
-      integer(ip) :: handls ( keeper_maxfil )  !! handle of each loaded kernel (0 for a text kernel)
-      integer(ip) :: srces ( keeper_maxfil )  !! index in files of the meta-kernel each kernel was loaded from (0: loaded directly)
-      character(typlen) :: types ( keeper_maxfil )  !! type (SPK, CK, PCK, DSK, EK, TEXT, META) of each loaded kernel
-      integer(ip) :: loaded  !! number of kernels loaded
-      character(keeper_wdsize) :: known ( nknown )  !! the meta-kernel variables (KERNELS_TO_LOAD, PATH_SYMBOLS, PATH_VALUES) watched by FURNSH
-      logical :: first  !! the watcher has not been set yet
+      integer(ip) :: loaded = 0  !! number of kernels loaded
+      type(keeper_kernel), allocatable :: kernels(:)  !! the kernels (1 to loaded are used)
+      character(keeper_wdsize) :: known ( nknown ) = ' '  !! the meta-kernel variables (KERNELS_TO_LOAD,
+                                                          !! PATH_SYMBOLS, PATH_VALUES) watched by FURNSH
+      logical :: first = .true.  !! the watcher has not been set yet
+   contains
+      procedure :: add => keeper_add
+      procedure :: remove => keeper_remove
+      procedure :: clear => keeper_clear
    end type keeper_state
 
    ! ------------------------------------------------------------------ LATSRF
@@ -1633,8 +1651,8 @@ module pepper_states
    !>
    !> No default initialization (40008 bytes): see init_pckbsr_state.
    type, public :: pckbsr_state
-      integer(ip) :: fthan ( pckbsr_ftsize )  !! handle of each loaded file (in load order)
-      integer(ip) :: ftnum ( pckbsr_ftsize )  !! file number of each loaded file: its place in the load (and search) order
+      integer(ip), allocatable :: fthan ( : )  !! handle of each loaded file (in load order)
+      integer(ip), allocatable :: ftnum ( : )  !! file number of each loaded file: its place in the load (and search) order
       integer(ip) :: next  !! the file number of the file loaded last
       integer(ip) :: nft  !! number of loaded files
    end type pckbsr_state
@@ -1809,7 +1827,8 @@ module pepper_states
    !> The saved variables of SPICELIB's RDKER routines (entry points rdknew,
    !> rdkdat, rdklin), held in pepper_spice.
    type, public :: rdker_state
-      character(filsiz) :: file = ' '  !! the text kernel being read
+      character(:), allocatable :: file  !! the text kernel being read (PEPPER: any length; SPICELIB's
+                                          !! held FILSIZ, 255, characters)
       integer(ip) :: linnum = 0  !! number of the last line read
       integer(ip) :: status = 0  !! reading text, data, or at the end of the file
       logical :: frstim = .true.  !! no kernel has been opened yet
@@ -1829,7 +1848,8 @@ module pepper_states
    type, public :: rdtext_state
       integer(ip) :: units ( maxopn ) = 0  !! units of the files open for reading
       integer(ip) :: n = 0  !! number of files open
-      character(rdtext_maxlen) :: lstfil = ' '  !! the file read last
+      character(:), allocatable :: lstfil  !! the file read last (PEPPER: any length; SPICELIB's
+                                            !! held 255 characters)
       integer(ip) :: lstunt = 0  !! the unit of the file read last
       integer(ip) :: index = 0  !! index in units of the file read last
    end type rdtext_state
@@ -2173,8 +2193,8 @@ module pepper_states
    !>
    !> No default initialization (40008 bytes): see init_spkbsr_state.
    type, public :: spkbsr_state
-      integer(ip) :: fthan ( spkbsr_ftsize )  !! handle of each loaded file (in load order)
-      integer(ip) :: ftnum ( spkbsr_ftsize )  !! file number of each loaded file: its place in the load (and search) order
+      integer(ip), allocatable :: fthan ( : )  !! handle of each loaded file (in load order)
+      integer(ip), allocatable :: ftnum ( : )  !! file number of each loaded file: its place in the load (and search) order
       integer(ip) :: next  !! the file number of the file loaded last
       integer(ip) :: nft  !! number of loaded files
    end type spkbsr_state
@@ -3424,18 +3444,31 @@ module pepper_states
    !> zzddhluh), held in pepper_spice (and, for some variables, in
    !> pepper_context).
    !>
-   !> No default initialization (1435016 bytes): see init_zzddhman_state.
+   !> PEPPER: SPICELIB's file table was eight parallel arrays of FTSIZE
+   !> (5000) entries, with names of at most FILEN (255) characters; it is
+   !> an array of these records that grows as files are loaded, with names
+   !> of any length. (SPICELIB's FTABS and FTRTM are abs(handle) and
+   !> len(name).)
+   type, public :: ddh_file
+      integer(ip) :: handle = 0  !! the handle (negative for files open for writing)
+      integer(ip) :: method = 0  !! access method (READ, WRITE, SCRTCH, NEW)
+      integer(ip) :: arch = 0  !! architecture (DAF, DAS)
+      integer(ip) :: bff = 0  !! binary file format
+      real(wp) :: mnm = 0.0_wp  !! unique number (from the file's attributes)
+      character(:), allocatable :: name  !! the file name
+   end type ddh_file
+
+   !> The file table: the files in increasing order of abs(handle) (the
+   !> order in which they were opened), so that a handle is found by
+   !> binary search.
    type, public :: zzddhman_state
-      integer(ip) :: nft  !! number of files in the file table
-      integer(ip) :: ftabs ( ftsize )  !! absolute value of each file's handle
-      integer(ip) :: ftamh ( ftsize )  !! access method of each file
-      integer(ip) :: ftarc ( ftsize )  !! architecture (DAF, DAS) of each file
-      integer(ip) :: ftbff ( ftsize )  !! binary file format of each file
-      integer(ip) :: fthan ( ftsize )  !! handle of each file
-      character(filen) :: ftnam ( ftsize )  !! name of each file
-      integer(ip) :: ftrtm ( ftsize )  !! length of each file name
-      real(wp) :: ftmnm ( ftsize )  !! unique number (from the file's attributes) of each file
-      integer(ip) :: next  !! the next handle number (handles are never reused)
+      integer(ip) :: nft = 0  !! number of files in the file table
+      type(ddh_file), allocatable :: files(:)  !! the files (1 to nft are used)
+      integer(ip) :: next = 0  !! the next handle number (handles are never reused)
+   contains
+      procedure :: find => ddh_find
+      procedure :: add => ddh_add
+      procedure :: remove => ddh_remove
    end type zzddhman_state
 
    !> The saved variables of ZZDDHMAN that are per context.
@@ -3566,8 +3599,8 @@ module pepper_states
    !>
    !> No default initialization (40020 bytes): see init_zzdskbsr_state.
    type, public :: zzdskbsr_state
-      integer(ip) :: fthan ( zzdskbsr_ftsize )  !! handle of each loaded file (in load order)
-      integer(ip) :: ftnum ( zzdskbsr_ftsize )  !! file number of each loaded file: its place in the load (and search) order
+      integer(ip), allocatable :: fthan ( : )  !! handle of each loaded file (in load order)
+      integer(ip), allocatable :: ftnum ( : )  !! file number of each loaded file: its place in the load (and search) order
       integer(ip) :: next  !! the file number of the file loaded last
       integer(ip) :: nft  !! number of loaded files
       integer(ip) :: dskctr ( ctrsiz )  !! counter of changes of the loaded DSK set (checked by ZZDSKCHK)
@@ -5632,8 +5665,7 @@ contains
    !> values, and zero for the other components.
    pure subroutine init_ckbsr_state(state)
       type(ckbsr_state), intent(inout) :: state  !! the state
-      state%fthan = 0
-      state%ftnum = 0
+      allocate ( state%fthan(16), state%ftnum(16), source=0_ip )  ! PEPPER: they grow (was ckbsr_ftsize)
       state%next = 0
       state%nft = 0
    end subroutine init_ckbsr_state
@@ -5681,16 +5713,61 @@ contains
 
    !> Set the initial values of a new dafah_state: SPICELIB's DATA
    !> values, and zero for the other components.
-   pure subroutine init_dafah_state(state)
-      type(dafah_state), intent(inout) :: state  !! the state
-      state%nft = 0
-      state%fthan = 0
-      state%ftlnk = 0
-      state%ftnd = 0
-      state%ftni = 0
-      state%fhlist = 0
-      state%first = .true.
-   end subroutine init_dafah_state
+   !> The index of the DAF with a handle in the DAF file table: 0 if no
+   !> DAF has this handle.
+   pure integer(ip) function daf_find(self, handle) result(i)
+      class(dafah_state), intent(in) :: self  !! the file table
+      integer(ip), intent(in) :: handle  !! the handle
+      integer(ip) :: lo, hi, key, k
+      key = abs(handle)
+      lo = 1
+      hi = self%nft
+      i = 0
+      do while (lo <= hi)
+         k = lo + (hi - lo)/2
+         if (abs(self%files(k)%handle) < key) then
+            lo = k + 1
+         else if (abs(self%files(k)%handle) > key) then
+            hi = k - 1
+         else
+            if (self%files(k)%handle == handle) i = k
+            return
+         end if
+      end do
+   end function daf_find
+
+   !> Add a DAF to the DAF file table, in order of abs(handle) (normally
+   !> at the end: handles grow).
+   pure subroutine daf_add(self, file)
+      class(dafah_state), intent(inout) :: self  !! the file table
+      type(daf_file), intent(in) :: file  !! the DAF
+      type(daf_file), allocatable :: tmp(:)
+      integer(ip) :: k
+      if (.not. allocated(self%files)) allocate (self%files(8))
+      if (self%nft == size(self%files)) then
+         allocate (tmp(2*size(self%files)))
+         tmp(1:self%nft) = self%files(1:self%nft)
+         call move_alloc(tmp, self%files)
+      end if
+      k = self%nft
+      do while (k > 0)
+         if (abs(self%files(k)%handle) < abs(file%handle)) exit
+         self%files(k + 1) = self%files(k)
+         k = k - 1
+      end do
+      self%files(k + 1) = file
+      self%nft = self%nft + 1
+   end subroutine daf_add
+
+   !> Remove DAF i from the DAF file table, keeping the order of the
+   !> others.
+   pure subroutine daf_remove(self, i)
+      class(dafah_state), intent(inout) :: self  !! the file table
+      integer(ip), intent(in) :: i  !! the index of the DAF
+      self%files(i:self%nft - 1) = self%files(i + 1:self%nft)
+      self%files(self%nft) = daf_file()
+      self%nft = self%nft - 1
+   end subroutine daf_remove
 
    !> Set the initial values of a new dafana_state: SPICELIB's DATA
    !> values, and zero for the other components.
@@ -5732,20 +5809,37 @@ contains
    !> values, and zero for the other components.
    pure subroutine init_daffa_state(state)
       type(daffa_state), intent(inout) :: state  !! the state
-      state%stfh = 0
-      state%stprev = 0
-      state%stthis = 0
-      state%stnext = 0
-      state%stnseg = 0
-      state%stcurr = 0
-      state%stnr = ' '
-      state%sthvnr = .false.
-      state%stsr = 0.0_wp
-      state%stpool = 0
       state%sthead = nil
       state%stfptr = nil
-      state%first = .true.
+      call daffa_grow(state)
    end subroutine init_daffa_state
+
+   !> Enlarge the DAFFA state table (to DAFFA_TBSIZE entries if it has
+   !> none, else to twice its size), keeping its entries and lists; the
+   !> new entries are added to the free list.
+   pure subroutine daffa_grow(state)
+      type(daffa_state), intent(inout) :: state  !! the state
+      integer(ip) :: n, m, i
+      n = 0
+      if (allocated(state%stpool)) n = size(state%stpool)
+      m = max(daffa_tbsize, 2*n)
+      call grow(state%stfh, m)
+      call grow(state%stprev, m)
+      call grow(state%stthis, m)
+      call grow(state%stnext, m)
+      call grow(state%stnseg, m)
+      call grow(state%stcurr, m)
+      call grow(state%stnr, m)
+      call grow(state%sthvnr, m)
+      call grow(state%stsr, m, dprsiz)
+      call grow(state%stpool, m)
+      m = size(state%stpool)
+      do i = n + 1, m - 1
+         state%stpool(i) = i + 1
+      end do
+      state%stpool(m) = state%stfptr
+      state%stfptr = n + 1
+   end subroutine daffa_grow
 
    !> Set the initial values of a new dafrwd_state: SPICELIB's DATA
    !> values, and zero for the other components.
@@ -5759,14 +5853,6 @@ contains
       state%nread = 0
       state%nreq = 0
    end subroutine init_dafrwd_state
-
-   !> Set the initial values of a new dascls_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_dascls_state(state)
-      type(dascls_state), intent(inout) :: state  !! the state
-      state%fhset = 0
-      state%pass1 = .true.
-   end subroutine init_dascls_state
 
    !> Set the initial values of a new dasec_state: SPICELIB's DATA
    !> values, and zero for the other components.
@@ -5785,17 +5871,61 @@ contains
 
    !> Set the initial values of a new dasfm_state: SPICELIB's DATA
    !> values, and zero for the other components.
-   pure subroutine init_dasfm_state(state)
-      type(dasfm_state), intent(inout) :: state  !! the state
-      state%fthan = 0
-      state%ftacc = -1
-      state%ftlnk = -1
-      state%ftsum = 0
-      state%pool = 0
-      state%fthead = 0
-      state%fhlist = 0
-      state%pass1 = .true.
-   end subroutine init_dasfm_state
+   !> The index of the DAS with a handle in the DAS file table: 0 if no
+   !> DAS has this handle.
+   pure integer(ip) function das_find(self, handle) result(i)
+      class(dasfm_state), intent(in) :: self  !! the file table
+      integer(ip), intent(in) :: handle  !! the handle
+      integer(ip) :: lo, hi, key, k
+      key = abs(handle)
+      lo = 1
+      hi = self%nft
+      i = 0
+      do while (lo <= hi)
+         k = lo + (hi - lo)/2
+         if (abs(self%files(k)%handle) < key) then
+            lo = k + 1
+         else if (abs(self%files(k)%handle) > key) then
+            hi = k - 1
+         else
+            if (self%files(k)%handle == handle) i = k
+            return
+         end if
+      end do
+   end function das_find
+
+   !> Add a DAS to the DAS file table, in order of abs(handle) (normally
+   !> at the end: handles grow).
+   pure subroutine das_add(self, file)
+      class(dasfm_state), intent(inout) :: self  !! the file table
+      type(das_file), intent(in) :: file  !! the DAS
+      type(das_file), allocatable :: tmp(:)
+      integer(ip) :: k
+      if (.not. allocated(self%files)) allocate (self%files(8))
+      if (self%nft == size(self%files)) then
+         allocate (tmp(2*size(self%files)))
+         tmp(1:self%nft) = self%files(1:self%nft)
+         call move_alloc(tmp, self%files)
+      end if
+      k = self%nft
+      do while (k > 0)
+         if (abs(self%files(k)%handle) < abs(file%handle)) exit
+         self%files(k + 1) = self%files(k)
+         k = k - 1
+      end do
+      self%files(k + 1) = file
+      self%nft = self%nft + 1
+   end subroutine das_add
+
+   !> Remove DAS i from the DAS file table, keeping the order of the
+   !> others.
+   pure subroutine das_remove(self, i)
+      class(dasfm_state), intent(inout) :: self  !! the file table
+      integer(ip), intent(in) :: i  !! the index of the DAS
+      self%files(i:self%nft - 1) = self%files(i + 1:self%nft)
+      self%files(self%nft) = das_file()
+      self%nft = self%nft - 1
+   end subroutine das_remove
 
    !> Set the initial values of a new dasrwr_state: SPICELIB's DATA
    !> values, and zero for the other components.
@@ -5977,18 +6107,54 @@ contains
       state%bididx = 0
    end subroutine init_framex_state
 
-   !> Set the initial values of a new keeper_state: SPICELIB's DATA
-   !> values, and zero for the other components.
-   pure subroutine init_keeper_state(state)
-      type(keeper_state), intent(inout) :: state  !! the state
-      state%files = ' '
-      state%handls = 0
-      state%srces = 0
-      state%types = ' '
-      state%loaded = 0
-      state%known = ' '
-      state%first = .true.
-   end subroutine init_keeper_state
+   !> Add a kernel at the end of the KEEPER table.
+   pure subroutine keeper_add(self, kernel)
+      class(keeper_state), intent(inout) :: self  !! the table
+      type(keeper_kernel), intent(in) :: kernel  !! the kernel
+      type(keeper_kernel), allocatable :: tmp(:)
+      integer(ip) :: k
+      if (.not. allocated(self%kernels)) allocate (self%kernels(16))
+      if (self%loaded == size(self%kernels)) then
+         allocate (tmp(2*size(self%kernels)))
+         do k = 1, self%loaded
+            call move_kernel(self%kernels(k), tmp(k))
+         end do
+         call move_alloc(tmp, self%kernels)
+      end if
+      self%loaded = self%loaded + 1
+      self%kernels(self%loaded) = kernel
+   end subroutine keeper_add
+
+   !> Remove kernel i from the KEEPER table, keeping the order of the
+   !> others (the sources of the others are not changed).
+   pure subroutine keeper_remove(self, i)
+      class(keeper_state), intent(inout) :: self  !! the table
+      integer(ip), intent(in) :: i  !! the index of the kernel
+      integer(ip) :: k
+      do k = i + 1, self%loaded
+         call move_kernel(self%kernels(k), self%kernels(k - 1))
+      end do
+      self%kernels(self%loaded) = keeper_kernel()
+      self%loaded = self%loaded - 1
+   end subroutine keeper_remove
+
+   !> Remove all kernels from the KEEPER table (and release its memory).
+   pure subroutine keeper_clear(self)
+      class(keeper_state), intent(inout) :: self  !! the table
+      self%loaded = 0
+      if (allocated(self%kernels)) deallocate (self%kernels)
+   end subroutine keeper_clear
+
+   !> Move a KEEPER record (its name without copying).
+   pure subroutine move_kernel(from, to)
+      type(keeper_kernel), intent(inout) :: from  !! the record moved (its name is deallocated)
+      type(keeper_kernel), intent(inout) :: to  !! the record replaced
+      to%type = from%type
+      to%handle = from%handle
+      to%source = from%source
+      call move_alloc(from%name, to%name)
+   end subroutine move_kernel
+
 
    !> Set the initial values of a new limbpt_state: SPICELIB's DATA
    !> values, and zero for the other components.
@@ -6030,8 +6196,7 @@ contains
    !> values, and zero for the other components.
    pure subroutine init_pckbsr_state(state)
       type(pckbsr_state), intent(inout) :: state  !! the state
-      state%fthan = 0
-      state%ftnum = 0
+      allocate ( state%fthan(16), state%ftnum(16), source=0_ip )  ! PEPPER: they grow (was pckbsr_ftsize)
       state%next = 0
       state%nft = 0
    end subroutine init_pckbsr_state
@@ -6136,8 +6301,7 @@ contains
    !> values, and zero for the other components.
    pure subroutine init_spkbsr_state(state)
       type(spkbsr_state), intent(inout) :: state  !! the state
-      state%fthan = 0
-      state%ftnum = 0
+      allocate ( state%fthan(16), state%ftnum(16), source=0_ip )  ! PEPPER: they grow (was spkbsr_ftsize)
       state%next = 0
       state%nft = 0
    end subroutine init_spkbsr_state
@@ -6308,26 +6472,77 @@ contains
 
    !> Set the initial values of a new zzddhman_state: SPICELIB's DATA
    !> values, and zero for the other components.
-   pure subroutine init_zzddhman_state(state)
-      type(zzddhman_state), intent(inout) :: state  !! the state
-      state%nft = 0
-      state%ftabs = 0
-      state%ftamh = 0
-      state%ftarc = 0
-      state%ftbff = 0
-      state%fthan = 0
-      state%ftnam = ' '
-      state%ftrtm = 0
-      state%ftmnm = 0.0_wp
-      state%next = 0
-   end subroutine init_zzddhman_state
+   !> The index of the file with a handle in the file table: 0 if no
+   !> file has this handle.
+   pure integer(ip) function ddh_find(self, handle) result(i)
+      class(zzddhman_state), intent(in) :: self  !! the file table
+      integer(ip), intent(in) :: handle  !! the handle
+      integer(ip) :: lo, hi, key, k
+      key = abs(handle)
+      lo = 1
+      hi = self%nft
+      i = 0
+      do while (lo <= hi)
+         k = lo + (hi - lo)/2
+         if (abs(self%files(k)%handle) < key) then
+            lo = k + 1
+         else if (abs(self%files(k)%handle) > key) then
+            hi = k - 1
+         else
+            if (self%files(k)%handle == handle) i = k
+            return
+         end if
+      end do
+   end function ddh_find
+
+   !> Add a file at the end of the file table (its handle must be larger
+   !> in absolute value than those in the table).
+   pure subroutine ddh_add(self, file)
+      class(zzddhman_state), intent(inout) :: self  !! the file table
+      type(ddh_file), intent(in) :: file  !! the file
+      type(ddh_file), allocatable :: tmp(:)
+      integer(ip) :: k
+      if (.not. allocated(self%files)) allocate (self%files(8))
+      if (self%nft == size(self%files)) then
+         allocate (tmp(2*size(self%files)))
+         do k = 1, self%nft
+            call move_file(self%files(k), tmp(k))
+         end do
+         call move_alloc(tmp, self%files)
+      end if
+      self%nft = self%nft + 1
+      self%files(self%nft) = file
+   end subroutine ddh_add
+
+   !> Remove file i from the file table, keeping the order of the others.
+   pure subroutine ddh_remove(self, i)
+      class(zzddhman_state), intent(inout) :: self  !! the file table
+      integer(ip), intent(in) :: i  !! the index of the file
+      integer(ip) :: k
+      do k = i + 1, self%nft
+         call move_file(self%files(k), self%files(k - 1))
+      end do
+      self%files(self%nft) = ddh_file()
+      self%nft = self%nft - 1
+   end subroutine ddh_remove
+
+   !> Move a file record (its name without copying).
+   pure subroutine move_file(from, to)
+      type(ddh_file), intent(inout) :: from  !! the record moved (its name is deallocated)
+      type(ddh_file), intent(inout) :: to  !! the record replaced
+      to%handle = from%handle
+      to%method = from%method
+      to%arch = from%arch
+      to%bff = from%bff
+      to%mnm = from%mnm
+      call move_alloc(from%name, to%name)
+   end subroutine move_file
 
    !> Set the initial values of a new zzdskbsr_state: SPICELIB's DATA
    !> values, and zero for the other components.
    pure subroutine init_zzdskbsr_state(state)
       type(zzdskbsr_state), intent(inout) :: state  !! the state
-      state%fthan = 0
-      state%ftnum = 0
+      allocate ( state%fthan(16), state%ftnum(16), source=0_ip )  ! PEPPER: they grow (was zzdskbsr_ftsize)
       state%next = 0
       state%nft = 0
       state%dskctr = 0

@@ -6079,27 +6079,14 @@ contains
       integer(ip)           iostat
       integer(ip)           lun
       logical               found
-      if ( .not. allocated ( ctx%spice%dafah ) ) then
-         allocate ( ctx%spice%dafah )
-         call init_dafah_state ( ctx%spice%dafah )
-      end if
-      associate ( nft => ctx%spice%dafah%nft, &
-                  fthan => ctx%spice%dafah%fthan, &
-                  ftlnk => ctx%spice%dafah%ftlnk, &
-                  ftnd => ctx%spice%dafah%ftnd, &
-                  ftni => ctx%spice%dafah%ftni, &
-                  fhlist => ctx%spice%dafah%fhlist, &
-                  first => ctx%spice%dafah%first )
+      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
+      associate ( ft => ctx%spice%dafah, &
+                  nft => ctx%spice%dafah%nft )
       if ( ctx%failed() ) return
 
 !
 !     Initialize the handle list, if necessary.
 !
-      if ( first ) then
-         call ssizei ( ctx, ftsize, fhlist )
-         first = .false.
-      end if
-
 !
 !     Attempt to open the file; perform any appropriate checks.
 !
@@ -6115,10 +6102,10 @@ contains
 !     is simply increment its link count by one, check out and
 !     return.
 !
-      findex = isrchi ( handle, nft, fthan )
+      findex = ft%find ( handle )
 
       if ( findex /= 0 ) then
-         ftlnk(findex) = ftlnk(findex) + 1
+         ft%files(findex)%links = ft%files(findex)%links + 1
          return
       end if
 
@@ -6153,16 +6140,8 @@ contains
 !     Update the file table to include information about our newly
 !     opened DAF.
 !
-      nft        = nft  + 1
-      fthan(nft) = handle
-      ftnd(nft)  = fnd
-      ftni(nft)  = fni
-      ftlnk(nft) = 1
+      call ft%add ( daf_file ( handle = handle, links = 1, nd = fnd, ni = fni ) )
 
-!
-!     Insert the new handle into our handle set.
-!
-      call insrti ( ctx, handle, fhlist )
 
       return
       end associate
@@ -6603,42 +6582,21 @@ contains
       integer(ip)           iostat
       integer(ip)           lun
       logical               found
-      if ( .not. allocated ( ctx%spice%dafah ) ) then
-         allocate ( ctx%spice%dafah )
-         call init_dafah_state ( ctx%spice%dafah )
-      end if
-      associate ( nft => ctx%spice%dafah%nft, &
-                  fthan => ctx%spice%dafah%fthan, &
-                  ftlnk => ctx%spice%dafah%ftlnk, &
-                  ftnd => ctx%spice%dafah%ftnd, &
-                  ftni => ctx%spice%dafah%ftni, &
-                  fhlist => ctx%spice%dafah%fhlist, &
-                  first => ctx%spice%dafah%first )
+      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
+      associate ( ft => ctx%spice%dafah, &
+                  nft => ctx%spice%dafah%nft )
       if ( ctx%failed() ) return
 
 !
 !     Initialize the handle list, if necessary.
 !
-      if ( first ) then
-
-         call ssizei ( ctx, ftsize, fhlist )
-         first = .false.
-
-      end if
-
 !
 !     Check to see if there is room in the file table.
 !
-      if ( nft == ftsize ) then
-
-         call ctx%setmsg ( 'The file table is full, with # entries. '     // &
-                       'Could not open ''#''.'                         )
-         call ctx%errint ( '#', ftsize                                     )
-         call ctx%errch  ( '#', fname                                      )
-         call ctx%sigerr ( 'SPICE(DAFFTFULL)'                              )
-         return
-
-      end if
+!
+!     PEPPER: the file table grows as needed; SPICELIB signaled
+!     SPICE(DAFFTFULL) here when it had FTSIZE (5000) DAFs.
+!
 
 !
 !     Attempt to open the file; perform any appropriate checks.
@@ -6682,16 +6640,8 @@ contains
 !     Update the file table to include information about our
 !     newly opened DAF.
 !
-      nft        = nft  + 1
-      fthan(nft) = handle
-      ftnd(nft)  = fnd
-      ftni(nft)  = fni
-      ftlnk(nft) = 1
+      call ft%add ( daf_file ( handle = handle, links = 1, nd = fnd, ni = fni ) )
 
-!
-!     Insert the new handle into our handle set.
-!
-      call insrti ( ctx, handle, fhlist )
 
       return
       end associate
@@ -7053,40 +7003,21 @@ contains
       integer(ip)           iostat
       integer(ip)           lun
       logical               found
-      if ( .not. allocated ( ctx%spice%dafah ) ) then
-         allocate ( ctx%spice%dafah )
-         call init_dafah_state ( ctx%spice%dafah )
-      end if
-      associate ( nft => ctx%spice%dafah%nft, &
-                  fthan => ctx%spice%dafah%fthan, &
-                  ftlnk => ctx%spice%dafah%ftlnk, &
-                  ftnd => ctx%spice%dafah%ftnd, &
-                  ftni => ctx%spice%dafah%ftni, &
-                  fhlist => ctx%spice%dafah%fhlist, &
-                  first => ctx%spice%dafah%first )
+      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
+      associate ( ft => ctx%spice%dafah, &
+                  nft => ctx%spice%dafah%nft )
       if ( ctx%failed() ) return
 
 !
 !     Initialize the handle list, if necessary.
 !
-      if ( first ) then
-         call ssizei ( ctx, ftsize, fhlist )
-         first = .false.
-      end if
-
 !
 !     Check to see if there is room in the file table.
 !
-      if ( nft == ftsize ) then
-
-         call ctx%setmsg ( 'The file table is full, with # entries. '     // &
-                       'Could not open ''#''.'                         )
-         call ctx%errint ( '#', ftsize                                     )
-         call ctx%errch  ( '#', fname                                      )
-         call ctx%sigerr ( 'SPICE(DAFFTFULL)'                              )
-         return
-
-      end if
+!
+!     PEPPER: the file table grows as needed; SPICELIB signaled
+!     SPICE(DAFFTFULL) here when it had FTSIZE (5000) DAFs.
+!
 
 !
 !     Check if the file type is blank.
@@ -7305,16 +7236,8 @@ contains
 !     Update the file table to include information about our newly
 !     opened DAF.
 !
-      nft        = nft + 1
-      fthan(nft) = handle
-      ftnd(nft)  = fnd
-      ftni(nft)  = fni
-      ftlnk(nft) = 1
+      call ft%add ( daf_file ( handle = handle, links = 1, nd = fnd, ni = fni ) )
 
-!
-!     Insert the new handle into our handle set.
-!
-      call insrti ( ctx, handle, fhlist )
 
       return
       end associate
@@ -7644,40 +7567,21 @@ contains
       integer(ip)           iostat
       integer(ip)           lun
       logical               found
-      if ( .not. allocated ( ctx%spice%dafah ) ) then
-         allocate ( ctx%spice%dafah )
-         call init_dafah_state ( ctx%spice%dafah )
-      end if
-      associate ( nft => ctx%spice%dafah%nft, &
-                  fthan => ctx%spice%dafah%fthan, &
-                  ftlnk => ctx%spice%dafah%ftlnk, &
-                  ftnd => ctx%spice%dafah%ftnd, &
-                  ftni => ctx%spice%dafah%ftni, &
-                  fhlist => ctx%spice%dafah%fhlist, &
-                  first => ctx%spice%dafah%first )
+      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
+      associate ( ft => ctx%spice%dafah, &
+                  nft => ctx%spice%dafah%nft )
       if ( ctx%failed() ) return
 
 !
 !     Initialize the handle list, if necessary.
 !
-      if ( first ) then
-         call ssizei ( ctx, ftsize, fhlist )
-         first = .false.
-      end if
-
 !
 !     Check to see if there is room in the file table.
 !
-      if ( nft == ftsize ) then
-
-         call ctx%setmsg ( 'The file table is full, with # entries. '     // &
-                       'Could not open ''#''.'                         )
-         call ctx%errint ( '#', ftsize                                     )
-         call ctx%errch  ( '#', fname                                      )
-         call ctx%sigerr ( 'SPICE(DAFFTFULL)'                              )
-         return
-
-      end if
+!
+!     PEPPER: the file table grows as needed; SPICELIB signaled
+!     SPICE(DAFFTFULL) here when it had FTSIZE (5000) DAFs.
+!
 
 !
 !     Make sure ND and NI are in range.
@@ -7849,16 +7753,8 @@ contains
 !     Update the file table to include information about
 !     our newly opened DAF.
 !
-      nft        = nft + 1
-      fthan(nft) = handle
-      ftnd(nft)  = fnd
-      ftni(nft)  = fni
-      ftlnk(nft) = 1
+      call ft%add ( daf_file ( handle = handle, links = 1, nd = fnd, ni = fni ) )
 
-!
-!     Insert the new handle into our handle set.
-!
-      call insrti ( ctx, handle, fhlist )
 
       return
       end associate
@@ -8234,27 +8130,14 @@ contains
       integer(ip)           iostat
       integer(ip)           lun
       logical               found
-      if ( .not. allocated ( ctx%spice%dafah ) ) then
-         allocate ( ctx%spice%dafah )
-         call init_dafah_state ( ctx%spice%dafah )
-      end if
-      associate ( nft => ctx%spice%dafah%nft, &
-                  fthan => ctx%spice%dafah%fthan, &
-                  ftlnk => ctx%spice%dafah%ftlnk, &
-                  ftnd => ctx%spice%dafah%ftnd, &
-                  ftni => ctx%spice%dafah%ftni, &
-                  fhlist => ctx%spice%dafah%fhlist, &
-                  first => ctx%spice%dafah%first )
+      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
+      associate ( ft => ctx%spice%dafah, &
+                  nft => ctx%spice%dafah%nft )
       if ( ctx%failed() ) return
 
 !
 !     Initialize the handle list, if necessary.
 !
-      if ( first ) then
-         call ssizei ( ctx, ftsize, fhlist )
-         first = .false.
-      end if
-
 !
 !     Is this file even open? If so, decrement the number of links
 !     to the file. If the number of links drops to zero, physically
@@ -8262,29 +8145,17 @@ contains
 !
 !     If the file is not open: no harm, no foul.
 !
-      findex = isrchi ( handle, nft, fthan )
+      findex = ft%find ( handle )
 
       if ( findex > 0 ) then
 
-         ftlnk(findex) = ftlnk(findex) - 1
+         ft%files(findex)%links = ft%files(findex)%links - 1
 
-         if ( ftlnk(findex) == 0 ) then
+         if ( ft%files(findex)%links == 0 ) then
 
             call zzddhcls ( ctx, handle, 'DAF', .false. )
 
-            do i = findex, nft - 1
-               fthan(i) = fthan(i+1)
-               ftlnk(i) = ftlnk(i+1)
-               ftnd(i)  = ftnd(i+1)
-               ftni(i)  = ftni(i+1)
-            end do
-
-            nft = nft - 1
-
-!
-!           Delete the handle from our handle set.
-!
-            call removi ( ctx, handle, fhlist )
+            call ft%remove ( findex )
 
          end if
 
@@ -8576,22 +8447,17 @@ contains
       integer(ip)           iostat
       integer(ip)           lun
       logical               found
-      if ( .not. allocated ( ctx%spice%dafah ) ) then
-         allocate ( ctx%spice%dafah )
-         call init_dafah_state ( ctx%spice%dafah )
-      end if
-      associate ( nft => ctx%spice%dafah%nft, &
-                  fthan => ctx%spice%dafah%fthan, &
-                  ftnd => ctx%spice%dafah%ftnd, &
-                  ftni => ctx%spice%dafah%ftni )
+      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
+      associate ( ft => ctx%spice%dafah, &
+                  nft => ctx%spice%dafah%nft )
       if ( ctx%failed() ) return
 
-      findex = isrchi ( handle, nft, fthan )
+      findex = ft%find ( handle )
 
       if ( findex > 0 ) then
 
-         nd = ftnd(findex)
-         ni = ftni(findex)
+         nd = ft%files(findex)%nd
+         ni = ft%files(findex)%ni
 
       else
 
@@ -9699,6 +9565,7 @@ contains
 !!
 !!     Standard SPICE error handling.
 !!
+      use pepper_arrays, only: shelli
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
@@ -9739,28 +9606,27 @@ contains
       integer(ip)           iostat
       integer(ip)           lun
       logical               found
-      if ( .not. allocated ( ctx%spice%dafah ) ) then
-         allocate ( ctx%spice%dafah )
-         call init_dafah_state ( ctx%spice%dafah )
-      end if
-      associate ( fhlist => ctx%spice%dafah%fhlist, &
-                  first => ctx%spice%dafah%first )
+      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
+      associate ( ft => ctx%spice%dafah )
       if ( ctx%failed() ) return
 
 !
-!     Initialize the handle list, if necessary.
+!     Just stuff our local list into the set. (PEPPER: the set is built
+!     from the file table, SPICELIB kept it as FHLIST; COPYI signals
+!     SPICE(CELLTOOSMALL) as before if FHSET has no room.)
 !
-      if ( first ) then
-
-         call ssizei ( ctx, ftsize, fhlist )
-         first = .false.
-
-      end if
-
-!
-!     Just stuff our local list into the set.
-!
-      call copyi ( ctx, fhlist, fhset )
+      block
+         integer(ip), allocatable :: set(:)
+         integer(ip) :: k
+         allocate ( set(lbcell:max(1_ip, ft%nft)) )
+         call ssizei ( ctx, max(1_ip, ft%nft), set )
+         do k = 1, ft%nft
+            set(k) = ft%files(k)%handle
+         end do
+         call shelli ( ft%nft, set(1:) )
+         call scardi ( ctx, ft%nft, set )
+         call copyi ( ctx, set, fhset )
+      end block
 
       return
       end associate
@@ -10035,24 +9901,13 @@ contains
       integer(ip)           iostat
       integer(ip)           lun
       logical               found
-      if ( .not. allocated ( ctx%spice%dafah ) ) then
-         allocate ( ctx%spice%dafah )
-         call init_dafah_state ( ctx%spice%dafah )
-      end if
-      associate ( fhlist => ctx%spice%dafah%fhlist, &
-                  first => ctx%spice%dafah%first )
+      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
+      associate ( ft => ctx%spice%dafah )
       if ( ctx%failed() ) return
 
 !
 !     Initialize the handle list, if necessary.
 !
-      if ( first ) then
-
-         call ssizei ( ctx, ftsize, fhlist )
-         first = .false.
-
-      end if
-
 !
 !     Get an upper case, left-justified copy of ACCESS.
 !
@@ -10082,7 +9937,7 @@ contains
 !     readable, so in the case that ACC is 'READ', we're done if
 !     the DAF is open.
 !
-      if ( ( .not. found ) .or. ( .not. elemi( ctx, handle, fhlist ) ) ) then
+      if ( ( .not. found ) .or. ( ft%find ( handle ) == 0 ) ) then
 
          call ctx%setmsg ( 'There is no file open with handle = #' )
          call ctx%errint ( '#', handle                             )
@@ -19677,7 +19532,6 @@ contains
       logical :: found
       integer(ip) :: ni
       integer(ip) :: fward
-      integer(ip) :: opnset ( lbcell : ftsize )
       integer(ip) :: nextp
       if ( .not. allocated ( ctx%dafana ) ) then
          allocate ( ctx%dafana )
@@ -19712,8 +19566,6 @@ contains
 !
 
       if ( first ) then
-
-         call ssizei ( ctx, ftsize, opnset )
 
          do i = 1,  tbsize - 1
             stpool(i)   =  i + 1
@@ -19815,9 +19667,6 @@ contains
 !           that is still open.  DAFHOF will tell us which handles
 !           point to open DAFs.
 !
-            !     PEPPER: OPNSET is a local variable (SPICELIB saved it): size it.
-            call ssizei ( ctx, ftsize, opnset )
-            call dafhof ( ctx, opnset )
 
             p     =  sthead
             prev  =  nil
@@ -19830,7 +19679,7 @@ contains
 
             do while ( p /= nil )
 
-               if (  elemi ( ctx, stfh(p), opnset )   )  then
+               if (  ctx%spice%dafah%find ( stfh(p) ) > 0  )  then
 !
 !                 The file is open. Have a look at the next node.
 !
@@ -22265,11 +22114,11 @@ contains
       integer(ip) :: fward
       logical :: fnd
       character(filen) :: dafnam
-      integer(ip) :: opnset ( lbcell : ftsize )
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
       end if
+      call daffa_room ( ctx )
       associate ( stfh => ctx%daffa%stfh, &
                   stprev => ctx%daffa%stprev, &
                   stthis => ctx%daffa%stthis, &
@@ -22280,8 +22129,7 @@ contains
                   stsr => ctx%daffa%stsr, &
                   stpool => ctx%daffa%stpool, &
                   sthead => ctx%daffa%sthead, &
-                  stfptr => ctx%daffa%stfptr, &
-                  first => ctx%daffa%first )
+                  stfptr => ctx%daffa%stfptr )
       if ( ctx%failed() ) return
 
 !
@@ -22296,19 +22144,6 @@ contains
 !     Also initialize the cell used to obtain the set of handles of
 !     open DAFs.
 !
-      if ( first ) then
-
-         call ssizei ( ctx, ftsize, opnset )
-
-         do i = 1,  tbsize - 1
-            stpool(i)   =  i + 1
-         end do
-
-         stpool(tbsize) =  nil
-         stfptr         =  1
-         first          = .false.
-
-      end if
 
 !
 !     See whether we already have an entry for this DAF in the
@@ -22374,90 +22209,7 @@ contains
 !        the new information by freeing space allocated to DAFs that
 !        are no longer open.
 !
-         if ( stfptr == nil ) then
-!
-!           Oops, we're out of space. Time for garbage collection.
-!           Test each file handle to see whether it designates a DAF
-!           that is still open. DAFHOF will tell us which handles
-!           point to open DAFs.
-!
-            !     PEPPER: OPNSET is a local variable (SPICELIB saved it): size it.
-            call ssizei ( ctx, ftsize, opnset )
-            call dafhof ( ctx, opnset )
-
-            p     =  sthead
-            prev  =  nil
-!
-!           For every DAF file represented in the state table, we'll
-!           delete the corresponding state information if the DAF is
-!           now closed. We traverse the active list, examining each
-!           file handle as we go.
-!
-            do while ( p /= nil )
-
-               if (  elemi ( ctx, stfh(p), opnset )   )  then
-!
-!                 The file is open. Have a look at the next node.
-!
-                  prev = p
-                  p    = stpool( p )
-
-               else
-!
-!                 This file handle is not on the list, so free the
-!                 node pointing to the information about the DAF it
-!                 designated:
-!
-!                    - Save the successor of P.
-!
-!                    - Link the predecessor of node P to the successor
-!                      of P, if the predecessor is not NIL.
-!
-!                    - If it happens that P is the head node of the
-!                      active list, set the head equal to the
-!                      successor of P.
-!
-!                    - Link P into the free list.
-!
-!                    - Set P equal to its saved successor.
-!
-!                    - (PREV remains unchanged.)
-!
-                  nextp  =  stpool( p )
-
-                  if ( p == sthead ) then
-!
-!                    Re-assign STHEAD so that we don't lose the head
-!                    of the active list. P has no predecessor in this
-!                    case, so there's no need to set the forward pointer
-!                    of node PREV.
-!
-                     sthead = nextp
-
-                  else
-!
-!                    Since P is not the head node of the active list,
-!                    PREV is not NIL, so we'll need to set the forward
-!                    pointer of node PREV.
-!
-                     stpool( prev ) = nextp
-
-                  end if
-
-                  stpool( p )  =  stfptr
-                  stfptr       =  p
-                  p            =  nextp
-
-               end if
-
-            end do
-!
-!           At this point, we've freed all nodes from the active
-!           list that were used to index information about DAFs that
-!           are no longer open. If there's any more room in the state
-!           table, we have it now.
-!
-         end if
+         ! PEPPER: DAFFA_ROOM has made room (before the ASSOCIATE block).
 
 !
 !        If there still is no room, there is a bug in DAFAH, since DAFAH
@@ -23216,11 +22968,11 @@ contains
       integer(ip) :: fward
       logical :: fnd
       character(filen) :: dafnam
-      integer(ip) :: opnset ( lbcell : ftsize )
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
          call init_daffa_state ( ctx%daffa )
       end if
+      call daffa_room ( ctx )
       associate ( stfh => ctx%daffa%stfh, &
                   stprev => ctx%daffa%stprev, &
                   stthis => ctx%daffa%stthis, &
@@ -23231,8 +22983,7 @@ contains
                   stsr => ctx%daffa%stsr, &
                   stpool => ctx%daffa%stpool, &
                   sthead => ctx%daffa%sthead, &
-                  stfptr => ctx%daffa%stfptr, &
-                  first => ctx%daffa%first )
+                  stfptr => ctx%daffa%stfptr )
       if ( ctx%failed() ) return
 
 !
@@ -23247,19 +22998,6 @@ contains
 !     Also initialize the cell used to obtain the set of handles of
 !     open DAFs.
 !
-      if ( first ) then
-
-         call ssizei ( ctx, ftsize, opnset )
-
-         do i = 1,  tbsize - 1
-            stpool(i)   =  i + 1
-         end do
-
-         stpool(tbsize) =  nil
-         stfptr         =  1
-         first          = .false.
-
-      end if
 
 !
 !     See whether we already have an entry for this DAF in the
@@ -23325,90 +23063,7 @@ contains
 !        the new information by freeing space allocated to DAFs that
 !        are no longer open.
 !
-         if ( stfptr == nil ) then
-!
-!           Oops, we're out of space. Time for garbage collection.
-!           Test each file handle to see whether it designates a DAF
-!           that is still open. DAFHOF will tell us which handles
-!           point to open DAFs.
-!
-            !     PEPPER: OPNSET is a local variable (SPICELIB saved it): size it.
-            call ssizei ( ctx, ftsize, opnset )
-            call dafhof ( ctx, opnset )
-
-            p     =  sthead
-            prev  =  nil
-!
-!           For every DAF file represented in the state table, we'll
-!           delete the corresponding state information if the DAF is
-!           now closed. We traverse the active list, examining each
-!           file handle as we go.
-!
-            do while ( p /= nil )
-
-               if (  elemi ( ctx, stfh(p), opnset )   )  then
-!
-!                 The file is open. Have a look at the next node.
-!
-                  prev = p
-                  p    = stpool( p )
-
-               else
-!
-!                 This file handle is not on the list, so free the
-!                 node pointing to the information about the DAF it
-!                 designated:
-!
-!                    - Save the successor of P.
-!
-!                    - Link the predecessor of node P to the successor
-!                      of P, if the predecessor is not NIL.
-!
-!                    - If it happens that P is the head node of the
-!                      active list, set the head equal to the
-!                      successor of P.
-!
-!                    - Link P into the free list.
-!
-!                    - Set P equal to its saved successor.
-!
-!                    - (PREV remains unchanged.)
-!
-                  nextp  =  stpool( p )
-
-                  if ( p == sthead ) then
-!
-!                    Re-assign STHEAD so that we don't lose the head
-!                    of the active list. P has no predecessor in this
-!                    case, so there's no need to set the forward pointer
-!                    of node PREV.
-!
-                     sthead = nextp
-
-                  else
-!
-!                    Since P is not the head node of the active list,
-!                    PREV is not NIL, so we'll need to set the forward
-!                    pointer of node PREV.
-!
-                     stpool( prev ) = nextp
-
-                  end if
-
-                  stpool( p )  =  stfptr
-                  stfptr       =  p
-                  p            =  nextp
-
-               end if
-
-            end do
-!
-!           At this point, we've freed all nodes from the active
-!           list that were used to index information about DAFs that
-!           are no longer open. If there's any more room in the state
-!           table, we have it now.
-!
-         end if
+         ! PEPPER: DAFFA_ROOM has made room (before the ASSOCIATE block).
 
 !
 !        If there still is no room, there is a bug in DAFAH, since DAFAH
@@ -28948,5 +28603,40 @@ contains
 
       return
       end procedure daftb
+
+   !> PEPPER: make room in the DAFFA state table for one more search (as
+   !> DAFBFS and DAFBBS need when they start a search of a DAF not in the
+   !> table): if no entry is free, free the entries of DAFs that are not
+   !> open any more (as SPICELIB did), and if none is, double the table.
+   !> Called before the ASSOCIATE blocks of DAFBFS and DAFBBS, since the
+   !> table may be reallocated.
+   subroutine daffa_room(ctx)
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: nil = -1
+      integer(ip) :: p, prev, nextp
+      logical :: open
+      if (ctx%daffa%stfptr /= nil) return
+      p = ctx%daffa%sthead
+      prev = nil
+      do while (p /= nil)
+         open = .false.
+         if (allocated(ctx%spice%dafah)) open = ctx%spice%dafah%find(ctx%daffa%stfh(p)) > 0
+         if (open) then
+            prev = p
+            p = ctx%daffa%stpool(p)
+         else
+            nextp = ctx%daffa%stpool(p)
+            if (p == ctx%daffa%sthead) then
+               ctx%daffa%sthead = nextp
+            else
+               ctx%daffa%stpool(prev) = nextp
+            end if
+            ctx%daffa%stpool(p) = ctx%daffa%stfptr
+            ctx%daffa%stfptr = p
+            p = nextp
+         end if
+      end do
+      if (ctx%daffa%stfptr == nil) call daffa_grow(ctx%daffa)
+   end subroutine daffa_room
 
 end submodule pepper_daf

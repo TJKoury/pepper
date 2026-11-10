@@ -293,7 +293,12 @@
          BIGNAM(BIGSIZ:BIGSIZ) = '@'
 
          CALL FURNSH ( BIGNAM )
-         CALL CHCKXC ( .TRUE., 'SPICE(FILENAMETOOLONG)',  OK )
+!
+!        PEPPER: names have no length limit (SPICELIB signaled
+!        SPICE(FILENAMETOOLONG)): the name is used whole, and the load fails
+!        because no such file exists.
+!
+         CALL CHCKXC ( .TRUE., 'SPICE(NOSUCHFILE)',  OK )
 
 
 
@@ -330,7 +335,12 @@
 
 
          CALL FURNSH ( 'zztst6.txt'  )
-         CALL CHCKXC ( .TRUE., 'SPICE(FILENAMETOOLONG)',  OK )
+!
+!        PEPPER: names have no length limit (SPICELIB signaled
+!        SPICE(FILENAMETOOLONG)): the name is used whole, and the load fails
+!        because no such file exists.
+!
+         CALL CHCKXC ( .TRUE., 'SPICE(NOSUCHFILE)',  OK )
 
 !
 !        The meta-kernel is still loaded; unload it so the
@@ -391,7 +401,12 @@
 
 
          CALL FURNSH ( 'zztst6.txt'  )
-         CALL CHCKXC ( .TRUE., 'SPICE(PATHTOOLONG)',  OK )
+!
+!        PEPPER: names have no length limit (SPICELIB signaled
+!        SPICE(PATHTOOLONG)): the name is used whole, and the load fails
+!        because no such file exists.
+!
+         CALL CHCKXC ( .TRUE., 'SPICE(NOSUCHFILE)',  OK )
 
 !
 !        The meta-kernel is still loaded; unload it so the
@@ -452,7 +467,12 @@
 
 
          CALL FURNSH ( 'zztst6.txt'  )
-         CALL CHCKXC ( .TRUE., 'SPICE(FILENAMETOOLONG)',  OK )
+!
+!        PEPPER: names have no length limit (SPICELIB signaled
+!        SPICE(FILENAMETOOLONG)): the name is used whole, and the load fails
+!        because no such file exists.
+!
+         CALL CHCKXC ( .TRUE., 'SPICE(NOSUCHFILE)',  OK )
 
 !
 !        The meta-kernel is still loaded; unload it so the

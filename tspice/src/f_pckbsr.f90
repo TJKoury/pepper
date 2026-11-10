@@ -2739,7 +2739,7 @@
 !     Create FTSIZE copies of PCK 1 and load FTSIZE-1 of them.  We
 !     should get a file table overflow error.
 !
-      CALL TCASE ( 'File table overflow error.' )
+      CALL TCASE ( 'File table overflow error (PEPPER: none).' )
 
 
       DO I = 1, FTSIZE
@@ -2774,7 +2774,15 @@
 !     Note:  if FTSIZE >= the file table size in the handle manager,
 !     the appropriate check would be
 !
-      CALL CHCKXC ( .TRUE., 'SPICE(FTFULL)', OK )
+!        CALL CHCKXC ( .TRUE., 'SPICE(FTFULL)', OK )
+!
+!     PEPPER: the file tables grow, so the file loads; unload it again
+!     (the following cases expect the copies before it to be loaded).
+!
+      CALL CHCKXC ( .FALSE., ' ', OK )
+
+      CALL PCKUOF ( CPYHAN(FTSIZE-1) )
+      CALL CHCKXC ( .FALSE., ' ', OK )
 
 
 !

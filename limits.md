@@ -279,7 +279,33 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
    - **File and path names** moved to phase 2: they are stored in the same
      tables (KEEPER, ZZDDHMAN, DAF/DAS) that phase 2 turns into growable
      records, so each table is converted once.
-2. **Number of loaded kernels, and file names:**
+2. **Number of loaded kernels, and file names.** Done so far (each table
+   an array of records or growable arrays, file names allocatable):
+   - ZZDDHMAN (handle manager): records with names of any length, binary
+     search by handle; `FTFULL` is gone. Fixes ZZDDHOPN's truncation.
+   - DAFAH and DASFM (DAF and DAS file tables): records, binary search by
+     handle (SPICELIB: a linear search in DAFHSF and a list walk in DASFM
+     on every lookup); the duplicate handle sets (FHLIST) and DASCLS's
+     copy of them are gone; `DAFFTFULL`, `DASFTFULL` are gone.
+   - DAFFA (DAF searches, per context): starts with 16 entries and grows
+     (SPICELIB: 5000, about 10 MB per context).
+   - The four BSR file tables (SPK, CK, PCK, DSK): growable; their "file
+     table full" errors are gone.
+   - KEEPER: records with names of any length; `NOMOREROOM`,
+     `FILENAMETOOLONG`, `PATHTOOLONG` are gone; meta-kernel file names and
+     path values are read at their full length.
+   - Unloading reloads files only when the unloaded entry is a second load
+     of a file. One difference from SPICELIB: its reload also moved every
+     file loaded through FURNSH above the files loaded directly (SPKLEF,
+     CKLPF, PCKLOF, ...); PEPPER keeps the existing order.
+   - RDKER and RDTEXT keep the name of the text kernel being read whole.
+   - `closed_files` is a string map (it was a list scanned on each open).
+   - Tests: `test_limits` (paths over 255 characters through FURNSH, UNLOAD
+     and meta-kernels; 6000 SPKs; priorities after unloading).
+   Still to do: DAFEC and DASEC, DAFANA (20 DAFs written at once), EKQMGR,
+   and the DAF/DAS locals that fetch a file name for an error message.
+
+   The plan for the step:
    - **File and path names** (from phase 1): allocatable strings in the
      records of KEEPER, ZZDDHMAN, DAS, RDTEXT and `closed_files`.
      - `FILENAMETOOLONG` and `PATHTOOLONG` go away. Path names are limited
@@ -381,6 +407,12 @@ parallel-startup gain, and it depends on the containers from 0.
 (at `fb40b19`), release build, macOS arm64, gfortran 16, under
 `/usr/bin/time -l`. Microseconds per operation:
 
+Note: compare only builds made in the same place. A release build in the
+repository's `build/` ran these operations up to twice as slowly as the same
+code built in a temporary worktree under `/private/tmp` (both old and new
+code; the cause is not known). The table below is from the repository; the
+comparison after phase 2 (below) has both builds in temporary worktrees.
+
 | Operation | n | µs |
 |---|---:|---:|
 | `furnsh` (SPK, one segment each) | 2000 | 119 |
@@ -417,6 +449,22 @@ What it shows:
   variables limit a kernel set to about 2600 TK frames, well before the
   frame cache's 5209.
 
+### After phase 2 (DDH, DAF, DAS, DAFFA, BSR file tables, KEEPER)
+
+Both builds in temporary worktrees, same session; µs per operation (two
+runs each):
+
+| Operation | Before (`333d736`) | After |
+|---|---:|---:|
+| `furnsh` (SPK) | 74–77 | 68 |
+| `spkgeo`, one body | 0.58 | 0.55 |
+| `spkgeo`, a random body among 2000 files | 216–218 | 201–202 |
+| `unload` (SPK), 2000 loaded | 21036–21302 | 8.1 |
+| `gdpool` | 0.45–0.46 | 0.44–0.47 |
+| first `spkgeo` in a new context | 2489–2692 | 1319–1436 |
+
+Peak memory of the full run (100 contexts): 2.19 GB before, 1.15 GB after.
+
 ## Inefficiencies
 
 Things SPICELIB does slowly or with more memory than needed, found along the
@@ -425,7 +473,11 @@ or listed for later.
 
 | Where | Cost | Fix | Phase |
 |---|---|---|---|
-| KEEPER `unload` | Reloads every remaining SPK/CK/PCK/DSK after an unload (one file open each): O(N²) opens to unload N files, 16.7 ms per unload at 2000 files | Remove the file from the BSR tables directly; reload only for a file loaded twice | 2 |
+| KEEPER `unload` | Reloads every remaining SPK/CK/PCK/DSK after an unload (one file open each): O(N²) opens to unload N files, 16.7 ms per unload at 2000 files | Done: reload only when the unloaded entry is a second load of a file | 2 |
+| DAFAH `dafhsf`, DASFM | A linear search (DAF) or list walk (DAS) of the open files on every handle lookup; sets of the same handles kept twice, DASCLS copying the set on each close | Done: records sorted by handle, binary search | 2 |
+| `closed_files` (PEPPER) | A list of every file ever closed, scanned on each open | Done: a string map | 2 |
+| SPKBSR, CKBSR, PCKBSR, ZZDSKBSR | The first query of a body in a context reads the summary records of every file loaded after the one holding it (opening each: the unit table keeps 23 open): O(N) file opens. Measured: a random body among 2000 SPKs, 200 µs against 0.55 µs for a known one; the first queries in `test_limits` (6000 SPKs) took minutes when every 7th body was queried | Index the segments by body when a file is loaded (instance-wide, read-only during queries); this also replaces the per-context segment caches | 5 |
+| DAFFA `dafbfs`, `dafbbs` | Walk the per-context list of searched DAFs (most recent first) to find the handle: O(DAFs searched) per search | Goes with the index above; or a handle map | 5 |
 | ZZDDHOPN (`zzddhf2h`) | Opens a file to identify it (inode/name) on every load, including reloads | Follows from the unload fix; consider identifying by name first | 2 |
 | SPKBSR + unit table | A random query among 2000 SPKs takes 192 µs against 1 µs for one body; probably the 23-unit LRU closing and reopening files (to confirm with a profile) | Measure; a larger unit table (an instance setting, decision 3), or keep files open | 5 |
 | `wrline` (error reports, `pepper_output`) | Looks up the file by name (`inquire`) for every line written | Keep the unit with the device in the context | later (only when reports go to a file) |

@@ -3856,9 +3856,9 @@ contains
 !!              have their own limits on the maximum number of kernels
 !!              that may be loaded.
 !!
-!!              The total number of DAF-based files (this set includes
-!!              SPKs, CKs, and binary PCKs) and DAS-based files (this
-!!              set includes EKs and DSKs) that may be loaded at any
+!!              The total number of DAF-based kt%kernels(this set includes
+!!              SPKs, CKs, and binary PCKs)%name and DAS-based kt%kernels(this
+!!              set includes EKs and DSKs)%name that may be loaded at any
 !!              time may not exceed 5000. This limit applies whether
 !!              the files are loaded via FURNSH or lower-level loaders
 !!              such as SPKLEF or DAFOPR. File access performance
@@ -4312,18 +4312,15 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: pos, repmc, rtrim, samsub
       implicit none
-      integer(ip), parameter :: filsiz = 255
-      integer(ip), parameter :: ftsize = 5000
-      integer(ip), parameter :: maxtxt = 300
-      integer(ip), parameter :: maxfil = ftsize + maxtxt
       integer(ip), parameter :: typlen = 8
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: nknown = 3
       integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: msgsiz = 500
       character(1)          norc
-      character(filsiz)     fil2ld
-      character(filsiz)     pvalue
+      character(:), allocatable :: fil2ld
+      character(:), allocatable :: pvalue
+      character(1)          probe
       character(lnsize)     symbol
       character(msgsiz)     nofile
       character(typlen)     thstyp
@@ -4373,14 +4370,8 @@ contains
       logical               paths
       logical               single
       logical               update
-      if ( .not. allocated ( ctx%spice%keeper ) ) then
-         allocate ( ctx%spice%keeper )
-         call init_keeper_state ( ctx%spice%keeper )
-      end if
-      associate ( files => ctx%spice%keeper%files, &
-                  handls => ctx%spice%keeper%handls, &
-                  srces => ctx%spice%keeper%srces, &
-                  types => ctx%spice%keeper%types, &
+      if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
+      associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded, &
                   known => ctx%spice%keeper%known, &
                   first => ctx%spice%keeper%first )
@@ -4399,40 +4390,9 @@ contains
 
       end if
 
-!
-!     Reject excessively long file names.
-!
-      if ( rtrim(file) > filsiz ) then
+      ! PEPPER: file names have no length limit (SPICELIB signaled
+      ! SPICE(FILENAMETOOLONG) for more than FILSIZ, 255, characters).
 
-         call ctx%setmsg ( 'Input file name <#> has length @ characters. ' &
-         //            'The limit on the length of file names stored ' &
-         //            'by FURNSH is @ characters.'                   )
-         call ctx%errch  ( '#', file                                      )
-         call ctx%errint ( '@', rtrim(file)                               )
-         call ctx%errint ( '@', filsiz                                    )
-         call ctx%sigerr ( 'SPICE(FILENAMETOOLONG)'                       )
-         return
-
-      end if
-
-!
-!     Make sure we have room to load at least one more file.
-!
-      if ( loaded == maxfil ) then
-
-         call ctx%setmsg ( 'There is no room left in KEEPER to load ' &
-         //            'another SPICE kernel.  The current limit ' &
-         //            'on the number of files that can be ' &
-         //            'loaded is #.  If you really need more ' &
-         //            'than this many files, you should ' &
-         //            'increase the parameter MAXFIL in the ' &
-         //            'subroutine KEEPER. ' )
-
-         call ctx%errint ( '#', maxfil )
-         call ctx%sigerr ( 'SPICE(NOMOREROOM)'  )
-         return
-
-      end if
 !
 !     We don't want external interactions with the kernel pool to
 !     have any affect on FURNSH's watch so we check the watcher
@@ -4451,13 +4411,8 @@ contains
 
       if ( ctx%failed() ) return
 
-      loaded = loaded + 1
+      call kt%add ( keeper_kernel ( name = trim ( file ), type = thstyp, handle = myhand, source = 0 ) )
       cursrc = loaded
-
-      files (loaded) = file
-      types (loaded) = thstyp
-      handls(loaded) = myhand
-      srces (loaded) = 0
 
        call cvpool ( ctx, 'FURNSH', update )
 
@@ -4483,29 +4438,17 @@ contains
 !        might span multiple array elements.
 !
          i = 1
-         call stpool( ctx, 'PATH_VALUES', i, '+', pvalue, size, ok )
+         call stpool( ctx, 'PATH_VALUES', i, '+', probe, size, ok )
 
          do while (  ok  .and.  ( .not. ctx%failed() )  )
 !
 !           Reject excessively long path names.
 !
-            if ( size > filsiz ) then
-
-               call ctx%setmsg ( 'In meta-kernel <#>, the path at ' &
-               //            'index # in the PATH_VALUES list has ' &
-               //            'length # characters; the limit is # ' &
-               //            'characters.'                          )
-               call ctx%errch  ( '#', file                              )
-               call ctx%errint ( '#', i                                 )
-               call ctx%errint ( '#', size                              )
-               call ctx%errint ( '#', filsiz                            )
-               call ctx%sigerr ( 'SPICE(PATHTOOLONG)'                   )
-               return
-
-            end if
+            ! PEPPER: path values have no length limit (SPICELIB signaled
+            ! SPICE(PATHTOOLONG) for more than FILSIZ, 255, characters).
 
             i = i + 1
-            call stpool( ctx, 'PATH_VALUES', i, '+', pvalue, size, ok )
+            call stpool( ctx, 'PATH_VALUES', i, '+', probe, size, ok )
 
          end do
 
@@ -4534,7 +4477,7 @@ contains
 !     This kernel appears to be a legitimate meta-text kernel. Mark
 !     it as such and then process its contents.
 !
-      types(loaded) = 'META'
+      kt%kernels(loaded)%type = 'META'
 
 !
 !     Now load all kernels specified in the KERNELS_TO_LOAD variable.
@@ -4542,43 +4485,18 @@ contains
       filnum = 1
       fidx   = 1
 
-      call sepool( ctx, 'KERNELS_TO_LOAD',  fidx,    '+', &
-                   fil2ld,             fnmlen,  lidx,  ok )
+      call get_file_name ( )
 
       do while (  ok  .and.  ( .not. ctx%failed() )  )
 !
 !        Reject excessively long file names.
 !
-         if ( fnmlen > filsiz ) then
-
-            call ctx%setmsg ( 'In meta-kernel <#>, the file name at ' &
-            //            'index # in the KERNELS_TO_LOAD list has ' &
-            //            'length # characters; the limit is # ' &
-            //            'characters.'                             )
-            call ctx%errch  ( '#', file                                 )
-            call ctx%errint ( '#', filnum                               )
-            call ctx%errint ( '#', fnmlen                               )
-            call ctx%errint ( '#', filsiz                               )
-            call ctx%sigerr ( 'SPICE(FILENAMETOOLONG)'                  )
-            return
-
-         end if
+         ! PEPPER: file names have no length limit (SPICELIB signaled
+         ! SPICE(FILENAMETOOLONG) for more than FILSIZ, 255, characters).
 
 !
 !        Make sure we have room to load at least one more file.
 !
-         if ( loaded == maxfil ) then
-
-            call ctx%setmsg ( 'There is no room left in KEEPER to ' &
-            //            'load another SPICE kernel. The ' &
-            //            'current limit on the number of files ' &
-            //            'that can be loaded is #.'             )
-
-            call ctx%errint ( '#', maxfil )
-            call ctx%sigerr ( 'SPICE(NOMOREROOM)'  )
-            return
-
-         end if
 
 !
 !        Resolve any path symbols that may be present.
@@ -4624,6 +4542,9 @@ contains
 !                 path values. Note that we've already checked that
 !                 the path value will fit in PVALUE.
 !
+                  call stpool( ctx, 'PATH_VALUES', use, '+', probe, n, fnd )
+                  if ( allocated ( pvalue ) ) deallocate ( pvalue )
+                  allocate ( character(max(1_ip, n)) :: pvalue )
                   call stpool( ctx, 'PATH_VALUES', use, '+', pvalue, n, fnd )
 
 !
@@ -4631,28 +4552,11 @@ contains
 !                 total length of the path and file name must fit in
 !                 the name buffer.
 !
-                  if ( ( fnmlen + n - size - 1 )  >  filsiz ) then
+                  ! PEPPER: the combined path and file name has no length limit
+                  ! (SPICELIB signaled SPICE(FILENAMETOOLONG) for more than FILSIZ,
+                  ! 255, characters).
 
-                     call ctx%setmsg ( 'In meta-kernel <#>, the path at ' &
-                     //            'index # in the PATH_SYMBOLS list ' &
-                     //            'has # characters and the ' &
-                     //            'file name at index # has ' &
-                     //            '# characters. The combined path ' &
-                     //            'and file name has # characters; ' &
-                     //            'the limit is # characters.'       )
-                     call ctx%errch  ( '#', file                          )
-                     call ctx%errint ( '#', use                           )
-                     call ctx%errint ( '#', n                             )
-                     call ctx%errint ( '#', filnum                        )
-                     call ctx%errint ( '#', fnmlen                        )
-                     call ctx%errint ( '#', fnmlen + n                    )
-                     call ctx%errint ( '#', filsiz                        )
-                     call ctx%sigerr ( 'SPICE(FILENAMETOOLONG)'           )
-                     return
-
-                  end if
-
-                  call repsub( ctx, fil2ld, d, d+size, pvalue(1:n), fil2ld )
+                  fil2ld = fil2ld(1:d-1) // pvalue(1:n) // fil2ld(d+size+1:)
 
                end if
 !
@@ -4724,11 +4628,7 @@ contains
 !        Add the latest file loaded to our database of loaded
 !        files.
 !
-         loaded         = loaded + 1
-         files (loaded) = fil2ld
-         types (loaded) = thstyp
-         handls(loaded) = myhand
-         srces (loaded) = cursrc
+         call kt%add ( keeper_kernel ( name = fil2ld, type = thstyp, handle = myhand, source = cursrc ) )
 
 !
 !        Get the name of the next file to load.
@@ -4736,8 +4636,7 @@ contains
          filnum = filnum + 1
          fidx   = lidx   + 1
 
-         call sepool( ctx, 'KERNELS_TO_LOAD',  fidx,    '+', &
-                       fil2ld,            fnmlen,  lidx,  ok )
+         call get_file_name ( )
 
       end do
 
@@ -4752,6 +4651,24 @@ contains
 
       return
       end associate
+
+      contains
+
+!
+!        PEPPER: get the file name starting at element FIDX of
+!        KERNELS_TO_LOAD (SEPOOL) at its full length: FIL2LD has FNMLEN
+!        characters. LIDX and OK are as returned by SEPOOL.
+!
+         subroutine get_file_name ( )
+            call sepool ( ctx, 'KERNELS_TO_LOAD', fidx, '+', probe, fnmlen, lidx, ok )
+            if ( allocated ( fil2ld ) ) deallocate ( fil2ld )
+            allocate ( character(max(1_ip, fnmlen)) :: fil2ld )
+            if ( ok ) then
+               call sepool ( ctx, 'KERNELS_TO_LOAD', fidx, '+', fil2ld, fnmlen, lidx, ok )
+            else
+               fil2ld = ' '
+            end if
+         end subroutine get_file_name
       end procedure furnsh
 
       module procedure ktotal
@@ -5012,10 +4929,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, fndnwd
       implicit none
-      integer(ip), parameter :: filsiz = 255
-      integer(ip), parameter :: ftsize = 5000
-      integer(ip), parameter :: maxtxt = 300
-      integer(ip), parameter :: maxfil = ftsize + maxtxt
       logical               return
       integer(ip), parameter :: typlen = 8
       integer(ip), parameter :: wdsize = 32
@@ -5023,8 +4936,6 @@ contains
       integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: msgsiz = 500
       character(1)          norc
-      character(filsiz)     fil2ld
-      character(filsiz)     pvalue
       character(lnsize)     symbol
       character(msgsiz)     nofile
       character(typlen)     thstyp
@@ -5074,11 +4985,8 @@ contains
       logical               paths
       logical               single
       logical               update
-      if ( .not. allocated ( ctx%spice%keeper ) ) then
-         allocate ( ctx%spice%keeper )
-         call init_keeper_state ( ctx%spice%keeper )
-      end if
-      associate ( types => ctx%spice%keeper%types, &
+      if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
+      associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded )
       if ( loaded == 0 ) then
          count = 0
@@ -5123,13 +5031,13 @@ contains
 
       do i = 1, loaded
 
-         add =      ( types(i) == 'CK'   .and. dock   ) &
-               .or. ( types(i) == 'DSK'  .and. dodsk  ) &
-               .or. ( types(i) == 'EK'   .and. doek   ) &
-               .or. ( types(i) == 'META' .and. dometa ) &
-               .or. ( types(i) == 'PCK'  .and. dopck  ) &
-               .or. ( types(i) == 'SPK'  .and. dospk  ) &
-               .or. ( types(i) == 'TEXT' .and. dotext )
+         add =      ( kt%kernels(i)%type == 'CK'   .and. dock   ) &
+               .or. ( kt%kernels(i)%type == 'DSK'  .and. dodsk  ) &
+               .or. ( kt%kernels(i)%type == 'EK'   .and. doek   ) &
+               .or. ( kt%kernels(i)%type == 'META' .and. dometa ) &
+               .or. ( kt%kernels(i)%type == 'PCK'  .and. dopck  ) &
+               .or. ( kt%kernels(i)%type == 'SPK'  .and. dospk  ) &
+               .or. ( kt%kernels(i)%type == 'TEXT' .and. dotext )
 
          if ( add ) then
             count = count + 1
@@ -5458,10 +5366,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, fndnwd
       implicit none
-      integer(ip), parameter :: filsiz = 255
-      integer(ip), parameter :: ftsize = 5000
-      integer(ip), parameter :: maxtxt = 300
-      integer(ip), parameter :: maxfil = ftsize + maxtxt
       logical               return
       integer(ip), parameter :: typlen = 8
       integer(ip), parameter :: wdsize = 32
@@ -5469,8 +5373,6 @@ contains
       integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: msgsiz = 500
       character(1)          norc
-      character(filsiz)     fil2ld
-      character(filsiz)     pvalue
       character(lnsize)     symbol
       character(msgsiz)     nofile
       character(typlen)     thstyp
@@ -5520,14 +5422,8 @@ contains
       logical               paths
       logical               single
       logical               update
-      if ( .not. allocated ( ctx%spice%keeper ) ) then
-         allocate ( ctx%spice%keeper )
-         call init_keeper_state ( ctx%spice%keeper )
-      end if
-      associate ( files => ctx%spice%keeper%files, &
-                  handls => ctx%spice%keeper%handls, &
-                  srces => ctx%spice%keeper%srces, &
-                  types => ctx%spice%keeper%types, &
+      if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
+      associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded )
       file   = ' '
       filtyp = ' '
@@ -5557,12 +5453,12 @@ contains
 !           variables right now.
 !
             found  = .true.
-            file   = files (which)
-            filtyp = types (which)
-            handle = handls(which)
+            file   = kt%kernels(which)%name
+            filtyp = kt%kernels(which)%type
+            handle = kt%kernels(which)%handle
 
-            if ( srces(which) /= 0 ) then
-               srcfil = files( srces(which) )
+            if ( kt%kernels(which)%source /= 0 ) then
+               srcfil = kt%kernels( kt%kernels(which)%source )%name
             end if
             return
 
@@ -5589,13 +5485,13 @@ contains
 
       do i = 1, loaded
 
-         add =      ( types(i) == 'CK'   .and. dock   ) &
-               .or. ( types(i) == 'DSK'  .and. dodsk  ) &
-               .or. ( types(i) == 'EK'   .and. doek   ) &
-               .or. ( types(i) == 'META' .and. dometa ) &
-               .or. ( types(i) == 'PCK'  .and. dopck  ) &
-               .or. ( types(i) == 'SPK'  .and. dospk  ) &
-               .or. ( types(i) == 'TEXT' .and. dotext )
+         add =      ( kt%kernels(i)%type == 'CK'   .and. dock   ) &
+               .or. ( kt%kernels(i)%type == 'DSK'  .and. dodsk  ) &
+               .or. ( kt%kernels(i)%type == 'EK'   .and. doek   ) &
+               .or. ( kt%kernels(i)%type == 'META' .and. dometa ) &
+               .or. ( kt%kernels(i)%type == 'PCK'  .and. dopck  ) &
+               .or. ( kt%kernels(i)%type == 'SPK'  .and. dospk  ) &
+               .or. ( kt%kernels(i)%type == 'TEXT' .and. dotext )
 
          if ( add ) then
 
@@ -5607,12 +5503,12 @@ contains
             if ( hits == which ) then
 
                found  = .true.
-               file   = files (i)
-               filtyp = types (i)
-               handle = handls(i)
+               file   = kt%kernels(i)%name
+               filtyp = kt%kernels(i)%type
+               handle = kt%kernels(i)%handle
 
-               if ( srces(i) /= 0 ) then
-                  srcfil = files( srces(i) )
+               if ( kt%kernels(i)%source /= 0 ) then
+                  srcfil = kt%kernels( kt%kernels(i)%source )%name
                end if
                return
             end if
@@ -5895,12 +5791,7 @@ contains
 !!     Fetch information about a loaded SPICE kernel
 !!
       use pepper_kinds, only: ip
-      use pepper_arrays, only: isrchc
       implicit none
-      integer(ip), parameter :: filsiz = 255
-      integer(ip), parameter :: ftsize = 5000
-      integer(ip), parameter :: maxtxt = 300
-      integer(ip), parameter :: maxfil = ftsize + maxtxt
       logical               return
       integer(ip), parameter :: typlen = 8
       integer(ip), parameter :: wdsize = 32
@@ -5908,8 +5799,6 @@ contains
       integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: msgsiz = 500
       character(1)          norc
-      character(filsiz)     fil2ld
-      character(filsiz)     pvalue
       character(lnsize)     symbol
       character(msgsiz)     nofile
       character(typlen)     thstyp
@@ -5959,30 +5848,30 @@ contains
       logical               paths
       logical               single
       logical               update
-      if ( .not. allocated ( ctx%spice%keeper ) ) then
-         allocate ( ctx%spice%keeper )
-         call init_keeper_state ( ctx%spice%keeper )
-      end if
-      associate ( files => ctx%spice%keeper%files, &
-                  handls => ctx%spice%keeper%handls, &
-                  srces => ctx%spice%keeper%srces, &
-                  types => ctx%spice%keeper%types, &
+      if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
+      associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded )
       filtyp = ' '
       srcfil = ' '
       handle =  0
       found  = .false.
 
-      i = isrchc ( file, loaded, files )
+      i = 0
+      do j = 1, loaded
+         if ( kt%kernels(j)%name == file ) then
+            i = j
+            exit
+         end if
+      end do
 
       if ( i > 0 ) then
 
          found  = .true.
-         filtyp = types (i)
-         handle = handls(i)
+         filtyp = kt%kernels(i)%type
+         handle = kt%kernels(i)%handle
 
-         if ( srces(i) /= 0 ) then
-            srcfil = files( srces(i) )
+         if ( kt%kernels(i)%source /= 0 ) then
+            srcfil = kt%kernels( kt%kernels(i)%source )%name
          end if
 
       end if
@@ -6200,18 +6089,12 @@ contains
 !!
       use pepper_kinds, only: ip
       implicit none
-      integer(ip), parameter :: filsiz = 255
-      integer(ip), parameter :: ftsize = 5000
-      integer(ip), parameter :: maxtxt = 300
-      integer(ip), parameter :: maxfil = ftsize + maxtxt
       integer(ip), parameter :: typlen = 8
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: nknown = 3
       integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: msgsiz = 500
       character(1)          norc
-      character(filsiz)     fil2ld
-      character(filsiz)     pvalue
       character(lnsize)     symbol
       character(msgsiz)     nofile
       character(typlen)     thstyp
@@ -6261,14 +6144,8 @@ contains
       logical               paths
       logical               single
       logical               update
-      if ( .not. allocated ( ctx%spice%keeper ) ) then
-         allocate ( ctx%spice%keeper )
-         call init_keeper_state ( ctx%spice%keeper )
-      end if
-      associate ( files => ctx%spice%keeper%files, &
-                  handls => ctx%spice%keeper%handls, &
-                  srces => ctx%spice%keeper%srces, &
-                  types => ctx%spice%keeper%types, &
+      if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
+      associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded )
       if ( ctx%failed() ) return
 
@@ -6280,25 +6157,25 @@ contains
 !
       do i = 1, loaded
 
-         if (      types(i) == 'SPK' ) then
+         if (      kt%kernels(i)%type == 'SPK' ) then
 
-            call spkuef ( ctx, handls(i) )
+            call spkuef ( ctx, kt%kernels(i)%handle )
 
-         else if ( types(i) == 'CK' ) then
+         else if ( kt%kernels(i)%type == 'CK' ) then
 
-            call ckupf ( ctx, handls(i) )
+            call ckupf ( ctx, kt%kernels(i)%handle )
 
-         else if ( types(i) == 'PCK' ) then
+         else if ( kt%kernels(i)%type == 'PCK' ) then
 
-            call pckuof ( ctx, handls(i) )
+            call pckuof ( ctx, kt%kernels(i)%handle )
 
-         else if ( types(i) == 'EK' ) then
+         else if ( kt%kernels(i)%type == 'EK' ) then
 
-            call ctx%ekuef ( handls(i) )
+            call ctx%ekuef ( kt%kernels(i)%handle )
 
-         else if ( types(i) == 'DSK' ) then
+         else if ( kt%kernels(i)%type == 'DSK' ) then
 
-            call zzdskusf ( ctx, handls(i) )
+            call zzdskusf ( ctx, kt%kernels(i)%handle )
 
          end if
 
@@ -6311,14 +6188,7 @@ contains
 !     KEEPER's database arrays.  This step may occasionally
 !     be helpful for debugging.
 !
-      do i = 1, loaded
-
-         files (i)  = ' '
-         handls(i) = 0
-         srces (i) = 0
-         types (i) = ' '
-
-      end do
+      call kt%clear ( )
 
 !
 !     There's just one counter that indicates the number of
@@ -6804,18 +6674,12 @@ contains
 !!
       use pepper_kinds, only: ip
       implicit none
-      integer(ip), parameter :: filsiz = 255
-      integer(ip), parameter :: ftsize = 5000
-      integer(ip), parameter :: maxtxt = 300
-      integer(ip), parameter :: maxfil = ftsize + maxtxt
       integer(ip), parameter :: typlen = 8
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: nknown = 3
       integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: msgsiz = 500
       character(1)          norc
-      character(filsiz)     fil2ld
-      character(filsiz)     pvalue
       character(lnsize)     symbol
       character(msgsiz)     nofile
       character(typlen)     thstyp
@@ -6865,14 +6729,8 @@ contains
       logical               paths
       logical               single
       logical               update
-      if ( .not. allocated ( ctx%spice%keeper ) ) then
-         allocate ( ctx%spice%keeper )
-         call init_keeper_state ( ctx%spice%keeper )
-      end if
-      associate ( files => ctx%spice%keeper%files, &
-                  handls => ctx%spice%keeper%handls, &
-                  srces => ctx%spice%keeper%srces, &
-                  types => ctx%spice%keeper%types, &
+      if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
+      associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded, &
                   known => ctx%spice%keeper%known )
       if ( ctx%failed() ) return
@@ -6894,7 +6752,7 @@ contains
 
       do while ( .not. gotit .and. i > 0 )
 
-         if ( files(i) == file ) then
+         if ( kt%kernels(i)%name == file ) then
             gotit = .true.
          else
             i     = i - 1
@@ -6919,11 +6777,11 @@ contains
 !     across all file types. We don't need to rely on file
 !     names.
 !
-      if (    ( types(i) == 'SPK' ) &
-          .or.( types(i) == 'CK'  ) &
-          .or.( types(i) == 'DSK' ) &
-          .or.( types(i) == 'EK'  ) &
-          .or.( types(i) == 'PCK' ) ) then
+      if (    ( kt%kernels(i)%type == 'SPK' ) &
+          .or.( kt%kernels(i)%type == 'CK'  ) &
+          .or.( kt%kernels(i)%type == 'DSK' ) &
+          .or.( kt%kernels(i)%type == 'EK'  ) &
+          .or.( kt%kernels(i)%type == 'PCK' ) ) then
 !
 !        Count the occurrences of the file in the database.
 !        Stop if we reach two occurrences.
@@ -6933,14 +6791,14 @@ contains
 
          do while ( ( j <= loaded ) .and. ( nmult < 2 ) )
 
-            if ( handls(j) == handls(i) ) then
+            if ( kt%kernels(j)%handle == kt%kernels(i)%handle ) then
 !
 !              To be safe, make sure we're not looking at
 !              a text kernel with a random, matching handle
 !              value.
 !
-               if (      ( types(j) /= 'TEXT' ) &
-                   .and. ( types(j) /= 'META' ) ) then
+               if (      ( kt%kernels(j)%type /= 'TEXT' ) &
+                   .and. ( kt%kernels(j)%type /= 'META' ) ) then
 
                   nmult = nmult + 1
 
@@ -6956,52 +6814,52 @@ contains
 
       end if
 
-      if (      types(i) == 'SPK' ) then
+      if (      kt%kernels(i)%type == 'SPK' ) then
 
          if ( single ) then
-            call spkuef ( ctx, handls(i) )
+            call spkuef ( ctx, kt%kernels(i)%handle )
+         else
+            didspk = .true.
          end if
 
-         didspk = .true.
-
-      else if ( types(i) == 'CK' ) then
+      else if ( kt%kernels(i)%type == 'CK' ) then
 
          if ( single ) then
-            call ckupf ( ctx, handls(i) )
+            call ckupf ( ctx, kt%kernels(i)%handle )
+         else
+            didck = .true.
          end if
 
-         didck = .true.
-
-      else if ( types(i) == 'DSK' ) then
+      else if ( kt%kernels(i)%type == 'DSK' ) then
 
          if ( single ) then
-            call zzdskusf ( ctx, handls(i) )
+            call zzdskusf ( ctx, kt%kernels(i)%handle )
+         else
+            diddsk = .true.
          end if
 
-         diddsk = .true.
-
-      else if ( types(i) == 'PCK' ) then
+      else if ( kt%kernels(i)%type == 'PCK' ) then
 
          if ( single ) then
-            call pckuof ( ctx, handls(i) )
+            call pckuof ( ctx, kt%kernels(i)%handle )
+         else
+            didpck = .true.
          end if
 
-         didpck = .true.
-
-      else if ( types(i) == 'EK' ) then
+      else if ( kt%kernels(i)%type == 'EK' ) then
 
          if ( single ) then
-            call ctx%ekuef ( handls(i) )
+            call ctx%ekuef ( kt%kernels(i)%handle )
+         else
+            didek = .true.
          end if
 
-         didek = .true.
-
-      else if ( types(i) == 'TEXT' ) then
+      else if ( kt%kernels(i)%type == 'TEXT' ) then
 
          call clpool ( ctx )
          didtxt = .true.
 
-      else if ( types(i) == 'META' ) then
+      else if ( kt%kernels(i)%type == 'META' ) then
 !
 !        This is a special case, we need to undo the effect of loading
 !        the meta-kernel.  This means we need to unload all kernels
@@ -7012,7 +6870,7 @@ contains
 
          do j = loaded, src+1, -1
 
-            if ( srces(j) == src ) then
+            if ( kt%kernels(j)%source == src ) then
 !
 !              This file was loaded by the meta-kernel of interest.
 !              We only need to unload the binary kernels as we
@@ -7025,11 +6883,11 @@ contains
 !              this test on each loop pass, since the count
 !              may have changed since the last pass.
 !
-               if (     ( types(j) == 'SPK' ) &
-                   .or. ( types(j) == 'CK'  ) &
-                   .or. ( types(j) == 'DSK' ) &
-                   .or. ( types(j) == 'EK'  ) &
-                   .or. ( types(j) == 'PCK' ) ) then
+               if (     ( kt%kernels(j)%type == 'SPK' ) &
+                   .or. ( kt%kernels(j)%type == 'CK'  ) &
+                   .or. ( kt%kernels(j)%type == 'DSK' ) &
+                   .or. ( kt%kernels(j)%type == 'EK'  ) &
+                   .or. ( kt%kernels(j)%type == 'PCK' ) ) then
 !
 !                 Count the occurrences of the file in the database.
 !                 Stop if we reach two occurrences.
@@ -7040,14 +6898,14 @@ contains
                   do while (      ( k     <= loaded ) &
                             .and. ( nmult < 2      ) )
 
-                     if ( handls(k) == handls(j) ) then
+                     if ( kt%kernels(k)%handle == kt%kernels(j)%handle ) then
 !
 !                       To be safe, make sure we're not looking at a
 !                       text kernel with a random, matching handle
 !                       value.
 !
-                        if (     ( types(k) /= 'TEXT' ) &
-                           .and. ( types(k) /= 'META' ) ) then
+                        if (     ( kt%kernels(k)%type /= 'TEXT' ) &
+                           .and. ( kt%kernels(k)%type /= 'META' ) ) then
 
                            nmult = nmult + 1
 
@@ -7063,55 +6921,49 @@ contains
 
                end if
 
-               if ( types(j) == 'SPK' ) then
+               if ( kt%kernels(j)%type == 'SPK' ) then
 
                   if ( single ) then
-                     call spkuef ( ctx, handls(j) )
+                     call spkuef ( ctx, kt%kernels(j)%handle )
+                  else
+                     didspk = .true.
                   end if
 
-                  didspk = .true.
-
-               else if ( types(j) == 'CK' ) then
+               else if ( kt%kernels(j)%type == 'CK' ) then
 
                   if ( single ) then
-                     call ckupf ( ctx, handls(j) )
+                     call ckupf ( ctx, kt%kernels(j)%handle )
+                  else
+                     didck = .true.
                   end if
 
-                  didck = .true.
-
-               else if ( types(j) == 'DSK' ) then
+               else if ( kt%kernels(j)%type == 'DSK' ) then
 
                   if ( single ) then
-                     call zzdskusf ( ctx, handls(j) )
+                     call zzdskusf ( ctx, kt%kernels(j)%handle )
+                  else
+                     diddsk = .true.
                   end if
 
-                  diddsk = .true.
-
-               else if ( types(j) == 'PCK' ) then
+               else if ( kt%kernels(j)%type == 'PCK' ) then
 
                   if ( single ) then
-                     call pckuof ( ctx, handls(j) )
+                     call pckuof ( ctx, kt%kernels(j)%handle )
+                  else
+                     didpck = .true.
                   end if
 
-                  didpck = .true.
-
-               else if ( types(j) == 'EK' ) then
+               else if ( kt%kernels(j)%type == 'EK' ) then
 
                   if ( single ) then
-                     call ctx%ekuef ( handls(j) )
+                     call ctx%ekuef ( kt%kernels(j)%handle )
+                  else
+                     didek = .true.
                   end if
-
-                  didek = .true.
 
                end if
 
-               n1 = loaded
-               n2 = loaded
-               n3 = loaded
-               call remlac ( ctx, 1, j, files,  n1 )
-               call remlac ( ctx, 1, j, types,  n2 )
-               call remlai ( ctx, 1, j, srces,  n3 )
-               call remlai ( ctx, 1, j, handls, loaded )
+               call kt%remove ( j )
 
 !
 !              Each time we delete an item from the database, any
@@ -7125,12 +6977,12 @@ contains
 !
                do k = j, loaded
 
-                  if ( srces(k) > j ) then
+                  if ( kt%kernels(k)%source > j ) then
 !
 !                    This pointer is affected by the deletion of
 !                    the Jth database entry.
 !
-                     srces(k) = srces(k)-1
+                     kt%kernels(k)%source = kt%kernels(k)%source-1
 
                   end if
 
@@ -7148,13 +7000,7 @@ contains
 !
 !     Remove the I'th kernel from our local database.
 !
-      n1 = loaded
-      n2 = loaded
-      n3 = loaded
-      call remlac ( ctx, 1, i, files,  n1 )
-      call remlac ( ctx, 1, i, types,  n2 )
-      call remlai ( ctx, 1, i, srces,  n3 )
-      call remlai ( ctx, 1, i, handls, loaded )
+      call kt%remove ( i )
 
 !
 !     Update any source pointers affected by the deletion of the Ith
@@ -7162,12 +7008,12 @@ contains
 !
       do j = i, loaded
 
-         if ( srces(j) > i ) then
+         if ( kt%kernels(j)%source > i ) then
 !
 !           This pointer is affected by the deletion of the Ith
 !           database entry.
 !
-            srces(j) = srces(j)-1
+            kt%kernels(j)%source = kt%kernels(j)%source-1
 
          end if
 
@@ -7181,12 +7027,12 @@ contains
 
          do i = 1, loaded
 
-            if (      types(i) == 'TEXT' &
-                 .or. types(i) == 'META' ) then
+            if (      kt%kernels(i)%type == 'TEXT' &
+                 .or. kt%kernels(i)%type == 'META' ) then
 
-               call ldpool ( ctx, files(i) )
+               call ldpool ( ctx, kt%kernels(i)%name )
 
-               if ( types(i) == 'META' ) then
+               if ( kt%kernels(i)%type == 'META' ) then
 !
 !                 Clean up any debris that may have been left lying
 !                 around because we reloaded a meta-text kernel.
@@ -7209,11 +7055,21 @@ contains
 !     If any SPK files were unloaded, we need to reload everything
 !     to establish the right priority sequence for segments.
 !
+!     PEPPER: only when an unloaded entry was a second load of a file
+!     still loaded (SINGLE false): DIDSPK, DIDCK, DIDDSK, DIDPCK and
+!     DIDEK are set only then. A file loaded once is removed from its
+!     subsystem's file table (SPKUEF, ...), which keeps the order of
+!     the other files, and that is the order the reload would restore.
+!     SPICELIB reloaded every remaining file of the type, which made
+!     unloading N files take O(N**2) file opens (and also moved the
+!     files loaded through FURNSH above those loaded directly, e.g. with
+!     SPKLEF; PEPPER keeps the existing order).
+!
       if ( didspk ) then
 
          do i = 1, loaded
-            if ( types(i) == 'SPK' ) then
-               call spklef ( ctx, files(i), handls(i) )
+            if ( kt%kernels(i)%type == 'SPK' ) then
+               call spklef ( ctx, kt%kernels(i)%name, kt%kernels(i)%handle )
             end if
          end do
 
@@ -7226,8 +7082,8 @@ contains
       if ( didck ) then
 
          do i = 1, loaded
-            if ( types(i) == 'CK' ) then
-               call cklpf ( ctx, files(i), handls(i) )
+            if ( kt%kernels(i)%type == 'CK' ) then
+               call cklpf ( ctx, kt%kernels(i)%name, kt%kernels(i)%handle )
             end if
          end do
 
@@ -7241,8 +7097,8 @@ contains
       if ( diddsk ) then
 
          do i = 1, loaded
-            if ( types(i) == 'DSK' ) then
-               call zzdsklsf ( ctx, files(i), handls(i) )
+            if ( kt%kernels(i)%type == 'DSK' ) then
+               call zzdsklsf ( ctx, kt%kernels(i)%name, kt%kernels(i)%handle )
             end if
          end do
 
@@ -7256,8 +7112,8 @@ contains
       if ( didpck ) then
 
          do i = 1, loaded
-            if ( types(i) == 'PCK' ) then
-               call pcklof ( ctx, files(i), handls(i) )
+            if ( kt%kernels(i)%type == 'PCK' ) then
+               call pcklof ( ctx, kt%kernels(i)%name, kt%kernels(i)%handle )
             end if
          end do
 
@@ -7270,8 +7126,8 @@ contains
       if ( didek ) then
 
          do i = 1, loaded
-            if ( types(i) == 'EK' ) then
-               call ctx%eklef ( files(i), handls(i) )
+            if ( kt%kernels(i)%type == 'EK' ) then
+               call ctx%eklef ( kt%kernels(i)%name, kt%kernels(i)%handle )
             end if
          end do
 

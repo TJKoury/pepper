@@ -1312,16 +1312,21 @@
 !
 ! --- Case: ------------------------------------------------------
 !
-      CALL TCASE ( 'ZZDSKLSF error case: try to load one more ' &
-      //           'earth DSK.' )
+!
+!     PEPPER: the file tables grow (SPICELIB signaled SPICE(FTFULL) from
+!     ZZDDHOPN here): the DSK loads. Unload it again, so that the
+!     following cases start from SPICELIB's state.
+!
+      CALL TCASE ( 'ZZDSKLSF: load one more earth DSK than FTSIZE ' &
+      //           '(PEPPER: no FTFULL).' )
 
       I = FTSIZE + 1
 
       CALL ZZDSKLSF ( DSKS(I), HANDLS(I) )
-      CALL CHCKXC   ( .TRUE., 'SPICE(FTFULL)', OK )
-!
-!     The error message above brought to you by ZZDDHOPN.
-!
+      CALL CHCKXC   ( .FALSE., ' ', OK )
+
+      CALL ZZDSKUSF ( HANDLS(I) )
+      CALL CHCKXC   ( .FALSE., ' ', OK )
 
 !
 ! --- Case: ------------------------------------------------------

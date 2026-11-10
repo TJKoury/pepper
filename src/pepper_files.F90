@@ -4576,6 +4576,9 @@ contains
 !
 !     NFT        is the number of entries in the file table.
 !
+!     PEPPER: the file table is FT (the records of zzddhman_state, with
+!     NFT entries) instead of the arrays above.
+!
 !     UTCST,
 !     UTHAN,
 !     UTLCK,
@@ -4900,7 +4903,7 @@ contains
 !
          if ( utlun(uindex) /= -1 ) close ( unit = utlun(uindex) )
 
-         call zzddhrmu ( ctx, uindex, nft, utcst, uthan, utlck, utlun, nut )
+         call zzddhrmu ( ctx, uindex, ft%nft, utcst, uthan, utlck, utlun, nut )
 
 !
 !        Signal the error and return.
@@ -4927,7 +4930,7 @@ contains
       i     = 1
       found = .false.
 
-      do while ( ( i <= nft ) .and. ( .not. found ) )
+      do while ( ( i <= ft%nft ) .and. ( .not. found ) )
 
 !
 !        If this file's magic number is non-zero and is different from
@@ -4937,7 +4940,7 @@ contains
 !        and check UNITs.
 !
          if (   mnm /= 0.0_wp                               .and. &
-              ( mnm /= ftmnm(i) .and. ftamh(i) == read )     ) then
+              ( mnm /= ft%files(i)%mnm .and. ft%files(i)%method == read )     ) then
 
 !
 !           These files are not the same file. Clear IOSTAT and set
@@ -4951,7 +4954,7 @@ contains
 !
 !           Do the INQUIRE. ;(
 !
-            inquire ( file   = ftnam(i) ( 1 : ftrtm(i) ), &
+            inquire ( file   = ft%files(i)%name, &
                       exist  = locexs, &
                       opened = locopn, &
                       number = unit, &
@@ -4976,7 +4979,7 @@ contains
 !
             if ( utlun(uindex) /= -1 ) close ( unit = utlun(uindex) )
 
-            call zzddhrmu ( ctx, uindex, nft,   utcst, uthan, &
+            call zzddhrmu ( ctx, uindex, ft%nft,   utcst, uthan, &
                             utlck,  utlun, nut           )
 
 !
@@ -4996,7 +4999,7 @@ contains
          if (       ( locexs .and. locopn ) &
               .and. (   unit ==  utlun(uindex) ) ) then
 
-               handle = fthan(i)
+               handle = ft%files(i)%handle
                found  = .true.
 
 !
@@ -5020,7 +5023,7 @@ contains
 !
       if ( utlun(uindex) /= -1 ) close ( unit = utlun(uindex) )
 
-      call zzddhrmu ( ctx, uindex, nft, utcst, uthan, utlck,  utlun, nut )
+      call zzddhrmu ( ctx, uindex, ft%nft, utcst, uthan, utlck,  utlun, nut )
 
       return
 
@@ -6304,7 +6307,9 @@ contains
       use pepper_strings, only: ljust, repmc, rtrim, ucase
       use pepper_inc_zzddhman
       implicit none
-      character(filen)      locfnm
+      integer(ip), parameter :: scrlen = 4096  !! PEPPER: room for the OS's name of a scratch file
+      character(:), allocatable :: locfnm
+      character(scrlen)     scrnam
       character(strsiz)     tmpstr
       real(wp)              mnm
       integer(ip)           accmet
@@ -6313,7 +6318,6 @@ contains
       integer(ip)           i
       integer(ip)           inqhan
       integer(ip)           iostat
-      integer(ip)           lchar
       integer(ip)           locked
       integer(ip)           loclun
       integer(ip)           supidx
@@ -6324,21 +6328,11 @@ contains
       logical               platok
       integer(ip)           findex
       integer(ip)           uindex
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) then
-         allocate ( ctx%spice%zzddhman )
-         call init_zzddhman_state ( ctx%spice%zzddhman )
-      end if
+      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
-      associate ( nft => ctx%spice%zzddhman%nft, &
-                  ftabs => ctx%spice%zzddhman%ftabs, &
-                  ftamh => ctx%spice%zzddhman%ftamh, &
-                  ftarc => ctx%spice%zzddhman%ftarc, &
-                  ftbff => ctx%spice%zzddhman%ftbff, &
-                  fthan => ctx%spice%zzddhman%fthan, &
-                  ftnam => ctx%spice%zzddhman%ftnam, &
-                  ftrtm => ctx%spice%zzddhman%ftrtm, &
-                  ftmnm => ctx%spice%zzddhman%ftmnm, &
+      associate ( ft => ctx%spice%zzddhman, &
+                  nft => ctx%spice%zzddhman%nft, &
                   next => ctx%spice%zzddhman%next, &
                   first => ctx%zzddhman_units%first, &
                   opnfst => ctx%zzddhman_units%opnfst, &
@@ -6403,7 +6397,7 @@ contains
 !
 !     Left justify FNAME to compress off any leading spaces.
 !
-      call ljust ( fname, locfnm )
+      locfnm = trim ( adjustl ( fname ) )
 
 !
 !     Translate the value of the requested access method to the
@@ -6526,8 +6520,7 @@ contains
 !        Check to see if the file associated with LOCFNM is already in
 !        the file table.
 !
-         call zzddhf2h ( ctx, locfnm,  ftabs,  ftamh,  ftarc, ftbff, &
-                         fthan,   ftnam,  ftrtm,  ftmnm, nft,   utcst, &
+         call zzddhf2h ( ctx, locfnm,  ft,     utcst, &
                          uthan,   utlck,  utlun,  nut,   inqext, &
                          inqopn,  inqhan, locfnd, mnm                 )
 
@@ -6565,7 +6558,7 @@ contains
 !        table); that is not an error.
 !
          if ( ( .not. locfnd ) .and. ( inqopn ) .and. &
-              ( .not. was_closed ( ctx%spice, locfnm(1:rtrim(locfnm)) ) ) ) then
+              ( .not. was_closed ( ctx%spice, locfnm ) ) ) then
 
 !
 !           Get the unit to include in the error message.
@@ -6609,13 +6602,13 @@ contains
 !
          if ( locfnd ) then
 
-            findex = bsrchi ( abs(inqhan), nft, ftabs )
+            findex = ft%find ( inqhan )
 
 !
 !           Check to see if the requested architecture does not match
 !           that of the entry in the file table.
 !
-            if ( filarc /= ftarc(findex) ) then
+            if ( filarc /= ft%files(findex)%arch ) then
 
 !
 !              Recall HANDLE was initialized to 0, and this invalid
@@ -6626,7 +6619,7 @@ contains
                //            'as a #.'                                 )
                call ctx%errch  ( '#', locfnm                               )
                call ctx%errch  ( '#', strarc(filarc)                       )
-               call ctx%errch  ( '#', strarc(ftarc(findex))                )
+               call ctx%errch  ( '#', strarc(ft%files(findex)%arch)                )
                call ctx%sigerr ( 'SPICE(FILARCMISMATCH)'                   )
                return
 
@@ -6656,7 +6649,7 @@ contains
 !           for READ access.  Check to make certain it is not
 !           already loaded with another method.
 !
-            if ( accmet /= ftamh(findex) ) then
+            if ( accmet /= ft%files(findex)%method ) then
 
 !
 !              Recall HANDLE was initialized to 0, and this invalid
@@ -6667,7 +6660,7 @@ contains
                //            'the conflicting access #.'           )
                call ctx%errch  ( '#', locfnm                           )
                call ctx%errch  ( '#', stramh(accmet)                   )
-               call ctx%errch  ( '#', stramh(ftamh(findex))            )
+               call ctx%errch  ( '#', stramh(ft%files(findex)%method)            )
                call ctx%sigerr ( 'SPICE(RWCONFLICT)'                   )
                return
 
@@ -6678,7 +6671,7 @@ contains
 !           and all the sanity checks have passed. Return to the
 !           caller as this is effectively a no-op.
 !
-            handle = fthan ( findex )
+            handle = ft%files(findex)%handle
 
             return
 
@@ -6687,24 +6680,9 @@ contains
       end if
 
 !
-!     Now check to see if there is room in the file table for this
-!     new file.
+!     PEPPER: the file table grows as needed; SPICELIB signaled
+!     SPICE(FTFULL) here when it had FTSIZE (5000) files.
 !
-      if ( nft == ftsize ) then
-
-!
-!        Recall HANDLE was initialized to 0, and this invalid
-!        value is returned to the caller.
-!
-         call ctx%setmsg ( 'The file table is full, with # entries. ' &
-         //            'As a result, the file ''#'' could not be ' &
-         //            'loaded.'                                   )
-         call ctx%errint ( '#', nft                                    )
-         call ctx%errch  ( '#', locfnm                                 )
-         call ctx%sigerr ( 'SPICE(FTFULL)'                             )
-         return
-
-      end if
 
 !
 !     We are about to attempt a HANDLE to LUN connection, increment
@@ -6725,12 +6703,8 @@ contains
       if ( ctx%failed() ) return
 
 !
-!     Trim up the filename.
+!     (PEPPER: the filename was trimmed when LOCFNM was set.)
 !
-      if ( accmet /= scrtch ) then
-         lchar = rtrim ( locfnm )
-      end if
-
 !
 !     If we have made it this far, then we're ready to perform the
 !     appropriate open.  First get the handle ready.
@@ -6807,7 +6781,7 @@ contains
       else if ( accmet == new ) then
 
          open ( newunit = utlun(uindex), &
-                file   = locfnm(1:lchar), &
+                file   = locfnm, &
                 access = 'DIRECT', &
                 recl   = recl, &
                 status = 'NEW', &
@@ -6818,7 +6792,7 @@ contains
       else if ( accmet == read ) then
 
          open ( newunit = utlun(uindex), &
-                file   = locfnm(1:lchar), &
+                file   = locfnm, &
                 access = 'DIRECT', &
                 recl   = recl, &
                 status = 'OLD', &
@@ -6827,7 +6801,7 @@ contains
       else if ( accmet == write ) then
 
          open ( newunit = utlun(uindex), &
-                file   = locfnm(1:lchar), &
+                file   = locfnm, &
                 access = 'DIRECT', &
                 recl   = recl, &
                 status = 'OLD', &
@@ -6877,28 +6851,19 @@ contains
 !        the scratch file.  Set the initial value of LOCFNM, in case
 !        the INQUIRE does not replace it.
 !
-         locfnm = '# SCRATCH FILE'
-         call repmc ( locfnm, '#', strarc(filarc), locfnm )
+         locfnm = trim ( strarc(filarc) ) // ' SCRATCH FILE'
+         scrnam = locfnm
 
          inquire ( unit   = utlun(uindex), &
-                   name   = locfnm, &
+                   name   = scrnam, &
                    iostat = iostat         )
 
 !
-!        In the event that this INQUIRE failed, replace the value
-!        stored in LOCFNM with the initial value.
+!        In the event that this INQUIRE failed, keep the initial value
+!        of LOCFNM. (PEPPER: the name the INQUIRE returns is read into
+!        SCRNAM, of SCRLEN characters.)
 !
-         if ( iostat /= 0 ) then
-
-            locfnm = '# SCRATCH FILE'
-            call repmc ( locfnm, '#', strarc(filarc), locfnm )
-
-         end if
-
-!
-!        Store the RTRIM value of this filename in LCHAR.
-!
-         lchar = rtrim ( locfnm )
+         if ( iostat == 0 ) locfnm = trim ( scrnam )
 
       else if ( ( accmet == read  ) .or. &
                 ( accmet == write )      ) then
@@ -7065,37 +7030,17 @@ contains
       utlck ( uindex ) = accmet == scrtch
 
 !
-!     Now fill out the file table.
+!     Now fill out the file table: the handle, access method, file
+!     architecture, native binary file format, unique DP number and
+!     filename. (PEPPER: one record, appended; the table grows.)
 !
-      nft = nft + 1
-
-!
-!     Use the absolute value of the handle used to index the file
-!     table.
-!
-      ftabs ( nft ) = iabs ( uthan( uindex ) )
-
-!
-!     Assign access method, file architecture, and native binary file
-!     format to the appropriate columns.
-!
-      ftamh ( nft ) = accmet
-      ftarc ( nft ) = filarc
-      ftbff ( nft ) = bff
-
-!
-!     Assign the handle, filename, RTRIM ( FTNAM(NFT) ) as FTRTM, and
-!     unique DP number as FTMNM.
-!
-      fthan ( nft ) = uthan ( uindex )
-      ftnam ( nft ) = locfnm(1:lchar)
-      ftrtm ( nft ) = lchar
-      ftmnm ( nft ) = mnm
+      call ft%add ( ddh_file ( handle = uthan ( uindex ), method = accmet, &
+                               arch = filarc, bff = bff, mnm = mnm, name = locfnm ) )
 
 !
 !     Assign HANDLE the value of the new handle.
 !
-      handle = fthan( nft )
+      handle = uthan ( uindex )
 
       return
       end associate
@@ -7238,7 +7183,6 @@ contains
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
-      character(filen)      locfnm
       character(strsiz)     tmpstr
       real(wp)              mnm
       integer(ip)           accmet
@@ -7258,21 +7202,11 @@ contains
       logical               platok
       integer(ip)           findex
       integer(ip)           uindex
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) then
-         allocate ( ctx%spice%zzddhman )
-         call init_zzddhman_state ( ctx%spice%zzddhman )
-      end if
+      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
-      associate ( nft => ctx%spice%zzddhman%nft, &
-                  ftabs => ctx%spice%zzddhman%ftabs, &
-                  ftamh => ctx%spice%zzddhman%ftamh, &
-                  ftarc => ctx%spice%zzddhman%ftarc, &
-                  ftbff => ctx%spice%zzddhman%ftbff, &
-                  fthan => ctx%spice%zzddhman%fthan, &
-                  ftnam => ctx%spice%zzddhman%ftnam, &
-                  ftrtm => ctx%spice%zzddhman%ftrtm, &
-                  ftmnm => ctx%spice%zzddhman%ftmnm, &
+      associate ( ft => ctx%spice%zzddhman, &
+                  nft => ctx%spice%zzddhman%nft, &
                   first => ctx%zzddhman_units%first, &
                   stramh => ctx%zzddhman_units%stramh, &
                   strarc => ctx%zzddhman_units%strarc, &
@@ -7311,14 +7245,12 @@ contains
 !
 !     Find the file in the handle table.
 !
-      findex = bsrchi ( abs(handle), nft, ftabs )
+      findex = ft%find ( handle )
 
 !
 !     Check to see whether we found the handle or not.
 !
       if ( findex == 0 ) then
-         return
-      else if ( fthan(findex) /= handle ) then
          return
       end if
 
@@ -7336,14 +7268,14 @@ contains
 !     column of the file table for this handle.  If it doesn't,
 !     signal an error.
 !
-      if ( filarc /= ftarc(findex) ) then
+      if ( filarc /= ft%files(findex)%arch ) then
 
          call ctx%setmsg ( 'Logical unit associated with # file $, ' &
          //            'is trying to be closed by routines in ' &
          //            'in the % system.'                         )
-         call ctx%errch  ( '#', strarc( ftarc(findex) )               )
+         call ctx%errch  ( '#', strarc( ft%files(findex)%arch )               )
          call ctx%errch  ( '%', tmpstr                                )
-         call ctx%errch  ( '$', ftnam(findex)                         )
+         call ctx%errch  ( '$', ft%files(findex)%name                         )
          call ctx%sigerr ( 'SPICE(FILARCMISMATCH)'                    )
          return
 
@@ -7353,12 +7285,12 @@ contains
 !     Now check that if KILL is set, the file is accessible for
 !     WRITE.
 !
-      if ( ( kill ) .and. ( ftamh(findex) == read ) ) then
+      if ( ( kill ) .and. ( ft%files(findex)%method == read ) ) then
 
          call ctx%setmsg ( '# file $ is open for READ access.  Attempt ' &
          //            'to close and delete file has failed. '       )
-         call ctx%errch  ( '#', strarc( ftarc(findex) )                  )
-         call ctx%errch  ( '#', ftnam(findex)                            )
+         call ctx%errch  ( '#', strarc( ft%files(findex)%arch )                  )
+         call ctx%errch  ( '#', ft%files(findex)%name                            )
          call ctx%sigerr ( 'SPICE(INVALIDACCESS)'                        )
          return
 
@@ -7368,30 +7300,17 @@ contains
 !     Buffer the access method for HANDLE, since we may need it
 !     when deciding which close to perform.
 !
-      accmet = ftamh (findex)
+      accmet = ft%files(findex)%method
 !
 !     PEPPER: note the close (other contexts' units for this handle).
 !
-      call file_closed ( ctx%spice, ftnam(findex)(1:ftrtm(findex)) )
+      call file_closed ( ctx%spice, ft%files(findex)%name )
 
 !
 !     If we reach here, we need to remove the row FINDEX from
 !     the file table.
 !
-      do i = findex+1, nft
-
-         ftabs(i-1) = ftabs(i)
-         ftamh(i-1) = ftamh(i)
-         ftarc(i-1) = ftarc(i)
-         ftbff(i-1) = ftbff(i)
-         fthan(i-1) = fthan(i)
-         ftnam(i-1) = ftnam(i)
-         ftrtm(i-1) = ftrtm(i)
-         ftmnm(i-1) = ftmnm(i)
-
-      end do
-
-      nft = nft - 1
+      call ft%remove ( findex )
 
 !
 !     Locate HANDLE in the unit table.
@@ -7599,7 +7518,6 @@ contains
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
-      character(filen)      locfnm
       character(strsiz)     tmpstr
       real(wp)              mnm
       integer(ip)           accmet
@@ -7619,19 +7537,11 @@ contains
       logical               platok
       integer(ip)           findex
       integer(ip)           uindex
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) then
-         allocate ( ctx%spice%zzddhman )
-         call init_zzddhman_state ( ctx%spice%zzddhman )
-      end if
+      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
-      associate ( nft => ctx%spice%zzddhman%nft, &
-                  ftabs => ctx%spice%zzddhman%ftabs, &
-                  ftamh => ctx%spice%zzddhman%ftamh, &
-                  ftarc => ctx%spice%zzddhman%ftarc, &
-                  fthan => ctx%spice%zzddhman%fthan, &
-                  ftnam => ctx%spice%zzddhman%ftnam, &
-                  ftrtm => ctx%spice%zzddhman%ftrtm, &
+      associate ( ft => ctx%spice%zzddhman, &
+                  nft => ctx%spice%zzddhman%nft, &
                   first => ctx%zzddhman_units%first, &
                   stramh => ctx%zzddhman_units%stramh, &
                   strarc => ctx%zzddhman_units%strarc, &
@@ -7674,11 +7584,9 @@ contains
 !
 !     Locate HANDLE in the file table.
 !
-      findex = bsrchi ( abs(handle), nft, ftabs )
+      findex = ft%find ( handle )
 
       if ( findex == 0 ) then
-         error = .true.
-      else if ( fthan(findex) /= handle ) then
          error = .true.
       else
          error = .false.
@@ -7708,16 +7616,16 @@ contains
 !     column of the file table for this handle.  If it doesn't,
 !     signal an error.
 !
-      if ( filarc /= ftarc(findex) ) then
+      if ( filarc /= ft%files(findex)%arch ) then
 
          unit = 0
 
          call ctx%setmsg ( 'Logical unit associated with # file $, ' &
          //            'is trying to be unlocked by routines in ' &
          //            'in the % system.'                         )
-         call ctx%errch  ( '#', strarc( ftarc(findex) )               )
+         call ctx%errch  ( '#', strarc( ft%files(findex)%arch )               )
          call ctx%errch  ( '%', tmpstr                                )
-         call ctx%errch  ( '$', ftnam(findex)                         )
+         call ctx%errch  ( '$', ft%files(findex)%name                         )
          call ctx%sigerr ( 'SPICE(FILARCMISMATCH)'                    )
          return
 
@@ -7761,20 +7669,20 @@ contains
 !        Re-attach the file to a logical unit.  Branch based on the
 !        access method stored in the file table.
 !
-         if ( ( ftamh(findex) == new   ) .or. &
-              ( ftamh(findex) == write )      ) then
+         if ( ( ft%files(findex)%method == new   ) .or. &
+              ( ft%files(findex)%method == write )      ) then
 
             open ( newunit = utlun(uindex), &
-                   file   = ftnam(findex)(1:ftrtm(findex)), &
+                   file   = ft%files(findex)%name, &
                    access = 'DIRECT', &
                    recl   = recl, &
                    status = 'OLD', &
                    iostat = iostat           )
 
-         else if ( ftamh(findex) == read ) then
+         else if ( ft%files(findex)%method == read ) then
 
             open ( newunit = utlun(uindex), &
-                   file   = ftnam(findex)(1:ftrtm(findex)), &
+                   file   = ft%files(findex)%name, &
                    access = 'DIRECT', &
                    recl   = recl, &
                    status = 'OLD', &
@@ -7813,7 +7721,7 @@ contains
 
             call ctx%setmsg ( 'Attempt to reconnect logical unit to ' &
             //            'file ''#'' failed. IOSTAT was #.'      )
-            call ctx%errch  ( '#', ftnam(findex)                      )
+            call ctx%errch  ( '#', ft%files(findex)%name                      )
             call ctx%errint ( '#', iostat                             )
             call ctx%sigerr ( 'SPICE(FILEOPENFAIL)'                   )
             return
@@ -7823,7 +7731,7 @@ contains
 !
 !        Lastly populate the unit table values.
 !
-         uthan(uindex) = fthan(findex)
+         uthan(uindex) = ft%files(findex)%handle
          utlck(uindex) = .false.
 
       end if
@@ -7851,7 +7759,7 @@ contains
             call ctx%setmsg ( 'Unable to lock handle for file ''#'' ' &
             //            'to a logical unit.  There are no rows ' &
             //            'available for locking in the unit table.' )
-            call ctx%errch  ( '#', ftnam(findex)                         )
+            call ctx%errch  ( '#', ft%files(findex)%name                         )
             call ctx%sigerr ( 'SPICE(HLULOCKFAILED)'                     )
             return
 
@@ -7971,7 +7879,6 @@ contains
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
-      character(filen)      locfnm
       character(strsiz)     tmpstr
       real(wp)              mnm
       integer(ip)           accmet
@@ -7991,18 +7898,11 @@ contains
       logical               platok
       integer(ip)           findex
       integer(ip)           uindex
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) then
-         allocate ( ctx%spice%zzddhman )
-         call init_zzddhman_state ( ctx%spice%zzddhman )
-      end if
+      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
-      associate ( nft => ctx%spice%zzddhman%nft, &
-                  ftabs => ctx%spice%zzddhman%ftabs, &
-                  ftamh => ctx%spice%zzddhman%ftamh, &
-                  ftarc => ctx%spice%zzddhman%ftarc, &
-                  fthan => ctx%spice%zzddhman%fthan, &
-                  ftnam => ctx%spice%zzddhman%ftnam, &
+      associate ( ft => ctx%spice%zzddhman, &
+                  nft => ctx%spice%zzddhman%nft, &
                   first => ctx%zzddhman_units%first, &
                   stramh => ctx%zzddhman_units%stramh, &
                   strarc => ctx%zzddhman_units%strarc, &
@@ -8064,7 +7964,7 @@ contains
 !     Now look up the handle in the table. Remember FTABS is a sorted
 !     list in increasing order.
 !
-      findex = bsrchi ( abs(handle), nft, ftabs )
+      findex = ft%find ( handle )
 
 !
 !     Check to see if HANDLE is in the file table.  We know it has
@@ -8072,15 +7972,6 @@ contains
 !     These checks are just for safety's sake.
 !
       if ( findex == 0 ) then
-
-         call ctx%setmsg ( 'HANDLE # was not found in the file table ' &
-         //            'but was located in the unit table.  This ' &
-         //            'error should never occur.'                 )
-         call ctx%errint ( '#', handle                                 )
-         call ctx%sigerr ( 'SPICE(BUG)'                                )
-         return
-
-      else if ( fthan(findex) /= handle ) then
 
          call ctx%setmsg ( 'HANDLE # was not found in the file table ' &
          //            'but was located in the unit table.  This ' &
@@ -8105,14 +7996,14 @@ contains
 !     column of the file table for this handle.  If it doesn't,
 !     signal an error.
 !
-      if ( filarc /= ftarc(findex) ) then
+      if ( filarc /= ft%files(findex)%arch ) then
 
          call ctx%setmsg ( 'Logical unit associated with # file $, ' &
          //            'is trying to be unlocked by routines in ' &
          //            'in the % system.'                         )
-         call ctx%errch  ( '#', strarc( ftarc(findex) )               )
+         call ctx%errch  ( '#', strarc( ft%files(findex)%arch )               )
          call ctx%errch  ( '%', tmpstr                                )
-         call ctx%errch  ( '$', ftnam(findex)                         )
+         call ctx%errch  ( '$', ft%files(findex)%name                         )
          call ctx%sigerr ( 'SPICE(FILARCMISMATCH)'                    )
          return
 
@@ -8123,7 +8014,7 @@ contains
 !     scratch access.  If it is, just return, since scratch files
 !     can not have their units unlocked.
 !
-      if ( ftamh(findex) == scrtch ) return
+      if ( ft%files(findex)%method == scrtch ) return
 
       utlck(uindex) = .false.
 
@@ -8250,7 +8141,6 @@ contains
       use pepper_inc_zzddhman
       implicit none
       logical               return
-      character(filen)      locfnm
       character(strsiz)     tmpstr
       real(wp)              mnm
       integer(ip)           accmet
@@ -8270,20 +8160,11 @@ contains
       logical               platok
       integer(ip)           findex
       integer(ip)           uindex
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) then
-         allocate ( ctx%spice%zzddhman )
-         call init_zzddhman_state ( ctx%spice%zzddhman )
-      end if
+      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
-      associate ( nft => ctx%spice%zzddhman%nft, &
-                  ftabs => ctx%spice%zzddhman%ftabs, &
-                  ftamh => ctx%spice%zzddhman%ftamh, &
-                  ftarc => ctx%spice%zzddhman%ftarc, &
-                  ftbff => ctx%spice%zzddhman%ftbff, &
-                  fthan => ctx%spice%zzddhman%fthan, &
-                  ftnam => ctx%spice%zzddhman%ftnam, &
-                  ftrtm => ctx%spice%zzddhman%ftrtm, &
+      associate ( ft => ctx%spice%zzddhman, &
+                  nft => ctx%spice%zzddhman%nft, &
                   first => ctx%zzddhman_units%first, &
                   stramh => ctx%zzddhman_units%stramh, &
                   strarc => ctx%zzddhman_units%strarc, &
@@ -8315,7 +8196,7 @@ contains
 !     Look up the handle in the table.  Remember FTABS is sorted
 !     listed in increasing order.
 !
-      findex = bsrchi ( abs(handle), nft, ftabs )
+      findex = ft%find ( handle )
 
 !
 !     Check to see if HANDLE is in the handle table.  Remember that
@@ -8329,13 +8210,6 @@ contains
          intamh = 0
          found  = .false.
          return
-      else if ( fthan(findex) /= handle ) then
-         fname  = ' '
-         intarc = 0
-         intbff = 0
-         intamh = 0
-         found  = .false.
-         return
       end if
 
 !
@@ -8343,10 +8217,10 @@ contains
 !     the handle table at row FINDEX.
 !
       found  = .true.
-      fname  = ftnam(findex) ( 1:ftrtm(findex) )
-      intarc = ftarc(findex)
-      intbff = ftbff(findex)
-      intamh = ftamh(findex)
+      fname  = ft%files(findex)%name
+      intarc = ft%files(findex)%arch
+      intbff = ft%files(findex)%bff
+      intamh = ft%files(findex)%method
 
       return
       end associate
@@ -8446,7 +8320,6 @@ contains
       use pepper_inc_zzddhman
       implicit none
       logical               return
-      character(filen)      locfnm
       character(strsiz)     tmpstr
       real(wp)              mnm
       integer(ip)           accmet
@@ -8466,16 +8339,11 @@ contains
       logical               platok
       integer(ip)           findex
       integer(ip)           uindex
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) then
-         allocate ( ctx%spice%zzddhman )
-         call init_zzddhman_state ( ctx%spice%zzddhman )
-      end if
+      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
-      associate ( nft => ctx%spice%zzddhman%nft, &
-                  ftabs => ctx%spice%zzddhman%ftabs, &
-                  ftbff => ctx%spice%zzddhman%ftbff, &
-                  fthan => ctx%spice%zzddhman%fthan, &
+      associate ( ft => ctx%spice%zzddhman, &
+                  nft => ctx%spice%zzddhman%nft, &
                   first => ctx%zzddhman_units%first, &
                   stramh => ctx%zzddhman_units%stramh, &
                   strarc => ctx%zzddhman_units%strarc, &
@@ -8507,7 +8375,7 @@ contains
 !     Look up the handle in the table. Remember FTABS is sorted
 !     listed in increasing order.
 !
-      findex = bsrchi ( abs(handle), nft, ftabs )
+      findex = ft%find ( handle )
 
 !
 !     Check to see if HANDLE is in the handle table.  Remember
@@ -8517,16 +8385,13 @@ contains
       if ( findex == 0 ) then
          found = .false.
          return
-      else if ( fthan(findex) /= handle ) then
-         found = .false.
-         return
       end if
 
 !
 !     If we make it this far, then we have found HANDLE in the file
 !     table.  Set NATIVE appropriately and FOUND to TRUE.
 !
-      native = natbff == ftbff(findex)
+      native = natbff == ft%files(findex)%bff
       found  = .true.
 
       return
@@ -8621,7 +8486,7 @@ contains
       use pepper_strings, only: ljust
       use pepper_inc_zzddhman
       implicit none
-      character(filen)      locfnm
+      character(:), allocatable :: locfnm
       character(strsiz)     tmpstr
       real(wp)              mnm
       integer(ip)           accmet
@@ -8641,21 +8506,11 @@ contains
       logical               platok
       integer(ip)           findex
       integer(ip)           uindex
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) then
-         allocate ( ctx%spice%zzddhman )
-         call init_zzddhman_state ( ctx%spice%zzddhman )
-      end if
+      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       if ( .not. allocated ( ctx%zzddhman_units ) ) allocate ( ctx%zzddhman_units )
       call units_check ( ctx )
-      associate ( nft => ctx%spice%zzddhman%nft, &
-                  ftabs => ctx%spice%zzddhman%ftabs, &
-                  ftamh => ctx%spice%zzddhman%ftamh, &
-                  ftarc => ctx%spice%zzddhman%ftarc, &
-                  ftbff => ctx%spice%zzddhman%ftbff, &
-                  fthan => ctx%spice%zzddhman%fthan, &
-                  ftnam => ctx%spice%zzddhman%ftnam, &
-                  ftrtm => ctx%spice%zzddhman%ftrtm, &
-                  ftmnm => ctx%spice%zzddhman%ftmnm, &
+      associate ( ft => ctx%spice%zzddhman, &
+                  nft => ctx%spice%zzddhman%nft, &
                   first => ctx%zzddhman_units%first, &
                   stramh => ctx%zzddhman_units%stramh, &
                   strarc => ctx%zzddhman_units%strarc, &
@@ -8697,13 +8552,12 @@ contains
 !
 !     Left justify FNAME to trim any leading white space.
 !
-      call ljust ( fname, locfnm )
+      locfnm = trim ( adjustl ( fname ) )
 
 !
 !     Look up FNAME in the handle table.
 !
-      call zzddhf2h ( ctx, locfnm,  ftabs,  ftamh, ftarc, ftbff, &
-                      fthan,   ftnam,  ftrtm, ftmnm, nft,   utcst, &
+      call zzddhf2h ( ctx, locfnm,  ft,    utcst, &
                       uthan,   utlck,  utlun, nut,   inqext, &
                       inqopn,  inqhan, found, mnm                 )
 
@@ -8812,7 +8666,6 @@ contains
       use pepper_inc_zzddhman
       implicit none
       logical               return
-      character(filen)      locfnm
       character(strsiz)     tmpstr
       real(wp)              mnm
       integer(ip)           accmet

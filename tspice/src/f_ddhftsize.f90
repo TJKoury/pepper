@@ -293,14 +293,27 @@
 !
       IF ( MAXCNT .EQ. FTSIZE ) THEN
 
-         TCNAME = 'Handle Manager: #+1 CKs'
+         TCNAME = 'Handle Manager: #+1 CKs (PEPPER: no DAFFTFULL)'
          CALL REPMI ( TCNAME, '#', MAXCNT, TCNAME )
          CALL TCASE ( TCNAME )
 
          I = MAXCNT + 1
 
+!
+!        PEPPER: the DAF and handle manager file tables grow (SPICELIB
+!        signaled SPICE(DAFFTFULL) here): the file opens. Close and
+!        delete it.
+!
+         IF ( EXISTS(FNAME(I)) ) THEN
+            CALL DELFIL ( FNAME(I) )
+         END IF
+
          CALL CKOPN ( FNAME(I), FNAME(I), 0, HANDLE )
-         CALL CHCKXC ( .TRUE., 'SPICE(DAFFTFULL)', OK )
+         CALL CHCKXC ( .FALSE., ' ', OK )
+
+         CALL DAFCLS ( HANDLE )
+         CALL DELFIL ( FNAME(I) )
+         CALL CHCKXC ( .FALSE., ' ', OK )
 
       END IF
 
@@ -503,14 +516,27 @@
 !
       IF ( MAXCNT .EQ. FTSIZE ) THEN
 
-         TCNAME = 'Handle Manager: #+1 SPKs'
+         TCNAME = 'Handle Manager: #+1 SPKs (PEPPER: no DAFFTFULL)'
          CALL REPMI ( TCNAME, '#', MAXCNT, TCNAME )
          CALL TCASE ( TCNAME )
 
          I = MAXCNT + 1
 
+!
+!        PEPPER: the DAF and handle manager file tables grow (SPICELIB
+!        signaled SPICE(DAFFTFULL) here): the file opens. Close and
+!        delete it.
+!
+         IF ( EXISTS(FNAME(I)) ) THEN
+            CALL DELFIL ( FNAME(I) )
+         END IF
+
          CALL SPKOPN ( FNAME(I), FNAME(I), 0, HANDLE )
-         CALL CHCKXC ( .TRUE., 'SPICE(DAFFTFULL)', OK )
+         CALL CHCKXC ( .FALSE., ' ', OK )
+
+         CALL DAFCLS ( HANDLE )
+         CALL DELFIL ( FNAME(I) )
+         CALL CHCKXC ( .FALSE., ' ', OK )
 
       END IF
 
@@ -671,14 +697,27 @@
 !
       IF ( MAXCNT .EQ. FTSIZE ) THEN
 
-         TCNAME = 'Handle Manager: #+1 PCKs'
+         TCNAME = 'Handle Manager: #+1 PCKs (PEPPER: no DAFFTFULL)'
          CALL REPMI ( TCNAME, '#', MAXCNT, TCNAME )
          CALL TCASE ( TCNAME )
 
          I = MAXCNT + 1
 
+!
+!        PEPPER: the DAF and handle manager file tables grow (SPICELIB
+!        signaled SPICE(DAFFTFULL) here): the file opens. Close and
+!        delete it.
+!
+         IF ( EXISTS(FNAME(I)) ) THEN
+            CALL DELFIL ( FNAME(I) )
+         END IF
+
          CALL PCKOPN ( FNAME(I), FNAME(I), 0, HANDLE )
-         CALL CHCKXC ( .TRUE., 'SPICE(DAFFTFULL)', OK )
+         CALL CHCKXC ( .FALSE., ' ', OK )
+
+         CALL DAFCLS ( HANDLE )
+         CALL DELFIL ( FNAME(I) )
+         CALL CHCKXC ( .FALSE., ' ', OK )
 
       END IF
 
