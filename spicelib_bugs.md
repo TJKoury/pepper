@@ -23,7 +23,7 @@ Kinds:
 | ZZGFRPWK | `LS` (length of the report's begin message) is computed only by ZZGFTSWK; ZZGFWKAD replaces the begin message without updating it, so ZZGFWKIN's messages can be cut or padded. | Unchanged (faithful). |
 | ZZGFREL, ZZGFRELX | `CSTEP` is saved but never assigned (it keeps its DATA value .FALSE.). Harmless. | Unchanged. |
 | GFEVNT | `DREF` is set only when a DREF parameter is supplied; otherwise it keeps the value from an earlier call. | Unchanged. |
-| NAMFRM (FRAMEX) | Kernel frame names are added to the name cache as `FRAME_<NAME>` (after PREFIX) but looked up as `<NAME>`, so the cache never hits and every lookup reads the pool. Results are correct. | Unchanged (faithful). |
+| NAMFRM (FRAMEX) | Kernel frame names are added to the name cache as `FRAME_<NAME>` (after PREFIX) but looked up as `<NAME>`, so the cache never hits and every lookup reads the pool. Results are correct. | Fixed: cached under the name (`limits.md`, phase 4). |
 | UDF | Assigns `X = X + 0` and `VALUE = VALUE + 0` to its inputs (to use them). | Removed. |
 | GFSTEP | Assigns `TIME = TIME` to its input. | Removed. |
 | ZZCKCV05 | Passes the DP word `BUFFER(1)` to ERRINT. | Passes the integer subtype. |
@@ -33,7 +33,7 @@ Kinds:
 | ET2LST | Signals `SPICE(CANTGETROTATIONTYPE)`, 26 characters; short messages hold 25, so it is stored as `SPICE(CANTGETROTATIONTYPE` (without the closing parenthesis). | Fixed: messages have no length limit (`limits.md`, phase 1). |
 | ZZDDHOPN (ZZDDHMAN) | Copies the file name into a `CHARACTER*(FILEN)` (255) local without a length check: a longer path is silently truncated, and the wrong file is opened or inquired. FURNSH checks the length, but DAFOPR, DASOPR, etc. called directly do not. | Fixed: file names have no length limit (`limits.md`, phase 2). |
 | RDKER, RDTEXT | RDKER keeps the name of the text kernel being read in `CHARACTER*(FILSIZ)` (255) and reads the following lines through RDTEXT with that name; RDTEXT recognizes the file by comparing it with its own 255-character copy. A longer path works only because both copies are cut the same way; two paths that agree in their first 255 characters would be confused. | Fixed: both names have no length limit. |
-| FRAMEX | The cache of kernel-defined frames (`MAXKFR` = 5209 entries) is reset only when the pool changes, and entries are added with ZZHSCADD/ZZHSIADD without checking for room (ZZHSCAVL), so looking up the 5210th distinct kernel frame between pool changes signals `SPICE(HASHISFULL)` instead of evicting. | Unchanged (to be fixed with the limits plan). |
+| FRAMEX | The cache of kernel-defined frames (`MAXKFR` = 5209 entries) is reset only when the pool changes, and entries are added with ZZHSCADD/ZZHSIADD without checking for room (ZZHSCAVL), so looking up the 5210th distinct kernel frame between pool changes signals `SPICE(HASHISFULL)` instead of evicting. | Fixed: the caches grow (`limits.md`, phase 4). |
 | ZZRVBF (LMPOOL) | Copies the characters of a string value into the pool's 80-character slot without the bounds check ZZRVAR has: a string value longer than 80 characters in an LMPOOL buffer is written past the end of its slot, into the next value. | Fixed: string values have no length limit (`limits.md`, phase 3). |
 | ZZBODDEF (BODDEF) | The documented limit is `MAXP` = 150 new names, but the check is against `MAXE` − `NPERM` = 161; `MAXP` is not used in code. | Unchanged. |
 

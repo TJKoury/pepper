@@ -4798,7 +4798,6 @@ contains
       integer(ip), parameter :: kvnmln = 32
       integer(ip), parameter :: kvbsz = 100
       integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxkfr = 5209
       integer(ip), parameter :: maxbfr = 149
       integer(ip) :: n
       integer(ip) :: values ( room )
@@ -4811,7 +4810,8 @@ contains
          allocate ( ctx%framex_state )
          call init_framex_state ( ctx%framex_state )
       end if
-      associate ( name => ctx%framex_state%name, &
+      associate ( fx => ctx%framex_state, &
+                  name => ctx%framex_state%name, &
                   center => ctx%framex_state%center, &
                   centrd => ctx%framex_state%centrd, &
                   idcode => ctx%framex_state%idcode, &
@@ -4819,12 +4819,6 @@ contains
                   typeid => ctx%framex_state%typeid, &
                   first => ctx%framex_state%first, &
                   pulctr => ctx%framex_state%pulctr, &
-                  knmlst => ctx%framex_state%knmlst, &
-                  knmpol => ctx%framex_state%knmpol, &
-                  knmnms => ctx%framex_state%knmnms, &
-                  knmids => ctx%framex_state%knmids, &
-                  kidlst => ctx%framex_state%kidlst, &
-                  kidpol => ctx%framex_state%kidpol, &
                   bnmlst => ctx%framex_state%bnmlst, &
                   bnmpol => ctx%framex_state%bnmpol, &
                   bnmnms => ctx%framex_state%bnmnms, &
@@ -4860,8 +4854,7 @@ contains
 !
 !        Initialize kernel POOL frame hashes.
 !
-         call zzhsiini ( ctx, maxkfr, kidlst, kidpol )
-         call zzhscini ( ctx, maxkfr, knmlst, knmpol )
+         call fx%kreset ( )
 
 !
 !        Initialize built-in frame tables and hashes.
@@ -4906,18 +4899,17 @@ contains
          call zzpctrck ( ctx, pulctr, lupdte )
 
          if ( lupdte ) then
-            call zzhscini ( ctx, maxkfr, knmlst, knmpol )
-            call zzhsiini ( ctx, maxkfr, kidlst, kidpol )
+            call fx%kreset ( )
          end if
 
 !
 !        Check if this name is in the hash.
 !
-         call zzhscchk ( ctx, knmlst, knmpol, knmnms, pname, item )
+         item = fx%kname_find ( pname )
 
          if ( item /= 0 ) then
 
-            frcode = knmids ( item )
+            frcode = fx%knmids(item)
 
          else
 
@@ -4925,8 +4917,7 @@ contains
 !           The name wasn't in the hash, see if we can find this frame
 !           in the kernel pool.
 !
-            call prefix ( 'FRAME_', 0,                  pname )
-            call gipool ( ctx,  pname,   1, room, n, values, gotit )
+            call gipool ( ctx,  'FRAME_' // trim(pname),   1, room, n, values, gotit )
 
             if ( ctx%failed() ) return
 
@@ -4939,12 +4930,11 @@ contains
 !              kernel frame name to its ID. Add this pair to the
 !              name-based hash.
 !
-               call zzhscadd ( ctx, knmlst, knmpol, knmnms, pname, item, &
-                                                              lnew )
+               call fx%kname_add ( pname, item )
 
                if ( .not. ctx%failed() .and. item /= 0 ) then
 
-                  knmids ( item ) = frcode
+                  fx%knmids(item) = frcode
 
                end if
 
@@ -5142,7 +5132,6 @@ contains
       integer(ip), parameter :: kvnmln = 32
       integer(ip), parameter :: kvbsz = 100
       integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxkfr = 5209
       integer(ip), parameter :: maxbfr = 149
       integer(ip) :: n
       character(frnmln) :: pname
@@ -5154,7 +5143,8 @@ contains
          allocate ( ctx%framex_state )
          call init_framex_state ( ctx%framex_state )
       end if
-      associate ( name => ctx%framex_state%name, &
+      associate ( fx => ctx%framex_state, &
+                  name => ctx%framex_state%name, &
                   center => ctx%framex_state%center, &
                   centrd => ctx%framex_state%centrd, &
                   idcode => ctx%framex_state%idcode, &
@@ -5162,12 +5152,6 @@ contains
                   typeid => ctx%framex_state%typeid, &
                   first => ctx%framex_state%first, &
                   pulctr => ctx%framex_state%pulctr, &
-                  knmlst => ctx%framex_state%knmlst, &
-                  knmpol => ctx%framex_state%knmpol, &
-                  kidlst => ctx%framex_state%kidlst, &
-                  kidpol => ctx%framex_state%kidpol, &
-                  kidids => ctx%framex_state%kidids, &
-                  kname => ctx%framex_state%kname, &
                   bnmlst => ctx%framex_state%bnmlst, &
                   bnmpol => ctx%framex_state%bnmpol, &
                   bnmnms => ctx%framex_state%bnmnms, &
@@ -5201,8 +5185,7 @@ contains
 !
 !        Initialize kernel POOL frame hashes.
 !
-         call zzhsiini ( ctx, maxkfr, kidlst, kidpol )
-         call zzhscini ( ctx, maxkfr, knmlst, knmpol )
+         call fx%kreset ( )
 
 !
 !        Initialize built-in frame tables and hashes.
@@ -5236,18 +5219,17 @@ contains
          call zzpctrck ( ctx, pulctr, lupdte )
 
          if ( lupdte ) then
-            call zzhscini ( ctx, maxkfr, knmlst, knmpol )
-            call zzhsiini ( ctx, maxkfr, kidlst, kidpol )
+            call fx%kreset ( )
          end if
 
 !
 !        Check if this ID is in the hash.
 !
-         call zzhsichk ( ctx, kidlst, kidpol, kidids, frcode, item )
+         item = fx%kid_find ( frcode )
 
          if ( item /= 0 ) then
 
-            frname = kname ( item )
+            frname = fx%kname(item)
 
          else
 
@@ -5536,7 +5518,6 @@ contains
       integer(ip), parameter :: kvnmln = 32
       integer(ip), parameter :: kvbsz = 100
       integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxkfr = 5209
       integer(ip), parameter :: maxbfr = 149
       integer(ip) :: n
       integer(ip) :: values ( room )
@@ -5551,7 +5532,8 @@ contains
          allocate ( ctx%framex_state )
          call init_framex_state ( ctx%framex_state )
       end if
-      associate ( name => ctx%framex_state%name, &
+      associate ( fx => ctx%framex_state, &
+                  name => ctx%framex_state%name, &
                   center => ctx%framex_state%center, &
                   centrd => ctx%framex_state%centrd, &
                   idcode => ctx%framex_state%idcode, &
@@ -5559,17 +5541,6 @@ contains
                   typeid => ctx%framex_state%typeid, &
                   first => ctx%framex_state%first, &
                   pulctr => ctx%framex_state%pulctr, &
-                  knmlst => ctx%framex_state%knmlst, &
-                  knmpol => ctx%framex_state%knmpol, &
-                  knmnms => ctx%framex_state%knmnms, &
-                  knmids => ctx%framex_state%knmids, &
-                  kidlst => ctx%framex_state%kidlst, &
-                  kidpol => ctx%framex_state%kidpol, &
-                  kidids => ctx%framex_state%kidids, &
-                  kname => ctx%framex_state%kname, &
-                  kcent => ctx%framex_state%kcent, &
-                  kclass => ctx%framex_state%kclass, &
-                  kclsid => ctx%framex_state%kclsid, &
                   bnmlst => ctx%framex_state%bnmlst, &
                   bnmpol => ctx%framex_state%bnmpol, &
                   bnmnms => ctx%framex_state%bnmnms, &
@@ -5604,8 +5575,7 @@ contains
 !
 !        Initialize kernel POOL frame hashes.
 !
-         call zzhsiini ( ctx, maxkfr, kidlst, kidpol )
-         call zzhscini ( ctx, maxkfr, knmlst, knmpol )
+         call fx%kreset ( )
 
 !
 !        Initialize built-in frame tables and hashes.
@@ -5655,20 +5625,19 @@ contains
          call zzpctrck ( ctx, pulctr, lupdte )
 
          if ( lupdte ) then
-            call zzhscini ( ctx, maxkfr, knmlst, knmpol )
-            call zzhsiini ( ctx, maxkfr, kidlst, kidpol )
+            call fx%kreset ( )
          end if
 
 !
 !        Check if this ID is in the hash.
 !
-         call zzhsichk ( ctx, kidlst, kidpol, kidids, frcode, item )
+         item = fx%kid_find ( frcode )
 
          if ( item /= 0 ) then
 
-            cent   =  kcent  (item)
-            frclss =  kclass (item)
-            clssid =  kclsid (item)
+            cent   =  fx%kcent(item)
+            frclss =  fx%kclass(item)
+            clssid =  fx%kclsid(item)
             found  = .true.
 
          else
@@ -5729,25 +5698,23 @@ contains
 !              all items for this frame. Add this frame to the
 !              ID-based hash.
 !
-               call zzhsiadd ( ctx, kidlst, kidpol, kidids, frcode, item, &
-                                                               lnew )
+               call fx%kid_add ( frcode, item )
 
                if ( .not. ctx%failed() .and. item /= 0 ) then
 
-                  kname  (item) = lcfram
-                  kcent  (item) = cent
-                  kclass (item) = frclss
-                  kclsid (item) = clssid
+                  fx%kname(item) = lcfram
+                  fx%kcent(item) = cent
+                  fx%kclass(item) = frclss
+                  fx%kclsid(item) = clssid
 
 !
 !                 Also, try to add this frame to the name-based hash.
 !
-                  call zzhscadd ( ctx, knmlst, knmpol, knmnms, lcfram, &
-                                                       item, lnew )
+                  call fx%kname_add ( lcfram, item )
 
                   if ( .not. ctx%failed() .and. item /= 0 ) then
 
-                     knmids ( item ) = frcode
+                     fx%knmids(item) = frcode
 
                   end if
 
@@ -5961,7 +5928,6 @@ contains
       integer(ip), parameter :: kvnmln = 32
       integer(ip), parameter :: kvbsz = 100
       integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxkfr = 5209
       integer(ip), parameter :: maxbfr = 149
       integer(ip) :: n
       integer(ip) :: values ( room )
@@ -5978,7 +5944,8 @@ contains
          allocate ( ctx%framex_state )
          call init_framex_state ( ctx%framex_state )
       end if
-      associate ( name => ctx%framex_state%name, &
+      associate ( fx => ctx%framex_state, &
+                  name => ctx%framex_state%name, &
                   center => ctx%framex_state%center, &
                   centrd => ctx%framex_state%centrd, &
                   idcode => ctx%framex_state%idcode, &
@@ -5986,14 +5953,6 @@ contains
                   typeid => ctx%framex_state%typeid, &
                   first => ctx%framex_state%first, &
                   pulctr => ctx%framex_state%pulctr, &
-                  knmlst => ctx%framex_state%knmlst, &
-                  knmpol => ctx%framex_state%knmpol, &
-                  knmnms => ctx%framex_state%knmnms, &
-                  knmids => ctx%framex_state%knmids, &
-                  kidlst => ctx%framex_state%kidlst, &
-                  kidpol => ctx%framex_state%kidpol, &
-                  kidids => ctx%framex_state%kidids, &
-                  kname => ctx%framex_state%kname, &
                   bnmlst => ctx%framex_state%bnmlst, &
                   bnmpol => ctx%framex_state%bnmpol, &
                   bnmnms => ctx%framex_state%bnmnms, &
@@ -6017,8 +5976,7 @@ contains
 !
 !        Initialize kernel POOL frame hashes.
 !
-         call zzhsiini ( ctx, maxkfr, kidlst, kidpol )
-         call zzhscini ( ctx, maxkfr, knmlst, knmpol )
+         call fx%kreset ( )
 
 !
 !        Initialize built-in frame tables and hashes.
@@ -6102,19 +6060,18 @@ contains
                call zzpctrck ( ctx, pulctr, lupdte )
 
                if ( lupdte ) then
-                  call zzhscini ( ctx, maxkfr, knmlst, knmpol )
-                  call zzhsiini ( ctx, maxkfr, kidlst, kidpol )
+                  call fx%kreset ( )
                end if
 
 !
 !              Check if this name is in the hash.
 !
-               call zzhscchk ( ctx, knmlst, knmpol, knmnms, pname, item )
+               item = fx%kname_find ( pname )
 
                if ( item /= 0 ) then
 
                   frname = pname
-                  frcode = knmids ( item )
+                  frcode = fx%knmids(item)
                   found  = .true.
 
                else
@@ -6127,9 +6084,7 @@ contains
 !                 modify PNAME.
 !
                   frname = pname
-
-                  call prefix ( 'FRAME_', 0,                  pname )
-                  call gipool ( ctx,  pname,   1, room, n, values, gotit )
+                  call gipool ( ctx,  'FRAME_' // trim(pname),   1, room, n, values, gotit )
 
                   if ( ctx%failed() ) return
 
@@ -6143,12 +6098,11 @@ contains
 !                    mapped the kernel frame name to its ID. Add this
 !                    pair to the name-based hash.
 !
-                     call zzhscadd ( ctx, knmlst, knmpol, knmnms, frname, &
-                                                       item, lnew )
+                     call fx%kname_add ( frname, item )
 
                      if ( .not. ctx%failed() .and. item /= 0 ) then
 
-                        knmids ( item ) = frcode
+                        fx%knmids(item) = frcode
 
                      end if
 
@@ -6201,18 +6155,17 @@ contains
                call zzpctrck ( ctx, pulctr, lupdte )
 
                if ( lupdte ) then
-                  call zzhscini ( ctx, maxkfr, knmlst, knmpol )
-                  call zzhsiini ( ctx, maxkfr, kidlst, kidpol )
+                  call fx%kreset ( )
                end if
 
 !
 !              Check if this ID is in the hash.
 !
-               call zzhsichk ( ctx, kidlst, kidpol, kidids, values(1), item )
+               item = fx%kid_find ( values(1) )
 
                if ( item /= 0 ) then
 
-                  frname = kname ( item )
+                  frname = fx%kname(item)
                   frcode = values(1)
                   found  = .true.
 
@@ -6486,7 +6439,6 @@ contains
       integer(ip), parameter :: kvnmln = 32
       integer(ip), parameter :: kvbsz = 100
       integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxkfr = 5209
       integer(ip), parameter :: maxbfr = 149
       integer(ip) :: n
       integer(ip) :: values ( room )
@@ -6503,7 +6455,8 @@ contains
          allocate ( ctx%framex_state )
          call init_framex_state ( ctx%framex_state )
       end if
-      associate ( name => ctx%framex_state%name, &
+      associate ( fx => ctx%framex_state, &
+                  name => ctx%framex_state%name, &
                   center => ctx%framex_state%center, &
                   centrd => ctx%framex_state%centrd, &
                   idcode => ctx%framex_state%idcode, &
@@ -6511,14 +6464,6 @@ contains
                   typeid => ctx%framex_state%typeid, &
                   first => ctx%framex_state%first, &
                   pulctr => ctx%framex_state%pulctr, &
-                  knmlst => ctx%framex_state%knmlst, &
-                  knmpol => ctx%framex_state%knmpol, &
-                  knmnms => ctx%framex_state%knmnms, &
-                  knmids => ctx%framex_state%knmids, &
-                  kidlst => ctx%framex_state%kidlst, &
-                  kidpol => ctx%framex_state%kidpol, &
-                  kidids => ctx%framex_state%kidids, &
-                  kname => ctx%framex_state%kname, &
                   bnmlst => ctx%framex_state%bnmlst, &
                   bnmpol => ctx%framex_state%bnmpol, &
                   bnmnms => ctx%framex_state%bnmnms, &
@@ -6542,8 +6487,7 @@ contains
 !
 !        Initialize kernel POOL frame hashes.
 !
-         call zzhsiini ( ctx, maxkfr, kidlst, kidpol )
-         call zzhscini ( ctx, maxkfr, knmlst, knmpol )
+         call fx%kreset ( )
 
 !
 !        Initialize built-in frame tables and hashes.
@@ -6629,19 +6573,18 @@ contains
                call zzpctrck ( ctx, pulctr, lupdte )
 
                if ( lupdte ) then
-                  call zzhscini ( ctx, maxkfr, knmlst, knmpol )
-                  call zzhsiini ( ctx, maxkfr, kidlst, kidpol )
+                  call fx%kreset ( )
                end if
 
 !
 !              Check if this name is in the hash.
 !
-               call zzhscchk ( ctx, knmlst, knmpol, knmnms, pname, item )
+               item = fx%kname_find ( pname )
 
                if ( item /= 0 ) then
 
                   frname = pname
-                  frcode = knmids ( item )
+                  frcode = fx%knmids(item)
                   found  = .true.
 
                else
@@ -6654,9 +6597,7 @@ contains
 !                 modify PNAME.
 !
                   frname = pname
-
-                  call prefix ( 'FRAME_', 0,                  pname )
-                  call gipool ( ctx,  pname,   1, room, n, values, gotit )
+                  call gipool ( ctx,  'FRAME_' // trim(pname),   1, room, n, values, gotit )
 
                   if ( ctx%failed() ) return
 
@@ -6670,12 +6611,11 @@ contains
 !                    mapped the kernel frame name to its ID. Add this
 !                    pair to the name-based hash.
 !
-                     call zzhscadd ( ctx, knmlst, knmpol, knmnms, frname, &
-                                                       item, lnew )
+                     call fx%kname_add ( frname, item )
 
                      if ( .not. ctx%failed() .and. item /= 0 ) then
 
-                        knmids ( item ) = frcode
+                        fx%knmids(item) = frcode
 
                      end if
 
@@ -6728,18 +6668,17 @@ contains
                call zzpctrck ( ctx, pulctr, lupdte )
 
                if ( lupdte ) then
-                  call zzhscini ( ctx, maxkfr, knmlst, knmpol )
-                  call zzhsiini ( ctx, maxkfr, kidlst, kidpol )
+                  call fx%kreset ( )
                end if
 
 !
 !              Check if this ID is in the hash.
 !
-               call zzhsichk ( ctx, kidlst, kidpol, kidids, values(1), item )
+               item = fx%kid_find ( values(1) )
 
                if ( item /= 0 ) then
 
-                  frname = kname ( item )
+                  frname = fx%kname(item)
                   frcode = values(1)
                   found  = .true.
 
@@ -7095,7 +7034,6 @@ contains
       integer(ip), parameter :: kvnmln = 32
       integer(ip), parameter :: kvbsz = 100
       integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxkfr = 5209
       integer(ip), parameter :: maxbfr = 149
       integer(ip) :: n
       integer(ip) :: kvclid
@@ -7110,7 +7048,8 @@ contains
          allocate ( ctx%framex_state )
          call init_framex_state ( ctx%framex_state )
       end if
-      associate ( name => ctx%framex_state%name, &
+      associate ( fx => ctx%framex_state, &
+                  name => ctx%framex_state%name, &
                   center => ctx%framex_state%center, &
                   centrd => ctx%framex_state%centrd, &
                   idcode => ctx%framex_state%idcode, &
@@ -7118,10 +7057,6 @@ contains
                   typeid => ctx%framex_state%typeid, &
                   first => ctx%framex_state%first, &
                   pulctr => ctx%framex_state%pulctr, &
-                  knmlst => ctx%framex_state%knmlst, &
-                  knmpol => ctx%framex_state%knmpol, &
-                  kidlst => ctx%framex_state%kidlst, &
-                  kidpol => ctx%framex_state%kidpol, &
                   bnmlst => ctx%framex_state%bnmlst, &
                   bnmpol => ctx%framex_state%bnmpol, &
                   bnmnms => ctx%framex_state%bnmnms, &
@@ -7145,8 +7080,7 @@ contains
 !
 !        Initialize kernel POOL frame hashes.
 !
-         call zzhsiini ( ctx, maxkfr, kidlst, kidpol )
-         call zzhscini ( ctx, maxkfr, knmlst, knmpol )
+         call fx%kreset ( )
 
 !
 !        Initialize built-in frame tables and hashes.

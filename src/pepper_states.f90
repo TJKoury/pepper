@@ -20,7 +20,7 @@
 module pepper_states
 
    use pepper_kinds, only: ip, wp
-   use pepper_containers, only: grow, string, string_map
+   use pepper_containers, only: grow, string, string_map, int_map
    use pepper_inc_das, only: ftsize
    use pepper_inc_dla, only: dladsz
    use pepper_inc_dsk, only: maxsrf
@@ -1207,7 +1207,6 @@ module pepper_states
    integer(ip), parameter :: non = nninrt
    integer(ip), parameter :: ncount = ninert + non
    integer(ip), parameter :: framex_frnmln = 32
-   integer(ip), parameter :: maxkfr = 5209
    integer(ip), parameter :: maxbfr = 149
 
    !> This is an umbrella routine for the entry points available for
@@ -1228,17 +1227,6 @@ module pepper_states
       integer(ip) :: typeid ( ncount )  !! frame class IDs of the built-in frames (parallel to name)
       logical :: first  !! true until the built-in frame tables and hashes have been set up
       integer(ip) :: pulctr ( ctrsiz )  !! POOL state counter.
-      integer(ip) :: knmlst (          maxkfr )  !! heads of the name hash collision lists of the kernel pool frames (index into knmids)
-      integer(ip) :: knmpol ( lbpool : maxkfr )  !! name-based hash for kernel pool frames: collision lists
-      character(framex_frnmln) :: knmnms (          maxkfr )  !! name-based hash for kernel pool frames: the names
-      integer(ip) :: knmids (          maxkfr )  !! frame ID codes for the names in knmnms
-      integer(ip) :: kidlst (          maxkfr )  !! heads of the ID hash collision lists of the kernel pool frames (index into kname, kcent, ...)
-      integer(ip) :: kidpol ( lbpool : maxkfr )  !! ID-based hash for kernel pool frames: collision lists
-      integer(ip) :: kidids (          maxkfr )  !! ID-based hash for kernel pool frames: the frame ID codes
-      character(framex_frnmln) :: kname (          maxkfr )  !! names of the kernel pool frames in kidids
-      integer(ip) :: kcent (          maxkfr )  !! center body ID codes of the kernel pool frames in kidids
-      integer(ip) :: kclass (          maxkfr )  !! frame classes of the kernel pool frames in kidids
-      integer(ip) :: kclsid (          maxkfr )  !! frame class IDs of the kernel pool frames in kidids
       integer(ip) :: bnmlst (          maxbfr )  !! heads of the name hash collision lists of the built-in frames (index into bnmidx)
       integer(ip) :: bnmpol ( lbpool : maxbfr )  !! name-based hash for built-in frames: collision lists
       character(framex_frnmln) :: bnmnms (          maxbfr )  !! name-based hash for built-in frames: the names (uppercase)
@@ -1247,6 +1235,24 @@ module pepper_states
       integer(ip) :: bidpol ( lbpool : maxbfr )  !! ID-based hash for built-in frames: collision lists
       integer(ip) :: bidids (          maxbfr )  !! ID-based hash for built-in frames: the frame ID codes
       integer(ip) :: bididx (          maxbfr )  !! index in the built-in frame arrays (name, idcode, ...) of each ID in bidids
+      ! PEPPER: the caches of kernel pool frames (emptied when the pool
+      ! changes) grow: SPICELIB's hash tables had MAXKFR (5209) entries and
+      ! signaled SPICE(HASHISFULL) for the next distinct frame.
+      type(string_map) :: knmmap  !! index in knmids of each kernel frame name looked up
+      integer(ip), allocatable :: knmids(:)  !! frame ID code of each name in knmmap
+      integer(ip) :: nknm = 0  !! number of names in knmmap
+      type(int_map) :: kidmap  !! index in kname, kcent, ... of each kernel frame ID looked up
+      character(framex_frnmln), allocatable :: kname(:)  !! names of the kernel pool frames in kidmap
+      integer(ip), allocatable :: kcent(:)  !! center body ID codes of the kernel pool frames in kidmap
+      integer(ip), allocatable :: kclass(:)  !! frame classes of the kernel pool frames in kidmap
+      integer(ip), allocatable :: kclsid(:)  !! frame class IDs of the kernel pool frames in kidmap
+      integer(ip) :: nkid = 0  !! number of IDs in kidmap
+   contains
+      procedure :: kreset => framex_kreset
+      procedure :: kname_find => framex_kname_find
+      procedure :: kname_add => framex_kname_add
+      procedure :: kid_find => framex_kid_find
+      procedure :: kid_add => framex_kid_add
    end type framex_state
 
    ! ------------------------------------------------------------------ FRMGET
@@ -6116,17 +6122,6 @@ contains
       state%typeid = 0
       state%first = .true.
       state%pulctr = 0
-      state%knmlst = 0
-      state%knmpol = 0
-      state%knmnms = ' '
-      state%knmids = 0
-      state%kidlst = 0
-      state%kidpol = 0
-      state%kidids = 0
-      state%kname = ' '
-      state%kcent = 0
-      state%kclass = 0
-      state%kclsid = 0
       state%bnmlst = 0
       state%bnmpol = 0
       state%bnmnms = ' '
@@ -6136,6 +6131,64 @@ contains
       state%bidids = 0
       state%bididx = 0
    end subroutine init_framex_state
+
+   !> Empty the FRAMEX caches of kernel pool frames (the pool changed).
+   pure subroutine framex_kreset(self)
+      class(framex_state), intent(inout) :: self  !! the state
+      call self%knmmap%clear()
+      call self%kidmap%clear()
+      self%nknm = 0
+      self%nkid = 0
+   end subroutine framex_kreset
+
+   !> The index (in knmids) of a kernel frame name in the cache: 0 if it is
+   !> not there.
+   pure integer(ip) function framex_kname_find(self, name) result(item)
+      class(framex_state), intent(in) :: self  !! the state
+      character(*), intent(in) :: name  !! the frame name
+      logical :: found
+      call self%knmmap%get(name, item, found)
+   end function framex_kname_find
+
+   !> Add a kernel frame name to the cache: its index in knmids (where the
+   !> caller stores the frame ID).
+   pure subroutine framex_kname_add(self, name, item)
+      class(framex_state), intent(inout) :: self  !! the state
+      character(*), intent(in) :: name  !! the frame name
+      integer(ip), intent(out) :: item  !! its index in knmids
+      item = self%kname_find(name)
+      if (item > 0) return
+      self%nknm = self%nknm + 1
+      item = self%nknm
+      call grow(self%knmids, item)
+      call self%knmmap%set(name, item)
+   end subroutine framex_kname_add
+
+   !> The index (in kname, kcent, ...) of a kernel frame ID in the cache: 0
+   !> if it is not there.
+   pure integer(ip) function framex_kid_find(self, id) result(item)
+      class(framex_state), intent(in) :: self  !! the state
+      integer(ip), intent(in) :: id  !! the frame ID code
+      logical :: found
+      call self%kidmap%get(id, item, found)
+   end function framex_kid_find
+
+   !> Add a kernel frame ID to the cache: its index in kname, kcent, ...
+   !> (where the caller stores the frame's data).
+   pure subroutine framex_kid_add(self, id, item)
+      class(framex_state), intent(inout) :: self  !! the state
+      integer(ip), intent(in) :: id  !! the frame ID code
+      integer(ip), intent(out) :: item  !! its index in kname, kcent, ...
+      item = self%kid_find(id)
+      if (item > 0) return
+      self%nkid = self%nkid + 1
+      item = self%nkid
+      call grow(self%kname, item)
+      call grow(self%kcent, item)
+      call grow(self%kclass, item)
+      call grow(self%kclsid, item)
+      call self%kidmap%set(id, item)
+   end subroutine framex_kid_add
 
    !> Add a kernel at the end of the KEEPER table.
    pure subroutine keeper_add(self, kernel)

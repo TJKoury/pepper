@@ -3,12 +3,14 @@
 !> SPICELIB's file tables held, the priority of SPK files after
 !> unloading, more DAFs written at once than DAFANA's 20, and comments
 !> read from many DAFs in turn (DAFEC's table), and the kernel pool past
-!> its limits (variables, values, name and string lengths).
+!> its limits (variables, values, name and string lengths), and more
+!> kernel frames than FRAMEX's caches held (5209).
 program test_limits
 
    use pepper_kinds, only: ip, wp
    use pepper_instance, only: pepper_spice, pepper_context
-   use pepper_test_kernels, only: write_lsk, write_spk, kernel_name, delete_file, circle_state
+   use pepper_test_kernels, only: write_lsk, write_spk, kernel_name, delete_file, circle_state, &
+      write_tk_frames, frame_name
 
    implicit none
 
@@ -24,6 +26,7 @@ program test_limits
    call test_many_writers()
    call test_many_comment_readers()
    call test_pool()
+   call test_frames()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -402,5 +405,41 @@ contains
       call ctx%clpool()
       call check_ok('pool')
    end subroutine test_pool
+
+   !> 20000 TK frames, each looked up by name and by ID once: more distinct
+   !> kernel frames than FRAMEX's caches held (5209; SPICELIB signaled
+   !> SPICE(HASHISFULL) for the next one). TK frames also take 10 pool
+   !> variables each: 200000, past the pool's 26003.
+   subroutine test_frames()
+      integer(ip), parameter :: n = 20000, first = 1700001
+      character(*), parameter :: file = prefix // 'frames.tf'
+      character(32) :: name
+      real(wp) :: rot(3, 3)
+      integer(ip) :: i, code, cent, frclss, clssid
+      logical :: found, ok
+      call write_tk_frames(file, n, first)
+      call ctx%furnsh(file)
+      call check_ok('frames: loading 20000 TK frames')
+      ok = .true.
+      do i = 1, n
+         call ctx%namfrm(frame_name(i), code)
+         ok = ok .and. code == first + i - 1
+         call ctx%frmnam(first + i - 1, name)
+         ok = ok .and. name == frame_name(i)
+         call ctx%frinfo(first + i - 1, cent, frclss, clssid, found)
+         ok = ok .and. found .and. cent == 399 .and. frclss == 4 .and. clssid == first + i - 1
+         if (ctx%failed()) exit
+      end do
+      call check_ok('frames: lookups')
+      call check(ok, 'frames: names, IDs and data of 20000 frames')
+      do i = 1, n, 4999
+         call ctx%pxform(frame_name(i), 'J2000', 0.0_wp, rot)
+         ok = ok .and. abs(atan2(rot(1, 2), rot(1, 1)) - i/1000.0_wp*acos(-1.0_wp)/180) < 1.0e-12_wp
+      end do
+      call check_ok('frames: pxform')
+      call check(ok, 'frames: rotations')
+      call ctx%unload(file)
+      call delete_file(file)
+   end subroutine test_frames
 
 end program test_limits

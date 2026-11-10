@@ -383,7 +383,18 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
    - **Measured** (both builds in temporary worktrees): `gdpool` 0.45 to
      0.35 µs, `pxform` on TK frames 14 to 6.8 µs, body names loaded 1.43 to
      1.21 µs per name, text kernels unchanged (1.2 µs per variable).
-4. **Names and definitions:**
+4. **Names and definitions.** Done so far:
+   - **FRAMEX** (per context): the caches of kernel pool frames are a
+     `string_map` and an `int_map` over growable arrays (SPICELIB: hash
+     tables of 5209 entries, about 550 KB per context). Fixes `HASHISFULL`
+     and NAMFRM's cache, which never hit. Test: 20000 TK frames in
+     `test_limits`.
+   - **Watches:** an agent is found through a map (it was a linear search
+     over the context's watches; TKFRAM keeps up to 200).
+   - **Measured:** `pxform` on a random TK frame 6.8 to 5.3 µs (14 µs before
+     phase 3).
+
+   The plan for the rest:
    - **Bodies:**
      - ZZBODTRN's kernel-name table is sized to the pool's contents;
      - the BODDEF table grows (`TOOMANYPAIRS` goes);
@@ -516,7 +527,8 @@ or listed for later.
 | `wrline` (error reports, `pepper_output`) | Looks up the file by name (`inquire`) for every line written | Keep the unit with the device in the context | later (only when reports go to a file) |
 | POOL (GDPOOL, GCPOOL, GIPOOL, DTPOOL) | Values in linked lists: a lookup walks the list from its head to START, and DTPOOL counts the values by walking them | Done: arrays (slices) | 3 |
 | POOL (GNPOOL, WRPOOL) | Scan all 26003 hash buckets on every call; CCIFRM and KPLFRM page through the matches with START, one scan per page | Done: the slots in use | 3 |
-| Watches (`watch_index`, PEPPER) | Find an agent by a linear search over all watches of the context; TKFRAM keeps one watch per buffered frame (up to 200) and calls CVPOOL on every lookup | A map from agent to watch | 4 |
+| Watches (`watch_index`, PEPPER) | Find an agent by a linear search over all watches of the context; TKFRAM keeps one watch per buffered frame (up to 200) and calls CVPOOL on every lookup | Done: a map from agent to watch | 4 |
+| FRAMEX (NAMFRM) | Adds kernel frame names to its cache as `FRAME_<NAME>` but looks up `<NAME>`: every lookup of a kernel frame by name reads the pool | Done: cached under the name | 4 |
 | BSR tables | 10 MB each, allocated and zeroed in full by the first query of a context: 2.5 ms and about 20 MB per context | Start small, grow (decision 3) | 5 |
 
 ## Testing

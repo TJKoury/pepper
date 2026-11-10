@@ -174,6 +174,7 @@ module pepper_instance
       integer(ip) :: files_seen = 0  !! the file_generation this context's record caches reflect
       ! Kernel pool watches (SWPOOL, CVPOOL, DWPOOL) of the context.
       type(pool_watch), allocatable :: watches(:)  !! the watches
+      type(string_map) :: watch_map  !! index in watches of each agent
       integer :: nwatches = 0  !! number of watches
       ! Per-context state of the subsystems (allocated when first used).
       ! >>> generated context state components (tools/modularize_ctx.py)
@@ -20339,14 +20340,10 @@ contains
    integer function watch_index(ctx, agent)
       class(pepper_context), intent(in) :: ctx  !! the context
       character(*), intent(in) :: agent  !! the agent
-      integer :: k
-      watch_index = 0
-      do k = 1, ctx%nwatches
-         if (ctx%watches(k)%agent == agent) then
-            watch_index = k
-            return
-         end if
-      end do
+      integer(ip) :: k
+      logical :: found
+      call ctx%watch_map%get(agent, k, found)
+      watch_index = k
    end function watch_index
 
    !> SWPOOL for a context: the watch is the
@@ -20373,6 +20370,7 @@ contains
          ctx%nwatches = ctx%nwatches + 1
          k = ctx%nwatches
          ctx%watches(k)%agent = trim(agent)
+         call ctx%watch_map%set(agent, int(k, ip))
          ctx%watches(k)%nnames = 0
          allocate (ctx%watches(k)%names(max(8, int(nnames))))
       end if
@@ -20459,8 +20457,10 @@ contains
       ! The last watch takes the place of the deleted one (the order of the
       ! watches does not matter: an agent has one watch); its components
       ! are moved, not copied.
+      call ctx%watch_map%remove(agent)
       associate (w => ctx%watches(k), last => ctx%watches(ctx%nwatches))
          if (k /= ctx%nwatches) then
+            call ctx%watch_map%set(last%agent, int(k, ip))
             call move_alloc(last%agent, w%agent)
             call move_alloc(last%names, w%names)
             w%nnames = last%nnames
