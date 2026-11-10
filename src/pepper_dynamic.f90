@@ -2187,7 +2187,6 @@ contains
       character(*), parameter :: rname = 'ZZSPKGO1'
       integer(ip), parameter :: chlen = 20
       integer(ip), parameter :: ssb = 0
-      integer(ip), parameter :: frnmln = 32
       character(40)         ident
       character(40)         tname
       character(40)         oname
@@ -3143,7 +3142,6 @@ contains
       character(*), parameter :: rname = 'ZZSPKGP1'
       integer(ip), parameter :: chlen = 20
       integer(ip), parameter :: ssb = 0
-      integer(ip), parameter :: frnmln = 32
       character(40)         ident
       character(40)         tname
       character(40)         oname
@@ -6925,7 +6923,6 @@ contains
       use pepper_inc_zzctr
       implicit none
       character(*), parameter :: rname = 'ZZSPKZP1'
-      integer(ip), parameter :: frnmln = 32
       real(wp) :: ltcent
       real(wp) :: temp     ( 3    )
       logical :: xmit
@@ -8618,7 +8615,6 @@ contains
       use pepper_inc_zzctr
       implicit none
       character(*), parameter :: rname = 'ZZSPKEZ1'
-      integer(ip), parameter :: frnmln = 32
       real(wp) :: state    ( 6    )
       real(wp) :: ltcent
       integer(ip) :: ltsign
@@ -9197,25 +9193,26 @@ contains
       integer(ip), parameter :: vnamln = 4
       character(corlen)     abcorr
       character(kvlen)      axname
-      character(frnmln)     basnam
-      character(frnmln)     cfrmnm
-      character(bdnmln)     ctrnam
+      character(:), allocatable :: basnam
+      character(:), allocatable :: cfrmnm
+      character(:), allocatable :: ctrnam
+      logical :: namfnd
       character(corlen)     cvcorr
       character(kvlen)      dynstl
       character(kvlen)      dynfam
-      character(frnmln)     fframs ( mxnfac )
-      character(frnmln)     inname
+      type(string), allocatable :: fframs(:)
+      character(:), allocatable :: inname
       character(kvlen)      nutmod
       character(kvlen)      oblmod
       character(kvlen)      prcmod
       character(kvlen)      rotsta
       character(kvlen)      spec
-      character(frnmln)     tframs ( mxnfac )
+      type(string), allocatable :: tframs(:)
       character(timlen)     timstr
       character(kvlen)      tmpfam
       character(kvlen)      units
       character(kvlen)      vecdef ( 2 )
-      character(frnmln)     velfrm
+      character(:), allocatable :: velfrm
       character(vnamln), parameter :: vname  ( 2 ) = &
          [ character(vnamln) :: kwpri, kwsec ]
       real(wp)              acc    ( 3 )
@@ -9407,7 +9404,7 @@ contains
 !
 !     Get the input frame name.
 !
-      call frmnam ( ctx, infram, inname )
+      call frame_name_of ( ctx, infram, inname, namfnd )
 
 !
 !     We need the name of the base frame.
@@ -9416,7 +9413,7 @@ contains
 
       if ( ctx%failed() ) return
 
-      call frmnam   ( ctx, basfrm, basnam )
+      call frame_name_of ( ctx, basfrm, basnam, namfnd )
 
 !
 !     The output frame code and name are set.
@@ -9606,10 +9603,12 @@ contains
 !
                if ( center /= earth ) then
 
-                  call bodc2n ( ctx, center, ctrnam, fnd )
+                  call body_name_of ( ctx, center, ctrnam, fnd )
 
                   if ( .not. fnd ) then
+                     ctrnam = repeat ( ' ', 11 )
                      call intstr ( center, ctrnam )
+                     ctrnam = trim ( ctrnam )
                   end if
 
                   call ctx%setmsg ( 'Definition of frame # specifies '    // &
@@ -9681,10 +9680,12 @@ contains
 !
                   if ( center /= earth ) then
 
-                     call bodc2n ( ctx, center, ctrnam, fnd )
+                     call body_name_of ( ctx, center, ctrnam, fnd )
 
                      if ( .not. fnd ) then
+                        ctrnam = repeat ( ' ', 11 )
                         call intstr ( center, ctrnam )
+                        ctrnam = trim ( ctrnam )
                      end if
 
                      call ctx%setmsg ( 'Definition of frame # specifies ' // &
@@ -9752,10 +9753,12 @@ contains
 !
                   if ( center /= earth ) then
 
-                     call bodc2n ( ctx, center, ctrnam, fnd )
+                     call body_name_of ( ctx, center, ctrnam, fnd )
 
                      if ( .not. fnd ) then
+                        ctrnam = repeat ( ' ', 11 )
                         call intstr ( center, ctrnam )
+                        ctrnam = trim ( ctrnam )
                      end if
 
                      call ctx%setmsg ( 'Definition of frame # specifies ' // &
@@ -9966,7 +9969,7 @@ contains
 !                 defined.
 !
                   call zzdynfid ( ctx, inname, infram, itmfrm(i), frid )
-                  call frmnam   ( ctx, frid,   velfrm  )
+                  call frame_name_of ( ctx, frid, velfrm, namfnd )
 
                   if ( ctx%failed() ) return
 
@@ -10124,7 +10127,7 @@ contains
 !                 Look up the body-fixed frame associated with the
 !                 target body.
 !
-                  call cidfrm ( ctx, targ, cfrmid, cfrmnm, fnd )
+                  call frame_of_center ( ctx, targ, cfrmid, cfrmnm, fnd )
 
                   if ( .not. fnd ) then
 
@@ -10764,8 +10767,8 @@ contains
 !
 !           Look up the "from" and "to" frames that define the product.
 !
-            call zzdynvac ( ctx, inname, infram, kwffrm, mxnfac, m, fframs )
-            call zzdynvac ( ctx, inname, infram, kwtfrm, mxnfac, n, tframs )
+            call dynamic_frame_strings ( ctx, inname, infram, kwffrm, mxnfac, m, fframs )
+            call dynamic_frame_strings ( ctx, inname, infram, kwtfrm, mxnfac, n, tframs )
 
             if ( ctx%failed() ) return
 
@@ -10791,8 +10794,8 @@ contains
 !           Compute the inverse of the product of the factors; place
 !           the result in XFORM.
 !
-            call namfrm ( ctx, fframs(1), fromid )
-            call namfrm ( ctx, tframs(1), toid   )
+            call namfrm ( ctx, fframs(1)%s, fromid )
+            call namfrm ( ctx, tframs(1)%s, toid   )
 
             call zzfrmch1 ( ctx, toid, fromid, t0, xform )
 
@@ -10802,8 +10805,8 @@ contains
 
                call moved  ( xform, 36, xftemp )
 
-               call namfrm ( ctx, fframs(i), fromid )
-               call namfrm ( ctx, tframs(i), toid   )
+               call namfrm ( ctx, fframs(i)%s, fromid )
+               call namfrm ( ctx, tframs(i)%s, toid   )
 
                call zzfrmch1 ( ctx, toid, fromid, t0, xform )
 
@@ -12340,7 +12343,6 @@ contains
       character(*), parameter :: rname = 'ZZSPKGO0'
       integer(ip), parameter :: chlen = 20
       integer(ip), parameter :: ssb = 0
-      integer(ip), parameter :: frnmln = 32
       character(40)         ident
       character(40)         tname
       character(40)         oname
@@ -16113,7 +16115,6 @@ contains
       use pepper_inc_zzctr
       implicit none
       character(*), parameter :: rname = 'ZZSPKEZ0'
-      integer(ip), parameter :: frnmln = 32
       real(wp) :: state    ( 6    )
       real(wp) :: ltcent
       integer(ip) :: ltsign
@@ -16675,25 +16676,26 @@ contains
       integer(ip), parameter :: vnamln = 4
       character(corlen)     abcorr
       character(kvlen)      axname
-      character(frnmln)     basnam
-      character(frnmln)     cfrmnm
-      character(bdnmln)     ctrnam
+      character(:), allocatable :: basnam
+      character(:), allocatable :: cfrmnm
+      character(:), allocatable :: ctrnam
+      logical :: namfnd
       character(corlen)     cvcorr
       character(kvlen)      dynstl
       character(kvlen)      dynfam
-      character(frnmln)     fframs ( mxnfac )
-      character(frnmln)     inname
+      type(string), allocatable :: fframs(:)
+      character(:), allocatable :: inname
       character(kvlen)      nutmod
       character(kvlen)      oblmod
       character(kvlen)      prcmod
       character(kvlen)      rotsta
       character(kvlen)      spec
-      character(frnmln)     tframs ( mxnfac )
+      type(string), allocatable :: tframs(:)
       character(timlen)     timstr
       character(kvlen)      tmpfam
       character(kvlen)      units
       character(kvlen)      vecdef ( 2 )
-      character(frnmln)     velfrm
+      character(:), allocatable :: velfrm
       character(vnamln), parameter :: vname  ( 2 ) = &
          [ character(vnamln) :: kwpri, kwsec ]
       real(wp)              alt
@@ -16885,7 +16887,7 @@ contains
 !
 !     Get the input frame name.
 !
-      call frmnam ( ctx, infram, inname )
+      call frame_name_of ( ctx, infram, inname, namfnd )
 
 !
 !     We need the name of the base frame.
@@ -16894,7 +16896,7 @@ contains
 
       if ( ctx%failed() ) return
 
-      call frmnam   ( ctx, basfrm, basnam )
+      call frame_name_of ( ctx, basfrm, basnam, namfnd )
 
 !
 !     The output frame code and name are set.
@@ -17069,10 +17071,12 @@ contains
 !
                if ( center /= earth ) then
 
-                  call bodc2n ( ctx, center, ctrnam, fnd )
+                  call body_name_of ( ctx, center, ctrnam, fnd )
 
                   if ( .not. fnd ) then
+                     ctrnam = repeat ( ' ', 11 )
                      call intstr ( center, ctrnam )
+                     ctrnam = trim ( ctrnam )
                   end if
 
                   call ctx%setmsg ( 'Definition of frame # specifies '    // &
@@ -17150,10 +17154,12 @@ contains
 !
                   if ( center /= earth ) then
 
-                     call bodc2n ( ctx, center, ctrnam, fnd )
+                     call body_name_of ( ctx, center, ctrnam, fnd )
 
                      if ( .not. fnd ) then
+                        ctrnam = repeat ( ' ', 11 )
                         call intstr ( center, ctrnam )
+                        ctrnam = trim ( ctrnam )
                      end if
 
                      call ctx%setmsg ( 'Definition of frame # specifies ' // &
@@ -17226,10 +17232,12 @@ contains
 !
                   if ( center /= earth ) then
 
-                     call bodc2n ( ctx, center, ctrnam, fnd )
+                     call body_name_of ( ctx, center, ctrnam, fnd )
 
                      if ( .not. fnd ) then
+                        ctrnam = repeat ( ' ', 11 )
                         call intstr ( center, ctrnam )
+                        ctrnam = trim ( ctrnam )
                      end if
 
                      call ctx%setmsg ( 'Definition of frame # specifies ' // &
@@ -17427,7 +17435,7 @@ contains
 !                 defined.
 !
                   call zzdynfid ( ctx, inname, infram, itmfrm(i), frid )
-                  call frmnam   ( ctx, frid,   velfrm  )
+                  call frame_name_of ( ctx, frid, velfrm, namfnd )
 
 !
 !                 Look up the Ith velocity vector in the velocity frame.
@@ -17557,7 +17565,7 @@ contains
 !                 Look up the body-fixed frame associated with the
 !                 target body.
 !
-                  call cidfrm ( ctx, targ, cfrmid, cfrmnm, fnd )
+                  call frame_of_center ( ctx, targ, cfrmid, cfrmnm, fnd )
 
                   if ( .not. fnd ) then
 
@@ -18149,8 +18157,8 @@ contains
 !
 !           Look up the "from" and "to" frames that define the product.
 !
-            call zzdynvac ( ctx, inname, infram, kwffrm, mxnfac, m, fframs )
-            call zzdynvac ( ctx, inname, infram, kwtfrm, mxnfac, n, tframs )
+            call dynamic_frame_strings ( ctx, inname, infram, kwffrm, mxnfac, m, fframs )
+            call dynamic_frame_strings ( ctx, inname, infram, kwtfrm, mxnfac, n, tframs )
 
             if ( ctx%failed() ) return
 
@@ -18176,8 +18184,8 @@ contains
 !           Compute the inverse of the product of the factors; place
 !           the result in XFORM.
 !
-            call namfrm ( ctx, fframs(1), fromid )
-            call namfrm ( ctx, tframs(1), toid   )
+            call namfrm ( ctx, fframs(1)%s, fromid )
+            call namfrm ( ctx, tframs(1)%s, toid   )
 
             call zzrefch1 ( ctx, toid, fromid, t0, rotate )
 
@@ -18187,8 +18195,8 @@ contains
 
                call moved  ( rotate, 9,  rtemp )
 
-               call namfrm ( ctx, fframs(i), fromid )
-               call namfrm ( ctx, tframs(i), toid   )
+               call namfrm ( ctx, fframs(i)%s, fromid )
+               call namfrm ( ctx, tframs(i)%s, toid   )
 
                call zzrefch1 ( ctx, toid, fromid, t0, rotate )
 
@@ -19328,7 +19336,6 @@ contains
       character(*), parameter :: rname = 'ZZSPKGP0'
       integer(ip), parameter :: chlen = 20
       integer(ip), parameter :: ssb = 0
-      integer(ip), parameter :: frnmln = 32
       character(40)         ident
       character(40)         tname
       character(40)         oname
@@ -21520,7 +21527,6 @@ contains
       use pepper_inc_zzctr
       implicit none
       character(*), parameter :: rname = 'ZZSPKZP0'
-      integer(ip), parameter :: frnmln = 32
       real(wp) :: ltcent
       real(wp) :: temp     ( 3    )
       logical :: xmit
@@ -22016,25 +22022,26 @@ contains
       integer(ip), parameter :: vnamln = 4
       character(corlen)     abcorr
       character(kvlen)      axname
-      character(frnmln)     basnam
-      character(frnmln)     cfrmnm
-      character(bdnmln)     ctrnam
+      character(:), allocatable :: basnam
+      character(:), allocatable :: cfrmnm
+      character(:), allocatable :: ctrnam
+      logical :: namfnd
       character(corlen)     cvcorr
       character(kvlen)      dynstl
       character(kvlen)      dynfam
-      character(frnmln)     fframs ( mxnfac )
-      character(frnmln)     inname
+      type(string), allocatable :: fframs(:)
+      character(:), allocatable :: inname
       character(kvlen)      nutmod
       character(kvlen)      oblmod
       character(kvlen)      prcmod
       character(kvlen)      rotsta
       character(kvlen)      spec
-      character(frnmln)     tframs ( mxnfac )
+      type(string), allocatable :: tframs(:)
       character(timlen)     timstr
       character(kvlen)      tmpfam
       character(kvlen)      units
       character(kvlen)      vecdef ( 2 )
-      character(frnmln)     velfrm
+      character(:), allocatable :: velfrm
       character(vnamln), parameter :: vname  ( 2 ) = &
          [ character(vnamln) :: kwpri, kwsec ]
       real(wp)              acc    ( 3 )
@@ -22226,7 +22233,7 @@ contains
 !
 !     Get the input frame name.
 !
-      call frmnam ( ctx, infram, inname )
+      call frame_name_of ( ctx, infram, inname, namfnd )
 
 !
 !     We need the name of the base frame.
@@ -22235,7 +22242,7 @@ contains
 
       if ( ctx%failed() ) return
 
-      call frmnam   ( ctx, basfrm, basnam )
+      call frame_name_of ( ctx, basfrm, basnam, namfnd )
 
 !
 !     The output frame code and name are set.
@@ -22425,10 +22432,12 @@ contains
 !
                if ( center /= earth ) then
 
-                  call bodc2n ( ctx, center, ctrnam, fnd )
+                  call body_name_of ( ctx, center, ctrnam, fnd )
 
                   if ( .not. fnd ) then
+                     ctrnam = repeat ( ' ', 11 )
                      call intstr ( center, ctrnam )
+                     ctrnam = trim ( ctrnam )
                   end if
 
                   call ctx%setmsg ( 'Definition of frame # specifies '    // &
@@ -22500,10 +22509,12 @@ contains
 !
                   if ( center /= earth ) then
 
-                     call bodc2n ( ctx, center, ctrnam, fnd )
+                     call body_name_of ( ctx, center, ctrnam, fnd )
 
                      if ( .not. fnd ) then
+                        ctrnam = repeat ( ' ', 11 )
                         call intstr ( center, ctrnam )
+                        ctrnam = trim ( ctrnam )
                      end if
 
                      call ctx%setmsg ( 'Definition of frame # specifies ' // &
@@ -22571,10 +22582,12 @@ contains
 !
                   if ( center /= earth ) then
 
-                     call bodc2n ( ctx, center, ctrnam, fnd )
+                     call body_name_of ( ctx, center, ctrnam, fnd )
 
                      if ( .not. fnd ) then
+                        ctrnam = repeat ( ' ', 11 )
                         call intstr ( center, ctrnam )
+                        ctrnam = trim ( ctrnam )
                      end if
 
                      call ctx%setmsg ( 'Definition of frame # specifies ' // &
@@ -22785,7 +22798,7 @@ contains
 !                 defined.
 !
                   call zzdynfid ( ctx, inname, infram, itmfrm(i), frid )
-                  call frmnam   ( ctx, frid,   velfrm  )
+                  call frame_name_of ( ctx, frid, velfrm, namfnd )
 
                   if ( ctx%failed() ) return
 
@@ -22943,7 +22956,7 @@ contains
 !                 Look up the body-fixed frame associated with the
 !                 target body.
 !
-                  call cidfrm ( ctx, targ, cfrmid, cfrmnm, fnd )
+                  call frame_of_center ( ctx, targ, cfrmid, cfrmnm, fnd )
 
                   if ( .not. fnd ) then
 
@@ -23583,8 +23596,8 @@ contains
 !
 !           Look up the "from" and "to" frames that define the product.
 !
-            call zzdynvac ( ctx, inname, infram, kwffrm, mxnfac, m, fframs )
-            call zzdynvac ( ctx, inname, infram, kwtfrm, mxnfac, n, tframs )
+            call dynamic_frame_strings ( ctx, inname, infram, kwffrm, mxnfac, m, fframs )
+            call dynamic_frame_strings ( ctx, inname, infram, kwtfrm, mxnfac, n, tframs )
 
             if ( ctx%failed() ) return
 
@@ -23610,8 +23623,8 @@ contains
 !           Compute the inverse of the product of the factors; place
 !           the result in XFORM.
 !
-            call namfrm ( ctx, fframs(1), fromid )
-            call namfrm ( ctx, tframs(1), toid   )
+            call namfrm ( ctx, fframs(1)%s, fromid )
+            call namfrm ( ctx, tframs(1)%s, toid   )
 
             call zzfrmch0 ( ctx, toid, fromid, t0, xform )
 
@@ -23621,8 +23634,8 @@ contains
 
                call moved  ( xform, 36, xftemp )
 
-               call namfrm ( ctx, fframs(i), fromid )
-               call namfrm ( ctx, tframs(i), toid   )
+               call namfrm ( ctx, fframs(i)%s, fromid )
+               call namfrm ( ctx, tframs(i)%s, toid   )
 
                call zzfrmch0 ( ctx, toid, fromid, t0, xform )
 
@@ -24065,25 +24078,26 @@ contains
       integer(ip), parameter :: vnamln = 4
       character(corlen)     abcorr
       character(kvlen)      axname
-      character(frnmln)     basnam
-      character(frnmln)     cfrmnm
-      character(bdnmln)     ctrnam
+      character(:), allocatable :: basnam
+      character(:), allocatable :: cfrmnm
+      character(:), allocatable :: ctrnam
+      logical :: namfnd
       character(corlen)     cvcorr
       character(kvlen)      dynstl
       character(kvlen)      dynfam
-      character(frnmln)     fframs ( mxnfac )
-      character(frnmln)     inname
+      type(string), allocatable :: fframs(:)
+      character(:), allocatable :: inname
       character(kvlen)      nutmod
       character(kvlen)      oblmod
       character(kvlen)      prcmod
       character(kvlen)      rotsta
       character(kvlen)      spec
-      character(frnmln)     tframs ( mxnfac )
+      type(string), allocatable :: tframs(:)
       character(timlen)     timstr
       character(kvlen)      tmpfam
       character(kvlen)      units
       character(kvlen)      vecdef ( 2 )
-      character(frnmln)     velfrm
+      character(:), allocatable :: velfrm
       character(vnamln), parameter :: vname  ( 2 ) = &
          [ character(vnamln) :: kwpri, kwsec ]
       real(wp)              alt
@@ -24275,7 +24289,7 @@ contains
 !
 !     Get the input frame name.
 !
-      call frmnam ( ctx, infram, inname )
+      call frame_name_of ( ctx, infram, inname, namfnd )
 
 !
 !     We need the name of the base frame.
@@ -24284,7 +24298,7 @@ contains
 
       if ( ctx%failed() ) return
 
-      call frmnam   ( ctx, basfrm, basnam )
+      call frame_name_of ( ctx, basfrm, basnam, namfnd )
 
 !
 !     The output frame code and name are set.
@@ -24457,10 +24471,12 @@ contains
 !
                if ( center /= earth ) then
 
-                  call bodc2n ( ctx, center, ctrnam, fnd )
+                  call body_name_of ( ctx, center, ctrnam, fnd )
 
                   if ( .not. fnd ) then
+                     ctrnam = repeat ( ' ', 11 )
                      call intstr ( center, ctrnam )
+                     ctrnam = trim ( ctrnam )
                   end if
 
                   call ctx%setmsg ( 'Definition of frame # specifies '    // &
@@ -24538,10 +24554,12 @@ contains
 !
                   if ( center /= earth ) then
 
-                     call bodc2n ( ctx, center, ctrnam, fnd )
+                     call body_name_of ( ctx, center, ctrnam, fnd )
 
                      if ( .not. fnd ) then
+                        ctrnam = repeat ( ' ', 11 )
                         call intstr ( center, ctrnam )
+                        ctrnam = trim ( ctrnam )
                      end if
 
                      call ctx%setmsg ( 'Definition of frame # specifies ' // &
@@ -24614,10 +24632,12 @@ contains
 !
                   if ( center /= earth ) then
 
-                     call bodc2n ( ctx, center, ctrnam, fnd )
+                     call body_name_of ( ctx, center, ctrnam, fnd )
 
                      if ( .not. fnd ) then
+                        ctrnam = repeat ( ' ', 11 )
                         call intstr ( center, ctrnam )
+                        ctrnam = trim ( ctrnam )
                      end if
 
                      call ctx%setmsg ( 'Definition of frame # specifies ' // &
@@ -24815,7 +24835,7 @@ contains
 !                 defined.
 !
                   call zzdynfid ( ctx, inname, infram, itmfrm(i), frid )
-                  call frmnam   ( ctx, frid,   velfrm  )
+                  call frame_name_of ( ctx, frid, velfrm, namfnd )
 
 !
 !                 Look up the Ith velocity vector in the velocity frame.
@@ -24945,7 +24965,7 @@ contains
 !                 Look up the body-fixed frame associated with the
 !                 target body.
 !
-                  call cidfrm ( ctx, targ, cfrmid, cfrmnm, fnd )
+                  call frame_of_center ( ctx, targ, cfrmid, cfrmnm, fnd )
 
                   if ( .not. fnd ) then
 
@@ -25537,8 +25557,8 @@ contains
 !
 !           Look up the "from" and "to" frames that define the product.
 !
-            call zzdynvac ( ctx, inname, infram, kwffrm, mxnfac, m, fframs )
-            call zzdynvac ( ctx, inname, infram, kwtfrm, mxnfac, n, tframs )
+            call dynamic_frame_strings ( ctx, inname, infram, kwffrm, mxnfac, m, fframs )
+            call dynamic_frame_strings ( ctx, inname, infram, kwtfrm, mxnfac, n, tframs )
 
             if ( ctx%failed() ) return
 
@@ -25564,8 +25584,8 @@ contains
 !           Compute the inverse of the product of the factors; place
 !           the result in ROTATE.
 !
-            call namfrm ( ctx, fframs(1), fromid )
-            call namfrm ( ctx, tframs(1), toid   )
+            call namfrm ( ctx, fframs(1)%s, fromid )
+            call namfrm ( ctx, tframs(1)%s, toid   )
 
             call zzrefch0 ( ctx, toid, fromid, t0, rotate )
 
@@ -25575,8 +25595,8 @@ contains
 
                call moved  ( rotate, 9,  rtemp )
 
-               call namfrm ( ctx, fframs(i), fromid )
-               call namfrm ( ctx, tframs(i), toid   )
+               call namfrm ( ctx, fframs(i)%s, fromid )
+               call namfrm ( ctx, tframs(i)%s, toid   )
 
                call zzrefch0 ( ctx, toid, fromid, t0, rotate )
 

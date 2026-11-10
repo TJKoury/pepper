@@ -1267,7 +1267,6 @@ contains
       integer(ip), parameter :: nic = 6
       integer(ip), parameter :: nc = ndc + ( nic + 1 )/2
       integer(ip), parameter :: idlen = nc * 8
-      integer(ip), parameter :: frnmln = 32
       character(idlen)      segid
       real(wp)              av     ( 3 )
       real(wp)              dcd    ( ndc  )
@@ -2295,7 +2294,6 @@ contains
       integer(ip), parameter :: nic = 6
       integer(ip), parameter :: nc = ndc + ( nic + 1 )/2
       integer(ip), parameter :: idlen = nc * 8
-      integer(ip), parameter :: frnmln = 32
       character(idlen)      segid
       real(wp)              dcd      ( ndc  )
       real(wp)              descr    ( nc   )

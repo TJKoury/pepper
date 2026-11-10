@@ -24,6 +24,8 @@ Kinds:
 | ZZGFREL, ZZGFRELX | `CSTEP` is saved but never assigned (it keeps its DATA value .FALSE.). Harmless. | Unchanged. |
 | GFEVNT | `DREF` is set only when a DREF parameter is supplied; otherwise it keeps the value from an earlier call. | Unchanged. |
 | NAMFRM (FRAMEX) | Kernel frame names are added to the name cache as `FRAME_<NAME>` (after PREFIX) but looked up as `<NAME>`, so the cache never hits and every lookup reads the pool. Results are correct. | Fixed: cached under the name (`limits.md`, phase 4). |
+| CCIFRM (FRAMEX) | In the loop over a batch of `FRAME_*_CLASS` names from GNPOOL, GIPOOL overwrites `N`, the batch size, with 1. The next batch then starts at `START + 1`, not `START + N`, so each name is examined up to 100 times, and each GNPOOL call scans the whole pool. Results are correct. | Fixed: the names are fetched once (`limits.md`, phase 4). |
+| CCIFRM (FRAMEX) | The name variable is built with `REPMC ( KVBUFF(I), '_CLASS', '_NAME', LOOK2 )`, which replaces the first `_CLASS` in `FRAME_<ID or name>_CLASS`. A frame defined by a name that contains `_CLASS` gets the wrong variable. | Fixed: the trailing `_CLASS` is replaced. |
 | UDF | Assigns `X = X + 0` and `VALUE = VALUE + 0` to its inputs (to use them). | Removed. |
 | GFSTEP | Assigns `TIME = TIME` to its input. | Removed. |
 | ZZCKCV05 | Passes the DP word `BUFFER(1)` to ERRINT. | Passes the integer subtype. |

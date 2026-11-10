@@ -924,7 +924,7 @@ module pepper_states
       logical :: first = .true.  !! first call: the counters are not yet initialized
       integer(ip) :: fixfid = 0  !! ID code of the body-fixed frame FIXREF of the previous call
       integer(ip) :: frmctr ( ctrsiz ) = 0  !! pool counter of the frame name lookup of FIXREF (ZZPCTRCK)
-      character(dskxsi_frnmln) :: prvfrm = ' '  !! body-fixed frame name of the previous call
+      character(:), allocatable :: prvfrm  !! body-fixed frame name of the previous call
       integer(ip) :: prvtcd = 0  !! target ID code of the previous call
       integer(ip) :: svtcde = 0  !! ID code of the target looked up last
       logical :: svtfnd = .false.  !! found flag of the last target name lookup
@@ -946,7 +946,7 @@ module pepper_states
       logical :: first = .true.  !! first call: pool counters not initialized, no frame validated yet
       integer(ip) :: fixfid = 0  !! frame ID code of the last validated body-fixed frame (fixref)
       integer(ip) :: frmctr ( ctrsiz ) = 0  !! pool counter for the frame kernel variables (ZZPCTRCK), triggers re-validating fixref
-      character(dskxv_frnmln) :: prvfrm = ' '  !! name of the body-fixed frame validated last
+      character(:), allocatable :: prvfrm  !! name of the body-fixed frame validated last
       integer(ip) :: prvtcd = 0  !! ID code of the target for which the frame was validated last
       integer(ip) :: svtcde = 0  !! ID code of the target looked up last (ZZBODS2C)
       logical :: svtfnd = .false.  !! found flag of the last target name lookup
@@ -1232,7 +1232,7 @@ module pepper_states
       integer(ip), allocatable :: knmids(:)  !! frame ID code of each name in knmmap
       integer(ip) :: nknm = 0  !! number of names in knmmap
       type(int_map) :: kidmap  !! index in kname, kcent, ... of each kernel frame ID looked up
-      character(framex_frnmln), allocatable :: kname(:)  !! names of the kernel pool frames in kidmap
+      type(string), allocatable :: kname(:)  !! names of the kernel pool frames in kidmap
       integer(ip), allocatable :: kcent(:)  !! center body ID codes of the kernel pool frames in kidmap
       integer(ip), allocatable :: kclass(:)  !! frame classes of the kernel pool frames in kidmap
       integer(ip), allocatable :: kclsid(:)  !! frame class IDs of the kernel pool frames in kidmap
@@ -3040,8 +3040,6 @@ module pepper_states
    !>
    !> No default initialization (18592 bytes): see init_tkfram_state.
    type, public :: tkfram_state
-      character(tkfram_wdsize) :: alt ( nitems )  !! work: alternate (frame name based) kernel variable names for the frame
-      character(tkfram_wdsize) :: item ( nvars  )  !! work: kernel variable names for the frame (ID based, or the alternates if found)
       character(tkfram_wdsize) :: oldagt  !! work: watcher agent name of the frame dropped from the full buffer
       real(wp) :: buffd ( ndps, tkfram_bufsiz )  !! buffered rotation matrix (column order) of each frame
       integer(ip) :: at  !! buffer index of the frame looked up last
@@ -3292,7 +3290,7 @@ module pepper_states
    type, public :: zzcvstat_state
       integer(ip) :: svctr = 0  !! ID code of the center of motion of the stored constant-velocity state
       real(wp) :: svet = 0.0_wp  !! epoch of the stored constant-velocity state
-      character(zzcvstat_frnmln) :: svref = ' '  !! reference frame name of the stored constant-velocity state
+      character(:), allocatable :: svref  !! reference frame name of the stored constant-velocity state
       real(wp) :: svstat ( 6 ) = 0.0_wp  !! constant-velocity state stored by ZZCVSSTA
    end type zzcvstat_state
 
@@ -4237,7 +4235,7 @@ module pepper_states
       character(crdlen) :: svcrd = ' '  !! coordinate name saved by ZZGFCOIN
       character(syslen) :: svcsys = ' '  !! coordinate system name saved by ZZGFCOIN
       integer(ip) :: svdctr = 0  !! ID code of the center of the ray frame svdref (intercept searches)
-      character(zzgfcou_frnmln) :: svdref = ' '  !! ray direction frame name (intercept searches; blank otherwise)
+      character(:), allocatable :: svdref  !! ray direction frame name (intercept searches; blank otherwise)
       real(wp) :: svdvec ( 3 ) = 0.0_wp  !! ray direction vector (intercept searches; zero otherwise)
       real(wp) :: svf = 0.0_wp  !! flattening coefficient of the frame center body (geodetic/planetographic)
       character(metlen) :: svmeth = ' '  !! subpoint/intercept computation method saved by ZZGFCOIN
@@ -4246,7 +4244,7 @@ module pepper_states
       character(zzgfcou_bdnmln) :: svrcnm = ' '  !! name of the frame center body (planetographic only)
       integer(ip) :: svrctr = 0  !! ID code of the center of the coordinate frame svref
       real(wp) :: svre = 0.0_wp  !! equatorial radius of the frame center body (geodetic/planetographic)
-      character(zzgfcou_frnmln) :: svref = ' '  !! coordinate reference frame name saved by ZZGFCOIN
+      character(:), allocatable :: svref  !! coordinate reference frame name saved by ZZGFCOIN
       integer(ip) :: svsens = 0  !! planetographic longitude sense: 1 east, -1 west, 0 not planetographic
       integer(ip) :: svtarg = 0  !! target ID code saved by ZZGFCOIN
       character(vdflen) :: svvdef = ' '  !! vector definition (position, sub-observer point, surface intercept)
@@ -4314,7 +4312,7 @@ module pepper_states
       real(wp) :: svfpol ( 2, maxvrt )  !! 2D vertices of the FOV polygon in the FOV plane (svfovm frame)
       real(wp) :: svfsmx ( 3, 3 )  !! semi-axis matrix of the ellipsoid representing the FOV (for ZZOCCED)
       real(wp) :: svfvct ( 3 )  !! unit FOV axis vector: center of the FOV plane
-      character(zzgffvu_frnmln) :: svifrm  !! instrument frame name, from GETFOV
+      character(:), allocatable :: svifrm  !! instrument frame name, from GETFOV
       character(zzgffvu_bdnmln) :: svinam  !! instrument name saved by ZZGFFVIN
       character(shplen) :: svishp  !! FOV shape (RECTANGLE mapped to POLYGON)
       integer(ip) :: svnvrt  !! number of FOV boundary vectors
@@ -4324,7 +4322,7 @@ module pepper_states
       real(wp) :: svrdir ( 3 )  !! unit ray direction (ray target) saved by ZZGFFVIN
       real(wp) :: svsemi ( 3, 2 )  !! semi-axis vectors of an elliptical/circular FOV in the FOV plane
       integer(ip) :: svtarg  !! target ID code saved by ZZGFFVIN (0 for a ray target)
-      character(zzgffvu_frnmln) :: svtfrm  !! target body-fixed frame (or ray frame) name saved by ZZGFFVIN
+      character(:), allocatable :: svtfrm  !! target body-fixed frame (or ray frame) name saved by ZZGFFVIN
       character(zzgffvu_bdnmln) :: svtnam  !! target name saved by ZZGFFVIN
       real(wp) :: svtrad ( 3 )  !! target ellipsoid radii (zero unless the target is an ellipsoid)
       logical :: svuray  !! the target is a ray
@@ -4356,7 +4354,7 @@ module pepper_states
       character(zzgfilu_mthlen) :: svmeth = ' '  !! computation method saved by ZZGFILIN
       real(wp) :: svnrml ( 3 ) = 0.0_wp  !! outward surface normal at the surface point svsspt
       character(zzgfilu_bdnmln) :: svonam = ' '  !! observer name saved by ZZGFILIN
-      character(zzgfilu_frnmln) :: svref = ' '  !! target body-fixed frame name saved by ZZGFILIN
+      character(:), allocatable :: svref  !! target body-fixed frame name saved by ZZGFILIN
       real(wp) :: svsspt ( 3 ) = 0.0_wp  !! surface point on the target saved by ZZGFILIN
       character(zzgfilu_bdnmln) :: svtnam = ' '  !! target name saved by ZZGFILIN
    end type zzgfilu_state
@@ -4392,13 +4390,13 @@ module pepper_states
    type, public :: zzgfocu_state
       integer(ip) :: ncalls = 0  !! number of SINCPT calls made by ZZGFOCST (diagnostic count only)
       integer(ip) :: svback = 0  !! back body ID code saved by ZZGFOCIN
-      character(zzgfocu_frnmln) :: svbfrm = ' '  !! back body-fixed frame name (blank for a point)
+      character(:), allocatable :: svbfrm  !! back body-fixed frame name (blank for a point)
       character(mthlen) :: svbmth = ' '  !! back body shape/method string saved by ZZGFOCIN
       character(zzgfocu_bdnmln) :: svbnam = ' '  !! back body name saved by ZZGFOCIN
       real(wp) :: svbrad ( 3 ) = 0.0_wp  !! back body ellipsoid radii (zero for a point)
       character(shplen) :: svbshp = ' '  !! back body shape: point, ellipsoid or DSK
       character(corlen) :: svcorr = ' '  !! aberration correction for SPKEZP (stellar aberration removed)
-      character(zzgfocu_frnmln) :: svffrm = ' '  !! front body-fixed frame name (blank for a point)
+      character(:), allocatable :: svffrm  !! front body-fixed frame name (blank for a point)
       character(mthlen) :: svfmth = ' '  !! front body shape/method string saved by ZZGFOCIN
       character(zzgfocu_bdnmln) :: svfnam = ' '  !! front body name saved by ZZGFOCIN
       real(wp) :: svfrad ( 3 ) = 0.0_wp  !! front body ellipsoid radii (zero for a point)
@@ -4520,9 +4518,9 @@ module pepper_states
       character(32) :: svabcr = ' '  !! aberration correction saved by ZZGFSPIN
       integer(ip) :: svbod1 = 0  !! ID code of the first body saved by ZZGFSPIN
       integer(ip) :: svbod2 = 0  !! ID code of the second body saved by ZZGFSPIN
-      character(32) :: svref = ' '  !! reference frame of the states saved by ZZGFSPIN
-      character(32) :: svref1 = ' '  !! body-fixed frame name of the first body saved by ZZGFSPIN
-      character(32) :: svref2 = ' '  !! body-fixed frame name of the second body saved by ZZGFSPIN
+      character(:), allocatable :: svref  !! reference frame of the states saved by ZZGFSPIN
+      character(:), allocatable :: svref1  !! body-fixed frame name of the first body saved by ZZGFSPIN
+      character(:), allocatable :: svref2  !! body-fixed frame name of the second body saved by ZZGFSPIN
       integer(ip) :: svobs = 0  !! observer ID code saved by ZZGFSPIN
       real(wp) :: svrad1 = 0.0_wp  !! radius of the first body (largest radius for a sphere, 0 for a point)
       real(wp) :: svrad2 = 0.0_wp  !! radius of the second body (largest radius for a sphere, 0 for a point)
@@ -6546,8 +6544,6 @@ contains
    !> values, and zero for the other components.
    pure subroutine init_tkfram_state(state)
       type(tkfram_state), intent(inout) :: state  !! the state
-      state%alt = ' '
-      state%item = ' '
       state%oldagt = ' '
       state%buffd = 0.0_wp
       state%at = 0
@@ -6913,6 +6909,8 @@ contains
       state%svustl = .false.
       state%svxmag = 0.0_wp
       state%svxmit = .false.
+      state%svifrm = ' '
+      state%svtfrm = ' '
    end subroutine init_zzgffvu_state
 
    !> Remove the surface names.

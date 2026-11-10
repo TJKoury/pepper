@@ -228,28 +228,20 @@ contains
       use pepper_inc_zzdyn
       implicit none
       integer(ip) :: idcode_1(1)  !! one-element copy of idcode (array argument)
-      character(*), parameter :: templt = 'FRAME_#_#'
 
 !
 !     TEMPLN is the length of the keyword template, minus
 !     the sum of the lengths of the two substitution markers ('#').
 !
-      integer(ip), parameter :: templn = 7
 
 !
 !     Local variables
 !
-      character(bdnmln)     bodnam
-      character(kvnmln)     cdestr
+      character(:), allocatable :: bodnam
       character(1)          dtype
-      character(kvnmln)     kvname
+      character(:), allocatable :: kvname
 
-      integer(ip)           codeln
-      integer(ip)           itemln
       integer(ip)           n
-      integer(ip)           nameln
-      integer(ip)           reqnam
-      integer(ip)           reqnum
 
       logical               found
 
@@ -261,184 +253,13 @@ contains
 !
 !     Convert the frame code to a string.
 !
-      call intstr ( frcode, cdestr )
-
+!
+!     PEPPER: the kernel variable names have any length (SPICELIB:
+!     32 characters, VARNAMETOOLONG); the lookup is shared by the
+!     ZZDYNxxx routines.
+!
+      call dynamic_frame_variable ( ctx, frname, frcode, item, .true., kvname, found, n, dtype, 'reference frame' )
       if ( ctx%failed() ) return
-
-!
-!     Get the lengths of the input frame code, name and item.
-!     Compute the length of the ID-based kernel variable name;
-!     check this length against the maximum allowed value.  If
-!     the name is too long, proceed to look up the form of the
-!     kernel variable name based on the frame name.
-!
-      codeln = rtrim ( cdestr )
-      nameln = rtrim ( frname )
-      itemln = rtrim ( item   )
-
-      reqnum = codeln + itemln + templn
-
-      if ( reqnum <= kvnmln ) then
-!
-!        First try looking for a kernel variable including the frame ID
-!        code.
-!
-!        Note the template is
-!
-!            'FRAME_#_#'
-!
-         call repmi  ( ctx, templt, '#',   frcode, kvname )
-         call repmc  ( kvname, '#',   item,   kvname )
-         call dtpool ( ctx, kvname, found, n,      dtype  )
-
-      else
-!
-!        The ID-based name is too long. We can't find the variable if
-!        we can't look it up.
-!
-         found = .false.
-
-      end if
-
-      if ( .not. found ) then
-!
-!        We need to look up the frame name-based kernel variable.
-!        Determine the length of the name of this variable; make
-!        sure it's not too long.
-!
-         reqnam = nameln + itemln + templn
-
-         if (       ( reqnam > kvnmln ) &
-              .and. ( reqnum > kvnmln ) ) then
-!
-!           Both forms of the name are too long.
-!
-            call ctx%setmsg ( 'Kernel variable FRAME_#_# has length #; '// &
-                          'kernel variable FRAME_#_# has length #; '// &
-                          'maximum allowed length is #.  Neither '  // &
-                          'variable could be searched for in the '  // &
-                          'kernel pool due to these name length '   // &
-                          'errors.'                                 )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnum                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnam                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%sigerr ( 'SPICE(VARNAMETOOLONG)'                   )
-            return
-
-         else if  ( reqnam > kvnmln ) then
-!
-!           We couldn't find the variable having the ID-based name,
-!           and the frame name-based variable name is too long to
-!           look up.
-!
-!           Note that at this point KVNAME contains the ID-based
-!           kernel variable name.
-!
-            call ctx%setmsg ( 'Kernel variable # was expected to '      // &
-                          'be present in the kernel pool but '      // &
-                          'was not found.  The alternative '        // &
-                          'form of kernel variable name '           // &
-                          'FRAME_#_# was not searched for '         // &
-                          'because this name has excessive '        // &
-                          'length (# characters vs allowed '        // &
-                          'maximum of #).  One of these variables ' // &
-                          'is needed to define the reference '      // &
-                          'frame #.  Usually '                      // &
-                          'this type of problem is due to a '       // &
-                          'missing keyword assignment in a frame '  // &
-                          'kernel.  Another, less likely, '         // &
-                          'possibility is that other errors in a '  // &
-                          'frame kernel have confused the '         // &
-                          'frame subsystem into wrongly '           // &
-                          'deciding these variables are needed.'    )
-            call ctx%errch  ( '#',  kvname                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnam                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         end if
-
-!
-!        Now try looking for a kernel variable including the frame
-!        name.
-!
-         call repmc  ( templt, '#',   frname, kvname )
-         call repmc  ( kvname, '#',   item,   kvname )
-         call dtpool ( ctx, kvname, found, n,      dtype  )
-
-         if (  ( .not. found ) .and. ( reqnum > kvnmln )  ) then
-!
-!           The kernel variable's presence (in one form or the other)
-!           is mandatory:  signal an error.  The error message
-!           depends on which variables we were able to try to
-!           look up.  In this case, we never tried to look up the
-!           frame ID-based name.
-!
-!           Note that at this point KVNAME contains the name-based
-!           kernel variable name.
-!
-            call ctx%setmsg ( 'Kernel variable # was expected to '      // &
-                          'be present in the kernel pool but '      // &
-                          'was not found.  The alternative '        // &
-                          'form of kernel variable name '           // &
-                          'FRAME_#_# was not searched for '         // &
-                          'because this name has excessive '        // &
-                          'length (# characters vs allowed '        // &
-                          'maximum of #).  One of these variables ' // &
-                          'is needed to define the reference '      // &
-                          'frame #.  Usually '                      // &
-                          'this type of problem is due to a '       // &
-                          'missing keyword assignment in a frame '  // &
-                          'kernel.  Another, less likely, '         // &
-                          'possibility is that other errors in a '  // &
-                          'frame kernel have confused the '         // &
-                          'frame subsystem into wrongly '           // &
-                          'deciding these variables are needed.'    )
-            call ctx%errch  ( '#',  kvname                              )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnum                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         else if ( .not. found ) then
-!
-!           We tried to look up both names and failed.
-!
-            call ctx%setmsg ( 'At least one of the kernel variables '   // &
-                          'FRAME_#_# or FRAME_#_# was expected to ' // &
-                          'be present in the kernel pool but '      // &
-                          'neither was found. One of these '        // &
-                          'variables is needed to define the '      // &
-                          'reference frame #.  Usually '            // &
-                          'this type of problem is due to a '       // &
-                          'missing keyword assignment in a frame '  // &
-                          'kernel.  Another, less likely, '         // &
-                          'possibility is that other errors in a '  // &
-                          'frame kernel have confused the '         // &
-                          'frame subsystem into wrongly '           // &
-                          'deciding these variables are needed.'    )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         end if
-
-      end if
 
 !
 !     Getting to this point means we found a kernel variable. The name
@@ -470,7 +291,7 @@ contains
 !
 !        Look up the kernel variable.
 !
-         call gcpool ( ctx, kvname, 1, 1, n, bodnam, found )
+         call ctx%pool_string ( kvname, 1_ip, bodnam, found )
 
          if ( .not. found ) then
 
@@ -715,26 +536,18 @@ contains
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzdyn
       implicit none
-      character(*), parameter :: templt = 'FRAME_#_#'
 
 !
 !     TEMPLN is the length of the keyword template, minus
 !     the sum of the lengths of the two substitution markers ('#').
 !
-      integer(ip), parameter :: templn = 7
 
 !
 !     Local Variables
 !
-      character(kvnmln)     cdestr
       character(1)          dtype
-      character(kvnmln)     kvname
+      character(:), allocatable :: kvname
 
-      integer(ip)           codeln
-      integer(ip)           itemln
-      integer(ip)           nameln
-      integer(ip)           reqnam
-      integer(ip)           reqnum
 
       logical               found
 
@@ -749,176 +562,13 @@ contains
 !
 !     Convert the frame code to a string.
 !
-      call intstr ( frcode, cdestr )
-
+!
+!     PEPPER: the kernel variable names have any length (SPICELIB:
+!     32 characters, VARNAMETOOLONG); the lookup is shared by the
+!     ZZDYNxxx routines.
+!
+      call dynamic_frame_variable ( ctx, frname, frcode, item, .true., kvname, found, n, dtype )
       if ( ctx%failed() ) return
-
-!
-!     Get the lengths of the input frame code, name and item.
-!     Compute the length of the ID-based kernel variable name;
-!     check this length against the maximum allowed value.  If
-!     the name is too long, proceed to look up the form of the
-!     kernel variable name based on the frame name.
-!
-      codeln = rtrim ( cdestr )
-      nameln = rtrim ( frname )
-      itemln = rtrim ( item   )
-
-      reqnum = codeln + itemln + templn
-
-      if ( reqnum <= kvnmln ) then
-!
-!        First try looking for a kernel variable including the frame ID
-!        code.
-!
-!        Note the template is
-!
-!            'FRAME_#_#'
-!
-         call repmi  ( ctx, templt, '#',   frcode, kvname )
-         call repmc  ( kvname, '#',   item,   kvname )
-         call dtpool ( ctx, kvname, found, n,      dtype  )
-
-      else
-!
-!        The ID-based name is too long. We can't find the variable if
-!        we can't look it up.
-!
-         found = .false.
-
-      end if
-
-      if ( .not. found ) then
-!
-!        We need to look up the frame name-based kernel variable.
-!        Determine the length of the name of this variable; make
-!        sure it's not too long.
-!
-         reqnam = nameln + itemln + templn
-
-         if (       ( reqnam > kvnmln ) &
-              .and. ( reqnum > kvnmln ) ) then
-!
-!           Both forms of the name are too long.
-!
-            call ctx%setmsg ( 'Kernel variable FRAME_#_# has length #; '// &
-                          'kernel variable FRAME_#_# has length #; '// &
-                          'maximum allowed length is #.  Neither '  // &
-                          'variable could be searched for in the '  // &
-                          'kernel pool due to these name length '   // &
-                          'errors.'                                 )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnum                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnam                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%sigerr ( 'SPICE(VARNAMETOOLONG)'                   )
-            return
-
-         else if  ( reqnam > kvnmln ) then
-!
-!           We couldn't find the variable having the ID-based name,
-!           and the frame name-based variable name is too long to
-!           look up.
-!
-!           Note that at this point KVNAME contains the ID-based
-!           kernel variable name.
-!
-            call ctx%setmsg ( 'Kernel variable # was expected to '      // &
-                          'be present in the kernel pool but '      // &
-                          'was not found.  The alternative '        // &
-                          'form of kernel variable name '           // &
-                          'FRAME_#_# was not searched for '         // &
-                          'because this name has excessive '        // &
-                          'length (# characters vs allowed '        // &
-                          'maximum of #).  One of these variables ' // &
-                          'is needed to define the parameterized '  // &
-                          'dynamic frame #.  Usually this type '    // &
-                          'of problem is due to an error in a '     // &
-                          'frame definition provided in a frame '   // &
-                          'kernel.'                                )
-            call ctx%errch  ( '#',  kvname                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnam                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         end if
-
-!
-!        Now try looking for a kernel variable including the frame
-!        name.
-!
-         call repmc  ( templt, '#',   frname, kvname )
-         call repmc  ( kvname, '#',   item,   kvname )
-         call dtpool ( ctx, kvname, found, n,      dtype  )
-
-         if (  ( .not. found ) .and. ( reqnum > kvnmln )  ) then
-!
-!           The kernel variable's presence (in one form or the other)
-!           is mandatory:  signal an error.  The error message
-!           depends on which variables we were able to try to
-!           look up.  In this case, we never tried to look up the
-!           frame ID-based name.
-!
-!           Note that at this point KVNAME contains the name-based
-!           kernel variable name.
-!
-            call ctx%setmsg ( 'Kernel variable # was expected to '      // &
-                          'be present in the kernel pool but '      // &
-                          'was not found.  The alternative '        // &
-                          'form of kernel variable name '           // &
-                          'FRAME_#_# was not searched for '         // &
-                          'because this name has excessive '        // &
-                          'length (# characters vs allowed '        // &
-                          'maximum of #).  One of these variables ' // &
-                          'is needed to define the parameterized '  // &
-                          'dynamic frame #.  Usually this type '    // &
-                          'of problem is due to an error in a '     // &
-                          'frame definition provided in a frame '   // &
-                          'kernel.'                                 )
-            call ctx%errch  ( '#',  kvname                              )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnum                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         else if ( .not. found ) then
-!
-!           We tried to look up both names and failed.
-!
-            call ctx%setmsg ( 'At least one of the kernel variables '   // &
-                          'FRAME_#_# or FRAME_#_# was expected to ' // &
-                          'be present in the kernel pool but '      // &
-                          'neither was found. One of these '        // &
-                          'variables is needed to define the '      // &
-                          'parameterized dynamic frame #.  Usually '// &
-                          'this type of problem is due to a '       // &
-                          'missing keyword assignment in a frame '  // &
-                          'kernel.  Another, less likely, '         // &
-                          'possibility is that other errors in a '  // &
-                          'frame kernel have confused the '         // &
-                          'frame subsystem into wrongly '           // &
-                          'deciding these variables are needed.'    )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         end if
-
-      end if
 
 !
 !     Getting to this point means we found a kernel variable. The name
@@ -1155,26 +805,18 @@ contains
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzdyn
       implicit none
-      character(*), parameter :: templt = 'FRAME_#_#'
 
 !
 !     TEMPLN is the length of the keyword template, minus
 !     the sum of the lengths of the two substitution markers ('#').
 !
-      integer(ip), parameter :: templn = 7
 
 !
 !     Local Variables
 !
-      character(kvnmln)     cdestr
       character(1)          dtype
-      character(kvnmln)     kvname
+      character(:), allocatable :: kvname
 
-      integer(ip)           codeln
-      integer(ip)           itemln
-      integer(ip)           nameln
-      integer(ip)           reqnam
-      integer(ip)           reqnum
 
 !
 !     Standard SPICE error handling
@@ -1192,101 +834,14 @@ contains
 !
 !     Convert the frame code to a string.
 !
-      call intstr ( frcode, cdestr )
-
+!
+!     PEPPER: the kernel variable names have any length (SPICELIB:
+!     32 characters, VARNAMETOOLONG); the lookup is shared by the
+!     ZZDYNxxx routines.
+!
+      call dynamic_frame_variable ( ctx, frname, frcode, item, .false., kvname, found, n, dtype )
       if ( ctx%failed() ) return
-
-!
-!     Get the lengths of the input frame code, name and item.
-!     Compute the length of the ID-based kernel variable name;
-!     check this length against the maximum allowed value.  If
-!     the name is too long, proceed to look up the form of the
-!     kernel variable name based on the frame name.
-!
-      codeln = rtrim ( cdestr )
-      nameln = rtrim ( frname )
-      itemln = rtrim ( item   )
-
-      reqnum = codeln + itemln + templn
-
-      if ( reqnum <= kvnmln ) then
-!
-!        First try looking for a kernel variable including the frame ID
-!        code.
-!
-!        Note the template is
-!
-!            'FRAME_#_#'
-!
-         call repmi  ( ctx, templt, '#',   frcode, kvname )
-         call repmc  ( kvname, '#',   item,   kvname )
-         call dtpool ( ctx, kvname, found, n,      dtype  )
-
-      else
-!
-!        The ID-based name is too long. We can't find the variable if
-!        we can't look it up.
-!
-         found = .false.
-
-      end if
-
-      if ( .not. found ) then
-!
-!        We need to look up the frame name-based kernel variable.
-!        Determine the length of the name of this variable; make
-!        sure it's not too long.
-!
-         reqnam = nameln + itemln + templn
-
-         if (       ( reqnam > kvnmln ) &
-              .and. ( reqnum > kvnmln ) ) then
-!
-!           Both forms of the name are too long.
-!
-            call ctx%setmsg ( 'Kernel variable FRAME_#_# has length #; '// &
-                          'kernel variable FRAME_#_# has length #; '// &
-                          'maximum allowed length is #.  Neither '  // &
-                          'variable could be searched for in the '  // &
-                          'kernel pool due to these name length '   // &
-                          'errors.'                                 )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnum                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnam                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%sigerr ( 'SPICE(VARNAMETOOLONG)'                   )
-            return
-
-         else if  ( reqnam > kvnmln ) then
-!
-!           We couldn't find the variable having the ID-based name,
-!           and the frame name-based variable name is too long to
-!           look up.
-!
-            return
-
-         end if
-
-!
-!        Now try looking for a kernel variable including the frame
-!        name.
-!
-         call repmc  ( templt, '#',   frname, kvname )
-         call repmc  ( kvname, '#',   item,   kvname )
-         call dtpool ( ctx, kvname, found, n,      dtype  )
-
-         if ( .not. found ) then
-!
-!           The FOUND flag is set appropriately.
-!
-            return
-
-         end if
-
-      end if
+      if ( .not. found ) return
 
 !
 !     Getting to this point means we found a kernel variable. The name
@@ -1524,26 +1079,18 @@ contains
       use pepper_inc_zzbodtrn
       use pepper_inc_zzdyn
       implicit none
-      character(*), parameter :: templt = 'FRAME_#_#'
 
 !
 !     TEMPLN is the length of the keyword template, minus
 !     the sum of the lengths of the two substitution markers ('#').
 !
-      integer(ip), parameter :: templn = 7
 
 !
 !     Local Variables
 !
-      character(kvnmln)     cdestr
       character(1)          dtype
-      character(kvnmln)     kvname
+      character(:), allocatable :: kvname
 
-      integer(ip)           codeln
-      integer(ip)           itemln
-      integer(ip)           nameln
-      integer(ip)           reqnam
-      integer(ip)           reqnum
 
 !
 !     Standard SPICE error handling
@@ -1561,101 +1108,14 @@ contains
 !
 !     Convert the frame code to a string.
 !
-      call intstr ( frcode, cdestr )
-
+!
+!     PEPPER: the kernel variable names have any length (SPICELIB:
+!     32 characters, VARNAMETOOLONG); the lookup is shared by the
+!     ZZDYNxxx routines.
+!
+      call dynamic_frame_variable ( ctx, frname, frcode, item, .false., kvname, found, n, dtype )
       if ( ctx%failed() ) return
-
-!
-!     Get the lengths of the input frame code, name and item.
-!     Compute the length of the ID-based kernel variable name;
-!     check this length against the maximum allowed value.  If
-!     the name is too long, proceed to look up the form of the
-!     kernel variable name based on the frame name.
-!
-      codeln = rtrim ( cdestr )
-      nameln = rtrim ( frname )
-      itemln = rtrim ( item   )
-
-      reqnum = codeln + itemln + templn
-
-      if ( reqnum <= kvnmln ) then
-!
-!        First try looking for a kernel variable including the frame ID
-!        code.
-!
-!        Note the template is
-!
-!            'FRAME_#_#'
-!
-         call repmi  ( ctx, templt, '#',   frcode, kvname )
-         call repmc  ( kvname, '#',   item,   kvname )
-         call dtpool ( ctx, kvname, found, n,      dtype  )
-
-      else
-!
-!        The ID-based name is too long. We can't find the variable if
-!        we can't look it up.
-!
-         found = .false.
-
-      end if
-
-      if ( .not. found ) then
-!
-!        We need to look up the frame name-based kernel variable.
-!        Determine the length of the name of this variable; make
-!        sure it's not too long.
-!
-         reqnam = nameln + itemln + templn
-
-         if (       ( reqnam > kvnmln ) &
-              .and. ( reqnum > kvnmln ) ) then
-!
-!           Both forms of the name are too long.
-!
-            call ctx%setmsg ( 'Kernel variable FRAME_#_# has length #; '// &
-                          'kernel variable FRAME_#_# has length #; '// &
-                          'maximum allowed length is #.  Neither '  // &
-                          'variable could be searched for in the '  // &
-                          'kernel pool due to these name length '   // &
-                          'errors.'                                 )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnum                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnam                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%sigerr ( 'SPICE(VARNAMETOOLONG)'                   )
-            return
-
-         else if  ( reqnam > kvnmln ) then
-!
-!           We couldn't find the variable having the ID-based name,
-!           and the frame name-based variable name is too long to
-!           look up.
-!
-            return
-
-         end if
-
-!
-!        Now try looking for a kernel variable including the frame
-!        name.
-!
-         call repmc  ( templt, '#',   frname, kvname )
-         call repmc  ( kvname, '#',   item,   kvname )
-         call dtpool ( ctx, kvname, found, n,      dtype  )
-
-         if ( .not. found ) then
-!
-!           The FOUND flag is set appropriately.
-!
-            return
-
-         end if
-
-      end if
+      if ( .not. found ) return
 
 !
 !     Getting to this point means we found a kernel variable. The name
@@ -1889,267 +1349,17 @@ contains
       use pepper_inc_zzdyn
 
       implicit none
-      character(*), parameter :: templt = 'FRAME_#_#'
-
+      type(string), allocatable :: strs(:)
+      integer(ip) :: i
 !
-!     TEMPLN is the length of the keyword template, minus
-!     the sum of the lengths of the two substitution markers ('#').
+!     PEPPER: the body is DYNAMIC_FRAME_STRINGS, which returns the values
+!     at full length; they are copied into VALUES.
 !
-      integer(ip), parameter :: templn = 7
-
-!
-!     Local Variables
-!
-      character(kvnmln)     cdestr
-      character(1)          dtype
-      character(kvnmln)     kvname
-
-      integer(ip)           codeln
-      integer(ip)           itemln
-      integer(ip)           nameln
-      integer(ip)           reqnam
-      integer(ip)           reqnum
-
-      logical               found
-
-!
-!     Standard SPICE error handling
-!
+      call dynamic_frame_strings ( ctx, frname, frcode, item, maxn, n, strs )
       if ( ctx%failed() ) return
-
-!
-!     Prepare to check the name of the kernel variable we're about
-!     to look up.
-!
-!     Convert the frame code to a string.
-!
-      call intstr ( frcode, cdestr )
-
-      if ( ctx%failed() ) return
-
-!
-!     Get the lengths of the input frame code, name and item.
-!     Compute the length of the ID-based kernel variable name;
-!     check this length against the maximum allowed value.  If
-!     the name is too long, proceed to look up the form of the
-!     kernel variable name based on the frame name.
-!
-      codeln = rtrim ( cdestr )
-      nameln = rtrim ( frname )
-      itemln = rtrim ( item   )
-
-      reqnum = codeln + itemln + templn
-
-      if ( reqnum <= kvnmln ) then
-!
-!        First try looking for a kernel variable including the frame ID
-!        code.
-!
-!        Note the template is
-!
-!            'FRAME_#_#'
-!
-         call repmi  ( ctx, templt, '#',   frcode, kvname )
-         call repmc  ( kvname, '#',   item,   kvname )
-         call dtpool ( ctx, kvname, found, n,      dtype  )
-
-      else
-!
-!        The ID-based name is too long. We can't find the variable if
-!        we can't look it up.
-!
-         found = .false.
-
-      end if
-
-      if ( .not. found ) then
-!
-!        We need to look up the frame name-based kernel variable.
-!        Determine the length of the name of this variable; make
-!        sure it's not too long.
-!
-         reqnam = nameln + itemln + templn
-
-         if (       ( reqnam > kvnmln ) &
-              .and. ( reqnum > kvnmln ) ) then
-!
-!           Both forms of the name are too long.
-!
-            call ctx%setmsg ( 'Kernel variable FRAME_#_# has length #; '// &
-                          'kernel variable FRAME_#_# has length #; '// &
-                          'maximum allowed length is #.  Neither '  // &
-                          'variable could be searched for in the '  // &
-                          'kernel pool due to these name length '   // &
-                          'errors.'                                 )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnum                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnam                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%sigerr ( 'SPICE(VARNAMETOOLONG)'                   )
-            return
-
-         else if  ( reqnam > kvnmln ) then
-!
-!           We couldn't find the variable having the ID-based name,
-!           and the frame name-based variable name is too long to
-!           look up.
-!
-!           Note that at this point KVNAME contains the ID-based
-!           kernel variable name.
-!
-            call ctx%setmsg ( 'Kernel variable # was expected to '      // &
-                          'be present in the kernel pool but '      // &
-                          'was not found.  The alternative '        // &
-                          'form of kernel variable name '           // &
-                          'FRAME_#_# was not searched for '         // &
-                          'because this name has excessive '        // &
-                          'length (# characters vs allowed '        // &
-                          'maximum of #).  One of these variables ' // &
-                          'is needed to define the parameterized '  // &
-                          'dynamic frame #.  Usually this type '    // &
-                          'of problem is due to an error in a '     // &
-                          'frame definition provided in a frame '   // &
-                          'kernel.'                                )
-            call ctx%errch  ( '#',  kvname                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnam                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         end if
-
-!
-!        Now try looking for a kernel variable including the frame
-!        name.
-!
-         call repmc  ( templt, '#',   frname, kvname )
-         call repmc  ( kvname, '#',   item,   kvname )
-         call dtpool ( ctx, kvname, found, n,      dtype  )
-
-         if (  ( .not. found ) .and. ( reqnum > kvnmln )  ) then
-!
-!           The kernel variable's presence (in one form or the other)
-!           is mandatory:  signal an error.  The error message
-!           depends on which variables we were able to try to
-!           look up.  In this case, we never tried to look up the
-!           frame ID-based name.
-!
-!           Note that at this point KVNAME contains the name-based
-!           kernel variable name.
-!
-            call ctx%setmsg ( 'Kernel variable # was expected to '      // &
-                          'be present in the kernel pool but '      // &
-                          'was not found.  The alternative '        // &
-                          'form of kernel variable name '           // &
-                          'FRAME_#_# was not searched for '         // &
-                          'because this name has excessive '        // &
-                          'length (# characters vs allowed '        // &
-                          'maximum of #).  One of these variables ' // &
-                          'is needed to define the parameterized '  // &
-                          'dynamic frame #.  Usually this type '    // &
-                          'of problem is due to an error in a '     // &
-                          'frame definition provided in a frame '   // &
-                          'kernel.'                                 )
-            call ctx%errch  ( '#',  kvname                              )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnum                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         else if ( .not. found ) then
-!
-!           We tried to look up both names and failed.
-!
-            call ctx%setmsg ( 'At least one of the kernel variables '   // &
-                          'FRAME_#_# or FRAME_#_# was expected to ' // &
-                          'be present in the kernel pool but '      // &
-                          'neither was found. One of these '        // &
-                          'variables is needed to define the '      // &
-                          'parameterized dynamic frame #.  Usually '// &
-                          'this type of problem is due to a '       // &
-                          'missing keyword assignment in a frame '  // &
-                          'kernel.  Another, less likely, '         // &
-                          'possibility is that other errors in a '  // &
-                          'frame kernel have confused the '         // &
-                          'frame subsystem into wrongly '           // &
-                          'deciding these variables are needed.'    )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         end if
-
-      end if
-
-!
-!     Getting to this point means we found a kernel variable. The name
-!     of the variable is KVNAME.  The data type is DTYPE and the
-!     cardinality is N.
-!
-!     Rather than using BADKPV, we check the data type and cardinality
-!     of the kernel variable in-line so we can create a more detailed
-!     error message if need be.
-!
-      if ( dtype == 'N' ) then
-
-         call ctx%setmsg ( 'The kernel variable # has used to define '  // &
-                       'frame # was expected to have character '    // &
-                       'data type but in fact has numeric '         // &
-                       'data type.  Usually this type of '          // &
-                       'problem is due to an error in a frame '     // &
-                       'definition provided in a frame kernel.'     )
-         call ctx%errch  ( '#',  kvname                                 )
-         call ctx%errch  ( '#',  frname                                 )
-         call ctx%sigerr ( 'SPICE(BADVARIABLETYPE)'                     )
-         return
-
-      end if
-
-      if ( n > maxn ) then
-
-         call ctx%setmsg ( 'The kernel variable # has used to define '  // &
-                       'frame # was expected to have size not '     // &
-                       'exceeding # but in fact has size #. '       // &
-                       'Usually this type of '                      // &
-                       'problem is due to an error in a frame '     // &
-                       'definition provided in a frame kernel.'     )
-         call ctx%errch  ( '#',  kvname                                 )
-         call ctx%errch  ( '#',  frname                                 )
-         call ctx%errint ( '#',  maxn                                   )
-         call ctx%errint ( '#',  n                                      )
-         call ctx%sigerr ( 'SPICE(BADVARIABLESIZE)'                     )
-         return
-
-      end if
-
-!
-!     Look up the kernel variable.
-!
-      call gcpool ( ctx, kvname, 1, maxn, n, values, found )
-
-      if ( .not. found ) then
-
-         call ctx%setmsg ( 'Variable # not found after DTPOOL ' // &
-                       'indicated it was present in pool.'  )
-         call ctx%errch  ( '#',  kvname                         )
-         call ctx%sigerr ( 'SPICE(BUG)'                         )
-         return
-
-      end if
-
+      do i = 1, n
+         values(i) = strs(i)%s
+      end do
       return
       end procedure zzdynvac
 
@@ -2326,26 +1536,18 @@ contains
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzdyn
       implicit none
-      character(*), parameter :: templt = 'FRAME_#_#'
 
 !
 !     TEMPLN is the length of the keyword template, minus
 !     the sum of the lengths of the two substitution markers ('#').
 !
-      integer(ip), parameter :: templn = 7
 
 !
 !     Local Variables
 !
-      character(kvnmln)     cdestr
       character(1)          dtype
-      character(kvnmln)     kvname
+      character(:), allocatable :: kvname
 
-      integer(ip)           codeln
-      integer(ip)           itemln
-      integer(ip)           nameln
-      integer(ip)           reqnam
-      integer(ip)           reqnum
 
       logical               found
 
@@ -2360,176 +1562,13 @@ contains
 !
 !     Convert the frame code to a string.
 !
-      call intstr ( frcode, cdestr )
-
+!
+!     PEPPER: the kernel variable names have any length (SPICELIB:
+!     32 characters, VARNAMETOOLONG); the lookup is shared by the
+!     ZZDYNxxx routines.
+!
+      call dynamic_frame_variable ( ctx, frname, frcode, item, .true., kvname, found, n, dtype )
       if ( ctx%failed() ) return
-
-!
-!     Get the lengths of the input frame code, name and item.
-!     Compute the length of the ID-based kernel variable name;
-!     check this length against the maximum allowed value.  If
-!     the name is too long, proceed to look up the form of the
-!     kernel variable name based on the frame name.
-!
-      codeln = rtrim ( cdestr )
-      nameln = rtrim ( frname )
-      itemln = rtrim ( item   )
-
-      reqnum = codeln + itemln + templn
-
-      if ( reqnum <= kvnmln ) then
-!
-!        First try looking for a kernel variable including the frame ID
-!        code.
-!
-!        Note the template is
-!
-!            'FRAME_#_#'
-!
-         call repmi  ( ctx, templt, '#',   frcode, kvname )
-         call repmc  ( kvname, '#',   item,   kvname )
-         call dtpool ( ctx, kvname, found, n,      dtype  )
-
-      else
-!
-!        The ID-based name is too long. We can't find the variable if
-!        we can't look it up.
-!
-         found = .false.
-
-      end if
-
-      if ( .not. found ) then
-!
-!        We need to look up the frame name-based kernel variable.
-!        Determine the length of the name of this variable; make
-!        sure it's not too long.
-!
-         reqnam = nameln + itemln + templn
-
-         if (       ( reqnam > kvnmln ) &
-              .and. ( reqnum > kvnmln ) ) then
-!
-!           Both forms of the name are too long.
-!
-            call ctx%setmsg ( 'Kernel variable FRAME_#_# has length #; '// &
-                          'kernel variable FRAME_#_# has length #; '// &
-                          'maximum allowed length is #.  Neither '  // &
-                          'variable could be searched for in the '  // &
-                          'kernel pool due to these name length '   // &
-                          'errors.'                                 )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnum                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnam                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%sigerr ( 'SPICE(VARNAMETOOLONG)'                   )
-            return
-
-         else if  ( reqnam > kvnmln ) then
-!
-!           We couldn't find the variable having the ID-based name,
-!           and the frame name-based variable name is too long to
-!           look up.
-!
-!           Note that at this point KVNAME contains the ID-based
-!           kernel variable name.
-!
-            call ctx%setmsg ( 'Kernel variable # was expected to '      // &
-                          'be present in the kernel pool but '      // &
-                          'was not found.  The alternative '        // &
-                          'form of kernel variable name '           // &
-                          'FRAME_#_# was not searched for '         // &
-                          'because this name has excessive '        // &
-                          'length (# characters vs allowed '        // &
-                          'maximum of #).  One of these variables ' // &
-                          'is needed to define the parameterized '  // &
-                          'dynamic frame #.  Usually this type '    // &
-                          'of problem is due to an error in a '     // &
-                          'frame definition provided in a frame '   // &
-                          'kernel.'                                )
-            call ctx%errch  ( '#',  kvname                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnam                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         end if
-
-!
-!        Now try looking for a kernel variable including the frame
-!        name.
-!
-         call repmc  ( templt, '#',   frname, kvname )
-         call repmc  ( kvname, '#',   item,   kvname )
-         call dtpool ( ctx, kvname, found, n,      dtype  )
-
-         if (  ( .not. found ) .and. ( reqnum > kvnmln )  ) then
-!
-!           The kernel variable's presence (in one form or the other)
-!           is mandatory:  signal an error.  The error message
-!           depends on which variables we were able to try to
-!           look up.  In this case, we never tried to look up the
-!           frame ID-based name.
-!
-!           Note that at this point KVNAME contains the name-based
-!           kernel variable name.
-!
-            call ctx%setmsg ( 'Kernel variable # was expected to '      // &
-                          'be present in the kernel pool but '      // &
-                          'was not found.  The alternative '        // &
-                          'form of kernel variable name '           // &
-                          'FRAME_#_# was not searched for '         // &
-                          'because this name has excessive '        // &
-                          'length (# characters vs allowed '        // &
-                          'maximum of #).  One of these variables ' // &
-                          'is needed to define the parameterized '  // &
-                          'dynamic frame #.  Usually this type '    // &
-                          'of problem is due to an error in a '     // &
-                          'frame definition provided in a frame '   // &
-                          'kernel.'                                 )
-            call ctx%errch  ( '#',  kvname                              )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnum                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         else if ( .not. found ) then
-!
-!           We tried to look up both names and failed.
-!
-            call ctx%setmsg ( 'At least one of the kernel variables '   // &
-                          'FRAME_#_# or FRAME_#_# was expected to ' // &
-                          'be present in the kernel pool but '      // &
-                          'neither was found. One of these '        // &
-                          'variables is needed to define the '      // &
-                          'parameterized dynamic frame #.  Usually '// &
-                          'this type of problem is due to a '       // &
-                          'missing keyword assignment in a frame '  // &
-                          'kernel.  Another, less likely, '         // &
-                          'possibility is that other errors in a '  // &
-                          'frame kernel have confused the '         // &
-                          'frame subsystem into wrongly '           // &
-                          'deciding these variables are needed.'    )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         end if
-
-      end if
 
 !
 !     Getting to this point means we found a kernel variable. The name
@@ -4789,167 +3828,28 @@ contains
       use pepper_inc_frmtyp
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: non = nninrt
-      integer(ip), parameter :: ncount = ninert + non
-      integer(ip), parameter :: room = 8
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
-      integer(ip), parameter :: kvnmln = 32
-      integer(ip), parameter :: kvbsz = 100
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxbfr = 149
-      integer(ip) :: n
-      integer(ip) :: values ( room )
-      character(frnmln) :: pname
-      integer(ip) :: item
-      logical :: gotit
-      logical :: lupdte
-      logical :: lnew
-      if ( .not. allocated ( ctx%framex_state ) ) then
-         allocate ( ctx%framex_state )
-         call init_framex_state ( ctx%framex_state )
-      end if
-      associate ( fx => ctx%framex_state, &
-                  name => ctx%framex_state%name, &
-                  center => ctx%framex_state%center, &
-                  centrd => ctx%framex_state%centrd, &
-                  idcode => ctx%framex_state%idcode, &
-                  type => ctx%framex_state%type, &
-                  typeid => ctx%framex_state%typeid, &
-                  first => ctx%framex_state%first, &
-                  pulctr => ctx%framex_state%pulctr, &
-                  bnmlst => ctx%framex_state%bnmlst, &
-                  bnmpol => ctx%framex_state%bnmpol, &
-                  bnmnms => ctx%framex_state%bnmnms, &
-                  bnmidx => ctx%framex_state%bnmidx, &
-                  bidlst => ctx%framex_state%bidlst, &
-                  bidpol => ctx%framex_state%bidpol, &
-                  bidids => ctx%framex_state%bidids, &
-                  bididx => ctx%framex_state%bididx )
+      character(:), allocatable :: pname
+      logical :: found
       frcode = 0
-!
-!     Standard SPICE error handling.
-!
       if ( ctx%failed() ) return
-
 !
-!     For efficiency, J2000 deserves special treatment.
+!     Handle the most common case, J2000, first.
 !
       if ( frname == 'J2000' .or. frname == 'j2000') then
          frcode = 1
          return
       end if
-
+      call framex_ready ( ctx )
+      if ( ctx%failed() ) return
 !
-!     Perform any needed first pass initializations.
+!     PEPPER: the name is normalized (left-justified, uppercase) in a
+!     copy of its own length; SPICELIB truncated it to 32 characters.
 !
-      if ( first ) then
-
-!
-!        Initialize POOL state counter to the user value.
-!
-         call zzctruin ( ctx, pulctr )
-
-!
-!        Initialize kernel POOL frame hashes.
-!
-         call fx%kreset ( )
-
-!
-!        Initialize built-in frame tables and hashes.
-!
-         call zzfdat   ( ctx, ncount, maxbfr, name,   idcode, &
-                         center, type,   typeid, centrd, &
-                         bnmlst, bnmpol, bnmnms, bnmidx, &
-                         bidlst, bidpol, bidids, bididx )
-
-         if ( ctx%failed() ) return
-
-         first = .false.
-
-      end if
-
-!
-!     Determine the location of the requested item in the array
-!     of names.
-!
+      allocate ( character(len(frname)) :: pname )
       call ljust ( frname, pname )
       call ucase ( pname,  pname )
-
-      call zzhscchk ( ctx, bnmlst, bnmpol, bnmnms, pname, item )
-      if ( item /= 0 ) then
-         item = bnmidx( item )
-      end if
-
-!
-!     If the name is in our hash, we can just look up its ID code in
-!     the parallel array.
-!
-      if ( item > 0 ) then
-
-         frcode = idcode ( item )
-
-      else
-
-!
-!        See if this frame is in the kernel pool frame name-based hash.
-!        First reset the hash if POOL has changed.
-!
-         call zzpctrck ( ctx, pulctr, lupdte )
-
-         if ( lupdte ) then
-            call fx%kreset ( )
-         end if
-
-!
-!        Check if this name is in the hash.
-!
-         item = fx%kname_find ( pname )
-
-         if ( item /= 0 ) then
-
-            frcode = fx%knmids(item)
-
-         else
-
-!
-!           The name wasn't in the hash, see if we can find this frame
-!           in the kernel pool.
-!
-            call gipool ( ctx,  'FRAME_' // trim(pname),   1, room, n, values, gotit )
-
-            if ( ctx%failed() ) return
-
-            if ( n == 1 .and. gotit ) then
-
-               frcode = values(1)
-
-!
-!              If we made it to this point, we successfully mapped the
-!              kernel frame name to its ID. Add this pair to the
-!              name-based hash.
-!
-               call fx%kname_add ( pname, item )
-
-               if ( .not. ctx%failed() .and. item /= 0 ) then
-
-                  fx%knmids(item) = frcode
-
-               end if
-
-            else
-
-               frcode = 0
-
-            end if
-
-         end if
-
-      end if
-
+      call framex_code ( ctx, pname, frcode, found )
       return
-      end associate
       end procedure namfrm
 
       module procedure frmnam
@@ -5123,147 +4023,11 @@ contains
       use pepper_inc_frmtyp
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: non = nninrt
-      integer(ip), parameter :: ncount = ninert + non
-      integer(ip), parameter :: room = 8
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
-      integer(ip), parameter :: kvnmln = 32
-      integer(ip), parameter :: kvbsz = 100
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxbfr = 149
-      integer(ip) :: n
-      character(frnmln) :: pname
-      integer(ip) :: item
-      character(lnsize) :: line   ( room )
-      logical :: gotit
-      logical :: lupdte
-      if ( .not. allocated ( ctx%framex_state ) ) then
-         allocate ( ctx%framex_state )
-         call init_framex_state ( ctx%framex_state )
-      end if
-      associate ( fx => ctx%framex_state, &
-                  name => ctx%framex_state%name, &
-                  center => ctx%framex_state%center, &
-                  centrd => ctx%framex_state%centrd, &
-                  idcode => ctx%framex_state%idcode, &
-                  type => ctx%framex_state%type, &
-                  typeid => ctx%framex_state%typeid, &
-                  first => ctx%framex_state%first, &
-                  pulctr => ctx%framex_state%pulctr, &
-                  bnmlst => ctx%framex_state%bnmlst, &
-                  bnmpol => ctx%framex_state%bnmpol, &
-                  bnmnms => ctx%framex_state%bnmnms, &
-                  bnmidx => ctx%framex_state%bnmidx, &
-                  bidlst => ctx%framex_state%bidlst, &
-                  bidpol => ctx%framex_state%bidpol, &
-                  bidids => ctx%framex_state%bidids, &
-                  bididx => ctx%framex_state%bididx )
-      frname = ' '
-
-      if ( ctx%failed() ) return
-
-!
-!     For efficiency, J2000 deserves special treatment.
-!
-      if ( frcode == 1 ) then
-         frname = 'J2000'
-         return
-      end if
-
-!
-!     Perform any needed first pass initializations.
-!
-      if ( first ) then
-
-!
-!        Initialize POOL state counter to the user value.
-!
-         call zzctruin ( ctx, pulctr )
-
-!
-!        Initialize kernel POOL frame hashes.
-!
-         call fx%kreset ( )
-
-!
-!        Initialize built-in frame tables and hashes.
-!
-         call zzfdat   ( ctx, ncount, maxbfr, name,   idcode, &
-                         center, type,   typeid, centrd, &
-                         bnmlst, bnmpol, bnmnms, bnmidx, &
-                         bidlst, bidpol, bidids, bididx )
-
-         if ( ctx%failed() ) return
-
-         first = .false.
-
-      end if
-
-      call zzhsichk ( ctx, bidlst, bidpol, bidids, frcode, item )
-      if ( item /= 0 ) then
-         item = bididx( item )
-      end if
-
-      if ( item /= 0 ) then
-
-         frname = name(item)
-
-      else
-
-!
-!        See if this frame is in the kernel pool frame ID-based hash.
-!        First reset the hash if POOL has changed.
-!
-         call zzpctrck ( ctx, pulctr, lupdte )
-
-         if ( lupdte ) then
-            call fx%kreset ( )
-         end if
-
-!
-!        Check if this ID is in the hash.
-!
-         item = fx%kid_find ( frcode )
-
-         if ( item /= 0 ) then
-
-            frname = fx%kname(item)
-
-         else
-
-!
-!           The ID wasn't in the hash, see if we can find this frame in
-!           the kernel pool.
-!
-            pname      = 'FRAME_#_NAME'
-            call repmi ( ctx,  pname, '#', frcode, pname )
-
-            call gcpool ( ctx, pname, 1, room, n, line, gotit )
-
-            if ( n == 1 .and. gotit ) then
-
-               call ljust ( line(1), frname )
-
-!
-!              Note that since we did not collect all needed
-!              information about this frame, we will not try to add it
-!              to the hash. This addition is done only by FRINFO.
-!
-
-            else
-
-               frname = ' '
-
-            end if
-
-         end if
-
-      end if
-
+      character(:), allocatable :: name
+      logical :: found
+      call frame_name_of ( ctx, frcode, name, found )
+      frname = name
       return
-      end associate
       end procedure frmnam
 
       module procedure frinfo
@@ -5514,19 +4278,18 @@ contains
       integer(ip), parameter :: room = 8
       integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: kvnmln = 32
       integer(ip), parameter :: kvbsz = 100
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: maxbfr = 149
       integer(ip) :: n
       integer(ip) :: values ( room )
-      character(frnmln) :: pname
+      character(:), allocatable :: pname
       integer(ip) :: item
       character(lnsize) :: line   ( room )
       logical :: gotit
       logical :: lupdte
-      character(frnmln) :: lcfram
+      character(:), allocatable :: lcfram
       logical :: lnew
       if ( .not. allocated ( ctx%framex_state ) ) then
          allocate ( ctx%framex_state )
@@ -5646,10 +4409,11 @@ contains
 !           The ID wasn't in the hash, see if we can find this frame in
 !           the kernel pool.
 !
-            pname     = 'FRAME_#_NAME'
-            call repmi ( ctx,  pname, '#', frcode, pname )
-
-            call gcpool ( ctx, pname, 1, room, n, line, gotit )
+!
+!           PEPPER: the name of any length.
+!
+            pname = frame_variable ( frcode, 'NAME' )
+            call ctx%pool_string ( pname, 1_ip, lcfram, gotit, n )
 
             if ( gotit ) then
 
@@ -5667,7 +4431,7 @@ contains
 
                end if
 
-               call ljust ( line(1), lcfram )
+               lcfram = trim ( adjustl ( lcfram ) )
 !
 !              Start by looking up the central body of the frame. The
 !              name of the kernel variable for the body could refer to
@@ -5702,7 +4466,7 @@ contains
 
                if ( .not. ctx%failed() .and. item /= 0 ) then
 
-                  fx%kname(item) = lcfram
+                  fx%kname(item)%s = lcfram
                   fx%kcent(item) = cent
                   fx%kclass(item) = frclss
                   fx%kclsid(item) = clssid
@@ -5919,342 +4683,10 @@ contains
       use pepper_inc_frmtyp
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: non = nninrt
-      integer(ip), parameter :: ncount = ninert + non
-      integer(ip), parameter :: room = 8
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
-      integer(ip), parameter :: kvnmln = 32
-      integer(ip), parameter :: kvbsz = 100
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxbfr = 149
-      integer(ip) :: n
-      integer(ip) :: values ( room )
-      character(frnmln) :: pname
-      integer(ip) :: item
-      character(lnsize) :: line   ( room )
-      logical :: gotit
-      logical :: lupdte
-      character(kvnmln) :: lookup
-      character(bdnmln) :: lcname
-      logical :: lnew
-      character(1) :: dattyp
-      if ( .not. allocated ( ctx%framex_state ) ) then
-         allocate ( ctx%framex_state )
-         call init_framex_state ( ctx%framex_state )
-      end if
-      associate ( fx => ctx%framex_state, &
-                  name => ctx%framex_state%name, &
-                  center => ctx%framex_state%center, &
-                  centrd => ctx%framex_state%centrd, &
-                  idcode => ctx%framex_state%idcode, &
-                  type => ctx%framex_state%type, &
-                  typeid => ctx%framex_state%typeid, &
-                  first => ctx%framex_state%first, &
-                  pulctr => ctx%framex_state%pulctr, &
-                  bnmlst => ctx%framex_state%bnmlst, &
-                  bnmpol => ctx%framex_state%bnmpol, &
-                  bnmnms => ctx%framex_state%bnmnms, &
-                  bnmidx => ctx%framex_state%bnmidx, &
-                  bidlst => ctx%framex_state%bidlst, &
-                  bidpol => ctx%framex_state%bidpol, &
-                  bidids => ctx%framex_state%bidids, &
-                  bididx => ctx%framex_state%bididx )
-      if ( ctx%failed() ) return
-
-!
-!     Perform any needed first pass initializations.
-!
-      if ( first ) then
-
-!
-!        Initialize POOL state counter to the user value.
-!
-         call zzctruin ( ctx, pulctr )
-
-!
-!        Initialize kernel POOL frame hashes.
-!
-         call fx%kreset ( )
-
-!
-!        Initialize built-in frame tables and hashes.
-!
-         call zzfdat   ( ctx, ncount, maxbfr, name,   idcode, &
-                         center, type,   typeid, centrd, &
-                         bnmlst, bnmpol, bnmnms, bnmidx, &
-                         bidlst, bidpol, bidids, bididx )
-
-         if ( ctx%failed() ) return
-
-         first = .false.
-
-      end if
-
-!
-!     First look up in the kernel pool the frame associated with this
-!     center.
-!
-      lookup = 'OBJECT_#_FRAME'
-
-      call repmi  ( ctx, lookup, '#',   cent, lookup )
-      call dtpool ( ctx, lookup, gotit, n,    dattyp )
-!
-!     If we didn't find this object in the form OBJECT_<number>_FRAME
-!     maybe it is present in the form OBJECT_<name>_FRAME. It's
-!     worth a try.
-!
-      if ( .not. gotit ) then
-!
-!        See if we can get the name for this center's ID code.
-!
-         call bodc2n ( ctx, cent, lcname, gotit )
-
-         if ( gotit ) then
-!
-!           Construct and look up the alternative name in the
-!           kernel pool.
-!
-            lookup = 'OBJECT_#_FRAME'
-
-            call repmc  ( lookup, '#', lcname, lookup )
-            call ucase  ( lookup,              lookup )
-            call dtpool ( ctx, lookup, gotit, n,    dattyp )
-
-         end if
-
-      end if
-!
-!     There are two cases. The user may specify either a name
-!     or ID code for the frame to use to model the orientation of
-!     an object. We assume they'll opt for the character string
-!     form so we test that case first.
-!
-      if ( gotit ) then
-
-         if ( dattyp == 'C' ) then
-
-            call gcpool ( ctx, lookup, 1, 1, n,  pname, gotit )
-!
-!           We've got the name:  See if we have this in our handy hash
-!           of built-in names.
-!
-            call zzhscchk ( ctx, bnmlst, bnmpol, bnmnms, pname, item )
-            if ( item /= 0 ) then
-               item = bnmidx( item )
-            end if
-
-            if ( item > 0 ) then
-
-               frname = pname
-               frcode = idcode ( item )
-               found  = .true.
-
-            else
-
-!
-!              See if this frame is in the kernel pool frame name-based
-!              hash. First reset the hash if POOL has changed.
-!
-               call zzpctrck ( ctx, pulctr, lupdte )
-
-               if ( lupdte ) then
-                  call fx%kreset ( )
-               end if
-
-!
-!              Check if this name is in the hash.
-!
-               item = fx%kname_find ( pname )
-
-               if ( item /= 0 ) then
-
-                  frname = pname
-                  frcode = fx%knmids(item)
-                  found  = .true.
-
-               else
-
-!
-!                 Nope. Look in the kernel pool for the data associated
-!                 with this frame.
-!
-!                 Capture the frame name now, since we're going to
-!                 modify PNAME.
-!
-                  frname = pname
-                  call gipool ( ctx,  'FRAME_' // trim(pname),   1, room, n, values, gotit )
-
-                  if ( ctx%failed() ) return
-
-                  if ( n == 1 .and. gotit ) then
-
-                     frcode = values(1)
-                     found  = .true.
-
-!
-!                    If we made it to this point, we successfully
-!                    mapped the kernel frame name to its ID. Add this
-!                    pair to the name-based hash.
-!
-                     call fx%kname_add ( frname, item )
-
-                     if ( .not. ctx%failed() .and. item /= 0 ) then
-
-                        fx%knmids(item) = frcode
-
-                     end if
-
-                  else
-
-                     frcode = 0
-                     frname = ' '
-                     found  = .false.
-
-                  end if
-
-               end if
-
-            end if
-
-         else if ( dattyp == 'N' ) then
-!
-!           Ok. They decided to use the numeric form to specify
-!           the frame ID. We need to figure out the name of the frame.
-!           First we retrieve the frame ID they've loaded into the
-!           kernel pool.
-!
-            call gipool ( ctx, lookup, 1, 1, n, values, gotit )
-
-            if ( ctx%failed() ) return
-
-!
-!           We've got the frame ID, see if we already know about this
-!           ID code.
-!
-            call zzhsichk ( ctx, bidlst, bidpol, bidids, values(1), item )
-            if ( item /= 0 ) then
-               item = bididx( item )
-            end if
-
-            if ( item /= 0 ) then
-!
-!              Just look up the name and set the frame code.
-!
-               frname = name  (item)
-               frcode = values(1)
-               found  = .true.
-
-            else
-
-!
-!              See if this frame is in the kernel pool frame ID-based
-!              hash. First reset the hash if POOL has changed.
-!
-               call zzpctrck ( ctx, pulctr, lupdte )
-
-               if ( lupdte ) then
-                  call fx%kreset ( )
-               end if
-
-!
-!              Check if this ID is in the hash.
-!
-               item = fx%kid_find ( values(1) )
-
-               if ( item /= 0 ) then
-
-                  frname = fx%kname(item)
-                  frcode = values(1)
-                  found  = .true.
-
-               else
-
-!
-!                 It is not in the hash. See if it's in the kernel pool
-!                 somewhere.
-!
-                  pname      = 'FRAME_#_NAME'
-                  call repmi ( ctx,  pname, '#', values(1),   pname )
-                  call gcpool ( ctx, pname, 1, room, n, line, gotit )
-
-                  if ( n == 1 .and. gotit ) then
-
-                     call ljust ( line(1), frname )
-                     frcode = values(1)
-                     found  = .true.
-
-!
-!                    Note that since we did not collect all needed
-!                    information about this frame, we will not try to
-!                    add it to the hash. This addition is done only by
-!                    FRINFO.
-!
-                  else
-
-                     frcode = values(1)
-                     frname = ' '
-                     found  = .false.
-
-                  end if
-
-               end if
-
-            end if
-
-         end if
-!
-!        One way or the other we've filled in the values at this
-!        point. Nothing left to do but return.
-!
-         return
-
-      end if
-!
-!     The only way to reach this point is if the user did not
-!     specify via the kernel pool a frame to use for this center.
-!
-!     We have a special case for EARTH.
-!
-      if ( cent == 399 ) then
-
-         frcode = 10013
-         frname = 'IAU_EARTH'
-         found  = .true.
-         return
-
-      end if
-
-!
-!     Determine the location of the requested item in the array
-!     of centers.
-!
-      item = bschoi ( cent, ncount, center, centrd )
-
-!
-!     If the name is in our list, we can just look up its ID code and
-!     name in the parallel array.
-!
-      if ( item > 0 ) then
-
-         frcode =  idcode(item)
-         frname =  name  (item)
-         found  = .true.
-
-      else
-!
-!        There's nothing we can do now. We don't know what frame
-!        might be associated with this object.
-!
-         frname = ' '
-         frcode =  0
-         found  = .false.
-
-      end if
-
+      character(:), allocatable :: name
+      call frame_of_center ( ctx, cent, frcode, name, found )
+      frname = name
       return
-      end associate
       end procedure cidfrm
 
       module procedure cnmfrm
@@ -6430,338 +4862,60 @@ contains
       use pepper_inc_frmtyp
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: non = nninrt
-      integer(ip), parameter :: ncount = ninert + non
-      integer(ip), parameter :: room = 8
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
-      integer(ip), parameter :: kvnmln = 32
-      integer(ip), parameter :: kvbsz = 100
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxbfr = 149
-      integer(ip) :: n
-      integer(ip) :: values ( room )
-      character(frnmln) :: pname
-      integer(ip) :: item
-      character(lnsize) :: line   ( room )
-      logical :: gotit
-      logical :: lupdte
-      character(kvnmln) :: lookup
-      integer(ip) :: id
-      logical :: lnew
+      character(:), allocatable :: lookup
+      character(:), allocatable :: name
       character(1) :: dattyp
-      if ( .not. allocated ( ctx%framex_state ) ) then
-         allocate ( ctx%framex_state )
-         call init_framex_state ( ctx%framex_state )
-      end if
-      associate ( fx => ctx%framex_state, &
-                  name => ctx%framex_state%name, &
-                  center => ctx%framex_state%center, &
-                  centrd => ctx%framex_state%centrd, &
-                  idcode => ctx%framex_state%idcode, &
-                  type => ctx%framex_state%type, &
-                  typeid => ctx%framex_state%typeid, &
-                  first => ctx%framex_state%first, &
-                  pulctr => ctx%framex_state%pulctr, &
-                  bnmlst => ctx%framex_state%bnmlst, &
-                  bnmpol => ctx%framex_state%bnmpol, &
-                  bnmnms => ctx%framex_state%bnmnms, &
-                  bnmidx => ctx%framex_state%bnmidx, &
-                  bidlst => ctx%framex_state%bidlst, &
-                  bidpol => ctx%framex_state%bidpol, &
-                  bidids => ctx%framex_state%bidids, &
-                  bididx => ctx%framex_state%bididx )
+      integer(ip) :: id
+      integer(ip) :: item
+      integer(ip) :: n
+      logical :: gotit
+      frcode = 0
+      found  = .false.
       if ( ctx%failed() ) return
-
+      call framex_ready ( ctx )
+      if ( ctx%failed() ) return
 !
-!     Perform any needed first pass initializations.
+!     A frame assigned to the object by OBJECT_<name>_FRAME, or else by
+!     OBJECT_<ID>_FRAME (PEPPER: names of any length).
 !
-      if ( first ) then
-
-!
-!        Initialize POOL state counter to the user value.
-!
-         call zzctruin ( ctx, pulctr )
-
-!
-!        Initialize kernel POOL frame hashes.
-!
-         call fx%kreset ( )
-
-!
-!        Initialize built-in frame tables and hashes.
-!
-         call zzfdat   ( ctx, ncount, maxbfr, name,   idcode, &
-                         center, type,   typeid, centrd, &
-                         bnmlst, bnmpol, bnmnms, bnmidx, &
-                         bidlst, bidpol, bidids, bididx )
-
-         if ( ctx%failed() ) return
-
-         first = .false.
-
-      end if
-
-!
-!     First look up in the kernel pool the frame associated with this
-!     center.
-!
-      lookup = 'OBJECT_#_FRAME'
-
-      call repmc  ( lookup, '#',   cname, lookup )
-      call ucase  ( lookup,               lookup )
-      call dtpool ( ctx, lookup, gotit, n,     dattyp )
-
-!
-!     If we didn't find this object in the form OBJECT_<name>_FRAME
-!     maybe it is present in the form OBJECT_<number>_FRAME. It's
-!     worth a try.
-!
+      name = 'OBJECT_' // marker_text ( cname ) // '_FRAME'
+      lookup = name
+      call ucase ( name, lookup )
+      call dtpool ( ctx, lookup, gotit, n, dattyp )
       if ( .not. gotit ) then
-!
-!        See if we can get the name for this center's ID code.
-!
          call bodn2c ( ctx, cname, id, gotit )
-
          if ( gotit ) then
-!
-!           Construct and look up the alternative name in the
-!           kernel pool.
-!
-            lookup = 'OBJECT_#_FRAME'
-
-            call repmi  ( ctx, lookup, '#',   id, lookup )
-            call dtpool ( ctx, lookup, gotit, n,  dattyp )
-
+            lookup = 'OBJECT_' // int_text ( id ) // '_FRAME'
+            call dtpool ( ctx, lookup, gotit, n, dattyp )
          end if
-
       end if
-
-!
-!     There are two cases. The user may specify either a name
-!     or ID code for the frame to use to model the orientation of
-!     an object. We assume they'll opt for the character string
-!     form so we test that case first.
-!
       if ( gotit ) then
-
-         if ( dattyp == 'C' ) then
-
-            call gcpool ( ctx, lookup, 1, 1, n,  pname, gotit )
-!
-!           We've got the name:  See if we have this in our handy hash
-!           of built-in names.
-!
-            call zzhscchk ( ctx, bnmlst, bnmpol, bnmnms, pname, item )
-            if ( item /= 0 ) then
-               item = bnmidx( item )
-            end if
-
-            if ( item > 0 ) then
-
-               frname = pname
-               frcode = idcode ( item )
-               found  = .true.
-
-            else
-
-!
-!              See if this frame is in the kernel pool frame name-based
-!              hash. First reset the hash if POOL has changed.
-!
-               call zzpctrck ( ctx, pulctr, lupdte )
-
-               if ( lupdte ) then
-                  call fx%kreset ( )
-               end if
-
-!
-!              Check if this name is in the hash.
-!
-               item = fx%kname_find ( pname )
-
-               if ( item /= 0 ) then
-
-                  frname = pname
-                  frcode = fx%knmids(item)
-                  found  = .true.
-
-               else
-
-!
-!                 Nope. Look in the kernel pool for the data associated
-!                 with this frame.
-!
-!                 Capture the frame name now, since we're going to
-!                 modify PNAME.
-!
-                  frname = pname
-                  call gipool ( ctx,  'FRAME_' // trim(pname),   1, room, n, values, gotit )
-
-                  if ( ctx%failed() ) return
-
-                  if ( n == 1 .and. gotit ) then
-
-                     frcode = values(1)
-                     found  = .true.
-
-!
-!                    If we made it to this point, we successfully
-!                    mapped the kernel frame name to its ID. Add this
-!                    pair to the name-based hash.
-!
-                     call fx%kname_add ( frname, item )
-
-                     if ( .not. ctx%failed() .and. item /= 0 ) then
-
-                        fx%knmids(item) = frcode
-
-                     end if
-
-                  else
-
-                     frcode = 0
-                     frname = ' '
-                     found  = .false.
-
-                  end if
-
-               end if
-
-            end if
-
-         else if ( dattyp == 'N' ) then
-!
-!           Ok. They decided to use the numeric form to specify
-!           the frame ID. We need to figure out the name of the frame.
-!           First we retrieve the frame ID they've loaded into the
-!           kernel pool.
-!
-            call gipool ( ctx, lookup, 1, 1, n, values, gotit )
-
-            if ( ctx%failed() ) return
-
-!
-!           We've got the frame ID, see if we already know about this
-!           ID code.
-!
-            call zzhsichk ( ctx, bidlst, bidpol, bidids, values(1), item )
-            if ( item /= 0 ) then
-               item = bididx( item )
-            end if
-
-            if ( item /= 0 ) then
-!
-!              Just look up the name and set the frame code.
-!
-               frname = name  (item)
-               frcode = values(1)
-               found  = .true.
-
-            else
-
-!
-!              See if this frame is in the kernel pool frame ID-based
-!              hash. First reset the hash if POOL has changed.
-!
-               call zzpctrck ( ctx, pulctr, lupdte )
-
-               if ( lupdte ) then
-                  call fx%kreset ( )
-               end if
-
-!
-!              Check if this ID is in the hash.
-!
-               item = fx%kid_find ( values(1) )
-
-               if ( item /= 0 ) then
-
-                  frname = fx%kname(item)
-                  frcode = values(1)
-                  found  = .true.
-
-               else
-
-!
-!                 It is not in the hash. See if it's in the kernel pool
-!                 somewhere.
-!
-                  pname      = 'FRAME_#_NAME'
-                  call repmi ( ctx,  pname, '#', values(1),   pname )
-                  call gcpool ( ctx, pname, 1, room, n, line, gotit )
-
-                  if ( n == 1 .and. gotit ) then
-
-                     call ljust ( line(1), frname )
-                     frcode = values(1)
-                     found  = .true.
-
-!
-!                    Note that since we did not collect all needed
-!                    information about this frame, we will not try to
-!                    add it to the hash. This addition is done only by
-!                    FRINFO.
-!
-                  else
-
-                     frcode = values(1)
-                     frname = ' '
-                     found  = .false.
-
-                  end if
-
-               end if
-
-            end if
-
-         end if
-!
-!        One way or the other we've filled in the values at this
-!        point. Nothing left to do but return.
-!
+         call object_frame ( ctx, lookup, dattyp, frcode, name, found )
+         frname = name
          return
-
       end if
 !
-!     The only way to reach this point is if the user did not
-!     specify via the kernel pool a frame to use for this center.
+!     Otherwise the built-in frame IAU_<name>, if there is one. As in
+!     SPICELIB, FRNAME is IAU_<name> even if there is not.
 !
-      frname = 'IAU_#'
-      call repmc ( frname, '#', cname, frname )
-      call ucase ( frname,             frname )
-
-!
-!     Determine the location of the requested item in the array
-!     of centers.
-!
-      call zzhscchk ( ctx, bnmlst, bnmpol, bnmnms, frname, item )
+      lookup = 'IAU_' // marker_text ( cname )
+      name = lookup
+      call ucase ( lookup, name )
+      frname = name
+      associate ( fx => ctx%framex_state )
+      item = 0
+      if ( len(name) <= len(fx%bnmnms) ) then
+         call zzhscchk ( ctx, fx%bnmlst, fx%bnmpol, fx%bnmnms, name, item )
+      end if
       if ( item /= 0 ) then
-         item = bnmidx( item )
+         item = fx%bnmidx( item )
       end if
-
-!
-!     If the name is in our hash, we can just look up its ID code and
-!     name in the parallel array.
-!
       if ( item > 0 ) then
-
-         frcode =  idcode(item)
+         frcode = fx%idcode(item)
          found  = .true.
-
-      else
-!
-!        There's nothing we can do now. We don't know what frame
-!        might be associated with this object.
-!
-         frcode =  0
-         found  = .false.
-
       end if
-
-      return
       end associate
+      return
       end procedure cnmfrm
 
       module procedure ccifrm
@@ -7022,273 +5176,467 @@ contains
       use pepper_inc_frmtyp
       use pepper_inc_zzctr
       implicit none
-      integer(ip) :: frcode_1(1)  !! one-element copy of frcode (array argument)
-      integer(ip) :: kvclid_1(1)  !! one-element copy of kvclid (array argument)
-      integer(ip) :: kvclss_1(1)  !! one-element copy of kvclss (array argument)
-      integer(ip), parameter :: non = nninrt
-      integer(ip), parameter :: ncount = ninert + non
-      integer(ip), parameter :: room = 8
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
-      integer(ip), parameter :: kvnmln = 32
-      integer(ip), parameter :: kvbsz = 100
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxbfr = 149
-      integer(ip) :: n
-      integer(ip) :: kvclid
-      integer(ip) :: kvclss
-      logical :: fnd
+      character(:), allocatable :: name
+      call frame_of_class ( ctx, frclss, clssid, frcode, name, cent, found )
+      frname = name
+      return
+      end procedure ccifrm
+
+
+!> PEPPER: find the kernel variable that defines an item of a frame:
+!> FRAME_<ID code>_<item>, or else FRAME_<name>_<item>. The lookup shared
+!> by the ZZDYNxxx routines; the names have any length (SPICELIB limited
+!> both forms to 32 characters, SPICE(VARNAMETOOLONG)).
+      module procedure dynamic_frame_variable
+      use pepper_kinds, only: ip
+      implicit none
+      found = .false.
+      n     = 0
+      dtype = ' '
+      kvname = 'FRAME_' // int_text ( frcode ) // '_' // marker_text ( item )
+      call dtpool ( ctx, kvname, found, n, dtype )
+      if ( found .or. ctx%failed() ) return
+      kvname = 'FRAME_' // marker_text ( frname ) // '_' // marker_text ( item )
+      call dtpool ( ctx, kvname, found, n, dtype )
+      if ( found .or. ctx%failed() .or. .not. required ) return
+      call ctx%setmsg ( 'At least one of the kernel variables '   // &
+                    'FRAME_#_# or FRAME_#_# was expected to ' // &
+                    'be present in the kernel pool but '      // &
+                    'neither was found. One of these '        // &
+                    'variables is needed to define the '      // &
+                    '# #.  Usually '                          // &
+                    'this type of problem is due to a '       // &
+                    'missing keyword assignment in a frame '  // &
+                    'kernel.  Another, less likely, '         // &
+                    'possibility is that other errors in a '  // &
+                    'frame kernel have confused the '         // &
+                    'frame subsystem into wrongly '           // &
+                    'deciding these variables are needed.'    )
+      call ctx%errint ( '#',  frcode )
+      call ctx%errch  ( '#',  item   )
+      call ctx%errch  ( '#',  frname )
+      call ctx%errch  ( '#',  item   )
+      if ( present ( what ) ) then
+         call ctx%errch ( '#', what )
+      else
+         call ctx%errch ( '#', 'parameterized dynamic frame' )
+      end if
+      call ctx%errch  ( '#',  frname )
+      call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)' )
+      end procedure dynamic_frame_variable
+
+!> PEPPER: the character values of the kernel variable that defines an
+!> item of a dynamic frame (FRAME_<ID code>_<item>, or else
+!> FRAME_<name>_<item>), at full length: the body of ZZDYNVAC.
+      module procedure dynamic_frame_strings
+      use pepper_kinds, only: ip
+      implicit none
+      character(:), allocatable :: kvname
+      character(1) :: dtype
+      logical :: found
       integer(ip) :: i
-      character(kvnmln) :: look2
-      character(kvnmln) :: lookup
-      integer(ip) :: start
-      character(kvnmln) :: kvbuff ( kvbsz )
+      allocate ( values(0) )
+      n = 0
+      if ( ctx%failed() ) return
+      call dynamic_frame_variable ( ctx, frname, frcode, item, .true., kvname, found, n, dtype )
+      if ( ctx%failed() ) return
+      if ( dtype == 'N' ) then
+         call ctx%setmsg ( 'The kernel variable # has used to define '  // &
+                       'frame # was expected to have character '    // &
+                       'data type but in fact has numeric '         // &
+                       'data type.  Usually this type of '          // &
+                       'problem is due to an error in a frame '     // &
+                       'definition provided in a frame kernel.'     )
+         call ctx%errch  ( '#',  kvname                                 )
+         call ctx%errch  ( '#',  frname                                 )
+         call ctx%sigerr ( 'SPICE(BADVARIABLETYPE)'                     )
+         return
+      end if
+      if ( n > maxn ) then
+         call ctx%setmsg ( 'The kernel variable # has used to define '  // &
+                       'frame # was expected to have size not '     // &
+                       'exceeding # but in fact has size #. '       // &
+                       'Usually this type of '                      // &
+                       'problem is due to an error in a frame '     // &
+                       'definition provided in a frame kernel.'     )
+         call ctx%errch  ( '#',  kvname                                 )
+         call ctx%errch  ( '#',  frname                                 )
+         call ctx%errint ( '#',  maxn                                   )
+         call ctx%errint ( '#',  n                                      )
+         call ctx%sigerr ( 'SPICE(BADVARIABLESIZE)'                     )
+         return
+      end if
+      deallocate ( values )
+      allocate ( values(n) )
+      do i = 1, n
+         call ctx%pool_string ( kvname, i, values(i)%s, found )
+         if ( .not. found ) then
+            call ctx%setmsg ( 'Variable # not found after DTPOOL ' // &
+                          'indicated it was present in pool.'  )
+            call ctx%errch  ( '#',  kvname                         )
+            call ctx%sigerr ( 'SPICE(BUG)'                         )
+            return
+         end if
+      end do
+      end procedure dynamic_frame_strings
+
+!> PEPPER: the name of a frame from its ID code, of any length (the body
+!> of FRMNAM, which copies it into its fixed-length argument).
+      module procedure frame_name_of
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip) :: item
+      integer(ip) :: n
+      logical :: lupdte
+      frname = ''
+      found  = .false.
+      if ( ctx%failed() ) return
+      call framex_ready ( ctx )
+      if ( ctx%failed() ) return
+      associate ( fx => ctx%framex_state )
+!
+!     A built-in frame?
+!
+      call zzhsichk ( ctx, fx%bidlst, fx%bidpol, fx%bidids, frcode, item )
+      if ( item /= 0 ) then
+         frname = trim ( fx%name( fx%bididx(item) ) )
+         found  = .true.
+         return
+      end if
+!
+!     A kernel frame looked up before (by FRINFO), unless the pool
+!     changed since?
+!
+      call zzpctrck ( ctx, fx%pulctr, lupdte )
+      if ( lupdte ) then
+         call fx%kreset ( )
+      end if
+      item = fx%kid_find ( frcode )
+      if ( item /= 0 ) then
+         frname = fx%kname(item)%s
+         found  = .true.
+         return
+      end if
+!
+!     The name assigned by FRAME_<frcode>_NAME, if it has one value.
+!
+      call ctx%pool_string ( frame_variable ( frcode, 'NAME' ), 1_ip, frname, found, n )
+      if ( found .and. n == 1 ) then
+         frname = trim ( adjustl ( frname ) )
+      else
+         frname = ''
+         found  = .false.
+      end if
+      return
+      end associate
+      end procedure frame_name_of
+
+
+!> PEPPER: the frame associated with an object, its name of any length
+!> (the body of CIDFRM).
+      module procedure frame_of_center
+      use pepper_kinds, only: ip
+      use pepper_arrays, only: bschoi
+      use pepper_strings, only: ucase
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      implicit none
+      integer(ip), parameter :: ncount = ninert + nninrt
+      character(:), allocatable :: lookup
+      character(:), allocatable :: bodnam
+      character(1) :: dattyp
+      integer(ip) :: item
+      integer(ip) :: n
+      logical :: gotit
+      frcode = 0
+      frname = ''
+      found  = .false.
+      if ( ctx%failed() ) return
+      call framex_ready ( ctx )
+      if ( ctx%failed() ) return
+!
+!     A frame assigned to the object by OBJECT_<ID>_FRAME, or else by
+!     OBJECT_<name>_FRAME (PEPPER: names of any length).
+!
+      lookup = 'OBJECT_' // int_text ( cent ) // '_FRAME'
+      call dtpool ( ctx, lookup, gotit, n, dattyp )
+      if ( .not. gotit ) then
+         call body_name_of ( ctx, cent, bodnam, gotit )
+         if ( gotit ) then
+            bodnam = 'OBJECT_' // marker_text ( bodnam ) // '_FRAME'
+            lookup = bodnam
+            call ucase ( bodnam, lookup )
+            call dtpool ( ctx, lookup, gotit, n, dattyp )
+         end if
+      end if
+      if ( gotit ) then
+         call object_frame ( ctx, lookup, dattyp, frcode, frname, found )
+         return
+      end if
+!
+!     The default body-fixed frame of the Earth is IAU_EARTH.
+!
+      if ( cent == 399 ) then
+         frcode = 10013
+         frname = 'IAU_EARTH'
+         found  = .true.
+         return
+      end if
+!
+!     The built-in frame centered on the object, if any.
+!
+      associate ( fx => ctx%framex_state )
+      item = bschoi ( cent, ncount, fx%center, fx%centrd )
+      if ( item > 0 ) then
+         frcode = fx%idcode(item)
+         frname = trim ( fx%name(item) )
+         found  = .true.
+      end if
+      end associate
+      return
+      end procedure frame_of_center
+
+
+!> PEPPER: the frame of a class and class ID, its name of any length
+!> (the body of CCIFRM).
+      module procedure frame_of_class
+      use pepper_kinds, only: ip
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      implicit none
+      integer(ip), parameter :: ncount = ninert + nninrt
+      type(string), allocatable :: kvars(:)
+      character(:), allocatable :: look2
+      integer(ip) :: values(1)
+      integer(ip) :: i
+      integer(ip) :: n
+      logical :: fnd
+      frcode = 0
+      frname = ''
+      cent   = 0
+      found  = .false.
+      if ( ctx%failed() ) return
+      call framex_ready ( ctx )
+      if ( ctx%failed() ) return
+!
+!     A built-in frame?
+!
+      associate ( fx => ctx%framex_state )
+      do i = 1, ncount
+         if (       ( fx%type(i)   == frclss ) &
+              .and. ( fx%typeid(i) == clssid ) ) then
+            frname = trim ( fx%name(i) )
+            frcode = fx%idcode(i)
+            cent   = fx%center(i)
+            found  = .true.
+            return
+         end if
+      end do
+      end associate
+!
+!     Search the kernel frames: the variables FRAME_<ID or name>_CLASS.
+!
+!     PEPPER: the names are fetched once (SPICELIB fetched them 100 at a
+!     time with GNPOOL, each call scanning the whole pool, and restarted
+!     each batch after its first name because GIPOOL overwrote the count
+!     of the batch, so each name was examined up to 100 times); names of
+!     any length.
+!
+      call pool_names ( ctx, 'FRAME_*_CLASS', kvars )
+      if ( ctx%failed() ) return
+      do i = 1, size ( kvars, kind=ip )
+         call gipool ( ctx, kvars(i)%s, 1_ip, 1_ip, n, values, fnd )
+         if ( ctx%failed() ) return
+         if ( .not. fnd ) then
+            call ctx%setmsg ( 'Invalid frame specification found in ' &
+            //            'kernel pool: frame class keyword ' &
+            //            'is # but integer class was not ' &
+            //            'associated with this keyword.'       )
+            call ctx%errch  ( '#',  kvars(i)%s                      )
+            call ctx%sigerr ( 'SPICE(INVALIDFRAMEDEF)'              )
+            return
+         end if
+         if ( values(1) /= frclss ) cycle
+         call gipool ( ctx, kvars(i)%s // '_ID', 1_ip, 1_ip, n, values, fnd )
+         if ( ctx%failed() ) return
+         if ( .not. fnd ) then
+            call ctx%setmsg ( 'Invalid frame specification found in ' &
+            //            'kernel pool: frame class keyword ' &
+            //            'is # but associated integer ' &
+            //            'class ID assignment was not found.' )
+            call ctx%errch  ( '#',  kvars(i)%s                     )
+            call ctx%sigerr ( 'SPICE(INVALIDFRAMEDEF)'             )
+            return
+         end if
+         if ( values(1) /= clssid ) cycle
+!
+!        The frame's name is FRAME_<ID or name>_NAME (PEPPER: the
+!        trailing _CLASS is replaced; SPICELIB replaced the first
+!        occurrence of _CLASS, which may be part of a frame name).
+!
+         look2 = kvars(i)%s(:len(kvars(i)%s) - 6) // '_NAME'
+         call ctx%pool_string ( look2, 1_ip, frname, fnd )
+         if ( .not. fnd ) then
+            call ctx%setmsg ( 'Invalid frame specification found ' &
+            //            'in kernel pool: frame class keyword' &
+            //            ' is # but associated frame name ' &
+            //            'assignment was not found.'         )
+            call ctx%errch  ( '#',  kvars(i)%s                    )
+            call ctx%sigerr ( 'SPICE(INVALIDFRAMEDEF)'            )
+            return
+         end if
+         call gipool ( ctx, 'FRAME_' // trim ( adjustl ( frname ) ), 1_ip, 1_ip, n, values, fnd )
+         if ( ctx%failed() ) return
+         if ( .not. fnd ) then
+            call ctx%setmsg ( 'Invalid frame specification found ' &
+            //            'in kernel pool: frame name is ' &
+            //            'is # but associated frame ID ' &
+            //            'assignment was not found.'         )
+            call ctx%errch  ( '#',  frname                        )
+            call ctx%sigerr ( 'SPICE(INVALIDFRAMEDEF)'            )
+            return
+         end if
+         frcode = values(1)
+         call zzdynbid ( ctx, frname, frcode, 'CENTER', cent )
+         if ( .not. ctx%failed() ) then
+            found = .true.
+         end if
+         return
+      end do
+      return
+      end procedure frame_of_class
+
+   !> PEPPER: allocate and initialize the FRAMEX state of a context, and
+   !> load the built-in frames on first use (the start of every FRAMEX
+   !> entry point).
+   subroutine framex_ready ( ctx )
+      use pepper_inc_ninert
+      use pepper_inc_nninrt
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ncount = ninert + nninrt
       if ( .not. allocated ( ctx%framex_state ) ) then
          allocate ( ctx%framex_state )
          call init_framex_state ( ctx%framex_state )
       end if
-      associate ( fx => ctx%framex_state, &
-                  name => ctx%framex_state%name, &
-                  center => ctx%framex_state%center, &
-                  centrd => ctx%framex_state%centrd, &
-                  idcode => ctx%framex_state%idcode, &
-                  type => ctx%framex_state%type, &
-                  typeid => ctx%framex_state%typeid, &
-                  first => ctx%framex_state%first, &
-                  pulctr => ctx%framex_state%pulctr, &
-                  bnmlst => ctx%framex_state%bnmlst, &
-                  bnmpol => ctx%framex_state%bnmpol, &
-                  bnmnms => ctx%framex_state%bnmnms, &
-                  bnmidx => ctx%framex_state%bnmidx, &
-                  bidlst => ctx%framex_state%bidlst, &
-                  bidpol => ctx%framex_state%bidpol, &
-                  bidids => ctx%framex_state%bidids, &
-                  bididx => ctx%framex_state%bididx )
-      if ( ctx%failed() ) return
-
-!
-!     Perform any needed first pass initializations.
-!
-      if ( first ) then
-
-!
-!        Initialize POOL state counter to the user value.
-!
-         call zzctruin ( ctx, pulctr )
-
-!
-!        Initialize kernel POOL frame hashes.
-!
+      associate ( fx => ctx%framex_state )
+      if ( fx%first ) then
+         call zzctruin ( ctx, fx%pulctr )
          call fx%kreset ( )
-
-!
-!        Initialize built-in frame tables and hashes.
-!
-         call zzfdat   ( ctx, ncount, maxbfr, name,   idcode, &
-                         center, type,   typeid, centrd, &
-                         bnmlst, bnmpol, bnmnms, bnmidx, &
-                         bidlst, bidpol, bidids, bididx )
-
+         call zzfdat ( ctx, ncount, size(fx%bnmlst, kind=ip), fx%name, fx%idcode, &
+                       fx%center, fx%type, fx%typeid, fx%centrd, &
+                       fx%bnmlst, fx%bnmpol, fx%bnmnms, fx%bnmidx, &
+                       fx%bidlst, fx%bidpol, fx%bidids, fx%bididx )
          if ( ctx%failed() ) return
-
-         first = .false.
-
+         fx%first = .false.
       end if
-
-!
-!     No frame found so far.
-!
-      found = .false.
-
-!
-!     First try to look up from the built-in list the frame associated
-!     with the input class and class ID. Unfortunately, this is a
-!     linear search.
-!
-      do i = 1, ncount
-
-         if (       ( type(i)   == frclss  ) &
-              .and. ( typeid(i) == clssid ) ) then
-!
-!           We have a match. Assign the output arguments and return.
-!
-            frname = name(i)
-            frcode = idcode(i)
-            cent   = center(i)
-            found  = .true.
-
-            return
-
-         end if
-
-      end do
-
-!
-!     Unfortunately we did not find a frame associated with the input
-!     class and class ID in the built-in list. We need to look for this
-!     frame in the kernel POOL. Since neither of these input values
-!     appears in a kernel variable name, we may have to look at all of
-!     the frame specifications in the kernel pool. Start out by looking
-!     the frame class assignments from any loaded frame specifications.
-!
-      lookup = 'FRAME_*_CLASS'
-
-      start = 1
-      call gnpool ( ctx, lookup, start, kvbsz, n, kvbuff, fnd )
-
-      do while (  fnd .and. ( n > 0 )  )
-!
-!        For each kernel variable name found in the buffer, look up the
-!        associated class. If the class matches the input class, look
-!        up the class ID as well. Set the output arguments and return
-!        if we get a complete match.
-!
-         do i = 1, n
-
-            call gipool ( ctx, kvbuff(i), 1, 1, n, kvclss_1, fnd )
-            kvclss = kvclss_1(1)
-
-            if ( ctx%failed() ) return
-
-            if ( .not. fnd ) then
-
-               call ctx%setmsg ( 'Invalid frame specification found in ' &
-               //            'kernel pool: frame class keyword ' &
-               //            'is # but integer class was not ' &
-               //            'associated with this keyword.'       )
-               call ctx%errch  ( '#',  kvbuff(i)                       )
-               call ctx%sigerr ( 'SPICE(INVALIDFRAMEDEF)'              )
-               return
-
-            end if
-
-            if ( kvclss == frclss ) then
-!
-!              Get the class ID for the current frame.
-!
-               look2 = kvbuff(i)
-
-               call suffix ( '_ID', 0, look2 )
-
-               call gipool ( ctx, look2, 1, 1, n, kvclid_1, fnd )
-               kvclid = kvclid_1(1)
-
-               if ( ctx%failed() ) return
-
-               if ( .not. fnd ) then
-
-                  call ctx%setmsg ( 'Invalid frame specification found in ' &
-                  //            'kernel pool: frame class keyword ' &
-                  //            'is # but associated integer ' &
-                  //            'class ID assignment was not found.' )
-                  call ctx%errch  ( '#',  kvbuff(i)                      )
-                  call ctx%sigerr ( 'SPICE(INVALIDFRAMEDEF)'             )
-                  return
-
-               end if
-
-!
-!              Check the class ID for the current kernel variable
-!              against the input value.
-!
-               if ( kvclid == clssid ) then
-!
-!                 We have a match. We need to return the frame
-!                 ID, frame name, and center. As long as we're
-!                 looking at a valid frame specification, this is
-!                 no problem.
-!
-!                 Look up the frame name first. Create the frame
-!                 name keyword.
-!
-                  call repmc ( kvbuff(i), '_CLASS', '_NAME', look2 )
-
-                  call gcpool ( ctx, look2, 1, 1, n, frname, fnd )
-
-                  if ( .not. fnd ) then
-
-                     call ctx%setmsg ( 'Invalid frame specification found ' &
-                     //            'in kernel pool: frame class keyword' &
-                     //            ' is # but associated frame name ' &
-                     //            'assignment was not found.'         )
-                     call ctx%errch  ( '#',  kvbuff(i)                     )
-                     call ctx%sigerr ( 'SPICE(INVALIDFRAMEDEF)'            )
-                     return
-
-                  end if
-
-!
-!                 We could extract the frame ID code from KVBUFF(I), but
-!                 instead we'll make sure that the ID is defined in the
-!                 kernel pool.
-!
-                  look2 = frname
-                  call prefix ( 'FRAME_', 0, look2 )
-
-                  call gipool ( ctx, look2, 1, 1, n, frcode_1, fnd )
-                  frcode = frcode_1(1)
-
-                  if ( ctx%failed() ) return
-
-                  if ( .not. fnd ) then
-
-                     call ctx%setmsg ( 'Invalid frame specification found ' &
-                     //            'in kernel pool: frame name is ' &
-                     //            'is # but associated frame ID ' &
-                     //            'assignment was not found.'         )
-                     call ctx%errch  ( '#',  frname                        )
-                     call ctx%sigerr ( 'SPICE(INVALIDFRAMEDEF)'            )
-                     return
-
-                  end if
-
-!
-!                 Look up the frame center. Whether the frame center
-!                 has been specified by name or ID code, the ID code
-!                 will be returned by ZZDYNBID.
-!
-                  call zzdynbid ( ctx, frname, frcode, 'CENTER', cent )
-
-!
-!                 As long as we looked up the center successfully,
-!                 we're done.
-!
-                  if ( .not. ctx%failed() ) then
-
-                     found = .true.
-
-                  end if
-
-!
-!                 Exit here, whether or not we looked up the frame's
-!                 center successfully.
-!
-                  return
-
-               end if
-
-            end if
-!
-!           Getting to this point means we didn't have a match;
-!           examine the next buffer entry.
-!
-         end do
-
-!
-!        Get the next buffer full of frame class keywords.
-!
-         start = start + n
-         call gnpool ( ctx, lookup, start, kvbsz, n, kvbuff, fnd )
-
-      end do
-
-!
-!     We drop down to this point only if no matching frame was found.
-!     The FOUND flag has already been set to .FALSE.
-!
-      return
       end associate
-      end procedure ccifrm
+   end subroutine framex_ready
+
+   !> PEPPER: the ID code of a frame from its normalized name
+   !> (left-justified, uppercase, any length): a built-in frame, else a
+   !> kernel frame (FRAME_<name>, a single value), cached by name.
+   subroutine framex_code ( ctx, pname, frcode, found )
+      class(pepper_context), intent(inout) :: ctx  !! the context (FRAMEX ready)
+      character(*), intent(in) :: pname  !! the normalized frame name
+      integer(ip), intent(out) :: frcode  !! the frame ID code (0 if not found)
+      logical, intent(out) :: found  !! the frame is known
+      integer(ip) :: item
+      integer(ip) :: n
+      integer(ip) :: values ( 8 )
+      logical :: lupdte
+      frcode = 0
+      found  = .false.
+      associate ( fx => ctx%framex_state )
+      item = 0
+      if ( len_trim(pname) <= len(fx%bnmnms) ) then
+         call zzhscchk ( ctx, fx%bnmlst, fx%bnmpol, fx%bnmnms, pname, item )
+      end if
+      if ( item /= 0 ) then
+         item = fx%bnmidx( item )
+      end if
+      if ( item > 0 ) then
+         frcode = fx%idcode(item)
+         found  = .true.
+         return
+      end if
+      call zzpctrck ( ctx, fx%pulctr, lupdte )
+      if ( lupdte ) then
+         call fx%kreset ( )
+      end if
+      item = fx%kname_find ( pname )
+      if ( item /= 0 ) then
+         frcode = fx%knmids(item)
+         found  = .true.
+         return
+      end if
+      call gipool ( ctx, 'FRAME_' // trim(pname), 1_ip, 8_ip, n, values, found )
+      if ( ctx%failed() ) return
+      if ( n == 1 .and. found ) then
+         frcode = values(1)
+         call fx%kname_add ( pname, item )
+         if ( .not. ctx%failed() .and. item /= 0 ) then
+            fx%knmids(item) = frcode
+         end if
+      else
+         found = .false.
+      end if
+      end associate
+   end subroutine framex_code
+
+   !> PEPPER: the frame assigned to an object by the kernel variable
+   !> LOOKUP (OBJECT_<ID or name>_FRAME): a frame name ('C') or ID code
+   !> ('N'). Shared by CIDFRM and CNMFRM.
+   subroutine object_frame ( ctx, lookup, dattyp, frcode, frname, found )
+      class(pepper_context), intent(inout) :: ctx  !! the context (FRAMEX ready)
+      character(*), intent(in) :: lookup  !! the kernel variable
+      character(*), intent(in) :: dattyp  !! its type, 'C' or 'N'
+      integer(ip), intent(out) :: frcode  !! the frame ID code
+      character(:), allocatable, intent(out) :: frname  !! the frame name (empty if not found)
+      logical, intent(out) :: found  !! the frame is known
+      integer(ip) :: n
+      integer(ip) :: values ( 1 )
+      logical :: gotit
+      frcode = 0
+      frname = ''
+      found  = .false.
+      if ( dattyp == 'C' ) then
+         call ctx%pool_string ( lookup, 1_ip, frname, gotit )
+         call framex_code ( ctx, frname, frcode, found )
+         if ( .not. found ) then
+            frname = ''
+         end if
+      else if ( dattyp == 'N' ) then
+         call gipool ( ctx, lookup, 1_ip, 1_ip, n, values, gotit )
+         if ( ctx%failed() ) return
+         frcode = values(1)
+         call frame_name_of ( ctx, frcode, frname, found )
+      end if
+   end subroutine object_frame
+
+   !> PEPPER: the frame kernel variable FRAME_<frcode>_<item>.
+   pure function frame_variable ( frcode, item ) result ( name )
+      integer(ip), intent(in) :: frcode  !! the frame ID code
+      character(*), intent(in) :: item  !! the item, e.g. NAME
+      character(:), allocatable :: name
+      name = 'FRAME_' // int_text ( frcode ) // '_' // item
+   end function frame_variable
+
+   !> PEPPER: an integer as text, without blanks.
+   pure function int_text ( i ) result ( text )
+      integer(ip), intent(in) :: i  !! the integer
+      character(:), allocatable :: text
+      character(24) :: buf
+      write ( buf, '(i0)' ) i
+      text = trim ( buf )
+   end function int_text
+
+   !> PEPPER: a string as REPMC substitutes it for a marker: without
+   !> leading and trailing blanks, or a single blank if it is blank.
+   pure function marker_text ( value ) result ( text )
+      character(*), intent(in) :: value  !! the string
+      character(:), allocatable :: text
+      text = trim ( adjustl ( value ) )
+      if ( len ( text ) == 0 ) text = ' '
+   end function marker_text
 
 end submodule pepper_frames

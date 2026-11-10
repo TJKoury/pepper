@@ -2836,7 +2836,6 @@ contains
       real(wp), parameter :: atol = 1.0e-6_wp
       real(wp), parameter :: fvemax = 1.0e-5_wp
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
       real(wp)              bsite  ( 3 )
       real(wp)              coord  ( 2 )
       real(wp)              ctrext
@@ -2891,7 +2890,6 @@ contains
                   svfpol => ctx%zzgffvu_state%svfpol, &
                   svfsmx => ctx%zzgffvu_state%svfsmx, &
                   svfvct => ctx%zzgffvu_state%svfvct, &
-                  svifrm => ctx%zzgffvu_state%svifrm, &
                   svinam => ctx%zzgffvu_state%svinam, &
                   svishp => ctx%zzgffvu_state%svishp, &
                   svnvrt => ctx%zzgffvu_state%svnvrt, &
@@ -2901,7 +2899,6 @@ contains
                   svrdir => ctx%zzgffvu_state%svrdir, &
                   svsemi => ctx%zzgffvu_state%svsemi, &
                   svtarg => ctx%zzgffvu_state%svtarg, &
-                  svtfrm => ctx%zzgffvu_state%svtfrm, &
                   svtnam => ctx%zzgffvu_state%svtnam, &
                   svtrad => ctx%zzgffvu_state%svtrad, &
                   svuray => ctx%zzgffvu_state%svuray, &
@@ -2924,7 +2921,7 @@ contains
       call cleard ( ubpl,     svplan )
       call cleard ( 3,        svrdir )
       svtarg = 0
-      svtfrm = ' '
+      ctx%zzgffvu_state%svtfrm = ' '
       svtnam = ' '
       call cleard ( 3,        svtrad )
       svustl = .false.
@@ -3062,8 +3059,9 @@ contains
 !
 !        Save the target frame name.
 !
-         call ljust ( tframe, svtfrm )
-         call ucase ( svtfrm, svtfrm )
+         ctx%zzgffvu_state%svtfrm = tframe
+         call ljust ( tframe, ctx%zzgffvu_state%svtfrm )
+         call ucase ( ctx%zzgffvu_state%svtfrm, ctx%zzgffvu_state%svtfrm )
 
 !
 !        Obtain the center of the frame. If the target is an ephemeris
@@ -3243,8 +3241,20 @@ contains
 !
 !     Look up the instrument parameters.
 !
+!
+!     PEPPER: the instrument frame name is saved at the length of its
+!     kernel variable's value (SPICELIB: 32 characters).
+!
+      block
+         character(:), allocatable :: fovfrm
+         character(24) :: idtext
+         logical :: fnd
+         write ( idtext, '(i0)' ) svinst
+         call ctx%pool_string ( 'INS' // trim(idtext) // '_FOV_FRAME', 1_ip, fovfrm, fnd )
+         ctx%zzgffvu_state%svifrm = repeat ( ' ', max ( len(fovfrm), 32 ) )
+      end block
       call getfov ( ctx, svinst, maxvrt, svishp, &
-                    svifrm, bsite,  svnvrt, svbnds )
+                    ctx%zzgffvu_state%svifrm, bsite,  svnvrt, svbnds )
 
       if ( ctx%failed() ) return
 
@@ -3701,7 +3711,6 @@ contains
       real(wp), parameter :: atol = 1.0e-6_wp
       real(wp), parameter :: fvemax = 1.0e-5_wp
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
       real(wp)              bsite  ( 3 )
       real(wp)              coord  ( 2 )
       real(wp)              ctrext
@@ -3755,7 +3764,6 @@ contains
                   svfpol => ctx%zzgffvu_state%svfpol, &
                   svfsmx => ctx%zzgffvu_state%svfsmx, &
                   svfvct => ctx%zzgffvu_state%svfvct, &
-                  svifrm => ctx%zzgffvu_state%svifrm, &
                   svinam => ctx%zzgffvu_state%svinam, &
                   svishp => ctx%zzgffvu_state%svishp, &
                   svnvrt => ctx%zzgffvu_state%svnvrt, &
@@ -3765,7 +3773,6 @@ contains
                   svrdir => ctx%zzgffvu_state%svrdir, &
                   svsemi => ctx%zzgffvu_state%svsemi, &
                   svtarg => ctx%zzgffvu_state%svtarg, &
-                  svtfrm => ctx%zzgffvu_state%svtfrm, &
                   svtnam => ctx%zzgffvu_state%svtnam, &
                   svtrad => ctx%zzgffvu_state%svtrad, &
                   svuray => ctx%zzgffvu_state%svuray, &
@@ -3792,7 +3799,7 @@ contains
 !        Start by finding the observer-target position vector in the
 !        target body-fixed frame.
 !
-         call spkezp ( ctx, svtarg, time, svtfrm, svcorr, svobs, pos, lt )
+         call spkezp ( ctx, svtarg, time, ctx%zzgffvu_state%svtfrm, svcorr, svobs, pos, lt )
 
 !
 !        Compute the target epoch.
@@ -3804,8 +3811,8 @@ contains
 !        instrument frame at TIME. We'll need to use J2000 as an
 !        intermediate frame.
 !
-         call pxform ( ctx, svtfrm,  'J2000', ettarg, m1 )
-         call pxform ( ctx, 'J2000', svifrm,  time,   m2 )
+         call pxform ( ctx, ctx%zzgffvu_state%svtfrm,  'J2000', ettarg, m1 )
+         call pxform ( ctx, 'J2000', ctx%zzgffvu_state%svifrm,  time,   m2 )
 
          if ( ctx%failed() ) return
 
@@ -3935,7 +3942,7 @@ contains
 !           for targets represented by rays, we evaluate SVTFRM
 !           at the current epoch TIME.
 !
-            call pxform ( ctx, svtfrm, svifrm, time, insmat )
+            call pxform ( ctx, ctx%zzgffvu_state%svtfrm, ctx%zzgffvu_state%svifrm, time, insmat )
 
             if ( ctx%failed() ) return
 
@@ -3959,7 +3966,7 @@ contains
 !
 !              Convert the direction vector to the J2000 frame.
 !
-               call pxform ( ctx, svifrm, 'J2000', time, m1 )
+               call pxform ( ctx, ctx%zzgffvu_state%svifrm, 'J2000', time, m1 )
 
                if ( ctx%failed() ) return
 
@@ -4006,7 +4013,7 @@ contains
             call spkezp ( ctx, svtarg,  time,   'J2000', &
                           svcorr,  svobs,  vtemp, lt )
 
-            call pxform ( ctx, 'J2000', svifrm, time,  m1 )
+            call pxform ( ctx, 'J2000', ctx%zzgffvu_state%svifrm, time,  m1 )
 
             if ( ctx%failed() ) return
 
@@ -4567,7 +4574,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: mthlen = 200
       integer(ip), parameter :: phsidx = 1
       integer(ip), parameter :: incidx = 2
@@ -4592,7 +4598,10 @@ contains
       integer(ip) :: svtarg
       integer(ip) :: svobs
       integer(ip) :: svilum
-      if ( .not. allocated ( ctx%zzgfilu_state ) ) allocate ( ctx%zzgfilu_state )
+      if ( .not. allocated ( ctx%zzgfilu_state ) ) then
+         allocate ( ctx%zzgfilu_state )
+         ctx%zzgfilu_state%svref = ' '
+      end if
       associate ( angnms => ctx%zzgfilu_state%angnms, &
                   svaidx => ctx%zzgfilu_state%svaidx, &
                   svcorr => ctx%zzgfilu_state%svcorr, &
@@ -4600,7 +4609,6 @@ contains
                   svmeth => ctx%zzgfilu_state%svmeth, &
                   svnrml => ctx%zzgfilu_state%svnrml, &
                   svonam => ctx%zzgfilu_state%svonam, &
-                  svref => ctx%zzgfilu_state%svref, &
                   svsspt => ctx%zzgfilu_state%svsspt, &
                   svtnam => ctx%zzgfilu_state%svtnam )
       if ( ctx%failed() ) return
@@ -4768,8 +4776,9 @@ contains
 !     Save a left-justified, upper case copy of the reference frame
 !     name.
 !
-      call ljust ( fixref, svref )
-      call ucase ( svref,  svref )
+      ctx%zzgfilu_state%svref = fixref
+      call ljust ( fixref, ctx%zzgfilu_state%svref )
+      call ucase ( ctx%zzgfilu_state%svref,  ctx%zzgfilu_state%svref )
 
 !
 !     Look up the frame attributes; make sure the frame is centered
@@ -4939,7 +4948,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: mthlen = 200
       integer(ip), parameter :: phsidx = 1
       integer(ip), parameter :: incidx = 2
@@ -4967,14 +4975,16 @@ contains
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! Flag indicating whether illumination angle is decreasing.
       procedure(gf_scalar) :: udfunc  !! Placeholder external routine argument.
-      if ( .not. allocated ( ctx%zzgfilu_state ) ) allocate ( ctx%zzgfilu_state )
+      if ( .not. allocated ( ctx%zzgfilu_state ) ) then
+         allocate ( ctx%zzgfilu_state )
+         ctx%zzgfilu_state%svref = ' '
+      end if
       associate ( svaidx => ctx%zzgfilu_state%svaidx, &
                   svcorr => ctx%zzgfilu_state%svcorr, &
                   svinam => ctx%zzgfilu_state%svinam, &
                   svmeth => ctx%zzgfilu_state%svmeth, &
                   svnrml => ctx%zzgfilu_state%svnrml, &
                   svonam => ctx%zzgfilu_state%svonam, &
-                  svref => ctx%zzgfilu_state%svref, &
                   svsspt => ctx%zzgfilu_state%svsspt, &
                   svtnam => ctx%zzgfilu_state%svtnam )
       if ( ctx%failed() ) return
@@ -4983,7 +4993,7 @@ contains
 !     Compute the rates of change of all of the illumination angles.
 !
       call zzilusta ( ctx, svmeth, svtnam, svinam, et, &
-                      svref,  svcorr, svonam, svsspt, &
+                      ctx%zzgfilu_state%svref,  svcorr, svonam, svsspt, &
                       svnrml, phssta, incsta, emista  )
 
       if ( ctx%failed() ) return
@@ -5118,7 +5128,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: mthlen = 200
       integer(ip), parameter :: phsidx = 1
       integer(ip), parameter :: incidx = 2
@@ -5139,18 +5148,20 @@ contains
       integer(ip)           fxtyid
       integer(ip)           fxcent
       logical               found
-      if ( .not. allocated ( ctx%zzgfilu_state ) ) allocate ( ctx%zzgfilu_state )
+      if ( .not. allocated ( ctx%zzgfilu_state ) ) then
+         allocate ( ctx%zzgfilu_state )
+         ctx%zzgfilu_state%svref = ' '
+      end if
       associate ( svaidx => ctx%zzgfilu_state%svaidx, &
                   svcorr => ctx%zzgfilu_state%svcorr, &
                   svinam => ctx%zzgfilu_state%svinam, &
                   svmeth => ctx%zzgfilu_state%svmeth, &
                   svonam => ctx%zzgfilu_state%svonam, &
-                  svref => ctx%zzgfilu_state%svref, &
                   svsspt => ctx%zzgfilu_state%svsspt, &
                   svtnam => ctx%zzgfilu_state%svtnam )
       if ( ctx%failed() ) return
 
-      call illumg ( ctx, svmeth, svtnam,    svinam,    et,      svref, &
+      call illumg ( ctx, svmeth, svtnam,    svinam,    et,      ctx%zzgfilu_state%svref, &
                     svcorr, svonam,    svsspt,    ettarg, &
                     srfvec, angles(1), angles(2), angles(3)       )
 
@@ -5793,9 +5804,8 @@ contains
       real(wp), parameter :: alpha = 1.0e-2_wp
       real(wp), parameter :: atol = 1.0e-12_wp
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: poslen = 10
-      character(frnmln)     fixfrm
+      character(:), allocatable :: fixfrm
       character(cvtlen)     pntdef
       character(poslen)     posnam
       character(shplen)     shape
@@ -5844,15 +5854,17 @@ contains
       logical               found
       logical               pntocc
       logical               pri
-      if ( .not. allocated ( ctx%zzgfocu_state ) ) allocate ( ctx%zzgfocu_state )
+      if ( .not. allocated ( ctx%zzgfocu_state ) ) then
+         allocate ( ctx%zzgfocu_state )
+         ctx%zzgfocu_state%svbfrm = ' '
+         ctx%zzgfocu_state%svffrm = ' '
+      end if
       associate ( svback => ctx%zzgfocu_state%svback, &
-                  svbfrm => ctx%zzgfocu_state%svbfrm, &
                   svbmth => ctx%zzgfocu_state%svbmth, &
                   svbnam => ctx%zzgfocu_state%svbnam, &
                   svbrad => ctx%zzgfocu_state%svbrad, &
                   svbshp => ctx%zzgfocu_state%svbshp, &
                   svcorr => ctx%zzgfocu_state%svcorr, &
-                  svffrm => ctx%zzgfocu_state%svffrm, &
                   svfmth => ctx%zzgfocu_state%svfmth, &
                   svfnam => ctx%zzgfocu_state%svfnam, &
                   svfrad => ctx%zzgfocu_state%svfrad, &
@@ -5949,10 +5961,10 @@ contains
 !     DSK specifications.
 !
       svfrnt = idfrnt
-      svffrm = fframe
+      ctx%zzgfocu_state%svffrm = fframe
 
       svback = idback
-      svbfrm = bframe
+      ctx%zzgfocu_state%svbfrm = bframe
 
       svobs  = idobs
 
@@ -6331,7 +6343,7 @@ contains
 
                svmnfr = 0.0_wp
                svmxfr = 0.0_wp
-               svffrm = ' '
+               ctx%zzgfocu_state%svffrm = ' '
 
             else
 
@@ -6339,7 +6351,7 @@ contains
 
                svmnbr = 0.0_wp
                svmxbr = 0.0_wp
-               svbfrm = ' '
+               ctx%zzgfocu_state%svbfrm = ' '
 
             end if
 
@@ -6488,9 +6500,7 @@ contains
       real(wp), parameter :: alpha = 1.0e-2_wp
       real(wp), parameter :: atol = 1.0e-12_wp
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: poslen = 10
-      character(frnmln)     fixfrm
       character(cvtlen)     pntdef
       character(poslen)     posnam
       character(shplen)     shape
@@ -6539,16 +6549,18 @@ contains
       logical               found
       logical               pntocc
       logical               pri
-      if ( .not. allocated ( ctx%zzgfocu_state ) ) allocate ( ctx%zzgfocu_state )
+      if ( .not. allocated ( ctx%zzgfocu_state ) ) then
+         allocate ( ctx%zzgfocu_state )
+         ctx%zzgfocu_state%svbfrm = ' '
+         ctx%zzgfocu_state%svffrm = ' '
+      end if
       associate ( ncalls => ctx%zzgfocu_state%ncalls, &
                   svback => ctx%zzgfocu_state%svback, &
-                  svbfrm => ctx%zzgfocu_state%svbfrm, &
                   svbmth => ctx%zzgfocu_state%svbmth, &
                   svbnam => ctx%zzgfocu_state%svbnam, &
                   svbrad => ctx%zzgfocu_state%svbrad, &
                   svbshp => ctx%zzgfocu_state%svbshp, &
                   svcorr => ctx%zzgfocu_state%svcorr, &
-                  svffrm => ctx%zzgfocu_state%svffrm, &
                   svfmth => ctx%zzgfocu_state%svfmth, &
                   svfnam => ctx%zzgfocu_state%svfnam, &
                   svfrad => ctx%zzgfocu_state%svfrad, &
@@ -6596,7 +6608,7 @@ contains
 !
          call zzcorepc ( ctx, svcorr,  time,   ltback, etbcor )
 
-         call pxform   ( ctx, svbfrm, 'J2000', etbcor, mtemp  )
+         call pxform   ( ctx, ctx%zzgfocu_state%svbfrm, 'J2000', etbcor, mtemp  )
 
          if ( ctx%failed() ) return
 !
@@ -6608,7 +6620,7 @@ contains
          end do
 
          call zzcorepc ( ctx, svcorr,  time,   ltfrnt, etfcor )
-         call pxform   ( ctx, svffrm, 'J2000', etfcor, mtemp  )
+         call pxform   ( ctx, ctx%zzgfocu_state%svffrm, 'J2000', etfcor, mtemp  )
 
          if ( ctx%failed() ) return
 !
@@ -6918,7 +6930,7 @@ contains
 !
             ncalls = ncalls + 1
 
-            call sincpt ( ctx, svfmth, svfnam,  time,    svffrm, &
+            call sincpt ( ctx, svfmth, svfnam,  time,    ctx%zzgfocu_state%svffrm, &
                           svcorr, svonam,  'J2000', bckpos, &
                           spoint, trgepc,  srfvec,  found )
 
@@ -6946,7 +6958,7 @@ contains
 !
 !           The back body is the extended one.
 !
-            call sincpt ( ctx, svbmth, svbnam,  time,    svbfrm, &
+            call sincpt ( ctx, svbmth, svbnam,  time,    ctx%zzgfocu_state%svbfrm, &
                           svcorr, svonam,  'J2000', frtpos, &
                           spoint, trgepc,  srfvec,  found )
 
@@ -9908,13 +9920,15 @@ contains
          [ character(32) :: 'POINT', 'SPHERE' ]
       integer(ip), parameter :: point = 1
       integer(ip), parameter :: sphere = 2
-      if ( .not. allocated ( ctx%zzgfspu_state ) ) allocate ( ctx%zzgfspu_state )
+      if ( .not. allocated ( ctx%zzgfspu_state ) ) then
+         allocate ( ctx%zzgfspu_state )
+         ctx%zzgfspu_state%svref = ' '
+         ctx%zzgfspu_state%svref1 = ' '
+         ctx%zzgfspu_state%svref2 = ' '
+      end if
       associate ( svabcr => ctx%zzgfspu_state%svabcr, &
                   svbod1 => ctx%zzgfspu_state%svbod1, &
                   svbod2 => ctx%zzgfspu_state%svbod2, &
-                  svref => ctx%zzgfspu_state%svref, &
-                  svref1 => ctx%zzgfspu_state%svref1, &
-                  svref2 => ctx%zzgfspu_state%svref2, &
                   svobs => ctx%zzgfspu_state%svobs, &
                   svrad1 => ctx%zzgfspu_state%svrad1, &
                   svrad2 => ctx%zzgfspu_state%svrad2, &
@@ -10002,9 +10016,9 @@ contains
 
       if ( ctx%failed() ) return
 
-      svref  = ref
-      svref1 = frame(1)
-      svref2 = frame(2)
+      ctx%zzgfspu_state%svref  = ref
+      ctx%zzgfspu_state%svref1 = frame(1)
+      ctx%zzgfspu_state%svref2 = frame(2)
 
 !
 !     Check shapes...
@@ -10109,14 +10123,14 @@ contains
 
       if ( (svshp1 /= point)  .and. (svshp1 /= sphere) ) then
 
-         call namfrm ( ctx, svref1, fcode1 )
+         call namfrm ( ctx, ctx%zzgfspu_state%svref1, fcode1 )
 
          call frinfo ( ctx, fcode1, ctr1, class, clssid, found )
 
          if ( .not. found ) then
 
             call ctx%setmsg ( 'Frame system did not recognize frame #.' )
-            call ctx%errch  ( '#', svref1                               )
+            call ctx%errch  ( '#', ctx%zzgfspu_state%svref1                               )
             call ctx%sigerr ( 'SPICE(NOFRAME)'                          )
             return
 
@@ -10128,7 +10142,7 @@ contains
                       'target body #2 is not centered on #2. The '  // &
                       'frame must be centered on the target body.' )
 
-            call ctx%errch  ( '#1', svref1                     )
+            call ctx%errch  ( '#1', ctx%zzgfspu_state%svref1                     )
             call ctx%errch  ( '#2', of(1)                      )
             call ctx%sigerr ( 'SPICE(INVALIDFRAME)'            )
             return
@@ -10139,14 +10153,14 @@ contains
 
       if ( (svshp2 /= point)  .and. (svshp2 /= sphere) ) then
 
-         call namfrm ( ctx, svref2, fcode2 )
+         call namfrm ( ctx, ctx%zzgfspu_state%svref2, fcode2 )
 
          call frinfo ( ctx, fcode2, ctr2, class, clssid, found )
 
          if ( .not. found ) then
 
             call ctx%setmsg ( 'Frame system did not recognize frame #.' )
-            call ctx%errch  ( '#', svref2                               )
+            call ctx%errch  ( '#', ctx%zzgfspu_state%svref2                               )
             call ctx%sigerr ( 'SPICE(NOFRAME)'                          )
             return
 
@@ -10158,7 +10172,7 @@ contains
                       'target body #2 is not centered on #2. The '  // &
                       'frame must be centered on the target body.' )
 
-            call ctx%errch  ( '#1', svref2                     )
+            call ctx%errch  ( '#1', ctx%zzgfspu_state%svref2                     )
             call ctx%errch  ( '#2', of(2)                      )
             call ctx%sigerr ( 'SPICE(INVALIDFRAME)'            )
             return
@@ -10306,21 +10320,25 @@ contains
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! .TRUE. if angular separation is decreasing .FALSE. otherwise.
       procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
-      if ( .not. allocated ( ctx%zzgfspu_state ) ) allocate ( ctx%zzgfspu_state )
+      if ( .not. allocated ( ctx%zzgfspu_state ) ) then
+         allocate ( ctx%zzgfspu_state )
+         ctx%zzgfspu_state%svref = ' '
+         ctx%zzgfspu_state%svref1 = ' '
+         ctx%zzgfspu_state%svref2 = ' '
+      end if
       associate ( svabcr => ctx%zzgfspu_state%svabcr, &
                   svbod1 => ctx%zzgfspu_state%svbod1, &
                   svbod2 => ctx%zzgfspu_state%svbod2, &
-                  svref => ctx%zzgfspu_state%svref, &
                   svobs => ctx%zzgfspu_state%svobs, &
                   svrad1 => ctx%zzgfspu_state%svrad1, &
                   svrad2 => ctx%zzgfspu_state%svrad2 )
       if ( ctx%failed() ) return
 
-      call spkez ( ctx, svbod1, et, svref, svabcr, svobs, pv1, lt )
+      call spkez ( ctx, svbod1, et, ctx%zzgfspu_state%svref, svabcr, svobs, pv1, lt )
 
       if (  ctx%failed() ) return
 
-      call spkez ( ctx, svbod2, et, svref, svabcr, svobs, pv2, lt )
+      call spkez ( ctx, svbod2, et, ctx%zzgfspu_state%svref, svabcr, svobs, pv2, lt )
 
       if (  ctx%failed() ) return
 
@@ -10479,18 +10497,22 @@ contains
          [ character(32) :: 'POINT', 'SPHERE' ]
       integer(ip), parameter :: point = 1
       integer(ip), parameter :: sphere = 2
-      if ( .not. allocated ( ctx%zzgfspu_state ) ) allocate ( ctx%zzgfspu_state )
+      if ( .not. allocated ( ctx%zzgfspu_state ) ) then
+         allocate ( ctx%zzgfspu_state )
+         ctx%zzgfspu_state%svref = ' '
+         ctx%zzgfspu_state%svref1 = ' '
+         ctx%zzgfspu_state%svref2 = ' '
+      end if
       associate ( svabcr => ctx%zzgfspu_state%svabcr, &
                   svbod1 => ctx%zzgfspu_state%svbod1, &
                   svbod2 => ctx%zzgfspu_state%svbod2, &
-                  svref => ctx%zzgfspu_state%svref, &
                   svobs => ctx%zzgfspu_state%svobs, &
                   svrad1 => ctx%zzgfspu_state%svrad1, &
                   svrad2 => ctx%zzgfspu_state%svrad2 )
       sep = zzsepq ( ctx, et, &
                      svbod1, svbod2, &
                      svrad1, svrad2, &
-                     svobs,  svabcr, svref )
+                     svobs,  svabcr, ctx%zzgfspu_state%svref )
 
       return
       end associate
@@ -10618,13 +10640,15 @@ contains
          [ character(32) :: 'POINT', 'SPHERE' ]
       integer(ip), parameter :: point = 1
       integer(ip), parameter :: sphere = 2
-      if ( .not. allocated ( ctx%zzgfspu_state ) ) allocate ( ctx%zzgfspu_state )
+      if ( .not. allocated ( ctx%zzgfspu_state ) ) then
+         allocate ( ctx%zzgfspu_state )
+         ctx%zzgfspu_state%svref = ' '
+         ctx%zzgfspu_state%svref1 = ' '
+         ctx%zzgfspu_state%svref2 = ' '
+      end if
       associate ( svabcr => ctx%zzgfspu_state%svabcr, &
                   svbod1 => ctx%zzgfspu_state%svbod1, &
                   svbod2 => ctx%zzgfspu_state%svbod2, &
-                  svref => ctx%zzgfspu_state%svref, &
-                  svref1 => ctx%zzgfspu_state%svref1, &
-                  svref2 => ctx%zzgfspu_state%svref2, &
                   svobs => ctx%zzgfspu_state%svobs, &
                   svrad1 => ctx%zzgfspu_state%svrad1, &
                   svrad2 => ctx%zzgfspu_state%svrad2, &
@@ -10633,9 +10657,9 @@ contains
       xabcr   = svabcr
       xbod(1) = svbod1
       xbod(2) = svbod2
-      yref    = svref
-      xref(1) = svref1
-      xref(2) = svref2
+      yref    = ctx%zzgfspu_state%svref
+      xref(1) = ctx%zzgfspu_state%svref1
+      xref(2) = ctx%zzgfspu_state%svref2
       xobs    = svobs
       xrad(1) = svrad1
       xrad(2) = svrad2
@@ -17459,19 +17483,18 @@ contains
 !
       integer(ip), parameter :: bdnmln = 36
 
-      integer(ip), parameter :: frnmln = 32
 !
 !     Local variables
 !
-      character(bdnmln)     back
-      character(bdnmln)     bname
-      character(frnmln)     bframe
+      character(:), allocatable :: back
+      character(:), allocatable :: bname
+      character(:), allocatable :: bframe
       character(mthlen)     bmethd
       character(mthlen)     bshape
       character(mthlen)     fmethd
-      character(bdnmln)     fname
-      character(bdnmln)     front
-      character(frnmln)     fframe
+      character(:), allocatable :: fname
+      character(:), allocatable :: front
+      character(:), allocatable :: fframe
       character(mthlen)     fshape
       character(shplen), parameter :: occtyp ( 3 ) = [ character(shplen) :: &
          partl,&
@@ -17552,9 +17575,11 @@ contains
       call ljust ( shape2, shap2 )
       call ucase ( shap2,  shap2 )
 
+      fname = targ1
       call ljust ( targ1,  fname )
       call ucase ( fname,  fname )
 
+      bname = targ2
       call ljust ( targ2,  bname )
       call ucase ( bname,  bname )
 
@@ -32282,7 +32307,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: syslen = 32
       integer(ip), parameter :: vdflen = 32
@@ -32308,13 +32332,16 @@ contains
       integer(ip)           sysidx
       logical               attblk ( abatsz )
       logical               found
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
+         allocate ( ctx%zzgfcou_state )
+         ctx%zzgfcou_state%svdref = ' '
+         ctx%zzgfcou_state%svref = ' '
+      end if
       associate ( svcidx => ctx%zzgfcou_state%svcidx, &
                   svcorr => ctx%zzgfcou_state%svcorr, &
                   svcrd => ctx%zzgfcou_state%svcrd, &
                   svcsys => ctx%zzgfcou_state%svcsys, &
                   svdctr => ctx%zzgfcou_state%svdctr, &
-                  svdref => ctx%zzgfcou_state%svdref, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svf => ctx%zzgfcou_state%svf, &
                   svmeth => ctx%zzgfcou_state%svmeth, &
@@ -32323,7 +32350,6 @@ contains
                   svrcnm => ctx%zzgfcou_state%svrcnm, &
                   svrctr => ctx%zzgfcou_state%svrctr, &
                   svre => ctx%zzgfcou_state%svre, &
-                  svref => ctx%zzgfcou_state%svref, &
                   svsens => ctx%zzgfcou_state%svsens, &
                   svtarg => ctx%zzgfcou_state%svtarg, &
                   svvdef => ctx%zzgfcou_state%svvdef, &
@@ -32467,8 +32493,9 @@ contains
 !
 !     Store an upper case, left-justified copy of REF.
 !
-      call ljust ( ref,   svref )
-      call ucase ( svref, svref )
+      ctx%zzgfcou_state%svref = ref
+      call ljust ( ref,   ctx%zzgfcou_state%svref )
+      call ucase ( ctx%zzgfcou_state%svref, ctx%zzgfcou_state%svref )
 
 !
 !     The remaining work is a function of the vector definition
@@ -32486,7 +32513,7 @@ contains
 !        need the center of the input reference frame and the
 !        radii associated with this center.
 !
-         call namfrm ( ctx, svref, frcode )
+         call namfrm ( ctx, ctx%zzgfcou_state%svref, frcode )
 
 !
 !        Save the frame REF's center ID in SVRCTR.
@@ -32699,12 +32726,12 @@ contains
 !
          call moved  ( dvec, 3, svdvec )
 
-         svdref = dref
+         ctx%zzgfcou_state%svdref = dref
 
 !
 !        Save the center of DREF.
 !
-         call namfrm ( ctx, svdref, frcode )
+         call namfrm ( ctx, ctx%zzgfcou_state%svdref, frcode )
 
          call frinfo ( ctx, frcode, svdctr, class, clssid, found )
 
@@ -32721,7 +32748,7 @@ contains
 !
 !        Simply give initial values to SVDREF, SVDCTR, and SVDVEC.
 !
-         svdref = ' '
+         ctx%zzgfcou_state%svdref = ' '
          svdctr = 0
 
          call cleard ( 3, svdvec )
@@ -32830,7 +32857,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: syslen = 32
       integer(ip), parameter :: vdflen = 32
@@ -32856,24 +32882,26 @@ contains
       integer(ip)           sysidx
       logical               attblk ( abatsz )
       logical               found
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
+         allocate ( ctx%zzgfcou_state )
+         ctx%zzgfcou_state%svdref = ' '
+         ctx%zzgfcou_state%svref = ' '
+      end if
       associate ( svcorr => ctx%zzgfcou_state%svcorr, &
                   svcrd => ctx%zzgfcou_state%svcrd, &
                   svcsys => ctx%zzgfcou_state%svcsys, &
-                  svdref => ctx%zzgfcou_state%svdref, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svf => ctx%zzgfcou_state%svf, &
                   svmeth => ctx%zzgfcou_state%svmeth, &
                   svobs => ctx%zzgfcou_state%svobs, &
                   svrctr => ctx%zzgfcou_state%svrctr, &
                   svre => ctx%zzgfcou_state%svre, &
-                  svref => ctx%zzgfcou_state%svref, &
                   svtarg => ctx%zzgfcou_state%svtarg, &
                   svvdef => ctx%zzgfcou_state%svvdef )
       if ( ctx%failed() ) return
 
-      call zzgfcoq ( ctx, svvdef, svmeth, svtarg, et,     svref, &
-                     svcorr, svobs,  svdref, svdvec, svcsys, &
+      call zzgfcoq ( ctx, svvdef, svmeth, svtarg, et,     ctx%zzgfcou_state%svref, &
+                     svcorr, svobs,  ctx%zzgfcou_state%svdref, svdvec, svcsys, &
                      svrctr, svre,   svf,    svcrd,  crdval, found )
 
       if ( .not. found ) then
@@ -33024,7 +33052,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: syslen = 32
       integer(ip), parameter :: vdflen = 32
@@ -33057,20 +33084,22 @@ contains
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if coordinate is decreasing.
       procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
+         allocate ( ctx%zzgfcou_state )
+         ctx%zzgfcou_state%svdref = ' '
+         ctx%zzgfcou_state%svref = ' '
+      end if
       associate ( svcidx => ctx%zzgfcou_state%svcidx, &
                   svcorr => ctx%zzgfcou_state%svcorr, &
                   svcrd => ctx%zzgfcou_state%svcrd, &
                   svcsys => ctx%zzgfcou_state%svcsys, &
                   svdctr => ctx%zzgfcou_state%svdctr, &
-                  svdref => ctx%zzgfcou_state%svdref, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svf => ctx%zzgfcou_state%svf, &
                   svmeth => ctx%zzgfcou_state%svmeth, &
                   svobs => ctx%zzgfcou_state%svobs, &
                   svradi => ctx%zzgfcou_state%svradi, &
                   svre => ctx%zzgfcou_state%svre, &
-                  svref => ctx%zzgfcou_state%svref, &
                   svsens => ctx%zzgfcou_state%svsens, &
                   svtarg => ctx%zzgfcou_state%svtarg, &
                   svvdef => ctx%zzgfcou_state%svvdef )
@@ -33081,8 +33110,8 @@ contains
 !     state can't be computed, we consider the coordinate to be
 !     "not decreasing."
 !
-      call zzgfcost ( ctx, svvdef, svmeth, svtarg, et,     svref,  svcorr, &
-                      svobs,  svdref, svdctr, svdvec, svradi, state, &
+      call zzgfcost ( ctx, svvdef, svmeth, svtarg, et,     ctx%zzgfcou_state%svref,  svcorr, &
+                      svobs,  ctx%zzgfcou_state%svdref, svdctr, svdvec, svradi, state, &
                       found                                          )
 
       if ( .not. found ) then
@@ -33229,7 +33258,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: syslen = 32
       integer(ip), parameter :: vdflen = 32
@@ -33262,15 +33290,17 @@ contains
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: crdfnd  !! Flag indicating if coordinate state is computable.
       procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
+         allocate ( ctx%zzgfcou_state )
+         ctx%zzgfcou_state%svdref = ' '
+         ctx%zzgfcou_state%svref = ' '
+      end if
       associate ( svcorr => ctx%zzgfcou_state%svcorr, &
                   svdctr => ctx%zzgfcou_state%svdctr, &
-                  svdref => ctx%zzgfcou_state%svdref, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svmeth => ctx%zzgfcou_state%svmeth, &
                   svobs => ctx%zzgfcou_state%svobs, &
                   svradi => ctx%zzgfcou_state%svradi, &
-                  svref => ctx%zzgfcou_state%svref, &
                   svtarg => ctx%zzgfcou_state%svtarg, &
                   svvdef => ctx%zzgfcou_state%svvdef )
       if ( ctx%failed() ) return
@@ -33279,8 +33309,8 @@ contains
 !     Simply attempt to compute the state. The returned found flag
 !     is the result.
 !
-      call zzgfcost ( ctx, svvdef, svmeth, svtarg, et,     svref,  svcorr, &
-                      svobs,  svdref, svdctr, svdvec, svradi, state, &
+      call zzgfcost ( ctx, svvdef, svmeth, svtarg, et,     ctx%zzgfcou_state%svref,  svcorr, &
+                      svobs,  ctx%zzgfcou_state%svdref, svdctr, svdvec, svradi, state, &
                       crdfnd                                          )
 
       return
@@ -33383,7 +33413,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: syslen = 32
       integer(ip), parameter :: vdflen = 32
@@ -33409,24 +33438,26 @@ contains
       integer(ip)           sysidx
       logical               attblk ( abatsz )
       logical               found
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
+         allocate ( ctx%zzgfcou_state )
+         ctx%zzgfcou_state%svdref = ' '
+         ctx%zzgfcou_state%svref = ' '
+      end if
       associate ( svcorr => ctx%zzgfcou_state%svcorr, &
                   svcrd => ctx%zzgfcou_state%svcrd, &
                   svcsys => ctx%zzgfcou_state%svcsys, &
-                  svdref => ctx%zzgfcou_state%svdref, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svf => ctx%zzgfcou_state%svf, &
                   svmeth => ctx%zzgfcou_state%svmeth, &
                   svobs => ctx%zzgfcou_state%svobs, &
                   svrctr => ctx%zzgfcou_state%svrctr, &
                   svre => ctx%zzgfcou_state%svre, &
-                  svref => ctx%zzgfcou_state%svref, &
                   svtarg => ctx%zzgfcou_state%svtarg, &
                   svvdef => ctx%zzgfcou_state%svvdef )
       if ( ctx%failed() ) return
 
-      call zzgfcoq ( ctx, svvdef, svmeth, svtarg, et,     svref, &
-                     svcorr, svobs,  svdref, svdvec, svcsys, &
+      call zzgfcoq ( ctx, svvdef, svmeth, svtarg, et,     ctx%zzgfcou_state%svref, &
+                     svcorr, svobs,  ctx%zzgfcou_state%svdref, svdvec, svcsys, &
                      svrctr, svre,   svf,    svcrd,  value, found )
 
       if ( .not. found ) then
@@ -33541,7 +33572,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: syslen = 32
       integer(ip), parameter :: vdflen = 32
@@ -33567,24 +33597,26 @@ contains
       integer(ip)           sysidx
       logical               attblk ( abatsz )
       logical               found
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
+         allocate ( ctx%zzgfcou_state )
+         ctx%zzgfcou_state%svdref = ' '
+         ctx%zzgfcou_state%svref = ' '
+      end if
       associate ( svcorr => ctx%zzgfcou_state%svcorr, &
                   svcrd => ctx%zzgfcou_state%svcrd, &
                   svcsys => ctx%zzgfcou_state%svcsys, &
-                  svdref => ctx%zzgfcou_state%svdref, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svf => ctx%zzgfcou_state%svf, &
                   svmeth => ctx%zzgfcou_state%svmeth, &
                   svobs => ctx%zzgfcou_state%svobs, &
                   svrctr => ctx%zzgfcou_state%svrctr, &
                   svre => ctx%zzgfcou_state%svre, &
-                  svref => ctx%zzgfcou_state%svref, &
                   svtarg => ctx%zzgfcou_state%svtarg, &
                   svvdef => ctx%zzgfcou_state%svvdef )
       if ( ctx%failed() ) return
 
-      call zzgfcoq ( ctx, svvdef, svmeth, svtarg, et,     svref, &
-                     svcorr, svobs,  svdref, svdvec, svcsys, &
+      call zzgfcoq ( ctx, svvdef, svmeth, svtarg, et,     ctx%zzgfcou_state%svref, &
+                     svcorr, svobs,  ctx%zzgfcou_state%svdref, svdvec, svcsys, &
                      svrctr, svre,   svf,    svcrd,  value, found )
 
       if ( .not. found ) then
@@ -33739,7 +33771,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: syslen = 32
       integer(ip), parameter :: vdflen = 32
@@ -33772,13 +33803,16 @@ contains
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if cos of coordinate is decreasing.
       procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
+         allocate ( ctx%zzgfcou_state )
+         ctx%zzgfcou_state%svdref = ' '
+         ctx%zzgfcou_state%svref = ' '
+      end if
       associate ( svcidx => ctx%zzgfcou_state%svcidx, &
                   svcorr => ctx%zzgfcou_state%svcorr, &
                   svcrd => ctx%zzgfcou_state%svcrd, &
                   svcsys => ctx%zzgfcou_state%svcsys, &
                   svdctr => ctx%zzgfcou_state%svdctr, &
-                  svdref => ctx%zzgfcou_state%svdref, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svf => ctx%zzgfcou_state%svf, &
                   svmeth => ctx%zzgfcou_state%svmeth, &
@@ -33786,7 +33820,6 @@ contains
                   svradi => ctx%zzgfcou_state%svradi, &
                   svrcnm => ctx%zzgfcou_state%svrcnm, &
                   svre => ctx%zzgfcou_state%svre, &
-                  svref => ctx%zzgfcou_state%svref, &
                   svsens => ctx%zzgfcou_state%svsens, &
                   svtarg => ctx%zzgfcou_state%svtarg, &
                   svvdef => ctx%zzgfcou_state%svvdef )
@@ -33801,8 +33834,8 @@ contains
 !     state vector from whose position component Q is
 !     derived.
 !
-      call zzgfcost ( ctx, svvdef, svmeth, svtarg, et,     svref,  svcorr, &
-                      svobs,  svdref, svdctr, svdvec, svradi, state, &
+      call zzgfcost ( ctx, svvdef, svmeth, svtarg, et,     ctx%zzgfcou_state%svref,  svcorr, &
+                      svobs,  ctx%zzgfcou_state%svdref, svdctr, svdvec, svradi, state, &
                       found                                          )
 
       if ( .not. found ) then
@@ -34020,7 +34053,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: syslen = 32
       integer(ip), parameter :: vdflen = 32
@@ -34053,13 +34085,16 @@ contains
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if sine of coordinate is decreasing.
       procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
-      if ( .not. allocated ( ctx%zzgfcou_state ) ) allocate ( ctx%zzgfcou_state )
+      if ( .not. allocated ( ctx%zzgfcou_state ) ) then
+         allocate ( ctx%zzgfcou_state )
+         ctx%zzgfcou_state%svdref = ' '
+         ctx%zzgfcou_state%svref = ' '
+      end if
       associate ( svcidx => ctx%zzgfcou_state%svcidx, &
                   svcorr => ctx%zzgfcou_state%svcorr, &
                   svcrd => ctx%zzgfcou_state%svcrd, &
                   svcsys => ctx%zzgfcou_state%svcsys, &
                   svdctr => ctx%zzgfcou_state%svdctr, &
-                  svdref => ctx%zzgfcou_state%svdref, &
                   svdvec => ctx%zzgfcou_state%svdvec, &
                   svf => ctx%zzgfcou_state%svf, &
                   svmeth => ctx%zzgfcou_state%svmeth, &
@@ -34067,7 +34102,6 @@ contains
                   svradi => ctx%zzgfcou_state%svradi, &
                   svrcnm => ctx%zzgfcou_state%svrcnm, &
                   svre => ctx%zzgfcou_state%svre, &
-                  svref => ctx%zzgfcou_state%svref, &
                   svsens => ctx%zzgfcou_state%svsens, &
                   svtarg => ctx%zzgfcou_state%svtarg, &
                   svvdef => ctx%zzgfcou_state%svvdef )
@@ -34081,8 +34115,8 @@ contains
 !     Look up the individual terms. Start with the Cartesian state
 !     vector from whose position component Q is derived.
 !
-      call zzgfcost ( ctx, svvdef, svmeth, svtarg, et,     svref,  svcorr, &
-                      svobs,  svdref, svdctr, svdvec, svradi, state, &
+      call zzgfcost ( ctx, svvdef, svmeth, svtarg, et,     ctx%zzgfcou_state%svref,  svcorr, &
+                      svobs,  ctx%zzgfcou_state%svdref, svdctr, svdvec, svradi, state, &
                       found                                          )
 
       if ( .not. found ) then
@@ -34993,7 +35027,8 @@ contains
       character(crdlen)     prxcrd
       character(funlen)     prxfun
       character(syslen)     prxsys
-      character(bdnmln)     rctrnm
+      character(:), allocatable :: rctrnm
+      logical :: fnd
       character(rptlen)     rptpre ( 2 )
       character(rptlen)     rptsuf ( 2 )
       character(rptlen)     tmplat
@@ -35549,7 +35584,11 @@ contains
 
          end if
 
-         call bodc2s ( ctx, refctr, rctrnm )
+         call body_name_of ( ctx, refctr, rctrnm, fnd )
+         if ( .not. fnd ) then
+            rctrnm = repeat ( ' ', 11 )
+            call intstr ( refctr, rctrnm )
+         end if
 
 !
 !        Find the longitude of the +Y axis. If this longitude

@@ -1965,7 +1965,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: frnmln = 32
       integer(ip)           fcode
       integer(ip)           tcode
       if ( .not. allocated ( ctx%pxform_state ) ) allocate ( ctx%pxform_state )
@@ -2199,7 +2198,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: frnmln = 32
       integer(ip)           fcode
       integer(ip)           tcode
       if ( .not. allocated ( ctx%sxform_state ) ) allocate ( ctx%sxform_state )

@@ -690,6 +690,8 @@ module pepper_instance
       procedure, non_overridable :: swpool
       procedure, non_overridable :: cvpool
       procedure, non_overridable :: gcpool
+      procedure, non_overridable :: pool_string
+      procedure, non_overridable :: pool_names
       procedure, non_overridable :: gdpool
       procedure, non_overridable :: gipool
       procedure, non_overridable :: dtpool
@@ -3825,6 +3827,26 @@ module pepper_instance
          logical, intent(out) :: update  !! .TRUE. if variables for AGENT have been updated.
       end subroutine cvpool
 
+      !> The names of the kernel variables that match a template (wildcards
+      !> * and %, case-insensitive, as GNPOOL), of any length, in the order
+      !> of GNPOOL (PEPPER).
+      module subroutine pool_names ( ctx, template, names )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: template  !! the template
+         type(string), allocatable, intent(out) :: names(:)  !! the matching names
+      end subroutine pool_names
+
+      !> Return one string value of a character kernel variable, of any
+      !> length (PEPPER; GCPOOL truncates to the length of its output).
+      module subroutine pool_string ( ctx, name, nth, value, found, n )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: name  !! the name of the variable
+         integer(ip), intent(in) :: nth  !! the index of the value
+         character(:), allocatable, intent(out) :: value  !! the value (empty if not found)
+         logical, intent(out) :: found  !! the variable is a character variable with an NTH value
+         integer(ip), intent(out), optional :: n  !! the number of values of the variable (0 if it is not a character variable)
+      end subroutine pool_string
+
       !> Return the character value of a kernel variable from the
       !> kernel pool.
       module subroutine gcpool ( ctx, name, start, room, n, cvals, found )
@@ -4232,6 +4254,15 @@ module pepper_instance
          integer(ip), intent(in) :: code  !! Integer code to be translated.
          logical, intent(out) :: found  !! True if translated, otherwise false.
       end subroutine zzbodc2n
+
+      !> The name of a body from its ID code, of any length (PEPPER; the
+      !> body of ZZBODC2N, which truncates to its argument's length).
+      module subroutine body_name_of ( ctx, code, name, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: code  !! the body ID code
+         character(:), allocatable, intent(out) :: name  !! the body name (empty if not found)
+         logical, intent(out) :: found  !! the code has a name
+      end subroutine body_name_of
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
@@ -8697,6 +8728,65 @@ module pepper_instance
          character(*), intent(out) :: frname  !! the name associated with the reference frame.
          integer(ip), intent(in) :: frcode  !! an integer code for a reference frame
       end subroutine frmnam
+
+      !> Find the kernel variable that defines an item of a frame:
+      !> FRAME_<ID code>_<item>, or else FRAME_<name>_<item>, names of any
+      !> length (PEPPER; the lookup shared by the ZZDYNxxx routines).
+      module subroutine dynamic_frame_variable ( ctx, frname, frcode, item, required, kvname, found, n, dtype, what )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: frname  !! the frame name
+         integer(ip), intent(in) :: frcode  !! the frame ID code
+         character(*), intent(in) :: item  !! the item, e.g. RELATIVE
+         logical, intent(in) :: required  !! signal SPICE(KERNELVARNOTFOUND) if neither variable exists
+         character(:), allocatable, intent(out) :: kvname  !! the variable found (the name form if neither)
+         logical, intent(out) :: found  !! a variable was found
+         integer(ip), intent(out) :: n  !! its number of values
+         character(*), intent(out) :: dtype  !! its type, 'C' or 'N'
+         character(*), intent(in), optional :: what  !! what the frame is, for the message (default: parameterized dynamic frame)
+      end subroutine dynamic_frame_variable
+
+      !> The character values of the kernel variable that defines an item
+      !> of a dynamic frame, at full length (PEPPER; the body of ZZDYNVAC).
+      module subroutine dynamic_frame_strings ( ctx, frname, frcode, item, maxn, n, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: frname  !! the frame name
+         integer(ip), intent(in) :: frcode  !! the frame ID code
+         character(*), intent(in) :: item  !! the item, e.g. FROM_FRAMES
+         integer(ip), intent(in) :: maxn  !! the maximum number of values
+         integer(ip), intent(out) :: n  !! the number of values
+         type(string), allocatable, intent(out) :: values(:)  !! the values
+      end subroutine dynamic_frame_strings
+
+      !> The name of a frame from its ID code, of any length (PEPPER; the
+      !> body of FRMNAM, which truncates to its argument's length).
+      module subroutine frame_name_of ( ctx, frcode, frname, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: frcode  !! the frame ID code
+         character(:), allocatable, intent(out) :: frname  !! the frame name (empty if not found)
+         logical, intent(out) :: found  !! the frame is known
+      end subroutine frame_name_of
+
+      !> The frame associated with an object, its name of any length
+      !> (PEPPER; the body of CIDFRM).
+      module subroutine frame_of_center ( ctx, cent, frcode, frname, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: cent  !! the object's ID code
+         integer(ip), intent(out) :: frcode  !! the frame ID code
+         character(:), allocatable, intent(out) :: frname  !! the frame name (empty if not found)
+         logical, intent(out) :: found  !! a frame was found
+      end subroutine frame_of_center
+
+      !> The frame of a class and class ID, its name of any length
+      !> (PEPPER; the body of CCIFRM).
+      module subroutine frame_of_class ( ctx, frclss, clssid, frcode, frname, cent, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: frclss  !! the frame class
+         integer(ip), intent(in) :: clssid  !! the class ID
+         integer(ip), intent(out) :: frcode  !! the frame ID code
+         character(:), allocatable, intent(out) :: frname  !! the frame name (empty if not found)
+         integer(ip), intent(out) :: cent  !! the frame's center
+         logical, intent(out) :: found  !! a frame was found
+      end subroutine frame_of_class
 
       !> Retrieve the minimal attributes associated with a frame
       !> needed for converting transformations to and from it.

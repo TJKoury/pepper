@@ -34,6 +34,7 @@ program test_limits
    call test_surfaces()
    call test_sclk()
    call test_nutation()
+   call test_frame_names()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -674,5 +675,168 @@ contains
       call ctx%pdpool(trim(b) // 'NUT_PREC_PM', n, coef(1:n))
       call ctx%pdpool(trim(b) // 'LONG_AXIS', 1_ip, [0.0_wp])
    end subroutine define_nutation
+
+   !> Frame names longer than 32 characters (FRNMLN), which differ only
+   !> after the 32nd: TK frames, a TK frame relative to one of them, a
+   !> dynamic frame defined by its name (FRAME_<name>_<item> is then longer
+   !> than 32 characters, VARNAMETOOLONG in SPICELIB), a product and a
+   !> switch frame of them, frames of objects and classes, and states in
+   !> those frames.
+   subroutine test_frame_names()
+      character(*), parameter :: stem = 'A_FRAME_NAME_LONGER_THAN_THIRTY_TWO_CHARACTERS_'
+      character(*), parameter :: dyn = 'A_DYNAMIC_FRAME_NAME_LONGER_THAN_THIRTY_TWO_CHARACTERS'
+      character(*), parameter :: spk = prefix // 'frame_names.bsp'
+      character(80) :: name
+      integer(ip) :: i, code, cent, idset(-5:10)
+      logical :: found
+      real(wp) :: rot(3, 3), rot2(3, 3), xf(6, 6), st(6), st2(6), lt
+      real(wp), parameter :: dpr = 180/acos(-1.0_wp)
+      call define_tk(stem // '1', 1800001_ip, 'J2000', 10.0_wp)
+      call define_tk(stem // '2', 1800002_ip, 'J2000', 20.0_wp)
+      call define_tk(stem // '3', 1800003_ip, stem // '1', 5.0_wp)
+      call define_mod(dyn, 1800004_ip)
+      call define_mod('SHORT_MOD', 1800005_ip)
+      call check_ok('frame names: definitions')
+      do i = 1, 3
+         call ctx%namfrm(stem // achar(48 + i), code)
+         call ctx%frmnam(1800000_ip + i, name)
+         call check(code == 1800000 + i .and. name == stem // achar(48 + i), 'frame names: namfrm/frmnam ' // achar(48 + i))
+      end do
+      call ctx%namfrm(dyn, code)
+      call check(code == 1800004, 'frame names: namfrm of the dynamic frame')
+      call check_ok('frame names: namfrm')
+      call ctx%pxform(stem // '1', 'J2000', 0.0_wp, rot)
+      call check(abs(atan2(rot(1, 2), rot(1, 1))*dpr - 10) < 1.0e-12_wp, 'frame names: pxform 1')
+      call ctx%pxform(stem // '2', 'J2000', 0.0_wp, rot)
+      call check(abs(atan2(rot(1, 2), rot(1, 1))*dpr - 20) < 1.0e-12_wp, 'frame names: pxform 2')
+      call ctx%pxform(stem // '3', 'J2000', 0.0_wp, rot)
+      call check(abs(atan2(rot(1, 2), rot(1, 1))*dpr - 15) < 1.0e-12_wp, 'frame names: pxform 3')
+      call ctx%pxform(stem // '1', stem // '2', 0.0_wp, rot)
+      call check(abs(atan2(rot(1, 2), rot(1, 1))*dpr + 10) < 1.0e-12_wp, 'frame names: pxform 1 to 2')
+      call ctx%sxform(stem // '2', 'J2000', 0.0_wp, xf)
+      call check(abs(atan2(xf(1, 2), xf(1, 1))*dpr - 20) < 1.0e-12_wp, 'frame names: sxform 2')
+      call check_ok('frame names: pxform')
+      call ctx%pxform(dyn, 'J2000', 1.0e8_wp, rot)
+      call ctx%pxform('SHORT_MOD', 'J2000', 1.0e8_wp, rot2)
+      call check_ok('frame names: pxform of the dynamic frame')
+      call check(maxval(abs(rot - rot2)) < 1.0e-15_wp .and. maxval(abs(rot)) > 0, &
+                 'frame names: pxform of the dynamic frame')
+      ! Frames of an object (OBJECT_<ID or name>_FRAME), by class, and
+      ! the list of TK frames.
+      call ctx%pcpool('OBJECT_900001_FRAME', 1_ip, [stem // '2'])
+      call ctx%cidfrm(900001_ip, code, name, found)
+      call check(found .and. code == 1800002 .and. name == stem // '2', 'frame names: cidfrm')
+      call ctx%cnmfrm('900001', code, name, found)
+      call check(found .and. code == 1800002 .and. name == stem // '2', 'frame names: cnmfrm')
+      call ctx%ccifrm(4_ip, 1800003_ip, code, name, cent, found)
+      call check(found .and. code == 1800003 .and. name == stem // '3' .and. cent == 399, 'frame names: ccifrm')
+      call ctx%ssizei(10_ip, idset)
+      call ctx%kplfrm(4_ip, idset)
+      call check(ctx%cardi(idset) == 3 .and. all(idset(1:3) == [1800001, 1800002, 1800003]), 'frame names: kplfrm')
+      call check_ok('frame names: frames of objects and classes')
+      ! A product frame and a switch frame built on the long names give
+      ! what the same frames built on a short name give.
+      call define_tk('SHORT_TK', 1800006_ip, 'J2000', 10.0_wp)
+      call define_product(stem // 'PRODUCT', 1800007_ip, stem // '1')
+      call define_product('SHORT_PRODUCT', 1800008_ip, 'SHORT_TK')
+      call ctx%pxform(stem // 'PRODUCT', 'J2000', 0.0_wp, rot)
+      call ctx%pxform('SHORT_PRODUCT', 'J2000', 0.0_wp, rot2)
+      call check_ok('frame names: product frame')
+      call check(maxval(abs(rot - rot2)) < 1.0e-15_wp .and. abs(rot(1, 1) - 1) > 1.0e-3_wp, 'frame names: product frame')
+      call define_switch(stem // 'SWITCH', 1800009_ip, stem // '2')
+      call ctx%pxform(stem // 'SWITCH', 'J2000', 0.0_wp, rot)
+      call ctx%pxform(stem // '2', 'J2000', 0.0_wp, rot2)
+      call check_ok('frame names: switch frame')
+      call check(maxval(abs(rot - rot2)) < 1.0e-15_wp, 'frame names: switch frame')
+      call write_spk(ctx, spk, 900001_ip, 0_ip, 1.0e5_wp, 0.0_wp)
+      call ctx%furnsh(spk)
+      call ctx%spkezr('900001', 0.0_wp, stem // '1', 'NONE', '0', st, lt)
+      call ctx%spkezr('900001', 0.0_wp, stem // '2', 'NONE', '0', st2, lt)
+      call check_ok('frame names: spkezr')
+      call check(abs(atan2(st(2), st(1))*dpr - 10) < 1.0e-9_wp .and. abs(atan2(st2(2), st2(1))*dpr - 20) < 1.0e-9_wp, &
+                 'frame names: spkezr')
+      call ctx%spkpos('900001', 0.0_wp, stem // '1', 'NONE', '0', st, lt)
+      call ctx%spkpos('900001', 0.0_wp, stem // '2', 'NONE', '0', st2, lt)
+      call check_ok('frame names: spkpos')
+      call check(abs(atan2(st(2), st(1))*dpr - 10) < 1.0e-9_wp .and. abs(atan2(st2(2), st2(1))*dpr - 20) < 1.0e-9_wp, &
+                 'frame names: spkpos')
+      call ctx%unload(spk)
+      call delete_file(spk)
+      call ctx%clpool()
+      call check_ok('frame names: cleanup')
+   end subroutine test_frame_names
+
+   !> Define a TK frame rotated by ANGLE degrees about Z from RELTO.
+   subroutine define_tk(name, id, relto, angle)
+      character(*), intent(in) :: name  !! the frame name
+      integer(ip), intent(in) :: id  !! the frame ID
+      character(*), intent(in) :: relto  !! the frame it is relative to
+      real(wp), intent(in) :: angle  !! the rotation (degrees)
+      character(40) :: f, t
+      write (f, '(a,i0,a)') 'FRAME_', id, '_'
+      write (t, '(a,i0,a)') 'TKFRAME_', id, '_'
+      call ctx%pipool('FRAME_' // name, 1_ip, [id])
+      call ctx%pcpool(trim(f) // 'NAME', 1_ip, [name])
+      call ctx%pipool(trim(f) // 'CLASS', 1_ip, [4_ip])
+      call ctx%pipool(trim(f) // 'CLASS_ID', 1_ip, [id])
+      call ctx%pipool(trim(f) // 'CENTER', 1_ip, [399_ip])
+      call ctx%pcpool(trim(t) // 'RELATIVE', 1_ip, [relto])
+      call ctx%pcpool(trim(t) // 'SPEC', 1_ip, ['ANGLES'])
+      call ctx%pcpool(trim(t) // 'UNITS', 1_ip, ['DEGREES'])
+      call ctx%pipool(trim(t) // 'AXES', 3_ip, [3_ip, 1_ip, 3_ip])
+      call ctx%pdpool(trim(t) // 'ANGLES', 3_ip, [angle, 0.0_wp, 0.0_wp])
+   end subroutine define_tk
+
+   !> Define a mean-of-date dynamic frame (Earth, IAU 1976) by its name.
+   subroutine define_mod(name, id)
+      character(*), intent(in) :: name  !! the frame name
+      integer(ip), intent(in) :: id  !! the frame ID
+      character(40) :: f
+      write (f, '(a,i0,a)') 'FRAME_', id, '_'
+      call ctx%pipool('FRAME_' // name, 1_ip, [id])
+      call ctx%pcpool(trim(f) // 'NAME', 1_ip, [name])
+      call ctx%pipool(trim(f) // 'CLASS', 1_ip, [5_ip])
+      call ctx%pipool(trim(f) // 'CLASS_ID', 1_ip, [id])
+      call ctx%pipool(trim(f) // 'CENTER', 1_ip, [399_ip])
+      call ctx%pcpool('FRAME_' // name // '_RELATIVE', 1_ip, ['J2000'])
+      call ctx%pcpool('FRAME_' // name // '_DEF_STYLE', 1_ip, ['PARAMETERIZED'])
+      call ctx%pcpool('FRAME_' // name // '_FAMILY', 1_ip, ['MEAN_EQUATOR_AND_EQUINOX_OF_DATE'])
+      call ctx%pcpool('FRAME_' // name // '_PREC_MODEL', 1_ip, ['EARTH_IAU_1976'])
+      call ctx%pcpool('FRAME_' // name // '_ROTATION_STATE', 1_ip, ['ROTATING'])
+   end subroutine define_mod
+
+   !> Define a product frame (a dynamic frame) from FACTOR to J2000.
+   subroutine define_product(name, id, factor)
+      character(*), intent(in) :: name  !! the frame name
+      integer(ip), intent(in) :: id  !! the frame ID
+      character(*), intent(in) :: factor  !! the "from" frame
+      character(40) :: f
+      write (f, '(a,i0,a)') 'FRAME_', id, '_'
+      call ctx%pipool('FRAME_' // name, 1_ip, [id])
+      call ctx%pcpool(trim(f) // 'NAME', 1_ip, [name])
+      call ctx%pipool(trim(f) // 'CLASS', 1_ip, [5_ip])
+      call ctx%pipool(trim(f) // 'CLASS_ID', 1_ip, [id])
+      call ctx%pipool(trim(f) // 'CENTER', 1_ip, [399_ip])
+      call ctx%pcpool(trim(f) // 'RELATIVE', 1_ip, ['J2000'])
+      call ctx%pcpool(trim(f) // 'DEF_STYLE', 1_ip, ['PARAMETERIZED'])
+      call ctx%pcpool(trim(f) // 'FAMILY', 1_ip, ['PRODUCT'])
+      call ctx%pcpool(trim(f) // 'FROM_FRAMES', 1_ip, [factor])
+      call ctx%pcpool(trim(f) // 'TO_FRAMES', 1_ip, ['J2000'])
+   end subroutine define_product
+
+   !> Define a switch frame aligned with a single base frame.
+   subroutine define_switch(name, id, base)
+      character(*), intent(in) :: name  !! the frame name
+      integer(ip), intent(in) :: id  !! the frame ID
+      character(*), intent(in) :: base  !! the base frame
+      character(40) :: f
+      write (f, '(a,i0,a)') 'FRAME_', id, '_'
+      call ctx%pipool('FRAME_' // name, 1_ip, [id])
+      call ctx%pcpool(trim(f) // 'NAME', 1_ip, [name])
+      call ctx%pipool(trim(f) // 'CLASS', 1_ip, [6_ip])
+      call ctx%pipool(trim(f) // 'CLASS_ID', 1_ip, [id])
+      call ctx%pipool(trim(f) // 'CENTER', 1_ip, [399_ip])
+      call ctx%pcpool(trim(f) // 'ALIGNED_WITH', 1_ip, [base])
+   end subroutine define_switch
 
 end program test_limits

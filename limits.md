@@ -140,7 +140,7 @@ is a limit. They must grow together, or the smallest becomes the limit.
 | Length | What | Where it appears |
 |---|---|---|
 | 36 | Body names (`maxl`), surface names (`sfnmln`) | `bodc2n` output, kernels (longer names are truncated by `gcpool`) |
-| 32 | Frame names (`frnmln`, declared 109 times), pool variable names (`maxlen`; `BADVARNAME` if longer; also `kvnmln`, watch names) | Kernels, `VARNAMETOOLONG` in the dynamic-frame routines when `FRAME_<name>_<item>` exceeds 32 |
+| 32 | Frame names (`frnmln`, declared 109 times), pool variable names (`maxlen`; `BADVARNAME` if longer; also `kvnmln`, watch names) | Kernels, `VARNAMETOOLONG` in the dynamic-frame routines when `FRAME_<name>_<item>` exceeds 32. Frame names: done (phase 4) |
 | 80 | Pool string values (`maxchr`) | Silently truncated |
 
 ### E. Caller buffers (API track)
@@ -445,6 +445,36 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      1.5 MB per context, plus BODEUL's saved work arrays). Test:
      `test_limits` (300 angles agree with 1 angle when the other
      coefficients are zero).
+   - **Frame names** (decision 1): no length limit (SPICELIB: 32
+     characters, FRNMLN; longer names were truncated, so two frames whose
+     names differ only after the 32nd character were the same frame).
+     - FRAMEX keeps kernel frame names as strings, normalizes the name
+       in a copy of its own length, and reads `FRAME_<ID>_NAME` and
+       `OBJECT_<ID or name>_FRAME` at full length (`pool_string`, a new
+       accessor). FRMNAM, CIDFRM and CCIFRM are wrappers of
+       `frame_name_of`, `frame_of_center` and `frame_of_class`, which
+       return allocatable names; the library uses those.
+       `body_name_of` does the same for ZZBODC2N.
+     - The ZZDYNxxx routines share one lookup of
+       `FRAME_<ID or name>_<item>`, `dynamic_frame_variable`, with no
+       length limit (`VARNAMETOOLONG` is gone); ZZDYNVAC's body is
+       `dynamic_frame_strings`, which returns the values at full length
+       (product frames).
+     - TKFRAM, the four dynamic-frame evaluators, ZZSWFFET, KPLFRM,
+       ZZNOFCON, TISBOD, ILLUM, SUBPT, SUBSOL, SRFXPT, ET2LST,
+       ZZDSKSPH, ZZDSKSBA, OCCULT and the GF searches use allocatable
+       names; the frame names saved by the GF searches, DSKXSI, DSKXV
+       and ZZCVSTAT are allocatable components.
+     - ZZNAMFRM (the "last name looked up" caches of about 40 routines)
+       does not save a name longer than the caller's 32-character
+       buffer: a truncated name could match a different, shorter name.
+       Long names are looked up on every call (a hash lookup).
+     - CCIFRM and KPLFRM fetch the matching variable names once
+       (`pool_names`); CCIFRM examined each name up to 100 times (see
+       `spicelib_bugs.md`).
+     - Test: `test_limits` (TK, dynamic, product and switch frames whose
+       names differ only after the 32nd character; CIDFRM, CNMFRM,
+       CCIFRM, KPLFRM; states in those frames).
    - **Still fixed:** GF saves the occultation method strings in 500
      characters (`svfmth`, `svbmth`), and the geometry routines save the
      previous method in a fixed buffer (a longer method is only parsed
@@ -457,7 +487,8 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      - the 540 KB `kernor` locals go;
      - `f_bodcod` and `f_zzbdkr` change.
    - **Frames:** the FRAMEX kernel-frame cache uses the hash map and grows. This
-     fixes `HASHISFULL`. Test: 20000 TK frames.
+     fixes `HASHISFULL`. Test: 20000 TK frames (done). Frame names of any
+     length (done).
    - **Surfaces:**
      - ZZSRFTRN grows;
      - method strings take any number of surfaces (`maxsrf`);
@@ -588,6 +619,7 @@ or listed for later.
 | ZZBODTRN (BODDEF, `sync_boddefs`) | Each definition rebuilds the maps of all the definitions (SPICELIB's ZZBODINI), and a context replays all of the instance's BODDEFs when they change: O(n**2) for n definitions | Update the maps incrementally | later |
 | ZZBODTRN, FRAMEX (per context) | Every context builds its own tables of body names and kernel frames from the pool | Build them once per instance when the pool changes (read-only during queries) | 5 |
 | BSR tables | 10 MB each, allocated and zeroed in full by the first query of a context: 2.5 ms and about 20 MB per context | Start small, grow (decision 3) | 5 |
+| CCIFRM | Scans the pool with GNPOOL in batches of 100 and, because GIPOOL overwrites the batch count, restarts each batch one name later: each `FRAME_*_CLASS` name is examined up to 100 times, and each batch is a full pool scan | Done: names fetched once | 4 |
 
 ## Testing
 

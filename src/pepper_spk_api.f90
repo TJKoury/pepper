@@ -5120,7 +5120,6 @@ contains
       character(*), parameter :: rname = 'SPKGEO'
       integer(ip), parameter :: chlen = 20
       integer(ip), parameter :: ssb = 0
-      integer(ip), parameter :: frnmln = 32
       character(40)         ident
       character(40)         tname
       character(40)         oname
@@ -6071,7 +6070,6 @@ contains
       character(*), parameter :: rname = 'SPKGPS'
       integer(ip), parameter :: chlen = 20
       integer(ip), parameter :: ssb = 0
-      integer(ip), parameter :: frnmln = 32
       character(40)         ident
       character(40)         tname
       character(40)         oname
@@ -12492,14 +12490,15 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxvg, vequ, vlcom
       implicit none
-      integer(ip), parameter :: frnmln = 32
       real(wp)              delta
       real(wp)              xstate ( 6 )
       real(wp)              xf     ( 6, 6 )
-      if ( .not. allocated ( ctx%zzcvstat_state ) ) allocate ( ctx%zzcvstat_state )
+      if ( .not. allocated ( ctx%zzcvstat_state ) ) then
+         allocate ( ctx%zzcvstat_state )
+         ctx%zzcvstat_state%svref = ' '
+      end if
       associate ( svctr => ctx%zzcvstat_state%svctr, &
                   svet => ctx%zzcvstat_state%svet, &
-                  svref => ctx%zzcvstat_state%svref, &
                   svstat => ctx%zzcvstat_state%svstat )
       if ( ctx%failed() ) return
 
@@ -12516,7 +12515,7 @@ contains
 !     Convert the extrapolated state to the requested frame
 !     at ET.
 !
-      call sxform ( ctx, svref, ref, et, xf )
+      call sxform ( ctx, ctx%zzcvstat_state%svref, ref, et, xf )
 
       if ( ctx%failed() ) return
 
@@ -12624,14 +12623,15 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: moved
       implicit none
-      integer(ip), parameter :: frnmln = 32
       real(wp)              delta
       real(wp)              xstate ( 6 )
       real(wp)              xf     ( 6, 6 )
-      if ( .not. allocated ( ctx%zzcvstat_state ) ) allocate ( ctx%zzcvstat_state )
+      if ( .not. allocated ( ctx%zzcvstat_state ) ) then
+         allocate ( ctx%zzcvstat_state )
+         ctx%zzcvstat_state%svref = ' '
+      end if
       associate ( svctr => ctx%zzcvstat_state%svctr, &
                   svet => ctx%zzcvstat_state%svet, &
-                  svref => ctx%zzcvstat_state%svref, &
                   svstat => ctx%zzcvstat_state%svstat )
       if ( ctx%failed() ) return
 
@@ -12644,7 +12644,7 @@ contains
 
       svctr = center
       svet  = et
-      svref = ref
+      ctx%zzcvstat_state%svref = ref
 
       return
       end associate
@@ -18466,7 +18466,6 @@ contains
       use pepper_inc_zzctr
       implicit none
       character(*), parameter :: rname = 'SPKEZP'
-      integer(ip), parameter :: frnmln = 32
       real(wp) :: temp     ( 3    )
       real(wp) :: xform    ( 3, 3 )
       logical :: found
@@ -22873,7 +22872,6 @@ contains
       use pepper_inc_zzctr
       implicit none
       character(*), parameter :: rname = 'SPKEZ'
-      integer(ip), parameter :: frnmln = 32
       real(wp) :: state    ( 6    )
       real(wp) :: temp     ( 6    )
       real(wp) :: xform    ( 6, 6 )
@@ -25860,7 +25858,6 @@ contains
       integer(ip), parameter :: evltrg = 2
       integer(ip), parameter :: evlctr = 3
       integer(ip), parameter :: maxl = 36
-      integer(ip), parameter :: frnmln = 32
       real(wp)              dlt
       real(wp)              j2stat ( 6 )
       real(wp)              s
@@ -30039,7 +30036,6 @@ contains
       integer(ip), parameter :: evltrg = 2
       integer(ip), parameter :: evlctr = 3
       integer(ip), parameter :: maxl = 36
-      integer(ip), parameter :: frnmln = 32
       real(wp)              dlt
       real(wp)              j2stat ( 6 )
       real(wp)              s

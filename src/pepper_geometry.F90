@@ -10642,9 +10642,8 @@ contains
       use pepper_inc_zzctr
       implicit none
       integer(ip), parameter :: sun = 10
-      integer(ip), parameter :: frnmln = 80
       integer(ip), parameter :: maxl = 36
-      character(frnmln)     frname
+      character(:), allocatable :: frname
       real(wp)              lt
       real(wp)              lts
       real(wp)              normal ( 3 )
@@ -10740,7 +10739,7 @@ contains
 !     target body.  We'll want the state of the target relative to
 !     the observer in this body-fixed frame.
 !
-      call cidfrm ( ctx, trgcde, frcode, frname, found )
+      call frame_of_center ( ctx, trgcde, frcode, frname, found )
 
       if ( .not. found ) then
 
@@ -11927,7 +11926,6 @@ contains
 !
 !     Local parameters
 !
-      integer(ip), parameter :: frnmln = 32
 
       integer(ip), parameter :: kvnmln = 32
 
@@ -11936,13 +11934,13 @@ contains
 !
 !     Local variables
 !
-      character(frnmln)     frname
-      character(kvnmln)     kvbuff ( bufsiz )
+      character(:), allocatable :: frname
+      type(string), allocatable :: kvars(:)
       character(kvnmln)     kvname
-      character(kvnmln)     kvtemp
-      character(kvnmln)     kvcode
-      character(kvnmln)     kvclas
-      character(frnmln)     tmpnam
+      character(:), allocatable :: kvcode
+      character(kvnmln) :: kvclas
+      character(:), allocatable :: kvnmcl
+      character(:), allocatable :: tmpnam
 
       integer(ip)           fclass
       integer(ip)           i
@@ -11951,7 +11949,6 @@ contains
       integer(ip)           m
       integer(ip)           n
       integer(ip)           to
-      integer(ip)           total
       integer(ip)           w
 
       logical               found
@@ -12001,30 +11998,26 @@ contains
 !     by looking the corresponding frame ID and frame class
 !     assignments.
 !
-      kvtemp = 'FRAME_*_NAME'
-
-      call gnpool ( ctx, kvtemp, 1, bufsiz, n, kvbuff, found )
-
-      total = 0
-
-      do while ( n > 0 )
-
-         total = total + n
-
 !
-!        At least one kernel variable was found by the last
-!        GNPOOL call. Each of these variables is a possible
-!        frame name. Look up each of these candidate names.
+!     PEPPER: the names are fetched once, at full length (SPICELIB fetched
+!     them 100 at a time with GNPOOL, into 32-character buffers).
 !
-         do i = 1, n
+      call pool_names ( ctx, 'FRAME_*_NAME', kvars )
+      if ( ctx%failed() ) return
+      n = size ( kvars, kind=ip )
+!
+!     Each of these variables is a possible frame name. Look up each of
+!     these candidate names.
+!
+      do i = 1, n
 !
 !           Attempt to fetch the right hand side value for
 !           the Ith kernel variable found on the previous
 !           GNPOOL call.
 !
-            call gcpool ( ctx, kvbuff(i), 1, 1, m, frname, found )
+         call ctx%pool_string ( kvars(i)%s, 1_ip, frname, found )
 
-            if ( found ) then
+         if ( found ) then
 !
 !              We found a possible frame name. Attempt to look
 !              up an ID code variable for the name. The assignment
@@ -12035,17 +12028,15 @@ contains
 !              Create the kernel variable name on the left hand
 !              side of the assignment.
 !
-               kvcode = 'FRAME_<name>'
-
-               call repmc ( kvcode, '<name>', frname, kvcode )
+            kvcode = 'FRAME_' // trim ( adjustl ( frname ) )
 
 !
 !              Try to fetch the ID code.
 !
-               call gipool ( ctx, kvcode, 1, 1, l, idcode_1, found )
-               idcode = idcode_1(1)
+            call gipool ( ctx, kvcode, 1, 1, l, idcode_1, found )
+            idcode = idcode_1(1)
 
-               if ( found ) then
+            if ( found ) then
 !
 !                 We found an integer on the right hand side
 !                 of the assignment. We probably have a
@@ -12057,13 +12048,13 @@ contains
 !                 is present in the kernel pool and maps to
 !                 the name FRNAME.
 !
-                  kvname = 'FRAME_<code>_NAME'
+               kvname = 'FRAME_<code>_NAME'
 
-                  call repmi ( ctx, kvname, '<code>', idcode, kvname )
+               call repmi ( ctx, kvname, '<code>', idcode, kvname )
 
-                  call gcpool ( ctx, kvname, 1, 1, w, tmpnam, found )
+               call ctx%pool_string ( kvname, 1_ip, tmpnam, found )
 
-                  if ( found ) then
+               if ( found ) then
 !
 !                    Try to look up the frame class using a
 !                    kernel variable name of the form
@@ -12073,98 +12064,87 @@ contains
 !                    Create the kernel variable name on the left
 !                    hand side of the frame class assignment.
 !
-                     kvclas = 'FRAME_<integer>_CLASS'
+                  kvclas = 'FRAME_<integer>_CLASS'
 
-                     call repmi ( ctx, kvclas, '<integer>', idcode, kvclas )
+                  call repmi ( ctx, kvclas, '<integer>', idcode, kvclas )
 
 !
 !                    Look for the frame class.
 !
-                     call gipool ( ctx, kvclas, 1, 1, w, fclass_1, found )
-                     fclass = fclass_1(1)
+                  call gipool ( ctx, kvclas, 1, 1, w, fclass_1, found )
+                  fclass = fclass_1(1)
 
-                     if ( .not. found ) then
+                  if ( .not. found ) then
 !
 !                       Try to look up the frame class using a kernel
 !                       variable name of the form
 !
 !                          FRAME_<frame name>_CLASS
 !
-                        kvclas = 'FRAME_<name>_CLASS'
+                     kvnmcl = 'FRAME_' // trim ( adjustl ( frname ) ) // '_CLASS'
 
-                        call repmc ( kvclas, '<name>', frname, kvclas )
+                     call gipool ( ctx, kvnmcl, 1, 1, w, fclass_1, found )
+                     fclass = fclass_1(1)
 
-                        call gipool ( ctx, kvclas, 1, 1, w, fclass_1, found )
-                        fclass = fclass_1(1)
-
-                     end if
+                  end if
 
 !
 !                    At this point FOUND indicates whether we found
 !                    the frame class.
 !
-                     if ( found ) then
+                  if ( found ) then
 !
 !                       Check whether the frame class is one
 !                       we want.
 !
-                        if (      ( frmcls == all    ) &
-                             .or. ( frmcls == fclass )  ) then
+                     if (      ( frmcls == all    ) &
+                          .or. ( frmcls == fclass )  ) then
 !
 !                          We have a winner. Add it to the output set.
 !
 !                          First make sure the set is large enough to
 !                          hold another element.
 !
-                           if ( to == sizei( ctx,idset) ) then
+                        if ( to == sizei( ctx,idset) ) then
 
-                              call ctx%setmsg ( 'Frame ID set argument ' &
-                              //            'IDSET has size #; required' &
-                              //            ' size is at least #. Make ' &
-                              //            'sure that the caller of ' &
-                              //            'this routine has initial' &
-                              //            'ized IDSET via SSIZEI.'   )
-                              call ctx%errint ( '#', sizei( ctx,idset)          )
-                              call ctx%errint ( '#', to+1                  )
-                              call ctx%sigerr ( 'SPICE(SETTOOSMALL)'       )
-                              return
-
-                           end if
-
-                           to        = to + 1
-                           idset(to) = idcode
+                           call ctx%setmsg ( 'Frame ID set argument ' &
+                           //            'IDSET has size #; required' &
+                           //            ' size is at least #. Make ' &
+                           //            'sure that the caller of ' &
+                           //            'this routine has initial' &
+                           //            'ized IDSET via SSIZEI.'   )
+                           call ctx%errint ( '#', sizei( ctx,idset)          )
+                           call ctx%errint ( '#', to+1                  )
+                           call ctx%sigerr ( 'SPICE(SETTOOSMALL)'       )
+                           return
 
                         end if
+
+                        to        = to + 1
+                        idset(to) = idcode
+
+                     end if
 !
 !                       End of IF block for processing a frame having
 !                       a frame class matching the request.
 !
-                     end if
+                  end if
 !
 !                    End of IF block for finding the frame class.
 !
-                  end if
+               end if
 !
 !                 End of IF block for finding the frame name.
 !
-               end if
+            end if
 !
 !              End of IF block for finding the frame ID.
 !
-            end if
+         end if
 !
 !           End of IF block for finding string value corresponding to
 !           the Ith kernel variable matching the name template.
 !
-         end do
-!
-!        End of loop for processing last batch of potential
-!        frame names.
-!
-!        Fetch next batch of potential frame names.
-!
-         call gnpool ( ctx, kvtemp, total+1, bufsiz, n, kvbuff, found )
-
       end do
 !
 !     At this point all kernel variables that matched the frame name
@@ -17872,7 +17852,6 @@ contains
       use pepper_inc_zzctr
       implicit none
       integer(ip), parameter :: jcode = 1
-      integer(ip), parameter :: frnmln = 32
       integer(ip)           fcode
       integer(ip)           tcode
       real(wp)              jf ( 3, 3 )
@@ -20411,7 +20390,6 @@ contains
       use pepper_math, only: mxvg
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: frnmln = 32
       integer(ip)           irf
       integer(ip)           irfreq
       integer(ip)           ic         (    6 )
@@ -43022,7 +43000,6 @@ contains
       use pepper_inc_zzctr
       implicit none
       integer(ip), parameter :: maxl = 36
-      integer(ip), parameter :: frnmln = 32
       real(wp)              ltsrc
       real(wp)              lttarg
       real(wp)              r
@@ -48496,9 +48473,8 @@ contains
       use pepper_strings, only: eqstr
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: frnmln = 80
       integer(ip), parameter :: maxl = 36
-      character(frnmln)     frname
+      character(:), allocatable :: frname
       real(wp)              lt
       real(wp)              pos    ( 3 )
       real(wp)              radii  ( 3 )
@@ -48602,7 +48578,7 @@ contains
 !     target body.  We'll want the state of the target relative to
 !     the observer in this body-fixed frame.
 !
-      call cidfrm ( ctx, trgcde, frcode, frname, found )
+      call frame_of_center ( ctx, trgcde, frcode, frname, found )
 
       if ( .not. found ) then
 
@@ -49139,9 +49115,8 @@ contains
       use pepper_strings, only: eqstr
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: frnmln = 80
       integer(ip), parameter :: maxl = 36
-      character(frnmln)     frname
+      character(:), allocatable :: frname
       real(wp)              alt
       real(wp)              ettarg
       real(wp)              lt
@@ -49242,7 +49217,7 @@ contains
 !     target body.  We'll want the state of the target relative to
 !     the observer in this body-fixed frame.
 !
-      call cidfrm ( ctx, trgcde, frcode, frname, found )
+      call frame_of_center ( ctx, trgcde, frcode, frname, found )
 
       if ( .not. found ) then
 
@@ -52279,9 +52254,9 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: frnmln = 32
       character(lmsgln)     errmsg
-      character(frnmln)     frname
+      character(:), allocatable :: frname
+      logical :: namfnd
       real(wp)              boxctr ( 3 )
       real(wp)              boxrad
       real(wp)              ctrmnr
@@ -52484,7 +52459,7 @@ contains
 
                   else
 
-                     call frmnam ( ctx, framid, frname )
+                     call frame_name_of ( ctx, framid, frname, namfnd )
 
                      if ( ctx%failed() ) return
 
@@ -58739,7 +58714,7 @@ contains
 !     Local Variables
 !
       character(4)          amorpm
-      character(bdnmln)     bodnam
+      character(:), allocatable :: bodnam
       character(wdsize)     frame
       character(2)          h
       character(wdsize)     bpmkwd
@@ -58791,9 +58766,10 @@ contains
 !        a name, if possible.  Otherwise, just convert the input code
 !        to a string.
 !
-         call bodc2n ( ctx, body, bodnam, found )
+         call body_name_of ( ctx, body, bodnam, found )
 
          if ( .not. found ) then
+            bodnam = repeat ( ' ', 11 )
             call intstr ( body, bodnam )
          end if
 
@@ -63778,9 +63754,7 @@ contains
       integer(ip), parameter :: sizidx = 0
       integer(ip), parameter :: freidx = -1
       integer(ip) :: nkvar
-      character(sfnmln) :: sqshnm
       integer(ip) :: node
-      character(sfnmln) :: nsrfnm
       integer(ip) :: lookat
       logical :: lupdte
       if ( .not. allocated ( ctx%zzsrftrn_state ) ) allocate ( ctx%zzsrftrn_state )
@@ -66984,12 +66958,12 @@ contains
 !
 !     Local parameters
 !
-      integer(ip), parameter :: frnmln = 32
 
 !
 !     Local variables
 !
-      character(frnmln)     frname
+      character(:), allocatable :: frname
+      logical :: namfnd
 
       real(wp)              dskdsc ( dskdsz )
       real(wp)              et
@@ -67180,7 +67154,7 @@ contains
 
          else
 
-            call frmnam ( ctx, segfid, frname )
+            call frame_name_of ( ctx, segfid, frname, namfnd )
 
             if ( frname == ' ' ) then
 
@@ -75345,8 +75319,7 @@ contains
       integer(ip), parameter :: abclen = 15
       integer(ip), parameter :: maxitr = 10
       integer(ip), parameter :: maxl = 36
-      integer(ip), parameter :: frnmln = 32
-      character(frnmln)     frname
+      character(:), allocatable :: frname
       character(abclen)     loccor
       real(wp)              etdiff
       real(wp)              j2dir  ( 3 )
@@ -75533,7 +75506,7 @@ contains
 !     target body.  We'll want the state of the target relative to
 !     the observer in this body-fixed frame.
 !
-      call cidfrm ( ctx, trgcde, frcode, frname, fnd )
+      call frame_of_center ( ctx, trgcde, frcode, frname, fnd )
 
       if ( .not. fnd ) then
 
@@ -78010,7 +77983,6 @@ contains
       integer(ip), parameter :: mxcvit = 10
       integer(ip), parameter :: mxncit = 3
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: loclen = 15
       integer(ip), parameter :: j2code = 1
       character(loclen)     locstr
@@ -84392,7 +84364,6 @@ contains
       use pepper_inc_zzctr
       implicit none
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
       integer(ip)           fxcent
       integer(ip)           fxclss
       integer(ip)           fxtpid
@@ -84402,11 +84373,13 @@ contains
       logical               trgfnd
       logical               update
       integer(ip) :: trgcde
-      if ( .not. allocated ( ctx%dskxsi_state ) ) allocate ( ctx%dskxsi_state )
+      if ( .not. allocated ( ctx%dskxsi_state ) ) then
+         allocate ( ctx%dskxsi_state )
+         ctx%dskxsi_state%prvfrm = ' '
+      end if
       associate ( first => ctx%dskxsi_state%first, &
                   fixfid => ctx%dskxsi_state%fixfid, &
                   frmctr => ctx%dskxsi_state%frmctr, &
-                  prvfrm => ctx%dskxsi_state%prvfrm, &
                   prvtcd => ctx%dskxsi_state%prvtcd, &
                   svtcde => ctx%dskxsi_state%svtcde, &
                   svtfnd => ctx%dskxsi_state%svtfnd, &
@@ -84491,7 +84464,7 @@ contains
 
       end if
 
-      newfrm = ( fixref /= prvfrm ) .or. first
+      newfrm = ( fixref /= ctx%dskxsi_state%prvfrm ) .or. first
       newtrg = ( trgcde /= prvtcd ) .or. first
 
 !
@@ -84557,7 +84530,7 @@ contains
 !        We have a valid frame at this point. Save the name.
 !
          first  = .false.
-         prvfrm = fixref
+         ctx%dskxsi_state%prvfrm = fixref
 
 !
 !        Update the previous target ID code as well.
@@ -85348,7 +85321,6 @@ contains
       use pepper_inc_zzctr
       implicit none
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
       integer(ip)           fxcent
       integer(ip)           fxclss
       integer(ip)           fxtpid
@@ -85359,11 +85331,13 @@ contains
       logical               trgfnd
       logical               update
       integer(ip) :: trgcde
-      if ( .not. allocated ( ctx%dskxv_state ) ) allocate ( ctx%dskxv_state )
+      if ( .not. allocated ( ctx%dskxv_state ) ) then
+         allocate ( ctx%dskxv_state )
+         ctx%dskxv_state%prvfrm = ' '
+      end if
       associate ( first => ctx%dskxv_state%first, &
                   fixfid => ctx%dskxv_state%fixfid, &
                   frmctr => ctx%dskxv_state%frmctr, &
-                  prvfrm => ctx%dskxv_state%prvfrm, &
                   prvtcd => ctx%dskxv_state%prvtcd, &
                   svtcde => ctx%dskxv_state%svtcde, &
                   svtfnd => ctx%dskxv_state%svtfnd, &
@@ -85444,7 +85418,7 @@ contains
 
       end if
 
-      newfrm = ( fixref /= prvfrm ) .or. first
+      newfrm = ( fixref /= ctx%dskxv_state%prvfrm ) .or. first
       newtrg = ( trgcde /= prvtcd ) .or. first
 
 !
@@ -85510,7 +85484,7 @@ contains
 !        We have a valid frame at this point. Save the name.
 !
          first  = .false.
-         prvfrm = fixref
+         ctx%dskxv_state%prvfrm = fixref
 
 !
 !        Update the previous target ID code as well.
@@ -86660,7 +86634,6 @@ contains
       character(*), parameter :: rname = 'ILLUMG'
       integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: maxl = 36
-      integer(ip), parameter :: frnmln = 32
       character(cvtlen)     pntdef
       character(shplen)     shpstr
       character(sublen)     subtyp
@@ -87844,7 +87817,6 @@ contains
       implicit none
       character(*), parameter :: rname = 'SRFNRM'
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
       character(cvtlen)     lmbtyp
       character(shplen)     shpstr
       character(sublen)     subtyp
@@ -90493,7 +90465,6 @@ contains
       character(*), parameter :: rname = 'ILLUMF'
       real(wp), parameter :: tolscl = 1.0e-10_wp
       integer(ip), parameter :: maxl = 36
-      integer(ip), parameter :: frnmln = 32
       character(cvtlen)     pntdef
       character(shplen)     shpstr
       character(sublen)     subtyp
@@ -92843,7 +92814,6 @@ contains
       implicit none
       character(*), parameter :: rname = 'LATSRF'
       integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: frnmln = 32
       character(cvtlen)     lmbtyp
       character(shplen)     shpstr
       character(sublen)     subtyp
@@ -94900,7 +94870,6 @@ contains
       implicit none
       character(*), parameter :: rname = 'SINCPT'
       integer(ip), parameter :: maxl = 36
-      integer(ip), parameter :: frnmln = 32
       character(cvtlen)     pntdef
       character(shplen)     shpstr
       character(sublen)     subtyp
@@ -96807,7 +96776,6 @@ contains
       real(wp), parameter :: cnvlim = 1.0e-17_wp
       integer(ip), parameter :: maxitr = 5
       integer(ip), parameter :: maxl = 36
-      integer(ip), parameter :: frnmln = 32
       character(cvtlen)     pntdef
       character(shplen)     shpstr
       character(tmtlen)     trmstr
@@ -98794,7 +98762,6 @@ contains
       integer(ip), parameter :: maxitr = 10
       integer(ip), parameter :: sun = 10
       integer(ip), parameter :: maxl = 36
-      integer(ip), parameter :: frnmln = 32
       character(cvtlen)     pntdef
       character(shplen)     shpstr
       character(sublen)     subtyp
@@ -102934,7 +102901,6 @@ contains
       integer(ip), parameter :: maxitr = 5
       integer(ip), parameter :: ssb = 0
       integer(ip), parameter :: maxl = 36
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: maxivl = 1000
       integer(ip), parameter :: maxwin = 2 * maxivl
@@ -106124,7 +106090,6 @@ contains
       integer(ip), parameter :: maxitr = 5
       integer(ip), parameter :: ssb = 0
       integer(ip), parameter :: maxl = 36
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: maxivl = 1000
       integer(ip), parameter :: maxwin = 2 * maxivl

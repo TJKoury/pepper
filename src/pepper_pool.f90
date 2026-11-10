@@ -15858,6 +15858,56 @@ contains
       end associate
       end procedure gcpool
 
+      !> Return one string value of a character kernel variable, of any
+      !> length (PEPPER).
+      module procedure pool_string
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip) :: i
+      value = ''
+      found = .false.
+      if ( present ( n ) ) n = 0
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
+      if ( ctx%failed() ) return
+      if ( ps%first ) call zzpini ( ctx, ps )
+      i = ps%find ( name )
+      if ( i == 0 ) return
+      if ( ps%vars(i)%kind /= pool_character ) return
+      if ( present ( n ) ) n = ps%vars(i)%n
+      if ( nth < 1 .or. nth > ps%vars(i)%n ) return
+      value = ps%vars(i)%cvals(nth)%s
+      found = .true.
+      end associate
+      end procedure pool_string
+
+      !> The names of the kernel variables that match a template, of any
+      !> length (PEPPER).
+      module procedure pool_names
+      use pepper_kinds, only: ip
+      use pepper_containers, only: grow
+      use pepper_strings, only: matchi
+      implicit none
+      integer(ip) :: k
+      integer(ip) :: n
+      allocate ( names(0) )
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
+      if ( ctx%failed() ) return
+      if ( ps%first ) call zzpini ( ctx, ps )
+      n = 0
+      do k = 1, ps%nslots
+         if ( .not. allocated ( ps%vars(k)%name ) ) cycle
+         if ( matchi ( ps%vars(k)%name, template, '*', '%' ) ) then
+            n = n + 1
+            call grow ( names, n )
+            names(n)%s = ps%vars(k)%name
+         end if
+      end do
+      names = names(1:n)
+      end associate
+      end procedure pool_names
+
       module procedure gdpool
 !! ## Abstract
 !!

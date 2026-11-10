@@ -7362,6 +7362,16 @@ contains
       end procedure zzbodn2c
 
       module procedure zzbodc2n
+      use pepper_kinds, only: ip
+      implicit none
+      character(:), allocatable :: full
+      call body_name_of ( ctx, code, full, found )
+      if ( found ) name = full
+      end procedure zzbodc2n
+
+!> PEPPER: the name of a body from its ID code, of any length (the body of
+!> ZZBODC2N, which copies the name into its fixed-length argument).
+      module procedure body_name_of
 !! ## Abstract
 !!
 !!     SPICE Private routine intended solely for the support of SPICE
@@ -7566,6 +7576,8 @@ contains
       logical :: lupdte
       integer(ip) :: j
 !     PEPPER: apply the body names defined through other contexts.
+      name = ''
+      found = .false.
       call sync_boddefs ( ctx )
       if ( ctx%failed() ) return
       if ( .not. allocated ( ctx%zzbodtrn ) ) then
@@ -7738,7 +7750,7 @@ contains
 
       return
       end associate
-      end procedure zzbodc2n
+      end procedure body_name_of
 
       !> Add a name/code pair to this context's table of defined names (the
       !> code of SPICELIB's ZZBODDEF; zzboddef also records it in the instance).

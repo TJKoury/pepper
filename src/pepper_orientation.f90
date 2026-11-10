@@ -1013,11 +1013,10 @@ contains
       integer(ip), parameter :: mxphas = 4
       integer(ip), parameter :: mxpoly = 3
       integer(ip), parameter :: namlen = 32
-      integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: timlen = 35
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: maxbod = 157
-      character(frnmln) :: fixfrm
+      character(:), allocatable :: fixfrm
       character(timlen) :: timstr
       integer(ip) :: nphsco
       integer(ip) :: reqref
@@ -1194,7 +1193,7 @@ contains
 !              really identified by a PCK frame class ID code, though
 !              most of the documentation just calls it a body ID code.
 !
-               call ccifrm ( ctx, pck, body,  frcode, fixfrm, cent, found )
+               call frame_of_class ( ctx, pck, body,  frcode, fixfrm, cent, found )
                call etcal  ( ctx, et,  timstr )
 
                errmsg = 'PCK data required to compute the orientation ' &
@@ -2129,7 +2128,7 @@ contains
       integer(ip) :: tail
       character(wdsize) :: units
       integer(ip) :: ar
-      character(wdsize) :: name
+      character(:), allocatable :: name
       real(wp) :: tempd
       real(wp) :: quatrn ( 0:3 )
       character(wdsize) :: agent
@@ -2139,7 +2138,9 @@ contains
       logical :: buffrd
       real(wp) :: qtmp   ( 0:3 )
       character(wdsize) :: idstr
-      character(wdsize) :: altnat
+      character(:), allocatable :: altnat
+      character(:), allocatable :: item ( : )
+      character(:), allocatable :: alt ( : )
       real(wp) :: matrix ( 3,    3      )
       integer(ip) :: i
       integer(ip) :: n
@@ -2150,14 +2151,12 @@ contains
       logical :: update
       real(wp) :: angles ( 3 )
       integer(ip) :: axes   ( 3 )
-      character(wdsize) :: frname
+      character(:), allocatable :: frname
       if ( .not. allocated ( ctx%tkfram_state ) ) then
          allocate ( ctx%tkfram_state )
          call init_tkfram_state ( ctx%tkfram_state )
       end if
-      associate ( alt => ctx%tkfram_state%alt, &
-                  item => ctx%tkfram_state%item, &
-                  oldagt => ctx%tkfram_state%oldagt, &
+      associate ( oldagt => ctx%tkfram_state%oldagt, &
                   buffd => ctx%tkfram_state%buffd, &
                   at => ctx%tkfram_state%at, &
                   buffi => ctx%tkfram_state%buffi, &
@@ -2268,7 +2267,7 @@ contains
 !     requested frame.  (Each frame has its own agent).
 !
       call intstr ( frcode, idstr  )
-      call frmnam ( ctx, frcode, frname )
+      call frame_name_of ( ctx, frcode, frname, fnd )
 
       if ( frname == ' ' ) then
 
@@ -2285,7 +2284,7 @@ contains
       agent  = 'TKFRAME_' // idstr( :rtrim(idstr) )
       r      =  rtrim(agent)
 
-      altnat = 'TKFRAME_' // frname( :rtrim(frname) )
+      altnat = 'TKFRAME_' // frname
       ar     =  rtrim(altnat)
 
 !
@@ -2330,6 +2329,10 @@ contains
 !        are TKFRAME_#_SPEC and TKFRAME_#_RELATIVE where # is
 !        replaced by the text value of ID or the frame name.
 !
+!        PEPPER: the kernel variable names are as long as the frame
+!        name needs (SPICELIB: 32 characters, saved work arrays).
+!
+         allocate ( character(max(r, ar) + 10) :: item(nvars), alt(nitems) )
          item(1) = agent(1:r) // '_SPEC'
          item(2) = agent(1:r) // '_RELATIVE'
 
@@ -2392,7 +2395,7 @@ contains
 !        If we make it this far, look up the SPEC and RELATIVE frame.
 !
          call gcpool ( ctx, item(1),   1, 1, n, spec,  fnd )
-         call gcpool ( ctx, item(2),   1, 1, n, name,  fnd )
+         call ctx%pool_string ( item(2), 1_ip, name, fnd )
 
 !
 !        Look up the ID code for this frame.
@@ -2971,28 +2974,20 @@ contains
       use pepper_inc_zzdyn
       implicit none
       integer(ip) :: idcode_1(1)  !! one-element copy of idcode (array argument)
-      character(*), parameter :: templt = 'FRAME_#_#'
 
 !
 !     TEMPLN is the length of the keyword template, minus
 !     the sum of the lengths of the two substitution markers ('#').
 !
-      integer(ip), parameter :: templn = 7
 
 !
 !     Local variables
 !
-      character(frnmln)     outnam
-      character(kvnmln)     cdestr
+      character(:), allocatable :: outnam
       character(1)          dtype
-      character(kvnmln)     kvname
+      character(:), allocatable :: kvname
 
-      integer(ip)           codeln
-      integer(ip)           itemln
       integer(ip)           n
-      integer(ip)           nameln
-      integer(ip)           reqnam
-      integer(ip)           reqnum
 
       logical               found
 
@@ -3004,184 +2999,13 @@ contains
 !
 !     Convert the frame code to a string.
 !
-      call intstr ( frcode, cdestr )
-
+!
+!     PEPPER: the kernel variable names have any length (SPICELIB:
+!     32 characters, VARNAMETOOLONG); the lookup is shared by the
+!     ZZDYNxxx routines.
+!
+      call dynamic_frame_variable ( ctx, frname, frcode, item, .true., kvname, found, n, dtype )
       if ( ctx%failed() ) return
-
-!
-!     Get the lengths of the input frame code, name and item.
-!     Compute the length of the ID-based kernel variable name;
-!     check this length against the maximum allowed value.  If
-!     the name is too long, proceed to look up the form of the
-!     kernel variable name based on the frame name.
-!
-      codeln = rtrim ( cdestr )
-      nameln = rtrim ( frname )
-      itemln = rtrim ( item   )
-
-      reqnum = codeln + itemln + templn
-
-      if ( reqnum <= kvnmln ) then
-!
-!        First try looking for a kernel variable including the frame ID
-!        code.
-!
-!        Note the template is
-!
-!            'FRAME_#_#'
-!
-         call repmi  ( ctx, templt, '#',   frcode, kvname )
-         call repmc  ( kvname, '#',   item,   kvname )
-         call dtpool ( ctx, kvname, found, n,      dtype  )
-
-      else
-!
-!        The ID-based name is too long. We can't find the variable if
-!        we can't look it up.
-!
-         found = .false.
-
-      end if
-
-      if ( .not. found ) then
-!
-!        We need to look up the frame name-based kernel variable.
-!        Determine the length of the name of this variable; make
-!        sure it's not too long.
-!
-         reqnam = nameln + itemln + templn
-
-         if (       ( reqnam > kvnmln ) &
-              .and. ( reqnum > kvnmln ) ) then
-!
-!           Both forms of the name are too long.
-!
-            call ctx%setmsg ( 'Kernel variable FRAME_#_# has length #; '// &
-                          'kernel variable FRAME_#_# has length #; '// &
-                          'maximum allowed length is #.  Neither '  // &
-                          'variable could be searched for in the '  // &
-                          'kernel pool due to these name length '   // &
-                          'errors.'                                 )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnum                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnam                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%sigerr ( 'SPICE(VARNAMETOOLONG)'                   )
-            return
-
-         else if  ( reqnam > kvnmln ) then
-!
-!           We couldn't find the variable having the ID-based name,
-!           and the frame name-based variable name is too long to
-!           look up.
-!
-!           Note that at this point KVNAME contains the ID-based
-!           kernel variable name.
-!
-            call ctx%setmsg ( 'Kernel variable # was expected to '      // &
-                          'be present in the kernel pool but '      // &
-                          'was not found.  The alternative '        // &
-                          'form of kernel variable name '           // &
-                          'FRAME_#_# was not searched for '         // &
-                          'because this name has excessive '        // &
-                          'length (# characters vs allowed '        // &
-                          'maximum of #).  One of these variables ' // &
-                          'is needed to define the parameterized '  // &
-                          'dynamic frame #.  Usually '              // &
-                          'this type of problem is due to a '       // &
-                          'missing keyword assignment in a frame '  // &
-                          'kernel.  Another, less likely, '         // &
-                          'possibility is that other errors in a '  // &
-                          'frame kernel have confused the '         // &
-                          'frame subsystem into wrongly '           // &
-                          'deciding these variables are needed.'    )
-            call ctx%errch  ( '#',  kvname                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnam                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         end if
-
-!
-!        Now try looking for a kernel variable including the frame
-!        name.
-!
-         call repmc  ( templt, '#',   frname, kvname )
-         call repmc  ( kvname, '#',   item,   kvname )
-         call dtpool ( ctx, kvname, found, n,      dtype  )
-
-         if (  ( .not. found ) .and. ( reqnum > kvnmln )  ) then
-!
-!           The kernel variable's presence (in one form or the other)
-!           is mandatory:  signal an error.  The error message
-!           depends on which variables we were able to try to
-!           look up.  In this case, we never tried to look up the
-!           frame ID-based name.
-!
-!           Note that at this point KVNAME contains the name-based
-!           kernel variable name.
-!
-            call ctx%setmsg ( 'Kernel variable # was expected to '      // &
-                          'be present in the kernel pool but '      // &
-                          'was not found.  The alternative '        // &
-                          'form of kernel variable name '           // &
-                          'FRAME_#_# was not searched for '         // &
-                          'because this name has excessive '        // &
-                          'length (# characters vs allowed '        // &
-                          'maximum of #).  One of these variables ' // &
-                          'is needed to define the parameterized '  // &
-                          'dynamic frame #.  Usually '              // &
-                          'this type of problem is due to a '       // &
-                          'missing keyword assignment in a frame '  // &
-                          'kernel.  Another, less likely, '         // &
-                          'possibility is that other errors in a '  // &
-                          'frame kernel have confused the '         // &
-                          'frame subsystem into wrongly '           // &
-                          'deciding these variables are needed.'    )
-            call ctx%errch  ( '#',  kvname                              )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errint ( '#',  reqnum                              )
-            call ctx%errint ( '#',  kvnmln                              )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         else if ( .not. found ) then
-!
-!           We tried to look up both names and failed.
-!
-            call ctx%setmsg ( 'At least one of the kernel variables '   // &
-                          'FRAME_#_# or FRAME_#_# was expected to ' // &
-                          'be present in the kernel pool but '      // &
-                          'neither was found. One of these '        // &
-                          'variables is needed to define the '      // &
-                          'parameterized dynamic frame #.  Usually '// &
-                          'this type of problem is due to a '       // &
-                          'missing keyword assignment in a frame '  // &
-                          'kernel.  Another, less likely, '         // &
-                          'possibility is that other errors in a '  // &
-                          'frame kernel have confused the '         // &
-                          'frame subsystem into wrongly '           // &
-                          'deciding these variables are needed.'    )
-            call ctx%errint ( '#',  frcode                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%errch  ( '#',  item                                )
-            call ctx%errch  ( '#',  frname                              )
-            call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                )
-            return
-
-         end if
-
-      end if
 
 !
 !     Getting to this point means we found a kernel variable. The name
@@ -3213,7 +3037,7 @@ contains
 !
 !        Look up the kernel variable.
 !
-         call gcpool ( ctx, kvname, 1, 1, n, outnam, found )
+         call ctx%pool_string ( kvname, 1_ip, outnam, found )
 
          if ( .not. found ) then
 
@@ -3530,6 +3354,7 @@ contains
 !
       if ( .not. update       .and. &
            savcde /= 0      .and. &
+           len_trim(frname) <= len(savnam) .and. &
            savnam == frname       ) then
 
 !
@@ -3552,8 +3377,18 @@ contains
 !
          call namfrm( ctx, frname, frcode )
 
-         savnam = frname
-         savcde = frcode
+!
+!        PEPPER: a name longer than the caller's saved name is not saved
+!        (its truncation could match another, shorter name); it is
+!        looked up on every call.
+!
+         if ( len_trim(frname) <= len(savnam) ) then
+            savnam = frname
+            savcde = frcode
+         else
+            savnam = ' '
+            savcde = 0
+         end if
 
 !
 !        Check out.
@@ -3811,7 +3646,6 @@ contains
       use pepper_inc_frmtyp
 
       implicit none
-      integer(ip), parameter :: frnmln = 32
 
       integer(ip), parameter :: timlen = 35
 
@@ -3820,8 +3654,9 @@ contains
 !
 !     Local variables
 !
-      character(frnmln)     bname ( 2 )
-      character(frnmln)     name  ( 2 )
+      type(string) :: bname ( 2 )
+      logical :: namfnd
+      type(string) :: name  ( 2 )
       character(phrsln)     phrase
       character(timlen)     timstr
 
@@ -3870,25 +3705,25 @@ contains
 !
 !     Get the names of the participating frames, if available.
 !
-      call frmnam ( ctx, frames(1),   name(1) )
-      call frmnam ( ctx, frames(2),   name(2) )
-      call frmnam ( ctx, endps(1),    bname(1) )
-      call frmnam ( ctx, endps(2),    bname(2) )
+      call frame_name_of ( ctx, frames(1), name(1)%s, namfnd )
+      call frame_name_of ( ctx, frames(2), name(2)%s, namfnd )
+      call frame_name_of ( ctx, endps(1), bname(1)%s, namfnd )
+      call frame_name_of ( ctx, endps(2), bname(2)%s, namfnd )
 
       if ( ctx%failed() ) return
 
       do i = 1, 2
 
-         if ( name(i) == ' ' ) then
+         if ( name(i)%s == ' ' ) then
 
-            name(i)   = 'Name not available'
+            name(i)%s   = 'Name not available'
             havnam(i) = .false.
          else
             havnam(i) = .true.
          end if
 
-         if ( bname(i) == ' ' ) then
-            bname(i) = 'Name not available'
+         if ( bname(i)%s == ' ' ) then
+            bname(i)%s = 'Name not available'
          end if
 
       end do
@@ -3904,7 +3739,7 @@ contains
       do i = 1, 2
 
          call repmi ( ctx, errmsg, '#', frames(i), errmsg )
-         call repmc ( errmsg, '@', name(i),   errmsg )
+         call repmc ( errmsg, '@', name(i)%s,   errmsg )
 
       end do
 
@@ -3920,13 +3755,13 @@ contains
             phrase = 'Frame # could be transformed to frame # (@).'
 
             if ( havnam(i) ) then
-               call repmc ( phrase, '#', name(i),   phrase )
+               call repmc ( phrase, '#', name(i)%s,   phrase )
             else
                call repmi ( ctx, phrase, '#', frames(i), phrase )
             end if
 
             call repmi ( ctx, phrase, '#', endps(i),  phrase )
-            call repmc ( phrase, '@', bname(i),  phrase )
+            call repmc ( phrase, '@', bname(i)%s,  phrase )
 
             call suffix ( phrase, 1, errmsg )
 
@@ -4025,7 +3860,7 @@ contains
                   //       'frame.'
 
                   if ( havnam(i) ) then
-                     call repmc ( phrase, '#', name(i),   phrase )
+                     call repmc ( phrase, '#', name(i)%s,   phrase )
                   else
                      call repmi ( ctx, phrase, '#', frames(i), phrase )
                   end if
@@ -4467,7 +4302,6 @@ contains
 !
 !     Other parameters
 !
-      integer(ip), parameter :: frnmln = 32
 
       integer(ip), parameter :: timlen = 80
 
@@ -4497,16 +4331,16 @@ contains
 !
 !     Local variables
 !
-      character(frnmln)     basnam
+      character(:), allocatable :: basnam
       character(1)          bastyp
-      character(frnmln)     frname
+      character(:), allocatable :: frname
       character(kvnmln)     kvalgn
       character(kvnmln)     kvclid
       character(kvnmln)     kvcent
       character(kvnmln)     kvclas
-      character(kvnmln)     kvid
+      character(:), allocatable :: kvid
       character(kvnmln)     kvfnam
-      character(kvnmln)     kvnams ( nkv )
+      type(string) :: kvnams ( nkv )
       character(kvnmln)     kvstrt
       character(kvnmln)     kvstop
       character(1)          stptyp
@@ -4579,7 +4413,8 @@ contains
       frclas = frclas_1(1)
       call gipool ( ctx, kvclid, 1, 1, n, frclid_1, kvfnd(ixclid) )
       frclid = frclid_1(1)
-      call gcpool( ctx, kvfnam, 1, 1, n, frname, kvfnd(ixfnam) )
+      call ctx%pool_string ( kvfnam, 1_ip, frname, kvfnd(ixfnam) )
+      kvid = ' '
 
       if ( ctx%failed() ) then
 
@@ -4596,7 +4431,7 @@ contains
 !
 !        Use the frame name to fetch the switch frame ID variable.
 !
-         call repmc ( tmid, '#', frname, kvid )
+         kvid = 'FRAME_' // trim ( adjustl ( frname ) )
 
          call gipool ( ctx, kvid, 1, 1, n, fid_1, kvfnd(ixid) )
          fid = fid_1(1)
@@ -4681,12 +4516,12 @@ contains
 !     Store the kernel variable names in order to prepare for
 !     checking availability of required variables.
 !
-      kvnams(ixid)   = kvid
-      kvnams(ixfnam) = kvfnam
-      kvnams(ixcent) = kvcent
-      kvnams(ixclas) = kvclas
-      kvnams(ixclid) = kvclid
-      kvnams(ixalgn) = kvalgn
+      kvnams(ixid)%s = kvid
+      kvnams(ixfnam)%s = kvfnam
+      kvnams(ixcent)%s = kvcent
+      kvnams(ixclas)%s = kvclas
+      kvnams(ixclid)%s = kvclid
+      kvnams(ixalgn)%s = kvalgn
 
 !
 !     Check for required variables that haven't been supplied.
@@ -4708,7 +4543,7 @@ contains
             //            'switch frame specification has not been ' &
             //            'loaded, or if the specification is present ' &
             //            'but is incorrect.'                         )
-            call ctx%errch  ( '#', kvnams(i)                              )
+            call ctx%errch  ( '#', kvnams(i)%s                            )
             call ctx%errint ( '#', framid                                 )
             call ctx%sigerr ( 'SPICE(MISSINGFRAMEVAR)'                    )
             return
@@ -4721,8 +4556,8 @@ contains
 !     Find out whether time bounds are supplied, and if so, which data
 !     type is used to represent them.
 !
-      kvnams(ixstrt) = kvstrt
-      kvnams(ixstop) = kvstop
+      kvnams(ixstrt)%s = kvstrt
+      kvnams(ixstop)%s = kvstop
 
       call dtpool( ctx, kvstrt, kvfnd(ixstrt), nstart, strtyp )
       call dtpool( ctx, kvstop, kvfnd(ixstop), nstop,  stptyp )
@@ -4939,8 +4774,7 @@ contains
 
          do i = 1, nbases
 
-            call gcpool( ctx, kvalgn,  i,       1, &
-                         n,       basnam,  kvfnd(ixalgn) )
+            call ctx%pool_string ( kvalgn, i, basnam, kvfnd(ixalgn) )
 
             if ( ctx%failed() ) then
 !
