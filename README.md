@@ -100,6 +100,32 @@ error handling starts with SPICELIB's settings (`erract`, `errprt` and
 Bugs and inconsistencies found in SPICELIB N0067 are listed in
 `spicelib_bugs.md`; the design and its history are in `plan.md`.
 
+## Prepared queries
+
+A state or frame query can be resolved once (names, aberration correction,
+frame) and then evaluated at any number of epochs, one at a time or as a
+batch. The results are SPKEZR's, PXFORM's and SXFORM's, to the last bit, and
+states are 1.5 to 4 times faster (`pepper_vs_spicelib.md`, "Prepared
+queries"):
+
+```fortran
+use pepper_instance, only: state_query, rotation_query
+
+type(state_query) :: q
+type(rotation_query) :: r
+real(wp) :: state(6), lt, states(6, 1000), lts(1000), ets(1000), rot(3, 3)
+
+call ctx%prepare_state(q, 'MOON', 'EARTH', 'J2000', 'LT+S')
+call ctx%query_state(q, et, state, lt)         ! one epoch
+call ctx%query_state(q, ets, states, lts)      ! a batch (lts is optional)
+
+call ctx%prepare_rotation(r, 'J2000', 'ITRF93')
+call ctx%query_rotation(r, et, rot)            ! PXFORM; query_transform: SXFORM
+```
+
+A query keeps the segments it used and their current records, so a thread
+uses its own queries (as its own context).
+
 ## Results of any size
 
 SPICELIB makes the caller size every output array, and fails (or truncates)

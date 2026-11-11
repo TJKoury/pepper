@@ -42,6 +42,7 @@ module pepper_instance
    use pepper_output, only: wrline, byebye
    use pepper_containers, only: string, string_map
    use pepper_windows, only: interval_list
+   use pepper_query_types, only: state_query, rotation_query, spk_segment_cache
    ! The state types of the subsystems, and the routines that set the
    ! initial values of the large ones.
    use pepper_states
@@ -51,6 +52,7 @@ module pepper_instance
    private
 
    public :: pepper_spice, pepper_context
+   public :: state_query, rotation_query
 
    !> Number of entries the kernel pool's change log keeps; when it is full,
    !> the log is emptied and every variable counts as changed.
@@ -1160,6 +1162,17 @@ module pepper_instance
       procedure, non_overridable :: spkez
       procedure, non_overridable :: spkcvo
       procedure, non_overridable :: spkezr
+      procedure, non_overridable :: prepare_state
+      procedure, non_overridable :: query_state_one
+      procedure, non_overridable :: query_state_batch
+      generic :: query_state => query_state_one, query_state_batch
+      procedure, non_overridable :: prepare_rotation
+      procedure, non_overridable :: query_rotation_one
+      procedure, non_overridable :: query_rotation_batch
+      generic :: query_rotation => query_rotation_one, query_rotation_batch
+      procedure, non_overridable :: query_transform_one
+      procedure, non_overridable :: query_transform_batch
+      generic :: query_transform => query_transform_one, query_transform_batch
       procedure, non_overridable :: spkcpo
       procedure, non_overridable :: spkcvt
       procedure, non_overridable :: spkcpt
@@ -10539,6 +10552,91 @@ module pepper_instance
          real(wp), intent(out) :: starg    ( 6 )  !! State of target.
          real(wp), intent(out) :: lt  !! One way light time between observer and target.
       end subroutine spkezr
+
+      !> Prepare a state query (PEPPER; [[pepper_query_types]]): the state of
+      !> a target relative to an observer in a frame, with an aberration
+      !> correction, as [[spkezr]], resolved once for evaluation at any number
+      !> of epochs with `query_state`.
+      !>
+      !> The errors are those of [[spkezr]] for these arguments (unknown
+      !> names, an invalid correction, an unknown frame).
+      module subroutine prepare_state ( ctx, q, target, observer, frame, abcorr )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         type(state_query), intent(out) :: q  !! the query
+         character(*), intent(in) :: target  !! the target's name or ID code
+         character(*), intent(in) :: observer  !! the observer's name or ID code
+         character(*), intent(in) :: frame  !! the frame of the state
+         character(*), intent(in) :: abcorr  !! the aberration correction, as for [[spkezr]]
+      end subroutine prepare_state
+
+      !> The state of a prepared query at one epoch (PEPPER): [[spkezr]]'s
+      !> result, to the last bit. Bound as the generic `query_state`.
+      module subroutine query_state_one ( ctx, q, et, state, lt )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         type(state_query), intent(inout) :: q  !! the query (its segment cache is updated)
+         real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+         real(wp), intent(out) :: state(6)  !! the state of the target relative to the observer
+         real(wp), intent(out) :: lt  !! the one-way light time between them
+      end subroutine query_state_one
+
+      !> The states of a prepared query at many epochs (PEPPER). Bound as the
+      !> generic `query_state`.
+      module subroutine query_state_batch ( ctx, q, ets, states, lts )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         type(state_query), intent(inout) :: q  !! the query (its segment cache is updated)
+         real(wp), intent(in) :: ets(:)  !! the epochs (TDB seconds past J2000)
+         real(wp), intent(out) :: states(:,:)  !! the states, shape (6, size(ets)) at least
+         real(wp), intent(out), optional :: lts(:)  !! the light times
+      end subroutine query_state_batch
+
+      !> Prepare a frame transformation query (PEPPER;
+      !> [[pepper_query_types]]): the transformation from one frame to
+      !> another, as [[pxform]] and [[sxform]], resolved once for evaluation
+      !> with `query_rotation` and `query_transform`. A rotation between
+      !> inertial and fixed TK frames is computed once.
+      module subroutine prepare_rotation ( ctx, q, from, to )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         type(rotation_query), intent(out) :: q  !! the query
+         character(*), intent(in) :: from  !! the frame transformed from
+         character(*), intent(in) :: to  !! the frame transformed to
+      end subroutine prepare_rotation
+
+      !> The rotation of a prepared frame query at one epoch (PEPPER):
+      !> [[pxform]]'s result. Bound as the generic `query_rotation`.
+      module subroutine query_rotation_one ( ctx, q, et, rotate )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         type(rotation_query), intent(inout) :: q  !! the query
+         real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+         real(wp), intent(out) :: rotate(3, 3)  !! the rotation
+      end subroutine query_rotation_one
+
+      !> The rotations of a prepared frame query at many epochs (PEPPER).
+      !> Bound as the generic `query_rotation`.
+      module subroutine query_rotation_batch ( ctx, q, ets, rotations )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         type(rotation_query), intent(inout) :: q  !! the query
+         real(wp), intent(in) :: ets(:)  !! the epochs (TDB seconds past J2000)
+         real(wp), intent(out) :: rotations(:,:,:)  !! the rotations, shape (3, 3, size(ets)) at least
+      end subroutine query_rotation_batch
+
+      !> The state transformation of a prepared frame query at one epoch
+      !> (PEPPER): [[sxform]]'s result. Bound as the generic
+      !> `query_transform`.
+      module subroutine query_transform_one ( ctx, q, et, xform )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         type(rotation_query), intent(inout) :: q  !! the query
+         real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+         real(wp), intent(out) :: xform(6, 6)  !! the state transformation
+      end subroutine query_transform_one
+
+      !> The state transformations of a prepared frame query at many epochs
+      !> (PEPPER). Bound as the generic `query_transform`.
+      module subroutine query_transform_batch ( ctx, q, ets, xforms )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         type(rotation_query), intent(inout) :: q  !! the query
+         real(wp), intent(in) :: ets(:)  !! the epochs (TDB seconds past J2000)
+         real(wp), intent(out) :: xforms(:,:,:)  !! the transformations, shape (6, 6, size(ets)) at least
+      end subroutine query_transform_batch
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines. Users should not call this routine directly due

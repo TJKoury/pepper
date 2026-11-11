@@ -333,6 +333,96 @@ The machine has 4 performance cores and 6 efficiency cores, so the scaling
 flattens past 4 threads. SPICELIB cannot run these queries in parallel at
 all.
 
+## Prepared queries
+
+PEPPER can resolve a state or frame query once and then evaluate it at any
+number of epochs (`ctx%prepare_state` and `ctx%query_state`,
+`ctx%prepare_rotation`, `ctx%query_rotation` and `ctx%query_transform`; see
+the README). The results are SPKEZR's, PXFORM's and SXFORM's, to the last
+bit (`test/core/test_queries.f90` compares 30,240 states over every
+combination of target, observer, frame and correction). A state query does
+less work per epoch:
+
+- the names, the aberration correction and the frame are resolved once;
+- the target's chain of segments is found from the segment descriptors
+  before any is evaluated, and only the links that the result needs are
+  evaluated (SPKGEO evaluates the target's whole chain to the solar system
+  barycenter: for the Moon from the Earth, the Earth-Moon barycenter's
+  segment, whose state it does not use);
+- for SPK types 2 and 3 (the planetary ephemerides) the query keeps each
+  segment's current Chebyshev record and reads a record only when the epoch
+  moves to another.
+
+`pixi run bench-queries` (`test/core/bench_queries.f90`, release build, the
+same machine and kernels as the ANISE comparison; 200,000 epochs per
+operation, random epochs over 20 years or sequential epochs 60 s apart):
+
+With the binary kernels in memory:
+
+| Operation | Epochs | SPICELIB routine (µs) | Prepared query (µs) | Batch (µs) | Speedup (query) | Speedup (batch) |
+|---|---|--:|--:|--:|--:|--:|
+| SPKEZR Moon from Earth, J2000, NONE | random | 0.268 | 0.121 | 0.120 | 2.2× | 2.2× |
+| SPKEZR Moon from Earth, J2000, NONE | sequential | 0.250 | 0.098 | 0.093 | 2.5× | 2.7× |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S | random | 0.858 | 0.535 | 0.550 | 1.6× | 1.6× |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S | sequential | 0.851 | 0.502 | 0.522 | 1.7× | 1.6× |
+| SPKEZR Mars barycenter from Earth, J2000, LT | random | 0.428 | 0.238 | 0.232 | 1.8× | 1.8× |
+| SPKEZR Mars barycenter from Earth, J2000, LT | sequential | 0.421 | 0.204 | 0.201 | 2.1× | 2.1× |
+| SPKEZR Sun from Earth, J2000, CN+S | random | 0.924 | 0.525 | 0.530 | 1.8× | 1.7× |
+| SPKEZR Sun from Earth, J2000, CN+S | sequential | 0.914 | 0.489 | 0.493 | 1.9× | 1.9× |
+| SPKEZR Moon from Earth, ITRF93, LT+S | random | 1.286 | 0.869 | 0.869 | 1.5× | 1.5× |
+| SPKEZR Moon from Earth, ITRF93, LT+S | sequential | 1.211 | 0.777 | 0.774 | 1.6× | 1.6× |
+| PXFORM J2000 to ITRF93 | random | 0.274 | 0.255 | 0.256 | 1.1× | 1.1× |
+| PXFORM J2000 to ITRF93 | sequential | 0.232 | 0.215 | 0.214 | 1.1× | 1.1× |
+| PXFORM J2000 to IAU_MARS | random | 0.585 | 0.562 | 0.569 | 1.0× | 1.0× |
+| PXFORM J2000 to IAU_MARS | sequential | 0.531 | 0.502 | 0.508 | 1.1× | 1.0× |
+| PXFORM MOON_ME to J2000 | random | 0.595 | 0.581 | 0.574 | 1.0× | 1.0× |
+| PXFORM MOON_ME to J2000 | sequential | 0.570 | 0.561 | 0.556 | 1.0× | 1.0× |
+| PXFORM J2000 to ECLIPJ2000 | random | 0.047 | 0.003 | 0.004 | 14.4× | 12.0× |
+| PXFORM J2000 to ECLIPJ2000 | sequential | 0.047 | 0.003 | 0.004 | 14.3× | 11.6× |
+| SXFORM J2000 to ITRF93 | random | 0.307 | 0.281 | 0.293 | 1.1× | 1.0× |
+| SXFORM J2000 to ITRF93 | sequential | 0.264 | 0.241 | 0.239 | 1.1× | 1.1× |
+
+With the binary kernels read from their files as needed:
+
+| Operation | Epochs | SPICELIB routine (µs) | Prepared query (µs) | Batch (µs) | Speedup (query) | Speedup (batch) |
+|---|---|--:|--:|--:|--:|--:|
+| SPKEZR Moon from Earth, J2000, NONE | random | 9.811 | 6.546 | 6.806 | 1.5× | 1.4× |
+| SPKEZR Moon from Earth, J2000, NONE | sequential | 0.378 | 0.098 | 0.093 | 3.9× | 4.1× |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S | random | 9.439 | 8.728 | 8.649 | 1.1× | 1.1× |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S | sequential | 1.201 | 0.498 | 0.516 | 2.4× | 2.3× |
+| SPKEZR Mars barycenter from Earth, J2000, LT | random | 8.649 | 8.389 | 8.297 | 1.0× | 1.0× |
+| SPKEZR Mars barycenter from Earth, J2000, LT | sequential | 0.576 | 0.201 | 0.199 | 2.9× | 2.9× |
+| SPKEZR Sun from Earth, J2000, CN+S | random | 11.138 | 9.730 | 9.305 | 1.1× | 1.2× |
+| SPKEZR Sun from Earth, J2000, CN+S | sequential | 1.378 | 0.486 | 0.491 | 2.8× | 2.8× |
+| SPKEZR Moon from Earth, ITRF93, LT+S | random | 15.988 | 15.033 | 15.019 | 1.1× | 1.1× |
+| SPKEZR Moon from Earth, ITRF93, LT+S | sequential | 1.717 | 0.826 | 0.823 | 2.1× | 2.1× |
+| PXFORM J2000 to ITRF93 | random | 3.722 | 3.697 | 3.692 | 1.0× | 1.0× |
+| PXFORM J2000 to ITRF93 | sequential | 0.269 | 0.250 | 0.244 | 1.1× | 1.1× |
+| PXFORM J2000 to IAU_MARS | random | 0.598 | 0.567 | 0.570 | 1.1× | 1.0× |
+| PXFORM J2000 to IAU_MARS | sequential | 0.523 | 0.499 | 0.497 | 1.0× | 1.1× |
+| PXFORM MOON_ME to J2000 | random | 1.746 | 1.715 | 1.707 | 1.0× | 1.0× |
+| PXFORM MOON_ME to J2000 | sequential | 0.604 | 0.593 | 0.586 | 1.0× | 1.0× |
+| PXFORM J2000 to ECLIPJ2000 | random | 0.046 | 0.003 | 0.004 | 14.1× | 11.7× |
+| PXFORM J2000 to ECLIPJ2000 | sequential | 0.046 | 0.003 | 0.004 | 14.2× | 11.7× |
+| SXFORM J2000 to ITRF93 | random | 3.758 | 3.736 | 3.744 | 1.0× | 1.0× |
+| SXFORM J2000 to ITRF93 | sequential | 0.296 | 0.273 | 0.275 | 1.1× | 1.1× |
+
+- **States:** 1.5 to 2.5 times faster in memory. Read from the files, the
+  gain is largest at sequential epochs (2 to 4 times: the query reads a
+  record only when the epoch leaves it); at random epochs the reading of
+  the files dominates.
+- **Frames:** about 1.1 times, from the names only. The time is in
+  evaluating the orientation itself (for ITRF93, the binary PCK; for
+  IAU_MARS, the text PCK's polynomials): rotations that do not depend on
+  time (inertial and fixed TK frames, such as J2000 to ECLIPJ2000) are
+  computed once and are 14 times faster.
+- **Against ANISE** (next section): ANISE takes 0.35 µs for the Moon from
+  the Earth and 0.78 µs for Mars from the Earth with LT+S; prepared queries
+  take 0.12 and 0.54 µs.
+- **Batches** give the speed of the single queries: the gain is in the
+  preparation. A batch is the place for further work (see
+  `modernization_options.md`).
+
 ## Compared with ANISE
 
 [ANISE](https://github.com/nyx-space/anise) (nyx-space) is a rewrite of
