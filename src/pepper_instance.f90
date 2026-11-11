@@ -95,6 +95,11 @@ module pepper_instance
       !> needs it after it was closed to make room. Set before the contexts
       !> open files (see [[set_max_open_files]]).
       integer(ip) :: open_files_limit = 23
+      !> FURNSH reads binary kernels (DAF: SPK, CK, binary PCK) whole into
+      !> memory, so that queries never read their files (see
+      !> [[set_in_memory]]; FURNSH's `in_memory` argument overrides it for
+      !> one call).
+      logical :: in_memory = .false.
       !> Incremented by every load and unload of an SPK, CK, PCK or DSK file;
       !> contexts discard their segment caches when it changed.
       integer(ip) :: segment_epoch = 0
@@ -172,6 +177,8 @@ module pepper_instance
       procedure, non_overridable :: failed => instance_failed
       procedure, non_overridable :: set_max_open_files
       procedure, non_overridable :: max_open_files
+      procedure, non_overridable :: set_in_memory
+      procedure, non_overridable :: kernel_memory
       ! Changes of the kernels: methods of the instance, not of its contexts
       procedure, non_overridable :: furnsh => spice_furnsh
       procedure, non_overridable :: unload => spice_unload
@@ -214,6 +221,11 @@ module pepper_instance
       logical :: print_trace = .true.  !! (the traceback: not kept by PEPPER)
       logical :: print_default = .true.  !! reports include the note on the default error handling
       integer(ip) :: files_seen = 0  !! the file_generation this context's record caches reflect
+      ! The file table entry of the DAF last read from memory (see
+      ! daf_image_slot), valid while the table's changes count is img_changes.
+      integer(ip) :: img_changes = -1  !! the file table's changes count when img_slot was found
+      integer(ip) :: img_handle = 0  !! the handle last looked up
+      integer(ip) :: img_slot = 0  !! its index in the file table (0: not in the table)
       ! Kernel pool watches (SWPOOL, CVPOOL, DWPOOL) of the context.
       type(pool_watch), allocatable :: watches(:)  !! the watches
       type(string_map) :: watch_map  !! index in watches of each agent
@@ -19667,7 +19679,6 @@ module pepper_instance
 
 contains
 
-   !> A new context for this instance.
    !> Set the number of files each context keeps open at the same time (the
    !> handle manager's unit table; default 23, as SPICELIB's UTSIZE). More
    !> makes queries spread over many files faster (fewer files closed and
@@ -19688,6 +19699,34 @@ contains
       n = this%open_files_limit
    end function max_open_files
 
+   !> Choose whether FURNSH reads binary kernels (DAF files: SPK, CK and
+   !> binary PCK) whole into memory (default: no). A file in memory is read
+   !> once, when it is loaded; every later query of it, in any context, copies
+   !> its data from memory instead of reading the file. This makes queries
+   !> at scattered epochs much faster (they read a different record of the
+   !> file nearly every time), at the cost of memory equal to the file's
+   !> size, once per instance. FURNSH's `in_memory` argument overrides this
+   !> for one call. Files already loaded are not changed.
+   subroutine set_in_memory(this, flag)
+      class(pepper_spice), intent(inout) :: this  !! the instance
+      logical, intent(in) :: flag  !! read binary kernels into memory
+      this%in_memory = flag
+   end subroutine set_in_memory
+
+   !> The memory used by the binary kernels loaded in memory (bytes).
+   pure integer(int64) function kernel_memory(this) result(bytes)
+      class(pepper_spice), intent(in) :: this  !! the instance
+      integer(ip) :: k
+      bytes = 0
+      if (.not. allocated(this%zzddhman)) return
+      do k = 1, this%zzddhman%nft
+         if (allocated(this%zzddhman%files(k)%image)) &
+            bytes = bytes + storage_size(this%zzddhman%files(k)%image, int64)/8* &
+            size(this%zzddhman%files(k)%image, kind=int64)
+      end do
+   end function kernel_memory
+
+   !> A new context for this instance.
    function new_context(this) result(ctx)
       class(pepper_spice), target, intent(in) :: this  !! the instance (must have the target
                                                        !! attribute)
@@ -19726,12 +19765,21 @@ contains
    !> PEPPER: a method of the instance (SPICELIB's FURNSH changes the
    !> kernels of the program); errors are signaled in the instance's
    !> context (see [[instance_context]]).
-   subroutine spice_furnsh(this, file)
+   !>
+   !> PEPPER: `in_memory` reads the binary kernels (DAF: SPK, CK, binary PCK)
+   !> whole into memory: the file, or every binary kernel a meta-kernel
+   !> lists (default: the instance's choice, [[set_in_memory]]).
+   subroutine spice_furnsh(this, file, in_memory)
       class(pepper_spice), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: file  !! SPICE kernel file (text or binary).
+      logical, intent(in), optional :: in_memory  !! read binary kernels whole into memory
       type(pepper_context), pointer :: ctx
+      logical :: saved
       ctx => this%context()
+      saved = this%in_memory
+      if (present(in_memory)) this%in_memory = in_memory
       call furnsh(ctx, file)
+      this%in_memory = saved
    end subroutine spice_furnsh
 
    !> Unload a SPICE kernel.
@@ -20268,6 +20316,93 @@ contains
       end if
       ctx%files_seen = ctx%spice%file_generation
    end subroutine files_check
+
+   !> The index in the instance's file table of the DAF `handle` if the file
+   !> is in memory, else 0. The context keeps the last lookup until the
+   !> table changes (a file opened or closed).
+   integer(ip) function daf_image_slot(ctx, handle) result(k)
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of the DAF
+      k = 0
+      if (.not. allocated(ctx%spice%zzddhman)) return
+      associate (ft => ctx%spice%zzddhman)
+         if (handle /= ctx%img_handle .or. ctx%img_changes /= ft%changes) then
+            ctx%img_handle = handle
+            ctx%img_slot = ft%find(handle)
+            ctx%img_changes = ft%changes
+         end if
+         k = ctx%img_slot
+         if (k > 0) then
+            if (.not. allocated(ft%files(k)%image)) k = 0
+         end if
+      end associate
+   end function daf_image_slot
+
+   !> Read the DAF `handle` whole into memory (FURNSH's `in_memory`; the
+   !> instance's context, while no queries run). A file in a non-native
+   !> binary format is translated, so the copy is always native. Nothing
+   !> happens if the file is in memory already. Signals SPICE(MALLOCFAILED)
+   !> if the memory cannot be allocated, and SPICE(FILEREADFAILED) if the file
+   !> cannot be read.
+   subroutine daf_load_image(ctx, handle)
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of the DAF (loaded for reading)
+      integer, parameter :: recl = 1024  !! bytes per DAF record
+      integer(ip) :: k, r
+      integer :: unit, ios, stat
+      integer(int64) :: nbytes, nrec
+      logical :: native, found
+      real(wp), allocatable :: image(:)
+      character(recl) :: chrbuf
+      if (ctx%failed()) return
+      if (.not. allocated(ctx%spice%zzddhman)) return
+      k = ctx%spice%zzddhman%find(handle)
+      if (k == 0) return
+      if (allocated(ctx%spice%zzddhman%files(k)%image)) return
+      call zzddhisn(ctx, handle, native, found)
+      if (ctx%failed() .or. .not. found) return
+      associate (f => ctx%spice%zzddhman%files(k))
+         open (newunit=unit, file=f%name, access='stream', form='unformatted', &
+               status='old', action='read', iostat=ios)
+         if (ios /= 0) then
+            call ctx%setmsg('The file ''#'' could not be opened to read it into memory.')
+            call ctx%errch('#', f%name)
+            call ctx%sigerr('SPICE(FILEREADFAILED)')
+            return
+         end if
+         inquire (unit=unit, size=nbytes)
+         nrec = max(nbytes, 0_int64)/recl
+         allocate (image(128*nrec), stat=stat)
+         if (stat /= 0) then
+            close (unit)
+            call ctx%setmsg('Not enough memory to read the file ''#'' (# bytes) into memory.')
+            call ctx%errch('#', f%name)
+            call ctx%errint('#', int(min(nbytes, int(huge(1_ip), int64)), ip))
+            call ctx%sigerr('SPICE(MALLOCFAILED)')
+            return
+         end if
+         if (native) then
+            if (nrec > 0) read (unit, pos=1, iostat=ios) image
+         else
+            ios = 0
+            do r = 1, int(nrec, ip)
+               read (unit, pos=int(r - 1, int64)*recl + 1, iostat=ios) chrbuf
+               if (ios /= 0) exit
+               call zzxlated(ctx, f%bff, chrbuf, 128_ip, image(128*(r - 1) + 1))
+               if (ctx%failed()) exit
+            end do
+         end if
+         close (unit)
+         if (ctx%failed()) return
+         if (ios /= 0) then
+            call ctx%setmsg('The file ''#'' could not be read into memory.')
+            call ctx%errch('#', f%name)
+            call ctx%sigerr('SPICE(FILEREADFAILED)')
+            return
+         end if
+         call move_alloc(image, f%image)
+      end associate
+   end subroutine daf_load_image
 
    !> Note that a file was closed: other contexts close their units for its
    !> handle when they next use their unit tables, and a later open of the

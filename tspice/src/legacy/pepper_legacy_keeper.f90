@@ -183,6 +183,19 @@
       call spice%furnsh ( file )
       end subroutine furnsh
 
+      !> PEPPER only (not in SPICELIB): choose whether FURNSH reads binary
+      !> kernels (DAF: SPK, CK, binary PCK) whole into memory (default: no;
+      !> see the instance's set_in_memory). Applies to later loads.
+      subroutine pepper_set_in_memory ( flag )
+      use pepper_instance, only: pepper_spice
+      use pepper_legacy_context, only: legacy_spice
+      implicit none
+      logical, intent(in) :: flag  !! read binary kernels into memory
+      type(pepper_spice), pointer :: spice
+      spice => legacy_spice()
+      call spice%set_in_memory ( flag )
+      end subroutine pepper_set_in_memory
+
       !> Return the number of kernels of a specified type that are
       !> currently loaded via the FURNSH interface.
       !>

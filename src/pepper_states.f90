@@ -3385,6 +3385,10 @@ module pepper_states
       integer(ip) :: bff = 0  !! binary file format
       real(wp) :: mnm = 0.0_wp  !! unique number (from the file's attributes)
       character(:), allocatable :: name  !! the file name
+      !> The whole file, when it is loaded in memory (FURNSH's `in_memory`):
+      !> DAF word address `a` is `image(a)`. Written when the file is loaded,
+      !> read by all contexts, freed with the entry.
+      real(wp), allocatable :: image(:)
    end type ddh_file
 
    !> The file table: the files in increasing order of abs(handle) (the
@@ -6031,6 +6035,7 @@ contains
       to%bff = from%bff
       to%mnm = from%mnm
       call move_alloc(from%name, to%name)
+      call move_alloc(from%image, to%image)
    end subroutine move_file
 
    !> Set the initial values of a new [[zzdsksbf_state]]: SPICELIB's DATA

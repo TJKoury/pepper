@@ -6844,6 +6844,21 @@ contains
       end if
 
 !
+!     PEPPER: a file loaded in memory (FURNSH's in_memory) is not read;
+!     its copy is native.
+!
+      i = daf_image_slot ( ctx, handle )
+      if ( i > 0 ) then
+         associate ( image => ctx%spice%zzddhman%files(i)%image )
+            if ( recno >= 1 .and. recno <= size(image)/128 ) then
+               dprec(1:128) = image(128*(recno-1)+1:128*recno)
+               found = .true.
+               return
+            end if
+         end associate
+      end if
+
+!
 !     Now get a logical unit for the handle.  Check FAILED() in
 !     case an error occurs.
 !
@@ -13441,6 +13456,7 @@ contains
       integer(ip)           last
       integer(ip)           next
 
+      integer(ip)           k
       logical               found
 
 !
@@ -13464,6 +13480,21 @@ contains
          call ctx%errint ( '#', eaddr   )
          call ctx%sigerr ( 'SPICE(DAFBEGGTEND)' )
          return
+      end if
+
+!
+!     PEPPER: a file loaded in memory (FURNSH's in_memory): one copy, no
+!     record buffer. Addresses past the end of the copy take the path
+!     below (as for the file, whose missing records give zeros).
+!
+      k = daf_image_slot ( ctx, handle )
+      if ( k > 0 ) then
+         associate ( image => ctx%spice%zzddhman%files(k)%image )
+            if ( eaddr <= size(image) ) then
+               data(1:eaddr-baddr+1) = image(baddr:eaddr)
+               return
+            end if
+         end associate
       end if
 
 !

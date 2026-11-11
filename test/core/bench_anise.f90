@@ -36,13 +36,19 @@ program bench_anise
    call get_command_argument(1, kdir)
    ctx => spice%context()
 
-   call bench_load()
    call random_epochs(nq, 20*year)
    seq = [(i*step, i=0, nq - 1)]
+   ! the kernels read from their files as needed, then loaded in memory
+   call bench_load(.false., '')
    call bench_states(ets, '')
    call bench_states(seq, '_seq')
    call bench_frames(ets, '')
    call bench_frames(seq, '_seq')
+   call bench_load(.true., '_mem')
+   call bench_states(ets, '_mem')
+   call bench_states(seq, '_mem_seq')
+   call bench_frames(ets, '_mem')
+   call bench_frames(seq, '_mem_seq')
 
 contains
 
@@ -88,20 +94,23 @@ contains
       print '(a,"|",i0,"|",es12.5,"|",es22.15)', key, n, 1.0e6_wp*seconds/n, checksum
    end subroutine report
 
-   !> Loading the kernel set (FURNSH of the six kernels), `nsets` times.
-   subroutine bench_load()
+   !> Loading the kernel set (FURNSH of the six kernels), `nsets` times;
+   !> with `in_memory`, the binary kernels are read whole into memory.
+   subroutine bench_load(in_memory, suffix)
+      logical, intent(in) :: in_memory  !! FURNSH's in_memory
+      character(*), intent(in) :: suffix  !! for the key
       real(wp) :: t, t0
       integer(ip) :: k, j
       t = 0
       do k = 1, nsets
-         if (k > 1) call spice%kclear()
+         call spice%kclear()
          t0 = now()
          do j = 1, size(kernels)
-            call spice%furnsh(trim(kdir) // '/' // trim(kernels(j)))
+            call spice%furnsh(trim(kdir) // '/' // trim(kernels(j)), in_memory=in_memory)
          end do
          t = t + now() - t0
       end do
-      call report('load_set', nsets, t, 0.0_wp)
+      call report('load_set' // suffix, nsets, t, 0.0_wp)
    end subroutine bench_load
 
    !> States at the epochs `et`; `suffix` is appended to the keys.

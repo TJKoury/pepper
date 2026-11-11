@@ -1,7 +1,34 @@
 # Binary kernels in memory: design
 
-**Status:** proposal; nothing implemented yet. The decisions D1–D5 at the end
-are open.
+**Status:** implemented for DAF files (SPK, CK, binary PCK), with the
+recommended decisions D1–D5 below. DAS files (DSK) are the second step (D4).
+
+What was built:
+- the API: `spice%furnsh(file, in_memory=.true.)`, `spice%set_in_memory(flag)`
+  and `spice%kernel_memory()` (bytes held); the legacy routine
+  `PEPPER_SET_IN_MEMORY(FLAG)`, and in tspice's legacy layer only, the
+  environment variable `PEPPER_IN_MEMORY=1`;
+- `daf_load_image` and `daf_image_slot` (pepper_instance.f90), the image in
+  `ddh_file` (pepper_states.f90), the hooks in DAFGDA and ZZDAFGDR
+  (pepper_daf.F90) and in ZZLDKER (pepper_keeper.F90; if the image cannot be
+  made, the file is unloaded again and the error stays);
+- non-native files are translated into a native image at load (D3);
+- the tests: `test_in_memory` (bitwise the same states, every context, UNLOAD,
+  KCLEAR, meta-kernels, the instance default, a file loaded twice, a
+  big-endian file), two passes of `test_parallel` with a second instance in
+  memory, and NAIF's suite with `PEPPER_IN_MEMORY=1` (399 families; 15117
+  loads in memory, in 37 families);
+- the speed: `pixi run -e anise compare-anise` (the "in memory" column of
+  `pepper_vs_spicelib.md`): random-epoch SPKGEO 9.6 → 0.22 µs, PXFORM to
+  ITRF93 3.7 → 0.28 µs; the kernel set loads in 4.6 ms instead of 2.0.
+
+Found along the way (not caused by this change, not fixed): a file unloaded
+and loaded again while another context still has its old unit open (the
+contexts close such units lazily) is refused: GETFAT signals
+SPICE(EXTERNALOPEN), and gfortran will not connect a file to a second unit.
+Closing another context's unit from the instance is not safe (gfortran
+reuses NEWUNIT numbers). A file in memory is not affected after its first
+load in memory, since contexts never open units for it.
 
 ## The problem
 

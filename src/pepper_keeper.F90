@@ -3338,6 +3338,18 @@ contains
 
          filtyp = mytype
 
+!
+!        PEPPER: FURNSH's in_memory (or the instance's choice): read the
+!        file whole into memory. If that fails, the file is unloaded again.
+!
+         if ( ctx%spice%in_memory .and. .not. ctx%failed() ) then
+            call daf_load_image ( ctx, handle )
+            if ( ctx%failed() ) then
+               call unload_daf ( mytype, handle )
+               return
+            end if
+         end if
+
       else if ( arch == 'DAS' ) then
 
          if ( mytype == 'EK' ) then
@@ -3395,6 +3407,31 @@ contains
       end if
 
       return
+
+      contains
+
+      !> Unload a DAF that was just loaded but could not be read into
+      !> memory, keeping the error that was signaled.
+      subroutine unload_daf ( kind, han )
+         character(*), intent(in) :: kind  !! SPK, CK or PCK
+         integer(ip), intent(in) :: han  !! the handle
+         character(:), allocatable :: short, long
+         short = short_text ( ctx )
+         long = long_text ( ctx )
+         call ctx%reset()
+         select case ( kind )
+         case ( 'SPK' )
+            call spkuef ( ctx, han )
+         case ( 'CK' )
+            call ckupf ( ctx, han )
+         case ( 'PCK' )
+            call pckuof ( ctx, han )
+         end select
+         call ctx%reset()
+         call ctx%setmsg ( long )
+         call ctx%sigerr ( short )
+      end subroutine unload_daf
+
       end procedure zzldker
 
       !>## Detailed Input

@@ -66,6 +66,15 @@ Load kernels first, then query from any number of threads, one context per
 thread (see `test/core/test_parallel.f90`). The kernels must not be changed
 while other threads use contexts of the instance (nothing checks this).
 
+Binary kernels (SPK, CK, binary PCK) are read record by record as queries
+need them, as in SPICELIB. They can instead be read whole into memory when
+they are loaded: `call spice%furnsh('de440.bsp', in_memory=.true.)` (for a
+meta-kernel: every binary kernel it lists), or `call
+spice%set_in_memory(.true.)` for all later loads. Queries at scattered epochs
+then never read the file (DE421 at random epochs: 9.6 → 0.22 µs per state),
+at the cost of memory equal to the file sizes, once per instance
+(`spice%kernel_memory()`).
+
 gfortran (at least up to 16.2) keeps the length of a deferred-length
 character function result (a `character(:), allocatable` result) in a static
 variable at each call site, which threads share. The library therefore has no

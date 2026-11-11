@@ -5,14 +5,18 @@
 !> SPK with two bodies, the second relative to the first, a frame kernel with
 !> a TK frame, and body names). One context computes the reference results
 !> serially; then OpenMP threads, each with a context of its own, compute the
-!> same queries, interleaved in a different order, twice. Every result must
-!> be identical (bitwise) to the serial one.
+!> same queries, interleaved in a different order, twice; then twice more
+!> with a second instance that has the SPK in memory (FURNSH's in_memory:
+!> the threads read one shared copy; a copy of the file, since a file can be
+!> loaded by one instance at a time). Every result must be identical
+!> (bitwise) to the serial one.
 !>
 !> The library has no OpenMP; only this test uses it (`pixi run
 !> test-parallel` builds with -fopenmp). Built without OpenMP, the "parallel"
 !> part runs on one thread and the test still checks the results.
 program test_parallel
 
+   use, intrinsic :: iso_fortran_env, only: int64
    use pepper_kinds, only: ip, wp
    use pepper_constants, only: twopi
    use pepper_instance, only: pepper_spice, pepper_context
@@ -23,10 +27,12 @@ program test_parallel
    character(*), parameter :: lsk = 'test_parallel.tls'
    character(*), parameter :: spk = 'test_parallel.bsp'
    character(*), parameter :: fk = 'test_parallel.tf'
+   character(*), parameter :: spk_mem = 'test_parallel_mem.bsp'  !! the SPK's copy, loaded in memory
    integer, parameter :: nepoch = 2000  !! number of query epochs
    integer, parameter :: nres = 6 + 1 + 3 + 1 + 9 + 9 + 1  !! results per epoch
    integer, parameter :: nthreads = 4
    type(pepper_spice), target :: spice
+   type(pepper_spice), target :: memspice  !! the same kernels, the SPK in memory
    type(pepper_context), pointer :: setup  !! the instance's context (it loads the kernels)
    type(pepper_context) :: serial
    real(wp) :: et(nepoch)
@@ -41,6 +47,11 @@ program test_parallel
    call spice%furnsh(spk)
    call spice%furnsh(fk)
    call check(.not. setup%failed(), 'setup loads the kernels')
+   call copy_file(spk, spk_mem)
+   call memspice%furnsh(lsk)
+   call memspice%furnsh(spk_mem, in_memory=.true.)
+   call memspice%furnsh(fk)
+   call check(.not. memspice%failed() .and. memspice%kernel_memory() > 0, 'the second instance loads the SPK in memory')
 
    et = [(1.0e5_wp + (1.8e6_wp*(i - 1))/(nepoch - 1), i = 1, nepoch)]
 
@@ -52,7 +63,7 @@ program test_parallel
    call check(.not. serial%failed(), 'serial queries')
 
    !$ print '(a, i0, a)', 'test_parallel: ', nthreads, ' threads'
-   do pass = 1, 2
+   do pass = 1, 4
       par = 0.0_wp
       parutc = ' '
       errors = 0
@@ -60,13 +71,17 @@ program test_parallel
       block
          type(pepper_context) :: ctx
          integer :: k
-         ctx = spice%new_context()
-         ! pass 1 forward, pass 2 backward; dynamic scheduling interleaves the
+         if (pass <= 2) then
+            ctx = spice%new_context()
+         else
+            ctx = memspice%new_context()  ! the SPK in memory
+         end if
+         ! odd passes forward, even passes backward; dynamic scheduling interleaves the
          ! threads' epochs (and so the contexts' caches see different
          ! sequences of queries than the serial run)
          !$omp do schedule(dynamic, 7)
          do k = 1, nepoch
-            i = merge(k, nepoch + 1 - k, pass == 1)
+            i = merge(k, nepoch + 1 - k, mod(pass, 2) == 1)
             call queries(ctx, et(i), mod(i, 2) == 0, par(:, i), parutc(i))
          end do
          !$omp end do
@@ -80,6 +95,7 @@ program test_parallel
    end do
 
    call spice%kclear()
+   call memspice%kclear()
    call delete_files()
 
    if (failures > 0) then
@@ -135,10 +151,10 @@ contains
 
    !> Remove the test files that exist.
    subroutine delete_files()
-      character(32) :: files(3)
+      character(32) :: files(4)
       logical :: exists
       integer :: unit, k
-      files = [character(32) :: lsk, spk, fk]
+      files = [character(32) :: lsk, spk, fk, spk_mem]
       do k = 1, size(files)
          inquire (file=trim(files(k)), exist=exists)
          if (exists) then
@@ -147,6 +163,23 @@ contains
          end if
       end do
    end subroutine delete_files
+
+   !> Copy the file `from` to `to`.
+   subroutine copy_file(from, to)
+      character(*), intent(in) :: from  !! the file
+      character(*), intent(in) :: to  !! the copy
+      character(1), allocatable :: bytes(:)
+      integer :: unit
+      integer(int64) :: n
+      inquire (file=from, size=n)
+      allocate (bytes(n))
+      open (newunit=unit, file=from, access='stream', form='unformatted', status='old', action='read')
+      read (unit) bytes
+      close (unit)
+      open (newunit=unit, file=to, access='stream', form='unformatted', status='replace', action='write')
+      write (unit) bytes
+      close (unit)
+   end subroutine copy_file
 
    !> Write the kernels: the leapseconds, the frame kernel (a TK frame and
    !> the body names) and the SPK.

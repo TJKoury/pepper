@@ -37,6 +37,12 @@ contains
          call ctx%erract('SET', setting)
          setting = 'SCREEN'
          call ctx%errdev('SET', setting)
+         ! PEPPER_IN_MEMORY=1 (or YES) in the environment: FURNSH reads the
+         ! binary kernels whole into memory (to run NAIF's test suite that
+         ! way; programs call PEPPER_SET_IN_MEMORY instead)
+         call get_environment_variable('PEPPER_IN_MEMORY', setting)
+         if (setting == '1' .or. setting == 'YES' .or. setting == 'yes') &
+            call default_spice%set_in_memory(.true.)
          initialized = .true.
       end if
       ctx => default_spice%context()

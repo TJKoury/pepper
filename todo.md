@@ -38,3 +38,8 @@ todo notes
   * splining of ephemeris and rotations? [bspline-fortran]
   * python interface (like spiceypy)
   * compare to the Rust implementation (ANISE)
+* reloading a binary kernel after UNLOAD while another context still has the
+  old unit open fails (GETFAT: SPICE(EXTERNALOPEN); gfortran connects a file
+  to one unit only). Contexts close such units lazily (units_check); the
+  instance cannot close them safely (NEWUNIT numbers are reused). See
+  in_memory_kernels_design.md.
