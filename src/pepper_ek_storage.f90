@@ -5,6 +5,488 @@
 !> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_ek_storage.f90.
+!>
+!>## ZZEKSCA (EK, scratch area)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZEKSCA is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zzeksca. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Manage the EK scratch area.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points for descriptions of their inputs.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points for descriptions of their outputs.
+!>
+!>### Parameters
+!>
+!>     None.
+!>
+!>### Exceptions
+!>
+!>     1) If this routine is called directly, the error SPICE(BOGUSENTRY)
+!>        is signaled.
+!>
+!>     See the entry points for discussions of exceptions specific to
+!>     those routines.
+!>
+!>### Files
+!>
+!>     None.
+!>
+!>### Particulars
+!>
+!>     The specific implementation of the EK scratch area is NOT
+!>     considered part of the specification of this suite of routines:
+!>     the implementation may be changed without notice.  However,
+!>     some aspects of the current implementation, such as scratch
+!>     file usage, are visible to users and therefore are discussed
+!>     in this subroutine header.
+!>
+!>     The EK system, in searching for events that satisfy a query,
+!>     produces intermediate results that require a potentially very
+!>     large amount of storage, more than can be expected to be
+!>     available in the form of memory.  On the other hand, in order
+!>     to achieve reasonable query response time, these intermediate
+!>     results must be capable of being accessed quickly.  The EK
+!>     scratch area provides a storage location that uses a combination
+!>     of memory and disk storage to give the EK system a large storage
+!>     area, part of which can be rapidly accessed.
+!>
+!>     The logical structure of the EK scratch area is that of a large
+!>     one-dimensional integer stack.  The indices of the  elements of
+!>     this stack are referred to as scratch area `addresses'.  Scratch
+!>     area addresses start at 1 and increase.  The maximum address is
+!>     the maximum integer representable on the host computer, but the
+!>     maximum usable address depends on the disk storage available
+!>     to the calling program at the time the program is run.
+!>
+!>     The EK scratch area has access routines that allow a calling
+!>     program to write to and read from it. Calling routines must
+!>     coordinate their use of the scratch area:  the scratch area is
+!>     effectively a global data structure.  Routines outside of the EK
+!>     system should not use the scratch area.
+!>
+!>     The EK scratch area routines are:
+!>
+!>        ZZEKSCA  ( EK scratch area umbrella routine )
+!>        ZZEKSTOP ( EK scratch area, return stack pointer )
+!>        ZZEKSPSH ( EK scratch area, push data onto stack )
+!>        ZZEKSDEC ( EK scratch area, decrement stack pointer )
+!>        ZZEKSPOP ( EK scratch area, pop data from stack )
+!>        ZZEKSUPD ( EK scratch area, update data )
+!>        ZZEKSRD  ( EK scratch area, read data )
+!>        ZZEKSCLN ( EK scratch area, clean up )
+!>
+!>### Examples
+!>
+!>     1)  Push data on the scratch area stack.
+!>
+!>            C
+!>            C     Push N items onto the stack.
+!>            C
+!>                  CALL ZZEKSPSH ( N, DATA )
+!>
+!>     2)  Update a range of addresses that may span the stack top.
+!>
+!>            C
+!>            C     Since we can't leave a gap between the stack top
+!>            C     and the start of the range of addresses we write to,
+!>            C     we'll need to know where the top is.  The address
+!>            C     range to update is BEG:END.
+!>            C
+!>                  CALL ZZEKSTOP ( TOP )
+!>
+!>                  IF ( BEG .GT. TOP ) THEN
+!>
+!>                     [ Handle error case ]
+!>
+!>                  ELSE
+!>
+!>                     CALL ZZEKSUPD ( BEG, END, DATA )
+!>
+!>                  END IF
+!>
+!>     3)  Read from the scratch area.
+!>
+!>            C
+!>            C     Read the contents of the scratch area address
+!>            C     range BEG:END into the integer array DATA:
+!>            C
+!>                  CALL ZZEKSTOP ( TOP )
+!>
+!>                  IF ( BEG .GT. TOP ) THEN
+!>
+!>                     [ Handle error case ]
+!>
+!>                  ELSE
+!>
+!>                     CALL ZZEKSRD ( BEG, END, DATA )
+!>
+!>                  END IF
+!>
+!>### Restrictions
+!>
+!>     1)  The current implementation of this suite of routines opens
+!>         a scratch file.  The logical unit connected to the scratch
+!>         file counts against the total that may be used by the calling
+!>         program.  Also, the scratch file, if written to, will occupy
+!>         additional disk storage.
+!>
+!>     2)  This suite of routines should not be used by routines outside
+!>         of the EK system.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman   (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 3.2.1, 03-OCT-2021 (NJB)
+!>
+!>        Corrected typos in comments.
+!>
+!>-    SPICELIB Version 3.2.0, 28-JUN-2005 (NJB)
+!>
+!>        Increased buffer size from 500K to 2M integers.
+!>
+!>-    SPICELIB Version 3.1.0, 29-JUL-2003 (NJB)
+!>
+!>        Added DASWBR call to entry point ZZEKCLN.  This call frees
+!>        the buffer records used by the scratch file.
+!>
+!>-    SPICELIB Version 3.0.0, 13-DEC-2001 (NJB)
+!>
+!>        Added entry point ZZEKCLN.
+!>
+!>-    Beta Version 2.0.0, 02-NOV-1995 (NJB)
+!>
+!>        Updated for EK architecture 3.
+!>
+!>-    Beta Version 1.1.0, 01-AUG-1994 (NJB)
+!>
+!>        Scratch area buffer size increased to 500K integers.
+!>        On 32-bit systems, this amounts to 2Mb of storage.
+!>
+!>-    Beta Version 1.0.1, 25-FEB-1993 (NJB)
+!>
+!>        Documented.
+!>
+!>-    Beta Version 1.0.0, 16-DEC-1992 (NJB)
+!>
+!>### Revisions
+!>
+!>-    SPICELIB Version 3.2.0, 28-JUN-2005 (NJB)
+!>
+!>        Increased buffer size from 500K to 2M integers.
+!>
+!>-    Beta Version 2.0.0, 08-SEP-1994 (NJB)
+!>
+!>        Updated for EK architecture 3.
+!>
+!>-    Beta Version 1.1.0, 01-AUG-1994 (NJB)
+!>
+!>        Scratch area buffer size increased to 500K integers.
+!>        On 32-bit systems, this amounts to 2Mb of storage.
+!>
+!>### Implementation notes
+!>
+!>     The parameter MEMSIZ is the size of an integer array used as
+!>     part of the scratch area.  The first MEMSIZ scratch area addresses
+!>     refer to elements of this array.  Additional storage is supplied
+!>     by the integer logical array of a scratch DAS file; the first
+!>     word of the scratch DAS file corresponds to scratch area address
+!>     MEMSIZ + 1.
+!>
+!>## ZZEKPAGE (Private: Manage EK DAS paging system)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZEKPAGE is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zzekpage. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     SPICE Private routine intended solely for the support of SPICE
+!>     routines.  Users should not call this routine directly due
+!>     to the volatile nature of this routine.
+!>
+!>     Manage EK DAS paging system.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points for descriptions of their inputs.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points for descriptions of their outputs.
+!>
+!>### Parameters
+!>
+!>     None.
+!>
+!>### Exceptions
+!>
+!>     1)  If this routine is called directly, the error
+!>         SPICE(BOGUSENTRY) will be signaled.
+!>
+!>     See the entry points for discussions of errors particular to
+!>     those routines.
+!>
+!>### Files
+!>
+!>     This suite of routines provides paged access to DAS files.  Only
+!>     DAS files initialized via a call to ZZEKPGIN may be written or
+!>     read by these routines.
+!>
+!>### Particulars
+!>
+!>     The EK paging system provides a means for the rest of the EK
+!>     system to allocate and deallocate contiguous blocks of DAS
+!>     addresses of character, d.p. and integer type.  The rest of the EK
+!>     system never accesses EK files directly; it only reads and writes
+!>     pages allocated via this system.
+!>
+!>     Much of the page allocation and de-allocation performed by
+!>     higher-level routines is done via the routines ZZEKAPS and
+!>     ZZEKDPS; those routines should be called if applicable, rather
+!>     than ZZEKPGAL, ZZEKPGAN, or ZZEKPGFR.
+!>
+!>### Examples
+!>
+!>     Initialization:               see EKOPN.
+!>     Page allocation:              see EKAPS.
+!>     Writing:                      see ZZEKAD01, ZZEKAD02, ZZEKAD03.
+!>     Reading:                      see ZZEKRD01, ZZEKRD02, ZZEKRD03.
+!>     Freeing pages:                see ZZEKDPS.
+!>     Address-to-page mapping:      see EKDELR.
+!>     Page number-to-base mapping:  see ZZEKAD0x
+!>
+!>### Restrictions
+!>
+!>     1) Only `empty' DAS files may be initialized for paged access.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     B.V. Semenov       (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 1.2.0, 14-OCT-2021 (BVS)
+!>
+!>        Bug fix: fixed routine name in CHKIN/CHKOUT calls in
+!>        entry point ZZEKPGPG (ZZEKPGBS -> ZZEKPGPG).
+!>
+!>-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
+!>
+!>        Now uses ERRHAN to insert DAS file name into
+!>        long error messages.
+!>
+!>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
+!>
+!>### Implementation notes
+!>
+!>     Note:  the integer fill buffer should be as large as the maximum
+!>     of the integer page size and the metadata area size.
+!>
+!>## ZZEKVADR (Compute row vector address)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZEKVADR is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zzekvadr. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Compute the EK scratch area base address of the row vector having
+!>     a specified index, given a union of EK join row sets and a row
+!>     vector index. Also return the base address of the row
+!>     vector's parent segment vector.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points for a discussion of their arguments.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points for a discussion of their arguments.
+!>
+!>### Parameters
+!>
+!>     MXJOIN         is the maximum number of tables that can be joined.
+!>
+!>     MXJRS          is the maximum number of join row sets allowed in
+!>                    in the input union identified by BASES and NJRS.
+!>
+!>### Exceptions
+!>
+!>     1)  This is an umbrella routine which contains declarations
+!>         for its entry points.  This routine should never be called
+!>         directly.  If it is, the error SPICE(BOGUSENTRY) will be
+!>         signaled.
+!>
+!>     See the entry points for discussions of the exceptions specific
+!>     to those entry points.
+!>
+!>### Files
+!>
+!>     1)  This routine uses the EK scratch area, which employs a scratch
+!>         DAS file.
+!>
+!>### Particulars
+!>
+!>     In the course of query resolution, the EK system builds a set of
+!>     data structures called `join row sets' that represent the rows
+!>     that satisfy the query constraints.  These rows belong to a table
+!>     formed by taking the Cartesian product of the tables in the FROM
+!>     clause of the query.  One join row set is formed for each
+!>     conjunction of join constraints; the total number of join row sets
+!>     is equal to the number of conjunctions of join constraints in
+!>     the query.  Join row sets are described below.
+!>
+!>     This group of routines allows the EK system to view the rows
+!>     matching a query as a sequence of vectors, where each vector is an
+!>     n-tuple of row numbers designating rows in segments of the
+!>     Cartesian product of tables specified in the input query.  These
+!>     vectors are called `row vectors'.  Each row vector also points to
+!>     a vector of segments that contain the rows represented by the row
+!>     vector.
+!>
+!>     These routines centralize the calculations needed to locate the
+!>     nth row vector.
+!>
+!>     Each join row set consists of:
+!>
+!>         - a base address in the scratch area
+!>         - a table count
+!>         - a segment vector count
+!>         - a set of segment vectors
+!>         - a set of segment vector row vector base addresses
+!>           (these are relative to the base of the join row set)
+!>         - a set of segment vector row vector counts
+!>         - a set of row vectors, augmented by offsets of their
+!>           parent segment vectors (these offsets are at the
+!>           end of each row vector)
+!>
+!>     The layout of a join row set in the EK scratch area is shown
+!>     below:
+!>
+!>        +--------------------------------------------+
+!>        |              join row set size             |  1 element
+!>        +--------------------------------------------+
+!>        |    number of row vectors in join row set   |  1 element
+!>        +--------------------------------------------+
+!>        |               table count (TC)             |  1 element
+!>        +--------------------------------------------+
+!>        |          segment vector count (SVC)        |  1 element
+!>        +--------------------------------------------+
+!>        |               segment vector 1             |  TC elements
+!>        +--------------------------------------------+
+!>                              .
+!>                              .
+!>                              .
+!>        +--------------------------------------------+
+!>        |               segment vector SVC           |  TC elements
+!>        +--------------------------------------------+
+!>        |   segment vector 1 row set base address    |  1 element
+!>        +--------------------------------------------+
+!>        |      segment vector 1 row count (RC_1)     |  1 element
+!>        +--------------------------------------------+
+!>                              .
+!>                              .
+!>                              .
+!>        +--------------------------------------------+
+!>        |  segment vector SVC row set base address   |  1 element
+!>        +--------------------------------------------+
+!>        |   segment vector SVC row count (RC_SVC)    |  1 element
+!>        +--------------------------------------------+
+!>        | Augmented row vectors for segment vector 1 |  TC*(RC_1 + 1 )
+!>        +--------------------------------------------+  elements
+!>                              .
+!>                              .
+!>                              .
+!>        +--------------------------------------------+
+!>        |Augmented row vectors for segment vector SVC|  TC*(RC_SVC + 1)
+!>        +--------------------------------------------+  elements
+!>
+!>### Examples
+!>
+!>     1)  For a given join row set union, initialize the addressing
+!>         routines, then look up row vectors.
+!>
+!>            C
+!>            C     Tell the addressing routines where the join row set
+!>            C     union is.  NJRS is the number of join row sets in
+!>            C     the union, BASES is an array of EK scratch area base
+!>            C     addresses of each join row set.  A base address is
+!>            C     the predecessor of the first address actually
+!>            C     occupied by a join row set.
+!>            C
+!>                  CALL ZZEKVSET ( NJRS, BASES )
+!>
+!>            C
+!>            C     Find the base address of the each row vector, as well
+!>            C     as the base address of the corresponding segment
+!>            C     vector.
+!>            C
+!>                  DO I = 1, NJRS
+!>
+!>                     CALL EKVCAL ( I, RWVBAS, SGVBAS )
+!>
+!>                     [Do something with the row vector....]
+!>
+!>                  END DO
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman   (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 1.0.2, 01-OCT-2021 (NJB)
+!>
+!>        Updated header Abstract section. Corrected typos in comments.
+!>
+!>-    SPICELIB Version 1.0.1, 06-SEP-2006 (NJB)
+!>
+!>        Filled in Particulars section of header in entry point
+!>        ZZEKVCAL.  Changed previous version line's product from "Beta"
+!>        to "SPICELIB" both here and in ZZEKVCAL.
+!>
+!>-    SPICELIB Version 1.0.0, 28-SEP-1994 (NJB) (WLT)
+!>
+!>### Implementation notes
+!>
+!>     Include Section:  EK Join Row Set Parameters
+!>
+!>        JRS$INC Version 1    17-SEP-1994 (NJB)
+!>
+!>     Base-relative index of join row set size
+!>
+!>     Index of row vector count
+!>
+!>     Index of table count
+!>
+!>     Index of segment vector count
+!>
+!>     Base address of first segment vector
+!>
+!>     End Include Section:  EK Join Row Set Parameters
 submodule (pepper_instance) pepper_ek_storage
 
    implicit none
@@ -2941,214 +3423,6 @@ contains
 
       return
       end procedure zzekreqi
-
-!$Procedure      ZZEKSCA ( EK, scratch area )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZEKSCA is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zzeksca. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Manage the EK scratch area.
-!
-! $ Detailed_Input
-!
-!     See the entry points for descriptions of their inputs.
-!
-! $ Detailed_Output
-!
-!     See the entry points for descriptions of their outputs.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If this routine is called directly, the error SPICE(BOGUSENTRY)
-!        is signaled.
-!
-!     See the entry points for discussions of exceptions specific to
-!     those routines.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The specific implementation of the EK scratch area is NOT
-!     considered part of the specification of this suite of routines:
-!     the implementation may be changed without notice.  However,
-!     some aspects of the current implementation, such as scratch
-!     file usage, are visible to users and therefore are discussed
-!     in this subroutine header.
-!
-!     The EK system, in searching for events that satisfy a query,
-!     produces intermediate results that require a potentially very
-!     large amount of storage, more than can be expected to be
-!     available in the form of memory.  On the other hand, in order
-!     to achieve reasonable query response time, these intermediate
-!     results must be capable of being accessed quickly.  The EK
-!     scratch area provides a storage location that uses a combination
-!     of memory and disk storage to give the EK system a large storage
-!     area, part of which can be rapidly accessed.
-!
-!     The logical structure of the EK scratch area is that of a large
-!     one-dimensional integer stack.  The indices of the  elements of
-!     this stack are referred to as scratch area `addresses'.  Scratch
-!     area addresses start at 1 and increase.  The maximum address is
-!     the maximum integer representable on the host computer, but the
-!     maximum usable address depends on the disk storage available
-!     to the calling program at the time the program is run.
-!
-!     The EK scratch area has access routines that allow a calling
-!     program to write to and read from it. Calling routines must
-!     coordinate their use of the scratch area:  the scratch area is
-!     effectively a global data structure.  Routines outside of the EK
-!     system should not use the scratch area.
-!
-!     The EK scratch area routines are:
-!
-!        ZZEKSCA  ( EK scratch area umbrella routine )
-!        ZZEKSTOP ( EK scratch area, return stack pointer )
-!        ZZEKSPSH ( EK scratch area, push data onto stack )
-!        ZZEKSDEC ( EK scratch area, decrement stack pointer )
-!        ZZEKSPOP ( EK scratch area, pop data from stack )
-!        ZZEKSUPD ( EK scratch area, update data )
-!        ZZEKSRD  ( EK scratch area, read data )
-!        ZZEKSCLN ( EK scratch area, clean up )
-!
-! $ Examples
-!
-!     1)  Push data on the scratch area stack.
-!
-!            C
-!            C     Push N items onto the stack.
-!            C
-!                  CALL ZZEKSPSH ( N, DATA )
-!
-!     2)  Update a range of addresses that may span the stack top.
-!
-!            C
-!            C     Since we can't leave a gap between the stack top
-!            C     and the start of the range of addresses we write to,
-!            C     we'll need to know where the top is.  The address
-!            C     range to update is BEG:END.
-!            C
-!                  CALL ZZEKSTOP ( TOP )
-!
-!                  IF ( BEG .GT. TOP ) THEN
-!
-!                     [ Handle error case ]
-!
-!                  ELSE
-!
-!                     CALL ZZEKSUPD ( BEG, END, DATA )
-!
-!                  END IF
-!
-!     3)  Read from the scratch area.
-!
-!            C
-!            C     Read the contents of the scratch area address
-!            C     range BEG:END into the integer array DATA:
-!            C
-!                  CALL ZZEKSTOP ( TOP )
-!
-!                  IF ( BEG .GT. TOP ) THEN
-!
-!                     [ Handle error case ]
-!
-!                  ELSE
-!
-!                     CALL ZZEKSRD ( BEG, END, DATA )
-!
-!                  END IF
-!
-! $ Restrictions
-!
-!     1)  The current implementation of this suite of routines opens
-!         a scratch file.  The logical unit connected to the scratch
-!         file counts against the total that may be used by the calling
-!         program.  Also, the scratch file, if written to, will occupy
-!         additional disk storage.
-!
-!     2)  This suite of routines should not be used by routines outside
-!         of the EK system.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.2.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    SPICELIB Version 3.2.0, 28-JUN-2005 (NJB)
-!
-!        Increased buffer size from 500K to 2M integers.
-!
-!-    SPICELIB Version 3.1.0, 29-JUL-2003 (NJB)
-!
-!        Added DASWBR call to entry point ZZEKCLN.  This call frees
-!        the buffer records used by the scratch file.
-!
-!-    SPICELIB Version 3.0.0, 13-DEC-2001 (NJB)
-!
-!        Added entry point ZZEKCLN.
-!
-!-    Beta Version 2.0.0, 02-NOV-1995 (NJB)
-!
-!        Updated for EK architecture 3.
-!
-!-    Beta Version 1.1.0, 01-AUG-1994 (NJB)
-!
-!        Scratch area buffer size increased to 500K integers.
-!        On 32-bit systems, this amounts to 2Mb of storage.
-!
-!-    Beta Version 1.0.1, 25-FEB-1993 (NJB)
-!
-!        Documented.
-!
-!-    Beta Version 1.0.0, 16-DEC-1992 (NJB)
-!
-
-! $ Revisions
-!
-!-    SPICELIB Version 3.2.0, 28-JUN-2005 (NJB)
-!
-!        Increased buffer size from 500K to 2M integers.
-!
-!-    Beta Version 2.0.0, 08-SEP-1994 (NJB)
-!
-!        Updated for EK architecture 3.
-!
-!-    Beta Version 1.1.0, 01-AUG-1994 (NJB)
-!
-!        Scratch area buffer size increased to 500K integers.
-!        On 32-bit systems, this amounts to 2Mb of storage.
-!
-
-!
-!     The parameter MEMSIZ is the size of an integer array used as
-!     part of the scratch area.  The first MEMSIZ scratch area addresses
-!     refer to elements of this array.  Additional storage is supplied
-!     by the integer logical array of a scratch DAS file; the first
-!     word of the scratch DAS file corresponds to scratch area address
-!     MEMSIZ + 1.
-!
-
-!
-!     Standard SPICE error handling.
 
       !>## Detailed Input
       !>
@@ -7412,105 +7686,6 @@ contains
       return
       end procedure zzekjsqz
 
-!$Procedure  ZZEKPAGE ( Private: Manage EK DAS paging system )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZEKPAGE is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zzekpage. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Manage EK DAS paging system.
-!
-! $ Detailed_Input
-!
-!     See the entry points for descriptions of their inputs.
-!
-! $ Detailed_Output
-!
-!     See the entry points for descriptions of their outputs.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If this routine is called directly, the error
-!         SPICE(BOGUSENTRY) will be signaled.
-!
-!     See the entry points for discussions of errors particular to
-!     those routines.
-!
-! $ Files
-!
-!     This suite of routines provides paged access to DAS files.  Only
-!     DAS files initialized via a call to ZZEKPGIN may be written or
-!     read by these routines.
-!
-! $ Particulars
-!
-!     The EK paging system provides a means for the rest of the EK
-!     system to allocate and deallocate contiguous blocks of DAS
-!     addresses of character, d.p. and integer type.  The rest of the EK
-!     system never accesses EK files directly; it only reads and writes
-!     pages allocated via this system.
-!
-!     Much of the page allocation and de-allocation performed by
-!     higher-level routines is done via the routines ZZEKAPS and
-!     ZZEKDPS; those routines should be called if applicable, rather
-!     than ZZEKPGAL, ZZEKPGAN, or ZZEKPGFR.
-!
-! $ Examples
-!
-!     Initialization:               see EKOPN.
-!     Page allocation:              see EKAPS.
-!     Writing:                      see ZZEKAD01, ZZEKAD02, ZZEKAD03.
-!     Reading:                      see ZZEKRD01, ZZEKRD02, ZZEKRD03.
-!     Freeing pages:                see ZZEKDPS.
-!     Address-to-page mapping:      see EKDELR.
-!     Page number-to-base mapping:  see ZZEKAD0x
-!
-! $ Restrictions
-!
-!     1) Only `empty' DAS files may be initialized for paged access.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.0, 14-OCT-2021 (BVS)
-!
-!        Bug fix: fixed routine name in CHKIN/CHKOUT calls in
-!        entry point ZZEKPGPG (ZZEKPGBS -> ZZEKPGPG).
-!
-!-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
-!
-
-!     Note:  the integer fill buffer should be as large as the maximum
-!     of the integer page size and the metadata area size.
-!
-
-!
-!     Saved variables
-
       !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
@@ -11099,211 +11274,6 @@ contains
 
       return
       end procedure zzeksz06
-
-!$Procedure  ZZEKVADR  ( Compute row vector address )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZEKVADR is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zzekvadr. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Compute the EK scratch area base address of the row vector having
-!     a specified index, given a union of EK join row sets and a row
-!     vector index. Also return the base address of the row
-!     vector's parent segment vector.
-!
-! $ Detailed_Input
-!
-!     See the entry points for a discussion of their arguments.
-!
-! $ Detailed_Output
-!
-!     See the entry points for a discussion of their arguments.
-!
-! $ Parameters
-!
-!     MXJOIN         is the maximum number of tables that can be joined.
-!
-!     MXJRS          is the maximum number of join row sets allowed in
-!                    in the input union identified by BASES and NJRS.
-!
-! $ Exceptions
-!
-!     1)  This is an umbrella routine which contains declarations
-!         for its entry points.  This routine should never be called
-!         directly.  If it is, the error SPICE(BOGUSENTRY) will be
-!         signaled.
-!
-!     See the entry points for discussions of the exceptions specific
-!     to those entry points.
-!
-! $ Files
-!
-!     1)  This routine uses the EK scratch area, which employs a scratch
-!         DAS file.
-!
-! $ Particulars
-!
-!     In the course of query resolution, the EK system builds a set of
-!     data structures called `join row sets' that represent the rows
-!     that satisfy the query constraints.  These rows belong to a table
-!     formed by taking the Cartesian product of the tables in the FROM
-!     clause of the query.  One join row set is formed for each
-!     conjunction of join constraints; the total number of join row sets
-!     is equal to the number of conjunctions of join constraints in
-!     the query.  Join row sets are described below.
-!
-!     This group of routines allows the EK system to view the rows
-!     matching a query as a sequence of vectors, where each vector is an
-!     n-tuple of row numbers designating rows in segments of the
-!     Cartesian product of tables specified in the input query.  These
-!     vectors are called `row vectors'.  Each row vector also points to
-!     a vector of segments that contain the rows represented by the row
-!     vector.
-!
-!     These routines centralize the calculations needed to locate the
-!     nth row vector.
-!
-!     Each join row set consists of:
-!
-!         - a base address in the scratch area
-!         - a table count
-!         - a segment vector count
-!         - a set of segment vectors
-!         - a set of segment vector row vector base addresses
-!           (these are relative to the base of the join row set)
-!         - a set of segment vector row vector counts
-!         - a set of row vectors, augmented by offsets of their
-!           parent segment vectors (these offsets are at the
-!           end of each row vector)
-!
-!     The layout of a join row set in the EK scratch area is shown
-!     below:
-!
-!        +--------------------------------------------+
-!        |              join row set size             |  1 element
-!        +--------------------------------------------+
-!        |    number of row vectors in join row set   |  1 element
-!        +--------------------------------------------+
-!        |               table count (TC)             |  1 element
-!        +--------------------------------------------+
-!        |          segment vector count (SVC)        |  1 element
-!        +--------------------------------------------+
-!        |               segment vector 1             |  TC elements
-!        +--------------------------------------------+
-!                              .
-!                              .
-!                              .
-!        +--------------------------------------------+
-!        |               segment vector SVC           |  TC elements
-!        +--------------------------------------------+
-!        |   segment vector 1 row set base address    |  1 element
-!        +--------------------------------------------+
-!        |      segment vector 1 row count (RC_1)     |  1 element
-!        +--------------------------------------------+
-!                              .
-!                              .
-!                              .
-!        +--------------------------------------------+
-!        |  segment vector SVC row set base address   |  1 element
-!        +--------------------------------------------+
-!        |   segment vector SVC row count (RC_SVC)    |  1 element
-!        +--------------------------------------------+
-!        | Augmented row vectors for segment vector 1 |  TC*(RC_1 + 1 )
-!        +--------------------------------------------+  elements
-!                              .
-!                              .
-!                              .
-!        +--------------------------------------------+
-!        |Augmented row vectors for segment vector SVC|  TC*(RC_SVC + 1)
-!        +--------------------------------------------+  elements
-!
-! $ Examples
-!
-!     1)  For a given join row set union, initialize the addressing
-!         routines, then look up row vectors.
-!
-!            C
-!            C     Tell the addressing routines where the join row set
-!            C     union is.  NJRS is the number of join row sets in
-!            C     the union, BASES is an array of EK scratch area base
-!            C     addresses of each join row set.  A base address is
-!            C     the predecessor of the first address actually
-!            C     occupied by a join row set.
-!            C
-!                  CALL ZZEKVSET ( NJRS, BASES )
-!
-!            C
-!            C     Find the base address of the each row vector, as well
-!            C     as the base address of the corresponding segment
-!            C     vector.
-!            C
-!                  DO I = 1, NJRS
-!
-!                     CALL EKVCAL ( I, RWVBAS, SGVBAS )
-!
-!                     [Do something with the row vector....]
-!
-!                  END DO
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.2, 01-OCT-2021 (NJB)
-!
-!        Updated header Abstract section. Corrected typos in comments.
-!
-!-    SPICELIB Version 1.0.1, 06-SEP-2006 (NJB)
-!
-!        Filled in Particulars section of header in entry point
-!        ZZEKVCAL.  Changed previous version line's product from "Beta"
-!        to "SPICELIB" both here and in ZZEKVCAL.
-!
-!-    SPICELIB Version 1.0.0, 28-SEP-1994 (NJB) (WLT)
-!
-
-!
-!     Include Section:  EK Join Row Set Parameters
-!
-!        JRS$INC Version 1    17-SEP-1994 (NJB)
-!
-!     Base-relative index of join row set size
-!
-
-!
-!     Index of row vector count
-!
-
-!
-!     Index of table count
-!
-
-!
-!     Index of segment vector count
-!
-
-!
-!     Base address of first segment vector
-!
-!
-!     End Include Section:  EK Join Row Set Parameters
-!
-
-!
-!     Standard SPICE error handling.
 
       !>## Detailed Input
       !>

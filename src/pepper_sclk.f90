@@ -5,202 +5,492 @@
 !> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_sclk.f90.
+!>
+!>## SCLU01 (SCLK look up, type 1)
+!>
+!> PEPPER: SPICELIB's umbrella routine SCLU01 is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_sclu01. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Look up type 1 SCLK kernel data.
+!>
+!>### Detailed Input
+!>
+!>     See entry points SCLI01, SCLD01.
+!>
+!>### Detailed Output
+!>
+!>     See entry points SCLI01, SCLD01.
+!>
+!>### Parameters
+!>
+!>     See the INCLUDE file sclk.inc for descriptions and values
+!>     of the global parameters used by this routine and
+!>     its entry points.
+!>
+!>### Exceptions
+!>
+!>     1)  If SCLU01 is called directly, the error SPICE(BOGUSENTRY) is
+!>         signaled.
+!>
+!>     See entry points SCLI01, SCLD01 for descriptions of exceptions
+!>     specific to those routines.
+!>
+!>### Files
+!>
+!>     None.
+!>
+!>### Particulars
+!>
+!>     This routine is a utility whose purpose is to localize error
+!>     checking for type 1 SCLK kernel pool lookups in a single place.
+!>
+!>     SLCU01 exists solely as an umbrella routine in which the
+!>     variables for its entry points are declared.  SCLU01 should never
+!>     be called directly.
+!>
+!>### Examples
+!>
+!>     See entry points SCLI01, SCLD01.
+!>
+!>### Restrictions
+!>
+!>     1)  SCLU01 handles lookups of type 1 SCLK data only.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>     W.L. Taber         (JPL)
+!>     E.D. Wright        (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 3.0.0, 01-DEC-2021 (NJB) (JDR)
+!>
+!>        New checks on item sizes have been added: sizes are now
+!>        compared against upper bounds as well as lower bounds.
+!>        Previously only lower bounds were used.
+!>
+!>        Bug fix: corrected index error in SCLD01 modulus range check.
+!>        Corrected comments about count checks in SCLI01. Made
+!>        cosmetic changes to code and comments in both SCLD01 and
+!>        SCLI01, and in this routine. Deleted unused parameter MXNCFF.
+!>
+!>        Edited the umbrella routine and all its entry points headers
+!>        to comply with NAIF standard.
+!>
+!>-    SPICELIB Version 2.3.0, 05-FEB-2008 (NJB)
+!>
+!>        Values of parameters
+!>
+!>           MXCOEF, MXPART, MXNFLD, NDELIM, MXTSYS
+!>
+!>        are now provided by the INCLUDE file sclk.inc.
+!>
+!>-    SPICELIB Version 2.2.0, 20-NOV-2006 (NJB) (EDW)
+!>
+!>        Entry points SCLI01 and SCLD01 were update to use kernel pool
+!>        fetch routines GIPOOL and GDPOOL respectively. Formerly these
+!>        entry points called the deprecated routine RTPOOL.
+!>
+!>        All headers have been updated to remove warnings about memory
+!>        corruption that could occur due to use of RTPOOL.
+!>
+!>        Header references to LDPOOL were replaced with references to
+!>        FURNSH.
+!>
+!>-    SPICELIB Version 2.1.0, 19-OCT-1992 (NJB)
+!>
+!>        Entry points SCLI01 and SCLD01 were updated to fix a bug:
+!>        if a kernel pool lookup fails, the number of elements returned
+!>        N is now set to zero.
+!>
+!>-    SPICELIB Version 2.0.0, 17-APR-1992 (NJB) (WLT)
+!>
+!>        Entry point SCLI01 was updated to handle a time
+!>        system specification for the `parallel' time system
+!>        in the SCLK kernel. Comment section for permuted index
+!>        source lines was added following the header.
+!>
+!>-    SPICELIB Version 1.0.0, 06-SEP-1990 (NJB)
+!>
+!>### Revisions
+!>
+!>-    SPICELIB Version 2.1.0, 19-OCT-1992 (NJB)
+!>
+!>        Entry points SCLI01 and SCLD01 were updated to fix a bug:
+!>        if a kernel pool lookup fails, the number of elements returned
+!>        N is now set to zero. Formerly, these routines returned
+!>        whatever value was returned by RTPOOL.  RTPOOL, however,
+!>        does not set N to zero when the data item requested from it
+!>        is not found.
+!>
+!>-    SPICELIB Version 2.0.0, 17-APR-1992 (NJB) (WLT)
+!>
+!>        Entry point SCLI01 was updated to handle a time
+!>        system specification for the `parallel' time system
+!>        in the SCLK kernel. The update consists of these
+!>        changes:
+!>
+!>           -- The parameter MXTSYS is now defined.
+!>
+!>           -- The local saved variable NAMLST has been expanded
+!>              to include the name SCLK01_TIME_SYSTEM
+!>
+!>           -- The local saved variable LB has been expanded to
+!>              include the lower bound for the number of returned
+!>              values when SCLK01_TIME_SYSTEM_nn is looked up in
+!>              the kernel pool.
+!>
+!>           -- SCLI01 checks the value returned by RTPOOL when
+!>              SCLK01_TIME_SYSTEM_nn is looked up to verify that
+!>              it is within the range [1, MXTSYS].
+!>
+!>        Also, a comment section for permuted index source lines was
+!>        added following the header.
+!>
+!>### Implementation notes
+!>
+!>     MXCOFA is the maximum size of the coefficient array.
+!>
+!>     COFIDX is the index of the coefficient name in NAMLST.
+!>
+!>     NFLIDX is the index of the SCLK field count in NAMLST.
+!>
+!>     OFFIDX is the index of the SCLK offsets in NAMLST.
+!>
+!>     MODIDX is the index of the SCLK moduli in NAMLST.
+!>
+!>     DELIDX is the index of the delimiter code name in NAMLST.  If
+!>     the declaration of NAMLST or assignment of values to NAMLST
+!>     changes, this parameter value may have to change.
+!>
+!>     SYSIDX is the index of the time system in NAMLST.
+!>
+!>     Names of type 1 SCLK items and lower bounds on the number of
+!>     associated values.
+!>
+!>## SC01 (Spacecraft clock, type 1)
+!>
+!> PEPPER: SPICELIB's umbrella routine SC01 is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_sc01. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Perform time conversions between different representations of
+!>     type 1 spacecraft clock.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points SCTK01, SCFM01, SCET01, SCTE01, SCEC01.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points SCTK01, SCFM01, SCET01, SCTE01, SCEC01.
+!>
+!>### Parameters
+!>
+!>     MXCOEF   is the maximum number of coefficient sets in the
+!>              array COEFFS that defines the mapping between
+!>              encoded type 1 SCLK and a parallel time system,
+!>              such as TDB or TDT. This array has dimension
+!>              3 x MXCOEF. The value of MXCOEF may be increased
+!>              as required.
+!>
+!>     MXPART   is the maximum number of partitions for any type 1
+!>              spacecraft clock. Type 1 SCLK kernels contain
+!>              start and stop times for each partition. The value
+!>              of MXPART may be increased as required.
+!>
+!>     MXNFLD   is an upper bound on the number of components in
+!>              the clock string.
+!>
+!>     DPLEN    is an upper bound on the width of the individual
+!>              components of the clock string.
+!>
+!>     DELIMS   are the characters that are accepted delimiters of
+!>              the clock components in the input SCLK string.
+!>
+!>### Exceptions
+!>
+!>     1)  If SC01 is called directly, the error SPICE(BOGUSENTRY)
+!>         is signaled.
+!>
+!>     2)  See the entry points SCTK01, SCFM01, SCET01, SCTE01 for a
+!>         description of the exceptions specific to those routines.
+!>
+!>### Files
+!>
+!>     An SCLK kernel appropriate to the spacecraft clock identified
+!>     by SC must be loaded at the time any entry point of this
+!>     routine is called.
+!>
+!>     If the SCLK kernel used with this routine does not map SCLK
+!>     directly to barycentric dynamical time, a leapseconds kernel
+!>     must be loaded at the time any entry point of this routine is
+!>     called.
+!>
+!>     Normally kernels are loaded by user applications once at the
+!>     start of execution. It is not necessary to load them repeatedly.
+!>
+!>### Particulars
+!>
+!>     SC01 serves as an umbrella routine under which the shared
+!>     variables of its entry points are declared.  SC01 should
+!>     never be called directly.
+!>
+!>     The entry points of SC01 are
+!>
+!>        SCTK01 ( SCLK to ticks,          type 1 )
+!>        SCFM01 ( Format,                 type 1 )
+!>        SCET01 ( ET to ticks,            type 1 )
+!>        SCEC01 ( ET to continuous ticks, type 1 )
+!>        SCTE01 ( Ticks to ET,            type 1 )
+!>        SCTY01 ( Return type of SCLK )
+!>        SCPR01 ( Return partition start and stop times, type 1 )
+!>
+!>### Examples
+!>
+!>     See the entry points.
+!>
+!>### Restrictions
+!>
+!>     1)  Efficiency of the conversion routines in this package
+!>         depends on the assumption that the kernel pool is updated
+!>         relatively infrequently. Any modification of kernel pool data,
+!>         including setting watches, will cause entry points of this
+!>         package to re-buffer saved SCLK data.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>     J.M. Lynch         (JPL)
+!>     B.V. Semenov       (JPL)
+!>     E.D. Wright        (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 4.0.0, 01-DEC-2021 (NJB) (JDR)
+!>
+!>        Added entry points SCPR01 (return partition data) and
+!>        SCTY01 (indicate whether clock is type 1).
+!>
+!>        Updated all entry points to support buffering of data for
+!>        multiple clocks.
+!>
+!>        Added error checks for invalid time system codes.
+!>
+!>        Edited headers of umbrella routine and all entry points to
+!>        comply with NAIF standard.
+!>
+!>-    SPICELIB Version 3.4.0, 09-SEP-2013 (BVS)
+!>
+!>        Updated to keep track of the POOL counter and call ZZCVPOOL.
+!>
+!>-    SPICELIB Version 3.3.0, 05-MAR-2009 (NJB)
+!>
+!>        Bug fix: the entry points of this routine now keep track of
+!>        whether their kernel pool look-ups succeeded. If not, a kernel
+!>        pool lookup is attempted on the next call to any entry point
+!>        of this routine.
+!>
+!>-    SPICELIB Version 3.2.0, 17-FEB-2008 (NJB)
+!>
+!>        Bug fix: changed maximum value arguments to 1 in
+!>        calls to SCLI01 to fetch NFIELD and DELCDE values.
+!>
+!>        Bug fix: spaces between fields are now inserted
+!>        correctly when the output field delimiter is blank.
+!>
+!>-    SPICELIB Version 3.1.1, 22-AUG-2006 (EDW)
+!>
+!>        Replaced references to LDPOOL with references
+!>        to FURNSH.
+!>
+!>-    SPICELIB Version 3.1.0, 24-JAN-2003 (BVS)
+!>
+!>        Increased MXCOEF to 10000.
+!>
+!>-    SPICELIB Version 3.0.0, 09-MAR-1999 (NJB)
+!>
+!>        Added new entry point SCEC01. Removed some extraneous
+!>        C's from column 1; these had been added by a wayward
+!>        preprocessor.
+!>
+!>        Removed local variable RNDCLK; entry point SCTE01 no longer
+!>        creates a rounded version of its input argument.
+!>
+!>        Updated/fixed various comments here and in entry SCET01.
+!>
+!>-    SPICELIB Version 2.1.0, 07-JUL-1996 (NJB)
+!>
+!>        Removed declaration, DATA and SAVE statements for unused
+!>        variables NFDMSG and OLDID.
+!>
+!>-    SPICELIB Version 2.0.0, 17-APR-1992 (NJB)
+!>
+!>        All entry points were updated to handle SCLK kernels that
+!>        map between SCLK and a variety of time systems; formerly
+!>        only TDB was supported. All entry points have had corrections
+!>        and additions made to their headers. Comment section for
+!>        permuted index source lines was added following the header.
+!>
+!>-    SPICELIB Version 1.0.0, 03-SEP-1990 (NJB) (JML)
+!>
+!>### Revisions
+!>
+!>-    SPICELIB Version 3.3.0, 05-MAR-2009 (NJB)
+!>
+!>        Bug fix: the entry points of this routine now keep track of
+!>        whether their kernel pool look-ups succeeded. If not, a kernel
+!>        pool lookup is attempted on the next call to any entry point
+!>        of this routine.
+!>
+!>        All entry points of this routine look up the same kernel
+!>        variables, and use the saved variable UPDATE to indicate that
+!>        a kernel pool look-up is needed. A look-up failure occurring
+!>        in any entry point will now prevent all entry points from
+!>        relying on stored kernel data.
+!>
+!>-    SPICELIB Version 3.2.0, 17-FEB-2008 (NJB)
+!>
+!>        Bug fix: changed maximum value arguments to 1 in
+!>        calls to SCLI01 to fetch NFIELD and DELCDE values.
+!>
+!>        Bug fix: spaces between fields are now inserted
+!>        correctly when the output field delimiter is blank.
+!>
+!>        Unused parameter INITID was removed.
+!>
+!>-    SPICELIB Version 3.1.0, 24-JAN-2003 (BVS)
+!>
+!>        Increased MXCOEF to 10000.
+!>
+!>-    SPICELIB Version 3.0.0, 09-MAR-1999 (NJB)
+!>
+!>        Added new entry point SCEC01. Removed some extraneous
+!>        C's from column 1; these had been added by a wayward
+!>        preprocessor.
+!>
+!>        Removed local variable RNDCLK; entry point SCTE01 no longer
+!>        creates a rounded version of its input argument.
+!>
+!>        Updated/fixed various comments here and in entry SCET01.
+!>
+!>-    SPICELIB Version 2.1.0, 07-JUL-1996 (NJB)
+!>
+!>        Removed declaration, DATA and SAVE statements for unused
+!>        variables NFDMSG and OLDID.
+!>
+!>-    SPICELIB Version 2.0.0, 17-APR-1992 (NJB)
+!>
+!>        Entry points SCET01 and SCTE01 were updated to handle a time
+!>        system specification for the `parallel' time system
+!>        in the SCLK kernel. Formerly, the only time system that
+!>        an SCLK kernel could map SCLK to was TDB. Now TDT is
+!>        supported, and the mechanism for allowing other parallel
+!>        time systems is in place.
+!>
+!>        To support a new parallel time system, it is necessary
+!>        to
+!>
+!>           -- Update SCTE01 so that after the routine converts an input
+!>              tick value to a value in the parallel system, the
+!>              resulting value is converted to TDB. See the current
+!>              treatment of TDT in that routine for an example of how
+!>              this is done.
+!>
+!>           -- Update SCET01 so that the input TDB value can be
+!>              converted to a value in the new parallel system when
+!>              required. This converted value is then used as an input
+!>              to the interpolation algorithm performed in SCET01. See
+!>              the current treatment of TDT in that routine for an
+!>              example of how this is done.
+!>
+!>           -- Update the parameter MXTSYS in SCLU01 to indicate the
+!>              new number of supported parallel time systems.
+!>
+!>           -- Update the SCLK Required Reading to document the
+!>              description of the currently supported parallel time
+!>              systems.
+!>
+!>        See the named entry points for further details.
+!>
+!>        The kernel pool routines SWPOOL and CVPOOL are now used
+!>        to determine when it is necessary to look up kernel pool
+!>        constants. The variable UPDATE is now used to indicate
+!>        when it is necessary to look up the kernel variables used by
+!>        this suite of routines. All of the entry points SCFM01,
+!>        SCTK01, SCET01, and SCTE01 were affected by this update.
+!>
+!>        All of the entry points have had their headers updated to
+!>        discuss the fact that a leapseconds kernel will now need to be
+!>        loaded in order to use SCLK kernels that map between SCLK and
+!>        a parallel time system other than TDB.
+!>
+!>        In this routine, a comment section for permuted index
+!>        source lines was added following the header.
+!>
+!>### Implementation notes
+!>
+!>     SCLK pool:
+!>
+!>     Declarations of statement functions
+!>
+!>     There are at least a half dozen distinct items to save. We're
+!>     safer just saving everything.
+!>
+!>     Maintenance programming note: the coefficient buffer
+!>     should be saved in any event to prevent memory problems
+!>     on some platforms.
+!>
+!>     NEW: Statement functions
+!>
+!>     PEPPER: the statement functions below are written out where they
+!>     were used (they read the SCLK data buffer, which is per-context
+!>     state now; tools/inline_statement_functions.py). Their descriptions
+!>     are kept.
+!>
+!>     Function COEFFS returns the Ith element of the Jth coefficient
+!>     record for the record set starting at index COFBAS+1 in the
+!>     double precision SCLK data buffer.
+!>
+!>     Function PREND returns the Ith partition end time for the
+!>     partition end time set starting at index ENDBAS+1 in the double
+!>     precision SCLK data buffer.
+!>
+!>     Function PRSTRT returns the Ith partition start time for the
+!>     partition start time set starting at index STRBAS+1 in the double
+!>     precision SCLK data buffer.
+!>
+!>     Function MODULI returns the Ith field modulus for the modulus
+!>     array starting at index MODBAS+1 in the double
+!>     precision SCLK data buffer.
+!>
+!>     Function OFFSET returns the Ith field offset for the offset
+!>     array starting at index OFFBAS+1 in the double
+!>     precision SCLK data buffer.
+!>
+!>     For later implementation:
+!>
+!>     Function CMPWID returns the width in characters required to
+!>     represent as a string the maximum count of the Ith field.
+!>
+!>      CMPWID( I ) = INTBUF( OFFCMP + I )
 submodule (pepper_instance) pepper_sclk
 
    implicit none
 
 contains
-
-!$Procedure SCLU01 ( SCLK look up, type 1 )
-!
-!     PEPPER: SPICELIB's umbrella routine SCLU01 is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_sclu01. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Look up type 1 SCLK kernel data.
-!
-! $ Detailed_Input
-!
-!     See entry points SCLI01, SCLD01.
-!
-! $ Detailed_Output
-!
-!     See entry points SCLI01, SCLD01.
-!
-! $ Parameters
-!
-!     See the INCLUDE file sclk.inc for descriptions and values
-!     of the global parameters used by this routine and
-!     its entry points.
-!
-! $ Exceptions
-!
-!     1)  If SCLU01 is called directly, the error SPICE(BOGUSENTRY) is
-!         signaled.
-!
-!     See entry points SCLI01, SCLD01 for descriptions of exceptions
-!     specific to those routines.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine is a utility whose purpose is to localize error
-!     checking for type 1 SCLK kernel pool lookups in a single place.
-!
-!     SLCU01 exists solely as an umbrella routine in which the
-!     variables for its entry points are declared.  SCLU01 should never
-!     be called directly.
-!
-! $ Examples
-!
-!     See entry points SCLI01, SCLD01.
-!
-! $ Restrictions
-!
-!     1)  SCLU01 handles lookups of type 1 SCLK data only.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.0.0, 01-DEC-2021 (NJB) (JDR)
-!
-!        New checks on item sizes have been added: sizes are now
-!        compared against upper bounds as well as lower bounds.
-!        Previously only lower bounds were used.
-!
-!        Bug fix: corrected index error in SCLD01 modulus range check.
-!        Corrected comments about count checks in SCLI01. Made
-!        cosmetic changes to code and comments in both SCLD01 and
-!        SCLI01, and in this routine. Deleted unused parameter MXNCFF.
-!
-!        Edited the umbrella routine and all its entry points headers
-!        to comply with NAIF standard.
-!
-!-    SPICELIB Version 2.3.0, 05-FEB-2008 (NJB)
-!
-!        Values of parameters
-!
-!           MXCOEF, MXPART, MXNFLD, NDELIM, MXTSYS
-!
-!        are now provided by the INCLUDE file sclk.inc.
-!
-!-    SPICELIB Version 2.2.0, 20-NOV-2006 (NJB) (EDW)
-!
-!        Entry points SCLI01 and SCLD01 were update to use kernel pool
-!        fetch routines GIPOOL and GDPOOL respectively. Formerly these
-!        entry points called the deprecated routine RTPOOL.
-!
-!        All headers have been updated to remove warnings about memory
-!        corruption that could occur due to use of RTPOOL.
-!
-!        Header references to LDPOOL were replaced with references to
-!        FURNSH.
-!
-!-    SPICELIB Version 2.1.0, 19-OCT-1992 (NJB)
-!
-!        Entry points SCLI01 and SCLD01 were updated to fix a bug:
-!        if a kernel pool lookup fails, the number of elements returned
-!        N is now set to zero.
-!
-!-    SPICELIB Version 2.0.0, 17-APR-1992 (NJB) (WLT)
-!
-!        Entry point SCLI01 was updated to handle a time
-!        system specification for the `parallel' time system
-!        in the SCLK kernel. Comment section for permuted index
-!        source lines was added following the header.
-!
-!-    SPICELIB Version 1.0.0, 06-SEP-1990 (NJB)
-!
-
-! $ Revisions
-!
-!-    SPICELIB Version 2.1.0, 19-OCT-1992 (NJB)
-!
-!        Entry points SCLI01 and SCLD01 were updated to fix a bug:
-!        if a kernel pool lookup fails, the number of elements returned
-!        N is now set to zero. Formerly, these routines returned
-!        whatever value was returned by RTPOOL.  RTPOOL, however,
-!        does not set N to zero when the data item requested from it
-!        is not found.
-!
-!-    SPICELIB Version 2.0.0, 17-APR-1992 (NJB) (WLT)
-!
-!        Entry point SCLI01 was updated to handle a time
-!        system specification for the `parallel' time system
-!        in the SCLK kernel. The update consists of these
-!        changes:
-!
-!           -- The parameter MXTSYS is now defined.
-!
-!           -- The local saved variable NAMLST has been expanded
-!              to include the name SCLK01_TIME_SYSTEM
-!
-!           -- The local saved variable LB has been expanded to
-!              include the lower bound for the number of returned
-!              values when SCLK01_TIME_SYSTEM_nn is looked up in
-!              the kernel pool.
-!
-!           -- SCLI01 checks the value returned by RTPOOL when
-!              SCLK01_TIME_SYSTEM_nn is looked up to verify that
-!              it is within the range [1, MXTSYS].
-!
-!        Also, a comment section for permuted index source lines was
-!        added following the header.
-!
-
-!
-!     MXCOFA is the maximum size of the coefficient array.
-!
-
-!
-!     COFIDX is the index of the coefficient name in NAMLST.
-!
-
-!
-!     NFLIDX is the index of the SCLK field count in NAMLST.
-!
-
-!
-!     OFFIDX is the index of the SCLK offsets in NAMLST.
-!
-
-!
-!     MODIDX is the index of the SCLK moduli in NAMLST.
-!
-
-!
-!     DELIDX is the index of the delimiter code name in NAMLST.  If
-!     the declaration of NAMLST or assignment of values to NAMLST
-!     changes, this parameter value may have to change.
-!
-
-!
-!     SYSIDX is the index of the time system in NAMLST.
-!
-
-!
-!     Names of type 1 SCLK items and lower bounds on the number of
-!     associated values.
-!
-
-!
-!     Standard SPICE error handling.
 
       !>## Detailed Input
       !>
@@ -1722,342 +2012,6 @@ contains
       return
       end associate
       end procedure zzsclk
-
-!$Procedure SC01 ( Spacecraft clock, type 1 )
-!
-!     PEPPER: SPICELIB's umbrella routine SC01 is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_sc01. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Perform time conversions between different representations of
-!     type 1 spacecraft clock.
-!
-! $ Detailed_Input
-!
-!     See the entry points SCTK01, SCFM01, SCET01, SCTE01, SCEC01.
-!
-! $ Detailed_Output
-!
-!     See the entry points SCTK01, SCFM01, SCET01, SCTE01, SCEC01.
-!
-! $ Parameters
-!
-!     MXCOEF   is the maximum number of coefficient sets in the
-!              array COEFFS that defines the mapping between
-!              encoded type 1 SCLK and a parallel time system,
-!              such as TDB or TDT. This array has dimension
-!              3 x MXCOEF. The value of MXCOEF may be increased
-!              as required.
-!
-!     MXPART   is the maximum number of partitions for any type 1
-!              spacecraft clock. Type 1 SCLK kernels contain
-!              start and stop times for each partition. The value
-!              of MXPART may be increased as required.
-!
-!     MXNFLD   is an upper bound on the number of components in
-!              the clock string.
-!
-!     DPLEN    is an upper bound on the width of the individual
-!              components of the clock string.
-!
-!     DELIMS   are the characters that are accepted delimiters of
-!              the clock components in the input SCLK string.
-!
-! $ Exceptions
-!
-!     1)  If SC01 is called directly, the error SPICE(BOGUSENTRY)
-!         is signaled.
-!
-!     2)  See the entry points SCTK01, SCFM01, SCET01, SCTE01 for a
-!         description of the exceptions specific to those routines.
-!
-! $ Files
-!
-!     An SCLK kernel appropriate to the spacecraft clock identified
-!     by SC must be loaded at the time any entry point of this
-!     routine is called.
-!
-!     If the SCLK kernel used with this routine does not map SCLK
-!     directly to barycentric dynamical time, a leapseconds kernel
-!     must be loaded at the time any entry point of this routine is
-!     called.
-!
-!     Normally kernels are loaded by user applications once at the
-!     start of execution. It is not necessary to load them repeatedly.
-!
-! $ Particulars
-!
-!     SC01 serves as an umbrella routine under which the shared
-!     variables of its entry points are declared.  SC01 should
-!     never be called directly.
-!
-!     The entry points of SC01 are
-!
-!        SCTK01 ( SCLK to ticks,          type 1 )
-!        SCFM01 ( Format,                 type 1 )
-!        SCET01 ( ET to ticks,            type 1 )
-!        SCEC01 ( ET to continuous ticks, type 1 )
-!        SCTE01 ( Ticks to ET,            type 1 )
-!        SCTY01 ( Return type of SCLK )
-!        SCPR01 ( Return partition start and stop times, type 1 )
-!
-! $ Examples
-!
-!     See the entry points.
-!
-! $ Restrictions
-!
-!     1)  Efficiency of the conversion routines in this package
-!         depends on the assumption that the kernel pool is updated
-!         relatively infrequently. Any modification of kernel pool data,
-!         including setting watches, will cause entry points of this
-!         package to re-buffer saved SCLK data.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     J.M. Lynch         (JPL)
-!     B.V. Semenov       (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 4.0.0, 01-DEC-2021 (NJB) (JDR)
-!
-!        Added entry points SCPR01 (return partition data) and
-!        SCTY01 (indicate whether clock is type 1).
-!
-!        Updated all entry points to support buffering of data for
-!        multiple clocks.
-!
-!        Added error checks for invalid time system codes.
-!
-!        Edited headers of umbrella routine and all entry points to
-!        comply with NAIF standard.
-!
-!-    SPICELIB Version 3.4.0, 09-SEP-2013 (BVS)
-!
-!        Updated to keep track of the POOL counter and call ZZCVPOOL.
-!
-!-    SPICELIB Version 3.3.0, 05-MAR-2009 (NJB)
-!
-!        Bug fix: the entry points of this routine now keep track of
-!        whether their kernel pool look-ups succeeded. If not, a kernel
-!        pool lookup is attempted on the next call to any entry point
-!        of this routine.
-!
-!-    SPICELIB Version 3.2.0, 17-FEB-2008 (NJB)
-!
-!        Bug fix: changed maximum value arguments to 1 in
-!        calls to SCLI01 to fetch NFIELD and DELCDE values.
-!
-!        Bug fix: spaces between fields are now inserted
-!        correctly when the output field delimiter is blank.
-!
-!-    SPICELIB Version 3.1.1, 22-AUG-2006 (EDW)
-!
-!        Replaced references to LDPOOL with references
-!        to FURNSH.
-!
-!-    SPICELIB Version 3.1.0, 24-JAN-2003 (BVS)
-!
-!        Increased MXCOEF to 10000.
-!
-!-    SPICELIB Version 3.0.0, 09-MAR-1999 (NJB)
-!
-!        Added new entry point SCEC01. Removed some extraneous
-!        C's from column 1; these had been added by a wayward
-!        preprocessor.
-!
-!        Removed local variable RNDCLK; entry point SCTE01 no longer
-!        creates a rounded version of its input argument.
-!
-!        Updated/fixed various comments here and in entry SCET01.
-!
-!-    SPICELIB Version 2.1.0, 07-JUL-1996 (NJB)
-!
-!        Removed declaration, DATA and SAVE statements for unused
-!        variables NFDMSG and OLDID.
-!
-!-    SPICELIB Version 2.0.0, 17-APR-1992 (NJB)
-!
-!        All entry points were updated to handle SCLK kernels that
-!        map between SCLK and a variety of time systems; formerly
-!        only TDB was supported. All entry points have had corrections
-!        and additions made to their headers. Comment section for
-!        permuted index source lines was added following the header.
-!
-!-    SPICELIB Version 1.0.0, 03-SEP-1990 (NJB) (JML)
-!
-
-! $ Revisions
-!
-!-    SPICELIB Version 3.3.0, 05-MAR-2009 (NJB)
-!
-!        Bug fix: the entry points of this routine now keep track of
-!        whether their kernel pool look-ups succeeded. If not, a kernel
-!        pool lookup is attempted on the next call to any entry point
-!        of this routine.
-!
-!        All entry points of this routine look up the same kernel
-!        variables, and use the saved variable UPDATE to indicate that
-!        a kernel pool look-up is needed. A look-up failure occurring
-!        in any entry point will now prevent all entry points from
-!        relying on stored kernel data.
-!
-!-    SPICELIB Version 3.2.0, 17-FEB-2008 (NJB)
-!
-!        Bug fix: changed maximum value arguments to 1 in
-!        calls to SCLI01 to fetch NFIELD and DELCDE values.
-!
-!        Bug fix: spaces between fields are now inserted
-!        correctly when the output field delimiter is blank.
-!
-!        Unused parameter INITID was removed.
-!
-!-    SPICELIB Version 3.1.0, 24-JAN-2003 (BVS)
-!
-!        Increased MXCOEF to 10000.
-!
-!-    SPICELIB Version 3.0.0, 09-MAR-1999 (NJB)
-!
-!        Added new entry point SCEC01. Removed some extraneous
-!        C's from column 1; these had been added by a wayward
-!        preprocessor.
-!
-!        Removed local variable RNDCLK; entry point SCTE01 no longer
-!        creates a rounded version of its input argument.
-!
-!        Updated/fixed various comments here and in entry SCET01.
-!
-!-    SPICELIB Version 2.1.0, 07-JUL-1996 (NJB)
-!
-!        Removed declaration, DATA and SAVE statements for unused
-!        variables NFDMSG and OLDID.
-!
-!-    SPICELIB Version 2.0.0, 17-APR-1992 (NJB)
-!
-!        Entry points SCET01 and SCTE01 were updated to handle a time
-!        system specification for the `parallel' time system
-!        in the SCLK kernel. Formerly, the only time system that
-!        an SCLK kernel could map SCLK to was TDB. Now TDT is
-!        supported, and the mechanism for allowing other parallel
-!        time systems is in place.
-!
-!        To support a new parallel time system, it is necessary
-!        to
-!
-!           -- Update SCTE01 so that after the routine converts an input
-!              tick value to a value in the parallel system, the
-!              resulting value is converted to TDB. See the current
-!              treatment of TDT in that routine for an example of how
-!              this is done.
-!
-!           -- Update SCET01 so that the input TDB value can be
-!              converted to a value in the new parallel system when
-!              required. This converted value is then used as an input
-!              to the interpolation algorithm performed in SCET01. See
-!              the current treatment of TDT in that routine for an
-!              example of how this is done.
-!
-!           -- Update the parameter MXTSYS in SCLU01 to indicate the
-!              new number of supported parallel time systems.
-!
-!           -- Update the SCLK Required Reading to document the
-!              description of the currently supported parallel time
-!              systems.
-!
-!        See the named entry points for further details.
-!
-!        The kernel pool routines SWPOOL and CVPOOL are now used
-!        to determine when it is necessary to look up kernel pool
-!        constants. The variable UPDATE is now used to indicate
-!        when it is necessary to look up the kernel variables used by
-!        this suite of routines. All of the entry points SCFM01,
-!        SCTK01, SCET01, and SCTE01 were affected by this update.
-!
-!        All of the entry points have had their headers updated to
-!        discuss the fact that a leapseconds kernel will now need to be
-!        loaded in order to use SCLK kernels that map between SCLK and
-!        a parallel time system other than TDB.
-!
-!        In this routine, a comment section for permuted index
-!        source lines was added following the header.
-!
-
-!
-!     SCLK pool:
-!
-
-!
-!     Declarations of statement functions
-!
-
-!
-!     There are at least a half dozen distinct items to save. We're
-!     safer just saving everything.
-!
-!     Maintenance programming note: the coefficient buffer
-!     should be saved in any event to prevent memory problems
-!     on some platforms.
-!
-
-!
-!     NEW: Statement functions
-!
-
-!
-!     PEPPER: the statement functions below are written out where they
-!     were used (they read the SCLK data buffer, which is per-context
-!     state now; tools/inline_statement_functions.py). Their descriptions
-!     are kept.
-!
-!     Function COEFFS returns the Ith element of the Jth coefficient
-!     record for the record set starting at index COFBAS+1 in the
-!     double precision SCLK data buffer.
-
-!
-!     Function PREND returns the Ith partition end time for the
-!     partition end time set starting at index ENDBAS+1 in the double
-!     precision SCLK data buffer.
-!
-
-!
-!     Function PRSTRT returns the Ith partition start time for the
-!     partition start time set starting at index STRBAS+1 in the double
-!     precision SCLK data buffer.
-!
-
-!
-!     Function MODULI returns the Ith field modulus for the modulus
-!     array starting at index MODBAS+1 in the double
-!     precision SCLK data buffer.
-!
-
-!
-!     Function OFFSET returns the Ith field offset for the offset
-!     array starting at index OFFBAS+1 in the double
-!     precision SCLK data buffer.
-!
-
-!
-!     For later implementation:
-!
-!     Function CMPWID returns the width in characters required to
-!     represent as a string the maximum count of the Ith field.
-!
-!      CMPWID( I ) = INTBUF( OFFCMP + I )
-
-!
-!     Standard SPICE error handling.
 
       !>## Detailed Input
       !>

@@ -5,6 +5,393 @@
 !> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_rotations.f90.
+!>
+!>## CHGIRF (Change inertial reference frames)
+!>
+!> PEPPER: SPICELIB's umbrella routine CHGIRF is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_chgirf. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Support changes among a standard set of inertial coordinate
+!>     reference frames.
+!>
+!>### Detailed Input
+!>
+!>     See entry points IRFROT, IRFNUM, IRFNAM, and IRFDEF.
+!>
+!>### Detailed Output
+!>
+!>     See entry points IRFROT, IRFNUM, and IRFNAM.
+!>
+!>### Parameters
+!>
+!>     None.
+!>
+!>### Exceptions
+!>
+!>     1)  If CHGIRF is called directly, the signal, the error
+!>         SPICE(BOGUSENTRY) is signaled.
+!>
+!>     2)  See entry points IRFROT, IRFNUM, IRFNAM, and IRFDEF for
+!>         exceptions specific to those routines.
+!>
+!>### Files
+!>
+!>     None.
+!>
+!>### Particulars
+!>
+!>     CHGIRF exists only as an umbrella for data to be shared
+!>     by its entry points (IRFROT, IRFNUM, IRFNAM, and IRFDEF).
+!>     It should never be called directly.
+!>
+!>### Examples
+!>
+!>     See entry points IRFROT, IRFNUM, IRFNAM, and IRFDEF.
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Literature References
+!>
+!>     [1]  J. Lieske, "Precession Matrix Based on IAU (1976) System of
+!>          Astronomical Constants," Astron. Astrophys. 73, 282-284,
+!>          1979.
+!>
+!>     [2]  E. M. Standish, Jr., "Orientation of the JPL Ephemerides,
+!>          DE 200/LE 200, to the Dynamical Equinox of J2000," Astron.
+!>          Astrophys. 114, 297-302, 1982.
+!>
+!>     [3]  E. M. Standish, Jr., "Conversion of Ephemeris Coordinates
+!>          from the B1950 System to the J2000 System," JPL IOM
+!>          314.6-581, 24 June 1985.
+!>
+!>     [4]  E. M. Standish, Jr., "The Equinox Offsets of the JPL
+!>          Ephemeris," JPL IOM 314.6-929, 26 February 1988.
+!>
+!>     [5]  J. Lieske, "Expressions for the Precession Quantities Based
+!>          upon the IAU (1976) System of Astronomical Constants,"
+!>          Astron. Astrophys. 58, 1-16, 1977.
+!>
+!>     [6]  L. Bass and R. Cesarone, "Mars Observer Planetary Constants
+!>          and Models," JPL D-3444, November 1990.
+!>
+!>     [7]  P. Kenneth Seidelmann (Ed.), "Explanatory Supplement to the
+!>          Astronomical Almanac," University Science Books, 1992.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>     B.V. Semenov       (JPL)
+!>     W.L. Taber         (JPL)
+!>     I.M. Underwood     (JPL)
+!>     E.D. Wright        (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 4.5.0, 06-NOV-2021 (JDR) (NJB)
+!>
+!>        Added IMPLICIT NONE statement.
+!>
+!>        Edited the header to comply with NAIF standard.
+!>
+!>        Corrected sign error in comments describing the angles used to
+!>        convert between the J2000 and B1950 reference frames. Also
+!>        corrected a typo in the comments.
+!>
+!>-    SPICELIB Version 4.4.0, 24-SEP-2013 (BVS)
+!>
+!>        Updated entry point IRFNUM to treat J2000 as a special case
+!>        and to not participate of CHKIN/CHOUT to increase efficiency.
+!>
+!>-    SPICELIB Version 4.3.0, 25-AUG-2005 (NJB)
+!>
+!>        Updated to remove non-standard use of duplicate arguments
+!>        in CONVRT, ROTMAT and MXM calls.
+!>
+!>-    SPICELIB Version 4.2.1, 04-JAN-2002 (EDW)
+!>
+!>        Added DE-143 to header description for IRFROT.
+!>
+!>-    SPICELIB Version 4.2.0, 10-APR-1997 (WLT)
+!>
+!>        A descriptive diagnostic was added to the entry points
+!>        IRFROT and IRFDEF. Before they simply signaled the error
+!>        with no diagnostic.
+!>
+!>-    SPICELIB Version 4.1.0, 14-OCT-1996 (WLT)
+!>
+!>        The number of inertial frames recognized is now stored
+!>        in the include file ninert.inc.
+!>
+!>-    SPICELIB Version 4.0.0, 20-MAY-1996 (WLT)
+!>
+!>        The inertial frame DE-143 was added to the list of recognized
+!>        inertial frames.
+!>
+!>-    SPICELIB Version 3.0.0, 20-MAR-1995 (WLT)
+!>
+!>        The inertial frames DE-140 and DE-142  were added to the
+!>        list of recognized inertial frames.
+!>
+!>-    SPICELIB Version 2.0.0, 30-JUL-1993 (WLT)
+!>
+!>        The transformation from J2000 to B1950 was upgraded
+!>        so that the transformation matrix produced matches
+!>        the matrix given in [1].
+!>
+!>        The frame MARSIAU was added to the list
+!>        of recognized frames. This is the standard mars
+!>        referenced inertial frame used by the Mars Observer
+!>        project.
+!>
+!>        Values for the obliquity of the ecliptic were taken
+!>        from the Explanatory Supplement [7] to the Astronomical
+!>        Almanac (1992) at both the epochs J2000 and B1950 and
+!>        used to define the mean ecliptic and equinox frames
+!>        ECLIPJ2000 and ECLIPB1950.
+!>
+!>-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
+!>
+!>        Comment section for permuted index source lines was added
+!>        following the header.
+!>
+!>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
+!>
+!>### Revisions
+!>
+!>-    SPICELIB Version 4.3.0, 25-AUG-2005 (NJB)
+!>
+!>        Updated to remove non-standard use of duplicate arguments
+!>        in CONVRT, ROTMAT  and MXM calls.
+!>
+!>### Implementation notes
+!>
+!>     Each frame is defined in terms of another frame, except for
+!>     the root frame, which is defined in terms of itself. For now,
+!>     the root frame is the standard IAU reference frame, J2000,
+!>     defined by the Earth mean equator and dynamical equinox of
+!>     Julian year 2000.
+!>
+!>     Each definition consists of a series of rotations, each
+!>     through some angle (in arc seconds) and about some axis.
+!>     The rotations are listed in the opposite order in which
+!>     they are to be performed, so as to correspond more closely
+!>     to conventional notation. For example, the definition
+!>
+!>        FRAMES(i) = 'F2'
+!>        BASES(i)  = 'F1'
+!>        DEFS(i)   = '22.34  3   31.21  2   0.449  1'
+!>
+!>     means that a vector in frame F1 is converted to the equivalent
+!>     vector in frame F2 by applying the following rotation:
+!>
+!>        -                                            -
+!>        v    = ( [ 22.34 ]  [ 31.21 ]  [ 0.449 ]  )  v
+!>         F2               3          2          1     F1
+!>
+!>     where the notation
+!>
+!>        [ theta ]
+!>                 a
+!>
+!>     means ``rotate through angle theta about axis a.''
+!>
+!>     New frames may be added by:
+!>
+!>        1) Increasing the value of MAXF.
+!>
+!>        2) Adding new values for FRAMES, BASES, and DEFS.
+!>
+!>     The actual transformations (TRANS) will be computed during
+!>     initialization.
+!>
+!>     Note that BASES must be the name of a previously defined
+!>     reference frame, and that no frame should appear more than
+!>     once in FRAMES.
+!>
+!>     Note also that the list of valid reference frames maintained
+!>     by CHGIRF must be updated whenever new frames are added.
+!>
+!>     The root frame is mostly for show. Rotate by 0 arc seconds
+!>     about the x-axis to obtain the identity matrix.
+!>
+!>     PEPPER: the tables FRAMES, BASES, DEFS are parameters (declared above);
+!>     the comments on their entries follow.
+!>
+!>     The B1950 reference frame is obtained by precessing the J2000
+!>     frame backwards from Julian year 2000 to Besselian year 1950,
+!>     using the 1976 IAU precession model.
+!>
+!>     The rotation from B1950 to J2000 is
+!>
+!>        [ -z ]  [ theta ]  [ -zeta ]
+!>              3          2          3
+!>
+!>     So the rotation from J2000 to B1950 is the transpose,
+!>
+!>        [ zeta ]  [ -theta ]  [ z ]
+!>                3           2      3
+!>
+!>     The values for z, theta, and zeta are computed from the formulas
+!>     given in table 5 of [5].
+!>
+!>        z     =  1153.04066200330"
+!>        theta =  1002.26108439117"
+!>        zeta  =  1152.84248596724"
+!>
+!>     The FK4 reference frame is derived from the B1950 frame by
+!>     applying the equinox offset determined by Fricke. This is just
+!>     the rotation
+!>
+!>        [ 0.525" ]
+!>                  3
+!>
+!>     The DE-118 reference frame is nearly identical to the FK4
+!>     reference frame. It is also derived from the B1950 frame.
+!>     Only the offset is different:
+!>
+!>        [ 0.53155" ]
+!>                    3
+!>
+!>     In [2], Standish uses two separate rotations,
+!>
+!>        [ 0.00073" ]  P [ 0.5316" ]
+!>                    3              3
+!>
+!>     (where P is the precession matrix used above to define the
+!>     B1950 frame). The major effect of the second rotation is to
+!>     correct for truncating the magnitude of the first rotation.
+!>     At his suggestion, we will use the untruncated value, and
+!>     stick to a single rotation.
+!>
+!>     Most of the other DE reference frames may be defined relative
+!>     to either the DE-118 or B1950 frames. The values below are taken
+!>     from [4].
+!>
+!>        DE number   Offset from DE-118   Offset from B1950
+!>        ---------   ------------------   -----------------
+!>               96             +0.1209"            +0.4107"
+!>              102             +0.3956"            +0.1359"
+!>              108             +0.0541"            +0.4775"
+!>              111             -0.0564"            +0.5880"
+!>              114             -0.0213"            +0.5529"
+!>              122             +0.0000"            +0.5316"
+!>              125             -0.0438"            +0.5754"
+!>              130             +0.0069"            +0.5247"
+!>
+!>     We will use B1950 for now, since the offsets generally have
+!>     more significant digits.
+!>
+!>     The Galactic System II reference frame is defined by the
+!>     following rotations:
+!>
+!>             o          o            o
+!>        [ 327  ]  [ 62.6  ]  [ 282.25  ]
+!>                3          1            3
+!>
+!>      In the absence of better information, we will assume that
+!>      it is derived from the FK4 frame. Converting the angles from
+!>      degrees to arc seconds,
+!>
+!>           o
+!>        327      = 1177200"
+!>            o
+!>        62.6     =  225360"
+!>              o
+!>        282.25   = 1016100"
+!>
+!>     According to Standish, the various DE-200 frames are identical
+!>     with J2000, because he rotates the ephemerides before releasing
+!>     them (in order to avoid problems like the one that this routine
+!>     is designed to solve). Because we have to have something, we
+!>     will use
+!>
+!>             o
+!>        [ 0.0 ]
+!>               3
+!>
+!>     The values for the transformation from J2000 to MARSIAU_MO
+!>     are derived from the constants given for the pole of Mars
+!>     on page 8-2 of reference [6].
+!>
+!>     The value for the obliquity of the ecliptic at J2000  is
+!>     taken from page  114 of [7] equation 3.222-1.  This agrees
+!>     with the expression given in [5]
+!>
+!>     The value for the obliquity of the ecliptic at B1950  is
+!>     taken from page  171 of [7].
+!>
+!>     The frame for DE-140 is simply DE-400 rotated by the rotation:
+!>
+!>      0.9999256765384668  0.0111817701197967  0.0048589521583895
+!>     -0.0111817701797229  0.9999374816848701 -0.0000271545195858
+!>     -0.0048589520204830 -0.0000271791849815  0.9999881948535965
+!>
+!>     Note that the DE-400 frame is J2000.
+!>
+!>     The transpose of this is the frame from DE140 to DE400. To get
+!>     the euler angles below, the matrix given above was copied into
+!>     a matrix XFORM.
+!>
+!>     This matrix was transposed to give the transformation from
+!>     DE-140 to J2000.
+!>
+!>        CALL XPOSE ( XFORM, XFORM )
+!>
+!>     Using the SPICE routine M2EUL, the euler representation of the
+!>     transformation from DE140 to J2000 was constructed.
+!>
+!>        CALL M2EUL ( XFORM, 3, 2, 3, A1, A2, A3 )
+!>
+!>     Angles were converted to the range from -180 to 180 degrees
+!>     and converted to arcseconds.  At this point we have the
+!>     euler representation from DE-140 to J2000.
+!>
+!>        [ A1 ]  [ A2 ]  [ A3 ]
+!>              3       2       3
+!>
+!>     To get the Euler representation of the transformation from
+!>     J2000 to DE-140  we use.
+!>
+!>        [ -A3 ]  [ -A2 ] [ -A1 ]
+!>               3        2       3
+!>
+!>     This method was used because it yields a nicer form of
+!>     representation than the straight forward transformation.
+!>     Note that these numbers are quite close to the values used
+!>     for the transformation from J2000 to B1950
+!>
+!>     The frame for DE-142 is simply DE-402 rotated by the rotation:
+!>
+!>      0.9999256765402605  0.0111817697320531  0.0048589526815484
+!>     -0.0111817697907755  0.9999374816892126 -0.0000271547693170
+!>     -0.0048589525464121 -0.0000271789392288  0.9999881948510477
+!>
+!>     Note that the DE-402 frame is J2000.
+!>
+!>     The Euler angles giving the transformation for J2000 to
+!>     DE-142 were constructed in the same way as the transformation
+!>     from J2000 to DE140.  Only the input matrix changed to use the
+!>     one given above.
+!>
+!>     The frame for DE-143 is simply DE-403 rotated by the rotation:
+!>
+!>      0.9999256765435852  0.0111817743077255  0.0048589414674762
+!>     -0.0111817743300355  0.9999374816382505 -0.0000271622115251
+!>     -0.0048589414161348 -0.0000271713942366  0.9999881949053349
+!>
+!>     Note that the DE-403 frame is J2000.
+!>
+!>     The Euler angles giving the transformation for J2000 to
+!>     DE-143 were constructed in the same way as the transformation
+!>     from J2000 to DE140.  Only the input matrix changed to use the
+!>     one given above.
+!>
+!>     Until defined (by a call to IRFDEF), the default frame is
+!>     undefined.
 submodule (pepper_instance) pepper_rotations
 
    implicit none
@@ -3389,427 +3776,6 @@ contains
 
       return
       end procedure zztwovxf
-
-!$Procedure CHGIRF ( Change inertial reference frames )
-!
-!     PEPPER: SPICELIB's umbrella routine CHGIRF is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_chgirf. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Support changes among a standard set of inertial coordinate
-!     reference frames.
-!
-! $ Detailed_Input
-!
-!     See entry points IRFROT, IRFNUM, IRFNAM, and IRFDEF.
-!
-! $ Detailed_Output
-!
-!     See entry points IRFROT, IRFNUM, and IRFNAM.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If CHGIRF is called directly, the signal, the error
-!         SPICE(BOGUSENTRY) is signaled.
-!
-!     2)  See entry points IRFROT, IRFNUM, IRFNAM, and IRFDEF for
-!         exceptions specific to those routines.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     CHGIRF exists only as an umbrella for data to be shared
-!     by its entry points (IRFROT, IRFNUM, IRFNAM, and IRFDEF).
-!     It should never be called directly.
-!
-! $ Examples
-!
-!     See entry points IRFROT, IRFNUM, IRFNAM, and IRFDEF.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     [1]  J. Lieske, "Precession Matrix Based on IAU (1976) System of
-!          Astronomical Constants," Astron. Astrophys. 73, 282-284,
-!          1979.
-!
-!     [2]  E. M. Standish, Jr., "Orientation of the JPL Ephemerides,
-!          DE 200/LE 200, to the Dynamical Equinox of J2000," Astron.
-!          Astrophys. 114, 297-302, 1982.
-!
-!     [3]  E. M. Standish, Jr., "Conversion of Ephemeris Coordinates
-!          from the B1950 System to the J2000 System," JPL IOM
-!          314.6-581, 24 June 1985.
-!
-!     [4]  E. M. Standish, Jr., "The Equinox Offsets of the JPL
-!          Ephemeris," JPL IOM 314.6-929, 26 February 1988.
-!
-!     [5]  J. Lieske, "Expressions for the Precession Quantities Based
-!          upon the IAU (1976) System of Astronomical Constants,"
-!          Astron. Astrophys. 58, 1-16, 1977.
-!
-!     [6]  L. Bass and R. Cesarone, "Mars Observer Planetary Constants
-!          and Models," JPL D-3444, November 1990.
-!
-!     [7]  P. Kenneth Seidelmann (Ed.), "Explanatory Supplement to the
-!          Astronomical Almanac," University Science Books, 1992.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 4.5.0, 06-NOV-2021 (JDR) (NJB)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Corrected sign error in comments describing the angles used to
-!        convert between the J2000 and B1950 reference frames. Also
-!        corrected a typo in the comments.
-!
-!-    SPICELIB Version 4.4.0, 24-SEP-2013 (BVS)
-!
-!        Updated entry point IRFNUM to treat J2000 as a special case
-!        and to not participate of CHKIN/CHOUT to increase efficiency.
-!
-!-    SPICELIB Version 4.3.0, 25-AUG-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in CONVRT, ROTMAT and MXM calls.
-!
-!-    SPICELIB Version 4.2.1, 04-JAN-2002 (EDW)
-!
-!        Added DE-143 to header description for IRFROT.
-!
-!-    SPICELIB Version 4.2.0, 10-APR-1997 (WLT)
-!
-!        A descriptive diagnostic was added to the entry points
-!        IRFROT and IRFDEF. Before they simply signaled the error
-!        with no diagnostic.
-!
-!-    SPICELIB Version 4.1.0, 14-OCT-1996 (WLT)
-!
-!        The number of inertial frames recognized is now stored
-!        in the include file ninert.inc.
-!
-!-    SPICELIB Version 4.0.0, 20-MAY-1996 (WLT)
-!
-!        The inertial frame DE-143 was added to the list of recognized
-!        inertial frames.
-!
-!-    SPICELIB Version 3.0.0, 20-MAR-1995 (WLT)
-!
-!        The inertial frames DE-140 and DE-142  were added to the
-!        list of recognized inertial frames.
-!
-!-    SPICELIB Version 2.0.0, 30-JUL-1993 (WLT)
-!
-!        The transformation from J2000 to B1950 was upgraded
-!        so that the transformation matrix produced matches
-!        the matrix given in [1].
-!
-!        The frame MARSIAU was added to the list
-!        of recognized frames. This is the standard mars
-!        referenced inertial frame used by the Mars Observer
-!        project.
-!
-!        Values for the obliquity of the ecliptic were taken
-!        from the Explanatory Supplement [7] to the Astronomical
-!        Almanac (1992) at both the epochs J2000 and B1950 and
-!        used to define the mean ecliptic and equinox frames
-!        ECLIPJ2000 and ECLIPB1950.
-!
-!-    SPICELIB Version 1.0.1, 10-MAR-1992 (WLT)
-!
-!        Comment section for permuted index source lines was added
-!        following the header.
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-!
-
-! $ Revisions
-!
-!-    SPICELIB Version 4.3.0, 25-AUG-2005 (NJB)
-!
-!        Updated to remove non-standard use of duplicate arguments
-!        in CONVRT, ROTMAT  and MXM calls.
-!
-
-!     Each frame is defined in terms of another frame, except for
-!     the root frame, which is defined in terms of itself. For now,
-!     the root frame is the standard IAU reference frame, J2000,
-!     defined by the Earth mean equator and dynamical equinox of
-!     Julian year 2000.
-!
-!     Each definition consists of a series of rotations, each
-!     through some angle (in arc seconds) and about some axis.
-!     The rotations are listed in the opposite order in which
-!     they are to be performed, so as to correspond more closely
-!     to conventional notation. For example, the definition
-!
-!        FRAMES(i) = 'F2'
-!        BASES(i)  = 'F1'
-!        DEFS(i)   = '22.34  3   31.21  2   0.449  1'
-!
-!     means that a vector in frame F1 is converted to the equivalent
-!     vector in frame F2 by applying the following rotation:
-!
-!        -                                            -
-!        v    = ( [ 22.34 ]  [ 31.21 ]  [ 0.449 ]  )  v
-!         F2               3          2          1     F1
-!
-!     where the notation
-!
-!        [ theta ]
-!                 a
-!
-!     means ``rotate through angle theta about axis a.''
-!
-!     New frames may be added by:
-!
-!        1) Increasing the value of MAXF.
-!
-!        2) Adding new values for FRAMES, BASES, and DEFS.
-!
-!     The actual transformations (TRANS) will be computed during
-!     initialization.
-!
-!     Note that BASES must be the name of a previously defined
-!     reference frame, and that no frame should appear more than
-!     once in FRAMES.
-!
-!     Note also that the list of valid reference frames maintained
-!     by CHGIRF must be updated whenever new frames are added.
-!
-
-!
-!     The root frame is mostly for show. Rotate by 0 arc seconds
-!     about the x-axis to obtain the identity matrix.
-!
-!     PEPPER: the tables FRAMES, BASES, DEFS are parameters (declared above);
-!     the comments on their entries follow.
-
-!
-!     The B1950 reference frame is obtained by precessing the J2000
-!     frame backwards from Julian year 2000 to Besselian year 1950,
-!     using the 1976 IAU precession model.
-!
-!     The rotation from B1950 to J2000 is
-!
-!        [ -z ]  [ theta ]  [ -zeta ]
-!              3          2          3
-!
-!     So the rotation from J2000 to B1950 is the transpose,
-!
-!        [ zeta ]  [ -theta ]  [ z ]
-!                3           2      3
-!
-!     The values for z, theta, and zeta are computed from the formulas
-!     given in table 5 of [5].
-!
-!        z     =  1153.04066200330"
-!        theta =  1002.26108439117"
-!        zeta  =  1152.84248596724"
-!
-
-!
-!     The FK4 reference frame is derived from the B1950 frame by
-!     applying the equinox offset determined by Fricke. This is just
-!     the rotation
-!
-!        [ 0.525" ]
-!                  3
-!
-
-!
-!     The DE-118 reference frame is nearly identical to the FK4
-!     reference frame. It is also derived from the B1950 frame.
-!     Only the offset is different:
-!
-!        [ 0.53155" ]
-!                    3
-!
-!     In [2], Standish uses two separate rotations,
-!
-!        [ 0.00073" ]  P [ 0.5316" ]
-!                    3              3
-!
-!     (where P is the precession matrix used above to define the
-!     B1950 frame). The major effect of the second rotation is to
-!     correct for truncating the magnitude of the first rotation.
-!     At his suggestion, we will use the untruncated value, and
-!     stick to a single rotation.
-!
-
-!
-!     Most of the other DE reference frames may be defined relative
-!     to either the DE-118 or B1950 frames. The values below are taken
-!     from [4].
-!
-!        DE number   Offset from DE-118   Offset from B1950
-!        ---------   ------------------   -----------------
-!               96             +0.1209"            +0.4107"
-!              102             +0.3956"            +0.1359"
-!              108             +0.0541"            +0.4775"
-!              111             -0.0564"            +0.5880"
-!              114             -0.0213"            +0.5529"
-!              122             +0.0000"            +0.5316"
-!              125             -0.0438"            +0.5754"
-!              130             +0.0069"            +0.5247"
-!
-!     We will use B1950 for now, since the offsets generally have
-!     more significant digits.
-!
-
-!
-!     The Galactic System II reference frame is defined by the
-!     following rotations:
-!
-!             o          o            o
-!        [ 327  ]  [ 62.6  ]  [ 282.25  ]
-!                3          1            3
-!
-!      In the absence of better information, we will assume that
-!      it is derived from the FK4 frame. Converting the angles from
-!      degrees to arc seconds,
-!
-!           o
-!        327      = 1177200"
-!            o
-!        62.6     =  225360"
-!              o
-!        282.25   = 1016100"
-!
-
-!
-!     According to Standish, the various DE-200 frames are identical
-!     with J2000, because he rotates the ephemerides before releasing
-!     them (in order to avoid problems like the one that this routine
-!     is designed to solve). Because we have to have something, we
-!     will use
-!
-!             o
-!        [ 0.0 ]
-!               3
-!
-
-!
-!     The values for the transformation from J2000 to MARSIAU_MO
-!     are derived from the constants given for the pole of Mars
-!     on page 8-2 of reference [6].
-!
-
-!
-!     The value for the obliquity of the ecliptic at J2000  is
-!     taken from page  114 of [7] equation 3.222-1.  This agrees
-!     with the expression given in [5]
-!
-
-!
-!     The value for the obliquity of the ecliptic at B1950  is
-!     taken from page  171 of [7].
-!
-
-!
-!     The frame for DE-140 is simply DE-400 rotated by the rotation:
-!
-!      0.9999256765384668  0.0111817701197967  0.0048589521583895
-!     -0.0111817701797229  0.9999374816848701 -0.0000271545195858
-!     -0.0048589520204830 -0.0000271791849815  0.9999881948535965
-!
-!     Note that the DE-400 frame is J2000.
-!
-!     The transpose of this is the frame from DE140 to DE400. To get
-!     the euler angles below, the matrix given above was copied into
-!     a matrix XFORM.
-!
-!     This matrix was transposed to give the transformation from
-!     DE-140 to J2000.
-!
-!        CALL XPOSE ( XFORM, XFORM )
-!
-!     Using the SPICE routine M2EUL, the euler representation of the
-!     transformation from DE140 to J2000 was constructed.
-!
-!        CALL M2EUL ( XFORM, 3, 2, 3, A1, A2, A3 )
-!
-!     Angles were converted to the range from -180 to 180 degrees
-!     and converted to arcseconds.  At this point we have the
-!     euler representation from DE-140 to J2000.
-!
-!        [ A1 ]  [ A2 ]  [ A3 ]
-!              3       2       3
-!
-!     To get the Euler representation of the transformation from
-!     J2000 to DE-140  we use.
-!
-!        [ -A3 ]  [ -A2 ] [ -A1 ]
-!               3        2       3
-!
-!     This method was used because it yields a nicer form of
-!     representation than the straight forward transformation.
-!     Note that these numbers are quite close to the values used
-!     for the transformation from J2000 to B1950
-!
-
-!
-!     The frame for DE-142 is simply DE-402 rotated by the rotation:
-!
-!      0.9999256765402605  0.0111817697320531  0.0048589526815484
-!     -0.0111817697907755  0.9999374816892126 -0.0000271547693170
-!     -0.0048589525464121 -0.0000271789392288  0.9999881948510477
-!
-!     Note that the DE-402 frame is J2000.
-!
-!     The Euler angles giving the transformation for J2000 to
-!     DE-142 were constructed in the same way as the transformation
-!     from J2000 to DE140.  Only the input matrix changed to use the
-!     one given above.
-!
-
-!
-!     The frame for DE-143 is simply DE-403 rotated by the rotation:
-!
-!      0.9999256765435852  0.0111817743077255  0.0048589414674762
-!     -0.0111817743300355  0.9999374816382505 -0.0000271622115251
-!     -0.0048589414161348 -0.0000271713942366  0.9999881949053349
-!
-!     Note that the DE-403 frame is J2000.
-!
-!     The Euler angles giving the transformation for J2000 to
-!     DE-143 were constructed in the same way as the transformation
-!     from J2000 to DE140.  Only the input matrix changed to use the
-!     one given above.
-!
-
-!
-!     Until defined (by a call to IRFDEF), the default frame is
-!     undefined.
-!
-
-!
-!     Standard SPICE error handling.
 
       !>## Detailed Input
       !>

@@ -5,6 +5,156 @@
 !> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_time.f90.
+!>
+!>## ZZVSTRNG (Virtual String)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZVSTRNG is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zzvstrng. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     SPICE Private routine intended solely for the support of SPICE
+!>     routines.  Users should not call this routine directly due
+!>     to the volatile nature of this routine.
+!>
+!>     Maintain a virtual decimal string associated with a d.p. number X.
+!>
+!>### Detailed Input
+!>
+!>     X          is a double precision number for which we want to
+!>                create a virtual decimal string.  This is supplied
+!>                to the routine ZZVSTSTR which sets up the internal
+!>                representation of the virtual decimal string.
+!>
+!>                X is assumed to be positive.
+!>
+!>     FILL       is the character to use for digits that precede the
+!>                first significant digit in the virtual decimal string.
+!>                Usually this will be a blank or zero ('0')
+!>
+!>     FROM       is the index in the virtual decimal string of the
+!>                first character that will be returned by ZZVSBSTR.
+!>
+!>     TO         is the index in the virtual decimal string of the
+!>                last character that will be returned by ZZVSBSTR.
+!>
+!>     RND        is a logical flag used to indicate that the output
+!>                string should represent the virtual decimal string
+!>                that results from rounding to the TO'th decimal
+!>                location.
+!>
+!>### Detailed Output
+!>
+!>     EXPONT     is the exponent associated with X when represented
+!>                in scientific notation.  It is returned by ZZVSTSTR.
+!>
+!>     SUBSTR     is the substring of the virtual decimal string from
+!>                index FROM to TO returned by ZZVSBSTR
+!>
+!>     DID        is a logical flag that is used to indicate that
+!>                the left most character returned by ZZVSBSTR became
+!>                a zero as a result of rounding up from 9. (i.e. there
+!>                are significant digits to the left of the first
+!>                character returned in SUBSTR.
+!>
+!>### Parameters
+!>
+!>     None.
+!>
+!>### Files
+!>
+!>     None.
+!>
+!>### Exceptions
+!>
+!>     Error free.
+!>
+!>### Particulars
+!>
+!>     Given a character representation of a number such as
+!>     '1.234567890123E+3' there is a corresponding "infinite"
+!>     representation.  In this case
+!>
+!>           ...0000001234.56789012300000....
+!>
+!>     If we let the "index" of the decimal point be zero and number
+!>     the other characters from left to right in sequence we can
+!>     speak of the J'th character in the infinite representation.
+!>
+!>     We call the combination of the infinite representation and
+!>     indexing scheme  the virtual decimal string associated with the
+!>     input string.
+!>
+!>     The internal representation of the virtual decimal string is
+!>     set using the entry point ZZVSTSTR.  This entry point returns
+!>     the exponent associated with the string when it is written
+!>     in scientific notation.
+!>
+!>     For any J the entry point ZZVSBSTR returns the J'th character
+!>     of the virtual decimal string.
+!>
+!>     You may request that ZZVSBSTR return a string that is rounded
+!>     to the right most digit returned.  If return to the example
+!>     above
+!>
+!>           ...0000001234.56789012300000....
+!>
+!>     and the substring from -5 to 3 is requested with rounding,
+!>     the virtual decimal string will be treated as virtual string
+!>     rounded to the 3rd decimal point.
+!>
+!>           ...0000001234.56800000000000....
+!>
+!>     As a special convenience, you may specify any character to
+!>     be used in place of the extra leading zeros in the representation.
+!>     This leading character is specified via the input FILL in
+!>     ZZVSTSTR.
+!>
+!>### Examples
+!>
+!>     Suppose you would like to create an output string associated
+!>     with X and you would like to present it in decimal format.
+!>
+!>     Moreover, suppose you know that X is positive and less than
+!>     100000.  The following would create the string and set the
+!>     leading character to be a blank.
+!>
+!>        CALL ZZVSTSTR ( X, ' ', EXP )
+!>
+!>     Check the exponent returned.  If it's greater than 5, our basic
+!>     assumptions were violated.
+!>
+!>        IF ( EXP .GT. 5 ) THEN
+!>           WRITE (*,*) 'The exponent is too big. It is: ', EXP
+!>        END IF
+!>
+!>     Now fill in the string.
+!>
+!>        CALL ZZVSBSTR ( -6, 5, RND, SUBSTR, DID )
+!>
+!>        WRITE (*,*) 'The value of X was: ', SUBSTR
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     W.L. Taber      (JPL)
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 1.0.0, 12-SEP-1996 (WLT)
+!>
+!>### Implementation notes
+!>
+!>     Although we don't anticipate ever needing these values
+!>     we set some initial values for EXP and STRING.
+!>
+!>     This routine doesn't do anything.
 submodule (pepper_instance) pepper_time
 
    implicit none
@@ -1413,160 +1563,6 @@ contains
 
       return
       end procedure zzutcpm
-
-!$Procedure       ZZVSTRNG ( Virtual String )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZVSTRNG is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zzvstrng. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Maintain a virtual decimal string associated with a d.p. number X.
-!
-! $ Detailed_Input
-!
-!     X          is a double precision number for which we want to
-!                create a virtual decimal string.  This is supplied
-!                to the routine ZZVSTSTR which sets up the internal
-!                representation of the virtual decimal string.
-!
-!                X is assumed to be positive.
-!
-!     FILL       is the character to use for digits that precede the
-!                first significant digit in the virtual decimal string.
-!                Usually this will be a blank or zero ('0')
-!
-!     FROM       is the index in the virtual decimal string of the
-!                first character that will be returned by ZZVSBSTR.
-!
-!     TO         is the index in the virtual decimal string of the
-!                last character that will be returned by ZZVSBSTR.
-!
-!     RND        is a logical flag used to indicate that the output
-!                string should represent the virtual decimal string
-!                that results from rounding to the TO'th decimal
-!                location.
-!
-! $ Detailed_Output
-!
-!     EXPONT     is the exponent associated with X when represented
-!                in scientific notation.  It is returned by ZZVSTSTR.
-!
-!     SUBSTR     is the substring of the virtual decimal string from
-!                index FROM to TO returned by ZZVSBSTR
-!
-!     DID        is a logical flag that is used to indicate that
-!                the left most character returned by ZZVSBSTR became
-!                a zero as a result of rounding up from 9. (i.e. there
-!                are significant digits to the left of the first
-!                character returned in SUBSTR.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Particulars
-!
-!     Given a character representation of a number such as
-!     '1.234567890123E+3' there is a corresponding "infinite"
-!     representation.  In this case
-!
-!           ...0000001234.56789012300000....
-!
-!     If we let the "index" of the decimal point be zero and number
-!     the other characters from left to right in sequence we can
-!     speak of the J'th character in the infinite representation.
-!
-!     We call the combination of the infinite representation and
-!     indexing scheme  the virtual decimal string associated with the
-!     input string.
-!
-!     The internal representation of the virtual decimal string is
-!     set using the entry point ZZVSTSTR.  This entry point returns
-!     the exponent associated with the string when it is written
-!     in scientific notation.
-!
-!     For any J the entry point ZZVSBSTR returns the J'th character
-!     of the virtual decimal string.
-!
-!     You may request that ZZVSBSTR return a string that is rounded
-!     to the right most digit returned.  If return to the example
-!     above
-!
-!           ...0000001234.56789012300000....
-!
-!     and the substring from -5 to 3 is requested with rounding,
-!     the virtual decimal string will be treated as virtual string
-!     rounded to the 3rd decimal point.
-!
-!           ...0000001234.56800000000000....
-!
-!     As a special convenience, you may specify any character to
-!     be used in place of the extra leading zeros in the representation.
-!     This leading character is specified via the input FILL in
-!     ZZVSTSTR.
-!
-! $ Examples
-!
-!     Suppose you would like to create an output string associated
-!     with X and you would like to present it in decimal format.
-!
-!     Moreover, suppose you know that X is positive and less than
-!     100000.  The following would create the string and set the
-!     leading character to be a blank.
-!
-!        CALL ZZVSTSTR ( X, ' ', EXP )
-!
-!     Check the exponent returned.  If it's greater than 5, our basic
-!     assumptions were violated.
-!
-!        IF ( EXP .GT. 5 ) THEN
-!           WRITE (*,*) 'The exponent is too big. It is: ', EXP
-!        END IF
-!
-!     Now fill in the string.
-!
-!        CALL ZZVSBSTR ( -6, 5, RND, SUBSTR, DID )
-!
-!        WRITE (*,*) 'The value of X was: ', SUBSTR
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     W.L. Taber      (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 12-SEP-1996 (WLT)
-!
-
-!
-!     Although we don't anticipate ever needing these values
-!     we set some initial values for EXP and STRING.
-!
-!
-!     This routine doesn't do anything.
 
       !>## Abstract
       !>

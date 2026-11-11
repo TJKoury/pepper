@@ -7,6 +7,984 @@
 !> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_das.f90.
+!>
+!>## DASFM (DAS, file manager)
+!>
+!> PEPPER: SPICELIB's umbrella routine DASFM is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_dasfm. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Manage open DAS files.
+!>
+!>### Detailed Input
+!>
+!>     FNAME    on input is the name of a DAS file to be opened, or
+!>              the name of a DAS file about which some information
+!>              (handle, logical unit) is requested.
+!>
+!>     FTYPE    on input is a code for the type of data that is
+!>              contained in the DAS file. This code has no meaning or
+!>              interpretation at the level of the DAS file
+!>              architecture, but is provided as a convenience for
+!>              higher level software. The maximum length for the file
+!>              type is four (4) characters. If the input string is
+!>              longer than four characters, the first nonblank
+!>              character and its three, at most, immediate successors
+!>              will be used as the file type. The file type may not
+!>              contain nonprinting characters, and it IS case
+!>              sensitive.
+!>
+!>     IFNAME   is the internal file name for a DAS file to be
+!>              created.
+!>
+!>     HANDLE   on input is the handle of a DAS file about which some
+!>              information (file name, logical unit) is requested,
+!>              or the handle of a DAS file to be closed.
+!>
+!>     UNIT     on input is the logical unit connected to a DAS file
+!>              about which some information (file name, handle) is
+!>              requested.
+!>
+!>     FREE     is the Fortran record number of the first free record
+!>              in a specified DAS file.
+!>
+!>     LASTLA   is an array containing the highest current logical
+!>              addresses, in the specified DAS file, of data of
+!>              character, double precision, and integer types, in
+!>              that order.
+!>
+!>     LASTRC   is an array containing the Fortran record numbers, in
+!>              the specified DAS file, of the directory records
+!>              containing the current last descriptors of clusters
+!>              of character, double precision, and integer data
+!>              records, in that order.
+!>
+!>     LASTWD   is an array containing the word positions, in the
+!>              specified DAS file, of the current last descriptors
+!>              of clusters of character, double precision, and
+!>              integer data records, in that order.
+!>
+!>     ACCESS   is the type of access for which a DAS file is open.
+!>              The values of ACCESS may be
+!>
+!>                 'READ'
+!>                 'WRITE'
+!>
+!>              Leading and trailing blanks are ignored, and case
+!>              is not significant.
+!>
+!>              DAS files that are open for writing may also be read.
+!>
+!>### Detailed Output
+!>
+!>     FNAME    on output is the name of a DAS file for which
+!>              the corresponding handle or logical unit has been
+!>              supplied.
+!>
+!>     HANDLE   on output is the handle of a DAS file for which
+!>              the corresponding file name or logical unit has been
+!>              supplied.
+!>
+!>     UNIT     on output is the logical unit connected to a DAS file
+!>              for which the corresponding file name or handle has
+!>              been supplied.
+!>
+!>     FREE     is the Fortran record number of the first free record
+!>              in a specified DAS file.
+!>
+!>     LASTLA   is an array containing the highest current logical
+!>              addresses, in the specified DAS file, of data of
+!>              character, double precision, and integer types, in
+!>              that order.
+!>
+!>     LASTRC   is an array containing the Fortran record numbers, in
+!>              the specified DAS file, of the directory records
+!>              containing the current last descriptors of clusters
+!>              of character, double precision, and integer data
+!>              records, in that order.
+!>
+!>     LASTWD   is an array containing the word positions, in the
+!>              specified DAS file, of the current last descriptors
+!>              of clusters of character, double precision, and
+!>              integer data records, in that order.
+!>
+!>     NRESVR   is the number of reserved records in a specified DAS
+!>              file.
+!>
+!>     NRESVC   is the number of characters in use in the reserved
+!>              record area of a specified DAS file.
+!>
+!>     NCOMR    is the number of comment records in a specified DAS
+!>              file.
+!>
+!>     NCOMC    is the number of characters in use in the comment area
+!>              of a specified DAS file.
+!>
+!>     FHSET    is a SPICE set containing the handles of the
+!>              currently open DAS files.
+!>
+!>### Parameters
+!>
+!>     RECL     is the record length of a DAS file. Each record
+!>              must be large enough to hold the greatest of NWI
+!>              integers, NWD double precision numbers, or NWC
+!>              characters, whichever is greater. The units in which
+!>              the record length must be specified vary from
+!>              environment to environment. For example, VAX Fortran
+!>              requires record lengths to be specified in longwords,
+!>              where two longwords equal one double precision
+!>              number.
+!>
+!>     FTSIZE   is the maximum number of DAS files that a user can
+!>              have open simultaneously. This includes any files used
+!>              by the DAS system when closing files opened with write
+!>              access. Currently, DASCLS (via DASSDR) opens a scratch
+!>              DAS file using DASOPS to segregate (sort by data
+!>              type) the records in the DAS file being closed.
+!>              Segregating the data by type improves the speed of
+!>              access to the data.
+!>
+!>              In order to avoid the possibility of overflowing the
+!>              DAS file table we recommend, when at least one DAS
+!>              file is open with write access, that users of this
+!>              software limit themselves to at most FTSIZE - 2  other
+!>              open DAS files. If no files are to be open with write
+!>              access, then users may open FTSIZE files with no
+!>              possibility of overflowing the DAS file table.
+!>
+!>### Exceptions
+!>
+!>     1)  If DASFM is called directly, the error SPICE(BOGUSENTRY)
+!>         is signaled.
+!>
+!>     2)  See entry points DASOPR, DASOPW, DASONW, DASOPN, DASOPS,
+!>         DASLLC, DASHFS, DASUFS, DASHLU, DASLUH, DASHFN, DASFNH,
+!>         DASHOF, and DASSIH for exceptions specific to those entry
+!>         points.
+!>
+!>### Files
+!>
+!>     This set of routines is intended to support the creation,
+!>     updating, and reading of Fortran direct access files that
+!>     conform to the DAS file format. This format is described in
+!>     detail in the DAS Required Reading.
+!>
+!>     See FTSIZE in the $Parameters section for a description of a
+!>     potential problem with overflowing the DAS file table when at
+!>     least one DAS file is opened with write access.
+!>
+!>### Particulars
+!>
+!>     As of the N0066 version of the SPICE Toolkit, DASFM uses the
+!>     SPICE handle manager subsystem and makes use of run-time
+!>     translation.
+!>
+!>     DASFM serves as an umbrella, allowing data to be shared by its
+!>     entry points:
+!>
+!>        DASOPR         Open for read.
+!>        DASOPW         Open for write.
+!>        DASONW         Open new.
+!>        DASOPN         Open new. (Obsolete: Use DASONW instead.)
+!>        DASOPS         Open as scratch file.
+!>
+!>        DASLLC         Low-level close.
+!>
+!>        DASHFS         Handle to file summary.
+!>        DASUFS         Update file summary.
+!>
+!>        DASHLU         Handle to logical unit.
+!>        DASLUH         Logical to handle.
+!>
+!>        DASHFN         Handle to name.
+!>        DASFNH         File name to handle.
+!>
+!>        DASHAM         Handle to access method.
+!>
+!>        DASHOF         Handles of open files.
+!>        DASSIH         Signal invalid handles.
+!>
+!>     Before a DAS file  can be used, it must be opened. Entry points
+!>     DASOPR and DASOPW provide the only means for opening an
+!>     existing DAS file.
+!>
+!>     Several files may be opened for use simultaneously. (This makes
+!>     it convenient to combine data from several files to produce a
+!>     single result, or to route subsets of data from a single source
+!>     to multiple DAS files.) As each DAS file is opened, it is
+!>     assigned a file handle, which is used to keep track of the file
+!>     internally, and which is used by the calling program to refer to
+!>     the file in all subsequent calls to DAS routines.
+!>
+!>     DAS files may be opened for either read or write access. Files
+!>     open for read access may not be changed in any way. Files opened
+!>     for write access may be both read from and written to.
+!>
+!>     DASONW is used to open a new DAS file. This routine extends the
+!>     functionality of DASOPN by providing a mechanism for associating a
+!>     type with the data in the DAS file. The use of this entry over
+!>     DASOPN is highly recommended.
+!>
+!>     Since the only reason for creating a new file is to write
+!>     something in it, all new files are opened for write access.
+!>
+!>     Entry point DASOPN, for opening a new DAS file, has been rendered
+!>     obsolete by the new entry point DASONW. The entry point DASOPN
+!>     will continue to be supported for purposes of backward
+!>     compatibility, but its use in new software development is strongly
+!>     discouraged.
+!>
+!>     Entry point DASOPS creates a new scratch DAS file. As with new
+!>     permanent files, these files are opened for write access.  DAS
+!>     files opened by DASOPS are automatically deleted when they are
+!>     closed.
+!>
+!>     Entry point DASLLC is used by DASCLS ( DAS, close file ) to close
+!>     an open DAS file and update DASFM's bookkeeping information
+!>     accordingly. DASCLS provides the only official means of closing
+!>     a DAS file that is currently open. Closing a DAS file any other
+!>     way (for example, by determining its logical unit and using the
+!>     Fortran CLOSE statement directly) may affect your calling program
+!>     in mysterious ways. Normally, DASLLC should not be called by
+!>     non-SPICELIB routines; these should call DASCLS instead.
+!>
+!>     Entry point DASHFS allows you to obtain a file summary for any
+!>     DAS file that is currently open, without calling DASRFR to
+!>     re-read the file record. Entry point DASUFS can be used to
+!>     update a file summary at run-time. Normally, there is no
+!>     need for routines outside of SPICELIB to modify a DAS file's
+!>     summary.
+!>
+!>     Entry point DASHAM allows you to determine which access method
+!>     a DAS file has been opened for.
+!>
+!>     Entry point DASHOF allows you to determine which DAS files are
+!>     open at any time. In particular, you can use DASHOF to determine
+!>     whether any file handle points to an open DAS file.
+!>
+!>     Entry point DASSIH signals errors when it is supplied with invalid
+!>     handles, so it serves to centralize error handling associated
+!>     with invalid handles.
+!>
+!>     The remaining entry points exist mainly to translate between
+!>     alternative representations of DAS files. There are three ways to
+!>     identify any open DAS file: by name, by handle, and by logical
+!>     unit. Given any one of these, you may use these entry points to
+!>     find the other two.
+!>
+!>### Examples
+!>
+!>     See $Examples in entry points DASOPR, DASOPW, DASONW,
+!>     DASOPN (Obsolete), DASLLC, DASHFS, DASUFS, DASHLU, DASLUH,
+!>     DASHFN, DASFNH, DASHAM, DASHOF, and DASSIH for examples specific
+!>     to those entry points.
+!>
+!>### Restrictions
+!>
+!>     1)  The value of parameter RECL may need to be changed when DASFM
+!>         and its entry points are ported to a new environment (CPU and
+!>         compiler).
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>     K.R. Gehringer     (JPL)
+!>     H.A. Neilan        (JPL)
+!>     B.V. Semenov       (JPL)
+!>     W.L. Taber         (JPL)
+!>     F.S. Turner        (JPL)
+!>     I.M. Underwood     (JPL)
+!>     E.D. Wright        (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 8.1.0, 28-NOV-2021 (BVS)
+!>
+!>        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+!>
+!>-    SPICELIB Version 8.0.1, 24-AUG-2021 (JDR)
+!>
+!>        Edited the header of the DASFM umbrella routine and all its
+!>        entry points.
+!>
+!>        Removed non-existent argument "SUM" from the umbrella's
+!>        $Brief_I/O section.
+!>
+!>-    SPICELIB Version 8.0.0, 06-APR-2016 (NJB)
+!>
+!>        Corrected call to ZZDDHCLS in DASUFS.
+!>
+!>        26-FEB-2015 (NJB)
+!>
+!>           Now uses DAF/DAS handle manager subsystem.
+!>
+!>           FTSIZE is now 5000.
+!>
+!>           Corrected miscellaneous spelling errors in comments
+!>           throughout this file.
+!>
+!>-    SPICELIB Version 7.24.0, 10-APR-2014 (NJB)
+!>
+!>        Added initializers for file table arrays. This was done
+!>        to suppress compiler warnings. Deleted declaration of
+!>        unused parameter BWDLOC.
+!>
+!>        Corrected header comments in entry point DASLLC: routine that
+!>        flushes written, buffered records is DASWBR, not DASWUR.
+!>
+!>-    SPICELIB Version 7.23.0, 10-MAR-2014 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-64BIT-INTEL.
+!>
+!>-    SPICELIB Version 7.22.0, 10-MAR-2014 (BVS)
+!>
+!>        Updated for PC-LINUX-64BIT-IFORT.
+!>
+!>-    SPICELIB Version 7.21.0, 10-MAR-2014 (BVS)
+!>
+!>        Updated for PC-CYGWIN-GFORTRAN.
+!>
+!>-    SPICELIB Version 7.20.0, 10-MAR-2014 (BVS)
+!>
+!>        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+!>
+!>-    SPICELIB Version 7.19.0, 10-MAR-2014 (BVS)
+!>
+!>        Updated for PC-CYGWIN-64BIT-GCC_C.
+!>
+!>-    SPICELIB Version 7.18.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-INTEL.
+!>
+!>-    SPICELIB Version 7.17.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-INTEL-CC_C.
+!>
+!>-    SPICELIB Version 7.16.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+!>
+!>-    SPICELIB Version 7.15.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+!>
+!>-    SPICELIB Version 7.14.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for PC-WINDOWS-64BIT-IFORT.
+!>
+!>-    SPICELIB Version 7.13.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for PC-LINUX-64BIT-GFORTRAN.
+!>
+!>-    SPICELIB Version 7.12.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for PC-64BIT-MS_C.
+!>
+!>-    SPICELIB Version 7.11.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for MAC-OSX-64BIT-INTEL_C.
+!>
+!>-    SPICELIB Version 7.10.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for MAC-OSX-64BIT-IFORT.
+!>
+!>-    SPICELIB Version 7.9.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for MAC-OSX-64BIT-GFORTRAN.
+!>
+!>-    SPICELIB Version 7.8.0, 18-MAR-2009 (BVS)
+!>
+!>        Updated for PC-LINUX-GFORTRAN.
+!>
+!>-    SPICELIB Version 7.7.0, 18-MAR-2009 (BVS)
+!>
+!>        Updated for MAC-OSX-GFORTRAN.
+!>
+!>-    SPICELIB Version 7.6.0, 19-FEB-2008 (BVS)
+!>
+!>        Updated for PC-LINUX-IFORT.
+!>
+!>-    SPICELIB Version 7.5.0, 14-NOV-2006 (BVS)
+!>
+!>        Updated for PC-LINUX-64BIT-GCC_C.
+!>
+!>-    SPICELIB Version 7.4.0, 14-NOV-2006 (BVS)
+!>
+!>        Updated for MAC-OSX-INTEL_C.
+!>
+!>-    SPICELIB Version 7.3.0, 14-NOV-2006 (BVS)
+!>
+!>        Updated for MAC-OSX-IFORT.
+!>
+!>-    SPICELIB Version 7.2.0, 14-NOV-2006 (BVS)
+!>
+!>        Updated for PC-WINDOWS-IFORT.
+!>
+!>-    SPICELIB Version 7.1.0, 26-OCT-2005 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-64BIT-GCC_C.
+!>
+!>-    SPICELIB Version 7.0.0, 28-SEP-2005 (NJB)
+!>
+!>        Error handling for non-native files was added to
+!>        entry points DASOPR and DASOPW.
+!>
+!>        Bug in code for constructing long error message in entry
+!>        point DASUFS was corrected.
+!>
+!>-    SPICELIB Version 6.2.0, 03-JAN-2005 (BVS)
+!>
+!>        Updated for PC-CYGWIN_C.
+!>
+!>-    SPICELIB Version 6.1.0, 03-JAN-2005 (BVS)
+!>
+!>        Updated for PC-CYGWIN.
+!>
+!>-    SPICELIB Version 6.0.3, 24-APR-2003 (EDW)
+!>
+!>        Added MAC-OSX-F77 to the list of platforms
+!>        that require READONLY to read write protected
+!>        kernels.
+!>
+!>-    SPICELIB Version 6.0.2, 21-FEB-2003 (NJB)
+!>
+!>        Corrected inline comment in DASLLC: determination of
+!>        whether file is open is done by searching the handle column of
+!>        the file table, not the unit column.
+!>
+!>-    SPICELIB Version 6.0.1, 17-JUL-2002 (BVS)
+!>
+!>        Added MAC-OSX environments.
+!>
+!>-    SPICELIB Version 6.0.0, 11-DEC-2001 (NJB) (FST)
+!>
+!>        To accommodate future updates to the DAS system, including
+!>        integration with the handle manager and FTP validation
+!>        checks, the following entry points were modified:
+!>
+!>           DASONW, DASOPN
+!>
+!>        See their headers and code for the details of the changes.
+!>
+!>        Bug fix: removed local buffering of the DAS file ID word
+!>        and the internal file name, as this was causing DASWFR
+!>        to exhibit improper behavior.
+!>
+!>        Bug fix: missing call to CHKIN was added to an error
+!>        handling branch in entry point DASUFS. This call is
+!>        required because DASUFS uses discovery check-in.
+!>
+!>-    SPICELIB Version 5.0.4, 08-OCT-1999 (WLT)
+!>
+!>        The environment lines were expanded so that the supported
+!>        environments are now explicitly given. New
+!>        environments are WIN-NT
+!>
+!>-    SPICELIB Version 5.0.3, 16-SEP-1999 (NJB)
+!>
+!>        CSPICE environments were added. Some typos were corrected.
+!>
+!>-    SPICELIB Version 5.0.2, 28-JUL-1999 (WLT)
+!>
+!>        The environment lines were expanded so that the supported
+!>        environments are now explicitly given. New
+!>        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
+!>
+!>-    SPICELIB Version 5.0.1, 18-MAR-1999 (WLT)
+!>
+!>        The environment lines were expanded so that the supported
+!>        environments are now explicitly given. Previously,
+!>        environments such as SUN-SUNOS and SUN-SOLARIS were implied
+!>        by the environment label SUN.
+!>
+!>-    SPICELIB Version 5.0.0, 05-APR-1998 (NJB)
+!>
+!>        Added references to the PC-LINUX environment. Repaired some
+!>        format errors involving placement of comment markers in
+!>        column 1.
+!>
+!>-    SPICELIB Version 4.0.1, 19-DEC-1995 (NJB)
+!>
+!>        Added permuted index entry section.
+!>
+!>-    SPICELIB Version 4.0.0, 31-AUG-1995 (NJB)
+!>
+!>        Changed argument list of the entry point DASONW. The input
+!>        argument NCOMR, which indicates the number of comment records
+!>        to reserve, was added to the argument list.
+!>
+!>-    SPICELIB Version 3.1.0, 05-JAN-1995 (HAN)
+!>
+!>        Removed Sun Solaris environment since it is now the same
+!>        as the Sun OS 4.1.x environment.
+!>        Removed DEC Alpha/OpenVMS environment since it is now the same
+!>        as the VAX environment.
+!>        Entry points affected are: DASFM, DASOPR.
+!>
+!>-    SPICELIB Version 3.0.0, 15-JUN-1994 (KRG)
+!>
+!>        Modified the umbrella routine DASFM to allow the inclusion of
+!>        a file type in the creation and manipulation of DAS files.
+!>
+!>-    SPICELIB Version 2.0.0, 11-APR-1994 (HAN)
+!>
+!>        Updated module to include values for the Silicon Graphics/IRIX,
+!>        DEC Alpha-OSF/1, and Next/Absoft Fortran platforms. Entry
+!>        points affected are: DASFM, DASOPR.
+!>
+!>-    SPICELIB Version 1.0.0, 15-NOV-1992 (NJB) (WLT) (IMU)
+!>
+!>### Revisions
+!>
+!>-    SPICELIB Version 7.0.0, 28-SEP-2005 (NJB)
+!>
+!>        Error handling for non-native files was added to
+!>        entry points DASOPR and DASOPW.
+!>
+!>        Bug in code for constructing long error message in entry
+!>        point DASUFS was corrected.
+!>
+!>        Local variable DAS was renamed to DASFIL in DASSIH.
+!>
+!>-    SPICELIB Version 6.0.0, 11-DEC-2001 (NJB) (FST)
+!>
+!>        Binary File Format Identification:
+!>
+!>        The file record now contains an 8 character string that
+!>        identifies the binary file format utilized by DAS files.
+!>        The purpose of this string's inclusion in the file record
+!>        is preparatory in nature, to accelerate the migration to
+!>        files that support the runtime translation update that
+!>        is scheduled.
+!>
+!>        FTP Validation:
+!>
+!>        The file record now contains a sequence of characters
+!>        commonly corrupted by improper FTP transfers. These
+!>        characters will be examined by the handle manager when
+!>        existing files are opened.
+!>
+!>        FTIDW and FTIFN have been removed from the elements of
+!>        the DAS file table. Their presence and use in DASUFS
+!>        was causing DASWFR difficulties in updating the internal
+!>        filename under situations where changes to the comment and
+!>        reserved record parameters in the file record were updated.
+!>        This change effects DASOPR, DASOPN, DASONW, DASOPW, and
+!>        DASUFS.
+!>
+!>-    SPICELIB Version 3.0.0, 15-JUN-1994 (KRG)
+!>
+!>        Modified the umbrella routine DASFM to allow the inclusion of
+!>        a file type in the creation and manipulation of DAS files. In
+!>        particular, the following changes were made:
+!>
+!>           1) Added variable FTYPE to the SUBROUTINE declaration, and
+!>              added appropriate entries for this variable in the
+!>              $Brief_I/O and $Detailed_Input sections of the header.
+!>
+!>           2) Removed erroneous references to OPC from the $Brief_I/O
+!>              section.
+!>
+!>           3) Added a new entry point, DASONW, which will support the
+!>              ability to associate a data type with a new DAS file
+!>              when it is created. The addition of this new entry point
+!>              makes the entry point DASOPN obsolete.
+!>
+!>           4) Added a description of the new entry point DASONW to the
+!>              $Particulars section. Also added a statement that the
+!>              entry point DASOPN has been made obsolete by this new
+!>              entry point, and its use in new code development is
+!>              discouraged.
+!>
+!>           5) Added a new variable to the file table, FTIDW, which
+!>              will be used to store the ID words from successfully
+!>              opened DAS files. We need to maintain this information
+!>              when writing the file record, as we do not want to
+!>              modify the ID word in the file.
+!>
+!>           6) Removed the parameter DASID as it is no longer needed.
+!>
+!>           7) Added new variables TARCH and TTYPE for temporary
+!>              storage of the file architecture and type. Also added a
+!>              new variable FNB for storing the position of the first
+!>              nonblank in a string.
+!>
+!>           8) Added new parameters:
+!>
+!>                 ARCLEN The maximum length of a file architecture
+!>                 TYPLEN The maximum length of a file type
+!>                 MAXPC  Decimal value for the upper limit of printable
+!>                        ASCII characters.
+!>                 MINPC  Decimal value for the lower limit of printable
+!>                        ASCII characters.
+!>
+!>           9) Modified entry points which open DAS files: OPR, OPW,
+!>              OPS, OPN, ONW to support the new file ID word format.
+!>
+!>          10) Made all occurrences of error message formatting of
+!>              filenames consistent. All filenames will be single
+!>              quoted in output error messages.
+!>
+!>          11) Added a test for a blank filename before the inquire
+!>              to obtain information about a file in the entry points:
+!>              DASOPR, DASOPW, DASONW, and DASOPN.
+!>
+!>          12) Modified the description of FTSIZE in the $Parameters
+!>              section to reflect the possibility of overflowing the
+!>              DAS file table when at least one DAS file had been
+!>              opened with write access.
+!>
+!>              The problem occurs when the file table is full, the
+!>              number of open DAS files equals FTSIZE, and at least one
+!>              of the open files was opened with write access. If an
+!>              attempt to close a file opened with write access is made
+!>              under these conditions, by calling DASCLS, it will fail.
+!>              DASCLS (via DASSDR) calls DASOPS to open a scratch DAS
+!>              file, but the scratch file CANNOT be opened because the
+!>              file table is full. If this occurs, close a file open
+!>              for read access, or restrict the number of open files
+!>              in use to be at most FTSIZE - 1 when there will be at
+!>              least one file opened with write access.
+!>
+!>### Implementation notes
+!>
+!>     Access method parameters:
+!>
+!>     File summary parameters:
+!>
+!>        A DAS file summary has the following structure:
+!>
+!>           +----------------------------------------+
+!>           | <number of reserved records>           |
+!>           +----------------------------------------+
+!>           | <number of characters in r.r. area>    |
+!>           +----------------------------------------+
+!>           | <number of comment records>            |
+!>           +----------------------------------------+
+!>           | <number of characters in comment area> |
+!>           +----------------------------------------+
+!>           | <first free record number>             |
+!>           +----------------------------------------+
+!>           | <last character logical address>       |
+!>           +----------------------------------------+
+!>           | <last d.p. logical address>            |
+!>           +----------------------------------------+
+!>           | <last integer logical address>         |
+!>           +----------------------------------------+
+!>           | <last character descriptor record>     |
+!>           +----------------------------------------+
+!>           | <last d.p. descriptor record>          |
+!>           +----------------------------------------+
+!>           | <last integer descriptor record>       |
+!>           +----------------------------------------+
+!>           | <last character descriptor word>       |
+!>           +----------------------------------------+
+!>           | <last d.p. descriptor word>            |
+!>           +----------------------------------------+
+!>           | <last integer descriptor word>         |
+!>           +----------------------------------------+
+!>
+!>     Base indices for:
+!>
+!>        -- last logical addresses
+!>        -- records containing last descriptor for a given type
+!>        -- word containing last descriptor for a given type
+!>
+!>     The offset into the file summary for any of these items
+!>     is obtained by adding the appropriate data type parameter
+!>     (DP, INT, or CHAR) to the base index for the item.
+!>
+!>     Descriptor record pointer locations (within descriptor records):
+!>
+!>     Directory address range location parameters:
+!>
+!>     First descriptor position in descriptor record:
+!>
+!>     Length of the Binary File Format string:
+!>
+!>     The parameter TAILEN determines the tail length of a DAS file
+!>     record.  This is the number of bytes (characters) that
+!>     occupy the portion of the file record that follows the
+!>     integer holding the first free address.  For environments
+!>     with a 32 bit word length, 1 byte characters, and DAS
+!>     record sizes of 1024 bytes, we have:
+!>
+!>           8 bytes - IDWORD
+!>          60 bytes - IFNAME
+!>           4 bytes - NRESVR (32 bit integer)
+!>           4 bytes - NRESVC (32 bit integer)
+!>           4 bytes - NCOMR  (32 bit integer)
+!>         + 4 bytes - NCOMC  (32 bit integer)
+!>          ---------
+!>          84 bytes - (All file records utilize this space.)
+!>
+!>     So the size of the remaining portion (or tail) of the DAS
+!>     file record for computing environments as described above
+!>     would be:
+!>
+!>        1024 bytes - DAS record size
+!>      -    8 bytes - DAS Binary File Format Word
+!>      -   84 bytes - (from above)
+!>       ------------
+!>         932 bytes - DAS file record tail length
+!>
+!>     Note: environments that do not have a 32 bit word length,
+!>     1 byte characters, and a DAS record size of 1024 bytes, will
+!>     require the adjustment of this parameter.
+!>
+!>     The file table consists of a set of arrays which serve as
+!>     `columns' of the table.  The sets of elements having the same
+!>     index in the arrays form the `rows' of the table.  Each column
+!>     contains a particular type of information; each row contains
+!>     all of the information pertaining to a particular DAS file.
+!>
+!>     All column names in the file table begin with `FT'.  The
+!>     columns are:
+!>
+!>        HAN      Handle
+!>        ACC      Access method
+!>        LNK      Number of links
+!>        SUM      File summary
+!>
+!>     The rows of the file table are indexed by a doubly linked
+!>     list pool.  The pool contains an active list and a free list.
+!>     when a file is opened, a pointer to the file (the pointer
+!>     is called a `node').  it is placed at the head of the active
+!>     list; when a file is closed, the node in the active list that
+!>     pointed to the file is placed on the free list.
+!>
+!>     NEXT is incremented each time a file is opened to become the
+!>     next file handle assigned.
+!>
+!>     FTHEAD is a pointer to the head of the active file list.
+!>
+!>     NEXT and PREV map the DAS data type codes to their
+!>     successors and predecessors, respectively.
+!>
+!>## DASRWR (DAS, read/write records)
+!>
+!> PEPPER: SPICELIB's umbrella routine DASRWR is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_dasrwr. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Read and write DAS physical records.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points for a discussion of their inputs.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points for a discussion of their outputs.
+!>
+!>### Parameters
+!>
+!>     NWD      is the number of DPs in a single DAS record
+!>              containing DPs.
+!>
+!>     NWI      is the number of integers in a single DAS record
+!>              containing integers.
+!>
+!>     NWC      is the number of characters in a single DAS record
+!>              containing characters.
+!>
+!>     BUFSZD,
+!>     BUFSZI,
+!>     BUFSZC   are, respectively, the number of records in the
+!>              data buffers for double precision, integer, and
+!>              character records.
+!>
+!>### Exceptions
+!>
+!>     1)  If this routine is called directly, the error
+!>         SPICE(BOGUSENTRY) is signaled.
+!>
+!>     2)  See the entry points for discussions of their exceptions.
+!>
+!>### Files
+!>
+!>     See the description of the argument HANDLE in the headers of
+!>     the entry points for a description of files accessed by this
+!>     set of routines.
+!>
+!>### Particulars
+!>
+!>     This suite of routines provides buffered read and write access to
+!>     DAS files. The purpose of this feature is to increase the
+!>     performance of application programs that access DAS files: in
+!>     particular, repeated reads from or writes to a given record
+!>     should be relatively fast, because the contents of the most
+!>     recently accessed records are buffered in memory. Thus DASRWR
+!>     and its entry points act as a miniature virtual memory system for
+!>     DAS files.
+!>
+!>     These routines are intended primarily for use by other SPICELIB
+!>     routines; users' application programs will not normally need to
+!>     call these routines. Writing to a DAS file with these routines
+!>     demands a particularly circumspect approach: it's quite easy to
+!>     end up with something other than a DAS file if one misuses the
+!>     routines.
+!>
+!>     The entry points of DASRWR support writing, reading, and updating
+!>     the records in a DAS file. The distinction between writing and
+!>     updating is that any record may be written (as long as the record
+!>     belongs to a file open for writing), but only existing records
+!>     may be updated.  `Writing' a record sets the values of all of
+!>     the elements of the record, while a subrange of the elements of an
+!>     existing record may be `updated'.
+!>
+!>     For each of these three operations, there are three DAS routines,
+!>     one for each supported data type. The names of the routines are
+!>
+!>        -- For writing:     DASWRC,  DASWRD,  DASWRI
+!>        -- For updating:    DASURC,  DASURD,  DASURI
+!>        -- For reading:     DASRRC,  DASRRD,  DASRRI
+!>
+!>     Users should note that, unlike in the case of SPICELIB's DAF
+!>     routines, the DAS routines buffer data that is written as well
+!>     as data that is read. Consequently a DAS file does not
+!>     necessarily yet contain, at any moment, all of the data that
+!>     has been written to it by the DASWRx or DASURx routines. The
+!>     written data that is buffered is written out when the need
+!>     to buffer additional data requires it, and also when the user
+!>     commands the closure of a file that has been written. So, at
+!>     the time a DAS file is closed, the contents of the physical file
+!>     do reflect what has been `written' to the file by the DASWRx and
+!>     DASURx entry points.
+!>
+!>     At any time, an application program can force the DAS system to
+!>     write to a DAS file any buffered records maintained for that
+!>     file. The entry point DASWBR (DAS, write buffered records)
+!>     provides this capability.
+!>
+!>     DASRWR contains three record buffers: one of character type,
+!>     one of double precision type, and one of integer type. Each
+!>     buffer has enough room for an integer number of records. The
+!>     sizes of the buffers are parameterized and can be increased if
+!>     necessary. When contemplating the revision of the buffer
+!>     sizes selected by NAIF, SPICELIB users should take note of the
+!>     following points:
+!>
+!>        -- Changing values of parameters in NAIF subroutines may cause
+!>           a maintenance burden for the users of the modified NAIF
+!>           code, since any changes made to a SPICELIB routine will have
+!>           to be made to any new version of that routine released by
+!>           NAIF in a later version of SPICELIB.
+!>
+!>        -- The effect of buffer size on the speed with which an
+!>           application executes is highly dependent on the specific
+!>           application. In some cases, increasing the buffer sizes
+!>           may slow the application down.
+!>
+!>### Examples
+!>
+!>     See the entry points for examples specific to those routines.
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>     K.R. Gehringer     (JPL)
+!>     B.V. Semenov       (JPL)
+!>     W.L. Taber         (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 2.1.0, 07-OCT-2021 (NJB) (JDR)
+!>
+!>        Added initializers for record buffers.
+!>
+!>        Edited the headers of DASRWR and all its entry points to comply
+!>        with NAIF standard.
+!>
+!>        Cleaned up the $Revisions history.
+!>
+!>-    SPICELIB Version 2.0.0, 05-FEB-2015 (NJB)
+!>
+!>        Upgraded to support handle manager integration and
+!>        reading of non-native files.
+!>
+!>-    SPICELIB Version 1.1.1, 10-FEB-2014 (BVS)
+!>
+!>        Added description of NWD, NWI, and NWC to the $Parameters
+!>        and $Brief_I/O sections of the header.
+!>
+!>-    SPICELIB Version 1.1.0, 17-NOV-1995 (NJB)
+!>
+!>        Made modifications to the DASRRx routines to enhance
+!>        efficiency. Removed references to the function RETURN.
+!>
+!>        Removed weird spaces from ENTRY statements.
+!>
+!>-    SPICELIB Version 1.0.1, 28-OCT-1993 (KRG)
+!>
+!>        Removed references to specific DAS file open routines in the
+!>        $Detailed_Input section of the header for each entry point.
+!>        This was done in order to minimize documentation changes if the
+!>        DAS open routines ever change.
+!>
+!>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
+!>
+!>### Revisions
+!>
+!>-    SPICELIB Version 2.0.0, 05-FEB-2015 (NJB)
+!>
+!>        Upgraded to support handle manager integration and
+!>        reading of non-native files.
+!>
+!>-    SPICELIB Version 1.1.0, 17-NOV-1995 (NJB)
+!>
+!>        Made modifications to the DASRRx routines to enhance
+!>        efficiency. Removed references to the function RETURN.
+!>
+!>### Implementation notes
+!>
+!>     The data structure maintained by this set of routines consists
+!>     of three record buffers, one each for use with records of double
+!>     precision, integer, and character data types.
+!>
+!>     Each buffer consists of five parallel arrays; the arrays contain:
+!>
+!>        -- data records
+!>        -- Fortran record numbers
+!>        -- file handles
+!>        -- Update flags
+!>
+!>     In addition, for each buffer there is a doubly linked list that
+!>     points to the buffer and keeps track of the order in which the
+!>     records in the buffer were accessed.  The three linked lists are
+!>     maintained in a doubly linked list pool structure.  The logical
+!>     structure of each buffer is illustrated below.  All of the array
+!>     elements in the same row are associated with the data record in
+!>     that row.
+!>
+!>     Linked          Record       Record   Handles   Update
+!>      List           buffer       Numbers            Flags
+!>
+!>      +---+      +------------+    +---+    +---+    +---+
+!>      |   | ---> |            |    |   |    |   |    |   |
+!>      +---+      +------------+    +---+    +---+    +---+
+!>      |   | ---> |            |    |   |    |   |    |   |
+!>      +---+      +------------+    +---+    +---+    +---+
+!>        .              .             .        .        .
+!>        .              .             .        .        .
+!>        .              .             .        .        .
+!>      +---+      +------------+    +---+    +---+    +---+
+!>      |   | ---> |            |    |   |    |   |    |   |
+!>      +---+      +------------+    +---+    +---+    +---+
 submodule (pepper_instance) pepper_das
 
    implicit none
@@ -2924,796 +3902,6 @@ contains
       return
       end associate
       end procedure zzdasrfr
-
-!$Procedure DASFM ( DAS, file manager )
-!
-!     PEPPER: SPICELIB's umbrella routine DASFM is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_dasfm. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Manage open DAS files.
-!
-! $ Detailed_Input
-!
-!     FNAME    on input is the name of a DAS file to be opened, or
-!              the name of a DAS file about which some information
-!              (handle, logical unit) is requested.
-!
-!     FTYPE    on input is a code for the type of data that is
-!              contained in the DAS file. This code has no meaning or
-!              interpretation at the level of the DAS file
-!              architecture, but is provided as a convenience for
-!              higher level software. The maximum length for the file
-!              type is four (4) characters. If the input string is
-!              longer than four characters, the first nonblank
-!              character and its three, at most, immediate successors
-!              will be used as the file type. The file type may not
-!              contain nonprinting characters, and it IS case
-!              sensitive.
-!
-!     IFNAME   is the internal file name for a DAS file to be
-!              created.
-!
-!     HANDLE   on input is the handle of a DAS file about which some
-!              information (file name, logical unit) is requested,
-!              or the handle of a DAS file to be closed.
-!
-!     UNIT     on input is the logical unit connected to a DAS file
-!              about which some information (file name, handle) is
-!              requested.
-!
-!     FREE     is the Fortran record number of the first free record
-!              in a specified DAS file.
-!
-!     LASTLA   is an array containing the highest current logical
-!              addresses, in the specified DAS file, of data of
-!              character, double precision, and integer types, in
-!              that order.
-!
-!     LASTRC   is an array containing the Fortran record numbers, in
-!              the specified DAS file, of the directory records
-!              containing the current last descriptors of clusters
-!              of character, double precision, and integer data
-!              records, in that order.
-!
-!     LASTWD   is an array containing the word positions, in the
-!              specified DAS file, of the current last descriptors
-!              of clusters of character, double precision, and
-!              integer data records, in that order.
-!
-!     ACCESS   is the type of access for which a DAS file is open.
-!              The values of ACCESS may be
-!
-!                 'READ'
-!                 'WRITE'
-!
-!              Leading and trailing blanks are ignored, and case
-!              is not significant.
-!
-!              DAS files that are open for writing may also be read.
-!
-! $ Detailed_Output
-!
-!     FNAME    on output is the name of a DAS file for which
-!              the corresponding handle or logical unit has been
-!              supplied.
-!
-!     HANDLE   on output is the handle of a DAS file for which
-!              the corresponding file name or logical unit has been
-!              supplied.
-!
-!     UNIT     on output is the logical unit connected to a DAS file
-!              for which the corresponding file name or handle has
-!              been supplied.
-!
-!     FREE     is the Fortran record number of the first free record
-!              in a specified DAS file.
-!
-!     LASTLA   is an array containing the highest current logical
-!              addresses, in the specified DAS file, of data of
-!              character, double precision, and integer types, in
-!              that order.
-!
-!     LASTRC   is an array containing the Fortran record numbers, in
-!              the specified DAS file, of the directory records
-!              containing the current last descriptors of clusters
-!              of character, double precision, and integer data
-!              records, in that order.
-!
-!     LASTWD   is an array containing the word positions, in the
-!              specified DAS file, of the current last descriptors
-!              of clusters of character, double precision, and
-!              integer data records, in that order.
-!
-!     NRESVR   is the number of reserved records in a specified DAS
-!              file.
-!
-!     NRESVC   is the number of characters in use in the reserved
-!              record area of a specified DAS file.
-!
-!     NCOMR    is the number of comment records in a specified DAS
-!              file.
-!
-!     NCOMC    is the number of characters in use in the comment area
-!              of a specified DAS file.
-!
-!     FHSET    is a SPICE set containing the handles of the
-!              currently open DAS files.
-!
-! $ Parameters
-!
-!     RECL     is the record length of a DAS file. Each record
-!              must be large enough to hold the greatest of NWI
-!              integers, NWD double precision numbers, or NWC
-!              characters, whichever is greater. The units in which
-!              the record length must be specified vary from
-!              environment to environment. For example, VAX Fortran
-!              requires record lengths to be specified in longwords,
-!              where two longwords equal one double precision
-!              number.
-!
-!     FTSIZE   is the maximum number of DAS files that a user can
-!              have open simultaneously. This includes any files used
-!              by the DAS system when closing files opened with write
-!              access. Currently, DASCLS (via DASSDR) opens a scratch
-!              DAS file using DASOPS to segregate (sort by data
-!              type) the records in the DAS file being closed.
-!              Segregating the data by type improves the speed of
-!              access to the data.
-!
-!              In order to avoid the possibility of overflowing the
-!              DAS file table we recommend, when at least one DAS
-!              file is open with write access, that users of this
-!              software limit themselves to at most FTSIZE - 2  other
-!              open DAS files. If no files are to be open with write
-!              access, then users may open FTSIZE files with no
-!              possibility of overflowing the DAS file table.
-!
-! $ Exceptions
-!
-!     1)  If DASFM is called directly, the error SPICE(BOGUSENTRY)
-!         is signaled.
-!
-!     2)  See entry points DASOPR, DASOPW, DASONW, DASOPN, DASOPS,
-!         DASLLC, DASHFS, DASUFS, DASHLU, DASLUH, DASHFN, DASFNH,
-!         DASHOF, and DASSIH for exceptions specific to those entry
-!         points.
-!
-! $ Files
-!
-!     This set of routines is intended to support the creation,
-!     updating, and reading of Fortran direct access files that
-!     conform to the DAS file format. This format is described in
-!     detail in the DAS Required Reading.
-!
-!     See FTSIZE in the $Parameters section for a description of a
-!     potential problem with overflowing the DAS file table when at
-!     least one DAS file is opened with write access.
-!
-! $ Particulars
-!
-!     As of the N0066 version of the SPICE Toolkit, DASFM uses the
-!     SPICE handle manager subsystem and makes use of run-time
-!     translation.
-!
-!     DASFM serves as an umbrella, allowing data to be shared by its
-!     entry points:
-!
-!        DASOPR         Open for read.
-!        DASOPW         Open for write.
-!        DASONW         Open new.
-!        DASOPN         Open new. (Obsolete: Use DASONW instead.)
-!        DASOPS         Open as scratch file.
-!
-!        DASLLC         Low-level close.
-!
-!        DASHFS         Handle to file summary.
-!        DASUFS         Update file summary.
-!
-!        DASHLU         Handle to logical unit.
-!        DASLUH         Logical to handle.
-!
-!        DASHFN         Handle to name.
-!        DASFNH         File name to handle.
-!
-!        DASHAM         Handle to access method.
-!
-!        DASHOF         Handles of open files.
-!        DASSIH         Signal invalid handles.
-!
-!     Before a DAS file  can be used, it must be opened. Entry points
-!     DASOPR and DASOPW provide the only means for opening an
-!     existing DAS file.
-!
-!     Several files may be opened for use simultaneously. (This makes
-!     it convenient to combine data from several files to produce a
-!     single result, or to route subsets of data from a single source
-!     to multiple DAS files.) As each DAS file is opened, it is
-!     assigned a file handle, which is used to keep track of the file
-!     internally, and which is used by the calling program to refer to
-!     the file in all subsequent calls to DAS routines.
-!
-!     DAS files may be opened for either read or write access. Files
-!     open for read access may not be changed in any way. Files opened
-!     for write access may be both read from and written to.
-!
-!     DASONW is used to open a new DAS file. This routine extends the
-!     functionality of DASOPN by providing a mechanism for associating a
-!     type with the data in the DAS file. The use of this entry over
-!     DASOPN is highly recommended.
-!
-!     Since the only reason for creating a new file is to write
-!     something in it, all new files are opened for write access.
-!
-!     Entry point DASOPN, for opening a new DAS file, has been rendered
-!     obsolete by the new entry point DASONW. The entry point DASOPN
-!     will continue to be supported for purposes of backward
-!     compatibility, but its use in new software development is strongly
-!     discouraged.
-!
-!     Entry point DASOPS creates a new scratch DAS file. As with new
-!     permanent files, these files are opened for write access.  DAS
-!     files opened by DASOPS are automatically deleted when they are
-!     closed.
-!
-!     Entry point DASLLC is used by DASCLS ( DAS, close file ) to close
-!     an open DAS file and update DASFM's bookkeeping information
-!     accordingly. DASCLS provides the only official means of closing
-!     a DAS file that is currently open. Closing a DAS file any other
-!     way (for example, by determining its logical unit and using the
-!     Fortran CLOSE statement directly) may affect your calling program
-!     in mysterious ways. Normally, DASLLC should not be called by
-!     non-SPICELIB routines; these should call DASCLS instead.
-!
-!     Entry point DASHFS allows you to obtain a file summary for any
-!     DAS file that is currently open, without calling DASRFR to
-!     re-read the file record. Entry point DASUFS can be used to
-!     update a file summary at run-time. Normally, there is no
-!     need for routines outside of SPICELIB to modify a DAS file's
-!     summary.
-!
-!     Entry point DASHAM allows you to determine which access method
-!     a DAS file has been opened for.
-!
-!     Entry point DASHOF allows you to determine which DAS files are
-!     open at any time. In particular, you can use DASHOF to determine
-!     whether any file handle points to an open DAS file.
-!
-!     Entry point DASSIH signals errors when it is supplied with invalid
-!     handles, so it serves to centralize error handling associated
-!     with invalid handles.
-!
-!     The remaining entry points exist mainly to translate between
-!     alternative representations of DAS files. There are three ways to
-!     identify any open DAS file: by name, by handle, and by logical
-!     unit. Given any one of these, you may use these entry points to
-!     find the other two.
-!
-! $ Examples
-!
-!     See $Examples in entry points DASOPR, DASOPW, DASONW,
-!     DASOPN (Obsolete), DASLLC, DASHFS, DASUFS, DASHLU, DASLUH,
-!     DASHFN, DASFNH, DASHAM, DASHOF, and DASSIH for examples specific
-!     to those entry points.
-!
-! $ Restrictions
-!
-!     1)  The value of parameter RECL may need to be changed when DASFM
-!         and its entry points are ported to a new environment (CPU and
-!         compiler).
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     H.A. Neilan        (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     F.S. Turner        (JPL)
-!     I.M. Underwood     (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 8.1.0, 28-NOV-2021 (BVS)
-!
-!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
-!
-!-    SPICELIB Version 8.0.1, 24-AUG-2021 (JDR)
-!
-!        Edited the header of the DASFM umbrella routine and all its
-!        entry points.
-!
-!        Removed non-existent argument "SUM" from the umbrella's
-!        $Brief_I/O section.
-!
-!-    SPICELIB Version 8.0.0, 06-APR-2016 (NJB)
-!
-!        Corrected call to ZZDDHCLS in DASUFS.
-!
-!        26-FEB-2015 (NJB)
-!
-!           Now uses DAF/DAS handle manager subsystem.
-!
-!           FTSIZE is now 5000.
-!
-!           Corrected miscellaneous spelling errors in comments
-!           throughout this file.
-!
-!-    SPICELIB Version 7.24.0, 10-APR-2014 (NJB)
-!
-!        Added initializers for file table arrays. This was done
-!        to suppress compiler warnings. Deleted declaration of
-!        unused parameter BWDLOC.
-!
-!        Corrected header comments in entry point DASLLC: routine that
-!        flushes written, buffered records is DASWBR, not DASWUR.
-!
-!-    SPICELIB Version 7.23.0, 10-MAR-2014 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-INTEL.
-!
-!-    SPICELIB Version 7.22.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-IFORT.
-!
-!-    SPICELIB Version 7.21.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-GFORTRAN.
-!
-!-    SPICELIB Version 7.20.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 7.19.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GCC_C.
-!
-!-    SPICELIB Version 7.18.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL.
-!
-!-    SPICELIB Version 7.17.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-CC_C.
-!
-!-    SPICELIB Version 7.16.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
-!
-!-    SPICELIB Version 7.15.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
-!
-!-    SPICELIB Version 7.14.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-WINDOWS-64BIT-IFORT.
-!
-!-    SPICELIB Version 7.13.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 7.12.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-64BIT-MS_C.
-!
-!-    SPICELIB Version 7.11.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-INTEL_C.
-!
-!-    SPICELIB Version 7.10.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-IFORT.
-!
-!-    SPICELIB Version 7.9.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 7.8.0, 18-MAR-2009 (BVS)
-!
-!        Updated for PC-LINUX-GFORTRAN.
-!
-!-    SPICELIB Version 7.7.0, 18-MAR-2009 (BVS)
-!
-!        Updated for MAC-OSX-GFORTRAN.
-!
-!-    SPICELIB Version 7.6.0, 19-FEB-2008 (BVS)
-!
-!        Updated for PC-LINUX-IFORT.
-!
-!-    SPICELIB Version 7.5.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GCC_C.
-!
-!-    SPICELIB Version 7.4.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-INTEL_C.
-!
-!-    SPICELIB Version 7.3.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-IFORT.
-!
-!-    SPICELIB Version 7.2.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-WINDOWS-IFORT.
-!
-!-    SPICELIB Version 7.1.0, 26-OCT-2005 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-GCC_C.
-!
-!-    SPICELIB Version 7.0.0, 28-SEP-2005 (NJB)
-!
-!        Error handling for non-native files was added to
-!        entry points DASOPR and DASOPW.
-!
-!        Bug in code for constructing long error message in entry
-!        point DASUFS was corrected.
-!
-!-    SPICELIB Version 6.2.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN_C.
-!
-!-    SPICELIB Version 6.1.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN.
-!
-!-    SPICELIB Version 6.0.3, 24-APR-2003 (EDW)
-!
-!        Added MAC-OSX-F77 to the list of platforms
-!        that require READONLY to read write protected
-!        kernels.
-!
-!-    SPICELIB Version 6.0.2, 21-FEB-2003 (NJB)
-!
-!        Corrected inline comment in DASLLC: determination of
-!        whether file is open is done by searching the handle column of
-!        the file table, not the unit column.
-!
-!-    SPICELIB Version 6.0.1, 17-JUL-2002 (BVS)
-!
-!        Added MAC-OSX environments.
-!
-!-    SPICELIB Version 6.0.0, 11-DEC-2001 (NJB) (FST)
-!
-!        To accommodate future updates to the DAS system, including
-!        integration with the handle manager and FTP validation
-!        checks, the following entry points were modified:
-!
-!           DASONW, DASOPN
-!
-!        See their headers and code for the details of the changes.
-!
-!        Bug fix: removed local buffering of the DAS file ID word
-!        and the internal file name, as this was causing DASWFR
-!        to exhibit improper behavior.
-!
-!        Bug fix: missing call to CHKIN was added to an error
-!        handling branch in entry point DASUFS. This call is
-!        required because DASUFS uses discovery check-in.
-!
-!-    SPICELIB Version 5.0.4, 08-OCT-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. New
-!        environments are WIN-NT
-!
-!-    SPICELIB Version 5.0.3, 16-SEP-1999 (NJB)
-!
-!        CSPICE environments were added. Some typos were corrected.
-!
-!-    SPICELIB Version 5.0.2, 28-JUL-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. New
-!        environments are PC-DIGITAL, SGI-O32 and SGI-N32.
-!
-!-    SPICELIB Version 5.0.1, 18-MAR-1999 (WLT)
-!
-!        The environment lines were expanded so that the supported
-!        environments are now explicitly given. Previously,
-!        environments such as SUN-SUNOS and SUN-SOLARIS were implied
-!        by the environment label SUN.
-!
-!-    SPICELIB Version 5.0.0, 05-APR-1998 (NJB)
-!
-!        Added references to the PC-LINUX environment. Repaired some
-!        format errors involving placement of comment markers in
-!        column 1.
-!
-!-    SPICELIB Version 4.0.1, 19-DEC-1995 (NJB)
-!
-!        Added permuted index entry section.
-!
-!-    SPICELIB Version 4.0.0, 31-AUG-1995 (NJB)
-!
-!        Changed argument list of the entry point DASONW. The input
-!        argument NCOMR, which indicates the number of comment records
-!        to reserve, was added to the argument list.
-!
-!-    SPICELIB Version 3.1.0, 05-JAN-1995 (HAN)
-!
-!        Removed Sun Solaris environment since it is now the same
-!        as the Sun OS 4.1.x environment.
-!        Removed DEC Alpha/OpenVMS environment since it is now the same
-!        as the VAX environment.
-!        Entry points affected are: DASFM, DASOPR.
-!
-!-    SPICELIB Version 3.0.0, 15-JUN-1994 (KRG)
-!
-!        Modified the umbrella routine DASFM to allow the inclusion of
-!        a file type in the creation and manipulation of DAS files.
-!
-!-    SPICELIB Version 2.0.0, 11-APR-1994 (HAN)
-!
-!        Updated module to include values for the Silicon Graphics/IRIX,
-!        DEC Alpha-OSF/1, and Next/Absoft Fortran platforms. Entry
-!        points affected are: DASFM, DASOPR.
-!
-!-    SPICELIB Version 1.0.0, 15-NOV-1992 (NJB) (WLT) (IMU)
-!
-
-! $ Revisions
-!
-!-    SPICELIB Version 7.0.0, 28-SEP-2005 (NJB)
-!
-!        Error handling for non-native files was added to
-!        entry points DASOPR and DASOPW.
-!
-!        Bug in code for constructing long error message in entry
-!        point DASUFS was corrected.
-!
-!        Local variable DAS was renamed to DASFIL in DASSIH.
-!
-!-    SPICELIB Version 6.0.0, 11-DEC-2001 (NJB) (FST)
-!
-!        Binary File Format Identification:
-!
-!        The file record now contains an 8 character string that
-!        identifies the binary file format utilized by DAS files.
-!        The purpose of this string's inclusion in the file record
-!        is preparatory in nature, to accelerate the migration to
-!        files that support the runtime translation update that
-!        is scheduled.
-!
-!        FTP Validation:
-!
-!        The file record now contains a sequence of characters
-!        commonly corrupted by improper FTP transfers. These
-!        characters will be examined by the handle manager when
-!        existing files are opened.
-!
-!        FTIDW and FTIFN have been removed from the elements of
-!        the DAS file table. Their presence and use in DASUFS
-!        was causing DASWFR difficulties in updating the internal
-!        filename under situations where changes to the comment and
-!        reserved record parameters in the file record were updated.
-!        This change effects DASOPR, DASOPN, DASONW, DASOPW, and
-!        DASUFS.
-!
-!-    SPICELIB Version 3.0.0, 15-JUN-1994 (KRG)
-!
-!        Modified the umbrella routine DASFM to allow the inclusion of
-!        a file type in the creation and manipulation of DAS files. In
-!        particular, the following changes were made:
-!
-!           1) Added variable FTYPE to the SUBROUTINE declaration, and
-!              added appropriate entries for this variable in the
-!              $Brief_I/O and $Detailed_Input sections of the header.
-!
-!           2) Removed erroneous references to OPC from the $Brief_I/O
-!              section.
-!
-!           3) Added a new entry point, DASONW, which will support the
-!              ability to associate a data type with a new DAS file
-!              when it is created. The addition of this new entry point
-!              makes the entry point DASOPN obsolete.
-!
-!           4) Added a description of the new entry point DASONW to the
-!              $Particulars section. Also added a statement that the
-!              entry point DASOPN has been made obsolete by this new
-!              entry point, and its use in new code development is
-!              discouraged.
-!
-!           5) Added a new variable to the file table, FTIDW, which
-!              will be used to store the ID words from successfully
-!              opened DAS files. We need to maintain this information
-!              when writing the file record, as we do not want to
-!              modify the ID word in the file.
-!
-!           6) Removed the parameter DASID as it is no longer needed.
-!
-!           7) Added new variables TARCH and TTYPE for temporary
-!              storage of the file architecture and type. Also added a
-!              new variable FNB for storing the position of the first
-!              nonblank in a string.
-!
-!           8) Added new parameters:
-!
-!                 ARCLEN The maximum length of a file architecture
-!                 TYPLEN The maximum length of a file type
-!                 MAXPC  Decimal value for the upper limit of printable
-!                        ASCII characters.
-!                 MINPC  Decimal value for the lower limit of printable
-!                        ASCII characters.
-!
-!           9) Modified entry points which open DAS files: OPR, OPW,
-!              OPS, OPN, ONW to support the new file ID word format.
-!
-!          10) Made all occurrences of error message formatting of
-!              filenames consistent. All filenames will be single
-!              quoted in output error messages.
-!
-!          11) Added a test for a blank filename before the inquire
-!              to obtain information about a file in the entry points:
-!              DASOPR, DASOPW, DASONW, and DASOPN.
-!
-!          12) Modified the description of FTSIZE in the $Parameters
-!              section to reflect the possibility of overflowing the
-!              DAS file table when at least one DAS file had been
-!              opened with write access.
-!
-!              The problem occurs when the file table is full, the
-!              number of open DAS files equals FTSIZE, and at least one
-!              of the open files was opened with write access. If an
-!              attempt to close a file opened with write access is made
-!              under these conditions, by calling DASCLS, it will fail.
-!              DASCLS (via DASSDR) calls DASOPS to open a scratch DAS
-!              file, but the scratch file CANNOT be opened because the
-!              file table is full. If this occurs, close a file open
-!              for read access, or restrict the number of open files
-!              in use to be at most FTSIZE - 1 when there will be at
-!              least one file opened with write access.
-!
-
-!
-!     Access method parameters:
-!
-
-!
-!     File summary parameters:
-!
-!        A DAS file summary has the following structure:
-!
-!           +----------------------------------------+
-!           | <number of reserved records>           |
-!           +----------------------------------------+
-!           | <number of characters in r.r. area>    |
-!           +----------------------------------------+
-!           | <number of comment records>            |
-!           +----------------------------------------+
-!           | <number of characters in comment area> |
-!           +----------------------------------------+
-!           | <first free record number>             |
-!           +----------------------------------------+
-!           | <last character logical address>       |
-!           +----------------------------------------+
-!           | <last d.p. logical address>            |
-!           +----------------------------------------+
-!           | <last integer logical address>         |
-!           +----------------------------------------+
-!           | <last character descriptor record>     |
-!           +----------------------------------------+
-!           | <last d.p. descriptor record>          |
-!           +----------------------------------------+
-!           | <last integer descriptor record>       |
-!           +----------------------------------------+
-!           | <last character descriptor word>       |
-!           +----------------------------------------+
-!           | <last d.p. descriptor word>            |
-!           +----------------------------------------+
-!           | <last integer descriptor word>         |
-!           +----------------------------------------+
-!
-
-!
-!     Base indices for:
-!
-!        -- last logical addresses
-!        -- records containing last descriptor for a given type
-!        -- word containing last descriptor for a given type
-!
-!     The offset into the file summary for any of these items
-!     is obtained by adding the appropriate data type parameter
-!     (DP, INT, or CHAR) to the base index for the item.
-!
-
-!
-!     Descriptor record pointer locations (within descriptor records):
-!
-
-!
-!     Directory address range location parameters:
-!
-
-!
-!     First descriptor position in descriptor record:
-!
-
-!
-!     Length of the Binary File Format string:
-!
-
-!
-!     The parameter TAILEN determines the tail length of a DAS file
-!     record.  This is the number of bytes (characters) that
-!     occupy the portion of the file record that follows the
-!     integer holding the first free address.  For environments
-!     with a 32 bit word length, 1 byte characters, and DAS
-!     record sizes of 1024 bytes, we have:
-!
-!           8 bytes - IDWORD
-!          60 bytes - IFNAME
-!           4 bytes - NRESVR (32 bit integer)
-!           4 bytes - NRESVC (32 bit integer)
-!           4 bytes - NCOMR  (32 bit integer)
-!         + 4 bytes - NCOMC  (32 bit integer)
-!          ---------
-!          84 bytes - (All file records utilize this space.)
-!
-!     So the size of the remaining portion (or tail) of the DAS
-!     file record for computing environments as described above
-!     would be:
-!
-!        1024 bytes - DAS record size
-!      -    8 bytes - DAS Binary File Format Word
-!      -   84 bytes - (from above)
-!       ------------
-!         932 bytes - DAS file record tail length
-!
-!     Note: environments that do not have a 32 bit word length,
-!     1 byte characters, and a DAS record size of 1024 bytes, will
-!     require the adjustment of this parameter.
-!
-
-!
-!     The file table consists of a set of arrays which serve as
-!     `columns' of the table.  The sets of elements having the same
-!     index in the arrays form the `rows' of the table.  Each column
-!     contains a particular type of information; each row contains
-!     all of the information pertaining to a particular DAS file.
-!
-!     All column names in the file table begin with `FT'.  The
-!     columns are:
-!
-!        HAN      Handle
-!        ACC      Access method
-!        LNK      Number of links
-!        SUM      File summary
-!
-!     The rows of the file table are indexed by a doubly linked
-!     list pool.  The pool contains an active list and a free list.
-!     when a file is opened, a pointer to the file (the pointer
-!     is called a `node').  it is placed at the head of the active
-!     list; when a file is closed, the node in the active list that
-!     pointed to the file is placed on the free list.
-!
-!     NEXT is incremented each time a file is opened to become the
-!     next file handle assigned.
-!
-
-!
-!     FTHEAD is a pointer to the head of the active file list.
-!
-
-!
-!     NEXT and PREV map the DAS data type codes to their
-!     successors and predecessors, respectively.
-!
-
-!
-!     Save everything between calls.
-!
-
-!
-!     Standard SPICE error handling.
 
       !>## Detailed Input
       !>
@@ -9529,234 +9717,6 @@ contains
       return
       end associate
       end procedure dasham
-
-!$Procedure DASRWR ( DAS, read/write records )
-!
-!     PEPPER: SPICELIB's umbrella routine DASRWR is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_dasrwr. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Read and write DAS physical records.
-!
-! $ Detailed_Input
-!
-!     See the entry points for a discussion of their inputs.
-!
-! $ Detailed_Output
-!
-!     See the entry points for a discussion of their outputs.
-!
-! $ Parameters
-!
-!     NWD      is the number of DPs in a single DAS record
-!              containing DPs.
-!
-!     NWI      is the number of integers in a single DAS record
-!              containing integers.
-!
-!     NWC      is the number of characters in a single DAS record
-!              containing characters.
-!
-!     BUFSZD,
-!     BUFSZI,
-!     BUFSZC   are, respectively, the number of records in the
-!              data buffers for double precision, integer, and
-!              character records.
-!
-! $ Exceptions
-!
-!     1)  If this routine is called directly, the error
-!         SPICE(BOGUSENTRY) is signaled.
-!
-!     2)  See the entry points for discussions of their exceptions.
-!
-! $ Files
-!
-!     See the description of the argument HANDLE in the headers of
-!     the entry points for a description of files accessed by this
-!     set of routines.
-!
-! $ Particulars
-!
-!     This suite of routines provides buffered read and write access to
-!     DAS files. The purpose of this feature is to increase the
-!     performance of application programs that access DAS files: in
-!     particular, repeated reads from or writes to a given record
-!     should be relatively fast, because the contents of the most
-!     recently accessed records are buffered in memory. Thus DASRWR
-!     and its entry points act as a miniature virtual memory system for
-!     DAS files.
-!
-!     These routines are intended primarily for use by other SPICELIB
-!     routines; users' application programs will not normally need to
-!     call these routines. Writing to a DAS file with these routines
-!     demands a particularly circumspect approach: it's quite easy to
-!     end up with something other than a DAS file if one misuses the
-!     routines.
-!
-!     The entry points of DASRWR support writing, reading, and updating
-!     the records in a DAS file. The distinction between writing and
-!     updating is that any record may be written (as long as the record
-!     belongs to a file open for writing), but only existing records
-!     may be updated.  `Writing' a record sets the values of all of
-!     the elements of the record, while a subrange of the elements of an
-!     existing record may be `updated'.
-!
-!     For each of these three operations, there are three DAS routines,
-!     one for each supported data type. The names of the routines are
-!
-!        -- For writing:     DASWRC,  DASWRD,  DASWRI
-!        -- For updating:    DASURC,  DASURD,  DASURI
-!        -- For reading:     DASRRC,  DASRRD,  DASRRI
-!
-!     Users should note that, unlike in the case of SPICELIB's DAF
-!     routines, the DAS routines buffer data that is written as well
-!     as data that is read. Consequently a DAS file does not
-!     necessarily yet contain, at any moment, all of the data that
-!     has been written to it by the DASWRx or DASURx routines. The
-!     written data that is buffered is written out when the need
-!     to buffer additional data requires it, and also when the user
-!     commands the closure of a file that has been written. So, at
-!     the time a DAS file is closed, the contents of the physical file
-!     do reflect what has been `written' to the file by the DASWRx and
-!     DASURx entry points.
-!
-!     At any time, an application program can force the DAS system to
-!     write to a DAS file any buffered records maintained for that
-!     file. The entry point DASWBR (DAS, write buffered records)
-!     provides this capability.
-!
-!     DASRWR contains three record buffers: one of character type,
-!     one of double precision type, and one of integer type. Each
-!     buffer has enough room for an integer number of records. The
-!     sizes of the buffers are parameterized and can be increased if
-!     necessary. When contemplating the revision of the buffer
-!     sizes selected by NAIF, SPICELIB users should take note of the
-!     following points:
-!
-!        -- Changing values of parameters in NAIF subroutines may cause
-!           a maintenance burden for the users of the modified NAIF
-!           code, since any changes made to a SPICELIB routine will have
-!           to be made to any new version of that routine released by
-!           NAIF in a later version of SPICELIB.
-!
-!        -- The effect of buffer size on the speed with which an
-!           application executes is highly dependent on the specific
-!           application. In some cases, increasing the buffer sizes
-!           may slow the application down.
-!
-! $ Examples
-!
-!     See the entry points for examples specific to those routines.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     K.R. Gehringer     (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.1.0, 07-OCT-2021 (NJB) (JDR)
-!
-!        Added initializers for record buffers.
-!
-!        Edited the headers of DASRWR and all its entry points to comply
-!        with NAIF standard.
-!
-!        Cleaned up the $Revisions history.
-!
-!-    SPICELIB Version 2.0.0, 05-FEB-2015 (NJB)
-!
-!        Upgraded to support handle manager integration and
-!        reading of non-native files.
-!
-!-    SPICELIB Version 1.1.1, 10-FEB-2014 (BVS)
-!
-!        Added description of NWD, NWI, and NWC to the $Parameters
-!        and $Brief_I/O sections of the header.
-!
-!-    SPICELIB Version 1.1.0, 17-NOV-1995 (NJB)
-!
-!        Made modifications to the DASRRx routines to enhance
-!        efficiency. Removed references to the function RETURN.
-!
-!        Removed weird spaces from ENTRY statements.
-!
-!-    SPICELIB Version 1.0.1, 28-OCT-1993 (KRG)
-!
-!        Removed references to specific DAS file open routines in the
-!        $Detailed_Input section of the header for each entry point.
-!        This was done in order to minimize documentation changes if the
-!        DAS open routines ever change.
-!
-!-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-!
-
-! $ Revisions
-!
-!-    SPICELIB Version 2.0.0, 05-FEB-2015 (NJB)
-!
-!        Upgraded to support handle manager integration and
-!        reading of non-native files.
-!
-!-    SPICELIB Version 1.1.0, 17-NOV-1995 (NJB)
-!
-!        Made modifications to the DASRRx routines to enhance
-!        efficiency. Removed references to the function RETURN.
-!
-
-!
-!     The data structure maintained by this set of routines consists
-!     of three record buffers, one each for use with records of double
-!     precision, integer, and character data types.
-!
-!     Each buffer consists of five parallel arrays; the arrays contain:
-!
-!        -- data records
-!        -- Fortran record numbers
-!        -- file handles
-!        -- Update flags
-!
-!     In addition, for each buffer there is a doubly linked list that
-!     points to the buffer and keeps track of the order in which the
-!     records in the buffer were accessed.  The three linked lists are
-!     maintained in a doubly linked list pool structure.  The logical
-!     structure of each buffer is illustrated below.  All of the array
-!     elements in the same row are associated with the data record in
-!     that row.
-!
-!     Linked          Record       Record   Handles   Update
-!      List           buffer       Numbers            Flags
-!
-!      +---+      +------------+    +---+    +---+    +---+
-!      |   | ---> |            |    |   |    |   |    |   |
-!      +---+      +------------+    +---+    +---+    +---+
-!      |   | ---> |            |    |   |    |   |    |   |
-!      +---+      +------------+    +---+    +---+    +---+
-!        .              .             .        .        .
-!        .              .             .        .        .
-!        .              .             .        .        .
-!      +---+      +------------+    +---+    +---+    +---+
-!      |   | ---> |            |    |   |    |   |    |   |
-!      +---+      +------------+    +---+    +---+    +---+
-!
-
-!
-!     Standard SPICE error handling.
 
       !>## Detailed Input
       !>

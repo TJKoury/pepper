@@ -6,6 +6,205 @@
 !> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_files.f90.
+!>
+!>## ZZDDHMAN (Private --- DAF/DAS Handle Manager)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZDDHMAN is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zzddhman. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     SPICE Private routine intended solely for the support of SPICE
+!>     routines.  Users should not call this routine directly due
+!>     to the volatile nature of this routine.
+!>
+!>     This is an umbrella routine for a collection of entry points
+!>     to the DAF/DAS handle manager.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points for descriptions of their inputs.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points for descriptions of their outputs.
+!>
+!>### Parameters
+!>
+!>     See the include file 'zzddhman.inc' for details of parameter
+!>     definitions used within this module.
+!>
+!>### Exceptions
+!>
+!>     1) If ZZDDHMAN is called directly, the error SPICE(BOGUSENTRY)
+!>        is signaled.
+!>
+!>     2) See entry points ZZDDHOPN, ZZDDHCLS, ZZDDHHLU, ZZDDHUNL,
+!>        ZZDDHISN, ZZDDHNFO, ZZDDHFNH, and ZZDDHLUH for exceptions
+!>        specific to those entry points.
+!>
+!>### Files
+!>
+!>     This set of routines is intended to provide low-level services
+!>     for the creation, updating, and reading of Fortran direct access
+!>     files utilized by the DAF and DAS systems within SPICE.
+!>
+!>### Particulars
+!>
+!>     ZZDDHMAN serves as an umbrella, allowing data to be shared by
+!>     its entry points:
+!>
+!>        ZZDDHOPN       Open file.
+!>        ZZDDHCLS       Close file.
+!>        ZZDDHHLU       Handle to logical unit.
+!>        ZZDDHUNL       Unlock handle from unit.
+!>        ZZDDHISN       Is the file native architecture?
+!>        ZZDDHNFO       Fetch information about a handle.
+!>        ZZDDHFNH       Filename to handle.
+!>        ZZDDFLUH       Logical unit to handle.
+!>
+!>     This umbrella serves a variety of functions to the DAS/DAF
+!>     families of routines.
+!>
+!>        (1) DAF/DAS handle consolidation
+!>        (2) Binary file format detection and tracking
+!>        (3) FTP error detection services
+!>        (4) Logical unit sharing
+!>        (5) Filename and unit to handle mapping services
+!>
+!>### Examples
+!>
+!>     See individual entry points for pointers to modules that utilize
+!>     their capabilities.
+!>
+!>### Restrictions
+!>
+!>     1) Changing the current working directory of a program when
+!>        more than UTSIZE files are loaded into this interface requires
+!>        that all filenames passed into ZZDDHOPN are specified with
+!>        absolute pathnames.  Otherwise the OPEN/CLOSE switching
+!>        logic will fail to OPEN files that are loaded.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     F.S. Turner     (JPL)
+!>     E.D. Wright     (JPL)
+!>     B.V. Semenov    (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 2.2.0, 01-OCT-2021 (NJB)
+!>
+!>        Corrected typos in a long error message and in comments.
+!>
+!>-    SPICELIB Version 2.1.0, 26-APR-2012 (BVS)
+!>
+!>        Added the "magic number" column to the file table.
+!>
+!>-    SPICELIB Version 2.0.1, 24-APR-2003 (EDW)
+!>
+!>        Added MAC-OSX-F77 to the list of platforms
+!>        that require READONLY to read write protected
+!>        kernels.
+!>
+!>-    SPICELIB Version 2.0.0, 07-AUG-2002 (FST)
+!>
+!>        The entry point ZZDDHOPN now invokes ZZPLTCHK, to verify
+!>        that the runtime environment's binary file format matches
+!>        the one for which the toolkit is configured.
+!>
+!>        The entry point ZZDDHCLS has had its argument list augmented
+!>        to include a "KILL" flag.  Check the entry point header for
+!>        details.
+!>
+!>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
+!>
+!>### Revisions
+!>
+!>-    SPICELIB Version 2.0.0, 07-AUG-2002 (FST)
+!>
+!>        The toolkit source code is far more sensitive to blind
+!>        porting of source packaged for one environment to another.
+!>        This sensitivity has already caused a few of our users
+!>        some difficulty.  In an attempt to address these problems
+!>        with future toolkits, ZZDDHOPN now invokes ZZPLTCHK on
+!>        it's first pass.  This will perform any necessary checks
+!>        on the runtime environment against the values recorded
+!>        in ZZPLATFM and other environment specific components
+!>        of the library.
+!>
+!>        As of this release, all that is verified is that the
+!>        BFF ID listed in ZZPLATFM is compatible with the runtime
+!>        environment.  See ZZPLTCHK's header for details.
+!>
+!>### Implementation notes
+!>
+!>     This logical allows initialization code to execute.
+!>
+!>     These strings store the labels for the parameters defined
+!>     in the include file and retrieved by ZZDDHINI.
+!>
+!>     The file table consists of a set of arrays which serve as
+!>     'columns' of the table.  The sets of elements having the same
+!>     index in the arrays form the 'rows' of the table.  Each column
+!>     contains a particular type of information; each row contains
+!>     all of the information pertaining to a particular file.
+!>
+!>     All column names in the file table begin with 'FT'.  The columns
+!>     are:
+!>
+!>        ABS      Absolute value of HAN
+!>        AMH      File access method
+!>        ARC      File architecture
+!>        BFF      Binary file format
+!>        HAN      Handle
+!>        NAM      Filename
+!>        RTM      RTRIM (right trimmed value for NAM)
+!>        MNM      Unique DP number (the Magic NuMber ;)
+!>
+!>     New 'rows' are added to the end of the list; the list is repacked
+!>     whenever a file is removed from the list.
+!>
+!>     NFT is the number of files currently loaded; this may not be
+!>     greater than FTSIZE.  FINDEX refers to a file of interest within
+!>     the table.  Since handles are always assigned in an increasing
+!>     fashion, FTABS is guaranteed to be a sorted list.  We will use
+!>     this fact to improve handle lookups in the file table.
+!>
+!>     NEXT stores the next handle to be used for file access.  This
+!>     could be either for read or write based operations. NEXT is
+!>     incremented just before entries in the file table are made.
+!>     It begins as zero valued.
+!>
+!>     The unit table consists of a set of arrays which serve as
+!>     'columns' of the table.  The sets of elements having the same
+!>     index in the arrays form the 'rows' of the table.  Each column
+!>     contains a particular type of information; each row contains
+!>     all of the information pertaining to a particular logical unit.
+!>
+!>     All column names in the unit table begin with 'UT'.  The columns
+!>     are:
+!>
+!>        CST      Cost to remove the file from the unit table
+!>        HAN      Handle
+!>        LCK      Is this logical unit locked to this handle?
+!>        LUN      Logical unit
+!>
+!>     New 'rows' are added to the end of the list; the list is repacked
+!>     whenever a logical unit is no longer needed.
+!>
+!>     NUT is the number of units currently stored in the table; this
+!>     may not exceed UTSIZE.  UINDEX refers to a unit of interest
+!>     within the table.
+!>
+!>     The following stores the native binary file format, a list of
+!>     codes for supported binary formats, and the number of entries
+!>     in SUPBFF.
+!>
+!>     Request counter used to determine cost.
 submodule (pepper_instance) pepper_files
 
    implicit none
@@ -5479,229 +5678,6 @@ contains
       return
       end associate
       end procedure zzddhnfc
-
-!$Procedure ZZDDHMAN ( Private --- DAF/DAS Handle Manager )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZDDHMAN is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zzddhman. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This is an umbrella routine for a collection of entry points
-!     to the DAF/DAS handle manager.
-!
-! $ Detailed_Input
-!
-!     See the entry points for descriptions of their inputs.
-!
-! $ Detailed_Output
-!
-!     See the entry points for descriptions of their outputs.
-!
-! $ Parameters
-!
-!     See the include file 'zzddhman.inc' for details of parameter
-!     definitions used within this module.
-!
-! $ Exceptions
-!
-!     1) If ZZDDHMAN is called directly, the error SPICE(BOGUSENTRY)
-!        is signaled.
-!
-!     2) See entry points ZZDDHOPN, ZZDDHCLS, ZZDDHHLU, ZZDDHUNL,
-!        ZZDDHISN, ZZDDHNFO, ZZDDHFNH, and ZZDDHLUH for exceptions
-!        specific to those entry points.
-!
-! $ Files
-!
-!     This set of routines is intended to provide low-level services
-!     for the creation, updating, and reading of Fortran direct access
-!     files utilized by the DAF and DAS systems within SPICE.
-!
-! $ Particulars
-!
-!     ZZDDHMAN serves as an umbrella, allowing data to be shared by
-!     its entry points:
-!
-!        ZZDDHOPN       Open file.
-!        ZZDDHCLS       Close file.
-!        ZZDDHHLU       Handle to logical unit.
-!        ZZDDHUNL       Unlock handle from unit.
-!        ZZDDHISN       Is the file native architecture?
-!        ZZDDHNFO       Fetch information about a handle.
-!        ZZDDHFNH       Filename to handle.
-!        ZZDDFLUH       Logical unit to handle.
-!
-!     This umbrella serves a variety of functions to the DAS/DAF
-!     families of routines.
-!
-!        (1) DAF/DAS handle consolidation
-!        (2) Binary file format detection and tracking
-!        (3) FTP error detection services
-!        (4) Logical unit sharing
-!        (5) Filename and unit to handle mapping services
-!
-! $ Examples
-!
-!     See individual entry points for pointers to modules that utilize
-!     their capabilities.
-!
-! $ Restrictions
-!
-!     1) Changing the current working directory of a program when
-!        more than UTSIZE files are loaded into this interface requires
-!        that all filenames passed into ZZDDHOPN are specified with
-!        absolute pathnames.  Otherwise the OPEN/CLOSE switching
-!        logic will fail to OPEN files that are loaded.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     F.S. Turner     (JPL)
-!     E.D. Wright     (JPL)
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.2.0, 01-OCT-2021 (NJB)
-!
-!        Corrected typos in a long error message and in comments.
-!
-!-    SPICELIB Version 2.1.0, 26-APR-2012 (BVS)
-!
-!        Added the "magic number" column to the file table.
-!
-!-    SPICELIB Version 2.0.1, 24-APR-2003 (EDW)
-!
-!        Added MAC-OSX-F77 to the list of platforms
-!        that require READONLY to read write protected
-!        kernels.
-!
-!-    SPICELIB Version 2.0.0, 07-AUG-2002 (FST)
-!
-!        The entry point ZZDDHOPN now invokes ZZPLTCHK, to verify
-!        that the runtime environment's binary file format matches
-!        the one for which the toolkit is configured.
-!
-!        The entry point ZZDDHCLS has had its argument list augmented
-!        to include a "KILL" flag.  Check the entry point header for
-!        details.
-!
-!-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-!
-
-! $ Revisions
-!
-!-    SPICELIB Version 2.0.0, 07-AUG-2002 (FST)
-!
-!        The toolkit source code is far more sensitive to blind
-!        porting of source packaged for one environment to another.
-!        This sensitivity has already caused a few of our users
-!        some difficulty.  In an attempt to address these problems
-!        with future toolkits, ZZDDHOPN now invokes ZZPLTCHK on
-!        it's first pass.  This will perform any necessary checks
-!        on the runtime environment against the values recorded
-!        in ZZPLATFM and other environment specific components
-!        of the library.
-!
-!        As of this release, all that is verified is that the
-!        BFF ID listed in ZZPLATFM is compatible with the runtime
-!        environment.  See ZZPLTCHK's header for details.
-!
-
-!
-!     This logical allows initialization code to execute.
-!
-
-!
-!     These strings store the labels for the parameters defined
-!     in the include file and retrieved by ZZDDHINI.
-!
-
-!
-!     The file table consists of a set of arrays which serve as
-!     'columns' of the table.  The sets of elements having the same
-!     index in the arrays form the 'rows' of the table.  Each column
-!     contains a particular type of information; each row contains
-!     all of the information pertaining to a particular file.
-!
-!     All column names in the file table begin with 'FT'.  The columns
-!     are:
-!
-!        ABS      Absolute value of HAN
-!        AMH      File access method
-!        ARC      File architecture
-!        BFF      Binary file format
-!        HAN      Handle
-!        NAM      Filename
-!        RTM      RTRIM (right trimmed value for NAM)
-!        MNM      Unique DP number (the Magic NuMber ;)
-!
-!     New 'rows' are added to the end of the list; the list is repacked
-!     whenever a file is removed from the list.
-!
-!     NFT is the number of files currently loaded; this may not be
-!     greater than FTSIZE.  FINDEX refers to a file of interest within
-!     the table.  Since handles are always assigned in an increasing
-!     fashion, FTABS is guaranteed to be a sorted list.  We will use
-!     this fact to improve handle lookups in the file table.
-!
-
-!
-!     NEXT stores the next handle to be used for file access.  This
-!     could be either for read or write based operations. NEXT is
-!     incremented just before entries in the file table are made.
-!     It begins as zero valued.
-!
-
-!
-!     The unit table consists of a set of arrays which serve as
-!     'columns' of the table.  The sets of elements having the same
-!     index in the arrays form the 'rows' of the table.  Each column
-!     contains a particular type of information; each row contains
-!     all of the information pertaining to a particular logical unit.
-!
-!     All column names in the unit table begin with 'UT'.  The columns
-!     are:
-!
-!        CST      Cost to remove the file from the unit table
-!        HAN      Handle
-!        LCK      Is this logical unit locked to this handle?
-!        LUN      Logical unit
-!
-!     New 'rows' are added to the end of the list; the list is repacked
-!     whenever a logical unit is no longer needed.
-!
-!     NUT is the number of units currently stored in the table; this
-!     may not exceed UTSIZE.  UINDEX refers to a unit of interest
-!     within the table.
-!
-
-!
-!     The following stores the native binary file format, a list of
-!     codes for supported binary formats, and the number of entries
-!     in SUPBFF.
-!
-
-!
-!     Request counter used to determine cost.
-!
-
-!
-!     Data Statements
-!
-
-!
-!     Standard SPICE error handling.
 
       !>## Abstract
       !>

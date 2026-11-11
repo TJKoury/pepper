@@ -5,6 +5,333 @@
 !> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_time_api.f90.
+!>
+!>## SCANIT (Scan a character string)
+!>
+!> PEPPER: SPICELIB's umbrella routine SCANIT is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_scanit. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     This routine serves as an umbrella routine for routines
+!>     that are used to scan a string for recognized and unrecognized
+!>     substrings.
+!>
+!>### Detailed Input
+!>
+!>     STRING   is any character string that is to be scanned
+!>              to locate recognized and unrecognized substrings.
+!>
+!>     ROOM     is the amount of space available for storing the
+!>              results of scanning the string.
+!>
+!>     NMARKS   is the number of marks that will be
+!>              recognized substrings of STRING.
+!>
+!>     MARKS    is an array of marks that will be recognized
+!>              by the scanning routine. The array must be
+!>              processed by a call to SCANPR before it can
+!>              be used by SCAN. Further details are given
+!>              in documentation for the individual entry points.
+!>
+!>     MRKLEN   is an auxiliary array populated by SCANPR
+!>              for use by SCAN. It should be declared with
+!>              length equal to the length of MARKS.
+!>
+!>     PNTERS   is an auxiliary array populated by SCANPR for
+!>              use by SCAN. It should be declared in the
+!>              calling program as
+!>
+!>                 INTEGER  PNTERS ( RCHARS )
+!>
+!>              RCHARS is given by the expression
+!>
+!>                MAX - MIN + 5
+!>
+!>              where
+!>
+!>              MAX is the maximum value of ICHAR(MARKS(I)(1:1))
+!>                  over the range I = 1, NMARKS
+!>
+!>              MIN is the minimum value of ICHAR(MARKS(I)(1:1))
+!>                  over the range I = 1, NMARKS
+!>
+!>               Further details are provided in the entry point
+!>               SCANPR.
+!>
+!>     START    is the position in the STRING from which scanning
+!>              should commence.
+!>
+!>### Detailed Output
+!>
+!>     NMARKS   is the number of marks in the array MARKS after it
+!>              has been prepared for SCANPR.
+!>
+!>     MARKS    is an array of recognizable substrings that has
+!>              been prepared for SCAN by SCANPR. Note that MARKS
+!>              will be sorted in increasing order.
+!>
+!>     MRKLEN   is an auxiliary array, populated by SCANPR for
+!>              use by SCAN.
+!>
+!>     PNTERS   is an auxiliary array, populated by a call to
+!>              SCANPR and is intended for use by SCAN.
+!>
+!>     START    is the position from which scanning should continue
+!>              in order to fully scan STRING (if sufficient memory was
+!>              not provided in BEG, END, and IDENT on the current
+!>              call to SCAN).
+!>
+!>     NTOKNS   is the number of substrings identified in the current
+!>              scan of STRING.
+!>
+!>     BEG      beginnings of scanned substrings.
+!>              This should be declared so that it is at least
+!>              as large as ROOM.
+!>
+!>     END      endings of scanned substrings.
+!>              This should be declared so that it is at least
+!>              as large as ROOM.
+!>
+!>     IDENT    positions of scanned substring within array MARKS.
+!>              If the substring STRING(BEG(I):END(I)) is not in the
+!>              list of MARKS then IDENT(I) will have the value 0.
+!>              This should be declared so that it is at least
+!>              as large as ROOM.
+!>
+!>### Parameters
+!>
+!>     None.
+!>
+!>### Exceptions
+!>
+!>     1)  If this routine is called directly, the error
+!>         SPICE(BOGUSENTRY) is signaled.
+!>
+!>### Files
+!>
+!>     None.
+!>
+!>### Particulars
+!>
+!>     This routine serves as an umbrella routine for the two entry
+!>     points SCANPR and SCAN. It can be used to locate keywords
+!>     or delimited substrings within a string.
+!>
+!>     The process of breaking a string into those substrings that
+!>     have recognizable meaning, is called "scanning." The substrings
+!>     identified by the scanning process are called "tokens."
+!>
+!>     Scanning has many applications including:
+!>
+!>     -- the parsing of algebraic expressions
+!>
+!>     -- parsing calendar dates
+!>
+!>     -- processing text with embedded directions for displaying
+!>        the text.
+!>
+!>     -- interpretation of command languages
+!>
+!>     -- compilation of programming languages
+!>
+!>     This routine simplifies the process of scanning a string for
+!>     its tokens.
+!>
+!>### Examples
+!>
+!>     Example 1.
+!>     ----------
+!>
+!>     Suppose you need to identify all of the words within a string
+!>     and wish to ignore punctuation marks such as ',', ':', ';', ' ',
+!>     '---'.
+!>
+!>     The first step is to load the array of marks as shown here:
+!>
+!>        The minimum ASCII code for the first character of a marker is
+!>        32 ( for ' ').
+!>
+!>        INTEGER               FCHAR
+!>        PARAMETER           ( FCHAR = 32 )
+!>
+!>        The maximum ASCII code for the first character of a marker is
+!>        59 (for ';' )
+!>
+!>        INTEGER               LCHAR
+!>        PARAMETER           ( LCHAR = 59 )
+!>
+!>        INTEGER               RCHAR
+!>        PARAMETER           ( RCHAR = LCHAR - FCHAR + 5 )
+!>
+!>        LOGICAL               FIRST
+!>        CHARACTER*(3)         MARKS
+!>        INTEGER               NMARKS ( 5     )
+!>        INTEGER               MRKLEN ( 5     )
+!>        INTEGER               PNTERS ( RCHAR )
+!>
+!>        INTEGER               ROOM
+!>        PARAMETER           ( ROOM = 50 )
+!>
+!>        INTEGER               BEG    ( ROOM  )
+!>        INTEGER               END    ( ROOM  )
+!>        INTEGER               IDENT  ( ROOM  )
+!>
+!>        SAVE                  FIRST
+!>        SAVE                  MARKS
+!>        SAVE                  MRKLEN
+!>        SAVE                  PNTERS
+!>
+!>        IF ( FIRST ) THEN
+!>
+!>           FIRST    = .FALSE.
+!>
+!>           MARKS(1) = ' '
+!>           MARKS(2) = '---'
+!>           MARKS(3) = ':'
+!>           MARKS(4) = ','
+!>           MARKS(5) = ';'
+!>
+!>           NMARKS   = 5
+!>
+!>           CALL SCANPR ( NMARKS, MARKS, MRKLEN, PNTERS )
+!>
+!>        END IF
+!>
+!>     Notice that the call to SCANPR is nested inside an
+!>     IF ( FIRST ) THEN ... END IF block. In this and many applications
+!>     the marks that will be used in the scan are fixed. Since the
+!>     marks are not changing, you need to process MARKS and set up
+!>     the auxiliary arrays MRKLEN and PNTERS only once (assuming that
+!>     you SAVE the appropriate variables as has been done above).
+!>     In this way if the code is executed many times, there is only
+!>     a small overhead required for preparing the data so that it
+!>     can be used efficiently in scanning.
+!>
+!>     To identify the substrings that represent words we scan the
+!>     string using the prepared MARKS, MRKLEN and PNTERS.
+!>
+!>        CALL SCAN ( STRING, MARKS,  MRKLEN, PNTERS, ROOM,
+!>       .            START,  NTOKNS, IDENT,  BEG,    END   )
+!>
+!>     To isolate only the words of the string, we examine the
+!>     array IDENT and keep only those Begin and Ends for which
+!>     the corresponding identity is non-positive.
+!>
+!>        KEPT = 0
+!>
+!>        DO I = 1, NTOKNS
+!>
+!>           IF ( IDENT(I) .LE. 0 ) THEN
+!>
+!>              KEPT      = KEPT + 1
+!>              BEG(KEPT) = BEG(I)
+!>              END(KEPT) = END(I)
+!>
+!>           END IF
+!>
+!>        END DO
+!>
+!>     Example 2.
+!>     ----------
+!>
+!>     To parse an algebraic expression such as
+!>
+!>        ( X + Y ) * ( 2*Z + SIN(W) ) ** 2
+!>
+!>     You would select '**', '*', '+', '-', '(', ')' and ' '
+!>     to be the markers. Note that all of these begin with one
+!>     of the characters in the string ' !"#$%&''()*+,-./'
+!>     so that we can declare PNTERS to have length 20.
+!>
+!>     Prepare the MARKS, MRKLEN, and PNTERS.
+!>
+!>        LOGICAL               FIRST
+!>        CHARACTER*(4)         MARKS
+!>        INTEGER               NMARKS ( 8  )
+!>        INTEGER               MRKLEN ( 8  )
+!>        INTEGER               PNTERS ( 20 )
+!>
+!>        SAVE                  FIRST
+!>        SAVE                  MARKS
+!>        SAVE                  MRKLEN
+!>        SAVE                  PNTERS
+!>
+!>        IF ( FIRST ) THEN
+!>
+!>           MARKS(1) = '('
+!>           MARKS(2) = ')'
+!>           MARKS(3) = '+'
+!>           MARKS(4) = '-'
+!>           MARKS(5) = '*'
+!>           MARKS(6) = '/'
+!>           MARKS(7) = '**'
+!>           MARKS(8) = ' '
+!>
+!>           NMARKS   = 8
+!>
+!>           CALL SCANPR ( NMARKS, MARKS, MRKLEN, PNTERS )
+!>
+!>           Locate the blank character in MARKS once it has
+!>           been prepared.
+!>
+!>           BLANK = BSRCHC ( ' ', NMARKS, MARKS )
+!>
+!>        END IF
+!>
+!>     Once all of the initializations are out of the way,
+!>     we can scan an input string.
+!>
+!>        CALL SCAN ( STRING, MARKS,  MRKLEN, PNTERS, ROOM,
+!>       .            START,  NTOKNS, IDENT,  BEG,    END   )
+!>
+!>     Next eliminate any white space that was returned in the
+!>     list of tokens.
+!>
+!>     KEPT = 0
+!>
+!>     DO I = 1, NTOKNS
+!>
+!>        IF ( IDENT(I) .NE. BLANK ) THEN
+!>           KEPT        = KEPT + 1
+!>           BEG  (KEPT) = BEG   (I)
+!>           END  (KEPT) = END   (I)
+!>           IDENT(KEPT) = IDENT (I)
+!>        END IF
+!>
+!>     END DO
+!>
+!>     Now all of the substrings remaining point to grouping symbols,
+!>     operators, functions, or variables. Given that the individual
+!>     "words" of the expression are now in hand, the meaning of the
+!>     expression is much easier to determine.
+!>
+!>     The rest of the routine is left as a non-trivial exercise
+!>     for the reader.
+!>
+!>### Restrictions
+!>
+!>     1)  The array of MARKS, MRKLEN, and PNTERS must be properly
+!>         formatted prior to calling SCAN. This is accomplished by
+!>         calling SCANPR.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     J. Diaz del Rio    (ODC Space)
+!>     W.L. Taber         (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
+!>
+!>        Added IMPLICIT NONE statement.
+!>
+!>        Edited the header to comply with NAIF standard.
+!>
+!>-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
 submodule (pepper_instance) pepper_time_api
 
    implicit none
@@ -1103,340 +1430,6 @@ contains
       return
       end associate
       end procedure et2utc
-
-!$Procedure SCANIT ( Scan a character string )
-!
-!     PEPPER: SPICELIB's umbrella routine SCANIT is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_scanit. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     This routine serves as an umbrella routine for routines
-!     that are used to scan a string for recognized and unrecognized
-!     substrings.
-!
-! $ Detailed_Input
-!
-!     STRING   is any character string that is to be scanned
-!              to locate recognized and unrecognized substrings.
-!
-!     ROOM     is the amount of space available for storing the
-!              results of scanning the string.
-!
-!     NMARKS   is the number of marks that will be
-!              recognized substrings of STRING.
-!
-!     MARKS    is an array of marks that will be recognized
-!              by the scanning routine. The array must be
-!              processed by a call to SCANPR before it can
-!              be used by SCAN. Further details are given
-!              in documentation for the individual entry points.
-!
-!     MRKLEN   is an auxiliary array populated by SCANPR
-!              for use by SCAN. It should be declared with
-!              length equal to the length of MARKS.
-!
-!     PNTERS   is an auxiliary array populated by SCANPR for
-!              use by SCAN. It should be declared in the
-!              calling program as
-!
-!                 INTEGER  PNTERS ( RCHARS )
-!
-!              RCHARS is given by the expression
-!
-!                MAX - MIN + 5
-!
-!              where
-!
-!              MAX is the maximum value of ICHAR(MARKS(I)(1:1))
-!                  over the range I = 1, NMARKS
-!
-!              MIN is the minimum value of ICHAR(MARKS(I)(1:1))
-!                  over the range I = 1, NMARKS
-!
-!               Further details are provided in the entry point
-!               SCANPR.
-!
-!     START    is the position in the STRING from which scanning
-!              should commence.
-!
-! $ Detailed_Output
-!
-!     NMARKS   is the number of marks in the array MARKS after it
-!              has been prepared for SCANPR.
-!
-!     MARKS    is an array of recognizable substrings that has
-!              been prepared for SCAN by SCANPR. Note that MARKS
-!              will be sorted in increasing order.
-!
-!     MRKLEN   is an auxiliary array, populated by SCANPR for
-!              use by SCAN.
-!
-!     PNTERS   is an auxiliary array, populated by a call to
-!              SCANPR and is intended for use by SCAN.
-!
-!     START    is the position from which scanning should continue
-!              in order to fully scan STRING (if sufficient memory was
-!              not provided in BEG, END, and IDENT on the current
-!              call to SCAN).
-!
-!     NTOKNS   is the number of substrings identified in the current
-!              scan of STRING.
-!
-!     BEG      beginnings of scanned substrings.
-!              This should be declared so that it is at least
-!              as large as ROOM.
-!
-!     END      endings of scanned substrings.
-!              This should be declared so that it is at least
-!              as large as ROOM.
-!
-!     IDENT    positions of scanned substring within array MARKS.
-!              If the substring STRING(BEG(I):END(I)) is not in the
-!              list of MARKS then IDENT(I) will have the value 0.
-!              This should be declared so that it is at least
-!              as large as ROOM.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If this routine is called directly, the error
-!         SPICE(BOGUSENTRY) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine serves as an umbrella routine for the two entry
-!     points SCANPR and SCAN. It can be used to locate keywords
-!     or delimited substrings within a string.
-!
-!     The process of breaking a string into those substrings that
-!     have recognizable meaning, is called "scanning." The substrings
-!     identified by the scanning process are called "tokens."
-!
-!     Scanning has many applications including:
-!
-!     -- the parsing of algebraic expressions
-!
-!     -- parsing calendar dates
-!
-!     -- processing text with embedded directions for displaying
-!        the text.
-!
-!     -- interpretation of command languages
-!
-!     -- compilation of programming languages
-!
-!     This routine simplifies the process of scanning a string for
-!     its tokens.
-!
-! $ Examples
-!
-!     Example 1.
-!     ----------
-!
-!     Suppose you need to identify all of the words within a string
-!     and wish to ignore punctuation marks such as ',', ':', ';', ' ',
-!     '---'.
-!
-!     The first step is to load the array of marks as shown here:
-!
-!        The minimum ASCII code for the first character of a marker is
-!        32 ( for ' ').
-!
-!        INTEGER               FCHAR
-!        PARAMETER           ( FCHAR = 32 )
-!
-!        The maximum ASCII code for the first character of a marker is
-!        59 (for ';' )
-!
-!        INTEGER               LCHAR
-!        PARAMETER           ( LCHAR = 59 )
-!
-!        INTEGER               RCHAR
-!        PARAMETER           ( RCHAR = LCHAR - FCHAR + 5 )
-!
-!        LOGICAL               FIRST
-!        CHARACTER*(3)         MARKS
-!        INTEGER               NMARKS ( 5     )
-!        INTEGER               MRKLEN ( 5     )
-!        INTEGER               PNTERS ( RCHAR )
-!
-!        INTEGER               ROOM
-!        PARAMETER           ( ROOM = 50 )
-!
-!        INTEGER               BEG    ( ROOM  )
-!        INTEGER               END    ( ROOM  )
-!        INTEGER               IDENT  ( ROOM  )
-!
-!        SAVE                  FIRST
-!        SAVE                  MARKS
-!        SAVE                  MRKLEN
-!        SAVE                  PNTERS
-!
-!        IF ( FIRST ) THEN
-!
-!           FIRST    = .FALSE.
-!
-!           MARKS(1) = ' '
-!           MARKS(2) = '---'
-!           MARKS(3) = ':'
-!           MARKS(4) = ','
-!           MARKS(5) = ';'
-!
-!           NMARKS   = 5
-!
-!           CALL SCANPR ( NMARKS, MARKS, MRKLEN, PNTERS )
-!
-!        END IF
-!
-!     Notice that the call to SCANPR is nested inside an
-!     IF ( FIRST ) THEN ... END IF block. In this and many applications
-!     the marks that will be used in the scan are fixed. Since the
-!     marks are not changing, you need to process MARKS and set up
-!     the auxiliary arrays MRKLEN and PNTERS only once (assuming that
-!     you SAVE the appropriate variables as has been done above).
-!     In this way if the code is executed many times, there is only
-!     a small overhead required for preparing the data so that it
-!     can be used efficiently in scanning.
-!
-!     To identify the substrings that represent words we scan the
-!     string using the prepared MARKS, MRKLEN and PNTERS.
-!
-!        CALL SCAN ( STRING, MARKS,  MRKLEN, PNTERS, ROOM,
-!       .            START,  NTOKNS, IDENT,  BEG,    END   )
-!
-!     To isolate only the words of the string, we examine the
-!     array IDENT and keep only those Begin and Ends for which
-!     the corresponding identity is non-positive.
-!
-!        KEPT = 0
-!
-!        DO I = 1, NTOKNS
-!
-!           IF ( IDENT(I) .LE. 0 ) THEN
-!
-!              KEPT      = KEPT + 1
-!              BEG(KEPT) = BEG(I)
-!              END(KEPT) = END(I)
-!
-!           END IF
-!
-!        END DO
-!
-!     Example 2.
-!     ----------
-!
-!     To parse an algebraic expression such as
-!
-!        ( X + Y ) * ( 2*Z + SIN(W) ) ** 2
-!
-!     You would select '**', '*', '+', '-', '(', ')' and ' '
-!     to be the markers. Note that all of these begin with one
-!     of the characters in the string ' !"#$%&''()*+,-./'
-!     so that we can declare PNTERS to have length 20.
-!
-!     Prepare the MARKS, MRKLEN, and PNTERS.
-!
-!        LOGICAL               FIRST
-!        CHARACTER*(4)         MARKS
-!        INTEGER               NMARKS ( 8  )
-!        INTEGER               MRKLEN ( 8  )
-!        INTEGER               PNTERS ( 20 )
-!
-!        SAVE                  FIRST
-!        SAVE                  MARKS
-!        SAVE                  MRKLEN
-!        SAVE                  PNTERS
-!
-!        IF ( FIRST ) THEN
-!
-!           MARKS(1) = '('
-!           MARKS(2) = ')'
-!           MARKS(3) = '+'
-!           MARKS(4) = '-'
-!           MARKS(5) = '*'
-!           MARKS(6) = '/'
-!           MARKS(7) = '**'
-!           MARKS(8) = ' '
-!
-!           NMARKS   = 8
-!
-!           CALL SCANPR ( NMARKS, MARKS, MRKLEN, PNTERS )
-!
-!           Locate the blank character in MARKS once it has
-!           been prepared.
-!
-!           BLANK = BSRCHC ( ' ', NMARKS, MARKS )
-!
-!        END IF
-!
-!     Once all of the initializations are out of the way,
-!     we can scan an input string.
-!
-!        CALL SCAN ( STRING, MARKS,  MRKLEN, PNTERS, ROOM,
-!       .            START,  NTOKNS, IDENT,  BEG,    END   )
-!
-!     Next eliminate any white space that was returned in the
-!     list of tokens.
-!
-!     KEPT = 0
-!
-!     DO I = 1, NTOKNS
-!
-!        IF ( IDENT(I) .NE. BLANK ) THEN
-!           KEPT        = KEPT + 1
-!           BEG  (KEPT) = BEG   (I)
-!           END  (KEPT) = END   (I)
-!           IDENT(KEPT) = IDENT (I)
-!        END IF
-!
-!     END DO
-!
-!     Now all of the substrings remaining point to grouping symbols,
-!     operators, functions, or variables. Given that the individual
-!     "words" of the expression are now in hand, the meaning of the
-!     expression is much easier to determine.
-!
-!     The rest of the routine is left as a non-trivial exercise
-!     for the reader.
-!
-! $ Restrictions
-!
-!     1)  The array of MARKS, MRKLEN, and PNTERS must be properly
-!         formatted prior to calling SCAN. This is accomplished by
-!         calling SCANPR.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     W.L. Taber         (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
-!
-
-!
-!     Local variables
 
       !>## Detailed Input
       !>

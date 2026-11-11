@@ -5,6 +5,529 @@
 !> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_keeper.f90.
+!>
+!>## KEEPER (Keeps track of SPICE kernels)
+!>
+!> PEPPER: SPICELIB's umbrella routine KEEPER is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_keeper. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     This routine is an umbrella for a collection of entry points
+!>     that manage the loading and unloading of SPICE kernels from
+!>     an application program.
+!>
+!>### Detailed Input
+!>
+!>     See Individual Entry points.
+!>
+!>### Detailed Output
+!>
+!>     See Individual Entry points.
+!>
+!>### Parameters
+!>
+!>     FILSIZ   is the maximum file name length that can be
+!>              accommodated by this set of routines.
+!>
+!>     MAXFIL   is the number of entries that can be stored in KEEPER's
+!>              kernel database. In this version of the toolkit MAXFIL
+!>              is set to 5300. Each time a kernel is loaded via
+!>              FURNSH, a database entry is created for that kernel.
+!>              If a meta-kernel is loaded, a database entry is created
+!>              for the meta-kernel itself and for all files referenced
+!>              in the meta-kernel's KERNELS_TO_LOAD specification.
+!>              Unloading a kernel or meta-kernel deletes database
+!>              entries created when the file was loaded.
+!>
+!>              The parameter MAXFIL is an upper bound on number of
+!>              SPICE kernels that can be loaded at any time via the
+!>              KEEPER interface, but the number of kernels that can be
+!>              loaded may be smaller, since re-loading a loaded kernel
+!>              or meta-kernel results in creation of additional
+!>              database entries.
+!>
+!>              Kernels loaded into the KEEPER system are subject to
+!>              constraints imposed by lower-level subsystems. The
+!>              binary kernel systems (SPK, CK, binary PCK, and EK)
+!>              have their own limits on the maximum number of kernels
+!>              that may be loaded.
+!>
+!>              The total number of DAF-based files (this set includes
+!>              SPKs, CKs, and binary PCKs) and DAS-based files (this
+!>              set includes EKs and DSKs) that may be loaded at any
+!>              time may not exceed 5000. This limit applies whether
+!>              the files are loaded via FURNSH or lower-level loaders
+!>              such as SPKLEF or DAFOPR. File access performance
+!>              normally will degrade as the number of loaded kernels
+!>              increases.
+!>
+!>### Exceptions
+!>
+!>     1)  If the main routine KEEPER is called, the error
+!>         SPICE(BOGUSENTRY) is signaled.
+!>
+!>### Files
+!>
+!>     None.
+!>
+!>### Particulars
+!>
+!>     This routine serves as an umbrella for a collection of
+!>     entry points that unify the task of loading, tracking,
+!>     and unloading SPICE kernels. A description of each entry
+!>     point is given below:
+!>
+!>     FURNSH    Furnish a kernel to a program. This entry point
+!>               provides a single interface for loading kernels into
+!>               your application program. All SPICE kernels (Text
+!>               kernels, SPK, CK, Binary PCK, and EK) can be loaded
+!>               through this entry point. In addition, special text
+!>               kernels, called meta-Text kernels, that contain a list
+!>               of other kernels to load can be processed by FURNSH.
+!>
+!>               Meta-text kernels allow you to easily control which
+!>               kernels will be loaded by your program without having
+!>               to write your own kernel managing routines.
+!>
+!>     KTOTAL    returns the number of kernels that are currently
+!>               available to your program as a result of previous calls
+!>               to FURNSH and UNLOAD.
+!>
+!>     KDATA     provides an interface for retrieving (in order of their
+!>               specification through FURNSH) kernels that are active in
+!>               your application.
+!>
+!>     KINFO     allows you to retrieve information about a loaded
+!>               kernel using the name of that kernel.
+!>
+!>     KCLEAR    Unloads all kernels that were loaded via the KEEPER
+!>               system, clears the kernel pool, and re-initializes the
+!>               KEEPER system.
+!>
+!>     UNLOAD    provides an interface for unloading kernels that have
+!>               been loaded via the routine FURNSH.
+!>
+!>     For more details concerning any particular entry point, see the
+!>     header for that entry point.
+!>
+!>### Examples
+!>
+!>     The numerical results shown for this example may differ across
+!>     platforms. The results depend on the SPICE kernels used as
+!>     input, the compiler and supporting libraries, and the machine
+!>     specific arithmetic implementation.
+!>
+!>     1) Load a meta-kernel with a PCK, an LSK and an SPK, and
+!>        separately, a text kernel and a binary PCK. Loop over the
+!>        loaded kernels, outputting file information for each of
+!>        them.
+!>
+!>        Then unload the text kernels, check that they have been
+!>        unloaded, and finally unload all remaining kernels
+!>        and clear the kernel pool using KCLEAR.
+!>
+!>        Use the meta-kernel shown below to load the required SPICE
+!>        kernels.
+!>
+!>           KPL/MK
+!>
+!>           File name: keeper_ex1.tm
+!>
+!>           This meta-kernel is intended to support operation of SPICE
+!>           example programs. The kernels shown here should not be
+!>           assumed to contain adequate or correct versions of data
+!>           required by SPICE-based user applications.
+!>
+!>           In order for an application to use this meta-kernel, the
+!>           kernels referenced here must be present in the user's
+!>           current working directory.
+!>
+!>           The names and contents of the kernels referenced
+!>           by this meta-kernel are as follows:
+!>
+!>              File name                     Contents
+!>              ---------                     --------
+!>              de421.bsp                     Planetary ephemeris
+!>              pck00009.tpc                  Planet orientation and
+!>                                            radii
+!>              naif0012.tls                  Leapseconds
+!>
+!>           \begindata
+!>
+!>              KERNELS_TO_LOAD = ( 'de421.bsp',
+!>                                  'naif0012.tls',
+!>                                  'pck00009.tpc' )
+!>
+!>           \begintext
+!>
+!>           End of meta-kernel
+!>
+!>        Use the PCK kernel below as the binary PCK required for the
+!>        example.
+!>
+!>           earth_latest_high_prec.bpc
+!>
+!>        Use the FK kernel below as the text kernel required for the
+!>        example.
+!>
+!>           RSSD0002.TF
+!>
+!>        Example code begins here.
+!>
+!>              PROGRAM KEEPER_EX1
+!>              IMPLICIT NONE
+!>
+!>        C
+!>        C     Local constants.
+!>        C
+!>              INTEGER               FNAMLN
+!>              PARAMETER           ( FNAMLN = 256 )
+!>
+!>              INTEGER               FTYPLN
+!>              PARAMETER           ( FTYPLN = 33 )
+!>
+!>              INTEGER               SRCLEN
+!>              PARAMETER           ( SRCLEN = 256 )
+!>
+!>        C
+!>        C     Local variables.
+!>        C
+!>              CHARACTER*(FNAMLN)    FILE
+!>              CHARACTER*(FTYPLN)    FILTYP
+!>              CHARACTER*(SRCLEN)    SRCFIL
+!>
+!>              INTEGER               COUNT
+!>              INTEGER               HANDLE
+!>              INTEGER               WHICH
+!>
+!>              LOGICAL               FOUND
+!>
+!>        C
+!>        C     Load several kernel files.
+!>        C
+!>              CALL FURNSH ( 'keeper_ex1.tm'              )
+!>              CALL FURNSH ( 'RSSD0002.TF'                )
+!>              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
+!>
+!>        C
+!>        C     Count the number of loaded kernel files.
+!>        C
+!>              CALL KTOTAL ( 'ALL', COUNT )
+!>
+!>              WRITE(*,'(A,I2)') 'The total number of kernels after '
+!>             . //               'final FURNSH: ', COUNT
+!>              WRITE(*,*) ' '
+!>
+!>        C
+!>        C     Retrieve the data for all the loaded kernels and
+!>        C     test an index for which there should be no kernel.
+!>        C
+!>              WRITE(*,'(A)') 'Overview of loaded kernels, by index:'
+!>              WRITE(*,*) ' '
+!>
+!>              DO WHICH= 1, COUNT + 1
+!>
+!>                 CALL KDATA ( WHICH, 'ALL',   FILE, FILTYP,
+!>             .                SRCFIL, HANDLE, FOUND        )
+!>
+!>                 IF ( FOUND ) THEN
+!>
+!>                    WRITE(*,*) '  Index : ', WHICH
+!>                    WRITE(*,*) '  File  : ', FILE
+!>                    WRITE(*,*) '  Type  : ', FILTYP
+!>                    WRITE(*,*) '  Source: ', SRCFIL
+!>                    WRITE(*,*) '  Handle: ', HANDLE
+!>                    WRITE(*,*) ' '
+!>
+!>                 ELSE
+!>
+!>                    WRITE(*,*) '  No kernel found with index: ', WHICH
+!>
+!>                 END IF
+!>
+!>              END DO
+!>
+!>        C
+!>        C     Unload the text kernels.
+!>        C
+!>              CALL KTOTAL ( 'TEXT', COUNT )
+!>
+!>              WRITE(*,*) ' '
+!>              WRITE(*,'(A,I2,A)') 'Unloading', COUNT,
+!>             .                    ' text kernels...'
+!>              WRITE(*,*) ' '
+!>
+!>              DO WHILE ( COUNT .NE. 0 )
+!>
+!>                 CALL KDATA (      1, 'TEXT',  FILE, FILTYP,
+!>             .                SRCFIL, HANDLE, FOUND        )
+!>
+!>        C
+!>        C        If the kernel is found in the pool, unload it.
+!>        C
+!>                 IF ( FOUND ) THEN
+!>
+!>                    CALL UNLOAD ( FILE )
+!>
+!>        C
+!>        C           Check if the file has been unloaded.
+!>        C
+!>                    CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
+!>
+!>                    IF ( FOUND ) THEN
+!>
+!>                       WRITE(*,'(A)') '  Error unloading ' // FILE
+!>
+!>                    ELSE
+!>
+!>                       WRITE(*,'(A)') '  Success unloading ' // FILE
+!>
+!>                    END IF
+!>
+!>        C
+!>        C        Something is not working. Inform NAIF.
+!>        C
+!>                 ELSE
+!>
+!>                    WRITE(*,*) ' ERROR: No kernel found with index: ',
+!>             .                 WHICH
+!>
+!>                 END IF
+!>
+!>        C
+!>        C        Check if we have more text kernels to unload from
+!>        C        the kernel pool. Note that unloading a text kernel
+!>        C        or meta-kernel implies that the kernel pool is
+!>        C        cleared, and any kernel(s) that were not to be
+!>        C        unloaded are re-loaded. Therefore the COUNT value
+!>        C        changes, and the indexing of the files within the
+!>        C        kernel pool too.
+!>        C
+!>                 CALL KTOTAL ( 'TEXT', COUNT )
+!>
+!>              END DO
+!>
+!>              CALL KTOTAL ( 'ALL', COUNT )
+!>
+!>              WRITE(*,*) ' '
+!>              WRITE(*,'(A,I2)') 'The total number of kernels after '
+!>             . //               'UNLOAD calls: ', COUNT
+!>
+!>        C
+!>        C     Clear the KEEPER system, retrieve the number of loaded
+!>        C     after the clear.
+!>        C
+!>              CALL KCLEAR()
+!>
+!>              CALL KTOTAL ( 'ALL', COUNT )
+!>
+!>              WRITE(*,*) ' '
+!>              WRITE(*,'(A,I2)') 'The total number of kernels after '
+!>             . //               'KCLEAR      : ', COUNT
+!>
+!>              END
+!>
+!>        When this program was executed on a Mac/Intel/gfortran/64-bit
+!>        platform, the output was:
+!>
+!>        The total number of kernels after final FURNSH:  6
+!>
+!>        Overview of loaded kernels, by index:
+!>
+!>           Index :            1
+!>           File  : keeper_ex1.tm
+!>           Type  : META
+!>           Source:
+!>           Handle:            0
+!>
+!>           Index :            2
+!>           File  : de421.bsp
+!>           Type  : SPK
+!>           Source: keeper_ex1.tm
+!>           Handle:            1
+!>
+!>           Index :            3
+!>           File  : naif0012.tls
+!>           Type  : TEXT
+!>           Source: keeper_ex1.tm
+!>           Handle:            0
+!>
+!>           Index :            4
+!>           File  : pck00009.tpc
+!>           Type  : TEXT
+!>           Source: keeper_ex1.tm
+!>           Handle:            0
+!>
+!>           Index :            5
+!>           File  : RSSD0002.TF
+!>           Type  : TEXT
+!>           Source:
+!>           Handle:            0
+!>
+!>           Index :            6
+!>           File  : earth_latest_high_prec.bpc
+!>           Type  : PCK
+!>           Source:
+!>           Handle:            2
+!>
+!>           No kernel found with index:            7
+!>
+!>        Unloading 3 text kernels...
+!>
+!>          Success unloading naif0012.tls
+!>          Success unloading pck00009.tpc
+!>          Success unloading RSSD0002.TF
+!>
+!>        The total number of kernels after UNLOAD calls:  3
+!>
+!>        The total number of kernels after KCLEAR      :  0
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     C.H. Acton         (JPL)
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>     B.V. Semenov       (JPL)
+!>     W.L. Taber         (JPL)
+!>     E.D. Wright        (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 5.1.0, 29-DEC-2021 (JDR) (NJB)
+!>
+!>        Changed argument name SOURCE to SRCFIL for consistency with
+!>        other routines.
+!>
+!>        Updated KEEPER umbrella routine and all entry points' headers
+!>        to comply with NAIF standard.
+!>
+!>        Updated description of input argument KIND in headers of entry
+!>        points KDATA and KTOTAL. Updated $Brief_I/O table to include
+!>        WHICH short description and sort arguments in the order they
+!>        are declared.
+!>
+!>        Added a restriction about specifying kernels using relative
+!>        paths to the FURNSH entry point header $Restrictions section.
+!>
+!>-    SPICELIB Version 5.0.0, 01-FEB-2017 (NJB) (BVS)
+!>
+!>        Updated to support use of DSKs.
+!>
+!>        Bug fix: now unloads binary kernels via low-level
+!>        unload routines only when those kernels have just
+!>        one entry in the KEEPER database.
+!>
+!>        Updated description of MAXFIL in the header.
+!>
+!>        Updated the $Author_and_Institution section.
+!>
+!>-    SPICELIB Version 4.1.0, 01-JUL-2014 (NJB) (BVS)
+!>
+!>        Updated the discussion of kernel variable watches in entry
+!>        points KCLEAR and UNLOAD. Added to the FURNSH header mention
+!>        of the effects of failure during text kernel or meta-kernel
+!>        loading.
+!>
+!>        Last update was 12-APR-2012 (BVS)
+!>
+!>           Increased FTSIZE (from 1000 to 5000).
+!>
+!>           Changed to use SEPOOL instead of STPOOL to reduce loading
+!>           time for large meta-kernels due to n^2 delay in STPOOL.
+!>
+!>-    SPICELIB Version 4.0.2, 13-APR-2011 (EDW)
+!>
+!>        Trivial edit to KCLEAR $Restrictions, replaced P*POOL with
+!>        PXPOOL. The "*" character causes the HTML documentation
+!>        script to create a link for the "POOL" substring.
+!>
+!>-    SPICELIB Version 4.0.1, 10-FEB-2010 (EDW)
+!>
+!>        Added mention of the restriction on kernel pool variable
+!>        names to MAXLEN (defined in pool.f) characters or less.
+!>
+!>-    SPICELIB Version 4.0.0, 02-APR-2009 (NJB)
+!>
+!>        Continued path values are now supported. FURNSH now rejects
+!>        file names longer than FILSIZ characters.
+!>
+!>        Deleted references to unneeded variable DOALL. Made
+!>        THSTYP declaration compatible with TYPES array.
+!>
+!>-    SPICELIB Version 3.0.1, 27-APR-2007 (NJB)
+!>
+!>        Fixed header typo: added quotes to literal string
+!>        input arguments in example FURNSH calls.
+!>
+!>-    SPICELIB Version 3.0.0, 15-NOV-2006 (NJB)
+!>
+!>        Added entry point KCLEAR. Bug fix: meta-kernel unloading bug
+!>        in UNLOAD was corrected. Some header updates were made.
+!>
+!>-    SPICELIB Version 2.0.2, 29-JUL-2003 (NJB) (CHA)
+!>
+!>        Only the header of the entry point FURNSH was modified.
+!>        Numerous updates were made to improve clarity. Some
+!>        corrections were made.
+!>
+!>-    SPICELIB Version 2.0.1, 06-DEC-2002 (NJB)
+!>
+!>        Typo in header example was corrected.
+!>
+!>-    SPICELIB Version 2.0.0, 07-JAN-2002 (WLT)
+!>
+!>        Added a call to CVPOOL in FURNSH so that watches that are
+!>        triggered are triggered by loading Meta-kernels and not by
+!>        some external interaction with the kernel pool.
+!>
+!>        Added code to make sure that UNLOAD has the effect of
+!>        loading all remaining kernels in the order they were first
+!>        introduced.
+!>
+!>-    SPICELIB Version 1.1.0, 19-SEP-2000 (WLT)
+!>
+!>        Corrected the error message template used
+!>        by ZZLDKER
+!>
+!>-    SPICELIB Version 1.0.1, 16-DEC-1999 (NJB)
+!>
+!>        Documentation fix: corrected second code example in the
+!>        header of the entry point FURNSH. The example previously used
+!>        the kernel variable PATH_NAMES; that name has been replaced
+!>        with the correct name PATH_VALUES.
+!>
+!>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
+!>
+!>### Implementation notes
+!>
+!>     Here we set up the database of loaded kernels
+!>
+!>     The name of every file loaded through this interface will
+!>     be stored in the array FILES.
+!>
+!>     The handle of every loaded file will be stored in the array
+!>     HANDLS.  If the file is a text kernel it will be assigned the
+!>     handle 0.
+!>
+!>     The source of each file specified will be stored in the integer
+!>     array SRCFIL.  If the file is loaded directly, its source
+!>     will be zero.  If it is loaded as the result of meta-information
+!>     in a text kernel, the index of the source file in FILES will
+!>     be stored in SRCES.
+!>
+!>     The file type of every loaded kernel will be stored in the array
+!>     TYPES.
+!>
+!>     The number of files loaded through this interfaces is kept in the
+!>     integer LOADED.
 submodule (pepper_instance) pepper_keeper
 
    implicit none
@@ -2873,537 +3396,6 @@ contains
 
       return
       end procedure zzldker
-
-!$Procedure KEEPER ( Keeps track of SPICE kernels )
-!
-!     PEPPER: SPICELIB's umbrella routine KEEPER is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_keeper. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     This routine is an umbrella for a collection of entry points
-!     that manage the loading and unloading of SPICE kernels from
-!     an application program.
-!
-! $ Detailed_Input
-!
-!     See Individual Entry points.
-!
-! $ Detailed_Output
-!
-!     See Individual Entry points.
-!
-! $ Parameters
-!
-!     FILSIZ   is the maximum file name length that can be
-!              accommodated by this set of routines.
-!
-!     MAXFIL   is the number of entries that can be stored in KEEPER's
-!              kernel database. In this version of the toolkit MAXFIL
-!              is set to 5300. Each time a kernel is loaded via
-!              FURNSH, a database entry is created for that kernel.
-!              If a meta-kernel is loaded, a database entry is created
-!              for the meta-kernel itself and for all files referenced
-!              in the meta-kernel's KERNELS_TO_LOAD specification.
-!              Unloading a kernel or meta-kernel deletes database
-!              entries created when the file was loaded.
-!
-!              The parameter MAXFIL is an upper bound on number of
-!              SPICE kernels that can be loaded at any time via the
-!              KEEPER interface, but the number of kernels that can be
-!              loaded may be smaller, since re-loading a loaded kernel
-!              or meta-kernel results in creation of additional
-!              database entries.
-!
-!              Kernels loaded into the KEEPER system are subject to
-!              constraints imposed by lower-level subsystems. The
-!              binary kernel systems (SPK, CK, binary PCK, and EK)
-!              have their own limits on the maximum number of kernels
-!              that may be loaded.
-!
-!              The total number of DAF-based files (this set includes
-!              SPKs, CKs, and binary PCKs) and DAS-based files (this
-!              set includes EKs and DSKs) that may be loaded at any
-!              time may not exceed 5000. This limit applies whether
-!              the files are loaded via FURNSH or lower-level loaders
-!              such as SPKLEF or DAFOPR. File access performance
-!              normally will degrade as the number of loaded kernels
-!              increases.
-!
-! $ Exceptions
-!
-!     1)  If the main routine KEEPER is called, the error
-!         SPICE(BOGUSENTRY) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine serves as an umbrella for a collection of
-!     entry points that unify the task of loading, tracking,
-!     and unloading SPICE kernels. A description of each entry
-!     point is given below:
-!
-!     FURNSH    Furnish a kernel to a program. This entry point
-!               provides a single interface for loading kernels into
-!               your application program. All SPICE kernels (Text
-!               kernels, SPK, CK, Binary PCK, and EK) can be loaded
-!               through this entry point. In addition, special text
-!               kernels, called meta-Text kernels, that contain a list
-!               of other kernels to load can be processed by FURNSH.
-!
-!               Meta-text kernels allow you to easily control which
-!               kernels will be loaded by your program without having
-!               to write your own kernel managing routines.
-!
-!     KTOTAL    returns the number of kernels that are currently
-!               available to your program as a result of previous calls
-!               to FURNSH and UNLOAD.
-!
-!     KDATA     provides an interface for retrieving (in order of their
-!               specification through FURNSH) kernels that are active in
-!               your application.
-!
-!     KINFO     allows you to retrieve information about a loaded
-!               kernel using the name of that kernel.
-!
-!     KCLEAR    Unloads all kernels that were loaded via the KEEPER
-!               system, clears the kernel pool, and re-initializes the
-!               KEEPER system.
-!
-!     UNLOAD    provides an interface for unloading kernels that have
-!               been loaded via the routine FURNSH.
-!
-!     For more details concerning any particular entry point, see the
-!     header for that entry point.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Load a meta-kernel with a PCK, an LSK and an SPK, and
-!        separately, a text kernel and a binary PCK. Loop over the
-!        loaded kernels, outputting file information for each of
-!        them.
-!
-!        Then unload the text kernels, check that they have been
-!        unloaded, and finally unload all remaining kernels
-!        and clear the kernel pool using KCLEAR.
-!
-!        Use the meta-kernel shown below to load the required SPICE
-!        kernels.
-!
-!           KPL/MK
-!
-!           File name: keeper_ex1.tm
-!
-!           This meta-kernel is intended to support operation of SPICE
-!           example programs. The kernels shown here should not be
-!           assumed to contain adequate or correct versions of data
-!           required by SPICE-based user applications.
-!
-!           In order for an application to use this meta-kernel, the
-!           kernels referenced here must be present in the user's
-!           current working directory.
-!
-!           The names and contents of the kernels referenced
-!           by this meta-kernel are as follows:
-!
-!              File name                     Contents
-!              ---------                     --------
-!              de421.bsp                     Planetary ephemeris
-!              pck00009.tpc                  Planet orientation and
-!                                            radii
-!              naif0012.tls                  Leapseconds
-!
-!           \begindata
-!
-!              KERNELS_TO_LOAD = ( 'de421.bsp',
-!                                  'naif0012.tls',
-!                                  'pck00009.tpc' )
-!
-!           \begintext
-!
-!           End of meta-kernel
-!
-!        Use the PCK kernel below as the binary PCK required for the
-!        example.
-!
-!           earth_latest_high_prec.bpc
-!
-!        Use the FK kernel below as the text kernel required for the
-!        example.
-!
-!           RSSD0002.TF
-!
-!        Example code begins here.
-!
-!              PROGRAM KEEPER_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Local constants.
-!        C
-!              INTEGER               FNAMLN
-!              PARAMETER           ( FNAMLN = 256 )
-!
-!              INTEGER               FTYPLN
-!              PARAMETER           ( FTYPLN = 33 )
-!
-!              INTEGER               SRCLEN
-!              PARAMETER           ( SRCLEN = 256 )
-!
-!        C
-!        C     Local variables.
-!        C
-!              CHARACTER*(FNAMLN)    FILE
-!              CHARACTER*(FTYPLN)    FILTYP
-!              CHARACTER*(SRCLEN)    SRCFIL
-!
-!              INTEGER               COUNT
-!              INTEGER               HANDLE
-!              INTEGER               WHICH
-!
-!              LOGICAL               FOUND
-!
-!        C
-!        C     Load several kernel files.
-!        C
-!              CALL FURNSH ( 'keeper_ex1.tm'              )
-!              CALL FURNSH ( 'RSSD0002.TF'                )
-!              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
-!
-!        C
-!        C     Count the number of loaded kernel files.
-!        C
-!              CALL KTOTAL ( 'ALL', COUNT )
-!
-!              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!             . //               'final FURNSH: ', COUNT
-!              WRITE(*,*) ' '
-!
-!        C
-!        C     Retrieve the data for all the loaded kernels and
-!        C     test an index for which there should be no kernel.
-!        C
-!              WRITE(*,'(A)') 'Overview of loaded kernels, by index:'
-!              WRITE(*,*) ' '
-!
-!              DO WHICH= 1, COUNT + 1
-!
-!                 CALL KDATA ( WHICH, 'ALL',   FILE, FILTYP,
-!             .                SRCFIL, HANDLE, FOUND        )
-!
-!                 IF ( FOUND ) THEN
-!
-!                    WRITE(*,*) '  Index : ', WHICH
-!                    WRITE(*,*) '  File  : ', FILE
-!                    WRITE(*,*) '  Type  : ', FILTYP
-!                    WRITE(*,*) '  Source: ', SRCFIL
-!                    WRITE(*,*) '  Handle: ', HANDLE
-!                    WRITE(*,*) ' '
-!
-!                 ELSE
-!
-!                    WRITE(*,*) '  No kernel found with index: ', WHICH
-!
-!                 END IF
-!
-!              END DO
-!
-!        C
-!        C     Unload the text kernels.
-!        C
-!              CALL KTOTAL ( 'TEXT', COUNT )
-!
-!              WRITE(*,*) ' '
-!              WRITE(*,'(A,I2,A)') 'Unloading', COUNT,
-!             .                    ' text kernels...'
-!              WRITE(*,*) ' '
-!
-!              DO WHILE ( COUNT .NE. 0 )
-!
-!                 CALL KDATA (      1, 'TEXT',  FILE, FILTYP,
-!             .                SRCFIL, HANDLE, FOUND        )
-!
-!        C
-!        C        If the kernel is found in the pool, unload it.
-!        C
-!                 IF ( FOUND ) THEN
-!
-!                    CALL UNLOAD ( FILE )
-!
-!        C
-!        C           Check if the file has been unloaded.
-!        C
-!                    CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
-!
-!                    IF ( FOUND ) THEN
-!
-!                       WRITE(*,'(A)') '  Error unloading ' // FILE
-!
-!                    ELSE
-!
-!                       WRITE(*,'(A)') '  Success unloading ' // FILE
-!
-!                    END IF
-!
-!        C
-!        C        Something is not working. Inform NAIF.
-!        C
-!                 ELSE
-!
-!                    WRITE(*,*) ' ERROR: No kernel found with index: ',
-!             .                 WHICH
-!
-!                 END IF
-!
-!        C
-!        C        Check if we have more text kernels to unload from
-!        C        the kernel pool. Note that unloading a text kernel
-!        C        or meta-kernel implies that the kernel pool is
-!        C        cleared, and any kernel(s) that were not to be
-!        C        unloaded are re-loaded. Therefore the COUNT value
-!        C        changes, and the indexing of the files within the
-!        C        kernel pool too.
-!        C
-!                 CALL KTOTAL ( 'TEXT', COUNT )
-!
-!              END DO
-!
-!              CALL KTOTAL ( 'ALL', COUNT )
-!
-!              WRITE(*,*) ' '
-!              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!             . //               'UNLOAD calls: ', COUNT
-!
-!        C
-!        C     Clear the KEEPER system, retrieve the number of loaded
-!        C     after the clear.
-!        C
-!              CALL KCLEAR()
-!
-!              CALL KTOTAL ( 'ALL', COUNT )
-!
-!              WRITE(*,*) ' '
-!              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!             . //               'KCLEAR      : ', COUNT
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!        The total number of kernels after final FURNSH:  6
-!
-!        Overview of loaded kernels, by index:
-!
-!           Index :            1
-!           File  : keeper_ex1.tm
-!           Type  : META
-!           Source:
-!           Handle:            0
-!
-!           Index :            2
-!           File  : de421.bsp
-!           Type  : SPK
-!           Source: keeper_ex1.tm
-!           Handle:            1
-!
-!           Index :            3
-!           File  : naif0012.tls
-!           Type  : TEXT
-!           Source: keeper_ex1.tm
-!           Handle:            0
-!
-!           Index :            4
-!           File  : pck00009.tpc
-!           Type  : TEXT
-!           Source: keeper_ex1.tm
-!           Handle:            0
-!
-!           Index :            5
-!           File  : RSSD0002.TF
-!           Type  : TEXT
-!           Source:
-!           Handle:            0
-!
-!           Index :            6
-!           File  : earth_latest_high_prec.bpc
-!           Type  : PCK
-!           Source:
-!           Handle:            2
-!
-!           No kernel found with index:            7
-!
-!        Unloading 3 text kernels...
-!
-!          Success unloading naif0012.tls
-!          Success unloading pck00009.tpc
-!          Success unloading RSSD0002.TF
-!
-!        The total number of kernels after UNLOAD calls:  3
-!
-!        The total number of kernels after KCLEAR      :  0
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     C.H. Acton         (JPL)
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.1.0, 29-DEC-2021 (JDR) (NJB)
-!
-!        Changed argument name SOURCE to SRCFIL for consistency with
-!        other routines.
-!
-!        Updated KEEPER umbrella routine and all entry points' headers
-!        to comply with NAIF standard.
-!
-!        Updated description of input argument KIND in headers of entry
-!        points KDATA and KTOTAL. Updated $Brief_I/O table to include
-!        WHICH short description and sort arguments in the order they
-!        are declared.
-!
-!        Added a restriction about specifying kernels using relative
-!        paths to the FURNSH entry point header $Restrictions section.
-!
-!-    SPICELIB Version 5.0.0, 01-FEB-2017 (NJB) (BVS)
-!
-!        Updated to support use of DSKs.
-!
-!        Bug fix: now unloads binary kernels via low-level
-!        unload routines only when those kernels have just
-!        one entry in the KEEPER database.
-!
-!        Updated description of MAXFIL in the header.
-!
-!        Updated the $Author_and_Institution section.
-!
-!-    SPICELIB Version 4.1.0, 01-JUL-2014 (NJB) (BVS)
-!
-!        Updated the discussion of kernel variable watches in entry
-!        points KCLEAR and UNLOAD. Added to the FURNSH header mention
-!        of the effects of failure during text kernel or meta-kernel
-!        loading.
-!
-!        Last update was 12-APR-2012 (BVS)
-!
-!           Increased FTSIZE (from 1000 to 5000).
-!
-!           Changed to use SEPOOL instead of STPOOL to reduce loading
-!           time for large meta-kernels due to n^2 delay in STPOOL.
-!
-!-    SPICELIB Version 4.0.2, 13-APR-2011 (EDW)
-!
-!        Trivial edit to KCLEAR $Restrictions, replaced P*POOL with
-!        PXPOOL. The "*" character causes the HTML documentation
-!        script to create a link for the "POOL" substring.
-!
-!-    SPICELIB Version 4.0.1, 10-FEB-2010 (EDW)
-!
-!        Added mention of the restriction on kernel pool variable
-!        names to MAXLEN (defined in pool.f) characters or less.
-!
-!-    SPICELIB Version 4.0.0, 02-APR-2009 (NJB)
-!
-!        Continued path values are now supported. FURNSH now rejects
-!        file names longer than FILSIZ characters.
-!
-!        Deleted references to unneeded variable DOALL. Made
-!        THSTYP declaration compatible with TYPES array.
-!
-!-    SPICELIB Version 3.0.1, 27-APR-2007 (NJB)
-!
-!        Fixed header typo: added quotes to literal string
-!        input arguments in example FURNSH calls.
-!
-!-    SPICELIB Version 3.0.0, 15-NOV-2006 (NJB)
-!
-!        Added entry point KCLEAR. Bug fix: meta-kernel unloading bug
-!        in UNLOAD was corrected. Some header updates were made.
-!
-!-    SPICELIB Version 2.0.2, 29-JUL-2003 (NJB) (CHA)
-!
-!        Only the header of the entry point FURNSH was modified.
-!        Numerous updates were made to improve clarity. Some
-!        corrections were made.
-!
-!-    SPICELIB Version 2.0.1, 06-DEC-2002 (NJB)
-!
-!        Typo in header example was corrected.
-!
-!-    SPICELIB Version 2.0.0, 07-JAN-2002 (WLT)
-!
-!        Added a call to CVPOOL in FURNSH so that watches that are
-!        triggered are triggered by loading Meta-kernels and not by
-!        some external interaction with the kernel pool.
-!
-!        Added code to make sure that UNLOAD has the effect of
-!        loading all remaining kernels in the order they were first
-!        introduced.
-!
-!-    SPICELIB Version 1.1.0, 19-SEP-2000 (WLT)
-!
-!        Corrected the error message template used
-!        by ZZLDKER
-!
-!-    SPICELIB Version 1.0.1, 16-DEC-1999 (NJB)
-!
-!        Documentation fix: corrected second code example in the
-!        header of the entry point FURNSH. The example previously used
-!        the kernel variable PATH_NAMES; that name has been replaced
-!        with the correct name PATH_VALUES.
-!
-!-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-!
-
-!
-!     Here we set up the database of loaded kernels
-!
-!     The name of every file loaded through this interface will
-!     be stored in the array FILES.
-!
-!
-!     The handle of every loaded file will be stored in the array
-!     HANDLS.  If the file is a text kernel it will be assigned the
-!     handle 0.
-!
-!
-!     The source of each file specified will be stored in the integer
-!     array SRCFIL.  If the file is loaded directly, its source
-!     will be zero.  If it is loaded as the result of meta-information
-!     in a text kernel, the index of the source file in FILES will
-!     be stored in SRCES.
-!
-!
-!     The file type of every loaded kernel will be stored in the array
-!     TYPES.
-!
-
-!
-!     The number of files loaded through this interfaces is kept in the
-!     integer LOADED.
 
       !>## Detailed Input
       !>

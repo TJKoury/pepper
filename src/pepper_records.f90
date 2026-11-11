@@ -5,6 +5,401 @@
 !> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_records.f90.
+!>
+!>## ZZSGP4 (SGP4 wrapper)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZSGP4 is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zzsgp4. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Umbrella for the SGP4 initializer and evaluator routines.
+!>
+!>### Detailed Input
+!>
+!>     See Individual Entry points.
+!>
+!>### Detailed Output
+!>
+!>     See Individual Entry points.
+!>
+!>### Parameters
+!>
+!>     None.
+!>
+!>### Exceptions
+!>
+!>     1)  If ZZSGP4 is called, the error SPICE(BOGUSENTRY) is signaled.
+!>
+!>### Files
+!>
+!>     None.
+!>
+!>### Particulars
+!>
+!>     This routine wraps XXSGP4E and XXSGP4I. As entry points to
+!>     this routine, they share the local memory space.
+!>
+!>### Examples
+!>
+!>     The numerical results shown for these examples may differ across
+!>     platforms. The results depend on the SPICE kernels used as
+!>     input, the compiler and supporting libraries, and the machine
+!>     specific arithmetic implementation.
+!>
+!>     Use a set of TLEs to calculate a collection of states for a
+!>     time interval centered at the TLE set epoch.
+!>
+!>           PROGRAM ZZSGP4_T
+!>
+!>     C
+!>     C     Read a data file containing sets of TLEs, then calculate
+!>     C     states at -1440 to 1440 minutes from the epoch of each
+!>     C     TLE set in steps of 10 minutes.
+!>     C
+!>     C     Example cases listed in sgp4-ver.tle.
+!>     C
+!>     C     1 00005U 58002B   00179.78495062  .00000023
+!>     C       00000-0  28098-4 0  4753
+!>     C     2 00005  34.2682 348.7242 1859667 331.7664
+!>     C       19.3264 10.82419157413667
+!>     C
+!>     C     1 04632U 70093B   04031.91070959 -.00000084
+!>     C       00000-0  10000-3 0  9955
+!>     C     2 04632  11.4628 273.1101 1450506 207.6000
+!>     C       143.9350  1.20231981 44145
+!>     C
+!>     C     1 06251U 62025E   06176.82412014  .00008885
+!>     C       00000-0  12808-3 0  3985
+!>     C     2 06251  58.0579  54.0425 0030035 139.1568
+!>     C       221.1854 15.56387291  6774
+!>     C
+!>     C     1 08195U 75081A   06176.33215444  .00000099
+!>     C       00000-0  11873-3 0   813
+!>     C     2 08195  64.1586 279.0717 6877146 264.7651
+!>     C       20.2257  2.00491383225656
+!>     C
+!>     C     1 09880U 77021A   06176.56157475  .00000421
+!>     C       00000-0  10000-3 0  9814
+!>     C     2 09880  64.5968 349.3786 7069051 270.0229
+!>     C       16.3320  2.00813614112380
+!>     C
+!>     C     1 09998U 74033F   05148.79417928 -.00000112
+!>     C       00000-0  00000+0 0  4480
+!>     C     2 09998   9.4958 313.1750 0270971 327.5225
+!>     C       30.8097  1.16186785 45878
+!>     C
+!>     C     1 11801U          80230.29629788  .01431103
+!>     C       00000-0  14311-1      13
+!>     C     2 11801  46.7916 230.4354 7318036  47.4722
+!>     C       10.4117  2.28537848    13
+!>     C
+!>     C     1 14128U 83058A   06176.02844893 -.00000158
+!>     C       00000-0  10000-3 0  9627
+!>     C     2 14128  11.4384  35.2134 0011562  26.4582
+!>     C       333.5652  0.98870114 46093
+!>     C
+!>     C     1 16925U 86065D   06151.67415771  .02550794
+!>     C       -30915-6  18784-3 0  4486
+!>     C     2 16925  62.0906 295.0239 5596327 245.1593
+!>     C       47.9690  4.88511875148616
+!>     C
+!>     C     1 20413U 83020D   05363.79166667  .00000000
+!>     C       00000-0  00000+0 0  7041
+!>     C     2 20413  12.3514 187.4253 7864447 196.3027
+!>     C       356.5478  0.24690082  7978
+!>     C
+!>     C     1 21897U 92011A   06176.02341244 -.00001273
+!>     C       00000-0 -13525-3 0  3044
+!>     C     2 21897  62.1749 198.0096 7421690 253.0462
+!>     C       20.1561  2.01269994104880
+!>     C
+!>     C     1 22312U 93002D   06094.46235912  .99999999
+!>     C       81888-5  49949-3 0  3953
+!>     C     2 22312  62.1486  77.4698 0308723 267.9229
+!>     C       88.7392 15.95744531 98783
+!>     C
+!>     C     1 22674U 93035D   06176.55909107  .00002121
+!>     C       00000-0  29868-3 0  6569
+!>     C     2 22674  63.5035 354.4452 7541712 253.3264
+!>     C       18.7754  1.96679808 93877
+!>     C
+!>     C     1 23177U 94040C   06175.45752052  .00000386
+!>     C       00000-0  76590-3 0    95
+!>     C     2 23177   7.0496 179.8238 7258491 296.0482
+!>     C       8.3061  2.25906668 97438
+!>     C
+!>     C     1 23333U 94071A   94305.49999999 -.00172956
+!>     C       26967-3  10000-3 0    15
+!>     C     2 23333  28.7490   2.3720 9728298  30.4360
+!>     C       1.3500  0.07309491    70
+!>     C
+!>     C     1 23599U 95029B   06171.76535463  .00085586
+!>     C       12891-6  12956-2 0  2905
+!>     C     2 23599   6.9327   0.2849 5782022 274.4436
+!>     C       25.2425  4.47796565123555
+!>     C
+!>     C     1 24208U 96044A   06177.04061740 -.00000094
+!>     C       00000-0  10000-3 0  1600
+!>     C     2 24208   3.8536  80.0121 0026640 311.0977
+!>     C       48.3000  1.00778054 36119
+!>     C
+!>     C     1 25954U 99060A   04039.68057285 -.00000108
+!>     C       00000-0  00000-0 0  6847
+!>     C     2 25954   0.0004 243.8136 0001765  15.5294
+!>     C       22.7134  1.00271289 15615
+!>     C
+!>     C     1 26900U 01039A   06106.74503247  .00000045
+!>     C       00000-0  10000-3 0  8290
+!>     C     2 26900   0.0164 266.5378 0003319  86.1794
+!>     C       182.2590  1.00273847 16981
+!>     C
+!>     C     1 26975U 78066F   06174.85818871  .00000620
+!>     C       00000-0  10000-3 0  6809
+!>     C     2 26975  68.4714 236.1303 5602877 123.7484
+!>     C       302.5767  2.05657553 67521
+!>     C
+!>     C     1 28057U 03049A   06177.78615833  .00000060
+!>     C       00000-0  35940-4 0  1836
+!>     C     2 28057  98.4283 247.6961 0000884  88.1964
+!>     C       271.9322 14.35478080140550
+!>     C
+!>     C     1 28129U 03058A   06175.57071136 -.00000104
+!>     C       00000-0  10000-3 0   459
+!>     C     2 28129  54.7298 324.8098 0048506 266.2640
+!>     C       93.1663  2.00562768 18443
+!>     C
+!>     C     1 28350U 04020A   06167.21788666  .16154492
+!>     C       76267-5  18678-3 0  8894
+!>     C     2 28350  64.9977 345.6130 0024870 260.7578
+!>     C       99.9590 16.47856722116490
+!>     C
+!>     C     1 28623U 05006B   06177.81079184  .00637644
+!>     C       69054-6  96390-3 0  6000
+!>     C     2 28623  28.5200 114.9834 6249053 170.2550
+!>     C       212.8965  3.79477162 12753
+!>     C
+!>     C     1 28626U 05008A   06176.46683397 -.00000205
+!>     C       00000-0  10000-3 0  2190
+!>     C     2 28626   0.0019 286.9433 0000335  13.7918
+!>     C       55.6504  1.00270176  4891
+!>     C
+!>     C     1 28872U 05037B   05333.02012661  .25992681
+!>     C       00000-0  24476-3 0  1534
+!>     C     2 28872  96.4736 157.9986 0303955 244.0492
+!>     C       110.6523 16.46015938 10708
+!>     C
+!>     C     1 29141U 85108AA  06170.26783845  .99999999
+!>     C       00000-0  13519-0 0   718
+!>     C     2 29141  82.4288 273.4882 0015848 277.2124
+!>     C       83.9133 15.93343074  6828
+!>     C
+!>     C     1 29238U 06022G   06177.28732010  .00766286
+!>     C       10823-4  13334-2 0   101
+!>     C     2 29238  51.5595 213.7903 0202579  95.2503
+!>     C       267.9010 15.73823839  1061
+!>     C
+!>     C     1 88888U          80275.98708465  .00073094
+!>     C       13844-3  66816-4 0    87
+!>     C     2 88888  72.8435 115.9689 0086731  52.6988
+!>     C       110.5714 16.05824518  1058
+!>     C
+!>
+!>           IMPLICIT NONE
+!>
+!>           INCLUDE 'zzsgp4.inc'
+!>
+!>           CHARACTER*(72)           LINES  ( 2 )
+!>           CHARACTER*(72)           TLEDAT
+!>
+!>           INTEGER                  FRSTYR
+!>           INTEGER                  I
+!>           INTEGER                  OPMODE
+!>
+!>           DOUBLE PRECISION         DELT
+!>           DOUBLE PRECISION         ELEMS  ( 10 )
+!>           DOUBLE PRECISION         EPOCH
+!>           DOUBLE PRECISION         GEOPHS ( 8 )
+!>           DOUBLE PRECISION         STATE  ( 6 )
+!>           DOUBLE PRECISION         TF
+!>           DOUBLE PRECISION         TIME
+!>           DOUBLE PRECISION         TS
+!>
+!>           LOGICAL                  EOF
+!>
+!>     C
+!>     C     SPICELIB routines.
+!>     C
+!>           LOGICAL                  FAILED
+!>
+!>     C
+!>     C     Load a leapseconds kernel for time conversion. Required
+!>     C     by the SPK 10 evaluator.
+!>     C
+!>           CALL FURNSH ( '/kernels/gen/lsk/naif0011.tls' )
+!>
+!>     C
+!>     C     Define the geophysical quantities using the values
+!>     C     from geophysical.ker.
+!>     C
+!>           GEOPHS( K_J2 ) =    1.082616D-3
+!>           GEOPHS( K_J3 ) =   -2.53881D-6
+!>           GEOPHS( K_J4 ) =   -1.65597D-6
+!>           GEOPHS( K_KE ) =    7.43669161D-2
+!>           GEOPHS( K_QO ) =  120.0D0
+!>           GEOPHS( K_SO ) =   78.0D0
+!>           GEOPHS( K_ER ) = 6378.135D0
+!>           GEOPHS( K_AE ) =    1.0D0
+!>
+!>           TLEDAT = 'sgp4-ver1.tle'
+!>
+!>     C
+!>     C     Error subsystem to report to ensure execution continues
+!>     C     if an error signals.
+!>     C
+!>           CALL ERRACT( 'SET', 'REPORT')
+!>
+!>     C
+!>     C     Use Spacetrack #3 algorithm to calculate sidereal time.
+!>     C
+!>           OPMODE = AFSPC
+!>
+!>     C
+!>     C     Identify the earliest year for the elements.
+!>     C
+!>           FRSTYR = 1958
+!>
+!>     C
+!>     C     Start and final offsets from TLE epochs. [-1440, 1400]
+!>     C     minutes.
+!>     C
+!>           TS     =  -1440.0D0
+!>           TF     =   1440.0D0
+!>
+!>     C
+!>     C     Step size for elements output 10 minutes.
+!>     C
+!>           DELT   = 10.D0
+!>
+!>     C
+!>     C     Read the TLE data file.
+!>     C
+!>           CALL RDTEXT ( TLEDAT, LINES(1), EOF )
+!>           CALL RDTEXT ( TLEDAT, LINES(2), EOF )
+!>
+!>     C
+!>     C     Loop over data file until end-of-file.
+!>     C
+!>           DO WHILE ( .NOT. EOF )
+!>
+!>     C
+!>     C        Parse the elements to something SPICE can use.
+!>     C
+!>              CALL GETELM ( FRSTYR, LINES, EPOCH, ELEMS )
+!>
+!>              WRITE(*, FMT='(A72)') LINES(1)
+!>              WRITE(*, FMT='(A72)') LINES(2)
+!>              WRITE(*,*) ' '
+!>
+!>     C
+!>     C        Initialize SGP4 calculations based on values in
+!>     C        GEOPHS, ELEMS, and AFSPC.
+!>     C
+!>              CALL XXSGP4I ( GEOPHS, ELEMS, OPMODE )
+!>
+!>     C
+!>     C        Start time keyed in minutes from TLE epoch.
+!>     C
+!>              TIME   = TS
+!>
+!>              DO WHILE ( TIME .LE. DABS(TF) .AND. (.NOT. FAILED()) )
+!>
+!>     C
+!>     C           Calculate the STATE at TIME.
+!>     C
+!>                 CALL XXSGP4E ( TIME, STATE )
+!>
+!>     C
+!>     C           If the propagation succeeded, output the STATE.
+!>     C
+!>                 IF ( .NOT. FAILED() ) THEN
+!>
+!>                    WRITE(*, FMT ='(7F17.8)' ) TIME,
+!>          .                                    (STATE(I),I=1,6)
+!>
+!>                 END IF
+!>
+!>     C
+!>     C           Increment the evaluation time by one step.
+!>     C
+!>                 TIME = TIME + DELT
+!>
+!>              END DO
+!>
+!>              WRITE(*,*) ' '
+!>
+!>     C
+!>     C        reset the error subsystem for the next loop.
+!>     C
+!>              CALL RESET()
+!>
+!>     C
+!>     C        Read the next two lines (if any) from the TLE
+!>     C        data file.
+!>     C
+!>              CALL RDTEXT ( TLEDAT, LINES(1), EOF )
+!>              CALL RDTEXT ( TLEDAT, LINES(2), EOF )
+!>
+!>           END DO
+!>
+!>           END
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Literature References
+!>
+!>     [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
+!>         Propagation of the NORAD Element Sets." Spacetrack Report #3.
+!>         U.S. Air Force: Aerospace Defense Command.
+!>
+!>     [2] Hoots, Felix R. "Spacetrack Report #6: Models for Propagation
+!>         of Space Command Element Sets." Space Command,
+!>         U. S. Air Force, CO.
+!>
+!>     [3] Hoots, Felix R., P. W. Schumacher, and R. A. Glover. 2004.
+!>         History of Analytical Orbit Modeling in the U. S. Space
+!>         Surveillance System. Journal of Guidance, Control, and
+!>         Dynamics. 27(2):174-185.
+!>
+!>     [4] Vallado, David, Crawford, Paul, Hujsak, Richard,
+!>         and Kelso, T.S. 2006. Revisiting Spacetrack Report #3. Paper
+!>         AIAA 2006-6753 presented at the AIAA/AAS Astrodynamics
+!>         Specialist Conference, August 21-24, 2006. Keystone, CO.
+!>
+!>### Author and Institution
+!>
+!>     J. Diaz del Rio    (ODC Space)
+!>     E.D. Wright        (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 1.0.1, 30-MAY-2021 (EDW) (JDR)
+!>
+!>        Correction of documentation error in listing of GEOPHS
+!>        constants. The definition of index 5, "High altitude bound
+!>        for atmospheric model in km.", and index 6, "Low altitude
+!>        bound for atmospheric model in km." were switched.
+!>
+!>-    SPICELIB Version 1.0.0, 15-SEP-2014 (EDW)
+!>
+!>        Based on routine SGP4, 28-JUN-2005, Vallado 2006 [4].
+!>
+!>### Implementation notes
+!>
+!>     DS values
+!>
+!>     SPICELIB routines.
 submodule (pepper_instance) pepper_records
 
    implicit none
@@ -25813,406 +26208,6 @@ contains
 
       return
       end procedure pckmat
-
-!$Procedure ZZSGP4 ( SGP4 wrapper )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZSGP4 is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zzsgp4. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Umbrella for the SGP4 initializer and evaluator routines.
-!
-! $ Detailed_Input
-!
-!     See Individual Entry points.
-!
-! $ Detailed_Output
-!
-!     See Individual Entry points.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If ZZSGP4 is called, the error SPICE(BOGUSENTRY) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine wraps XXSGP4E and XXSGP4I. As entry points to
-!     this routine, they share the local memory space.
-!
-! $ Examples
-!
-!     The numerical results shown for these examples may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     Use a set of TLEs to calculate a collection of states for a
-!     time interval centered at the TLE set epoch.
-!
-!           PROGRAM ZZSGP4_T
-!
-!     C
-!     C     Read a data file containing sets of TLEs, then calculate
-!     C     states at -1440 to 1440 minutes from the epoch of each
-!     C     TLE set in steps of 10 minutes.
-!     C
-!     C     Example cases listed in sgp4-ver.tle.
-!     C
-!     C     1 00005U 58002B   00179.78495062  .00000023
-!     C       00000-0  28098-4 0  4753
-!     C     2 00005  34.2682 348.7242 1859667 331.7664
-!     C       19.3264 10.82419157413667
-!     C
-!     C     1 04632U 70093B   04031.91070959 -.00000084
-!     C       00000-0  10000-3 0  9955
-!     C     2 04632  11.4628 273.1101 1450506 207.6000
-!     C       143.9350  1.20231981 44145
-!     C
-!     C     1 06251U 62025E   06176.82412014  .00008885
-!     C       00000-0  12808-3 0  3985
-!     C     2 06251  58.0579  54.0425 0030035 139.1568
-!     C       221.1854 15.56387291  6774
-!     C
-!     C     1 08195U 75081A   06176.33215444  .00000099
-!     C       00000-0  11873-3 0   813
-!     C     2 08195  64.1586 279.0717 6877146 264.7651
-!     C       20.2257  2.00491383225656
-!     C
-!     C     1 09880U 77021A   06176.56157475  .00000421
-!     C       00000-0  10000-3 0  9814
-!     C     2 09880  64.5968 349.3786 7069051 270.0229
-!     C       16.3320  2.00813614112380
-!     C
-!     C     1 09998U 74033F   05148.79417928 -.00000112
-!     C       00000-0  00000+0 0  4480
-!     C     2 09998   9.4958 313.1750 0270971 327.5225
-!     C       30.8097  1.16186785 45878
-!     C
-!     C     1 11801U          80230.29629788  .01431103
-!     C       00000-0  14311-1      13
-!     C     2 11801  46.7916 230.4354 7318036  47.4722
-!     C       10.4117  2.28537848    13
-!     C
-!     C     1 14128U 83058A   06176.02844893 -.00000158
-!     C       00000-0  10000-3 0  9627
-!     C     2 14128  11.4384  35.2134 0011562  26.4582
-!     C       333.5652  0.98870114 46093
-!     C
-!     C     1 16925U 86065D   06151.67415771  .02550794
-!     C       -30915-6  18784-3 0  4486
-!     C     2 16925  62.0906 295.0239 5596327 245.1593
-!     C       47.9690  4.88511875148616
-!     C
-!     C     1 20413U 83020D   05363.79166667  .00000000
-!     C       00000-0  00000+0 0  7041
-!     C     2 20413  12.3514 187.4253 7864447 196.3027
-!     C       356.5478  0.24690082  7978
-!     C
-!     C     1 21897U 92011A   06176.02341244 -.00001273
-!     C       00000-0 -13525-3 0  3044
-!     C     2 21897  62.1749 198.0096 7421690 253.0462
-!     C       20.1561  2.01269994104880
-!     C
-!     C     1 22312U 93002D   06094.46235912  .99999999
-!     C       81888-5  49949-3 0  3953
-!     C     2 22312  62.1486  77.4698 0308723 267.9229
-!     C       88.7392 15.95744531 98783
-!     C
-!     C     1 22674U 93035D   06176.55909107  .00002121
-!     C       00000-0  29868-3 0  6569
-!     C     2 22674  63.5035 354.4452 7541712 253.3264
-!     C       18.7754  1.96679808 93877
-!     C
-!     C     1 23177U 94040C   06175.45752052  .00000386
-!     C       00000-0  76590-3 0    95
-!     C     2 23177   7.0496 179.8238 7258491 296.0482
-!     C       8.3061  2.25906668 97438
-!     C
-!     C     1 23333U 94071A   94305.49999999 -.00172956
-!     C       26967-3  10000-3 0    15
-!     C     2 23333  28.7490   2.3720 9728298  30.4360
-!     C       1.3500  0.07309491    70
-!     C
-!     C     1 23599U 95029B   06171.76535463  .00085586
-!     C       12891-6  12956-2 0  2905
-!     C     2 23599   6.9327   0.2849 5782022 274.4436
-!     C       25.2425  4.47796565123555
-!     C
-!     C     1 24208U 96044A   06177.04061740 -.00000094
-!     C       00000-0  10000-3 0  1600
-!     C     2 24208   3.8536  80.0121 0026640 311.0977
-!     C       48.3000  1.00778054 36119
-!     C
-!     C     1 25954U 99060A   04039.68057285 -.00000108
-!     C       00000-0  00000-0 0  6847
-!     C     2 25954   0.0004 243.8136 0001765  15.5294
-!     C       22.7134  1.00271289 15615
-!     C
-!     C     1 26900U 01039A   06106.74503247  .00000045
-!     C       00000-0  10000-3 0  8290
-!     C     2 26900   0.0164 266.5378 0003319  86.1794
-!     C       182.2590  1.00273847 16981
-!     C
-!     C     1 26975U 78066F   06174.85818871  .00000620
-!     C       00000-0  10000-3 0  6809
-!     C     2 26975  68.4714 236.1303 5602877 123.7484
-!     C       302.5767  2.05657553 67521
-!     C
-!     C     1 28057U 03049A   06177.78615833  .00000060
-!     C       00000-0  35940-4 0  1836
-!     C     2 28057  98.4283 247.6961 0000884  88.1964
-!     C       271.9322 14.35478080140550
-!     C
-!     C     1 28129U 03058A   06175.57071136 -.00000104
-!     C       00000-0  10000-3 0   459
-!     C     2 28129  54.7298 324.8098 0048506 266.2640
-!     C       93.1663  2.00562768 18443
-!     C
-!     C     1 28350U 04020A   06167.21788666  .16154492
-!     C       76267-5  18678-3 0  8894
-!     C     2 28350  64.9977 345.6130 0024870 260.7578
-!     C       99.9590 16.47856722116490
-!     C
-!     C     1 28623U 05006B   06177.81079184  .00637644
-!     C       69054-6  96390-3 0  6000
-!     C     2 28623  28.5200 114.9834 6249053 170.2550
-!     C       212.8965  3.79477162 12753
-!     C
-!     C     1 28626U 05008A   06176.46683397 -.00000205
-!     C       00000-0  10000-3 0  2190
-!     C     2 28626   0.0019 286.9433 0000335  13.7918
-!     C       55.6504  1.00270176  4891
-!     C
-!     C     1 28872U 05037B   05333.02012661  .25992681
-!     C       00000-0  24476-3 0  1534
-!     C     2 28872  96.4736 157.9986 0303955 244.0492
-!     C       110.6523 16.46015938 10708
-!     C
-!     C     1 29141U 85108AA  06170.26783845  .99999999
-!     C       00000-0  13519-0 0   718
-!     C     2 29141  82.4288 273.4882 0015848 277.2124
-!     C       83.9133 15.93343074  6828
-!     C
-!     C     1 29238U 06022G   06177.28732010  .00766286
-!     C       10823-4  13334-2 0   101
-!     C     2 29238  51.5595 213.7903 0202579  95.2503
-!     C       267.9010 15.73823839  1061
-!     C
-!     C     1 88888U          80275.98708465  .00073094
-!     C       13844-3  66816-4 0    87
-!     C     2 88888  72.8435 115.9689 0086731  52.6988
-!     C       110.5714 16.05824518  1058
-!     C
-!
-!           IMPLICIT NONE
-!
-!           INCLUDE 'zzsgp4.inc'
-!
-!           CHARACTER*(72)           LINES  ( 2 )
-!           CHARACTER*(72)           TLEDAT
-!
-!           INTEGER                  FRSTYR
-!           INTEGER                  I
-!           INTEGER                  OPMODE
-!
-!           DOUBLE PRECISION         DELT
-!           DOUBLE PRECISION         ELEMS  ( 10 )
-!           DOUBLE PRECISION         EPOCH
-!           DOUBLE PRECISION         GEOPHS ( 8 )
-!           DOUBLE PRECISION         STATE  ( 6 )
-!           DOUBLE PRECISION         TF
-!           DOUBLE PRECISION         TIME
-!           DOUBLE PRECISION         TS
-!
-!           LOGICAL                  EOF
-!
-!     C
-!     C     SPICELIB routines.
-!     C
-!           LOGICAL                  FAILED
-!
-!     C
-!     C     Load a leapseconds kernel for time conversion. Required
-!     C     by the SPK 10 evaluator.
-!     C
-!           CALL FURNSH ( '/kernels/gen/lsk/naif0011.tls' )
-!
-!     C
-!     C     Define the geophysical quantities using the values
-!     C     from geophysical.ker.
-!     C
-!           GEOPHS( K_J2 ) =    1.082616D-3
-!           GEOPHS( K_J3 ) =   -2.53881D-6
-!           GEOPHS( K_J4 ) =   -1.65597D-6
-!           GEOPHS( K_KE ) =    7.43669161D-2
-!           GEOPHS( K_QO ) =  120.0D0
-!           GEOPHS( K_SO ) =   78.0D0
-!           GEOPHS( K_ER ) = 6378.135D0
-!           GEOPHS( K_AE ) =    1.0D0
-!
-!           TLEDAT = 'sgp4-ver1.tle'
-!
-!     C
-!     C     Error subsystem to report to ensure execution continues
-!     C     if an error signals.
-!     C
-!           CALL ERRACT( 'SET', 'REPORT')
-!
-!     C
-!     C     Use Spacetrack #3 algorithm to calculate sidereal time.
-!     C
-!           OPMODE = AFSPC
-!
-!     C
-!     C     Identify the earliest year for the elements.
-!     C
-!           FRSTYR = 1958
-!
-!     C
-!     C     Start and final offsets from TLE epochs. [-1440, 1400]
-!     C     minutes.
-!     C
-!           TS     =  -1440.0D0
-!           TF     =   1440.0D0
-!
-!     C
-!     C     Step size for elements output 10 minutes.
-!     C
-!           DELT   = 10.D0
-!
-!     C
-!     C     Read the TLE data file.
-!     C
-!           CALL RDTEXT ( TLEDAT, LINES(1), EOF )
-!           CALL RDTEXT ( TLEDAT, LINES(2), EOF )
-!
-!     C
-!     C     Loop over data file until end-of-file.
-!     C
-!           DO WHILE ( .NOT. EOF )
-!
-!     C
-!     C        Parse the elements to something SPICE can use.
-!     C
-!              CALL GETELM ( FRSTYR, LINES, EPOCH, ELEMS )
-!
-!              WRITE(*, FMT='(A72)') LINES(1)
-!              WRITE(*, FMT='(A72)') LINES(2)
-!              WRITE(*,*) ' '
-!
-!     C
-!     C        Initialize SGP4 calculations based on values in
-!     C        GEOPHS, ELEMS, and AFSPC.
-!     C
-!              CALL XXSGP4I ( GEOPHS, ELEMS, OPMODE )
-!
-!     C
-!     C        Start time keyed in minutes from TLE epoch.
-!     C
-!              TIME   = TS
-!
-!              DO WHILE ( TIME .LE. DABS(TF) .AND. (.NOT. FAILED()) )
-!
-!     C
-!     C           Calculate the STATE at TIME.
-!     C
-!                 CALL XXSGP4E ( TIME, STATE )
-!
-!     C
-!     C           If the propagation succeeded, output the STATE.
-!     C
-!                 IF ( .NOT. FAILED() ) THEN
-!
-!                    WRITE(*, FMT ='(7F17.8)' ) TIME,
-!          .                                    (STATE(I),I=1,6)
-!
-!                 END IF
-!
-!     C
-!     C           Increment the evaluation time by one step.
-!     C
-!                 TIME = TIME + DELT
-!
-!              END DO
-!
-!              WRITE(*,*) ' '
-!
-!     C
-!     C        reset the error subsystem for the next loop.
-!     C
-!              CALL RESET()
-!
-!     C
-!     C        Read the next two lines (if any) from the TLE
-!     C        data file.
-!     C
-!              CALL RDTEXT ( TLEDAT, LINES(1), EOF )
-!              CALL RDTEXT ( TLEDAT, LINES(2), EOF )
-!
-!           END DO
-!
-!           END
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
-!         Propagation of the NORAD Element Sets." Spacetrack Report #3.
-!         U.S. Air Force: Aerospace Defense Command.
-!
-!     [2] Hoots, Felix R. "Spacetrack Report #6: Models for Propagation
-!         of Space Command Element Sets." Space Command,
-!         U. S. Air Force, CO.
-!
-!     [3] Hoots, Felix R., P. W. Schumacher, and R. A. Glover. 2004.
-!         History of Analytical Orbit Modeling in the U. S. Space
-!         Surveillance System. Journal of Guidance, Control, and
-!         Dynamics. 27(2):174-185.
-!
-!     [4] Vallado, David, Crawford, Paul, Hujsak, Richard,
-!         and Kelso, T.S. 2006. Revisiting Spacetrack Report #3. Paper
-!         AIAA 2006-6753 presented at the AIAA/AAS Astrodynamics
-!         Specialist Conference, August 21-24, 2006. Keystone, CO.
-!
-! $ Author_and_Institution
-!
-!     J. Diaz del Rio    (ODC Space)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 30-MAY-2021 (EDW) (JDR)
-!
-!        Correction of documentation error in listing of GEOPHS
-!        constants. The definition of index 5, "High altitude bound
-!        for atmospheric model in km.", and index 6, "Low altitude
-!        bound for atmospheric model in km." were switched.
-!
-!-    SPICELIB Version 1.0.0, 15-SEP-2014 (EDW)
-!
-!        Based on routine SGP4, 28-JUN-2005, Vallado 2006 [4].
-!
-
-!
-!     DS values
-!
-
-!
-!     SPICELIB routines.
 
       !>## Detailed Input
       !>

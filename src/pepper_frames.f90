@@ -5,6 +5,293 @@
 !> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_frames.f90.
+!>
+!>## FRAMEX (FRAMe EXpert)
+!>
+!> PEPPER: SPICELIB's umbrella routine FRAMEX is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_framex. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     This is an umbrella routine for the entry points available for
+!>     manipulating different reference frames. It should not be called
+!>     directly.
+!>
+!>### Detailed Input
+!>
+!>     See individual entry points for details concerning inputs.
+!>
+!>### Detailed Output
+!>
+!>     See individual entry points for details concerning inputs.
+!>
+!>### Parameters
+!>
+!>     None.
+!>
+!>### Exceptions
+!>
+!>     1)  If this routine is called directly, the error
+!>         SPICE(BOGUSENTRY) is signaled.
+!>
+!>### Files
+!>
+!>     None.
+!>
+!>### Particulars
+!>
+!>     This is an umbrella routine that comprises the SPICE
+!>     interface to the reference frame transformation software.
+!>
+!>     There are 6 entry points.
+!>
+!>     NAMFRM  converts string to the ID codes used by low level
+!>             SPICE software
+!>
+!>     FRMNAM  converts frame ID codes to the more familiar names
+!>             used to describe various reference frames.
+!>
+!>     FRINFO  returns the center associated with a reference frame.
+!>
+!>     CIDFRM  given the ID code of an object, returns the bodyfixed
+!>             frame associated with it.
+!>
+!>     CNMFRM  given the name of an object, returns the bodyfixed
+!>             frame associated with it.
+!>
+!>     CCIFRM  given a frame's class and class ID, returns
+!>             the frame's ID code, name, and center.
+!>
+!>### Examples
+!>
+!>     Suppose that you needed to transform between two reference
+!>     frames on the basis of their names and that you wanted to
+!>     correct for light time to the center of the second frame
+!>     as seen from an observer with ID code OBS.
+!>
+!>     The code fragment below illustrates how you could use the
+!>     entry points gathered in this routine to retrieve the
+!>     state transformation matrix.
+!>
+!>        First convert names to frame ID codes.
+!>
+!>        CHARACTER*(32)        NAME1
+!>        CHARACTER*(32)        NAME2
+!>
+!>        INTEGER               FRAME1
+!>        INTEGER               FRAME2
+!>        INTEGER               CENT
+!>        INTEGER               OBS
+!>
+!>        DOUBLE PRECISION      ET
+!>        DOUBLE PRECISION      LT
+!>
+!>        DOUBLE PRECISION      STATE ( 6 )
+!>        DOUBLE PRECISION      XFORM ( 6, 6 )
+!>
+!>        First we use the entry points NAMFRM to convert the frame
+!>        names to ID codes.
+!>
+!>        CALL NAMFRM ( NAME1, FRAME1 )
+!>        CALL NAMFRM ( NAME2, FRAME2 )
+!>
+!>        Next we determine the center of the second frame
+!>
+!>        CALL FRINFO ( FRAME2, CENT, FRCLSS, CLSSID, FOUND )
+!>
+!>        Determine the light time to the center of the second frame.
+!>
+!>        CALL SPKGEO ( CENT,  ET, 'J2000',  OBS, STATE, LT )
+!>
+!>        Finally get the state transformation from FRAME1 to FRAME2
+!>        at time ET - LT
+!>
+!>        CALL FRMCHG ( FRAME1, FRAME2, ET-LT, XFORM )
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>     B.V. Semenov       (JPL)
+!>     W.L. Taber         (JPL)
+!>     E.D. Wright        (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 5.3.0, 26-AUG-2021 (JDR)
+!>
+!>        Changed the argument name CLASS to FRCLSS in FRINFO and CCIFRM
+!>        entry points for consistency with other routines.
+!>
+!>        Edited the header of the umbrella routine and all its entry
+!>        points to comply with NAIF standard. Updated the $Examples
+!>        section of CCIFRM entry point.
+!>
+!>        Updated frame name length from 26 to 32 in example code.
+!>
+!>        Increased MAXBFR from 127 to 149 to accommodate additional
+!>        built-in PCK based frames.
+!>
+!>-    SPICELIB Version 5.2.1, 02-FEB-2017 (BVS)
+!>
+!>        Shortened one of permuted index entries in CCIFRM.
+!>
+!>-    SPICELIB Version 5.2.0, 08-AUG-2012 (BVS)
+!>
+!>        The routine was updated to be more efficient by using hashes
+!>        instead kernel POOL look-ups for kernel POOL frames and by
+!>        using hashes instead of ordered array searches for built-in
+!>        frames.
+!>
+!>        Bug fix: CCIFRM entry point logic was corrected to examine the
+!>        built-in frames before looking at the kernel POOL frames.
+!>
+!>-    SPICELIB Version 5.1.1, 09-FEB-2011 (NJB)
+!>
+!>        Bug fix: corrected logic in entry point CIDFRM for
+!>        object-frame association for case where the assigned frame
+!>        value is denoted by a frame code.
+!>
+!>        Fixed typo in FRAMEX header.
+!>
+!>-    SPICELIB Version 5.0.1, 17-MAR-2009 (EDW)
+!>
+!>        Entry point NAMFRM: Typo correction in $Required_Reading,
+!>        changed FRAME to FRAMES.
+!>
+!>-    SPICELIB Version 5.0.0, 05-NOV-2007 (NJB)
+!>
+!>        Entry point CCIFRM (map frame class and class ID
+!>        to frame ID code, name, and center) has been added.
+!>
+!>-    SPICELIB Version 4.0.0, 13-SEP-2005 (NJB)
+!>
+!>        Entry point FRINFO is no longer error-free. Various frame
+!>        definition errors that were previously ignored are now
+!>        diagnosed.
+!>
+!>        Entry point FRINFO has been updated to support specification
+!>        of frame center by name or ID code. Previously only ID codes
+!>        could be used to identify frame centers.
+!>
+!>-    SPICELIB Version 3.2.0, 20-DEC-2004 (BVS)
+!>
+!>        Added parameter incorporating maximum body name length and set
+!>        it to the same value as MAXL from zzbodtrn.inc. Used this
+!>        parameter to declare local variable that holds frame center
+!>        name (LCNAME).
+!>
+!>        In FRINFO entry: removed special handling of the frame IDs
+!>        less than -999. If they cannot be ``resolved'' using kernel
+!>        pool keywords, the frame is NOT declared CK-based with center
+!>        ID derived by dividing frame ID by a 1000 and class ID
+!>        assigned the frame ID anymore. In the current practice with
+!>        multitude of TK frames with IDs set instrument IDs this
+!>        default behavior is simply not valid.
+!>
+!>-    SPICELIB Version 3.1.0, 28-NOV-2002 (NJB)
+!>
+!>        Bug fix: updated CNMFRM so a TK frame specified by name and
+!>        designated as an object's preferred frame via kernel pool
+!>        assignments is found, and so that the correct name of this
+!>        frame is returned.
+!>
+!>-    SPICELIB Version 3.0.1, 25-JUN-1999 (WLT)
+!>
+!>        Extended documentation of entry point CNMFRM and
+!>        corrected example for that entry point.
+!>
+!>-    SPICELIB Version 3.0.0, 03-JUN-1997 (WLT)
+!>
+!>        The entry points CIDFRM and CNMFRM were added so that
+!>        user's may determine the frame-id and name to associated
+!>        with a planetary object.
+!>
+!>-    SPICELIB Version 2.0.0, 04-APR-1997 (WLT)
+!>
+!>        The routine was upgraded to reflect that a block of
+!>        frame ID codes have been reserved for use by the DSN.
+!>        ID codes 13001 to 13999 have been set aside for DSN
+!>        models for the orientation of the earth. These frames
+!>        are all PCK frames. Moreover, the PCK ID code to
+!>        use with these frames is simply the Frame-Code minus 10000.
+!>        All of these frames are centered at the earth (body 399).
+!>
+!>-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
+!>
+!>        The values NINERT and NNINRT are included instead of
+!>        being declared locally.
+!>
+!>-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
+!>
+!>### Implementation notes
+!>
+!>     Body name length. The value BDNMLN used here must be the
+!>     same as the value of MAXL defined in the INCLUDE file
+!>
+!>        zzbodtrn.inc
+!>
+!>     Current value of MAXL = 36.
+!>
+!>     Frame name length.
+!>
+!>     Kernel variable name length.
+!>
+!>     Kernel variable buffer size.
+!>
+!>     POOL state counter.
+!>
+!>     Lower bound of collision lists in hashes.
+!>
+!>     The size of ID-based hash for kernel POOL frames.
+!>
+!>     Since defining a valid kernel POOL frame takes at least 5
+!>     keywords and integer hash dimension must be a prime number, this
+!>     size should be set to the first prime number greater than POOL's
+!>     MAXVAR / 5 + 1.
+!>
+!>     For the current POOL MAXVAR set to 26003, such number is 5209.
+!>
+!>     Name-based hash for kernel pool frames. KNMLST, KNMPOL, and
+!>     KNMNMS provide an index in the frame ID array KNMIDS at which the
+!>     ID for the frame with a given name is stored.
+!>
+!>     ID-based hash for kernel pool frames. KIDLST, KIDPOL, and KIDIDS
+!>     provide the index in the kernel frame attribute arrays KNAME,
+!>     KCENT, KCLASS, and KCLSID at which the attributes of the frame
+!>     with a given ID are stored.
+!>
+!>     The size of hashes for built-in frames.
+!>
+!>     Since integer hash dimension must be a prime number it cannot be
+!>     computed in a parameter statement from the inertial and
+!>     non-inertial frame counts provided in the include files. Instead
+!>     it should be set manually to the first prime number greater than
+!>     or equal to NCOUNT.
+!>
+!>     For the current N0067 NCOUNT equal to 145 (21 inertial + 124
+!>     non-inertial), such number is 149.
+!>
+!>     Name-based hash for built-in frames. BNMLST, BNMPOL, and BNMNMS
+!>     provide the index in BNMIDX which stores the index for the frame
+!>     attributes in the built-in frame attributes arrays IDCODE, NAME,
+!>     CENTER, TYPE, and TYPEID.
+!>
+!>     ID-based hash for built-in frames. BIDLST, BIDPOL, and BIDIDS
+!>     provide an index in BIDIDX which stores the index for the frame
+!>     attributes in the built-in frame attributes arrays IDCODE, NAME,
+!>     CENTER, TYPE, and TYPEID.
+!>
+!>     Because we need to save almost everything we save everything
+!>     rather than taking a chance and accidentally leaving something
+!>     off the list.
 submodule (pepper_instance) pepper_frames
 
    implicit none
@@ -3069,323 +3356,6 @@ contains
 
       return
       end procedure zzfdat
-
-!$Procedure FRAMEX ( FRAMe EXpert )
-!
-!     PEPPER: SPICELIB's umbrella routine FRAMEX is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_framex. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     This is an umbrella routine for the entry points available for
-!     manipulating different reference frames. It should not be called
-!     directly.
-!
-! $ Detailed_Input
-!
-!     See individual entry points for details concerning inputs.
-!
-! $ Detailed_Output
-!
-!     See individual entry points for details concerning inputs.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If this routine is called directly, the error
-!         SPICE(BOGUSENTRY) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This is an umbrella routine that comprises the SPICE
-!     interface to the reference frame transformation software.
-!
-!     There are 6 entry points.
-!
-!     NAMFRM  converts string to the ID codes used by low level
-!             SPICE software
-!
-!     FRMNAM  converts frame ID codes to the more familiar names
-!             used to describe various reference frames.
-!
-!     FRINFO  returns the center associated with a reference frame.
-!
-!     CIDFRM  given the ID code of an object, returns the bodyfixed
-!             frame associated with it.
-!
-!     CNMFRM  given the name of an object, returns the bodyfixed
-!             frame associated with it.
-!
-!     CCIFRM  given a frame's class and class ID, returns
-!             the frame's ID code, name, and center.
-!
-! $ Examples
-!
-!     Suppose that you needed to transform between two reference
-!     frames on the basis of their names and that you wanted to
-!     correct for light time to the center of the second frame
-!     as seen from an observer with ID code OBS.
-!
-!     The code fragment below illustrates how you could use the
-!     entry points gathered in this routine to retrieve the
-!     state transformation matrix.
-!
-!        First convert names to frame ID codes.
-!
-!        CHARACTER*(32)        NAME1
-!        CHARACTER*(32)        NAME2
-!
-!        INTEGER               FRAME1
-!        INTEGER               FRAME2
-!        INTEGER               CENT
-!        INTEGER               OBS
-!
-!        DOUBLE PRECISION      ET
-!        DOUBLE PRECISION      LT
-!
-!        DOUBLE PRECISION      STATE ( 6 )
-!        DOUBLE PRECISION      XFORM ( 6, 6 )
-!
-!        First we use the entry points NAMFRM to convert the frame
-!        names to ID codes.
-!
-!        CALL NAMFRM ( NAME1, FRAME1 )
-!        CALL NAMFRM ( NAME2, FRAME2 )
-!
-!        Next we determine the center of the second frame
-!
-!        CALL FRINFO ( FRAME2, CENT, FRCLSS, CLSSID, FOUND )
-!
-!        Determine the light time to the center of the second frame.
-!
-!        CALL SPKGEO ( CENT,  ET, 'J2000',  OBS, STATE, LT )
-!
-!        Finally get the state transformation from FRAME1 to FRAME2
-!        at time ET - LT
-!
-!        CALL FRMCHG ( FRAME1, FRAME2, ET-LT, XFORM )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 5.3.0, 26-AUG-2021 (JDR)
-!
-!        Changed the argument name CLASS to FRCLSS in FRINFO and CCIFRM
-!        entry points for consistency with other routines.
-!
-!        Edited the header of the umbrella routine and all its entry
-!        points to comply with NAIF standard. Updated the $Examples
-!        section of CCIFRM entry point.
-!
-!        Updated frame name length from 26 to 32 in example code.
-!
-!        Increased MAXBFR from 127 to 149 to accommodate additional
-!        built-in PCK based frames.
-!
-!-    SPICELIB Version 5.2.1, 02-FEB-2017 (BVS)
-!
-!        Shortened one of permuted index entries in CCIFRM.
-!
-!-    SPICELIB Version 5.2.0, 08-AUG-2012 (BVS)
-!
-!        The routine was updated to be more efficient by using hashes
-!        instead kernel POOL look-ups for kernel POOL frames and by
-!        using hashes instead of ordered array searches for built-in
-!        frames.
-!
-!        Bug fix: CCIFRM entry point logic was corrected to examine the
-!        built-in frames before looking at the kernel POOL frames.
-!
-!-    SPICELIB Version 5.1.1, 09-FEB-2011 (NJB)
-!
-!        Bug fix: corrected logic in entry point CIDFRM for
-!        object-frame association for case where the assigned frame
-!        value is denoted by a frame code.
-!
-!        Fixed typo in FRAMEX header.
-!
-!-    SPICELIB Version 5.0.1, 17-MAR-2009 (EDW)
-!
-!        Entry point NAMFRM: Typo correction in $Required_Reading,
-!        changed FRAME to FRAMES.
-!
-!-    SPICELIB Version 5.0.0, 05-NOV-2007 (NJB)
-!
-!        Entry point CCIFRM (map frame class and class ID
-!        to frame ID code, name, and center) has been added.
-!
-!-    SPICELIB Version 4.0.0, 13-SEP-2005 (NJB)
-!
-!        Entry point FRINFO is no longer error-free. Various frame
-!        definition errors that were previously ignored are now
-!        diagnosed.
-!
-!        Entry point FRINFO has been updated to support specification
-!        of frame center by name or ID code. Previously only ID codes
-!        could be used to identify frame centers.
-!
-!-    SPICELIB Version 3.2.0, 20-DEC-2004 (BVS)
-!
-!        Added parameter incorporating maximum body name length and set
-!        it to the same value as MAXL from zzbodtrn.inc. Used this
-!        parameter to declare local variable that holds frame center
-!        name (LCNAME).
-!
-!        In FRINFO entry: removed special handling of the frame IDs
-!        less than -999. If they cannot be ``resolved'' using kernel
-!        pool keywords, the frame is NOT declared CK-based with center
-!        ID derived by dividing frame ID by a 1000 and class ID
-!        assigned the frame ID anymore. In the current practice with
-!        multitude of TK frames with IDs set instrument IDs this
-!        default behavior is simply not valid.
-!
-!-    SPICELIB Version 3.1.0, 28-NOV-2002 (NJB)
-!
-!        Bug fix: updated CNMFRM so a TK frame specified by name and
-!        designated as an object's preferred frame via kernel pool
-!        assignments is found, and so that the correct name of this
-!        frame is returned.
-!
-!-    SPICELIB Version 3.0.1, 25-JUN-1999 (WLT)
-!
-!        Extended documentation of entry point CNMFRM and
-!        corrected example for that entry point.
-!
-!-    SPICELIB Version 3.0.0, 03-JUN-1997 (WLT)
-!
-!        The entry points CIDFRM and CNMFRM were added so that
-!        user's may determine the frame-id and name to associated
-!        with a planetary object.
-!
-!-    SPICELIB Version 2.0.0, 04-APR-1997 (WLT)
-!
-!        The routine was upgraded to reflect that a block of
-!        frame ID codes have been reserved for use by the DSN.
-!        ID codes 13001 to 13999 have been set aside for DSN
-!        models for the orientation of the earth. These frames
-!        are all PCK frames. Moreover, the PCK ID code to
-!        use with these frames is simply the Frame-Code minus 10000.
-!        All of these frames are centered at the earth (body 399).
-!
-!-    SPICELIB Version 1.1.0, 14-OCT-1996 (WLT)
-!
-!        The values NINERT and NNINRT are included instead of
-!        being declared locally.
-!
-!-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
-!
-
-!
-!     Body name length. The value BDNMLN used here must be the
-!     same as the value of MAXL defined in the INCLUDE file
-!
-!        zzbodtrn.inc
-!
-!     Current value of MAXL = 36.
-!
-
-!
-!     Frame name length.
-!
-
-!
-!     Kernel variable name length.
-!
-
-!
-!     Kernel variable buffer size.
-!
-
-!
-!     POOL state counter.
-!
-
-!
-!     Lower bound of collision lists in hashes.
-!
-
-!
-!     The size of ID-based hash for kernel POOL frames.
-!
-!     Since defining a valid kernel POOL frame takes at least 5
-!     keywords and integer hash dimension must be a prime number, this
-!     size should be set to the first prime number greater than POOL's
-!     MAXVAR / 5 + 1.
-!
-!     For the current POOL MAXVAR set to 26003, such number is 5209.
-!
-
-!
-!     Name-based hash for kernel pool frames. KNMLST, KNMPOL, and
-!     KNMNMS provide an index in the frame ID array KNMIDS at which the
-!     ID for the frame with a given name is stored.
-!
-
-!
-!     ID-based hash for kernel pool frames. KIDLST, KIDPOL, and KIDIDS
-!     provide the index in the kernel frame attribute arrays KNAME,
-!     KCENT, KCLASS, and KCLSID at which the attributes of the frame
-!     with a given ID are stored.
-!
-
-!
-!     The size of hashes for built-in frames.
-!
-!     Since integer hash dimension must be a prime number it cannot be
-!     computed in a parameter statement from the inertial and
-!     non-inertial frame counts provided in the include files. Instead
-!     it should be set manually to the first prime number greater than
-!     or equal to NCOUNT.
-!
-!     For the current N0067 NCOUNT equal to 145 (21 inertial + 124
-!     non-inertial), such number is 149.
-!
-
-!
-!     Name-based hash for built-in frames. BNMLST, BNMPOL, and BNMNMS
-!     provide the index in BNMIDX which stores the index for the frame
-!     attributes in the built-in frame attributes arrays IDCODE, NAME,
-!     CENTER, TYPE, and TYPEID.
-!
-
-!
-!     ID-based hash for built-in frames. BIDLST, BIDPOL, and BIDIDS
-!     provide an index in BIDIDX which stores the index for the frame
-!     attributes in the built-in frame attributes arrays IDCODE, NAME,
-!     CENTER, TYPE, and TYPEID.
-!
-
-!     Because we need to save almost everything we save everything
-!     rather than taking a chance and accidentally leaving something
-!     off the list.
-!
-
-!
-!     Initial values
 
       !>## Detailed Input
       !>

@@ -6,6 +6,109 @@
 !> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_dsk_files.f90.
+!>
+!>## DSKTOL (DSK, tolerance umbrella)
+!>
+!> PEPPER: SPICELIB's umbrella routine DSKTOL is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_dsktol. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Umbrella routine for DSK tolerance and margin parameter access
+!>     routines.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points for descriptions of their input arguments.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points for descriptions of their output arguments.
+!>
+!>### Parameters
+!>
+!>     See the include file
+!>
+!>        dsktol.inc
+!>
+!>     for descriptions and values of the tolerance or margin parameters
+!>     accessed by the entry points of this routine, and of the keyword
+!>     parameters used to refer to them.
+!>
+!>### Exceptions
+!>
+!>     1)  If this routine is called directly, the error
+!>         SPICE(BOGUSENTRY) is signaled.
+!>
+!>     2)  See the entry points for descriptions of exceptions specific
+!>         to those entry points.
+!>
+!>### Files
+!>
+!>     None.
+!>
+!>### Particulars
+!>
+!>     The routines in this package serve to centralize numeric
+!>     tolerance and margin values used by the DSK subsystem. The
+!>     subsystem retrieves values from this package to use at run time.
+!>
+!>     The entry points of this routine are
+!>
+!>        DSKGTL {DSK, get tolerance value}
+!>        DSKSTL {DSK, set tolerance value}
+!>
+!>     To minimize run time overhead, the "keywords" used by these
+!>     routines to identify parameters are actually integer codes.
+!>
+!>     SPICE users may override certain values maintained by this
+!>     package; others values are fixed.
+!>
+!>     One use of this system would be to disable the "greedy"
+!>     algorithms used to prevent "false miss" ray-surface intercepts
+!>     results. Setting to zero the margins used for this purpose would
+!>     accomplish this.
+!>
+!>     It is recommended that any change to the tolerance values made at
+!>     run time be programmed only by SPICE experts.
+!>
+!>### Examples
+!>
+!>     See the entry points.
+!>
+!>### Restrictions
+!>
+!>     1)  The default settings used by the DSK subsystem should
+!>         be overridden only by expert SPICE users.
+!>
+!>     2)  The entry points of this routine do not check the
+!>         validity of new parameter values supplied by the
+!>         calling application.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
+!>
+!>        Edited the entry points and umbrella headers to comply with
+!>        NAIF standard.
+!>
+!>-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
+!>
+!>### Implementation notes
+!>
+!>     Saved values
+!>
+!>     Caution: this array must be declared in
+!>     the order defined by the keywords declared
+!>     in dsktol.inc.
 submodule (pepper_instance) pepper_dsk_files
 
    implicit none
@@ -9293,113 +9396,6 @@ contains
 
       return
       end procedure dskcls
-
-!$Procedure DSKTOL ( DSK, tolerance umbrella )
-!
-!     PEPPER: SPICELIB's umbrella routine DSKTOL is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_dsktol. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Umbrella routine for DSK tolerance and margin parameter access
-!     routines.
-!
-! $ Detailed_Input
-!
-!     See the entry points for descriptions of their input arguments.
-!
-! $ Detailed_Output
-!
-!     See the entry points for descriptions of their output arguments.
-!
-! $ Parameters
-!
-!     See the include file
-!
-!        dsktol.inc
-!
-!     for descriptions and values of the tolerance or margin parameters
-!     accessed by the entry points of this routine, and of the keyword
-!     parameters used to refer to them.
-!
-! $ Exceptions
-!
-!     1)  If this routine is called directly, the error
-!         SPICE(BOGUSENTRY) is signaled.
-!
-!     2)  See the entry points for descriptions of exceptions specific
-!         to those entry points.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     The routines in this package serve to centralize numeric
-!     tolerance and margin values used by the DSK subsystem. The
-!     subsystem retrieves values from this package to use at run time.
-!
-!     The entry points of this routine are
-!
-!        DSKGTL {DSK, get tolerance value}
-!        DSKSTL {DSK, set tolerance value}
-!
-!     To minimize run time overhead, the "keywords" used by these
-!     routines to identify parameters are actually integer codes.
-!
-!     SPICE users may override certain values maintained by this
-!     package; others values are fixed.
-!
-!     One use of this system would be to disable the "greedy"
-!     algorithms used to prevent "false miss" ray-surface intercepts
-!     results. Setting to zero the margins used for this purpose would
-!     accomplish this.
-!
-!     It is recommended that any change to the tolerance values made at
-!     run time be programmed only by SPICE experts.
-!
-! $ Examples
-!
-!     See the entry points.
-!
-! $ Restrictions
-!
-!     1)  The default settings used by the DSK subsystem should
-!         be overridden only by expert SPICE users.
-!
-!     2)  The entry points of this routine do not check the
-!         validity of new parameter values supplied by the
-!         calling application.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
-!
-!        Edited the entry points and umbrella headers to comply with
-!        NAIF standard.
-!
-!-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
-!
-
-!
-!     Saved values
-!
-
-!     Caution: this array must be declared in
-!     the order defined by the keywords declared
-!     in dsktol.inc.
 
       !>## Detailed Input
       !>

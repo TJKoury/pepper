@@ -5,6 +5,736 @@
 !> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_ek.f90.
+!>
+!>## ZZEKJTST (Test join candidates)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZEKJTST is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zzekjtst. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     SPICE Private routine intended solely for the support of SPICE
+!>     routines.  Users should not call this routine directly due
+!>     to the volatile nature of this routine.
+!>
+!>     Test a set of candidate row vectors, all corresponding to the same
+!>     segment vector, against join constraints.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points for a discussion of their inputs.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points for a discussion of their inputs.
+!>
+!>### Parameters
+!>
+!>     See the include files.
+!>
+!>### Exceptions
+!>
+!>     1)  If this routine is called directly, the error
+!>         SPICE(BOGUSENTRY) is signaled.
+!>
+!>     See the entry points for discussions of exceptions pertaining to
+!>     those routines.
+!>
+!>### Files
+!>
+!>     1)  This routine uses the EK scratch area, which employs a scratch
+!>         DAS file.
+!>
+!>### Particulars
+!>
+!>     This suite of routines enables the EK system to execute table
+!>     joins with reasonable efficiency.  These routines make use of
+!>     join constraints to limit the number of joined row vectors that
+!>     must be considered in computing a join.
+!>
+!>     These routines deal with a limited case of the join problem:
+!>     the inputs define, for both join row sets participating in the
+!>     join, row vectors that are qualified by a single segment vector.
+!>     Thus this routine is meant to be called once for every pair of
+!>     segment vectors to be considered in executing the join.
+!>
+!>     The layout of a join row set in the EK scratch area is shown
+!>     in the include file for the join row set parameters.
+!>
+!>### Examples
+!>
+!>     To use these routines, the normal sequence of actions is to
+!>     call ZZEKJPRP once to initialize them, and then to call
+!>     ZZEKJNXT in a loop to retrieve the row vectors satisfying
+!>     the join constraints.  See ZZEKJOIN for an example application.
+!>
+!>### Restrictions
+!>
+!>     1)  This routine should not be called by routines outside of the
+!>         EK system.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman   (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 2.0.1, 03-OCT-2021 (NJB)
+!>
+!>        Corrected typos in comments.
+!>
+!>-    SPICELIB Version 2.0.0, 20-JUL-1998 (NJB)
+!>
+!>        Modified entry point ZZEKJPRP to set CASE to EMPTY when either
+!>        input row count is zero.  Modified entry point ZZEKJNXT to
+!>        set FOUND to .FALSE. on the first pass when CASE is EMPTY.
+!>
+!>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
+!>
+!>## EKQMGR (EK, query manager)
+!>
+!> PEPPER: SPICELIB's umbrella routine EKQMGR is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_ekqmgr. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Manage query operations on EK files.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points for descriptions of their inputs.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points for descriptions of their outputs.
+!>
+!>### Parameters
+!>
+!>     FTSIZE   is the maximum number of EK files that may be
+!>              loaded. Any other DAS files loaded by the calling
+!>              program count against this limit.
+!>
+!>     STSIZE   is the size of the segment table; this is the
+!>              maximum number of segments that can be loaded at
+!>              one time.
+!>
+!>     MXTBLD   is the maximum number of tables that can be loaded
+!>              at any time. A table can consist of multiple
+!>              segments.
+!>
+!>     MXCLLD   is the maximum number of columns that can be loaded
+!>              at any time. A column may be spread across
+!>              multiple segments; in this case, the portions of
+!>              the column contained in each segment count against
+!>              this limit.
+!>
+!>     ADSCSZ   is the size of column attribute descriptor.
+!>              (Defined in ekattdsc.inc.)
+!>
+!>     LBCELL   is the SPICE cell lower bound.
+!>
+!>     Many other parameters are defined in the include files referenced
+!>     above. See those files for details.
+!>
+!>### Exceptions
+!>
+!>     1)  If this routine is called directly, the error
+!>         SPICE(BOGUSENTRY) is signaled.
+!>
+!>     2)  See the headers of the entry points for descriptions of
+!>         exceptions specific to those routines.
+!>
+!>### Files
+!>
+!>     This suite of routines reads binary `sequence component' EK files.
+!>     In order for a binary EK file to be accessible to this routine,
+!>     the file must be `loaded' via a call to the entry point EKLEF.
+!>
+!>     Text format EK files cannot be used by this routine; they must
+!>     first be converted by binary format by the NAIF Toolkit utility
+!>     SPACIT.
+!>
+!>### Particulars
+!>
+!>     EKQMGR is an umbrella routine for its entry points: all variables
+!>     used by the entry points are declared here.
+!>
+!>     EKQMGR supports loading and unloading EK files, executing queries,
+!>     and fetching the results of executed queries. The entry points
+!>     and their functions are:
+!>
+!>        File loading and unloading:
+!>
+!>           EKLEF  ( EK, load event file   )
+!>           EKUEF  ( EK, unload event file )
+!>
+!>        Query execution:
+!>
+!>           EKSRCH ( EK, search for events )
+!>
+!>        Fetching query results:
+!>
+!>           EKGC   ( EK, get event data, character        )
+!>           EKGD   ( EK, get event data, double precision )
+!>           EKGI   ( EK, get event data, integer          )
+!>
+!>        Utilities:
+!>
+!>           EKNTAB ( EK, return the number of loaded tables        )
+!>           EKTNAM ( EK, return the names of loaded tables         )
+!>           EKCCNT ( EK, return the column count of a table        )
+!>           EKCII  ( EK, look up column info by index              )
+!>           EKNELT ( EK, return number of elements in column entry )
+!>
+!>     To issue queries to the EK system, users would normally call the
+!>     high-level interface routine EKFIND. EKFIND parses queries and
+!>     converts them to the encoded form expected by EKSRCH. It is
+!>     possible to call EKSRCH directly, but this should not be attempted
+!>     by others than EK masters. EKFIND is not an entry point of
+!>     EKQMGR, but instead is a separate subroutine.
+!>
+!>### Examples
+!>
+!>     The numerical results shown for this example may differ across
+!>     platforms. The results depend on the SPICE kernels used as
+!>     input, the compiler and supporting libraries, and the machine
+!>     specific arithmetic implementation.
+!>
+!>     1) Query the EK system and fetch data matching that query.
+!>
+!>        The program shown here does not rely on advance
+!>        knowledge of the input query or the contents of any loaded EK
+!>        files.
+!>
+!>        To simplify the example, we assume that all data are scalar.
+!>        This assumption relieves us of the need to test the size of
+!>        column entries before fetching them. In the event that a
+!>        column contains variable-size array entries, the entry point
+!>        EKNELT may be called to obtain the size of column entries to
+!>        be fetched. See EKNELT for an example.
+!>
+!>        Use the EK kernel below to load the information from the
+!>        original Supplementary Engineering Data Record (SEDR) data
+!>        set generated by the Viking Project.
+!>
+!>           vo_sedr.bdb
+!>
+!>        Use the LSK kernel below to load the leap seconds and time
+!>        constants required for the conversions.
+!>
+!>           naif0012.tls
+!>
+!>        Example code begins here.
+!>
+!>              PROGRAM EKQMGR_EX1
+!>              IMPLICIT NONE
+!>
+!>        C
+!>        C     Include EK Query Limit Parameters
+!>        C
+!>              INCLUDE 'ekqlimit.inc'
+!>
+!>        C
+!>        C     SPICELIB functions
+!>        C
+!>              INTEGER               RTRIM
+!>
+!>        C
+!>        C     Local parameters
+!>        C
+!>              CHARACTER*(*)         EKNAME
+!>              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
+!>
+!>              CHARACTER*(*)         LSKNAM
+!>              PARAMETER           ( LSKNAM = 'naif0012.tls' )
+!>
+!>              INTEGER               DESCSZ
+!>              PARAMETER           ( DESCSZ = 31   )
+!>
+!>              INTEGER               ERRLEN
+!>              PARAMETER           ( ERRLEN = 1840 )
+!>
+!>              INTEGER               ITEMSZ
+!>              PARAMETER           ( ITEMSZ = DESCSZ + 4 )
+!>
+!>              INTEGER               TIMLEN
+!>              PARAMETER           ( TIMLEN = 27   )
+!>
+!>              INTEGER               TYPLEN
+!>              PARAMETER           ( TYPLEN = 4    )
+!>
+!>              INTEGER               XCLSLN
+!>              PARAMETER           ( XCLSLN = 4    )
+!>
+!>        C
+!>        C     Local variables
+!>        C
+!>              CHARACTER*(MAXSTR)    CDATA
+!>              CHARACTER*(MAXCLN)    COLS   ( MAXSEL )
+!>              CHARACTER*(ERRLEN)    ERRMSG
+!>              CHARACTER*(ITEMSZ)    ITEM
+!>              CHARACTER*(DESCSZ)    OUTSTR
+!>              CHARACTER*(MAXQRY)    QUERY
+!>              CHARACTER*(TIMLEN)    UTCSTR
+!>              CHARACTER*(MAXCLN)    TABS   ( MAXTAB )
+!>              CHARACTER*(XCLSLN)    XCLASS ( MAXSEL )
+!>              CHARACTER*(TYPLEN)    XTYPES ( MAXSEL )
+!>
+!>              DOUBLE PRECISION      DDATA
+!>              DOUBLE PRECISION      TDATA
+!>
+!>              INTEGER               B
+!>              INTEGER               COLNO
+!>              INTEGER               E
+!>              INTEGER               HANDLE
+!>              INTEGER               IDATA
+!>              INTEGER               N
+!>              INTEGER               NMROWS
+!>              INTEGER               ROW
+!>              INTEGER               XBEGS  ( MAXSEL )
+!>              INTEGER               XENDS  ( MAXSEL )
+!>
+!>              LOGICAL               ERROR
+!>              LOGICAL               FOUND
+!>              LOGICAL               NULL
+!>
+!>        C
+!>        C     Load leapseconds file for time conversion.
+!>        C
+!>              CALL FURNSH ( LSKNAM )
+!>
+!>        C
+!>        C     Load EK.
+!>        C
+!>              CALL EKLEF  ( EKNAME, HANDLE )
+!>
+!>        C
+!>        C     Setup the query.  Parse the SELECT clause using
+!>        C     EKPSEL.
+!>        C
+!>              QUERY = 'Select IMAGE_NUMBER, IMAGE_ID, '
+!>             .   //          'PLATFORM_CLOCK, IMAGE_TIME '
+!>             .   //   'from VIKING_SEDR_DATA '
+!>             .   //   'where IMAGE_NUMBER < 25850000 '
+!>             .   //   'order by IMAGE_NUMBER'
+!>
+!>              CALL EKPSEL ( QUERY,  N,    XBEGS, XENDS, XTYPES,
+!>             .              XCLASS, TABS, COLS,  ERROR, ERRMSG )
+!>
+!>              IF ( ERROR ) THEN
+!>
+!>                 WRITE(*,*) ERRMSG
+!>
+!>              ELSE
+!>
+!>        C
+!>        C        Submit query to the EK query system.
+!>        C
+!>                 CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+!>
+!>                 IF ( ERROR ) THEN
+!>
+!>                    WRITE(*,*) ERRMSG
+!>
+!>                 ELSE
+!>
+!>        C
+!>        C           Fetch the rows that matched the query.
+!>        C
+!>                    DO ROW = 1, NMROWS
+!>
+!>        C
+!>        C              Fetch data from the Ith row.
+!>        C
+!>                       WRITE (*,*) ' '
+!>                       WRITE (*,*) 'ROW = ', ROW
+!>
+!>                       DO COLNO = 1, N
+!>
+!>        C
+!>        C                 Fetch the data from the Jth selected
+!>        C                 column.
+!>        C
+!>                          IF ( XCLASS(COLNO) .EQ. 'COL' ) THEN
+!>
+!>                             OUTSTR  =  COLS(COLNO)
+!>                             CALL PREFIX ( '.',         0, OUTSTR )
+!>                             CALL PREFIX ( TABS(COLNO), 0, OUTSTR )
+!>                             ITEM = '  ' // OUTSTR // ':'
+!>
+!>                          ELSE
+!>
+!>                             B  =  XBEGS(COLNO)
+!>                             E  =  XENDS(COLNO)
+!>                             ITEM = '  ITEM = ' // QUERY(B:E)
+!>
+!>                          END IF
+!>
+!>                          IF ( XTYPES(COLNO) .EQ. 'CHR' ) THEN
+!>
+!>                             CALL EKGC ( COLNO,  ROW,  1,
+!>             .                           CDATA, NULL, FOUND )
+!>
+!>                             IF ( NULL ) THEN
+!>                                WRITE(*,*) ITEM, '<Null>'
+!>                             ELSE
+!>                                WRITE(*,*) ITEM, CDATA(:RTRIM(CDATA))
+!>                             END IF
+!>
+!>                          ELSE IF ( XTYPES(COLNO) .EQ. 'DP' ) THEN
+!>
+!>                             CALL EKGD ( COLNO,  ROW,  1,
+!>             .                           DDATA, NULL, FOUND )
+!>
+!>                             IF ( NULL ) THEN
+!>                                WRITE(*,*) ITEM, '<Null>'
+!>                             ELSE
+!>                                WRITE(*,*) ITEM, DDATA
+!>                             END IF
+!>
+!>                          ELSE IF ( XTYPES(COLNO) .EQ. 'INT' ) THEN
+!>
+!>                             CALL EKGI ( COLNO,  ROW,  1,
+!>             .                           IDATA, NULL, FOUND )
+!>
+!>                             IF ( NULL ) THEN
+!>                                WRITE(*,*) ITEM, '<Null>'
+!>                             ELSE
+!>                                WRITE(*,*) ITEM, IDATA
+!>                             END IF
+!>
+!>                          ELSE
+!>        C
+!>        C                    The item is a time value.  Convert it
+!>        C                    to UTC for output.
+!>        C
+!>                             CALL EKGD ( COLNO,  ROW,  1,
+!>             .                           TDATA, NULL, FOUND )
+!>
+!>                             IF ( NULL ) THEN
+!>                                WRITE(*,*) ITEM, '<Null>'
+!>                             ELSE
+!>                                CALL ET2UTC ( TDATA, 'C', 3, UTCSTR )
+!>                                WRITE(*,*) ITEM, UTCSTR
+!>                             END IF
+!>
+!>                          END IF
+!>
+!>        C
+!>        C              We're done with the column having index COLNO.
+!>        C
+!>                       END DO
+!>
+!>        C
+!>        C           We're done with the row having index ROW.
+!>        C
+!>                    END DO
+!>
+!>        C
+!>        C        We either processed the query or had an error.
+!>        C
+!>                 END IF
+!>
+!>        C
+!>        C     We either parsed the SELECT clause or had an error.
+!>        C
+!>              END IF
+!>
+!>              END
+!>
+!>        When this program was executed on a Mac/Intel/gfortran/64-bit
+!>        platform, the output was:
+!>
+!>         ROW =            1
+!>           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25837050
+!>           VIKING_SEDR_DATA.IMAGE_ID      : 168C09
+!>           VIKING_SEDR_DATA.PLATFORM_CLOCK:    119.88000000000000
+!>           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 16 16:50:55.925
+!>
+!>         ROW =            2
+!>           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25837051
+!>           VIKING_SEDR_DATA.IMAGE_ID      : 168C10
+!>           VIKING_SEDR_DATA.PLATFORM_CLOCK:    119.27000000000000
+!>           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 16 16:51:00.269
+!>
+!>         ROW =            3
+!>           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25840344
+!>           VIKING_SEDR_DATA.IMAGE_ID      : 168C11
+!>           VIKING_SEDR_DATA.PLATFORM_CLOCK:    119.88000000000000
+!>           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 16 20:56:53.051
+!>
+!>         ROW =            4
+!>           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25840345
+!>           VIKING_SEDR_DATA.IMAGE_ID      : 168C12
+!>           VIKING_SEDR_DATA.PLATFORM_CLOCK:    119.27000000000000
+!>           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 16 20:56:57.395
+!>
+!>         ROW =            5
+!>           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25843638
+!>           VIKING_SEDR_DATA.IMAGE_ID      : 169C01
+!>           VIKING_SEDR_DATA.PLATFORM_CLOCK:    119.88000000000000
+!>           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 17 01:02:50.177
+!>
+!>         ROW =            6
+!>           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25843639
+!>           VIKING_SEDR_DATA.IMAGE_ID      : 169C02
+!>           VIKING_SEDR_DATA.PLATFORM_CLOCK:    119.27000000000000
+!>           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 17 01:02:54.521
+!>
+!>         ROW =            7
+!>           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25846934
+!>           VIKING_SEDR_DATA.IMAGE_ID      : 169C03
+!>           VIKING_SEDR_DATA.PLATFORM_CLOCK:    120.14000000000000
+!>           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 17 05:08:56.263
+!>
+!>         ROW =            8
+!>           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25846935
+!>           VIKING_SEDR_DATA.IMAGE_ID      : 169C04
+!>           VIKING_SEDR_DATA.PLATFORM_CLOCK:    119.52000000000000
+!>           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 17 05:09:00.607
+!>
+!>         ROW =            9
+!>           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25848026
+!>           VIKING_SEDR_DATA.IMAGE_ID      : 169C05
+!>           VIKING_SEDR_DATA.PLATFORM_CLOCK:    120.14000000000000
+!>           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 17 06:30:28.424
+!>
+!>         ROW =           10
+!>           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25848030
+!>           VIKING_SEDR_DATA.IMAGE_ID      : 169C09
+!>           VIKING_SEDR_DATA.PLATFORM_CLOCK:    120.14000000000000
+!>           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 17 06:30:46.174
+!>
+!>         ROW =           11
+!>           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25848032
+!>           VIKING_SEDR_DATA.IMAGE_ID      : 169C11
+!>           VIKING_SEDR_DATA.PLATFORM_CLOCK:    120.14000000000000
+!>           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 17 06:30:55.168
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>     B.V. Semenov       (JPL)
+!>     E.D. Wright        (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 2.2.0, 27-AUG-2021 (JDR)
+!>
+!>        Added IMPLICIT NONE statement.
+!>
+!>        Edited the header of EKQMGR umbrella routine and all its entry
+!>        points. Removed unnecessary $Revisions section.
+!>
+!>-    SPICELIB Version 2.1.0, 09-FEB-2015 (NJB)
+!>
+!>        Now uses ERRHAN to insert DAS file name into
+!>        long error messages.
+!>
+!>-    SPICELIB Version 2.0.3, 10-FEB-2014 (BVS)
+!>
+!>        Added descriptions of ADSCSZ and LBCELL to the $Parameters
+!>        section of the header.
+!>
+!>-    SPICELIB Version 2.0.2, 22-AUG-2006 (EDW)
+!>
+!>        Replaced references to LDPOOL with references
+!>        to FURNSH.
+!>
+!>-    SPICELIB Version 2.0.1, 22-SEP-2004 (EDW)
+!>
+!>        Removed from the header descriptions, all occurrences of the
+!>        token used to mark the $Procedure section.
+!>
+!>-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
+!>
+!>        Bug fix: When an already loaded kernel is opened with EKOPR,
+!>        it now has its link count reset to 1 via a call to EKCLS.
+!>
+!>-    SPICELIB Version 1.3.0, 12-FEB-1999 (NJB)
+!>
+!>        Bug fix: in entry point EKNELT, there was a error handling
+!>        branch that called CHKOUT where CHKIN should have been called.
+!>        This has been fixed.
+!>
+!>-    SPICELIB Version 1.2.0, 21-JUL-1998 (NJB)
+!>
+!>        In the entry point EKSRCH, a ZZEKJSQZ call was added after
+!>        the ZZEKJOIN call. This change reduces the scratch area usage
+!>        for intermediate results of joins. It also prevents ZZEKJOIN
+!>        from being handed a join row set containing a segment vector
+!>        having no corresponding row vectors.
+!>
+!>-    SPICELIB Version 1.1.0, 07-JUL-1996 (NJB)
+!>
+!>        Code fixes were made in routines
+!>
+!>           EKNELT, EKGC, EKGD, EKGI
+!>
+!>        Version lines were fixed in all routines: versions were
+!>        changed from "Beta" to "SPICELIB."
+!>
+!>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
+!>
+!>### Implementation notes
+!>
+!>     Linked list functions:
+!>
+!>        Find next node
+!>        Find tail of list
+!>        Return number of free nodes
+!>
+!>     Maximum number of constraints allowed in a single query:
+!>
+!>     Miscellaneous parameters
+!>
+!>     Number of data types
+!>
+!>     Length of strings used for data type names.
+!>
+!>     Length of status strings.
+!>
+!>     As do the CK and SPK `BSR' entry points, the EKQMGR entry points
+!>     make use of an amusing panoply of tables, linked lists, and
+!>     pointers.  Here's where they're declared and described.
+!>
+!>     The file table contains a list of handles of loaded EK files.
+!>     Entries in the table are organized as a doubly linked list.
+!>     Names of file table variables begin with the string 'FT'.
+!>
+!>        The maximum number of EK files that can be loaded is FTSIZE.
+!>
+!>        The linked list pool used to index table entries is called
+!>        FTPOOL.
+!>
+!>        FTHAN is an array containing file handles of loaded EKs.
+!>
+!>        FTHEAD is the head node of the file list.
+!>
+!>     The table list contains table names, segment table pointers,
+!>     and column table pointers for every table associated with a
+!>     loaded segment.  The segment table pointers indicate the head node
+!>     of the segment list for each table.  The column table pointers
+!>     indicate the column names and attributes associated with each
+!>     table.
+!>
+!>     The entries of the table list are organized as a doubly linked
+!>     list.  All variables in the table list have names starting with
+!>     the string 'TB'.
+!>
+!>        MXTBLD is the maximum number of tables that can be
+!>        accommodated by the table list.
+!>
+!>        TBPOOL is the doubly linked list pool used to index the
+!>        table list.
+!>
+!>        TBNAMS is an array of table names.
+!>
+!>        TBSTPT is an array containing pointers to the heads of segment
+!>        lists corresponding to segments belonging to the table.
+!>
+!>        TBNCOL is the number of columns in each table.
+!>
+!>        TBCTPT is an array of pointers to lists of column table
+!>        entries giving the names and attributes of the columns in each
+!>        table.
+!>
+!>        TBFILS is an array containing, for each table, handles of the
+!>        files that contain segments belonging to that table.
+!>
+!>        TBFLSZ is an array of sizes of handle lists for each table
+!>        entry.
+!>
+!>        TBHEAD is the head node of the table list.
+!>
+!>     The segment table contains descriptive information for each
+!>     loaded segment.  Entries in the table are indexed by a linked
+!>     list pool containing a doubly linked list for each system (or
+!>     instrument) for which segments are loaded.
+!>
+!>     Names of segment table variables begin with the string 'ST'.
+!>
+!>        The maximum number of segments that can be loaded is MAXSEG.
+!>        Currently, the value of MAXSEG is just the size of the segment
+!>        table, STSIZE.
+!>
+!>        The linked list pool used to index segment table entries is
+!>        called STPOOL.
+!>
+!>        For each loaded segment, the following information is stored:
+!>
+!>           -- The file handle of the EK containing the segment.
+!>
+!>           -- The index of the segment within the EK that contains it.
+!>              Indices start at 1 and end with the segment count for the
+!>              EK file.
+!>
+!>           -- The segment descriptor.
+!>
+!>           -- The number of rows in the segment.
+!>
+!>           -- The number of columns in the segment.
+!>
+!>           -- A pointer to a list of column descriptors.  The
+!>              column descriptor table contains a complete descriptor
+!>              for every loaded column.
+!>
+!>     The column descriptor table contains a column descriptor for
+!>     every loaded column.  This table allows segments to share the
+!>     area used for buffering descriptors, making it reasonable for
+!>     the buffer space to have room for fewer than
+!>
+!>        MXCLLD * MAXSEG
+!>
+!>     column descriptors.
+!>
+!>     The space in the table is organized as a doubly linked list.
+!>
+!>     The column attribute table contains attribute information for
+!>     every column in every loaded segment.  There is one entry per
+!>     column name; columns with the same names and different data
+!>     types may not be loaded simultaneously.
+!>
+!>     The entries of the column table are organized as a doubly linked
+!>     list.  All variables in the column table have names starting with
+!>     the string 'CT'.
+!>
+!>        CTSIZE is the maximum number of distinct column declarations
+!>        that can be accommodated by the column table.
+!>
+!>        CTPOOL is the doubly linked list pool used to index the column
+!>        table.
+!>
+!>        CTNAMS is an array containing column names.
+!>
+!>        CTCLAS is an array containing column class specifiers.
+!>
+!>        CTTYPS is an array containing column data types.
+!>
+!>        CTLENS is an array containing column string length specifiers.
+!>
+!>        CTFIXD is an array of logical flags indicating whether the
+!>        columns they correspond to have fixed size.
+!>
+!>        CTSIZS is an array of integers indicating the number of array
+!>        elements per column entry, for fixed-size columns.
+!>
+!>        CTINDX is an array of logical flags that indicate whether the
+!>        columns they correspond to are indexed.
+!>
+!>        CTNULL is an array of logical flags that indicate whether the
+!>        columns they correspond to may contain null values.
 submodule (pepper_instance) pepper_ek
 
    implicit none
@@ -21357,105 +22087,6 @@ contains
       return
       end procedure zzekiii1
 
-!$Procedure  ZZEKJTST  ( Test join candidates )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZEKJTST is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zzekjtst. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     Test a set of candidate row vectors, all corresponding to the same
-!     segment vector, against join constraints.
-!
-! $ Detailed_Input
-!
-!     See the entry points for a discussion of their inputs.
-!
-! $ Detailed_Output
-!
-!     See the entry points for a discussion of their inputs.
-!
-! $ Parameters
-!
-!     See the include files.
-!
-! $ Exceptions
-!
-!     1)  If this routine is called directly, the error
-!         SPICE(BOGUSENTRY) is signaled.
-!
-!     See the entry points for discussions of exceptions pertaining to
-!     those routines.
-!
-! $ Files
-!
-!     1)  This routine uses the EK scratch area, which employs a scratch
-!         DAS file.
-!
-! $ Particulars
-!
-!     This suite of routines enables the EK system to execute table
-!     joins with reasonable efficiency.  These routines make use of
-!     join constraints to limit the number of joined row vectors that
-!     must be considered in computing a join.
-!
-!     These routines deal with a limited case of the join problem:
-!     the inputs define, for both join row sets participating in the
-!     join, row vectors that are qualified by a single segment vector.
-!     Thus this routine is meant to be called once for every pair of
-!     segment vectors to be considered in executing the join.
-!
-!     The layout of a join row set in the EK scratch area is shown
-!     in the include file for the join row set parameters.
-!
-! $ Examples
-!
-!     To use these routines, the normal sequence of actions is to
-!     call ZZEKJPRP once to initialize them, and then to call
-!     ZZEKJNXT in a loop to retrieve the row vectors satisfying
-!     the join constraints.  See ZZEKJOIN for an example application.
-!
-! $ Restrictions
-!
-!     1)  This routine should not be called by routines outside of the
-!         EK system.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.1, 03-OCT-2021 (NJB)
-!
-!        Corrected typos in comments.
-!
-!-    SPICELIB Version 2.0.0, 20-JUL-1998 (NJB)
-!
-!        Modified entry point ZZEKJPRP to set CASE to EMPTY when either
-!        input row count is zero.  Modified entry point ZZEKJNXT to
-!        set FOUND to .FALSE. on the first pass when CASE is EMPTY.
-!
-!-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-!
-
-!
-!     Other functions
-!
-
-!
-!     Saved variables
-
       !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
@@ -27126,675 +27757,6 @@ contains
 
       return
       end procedure ekacei
-
-!$Procedure EKQMGR  ( EK, query manager )
-!
-!     PEPPER: SPICELIB's umbrella routine EKQMGR is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_ekqmgr. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Manage query operations on EK files.
-!
-! $ Detailed_Input
-!
-!     See the entry points for descriptions of their inputs.
-!
-! $ Detailed_Output
-!
-!     See the entry points for descriptions of their outputs.
-!
-! $ Parameters
-!
-!     FTSIZE   is the maximum number of EK files that may be
-!              loaded. Any other DAS files loaded by the calling
-!              program count against this limit.
-!
-!     STSIZE   is the size of the segment table; this is the
-!              maximum number of segments that can be loaded at
-!              one time.
-!
-!     MXTBLD   is the maximum number of tables that can be loaded
-!              at any time. A table can consist of multiple
-!              segments.
-!
-!     MXCLLD   is the maximum number of columns that can be loaded
-!              at any time. A column may be spread across
-!              multiple segments; in this case, the portions of
-!              the column contained in each segment count against
-!              this limit.
-!
-!     ADSCSZ   is the size of column attribute descriptor.
-!              (Defined in ekattdsc.inc.)
-!
-!     LBCELL   is the SPICE cell lower bound.
-!
-!     Many other parameters are defined in the include files referenced
-!     above. See those files for details.
-!
-! $ Exceptions
-!
-!     1)  If this routine is called directly, the error
-!         SPICE(BOGUSENTRY) is signaled.
-!
-!     2)  See the headers of the entry points for descriptions of
-!         exceptions specific to those routines.
-!
-! $ Files
-!
-!     This suite of routines reads binary `sequence component' EK files.
-!     In order for a binary EK file to be accessible to this routine,
-!     the file must be `loaded' via a call to the entry point EKLEF.
-!
-!     Text format EK files cannot be used by this routine; they must
-!     first be converted by binary format by the NAIF Toolkit utility
-!     SPACIT.
-!
-! $ Particulars
-!
-!     EKQMGR is an umbrella routine for its entry points: all variables
-!     used by the entry points are declared here.
-!
-!     EKQMGR supports loading and unloading EK files, executing queries,
-!     and fetching the results of executed queries. The entry points
-!     and their functions are:
-!
-!        File loading and unloading:
-!
-!           EKLEF  ( EK, load event file   )
-!           EKUEF  ( EK, unload event file )
-!
-!        Query execution:
-!
-!           EKSRCH ( EK, search for events )
-!
-!        Fetching query results:
-!
-!           EKGC   ( EK, get event data, character        )
-!           EKGD   ( EK, get event data, double precision )
-!           EKGI   ( EK, get event data, integer          )
-!
-!        Utilities:
-!
-!           EKNTAB ( EK, return the number of loaded tables        )
-!           EKTNAM ( EK, return the names of loaded tables         )
-!           EKCCNT ( EK, return the column count of a table        )
-!           EKCII  ( EK, look up column info by index              )
-!           EKNELT ( EK, return number of elements in column entry )
-!
-!     To issue queries to the EK system, users would normally call the
-!     high-level interface routine EKFIND. EKFIND parses queries and
-!     converts them to the encoded form expected by EKSRCH. It is
-!     possible to call EKSRCH directly, but this should not be attempted
-!     by others than EK masters. EKFIND is not an entry point of
-!     EKQMGR, but instead is a separate subroutine.
-!
-! $ Examples
-!
-!     The numerical results shown for this example may differ across
-!     platforms. The results depend on the SPICE kernels used as
-!     input, the compiler and supporting libraries, and the machine
-!     specific arithmetic implementation.
-!
-!     1) Query the EK system and fetch data matching that query.
-!
-!        The program shown here does not rely on advance
-!        knowledge of the input query or the contents of any loaded EK
-!        files.
-!
-!        To simplify the example, we assume that all data are scalar.
-!        This assumption relieves us of the need to test the size of
-!        column entries before fetching them. In the event that a
-!        column contains variable-size array entries, the entry point
-!        EKNELT may be called to obtain the size of column entries to
-!        be fetched. See EKNELT for an example.
-!
-!        Use the EK kernel below to load the information from the
-!        original Supplementary Engineering Data Record (SEDR) data
-!        set generated by the Viking Project.
-!
-!           vo_sedr.bdb
-!
-!        Use the LSK kernel below to load the leap seconds and time
-!        constants required for the conversions.
-!
-!           naif0012.tls
-!
-!        Example code begins here.
-!
-!              PROGRAM EKQMGR_EX1
-!              IMPLICIT NONE
-!
-!        C
-!        C     Include EK Query Limit Parameters
-!        C
-!              INCLUDE 'ekqlimit.inc'
-!
-!        C
-!        C     SPICELIB functions
-!        C
-!              INTEGER               RTRIM
-!
-!        C
-!        C     Local parameters
-!        C
-!              CHARACTER*(*)         EKNAME
-!              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
-!
-!              CHARACTER*(*)         LSKNAM
-!              PARAMETER           ( LSKNAM = 'naif0012.tls' )
-!
-!              INTEGER               DESCSZ
-!              PARAMETER           ( DESCSZ = 31   )
-!
-!              INTEGER               ERRLEN
-!              PARAMETER           ( ERRLEN = 1840 )
-!
-!              INTEGER               ITEMSZ
-!              PARAMETER           ( ITEMSZ = DESCSZ + 4 )
-!
-!              INTEGER               TIMLEN
-!              PARAMETER           ( TIMLEN = 27   )
-!
-!              INTEGER               TYPLEN
-!              PARAMETER           ( TYPLEN = 4    )
-!
-!              INTEGER               XCLSLN
-!              PARAMETER           ( XCLSLN = 4    )
-!
-!        C
-!        C     Local variables
-!        C
-!              CHARACTER*(MAXSTR)    CDATA
-!              CHARACTER*(MAXCLN)    COLS   ( MAXSEL )
-!              CHARACTER*(ERRLEN)    ERRMSG
-!              CHARACTER*(ITEMSZ)    ITEM
-!              CHARACTER*(DESCSZ)    OUTSTR
-!              CHARACTER*(MAXQRY)    QUERY
-!              CHARACTER*(TIMLEN)    UTCSTR
-!              CHARACTER*(MAXCLN)    TABS   ( MAXTAB )
-!              CHARACTER*(XCLSLN)    XCLASS ( MAXSEL )
-!              CHARACTER*(TYPLEN)    XTYPES ( MAXSEL )
-!
-!              DOUBLE PRECISION      DDATA
-!              DOUBLE PRECISION      TDATA
-!
-!              INTEGER               B
-!              INTEGER               COLNO
-!              INTEGER               E
-!              INTEGER               HANDLE
-!              INTEGER               IDATA
-!              INTEGER               N
-!              INTEGER               NMROWS
-!              INTEGER               ROW
-!              INTEGER               XBEGS  ( MAXSEL )
-!              INTEGER               XENDS  ( MAXSEL )
-!
-!              LOGICAL               ERROR
-!              LOGICAL               FOUND
-!              LOGICAL               NULL
-!
-!        C
-!        C     Load leapseconds file for time conversion.
-!        C
-!              CALL FURNSH ( LSKNAM )
-!
-!        C
-!        C     Load EK.
-!        C
-!              CALL EKLEF  ( EKNAME, HANDLE )
-!
-!        C
-!        C     Setup the query.  Parse the SELECT clause using
-!        C     EKPSEL.
-!        C
-!              QUERY = 'Select IMAGE_NUMBER, IMAGE_ID, '
-!             .   //          'PLATFORM_CLOCK, IMAGE_TIME '
-!             .   //   'from VIKING_SEDR_DATA '
-!             .   //   'where IMAGE_NUMBER < 25850000 '
-!             .   //   'order by IMAGE_NUMBER'
-!
-!              CALL EKPSEL ( QUERY,  N,    XBEGS, XENDS, XTYPES,
-!             .              XCLASS, TABS, COLS,  ERROR, ERRMSG )
-!
-!              IF ( ERROR ) THEN
-!
-!                 WRITE(*,*) ERRMSG
-!
-!              ELSE
-!
-!        C
-!        C        Submit query to the EK query system.
-!        C
-!                 CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
-!
-!                 IF ( ERROR ) THEN
-!
-!                    WRITE(*,*) ERRMSG
-!
-!                 ELSE
-!
-!        C
-!        C           Fetch the rows that matched the query.
-!        C
-!                    DO ROW = 1, NMROWS
-!
-!        C
-!        C              Fetch data from the Ith row.
-!        C
-!                       WRITE (*,*) ' '
-!                       WRITE (*,*) 'ROW = ', ROW
-!
-!                       DO COLNO = 1, N
-!
-!        C
-!        C                 Fetch the data from the Jth selected
-!        C                 column.
-!        C
-!                          IF ( XCLASS(COLNO) .EQ. 'COL' ) THEN
-!
-!                             OUTSTR  =  COLS(COLNO)
-!                             CALL PREFIX ( '.',         0, OUTSTR )
-!                             CALL PREFIX ( TABS(COLNO), 0, OUTSTR )
-!                             ITEM = '  ' // OUTSTR // ':'
-!
-!                          ELSE
-!
-!                             B  =  XBEGS(COLNO)
-!                             E  =  XENDS(COLNO)
-!                             ITEM = '  ITEM = ' // QUERY(B:E)
-!
-!                          END IF
-!
-!                          IF ( XTYPES(COLNO) .EQ. 'CHR' ) THEN
-!
-!                             CALL EKGC ( COLNO,  ROW,  1,
-!             .                           CDATA, NULL, FOUND )
-!
-!                             IF ( NULL ) THEN
-!                                WRITE(*,*) ITEM, '<Null>'
-!                             ELSE
-!                                WRITE(*,*) ITEM, CDATA(:RTRIM(CDATA))
-!                             END IF
-!
-!                          ELSE IF ( XTYPES(COLNO) .EQ. 'DP' ) THEN
-!
-!                             CALL EKGD ( COLNO,  ROW,  1,
-!             .                           DDATA, NULL, FOUND )
-!
-!                             IF ( NULL ) THEN
-!                                WRITE(*,*) ITEM, '<Null>'
-!                             ELSE
-!                                WRITE(*,*) ITEM, DDATA
-!                             END IF
-!
-!                          ELSE IF ( XTYPES(COLNO) .EQ. 'INT' ) THEN
-!
-!                             CALL EKGI ( COLNO,  ROW,  1,
-!             .                           IDATA, NULL, FOUND )
-!
-!                             IF ( NULL ) THEN
-!                                WRITE(*,*) ITEM, '<Null>'
-!                             ELSE
-!                                WRITE(*,*) ITEM, IDATA
-!                             END IF
-!
-!                          ELSE
-!        C
-!        C                    The item is a time value.  Convert it
-!        C                    to UTC for output.
-!        C
-!                             CALL EKGD ( COLNO,  ROW,  1,
-!             .                           TDATA, NULL, FOUND )
-!
-!                             IF ( NULL ) THEN
-!                                WRITE(*,*) ITEM, '<Null>'
-!                             ELSE
-!                                CALL ET2UTC ( TDATA, 'C', 3, UTCSTR )
-!                                WRITE(*,*) ITEM, UTCSTR
-!                             END IF
-!
-!                          END IF
-!
-!        C
-!        C              We're done with the column having index COLNO.
-!        C
-!                       END DO
-!
-!        C
-!        C           We're done with the row having index ROW.
-!        C
-!                    END DO
-!
-!        C
-!        C        We either processed the query or had an error.
-!        C
-!                 END IF
-!
-!        C
-!        C     We either parsed the SELECT clause or had an error.
-!        C
-!              END IF
-!
-!              END
-!
-!        When this program was executed on a Mac/Intel/gfortran/64-bit
-!        platform, the output was:
-!
-!         ROW =            1
-!           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25837050
-!           VIKING_SEDR_DATA.IMAGE_ID      : 168C09
-!           VIKING_SEDR_DATA.PLATFORM_CLOCK:    119.88000000000000
-!           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 16 16:50:55.925
-!
-!         ROW =            2
-!           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25837051
-!           VIKING_SEDR_DATA.IMAGE_ID      : 168C10
-!           VIKING_SEDR_DATA.PLATFORM_CLOCK:    119.27000000000000
-!           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 16 16:51:00.269
-!
-!         ROW =            3
-!           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25840344
-!           VIKING_SEDR_DATA.IMAGE_ID      : 168C11
-!           VIKING_SEDR_DATA.PLATFORM_CLOCK:    119.88000000000000
-!           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 16 20:56:53.051
-!
-!         ROW =            4
-!           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25840345
-!           VIKING_SEDR_DATA.IMAGE_ID      : 168C12
-!           VIKING_SEDR_DATA.PLATFORM_CLOCK:    119.27000000000000
-!           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 16 20:56:57.395
-!
-!         ROW =            5
-!           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25843638
-!           VIKING_SEDR_DATA.IMAGE_ID      : 169C01
-!           VIKING_SEDR_DATA.PLATFORM_CLOCK:    119.88000000000000
-!           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 17 01:02:50.177
-!
-!         ROW =            6
-!           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25843639
-!           VIKING_SEDR_DATA.IMAGE_ID      : 169C02
-!           VIKING_SEDR_DATA.PLATFORM_CLOCK:    119.27000000000000
-!           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 17 01:02:54.521
-!
-!         ROW =            7
-!           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25846934
-!           VIKING_SEDR_DATA.IMAGE_ID      : 169C03
-!           VIKING_SEDR_DATA.PLATFORM_CLOCK:    120.14000000000000
-!           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 17 05:08:56.263
-!
-!         ROW =            8
-!           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25846935
-!           VIKING_SEDR_DATA.IMAGE_ID      : 169C04
-!           VIKING_SEDR_DATA.PLATFORM_CLOCK:    119.52000000000000
-!           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 17 05:09:00.607
-!
-!         ROW =            9
-!           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25848026
-!           VIKING_SEDR_DATA.IMAGE_ID      : 169C05
-!           VIKING_SEDR_DATA.PLATFORM_CLOCK:    120.14000000000000
-!           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 17 06:30:28.424
-!
-!         ROW =           10
-!           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25848030
-!           VIKING_SEDR_DATA.IMAGE_ID      : 169C09
-!           VIKING_SEDR_DATA.PLATFORM_CLOCK:    120.14000000000000
-!           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 17 06:30:46.174
-!
-!         ROW =           11
-!           VIKING_SEDR_DATA.IMAGE_NUMBER  :     25848032
-!           VIKING_SEDR_DATA.IMAGE_ID      : 169C11
-!           VIKING_SEDR_DATA.PLATFORM_CLOCK:    120.14000000000000
-!           VIKING_SEDR_DATA.IMAGE_TIME    : 1976 JUN 17 06:30:55.168
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.2.0, 27-AUG-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header of EKQMGR umbrella routine and all its entry
-!        points. Removed unnecessary $Revisions section.
-!
-!-    SPICELIB Version 2.1.0, 09-FEB-2015 (NJB)
-!
-!        Now uses ERRHAN to insert DAS file name into
-!        long error messages.
-!
-!-    SPICELIB Version 2.0.3, 10-FEB-2014 (BVS)
-!
-!        Added descriptions of ADSCSZ and LBCELL to the $Parameters
-!        section of the header.
-!
-!-    SPICELIB Version 2.0.2, 22-AUG-2006 (EDW)
-!
-!        Replaced references to LDPOOL with references
-!        to FURNSH.
-!
-!-    SPICELIB Version 2.0.1, 22-SEP-2004 (EDW)
-!
-!        Removed from the header descriptions, all occurrences of the
-!        token used to mark the $Procedure section.
-!
-!-    SPICELIB Version 2.0.0, 16-NOV-2001 (NJB)
-!
-!        Bug fix: When an already loaded kernel is opened with EKOPR,
-!        it now has its link count reset to 1 via a call to EKCLS.
-!
-!-    SPICELIB Version 1.3.0, 12-FEB-1999 (NJB)
-!
-!        Bug fix: in entry point EKNELT, there was a error handling
-!        branch that called CHKOUT where CHKIN should have been called.
-!        This has been fixed.
-!
-!-    SPICELIB Version 1.2.0, 21-JUL-1998 (NJB)
-!
-!        In the entry point EKSRCH, a ZZEKJSQZ call was added after
-!        the ZZEKJOIN call. This change reduces the scratch area usage
-!        for intermediate results of joins. It also prevents ZZEKJOIN
-!        from being handed a join row set containing a segment vector
-!        having no corresponding row vectors.
-!
-!-    SPICELIB Version 1.1.0, 07-JUL-1996 (NJB)
-!
-!        Code fixes were made in routines
-!
-!           EKNELT, EKGC, EKGD, EKGI
-!
-!        Version lines were fixed in all routines: versions were
-!        changed from "Beta" to "SPICELIB."
-!
-!-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-!
-
-!
-!     Linked list functions:
-!
-!        Find next node
-!        Find tail of list
-!        Return number of free nodes
-!
-
-!
-!     Maximum number of constraints allowed in a single query:
-!
-
-!
-!     Miscellaneous parameters
-!
-
-!
-!     Number of data types
-!
-
-!
-!     Length of strings used for data type names.
-!
-
-!
-!     Length of status strings.
-!
-
-!
-!     As do the CK and SPK `BSR' entry points, the EKQMGR entry points
-!     make use of an amusing panoply of tables, linked lists, and
-!     pointers.  Here's where they're declared and described.
-!
-!     The file table contains a list of handles of loaded EK files.
-!     Entries in the table are organized as a doubly linked list.
-!     Names of file table variables begin with the string 'FT'.
-!
-!        The maximum number of EK files that can be loaded is FTSIZE.
-!
-!        The linked list pool used to index table entries is called
-!        FTPOOL.
-!
-!        FTHAN is an array containing file handles of loaded EKs.
-!
-!        FTHEAD is the head node of the file list.
-!
-
-!
-!     The table list contains table names, segment table pointers,
-!     and column table pointers for every table associated with a
-!     loaded segment.  The segment table pointers indicate the head node
-!     of the segment list for each table.  The column table pointers
-!     indicate the column names and attributes associated with each
-!     table.
-!
-!     The entries of the table list are organized as a doubly linked
-!     list.  All variables in the table list have names starting with
-!     the string 'TB'.
-!
-!        MXTBLD is the maximum number of tables that can be
-!        accommodated by the table list.
-!
-!        TBPOOL is the doubly linked list pool used to index the
-!        table list.
-!
-!        TBNAMS is an array of table names.
-!
-!        TBSTPT is an array containing pointers to the heads of segment
-!        lists corresponding to segments belonging to the table.
-!
-!        TBNCOL is the number of columns in each table.
-!
-!        TBCTPT is an array of pointers to lists of column table
-!        entries giving the names and attributes of the columns in each
-!        table.
-!
-!        TBFILS is an array containing, for each table, handles of the
-!        files that contain segments belonging to that table.
-!
-!        TBFLSZ is an array of sizes of handle lists for each table
-!        entry.
-!
-!        TBHEAD is the head node of the table list.
-!
-
-!
-!     The segment table contains descriptive information for each
-!     loaded segment.  Entries in the table are indexed by a linked
-!     list pool containing a doubly linked list for each system (or
-!     instrument) for which segments are loaded.
-!
-!     Names of segment table variables begin with the string 'ST'.
-!
-!        The maximum number of segments that can be loaded is MAXSEG.
-!        Currently, the value of MAXSEG is just the size of the segment
-!        table, STSIZE.
-!
-!        The linked list pool used to index segment table entries is
-!        called STPOOL.
-!
-!        For each loaded segment, the following information is stored:
-!
-!           -- The file handle of the EK containing the segment.
-!
-!           -- The index of the segment within the EK that contains it.
-!              Indices start at 1 and end with the segment count for the
-!              EK file.
-!
-!           -- The segment descriptor.
-!
-!           -- The number of rows in the segment.
-!
-!           -- The number of columns in the segment.
-!
-!           -- A pointer to a list of column descriptors.  The
-!              column descriptor table contains a complete descriptor
-!              for every loaded column.
-!
-
-!
-!     The column descriptor table contains a column descriptor for
-!     every loaded column.  This table allows segments to share the
-!     area used for buffering descriptors, making it reasonable for
-!     the buffer space to have room for fewer than
-!
-!        MXCLLD * MAXSEG
-!
-!     column descriptors.
-!
-!     The space in the table is organized as a doubly linked list.
-!
-
-!
-!     The column attribute table contains attribute information for
-!     every column in every loaded segment.  There is one entry per
-!     column name; columns with the same names and different data
-!     types may not be loaded simultaneously.
-!
-!     The entries of the column table are organized as a doubly linked
-!     list.  All variables in the column table have names starting with
-!     the string 'CT'.
-!
-!        CTSIZE is the maximum number of distinct column declarations
-!        that can be accommodated by the column table.
-!
-!        CTPOOL is the doubly linked list pool used to index the column
-!        table.
-!
-!        CTNAMS is an array containing column names.
-!
-!        CTCLAS is an array containing column class specifiers.
-!
-!        CTTYPS is an array containing column data types.
-!
-!        CTLENS is an array containing column string length specifiers.
-!
-!        CTFIXD is an array of logical flags indicating whether the
-!        columns they correspond to have fixed size.
-!
-!        CTSIZS is an array of integers indicating the number of array
-!        elements per column entry, for fixed-size columns.
-!
-!        CTINDX is an array of logical flags that indicate whether the
-!        columns they correspond to are indexed.
-!
-!        CTNULL is an array of logical flags that indicate whether the
-!        columns they correspond to may contain null values.
-!
-
-!
-!     Standard SPICE error handling.
 
       !>## Detailed Input
       !>

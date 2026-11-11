@@ -6,6 +6,1406 @@
 !> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_pool.f90.
+!>
+!>## ZZCTR (Manipulate Counter Array)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZCTR is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zzctr. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Manipulate counter array.
+!>
+!>### Detailed Input
+!>
+!>     See the ENTRY points for a discussion of their arguments.
+!>
+!>### Detailed Output
+!>
+!>     See the ENTRY points for a discussion of their arguments.
+!>
+!>### Parameters
+!>
+!>     CTRSIZ      is the dimension of the counter array used by
+!>                 various SPICE subsystems to identify
+!>                 changes in their states. This parameter is
+!>                 defined in the include file.
+!>
+!>### Exceptions
+!>
+!>     1) If ZZCTR is called directly, the error SPICE(BOGUSENTRY) is
+!>        signaled.
+!>
+!>### Files
+!>
+!>     None.
+!>
+!>### Particulars
+!>
+!>     ZZCTR should never be called directly, but should instead be
+!>     accessed only through its entry points.
+!>
+!>     The purpose of this routine is to manipulate counter arrays used
+!>     by various SPICE subsystems to identify changes in their states.
+!>
+!>           ZZCTRUIN       Initialize counter array kept by a user
+!>                          routine.
+!>
+!>           ZZCTRSIN       Initialize counter array kept by a
+!>                          subsystem routine.
+!>
+!>           ZZCTRINC       Increment counter array.
+!>
+!>           ZZCTRCHK       Check/update counter array.
+!>
+!>     A counter array consists of CTRSIZ elements representing
+!>     cascading counters. The fastest counter is at index 1, the
+!>     slowest counter is at index CTRSIZ. At the start of counting all
+!>     counter array elements are set to INTMIN. In the process of
+!>     counting the fastest element is incremented by one. As with any
+!>     cascading counters when the fastest counter reaches INTMAX it
+!>     rolls back to INTMIN and the next counter is incremented by 1.
+!>     When all counters reach INTMAX, ZZCTRINC signals an error.
+!>
+!>### Examples
+!>
+!>     The counter array gives subsystems like POOL a way to provide to
+!>     the user routines of that subsystem's services a simple indicator
+!>     of whether the subsystem's state has changed, meaning that some
+!>     saved values may have become stale and need to be updated or some
+!>     other action needs to be taken in the user routines.
+!>
+!>     For that the subsystem initializes a counter array ("subsystem
+!>     counter") using ZZCTRSIN, saves it, increments it using ZZCTRINC
+!>     each time the subsystem's state changes, and resets a user
+!>     counter to subsystem counter and indicates the need for update
+!>     when counters are not the same, like this:
+!>
+!>        C
+!>        C     Include zzctr.inc to access CTRSIZ.
+!>        C
+!>              INCLUDE              'zzctr.inc'
+!>              ...
+!>        C
+!>        C     In input/output variable declarations declare user
+!>        C     user counter (USRCTR) as I/O and the update flag
+!>        C     (UPDATE) as O.
+!>        C
+!>              INTEGER               USRCTR ( CTRSIZ )
+!>              LOGICAL               UPDATE
+!>              ...
+!>        C
+!>        C     In local variable declarations declare and save the
+!>        C     subsystem counter (SUBCTR) that will incremented
+!>        C     with each change of state.
+!>        C
+!>              INTEGER               SUBCTR ( CTRSIZ )
+!>              ...
+!>              SAVE                  SUBCTR
+!>              ...
+!>        C
+!>        C     In all places where initialization is done set
+!>        C     subsystem counter using ZZCTRSIN.
+!>        C
+!>              IF ( FIRST ) THEN
+!>                 ...
+!>                 CALL ZZCTRSIN( SUBCTR )
+!>                 FIRST = .FALSE.
+!>              END IF
+!>              ...
+!>        C
+!>        C     In all places where the subsystem state changes
+!>        C     increment the subsystem counter using ZZCTRINC.
+!>        C
+!>              CALL ZZCTRINC( SUBCTR )
+!>              ...
+!>        C
+!>        C     Make a special entry that checks and resets input
+!>        C     user counter to the current subsystem counter and
+!>        C     indicates whether it was updated using ZZCTRCHK.
+!>        C
+!>              ENTRY <entry_name> ( USRCTR, UPDATE )
+!>
+!>              CALL ZZCTRCHK( SUBCTR, USRCTR, UPDATE )
+!>
+!>              RETURN
+!>              ...
+!>
+!>     The users of the subsystem services initialize a counter array
+!>     ("user counter") using ZZCTRUIN, save it, and check against the
+!>     subsystem's counter and update, if needed, using the subsystem's
+!>     entry point, like this:
+!>
+!>        C
+!>        C     Include zzctr.inc to access CTRSIZ.
+!>        C
+!>              INCLUDE              'zzctr.inc'
+!>              ...
+!>        C
+!>        C     In local variable declarations declare and save
+!>        C     user counter. Also declare an update flag.
+!>        C
+!>              INTEGER               USRCTR ( CTRSIZ )
+!>              LOGICAL               UPDATE
+!>              ...
+!>              SAVE                  USRCTR
+!>              ...
+!>        C
+!>        C     In all places where initialization is done initialize
+!>        C     the user counter using ZZCTRUIN to ensure update on
+!>        C     the first check.
+!>        C
+!>              IF ( FIRST ) THEN
+!>                 ...
+!>                 CALL ZZCTRUIN( USRCTR )
+!>                 FIRST = .FALSE.
+!>              END IF
+!>              ...
+!>        C
+!>        C     In all places where there is a need to check for
+!>        C     the subsystem state change call subsystem's entry
+!>        C     that checks and updates the user counter based on
+!>        C     value of the subsystem counter.
+!>        C
+!>              CALL <entry_name> ( USRCTR, UPDATE )
+!>
+!>              IF ( UPDATE ) THEN
+!>
+!>        C
+!>        C        Do what needs to be done when the subsystem
+!>        C        state has changed.
+!>        C
+!>                 ...
+!>
+!>              END IF
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     B.V. Semenov    (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
+!>
+!>### Implementation notes
+!>
+!>     Constants (SPICELIB computed them on the first call).
+!>
+!>## RDKER (Read a kernel file)
+!>
+!> PEPPER: SPICELIB's umbrella routine RDKER is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_rdker. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Open and read the contents of a SPICE ASCII kernel file.
+!>
+!>### Detailed Input
+!>
+!>     All input is through entry RDKNEW.
+!>
+!>### Detailed Output
+!>
+!>     All output is through entry RDKDAT.
+!>
+!>### Parameters
+!>
+!>     None.
+!>
+!>### Exceptions
+!>
+!>     1)  If RDKER is called directly, the error SPICE(BOGUSENTRY) is
+!>         signaled.
+!>
+!>### Files
+!>
+!>     The SPICE ASCII kernel file KERNEL is opened by RDKNEW and read
+!>     by RDKDAT. The entry point RDKLIN is available for reporting
+!>     the name of the open file and the number of the last line that
+!>     was read from that file.
+!>
+!>### Particulars
+!>
+!>     RDKER should never be called directly, but should instead be
+!>     accessed only through its entry points, RDKNEW, RDKDAT and
+!>     RDKLIN.
+!>
+!>### Examples
+!>
+!>     In the following example, RDKNEW and RDKDAT are used to read
+!>     the contents of a kernel file.
+!>
+!>     Let the file KERNEL contain the following lines.
+!>
+!>        =============================================================
+!>
+!>        DELTA_T_A is defined to be 32.184 seconds, and should not
+!>        be changed except under the most unusual circumstances.
+!>
+!>        \begindata
+!>
+!>        DELTA_T_A       =   32.184
+!>
+!>        \begintext
+!>
+!>        The next three items determine the relativistic correction
+!>        in the difference ET - TAI. To turn the correction off,
+!>        just set K to zero.
+!>
+!>        \begindata
+!>
+!>        K               =    1.657D-3
+!>        ORBIT_ECC       =    1.671D-2
+!>        MEAN_ANOM       = (  6.239996D0,  1.99096871D-7 )
+!>
+!>        =============================================================
+!>
+!>     Then the code fragment
+!>
+!>        CALL RDKNEW ( KERNEL )
+!>        CALL RDKDAT ( LINE, EOF )
+!>
+!>        DO WHILE ( (.NOT. EOF) .AND. ( .NOT. FAILED () ) )
+!>           WRITE (6,*) LINE
+!>           CALL RDKDAT ( LINE, EOF )
+!>        END DO
+!>
+!>     prints the following lines.
+!>
+!>        =============================================================
+!>        DELTA_T_A       =   32.184
+!>        K               =    1.657D-3
+!>        ORBIT_ECC       =    1.671D-2
+!>        MEAN_ANOM       = (  6.239996D0,  1.99096871D-7 )
+!>        =============================================================
+!>
+!>### Restrictions
+!>
+!>     1)  The input file must be opened and initialized by RDKNEW prior
+!>         to the first call to RDKDAT.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>     H.A. Neilan        (JPL)
+!>     B.V. Semenov       (JPL)
+!>     M.J. Spencer       (JPL)
+!>     W.L. Taber         (JPL)
+!>     I.M. Underwood     (JPL)
+!>     E.D. Wright        (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 3.7.0, 28-NOV-2021 (BVS)
+!>
+!>        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+!>
+!>-    SPICELIB Version 3.6.1, 17-JUN-2021 (JDR)
+!>
+!>        Edited the header of the RDKER umbrella routine and all its
+!>        entry entry points to comply with NAIF standard.
+!>
+!>-    SPICELIB Version 3.6.0, 10-MAR-2014 (BVS)
+!>
+!>        Updated for PC-CYGWIN-64BIT-GCC_C.
+!>
+!>-    SPICELIB Version 3.5.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-INTEL-CC_C.
+!>
+!>-    SPICELIB Version 3.4.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+!>
+!>-    SPICELIB Version 3.3.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+!>
+!>-    SPICELIB Version 3.2.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for PC-64BIT-MS_C.
+!>
+!>-    SPICELIB Version 3.1.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for MAC-OSX-64BIT-INTEL_C.
+!>
+!>-    SPICELIB Version 3.0.0, 11-FEB-2008 (NJB)
+!>
+!>        Entry points RDKNEW and RDKDAT have been updated so as to be
+!>        able to parse text kernel lines containing tab characters.
+!>
+!>-    SPICELIB Version 2.5.0, 14-NOV-2006 (BVS)
+!>
+!>        Updated for PC-LINUX-64BIT-GCC_C.
+!>
+!>-    SPICELIB Version 2.4.0, 14-NOV-2006 (BVS)
+!>
+!>        Updated for MAC-OSX-INTEL_C.
+!>
+!>-    SPICELIB Version 2.3.0, 14-NOV-2005 (BVS)
+!>
+!>        Reinstated HP_C environment.
+!>
+!>-    SPICELIB Version 2.2.0, 26-OCT-2005 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-64BIT-GCC_C.
+!>
+!>-    SPICELIB Version 2.1.0, 03-OCT-2005 (EDW)
+!>
+!>        File rdker.f made a master file so as to
+!>        add the ZZSETNNREAD call. This call will exist
+!>        only in FORTRAN source intended for conversion
+!>        to C by the f2c utility.
+!>
+!>        The ZZSETNNREAD call activates and deactivates
+!>        the non-native text line read capability for the
+!>        CSPICE toolkit.
+!>
+!>-    SPICELIB Version 2.0.1, 22-AUG-2001 (EDW)
+!>
+!>        Corrected ENDIF to END IF.
+!>
+!>-    SPICELIB Version 2.0.0, 20-SEP-1995 (WLT)
+!>
+!>         The entry point RDKLIN was added.
+!>
+!>-    SPICELIB Version 1.3.0, 22-SEP-1993 (NJB)
+!>
+!>         Updated for port to NeXT. The "previous kernel" is now closed
+!>         only if there actually was a previous kernel.
+!>
+!>-    SPICELIB Version 1.2.0, 01-JUN-1992 (MJS)
+!>
+!>         RDKER now initializes the variables BEGDAT and BEGTXT
+!>         in a portable way. On the first valid entry to this routine,
+!>         the backslash character in the form CHAR(92) is concatenated
+!>         individually to 'begindata' and 'begintext'.
+!>
+!>-    SPICELIB Version 1.1.1, 10-MAR-1992 (WLT)
+!>
+!>         Comment section for permuted index source lines was added
+!>         following the header.
+!>
+!>-    SPICELIB Version 1.1.0, 07-DEC-1990 (HAN)
+!>
+!>         The declarations for BEGDAT and BEGTXT were changed from
+!>         CHARACTER*10 to CHARACTER*(*).
+!>
+!>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
+!>
+!>### Revisions
+!>
+!>-     SPICELIB Version 2.0.0, 20-SEP-1995 (WLT)
+!>
+!>         The entry point RDKLIN was added.
+!>
+!>-     SPICELIB Version 1.3.0, 22-SEP-1993 (NJB)
+!>
+!>         Updated for port to NeXT. The "previous kernel" is now closed
+!>         only if there actually was a previous kernel.
+!>
+!>         In the last version of this routine, on the first entry into
+!>         the routine, the variable FILE, which records the name of
+!>         the last kernel accessed, was passed to CLTEXT.  CLTEXT
+!>         executed an INQUIRE statement using this name, which was
+!>         not initialized. On the NeXT, this caused the INQUIRE
+!>         statement to fail.
+!>
+!>-     SPICELIB Version 1.2.0, 01-JUN-1992 (MJS)
+!>
+!>         RDKER now initializes the variables BEGDAT and BEGTXT
+!>         in a portable way. On the first valid entry to this routine,
+!>         the backslash character in the form CHAR(92) is concatenated
+!>         individually to 'begindata' and 'begintext'. As a result of
+!>         this change, this module is no longer considered environment
+!>         specific. All references in the header to the previous method
+!>         of initialization were removed.
+!>
+!>         FILE is now initialized to ' '. Before this modification, if
+!>         a call to RDKDAT was performed prior to RDKNEW, RDTEXT
+!>         would have printed out garbage (on some machines) in its
+!>         error message when notifying the user that it couldn't read
+!>         from FILE.
+!>
+!>-     SPICELIB Version 1.1.0, 7-DEC-1990 (HAN)
+!>
+!>         The declarations for BEGDAT and BEGTXT were changed from
+!>         CHARACTER*10 to CHARACTER*(*). The fixed length of 10 was
+!>         not long enough.
+!>
+!>-     Beta Version 1.1.0, 9-MAR-1989 (HAN)
+!>
+!>         Moved the declaration of the parameters BEGDAT and
+!>         BEGTXT from the code to the $Declarations section.
+!>         Filled out the Brief I/O and $Parameters sections.
+!>
+!>### Implementation notes
+!>
+!>     Because some environments (such as the SUN) treat the backslash
+!>     character as a special character, some gyrations are needed to
+!>     put it into a variable in a "portable" way. This is the reason
+!>     for the following block of declarations. Admittedly this is
+!>     bizarre, but it works.
+!>
+!>     The ASCII decimal code for the tab character is 9.
+!>
+!>## ZZTIME (Private, Time --- time parsing utilities)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZTIME is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zztime. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     SPICE Private routine intended solely for the support of SPICE
+!>     routines. Users should not call this routine directly due
+!>     to the volatile nature of this routine.
+!>
+!>     This is an umbrella routine for a collection of entry points
+!>     to the time parsing utility functions.
+!>
+!>### Detailed Input
+!>
+!>     See Individual Entry Points.
+!>
+!>### Detailed Output
+!>
+!>     See Individual Entry Points.
+!>
+!>### Parameters
+!>
+!>     None.
+!>
+!>### Exceptions
+!>
+!>     1)  If ZZTIME is called directly the error 'SPICE(BOGUSENTRY)'
+!>         is signaled.
+!>
+!>### Files
+!>
+!>     None.
+!>
+!>### Particulars
+!>
+!>     This routine serves as an umbrella for a collection of
+!>     related entry points that are used to parse time strings.
+!>
+!>     Normal usage is to first call ZZTOKNS to create an internal
+!>     representation for a time string. This internal representations
+!>     maintains a list of identified substrings from the original
+!>     input time string. For example the call to ZZTOKNS using
+!>     the string
+!>
+!>       '1996 JAN 25 12:18:19.199'
+!>        123456789012345678901234
+!>
+!>     yields the following internal representation:
+!>
+!>       'ibmbibi:i:i.i'
+!>
+!>     where the individual tokens correspond to the substrings
+!>     indicated in the following table:
+!>
+!>       Identifier    Substring          meaning
+!>       ----------    -------------      ----------------
+!>         i           from 01 to 04      unsigned integer
+!>         b           from 05 to 05      blanks or tab
+!>         m           from 06 to 08      month
+!>         b           from 09 to 09      blanks or tab
+!>         i           from 10 to 11      unsigned integer
+!>         b           from 12 to 12      blank or tab
+!>         i           from 13 to 14      unsigned integer
+!>         :           from 15 to 15      colon
+!>         i           from 16 to 17      unsigned integer
+!>         :           from 18 to 18      colon
+!>         i           from 19 to 20      unsigned integer
+!>         .           from 21 to 21      decimal point
+!>         i           from 22 to 24      unsigned integer
+!>
+!>     These substrings may be combined and reidentified, removed
+!>     or re-identified using the various entry points listed here:
+!>
+!>     ZZCMBT   combine several tokens into a single token
+!>              for example you might scan right to left and replace
+!>              the token sequence i.i by n (for number). In this
+!>              case the substring boundaries of n would be from 19
+!>              to 24.
+!>
+!>     ZZGREP   returns the current internal representation
+!>              in the case above 'ibmbibi:i:i.i'
+!>
+!>     ZZISPT   returns TRUE if a pair of letters from a list are
+!>              present in the internal representation. This is
+!>              used primarily to detect erroneous substrings such
+!>              as ',,' or ':,'
+!>
+!>     ZZIST    Return TRUE if a particular letter is present in the
+!>              string.
+!>
+!>     ZZNOTE   Returns the substring boundaries associated with
+!>              a letter and removes the letter from the internal
+!>              representation. This is used primarily for calendar
+!>              string modifiers such as 'B.C.', 'A.D.' etc.
+!>
+!>     ZZREMT   remove a letter from the internal representation.
+!>              In the input example you might remove all white space
+!>              markers.
+!>
+!>     ZZSUBT   substitute a different letter for one listed in the
+!>              input one for one. For example after removing blanks
+!>              you might substitute YmD for imi.
+!>
+!>     ZZVALT   replace an integer by a new marker if the integer
+!>              lies withing a particular range. For example
+!>              you might replace any integer between 1000 and 10000
+!>              by Y (for year).
+!>
+!>     Once all substitutions and removals have been performed that
+!>     can be made, the entry point ZZUNPCK allows you to extract
+!>     year(Y), month(m), day or month(D), day of year (y), hours(H),
+!>     minutes(M) and seconds(S) from the input string
+!>
+!>### Examples
+!>
+!>     See TPARTV.
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman    (JPL)
+!>     B.V. Semenov    (JPL)
+!>     W.L. Taber      (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 1.7.0, 08-NOV-2020 (EDW)
+!>
+!>        Added 'Z' to list of recognized tokens, marked as
+!>        no op.
+!>
+!>-    SPICELIB Version 1.6.0, 05-FEB-2014 (EDW) (BVS)
+!>
+!>        BUG FIX: entry point ZZUNPCK: added error check on ITEM value.
+!>        Failure to perform this check can cause BADSUBSCRIPT error
+!>        signals from CSPICE code on invalid time strings.
+!>
+!>        BUG FIX: entry point ZZTOKNS: added checks for token indexes
+!>        overflowing the maximum number of tokens and for the character
+!>        positions in the time picture overflowing the time picture
+!>        length. Both overflows previously resulted in segmentation
+!>        faults for invalid input time strings that contained too many
+!>        recognizable tokens or were too long and required too many
+!>        characters in the picture representation.
+!>
+!>-    SPICELIB Version 1.5.0, 08-MAR-2009 (NJB)
+!>
+!>        Bug fix: in entry point ZZTOKNS, changed upper
+!>        bound used to detect non-printing characters from 128
+!>        to 126.
+!>
+!>        Bug fix: added error handling to this routine. Header
+!>        already referred to SPICE(BOGUSENTRY) error, but no
+!>        such error was signaled.
+!>
+!>        Changed upper bound of arrays NAMES, F, and L from 128
+!>        to 126.
+!>
+!>        Re-ordered header sections in various entry points.
+!>
+!>-    SPICELIB Version 1.4.0, 27-OCT-2006 (BVS)
+!>
+!>        Fixed the bug in the ZZTOKNS entry that in the case of a one
+!>        character long blank input time string caused the TO variable
+!>        be set to the value greater than the string length, triggering
+!>        an OUT OF BOUNDS runtime error on HP. Added to ZZTOKNS a
+!>        separate check for the blank input strings.
+!>
+!>-    SPICELIB Version 1.3.0, 13-Nov-2000 (WLT)
+!>
+!>        Changed the call to EQSTR to a call to SAMSBI so as to
+!>        guard against overflowing strings.
+!>
+!>-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
+!>
+!>        The main routine (which should never be called) now returns
+!>        the value .FALSE.
+!>
+!>-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
+!>
+!>        Added a RETURN statement at the end of the main routine.
+!>        Enhanced error message for the case when the input string
+!>        to ZZTOKNS has a non-printing character.
+!>
+!>-    SPICELIB Version 1.0.0, 8-APR-1996 (WLT)
+!>
+!>### Implementation notes
+!>
+!>     Entry points
+!>
+!>     Standard Parameters
+!>
+!>     LOWER
+!>     UPPER
+!>     MIXED
+!>
+!>     FULL
+!>     SHORT
+!>
+!>     Maximum number of tokens that a valid time string can contain.
+!>
+!>     Length of the string buffer containing the time string picture.
+!>
+!>     Representation Variables.
+!>
+!>     Token Recognition Variables.
+!>
+!>     At the moment there are 53 recognized substrings, we
+!>     make room for 70 just so we won't have to increase
+!>     the parameter NRECOG soon.
+!>
+!>## POOL (Maintain a pool of kernel variables)
+!>
+!> PEPPER: SPICELIB's umbrella routine POOL is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_pool. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Maintain a pool of variables read from SPICE ASCII kernel files.
+!>
+!>### Detailed Input
+!>
+!>     See the ENTRY points for a discussion of their arguments.
+!>
+!>### Detailed Output
+!>
+!>     See the ENTRY points for a discussion of their arguments.
+!>
+!>### Parameters
+!>
+!>     MAXVAR   is the maximum number of variables that the
+!>              kernel pool may contain at any one time.
+!>              MAXVAR should be a prime number.
+!>
+!>              Here's a list of primes that should make
+!>              it easy to upgrade MAXVAR when/if the need arises.
+!>
+!>                  103
+!>                  199
+!>                  307
+!>                  401
+!>                  503
+!>                  601
+!>                  701
+!>                  751
+!>                  811
+!>                  911
+!>                 1013
+!>                 1213
+!>                 1303
+!>                 1511
+!>                 1811
+!>                 1913
+!>                 2003
+!>                 2203
+!>                 2503
+!>                 2803
+!>                 3203
+!>                 3607
+!>                 4001
+!>                 4507
+!>                 4801
+!>                 5003 Current Value
+!>                 6007
+!>                 6521
+!>                 7001
+!>                 7507
+!>                 8009
+!>                 8501
+!>                 9001
+!>                 9511
+!>                10007
+!>                10501
+!>                11003
+!>                11503
+!>
+!>     MAXLEN   is the maximum length of the variable names that
+!>              can be stored in the kernel pool (also set in
+!>              zzrvar.f).
+!>
+!>     MAXVAL   is the maximum number of distinct values that
+!>              may belong to the variables in the kernel pool.
+!>              Each variable must have at least one value, and
+!>              may have any number, so long as the total number
+!>              does not exceed MAXVAL. MAXVAL must be at least
+!>              as large as MAXVAR.
+!>
+!>     MAXAGT   is the maximum number of agents that can be
+!>              associated with a given kernel variable.
+!>
+!>     MAXCHR   is the maximum number of characters that can be
+!>              stored in a component of a string valued kernel
+!>              variable.
+!>
+!>     MXNOTE   is the maximum sum of the sizes of the sets of
+!>              agents in the range of the mapping that associates
+!>              with each watched kernel variable a set of agents
+!>              that "watch" that variable.
+!>
+!>     MAXLIN   is the maximum number of character strings that
+!>              can be stored as data for kernel pool variables.
+!>
+!>     CTRSIZ   is the dimension of the counter array used by
+!>              various SPICE subsystems to uniquely identify
+!>              changes in their states. This parameter is
+!>              defined in the private include file 'zzctr.inc'.
+!>
+!>### Exceptions
+!>
+!>     1)  If POOL is called directly, the error SPICE(BOGUSENTRY) is
+!>         signaled.
+!>
+!>### Files
+!>
+!>     See the ENTRY points for a discussion of their arguments.
+!>
+!>### Particulars
+!>
+!>     POOL should never be called directly, but should instead be
+!>     accessed only through its entry points.
+!>
+!>     The purpose of this routine is to maintain a pool of variables
+!>     read from ASCII kernel files. The following entry points may be
+!>     used to access the pool.
+!>
+!>           CLPOOL         Clears the pool.
+!>
+!>           LDPOOL         Loads the variables from a kernel file into
+!>                          the pool.
+!>
+!>           RTPOOL         Returns the value of a variable from
+!>                          the pool. (Obsolete use GDPOOL)
+!>
+!>           EXPOOL         Confirms the existence of a numeric
+!>                          variable in the pool.
+!>
+!>           WRPOOL         Writes the contents of the pool to an
+!>                          ASCII kernel file.
+!>
+!>           SWPOOL         Sets up a "watcher" on a variable so that
+!>                          various "agents" can be notified when a
+!>                          variable has been updated.
+!>
+!>           CVPOOL         Indicates whether or not an agent's
+!>                          variable has been updated since the last
+!>                          time an agent checked with the pool.
+!>
+!>           GCPOOL         Returns the value of a string valued
+!>                          variable in the pool.
+!>
+!>           GDPOOL         Returns the d.p. value of a numeric valued
+!>                          variable in the pool.
+!>
+!>           GIPOOL         Returns the integer value of a numeric valued
+!>                          variable in the pool.
+!>
+!>           DTPOOL         Returns the attributes of a variable in the
+!>                          pool.
+!>
+!>           PCPOOL         Allows the insertion of a character variable
+!>                          directly into the kernel pool without
+!>                          supplying a text kernel.
+!>
+!>           PDPOOL         Allows the insertion of a double precision
+!>                          variable directly into the kernel pool
+!>                          without supplying a text kernel.
+!>
+!>           PIPOOL         Allows the insertion of an integer variable
+!>                          directly into the kernel pool without
+!>                          supplying a text kernel.
+!>
+!>           LMPOOL         Similar to LDPOOL, but the text kernel is
+!>                          stored in an array of strings instead of an
+!>                          external file.
+!>
+!>           SZPOOL         allows run time retrieval of kernel pool
+!>                          memory parameters.
+!>
+!>           DVPOOL         allows deletion of a specific variable from
+!>                          the kernel pool. (CLPOOL deletes all
+!>                          variables from the kernel pool.)
+!>
+!>           GNPOOL         assists in determining which variables are
+!>                          defined in the kernel pool via variable name
+!>                          template matching.
+!>
+!>           DWPOOL         deletes a watch from the watcher system.
+!>
+!>     Nominally, the kernel pool contains up to MAXVAR separate
+!>     variables, up to MAXVAL numeric values, and up to MAXLIN string
+!>     values. The names of the individual variables may contain up to
+!>     MAXLEN characters.
+!>
+!>### Examples
+!>
+!>     The following code fragment demonstrates how the data from
+!>     several kernel files can be loaded into a kernel pool. After the
+!>     pool is loaded, the values in the pool are written to a kernel
+!>     file.
+!>
+!>     C
+!>     C     Store in an array the names of the kernel files whose
+!>     C     values will be loaded into the kernel pool.
+!>     C
+!>           FNAME (1) = 'AXES.KER'
+!>           FNAME (2) = 'GM.KER'
+!>           FNAME (3) = 'LEAP_SECONDS.KER'
+!>
+!>     C
+!>     C     Clear the kernel pool. (This is optional.)
+!>     C
+!>           CALL CLPOOL
+!>
+!>     C
+!>     C     Load the variables from the three kernel files into the
+!>     C     the kernel pool.
+!>     C
+!>           DO I = 1, 3
+!>             CALL LDPOOL ( FNAME (I) )
+!>           END DO
+!>
+!>     C
+!>     C     We can examine the values associated with any d.p. variable
+!>     C     in the kernel pool using GDPOOL.
+!>     C
+!>           CALL GDPOOL ( VARIABLE, START, ROOM, NVALS, VALUES, FOUND )
+!>
+!>     C
+!>     C     Open the text file 'NEWKERNEL.KER'.
+!>     C
+!>           CALL TXTOPN ( NEWKERNEL.KER', UNIT )
+!>
+!>     C
+!>     C     Write the values in the kernel pool to the file.
+!>     C
+!>           CALL WRPOOL ( UNIT )
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>     H.A. Neilan        (JPL)
+!>     B.V. Semenov       (JPL)
+!>     W.L. Taber         (JPL)
+!>     R.E. Thurman       (JPL)
+!>     F.S. Turner        (JPL)
+!>     I.M. Underwood     (JPL)
+!>     E.D. Wright        (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 10.2.0, 27-AUG-2021 (JDR) (BVS) (NJB)
+!>
+!>        Changed input argument name KERNEL to FNAME in entry point
+!>        LDPOOL for consistency with other routines.
+!>
+!>        Edited the header of the umbrella routine and all its entry
+!>        points.
+!>
+!>        Updated SZPOOL $Detailed_Input section.
+!>
+!>-    SPICELIB Version 10.1.0, 14-JUL-2014 (NJB) (BVS)
+!>
+!>        Updated header of WRPOOL to improve accuracy of
+!>        that routine's output description.
+!>
+!>        Updated header of CVPOOL to improve accuracy of
+!>        the description of the output argument UPDATE.
+!>
+!>        Updated header of CLPOOL to improve the description
+!>        of behavior of the watcher subsystem.
+!>
+!>        Last update was 17-JAN-2014 (BVS) (NJB)
+!>
+!>        Increased key POOL parameters as follows:
+!>
+!>           MAXVAR    5003 ->  26003
+!>           MAXVAL  200000 -> 400000
+!>           MAXLIN    4000 ->  15000
+!>
+!>        Decreased MXNOTE factor F (MXNOTE=MAXVAR*F) from 10 to 5.
+!>
+!>        Updated the main umbrella argument list to include the POOL
+!>        state counter. Added the private entry point ZZPCTRCK allowing
+!>        other routines to check their saved POOL state counter against
+!>        the current POOL state counter to detect and act on the POOL
+!>        state change.
+!>
+!>        Updated $Index_Entries sections of entry points PCPOOL, PDPOOL,
+!>        and PIPOOL.
+!>
+!>-    SPICELIB Version 10.0.0, 24-MAY-2010 (EDW) (NJB)
+!>
+!>        Added an error check on the length of the kernel pool variable
+!>        name argument in:
+!>
+!>           PCPOOL
+!>           PDPOOL
+!>           PIPOOL
+!>
+!>        to enforce the variable name length does not exceed MAXLEN.
+!>
+!>        Increased MAXVAL to 200000.
+!>
+!>-    SPICELIB Version 9.0.0, 19-MAR-2009 (NJB)
+!>
+!>        Added watch deletion entry point DWPOOL and private entry
+!>        point ZZVUPOOL. Re-implemented watcher system to improve
+!>        efficiency, particularly of watch deletion. Bug fix: corrected
+!>        watcher overflow detection logic in SWPOOL. Updated header
+!>        code examples to use TXTOPN instead of GETLUN and a Fortran
+!>        OPEN statement; also to use GDPOOL instead of RTPOOL, except in
+!>        the header of RTPOOL itself.
+!>
+!>        Code examples in SWPOOL and CVPOOL were updated to handle
+!>        kernel pool fetch failures.
+!>
+!>        Existing entry points modified as part of this update were:
+!>
+!>           POOL
+!>           CLPOOL
+!>           CVPOOL
+!>           DTPOOL
+!>           DVPOOL
+!>           EXPOOL
+!>           GCPOOL
+!>           GDPOOL
+!>           GIPOOL
+!>           GNPOOL
+!>           LDPOOL
+!>           LMPOOL
+!>           PCPOOL
+!>           PDPOOL
+!>           PIPOOL
+!>           RTPOOL
+!>           SWPOOL
+!>           WRPOOL
+!>
+!>        Code examples using RTPOOL were updated to use GDPOOL, except
+!>        in the header of RTPOOL itself. Code examples using GETLUN and
+!>        an in-line Fortran OPEN statement were updated to use TXTOPN.
+!>
+!>        Various typos in comments throughout this file were fixed.
+!>
+!>-    SPICELIB Version 8.3.0, 22-DEC-2004 (NJB)
+!>
+!>        Fixed bug in DVPOOL. Made corrections to comments in
+!>        other entry points. The updated routines are DTPOOL,
+!>        DVPOOL, EXPOOL, GCPOOL, GDPOOL, GIPOOL, RTPOOL.
+!>
+!>-    SPICELIB Version 8.2.0, 24-JAN-2003 (BVS)
+!>
+!>        Increased MAXVAL to 40000.
+!>
+!>-    SPICELIB Version 8.1.0, 13-MAR-2001 (FST) (NJB)
+!>
+!>        Increased kernel pool size and agent parameters. MAXVAR is now
+!>        5003, MAXVAL is 10000, MAXLIN is 4000, MXNOTE is 2000, and
+!>        MAXAGT is 1000.
+!>
+!>        Modified Fortran output formats used in entry point WRPOOL to
+!>        remove list-directed formatting. This change was made to
+!>        work around problems with the way f2c translates list-
+!>        directed I/O.
+!>
+!>-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!>
+!>        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!>        direct insertion of data into the kernel pool without having
+!>        to read an external file.
+!>
+!>        Added the interface LMPOOL that allows SPICE
+!>        programs to load text kernels directly from memory
+!>        instead of requiring a text file.
+!>
+!>        Added the entry point SZPOOL to return kernel pool definition
+!>        parameters.
+!>
+!>        Added the entry point DVPOOL to allow the removal of a variable
+!>        from the kernel pool.
+!>
+!>        Added the entry point GNPOOL to allow users to determine
+!>        variables that are present in the kernel pool
+!>
+!>-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!>
+!>        The implementation of the kernel pool was completely redone
+!>        to improve performance in loading and fetching data. In
+!>        addition the pool was upgraded so that variables may be
+!>        either string or numeric valued.
+!>
+!>        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
+!>        to the routine.
+!>
+!>        The entry point RTPOOL should now be regarded as obsolete
+!>        and is maintained solely for backward compatibility with
+!>        existing routines that make use of it.
+!>
+!>-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
+!>
+!>        The entry points SWPOOL and CVPOOL were added.
+!>
+!>-    SPICELIB Version 5.0.0, 22-AUG-1990 (NJB)
+!>
+!>        Increased value of parameter MAXVAL to 5000 to accommodate
+!>        storage of SCLK coefficients in the kernel pool.
+!>
+!>-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
+!>
+!>        All entry points except POOL and CLPOOL now initialize the
+!>        pool if it has not been done yet.
+!>
+!>-    SPICELIB Version 3.0.0, 23-OCT-1989 (HAN)
+!>
+!>        Added declaration of FAILED. FAILED is checked in the
+!>        DO-loops in LDPOOL and WRPOOL to prevent infinite looping.
+!>
+!>-    SPICELIB Version 2.0.0, 18-OCT-1989 (RET)
+!>
+!>       A FAILED test was inserted into the control of the DO-loop which
+!>       reads in each kernel variable in LDPOOL.
+!>
+!>-    SPICELIB Version 1.2.0, 09-MAR-1989 (HAN)
+!>
+!>        Parameters BEGDAT and BEGTXT have been moved into the
+!>        $Declarations section.
+!>
+!>-    SPICELIB Version 1.1.0, 16-FEB-1989 (IMU) (NJB)
+!>
+!>        Parameters MAXVAR, MAXVAL, MAXLEN moved into $Declarations.
+!>        (Actually, MAXLEN was implicitly 32 characters, and has only
+!>        now been made an explicit---and changeable---limit.)
+!>
+!>        Declaration of unused function FAILED removed.
+!>
+!>-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
+!>
+!>### Revisions
+!>
+!>-    SPICELIB Version 8.3.0, 22-DEC-2004 (NJB)
+!>
+!>        Fixed bug in DVPOOL. Made corrections to comments in
+!>        other entry points. The updated routines are DTPOOL,
+!>        DVPOOL, EXPOOL, GCPOOL, GDPOOL, GIPOOL, RTPOOL.
+!>
+!>-    SPICELIB Version 8.2.0, 24-JAN-2003 (BVS)
+!>
+!>        Increased MAXVAL to 40000.
+!>
+!>-    SPICELIB Version 8.1.0, 13-MAR-2001 (FST) (NJB)
+!>
+!>        Increased kernel pool size and agent parameters. MAXVAR is now
+!>        5003, MAXVAL is 10000, MAXLIN is 4000, MXNOTE is 2000, and
+!>        MAXAGT is 1000.
+!>
+!>        Modified Fortran output formats used in entry point WRPOOL to
+!>        remove list-directed formatting. This change was made to
+!>        work around problems with the way f2c translates list-
+!>        directed I/O.
+!>
+!>-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
+!>
+!>        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
+!>        direct insertion of data into the kernel pool without having
+!>        to read an external file.
+!>
+!>        Added the interface LMPOOL that allows SPICE
+!>        programs to load text kernels directly from memory
+!>        instead of requiring a text file.
+!>
+!>        Added the entry point SZPOOL to return kernel pool definition
+!>        parameters.
+!>
+!>-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
+!>
+!>        The implementation of the kernel pool was completely redone
+!>        to improve performance in loading and fetching data. In
+!>        addition the pool was upgraded so that variables may be
+!>        either string or numeric valued.
+!>
+!>        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
+!>        to the routine.
+!>
+!>        The entry point RTPOOL should now be regarded as obsolete
+!>        and is maintained solely for backward compatibility with
+!>        existing routines that make use of it.
+!>
+!>        The basic data structure used to maintain the list of
+!>        variable names and values was replaced with a hash table
+!>        implementation. Data and names are accessed by means
+!>        of a hash function and linked lists of pointers to existing
+!>        variable names and data values.
+!>
+!>-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
+!>
+!>        The entry points SWPOOL (set watch on a pool variable)
+!>        and CVPOOL (check variable for update) so that routines
+!>        that buffer data stored in the kernel pool can fetch
+!>        that data only when it is updated.
+!>
+!>        Also the control of initializations was modified to be
+!>        consistent with other SPICELIB practices.
+!>
+!>        Finally, the revision history was upgraded so that the
+!>        version number increases over time. This wasn't true
+!>        before. In addition some early revision data that referred to
+!>        pre-SPICELIB modifications were removed. This editing of
+!>        the version numbers makes it unlikely that anyone can track
+!>        down which previous version of this routine they have by
+!>        looking at the version number. The best way to determine
+!>        the routine you had previously is to compare the dates
+!>        stored in the Version line of the routine.
+!>
+!>-    SPICELIB Version 5.0.0, 22-AUG-1990 (NJB)
+!>
+!>        Increased value of parameter MAXVAL to 5000 to accommodate
+!>        storage of SCLK coefficients in the kernel pool.
+!>
+!>        Also, changed version number in previous revisions entry
+!>        from SPICELIB Version 2.0.0 to SPICELIB Version 2.0.0. The
+!>        last version entry in the $Version section had been
+!>        Version 1.0.0, dated later than the entry for `version 2'
+!>        in the $Revisions section!
+!>
+!>-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
+!>
+!>        All entry points except POOL and CLPOOL now initialize the
+!>        pool if it has not been done yet.
+!>
+!>-    SPICELIB Version 3.0.0, 23-OCT-1989 (HAN)
+!>
+!>        Added declaration of FAILED. FAILED is checked in the
+!>        DO-loops in LDPOOL and WRPOOL to prevent infinite looping.
+!>
+!>-    SPICELIB Version 2.0.0, 18-OCT-1989 (RET)
+!>
+!>       A FAILED test was inserted into the control of the DO-loop which
+!>       reads in each kernel variable.
+!>
+!>       Previously, if the error action 'RETURN' had been set by a
+!>       calling program, and the call to RDKNEW by LDPOOL failed,
+!>       then execution would continue through LDPOOL, with SPICELIB
+!>       routines returning upon entry. This meant that the routine
+!>       RDKVAR never got a chance to set the EOF flag, which was the
+!>       only control of the DO-loop. An infinite loop resulted in such
+!>       cases. The FAILED test resolves that situation.
+!>
+!>-    SPICELIB Version 1.2.0, 9-MAR-1989 (HAN)
+!>
+!>        Parameters BEGDAT and BEGTXT have been moved into the
+!>        $Declarations section.
+!>
+!>-    SPICELIB Version 1.1.0, 16-FEB-1989 (IMU) (NJB)
+!>
+!>        Parameters MAXVAR, MAXVAL, MAXLEN moved into $Declarations.
+!>        (Actually, MAXLEN was implicitly 32 characters, and has only
+!>        now been made an explicit---and changeable---limit.)
+!>
+!>        Declaration of unused function FAILED removed.
+!>
+!>-    SPICELIB Version 1.0.0, 8-JAN-1989 (IMU)
+!>
+!>### Implementation notes
+!>
+!>     Private SPICELIB functions
+!>
+!>     The next two variables are for use in traversing linked lists.
+!>
+!>     Because some environments (such as the SUN) are too stupid to
+!>     treat the backslash character correctly we have to go through
+!>     some gyrations to put it into a variable in a "portable" way.
+!>     This is the reason for the following block of declarations.
+!>     Admittedly this is bizarre, but it works.
+!>
+!>     The following is the hash table used for holding kernel pool
+!>     variables.  Here's the basic structure:
+!>
+!>     The function ZZHASH computes the address of the head of a linked
+!>     list that contains the collisions for the range of ZZHASH.
+!>
+!>     The head node of the collision lists is stored in NAMLST.
+!>
+!>     If NAMLST has a value zero then
+!>
+!>        there is no name corresponding to that value of the
+!>        hash function.
+!>
+!>     If NAMLST is non-zero then
+!>
+!>        it is the head node of the list of names that have been
+!>        stored so far.
+!>
+!>        The list of addresses of names is stored in NMPOOL.
+!>        The names that have been stored so far are in PNAMES.
+!>
+!>     The data associated with  PNAMES is pointed to by DATLST
+!>     and CHPOOL or DPPOOL.  If a name of interest is stored in
+!>     PNAMES(I) then the DATLST(I) points to the first data node
+!>     associated with the name.
+!>
+!>     If DATLST(I) is less than zero then
+!>
+!>        its opposite is the address of the first node of
+!>        character data associated with PNAMES(I).
+!>
+!>     If DATLST(I) is positive then
+!>
+!>        it points to the address of the first node of numeric
+!>        data associated with PNAMES(I).
+!>
+!>     If DATLST(I) is zero
+!>
+!>        there is no data associated with PNAMES(I).
+!>
+!>     The arrays DPPOOL and CHPOOL are linked list pools that
+!>     give the address lists of values associated with a name.
+!>
+!>     The actual data is stored in DPVALS and CHVALS.
+!>
+!>     Here's a picture of how this all works.
+!>
+!>                                             Linked list Pool
+!>                                             of HASH collisions
+!>                       NAMLST                  NMPOOL         PNAME
+!>                     +------------+          +---------+    +--------+
+!>                     |            |          |         |    |        |
+!>                     +------------+ if not 0 +---------+    +--------+
+!>  ZZHASH( NAME ) --->|  Head Node | ---.     |         |    |        |
+!>                     +------------+    |     +---------+    +--------+
+!>                                       |     |         |    |        |
+!>                                       |     +---------+    +--------+
+!>                                       `-->  |Head of  |    |Name    |
+!>                                             |collision|    |corresp.|
+!>                                             |list for | -. |to head |
+!>                                             | NAME    |  | |of list |
+!>                                             +---------+  | +--------+
+!>                                             |         |  | |        |
+!>                                             +---------+  | +--------+
+!>                                             |         |  | |        |
+!>                                             +---------+  | +--------+
+!>                                             |Next Node|<-' |NextName|
+!>                                             +---------+etc.+--------+
+!>                                                  .              .
+!>                                                  .              .
+!>                                                  .              .
+!>                                             +---------+    +--------+
+!>                                             |         |    |        |
+!>                                             +---------+    +--------+
+!>
+!>      Linked       Variable    Heads of
+!>      List Pool     Names      Data lists
+!>       NMPOOL       PNAME       DATLST
+!>     +--------+   +--------+   +---------+          Head of linked list
+!>     |        |   |        |   |         |     .--> in DPPOOL linked
+!>     +--------+   +--------+   +---------+    |     list pool
+!>     |        |   |        |   |         |    |
+!>     +--------+   +--------+   +---------+    | Positive Value
+!>     |        |<->|        |<->|         |---<
+!>     +--------+   +--------+   +---------+    |
+!>     |        |   |        |   |         |    | Negative Value
+!>     +--------+   +--------+   +---------+    |
+!>     |        |   |        |   |         |    `--> Opposite of head
+!>     +--------+   +--------+   +---------+          of linked list
+!>     |        |   |        |   |         |          in CHPOOL linked
+!>     +--------+   +--------+   +---------+          list pool.
+!>
+!>      Linked                Values
+!>      List Pool             of data
+!>       DPPOOL (CHPOOL)      DPVALS (CHVALS)
+!>     +------------+         +------------+
+!>     |            |         |            |
+!>     +------------+         +------------+
+!>     |            |         |            |
+!>     +------------+         +------------+
+!>     | HEAD       |--. <--> | head value |
+!>     +------------+  |      +------------+
+!>     |            |  |      |            |
+!>     +------------+  |      +------------+
+!>     |            |  |      |            |
+!>     +------------+  |      +------------+
+!>     | Node 2     |<-' <--> | 2nd value  |
+!>     +------------+ etc.    +------------+
+!>     |            |         |            |
+!>     +------------+         +------------+
+!>     |            |         |            |
+!>     +------------+         +------------+
+!>     |            |         |            |
+!>     +------------+         +------------+
+!>     |            |         |            |
+!>     +------------+         +------------+
+!>     |            |         |            |
+!>     +------------+         +------------+
+!>     |            |         |            |
+!>     +------------+         +------------+
+!>
+!>     The WT... variables make up the data structure that
+!>     maps variables to their associated agents (WTAGNT).
+!>     A diagram of the watcher data structure is shown below.
+!>
+!>      Watched     Heads of     Agent linked  Agent names
+!>      variables   agent lists  list pool
+!>       WTVARS       WTPTR        WTPOOL        WTAGNT
+!>     +--------+   +--------+   +---------+   +---------+
+!>     |        |   |        |   |         |   |         |
+!>     +--------+   +--------+   +---------+   +---------+
+!>     |        |   |        |   |         |   |         |
+!>     +--------+   +--------+   +---------+   +---------+
+!>     |        |<->|        |<->|         |<->|         |
+!>     +--------+   +--------+   +---------+   +---------+
+!>     |        |   |        |   |         |   |         |
+!>     +--------+   +--------+   +---------+   +---------+
+!>     |        |   |        |   |         |   |         |
+!>     +--------+   +--------+   +---------+   +---------+
+!>     |        |   |        |   |         |   |         |
+!>     +--------+   +--------+   +---------+   +---------+
+!>
+!>     Agents contains the list of agents that need to be notified
+!>     about updates to their variables.  NOTIFY and ACTIVE are both
+!>     temporary sets.
+!>
+!>     These variables are declared with the size MXNOTE because
+!>     they must be able to hold the largest possible number
+!>     of agents that could be associated with a kernel variable.
+!>
+!>     First is our initialization flag.
+!>
+!>     POOL state counter.
+!>
+!>     The remaining local variables...
+!>
+!>     Set up the definition of our in-line functions.
 submodule (pepper_instance) pepper_pool
 
    implicit none
@@ -142,214 +1542,6 @@ submodule (pepper_instance) pepper_pool
       'mDY', 'mDY', 'DmY' ]
 
 contains
-
-!$Procedure ZZCTR ( Manipulate Counter Array )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZCTR is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zzctr. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Manipulate counter array.
-!
-! $ Detailed_Input
-!
-!     See the ENTRY points for a discussion of their arguments.
-!
-! $ Detailed_Output
-!
-!     See the ENTRY points for a discussion of their arguments.
-!
-! $ Parameters
-!
-!     CTRSIZ      is the dimension of the counter array used by
-!                 various SPICE subsystems to identify
-!                 changes in their states. This parameter is
-!                 defined in the include file.
-!
-! $ Exceptions
-!
-!     1) If ZZCTR is called directly, the error SPICE(BOGUSENTRY) is
-!        signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     ZZCTR should never be called directly, but should instead be
-!     accessed only through its entry points.
-!
-!     The purpose of this routine is to manipulate counter arrays used
-!     by various SPICE subsystems to identify changes in their states.
-!
-!           ZZCTRUIN       Initialize counter array kept by a user
-!                          routine.
-!
-!           ZZCTRSIN       Initialize counter array kept by a
-!                          subsystem routine.
-!
-!           ZZCTRINC       Increment counter array.
-!
-!           ZZCTRCHK       Check/update counter array.
-!
-!     A counter array consists of CTRSIZ elements representing
-!     cascading counters. The fastest counter is at index 1, the
-!     slowest counter is at index CTRSIZ. At the start of counting all
-!     counter array elements are set to INTMIN. In the process of
-!     counting the fastest element is incremented by one. As with any
-!     cascading counters when the fastest counter reaches INTMAX it
-!     rolls back to INTMIN and the next counter is incremented by 1.
-!     When all counters reach INTMAX, ZZCTRINC signals an error.
-!
-! $ Examples
-!
-!     The counter array gives subsystems like POOL a way to provide to
-!     the user routines of that subsystem's services a simple indicator
-!     of whether the subsystem's state has changed, meaning that some
-!     saved values may have become stale and need to be updated or some
-!     other action needs to be taken in the user routines.
-!
-!     For that the subsystem initializes a counter array ("subsystem
-!     counter") using ZZCTRSIN, saves it, increments it using ZZCTRINC
-!     each time the subsystem's state changes, and resets a user
-!     counter to subsystem counter and indicates the need for update
-!     when counters are not the same, like this:
-!
-!        C
-!        C     Include zzctr.inc to access CTRSIZ.
-!        C
-!              INCLUDE              'zzctr.inc'
-!              ...
-!        C
-!        C     In input/output variable declarations declare user
-!        C     user counter (USRCTR) as I/O and the update flag
-!        C     (UPDATE) as O.
-!        C
-!              INTEGER               USRCTR ( CTRSIZ )
-!              LOGICAL               UPDATE
-!              ...
-!        C
-!        C     In local variable declarations declare and save the
-!        C     subsystem counter (SUBCTR) that will incremented
-!        C     with each change of state.
-!        C
-!              INTEGER               SUBCTR ( CTRSIZ )
-!              ...
-!              SAVE                  SUBCTR
-!              ...
-!        C
-!        C     In all places where initialization is done set
-!        C     subsystem counter using ZZCTRSIN.
-!        C
-!              IF ( FIRST ) THEN
-!                 ...
-!                 CALL ZZCTRSIN( SUBCTR )
-!                 FIRST = .FALSE.
-!              END IF
-!              ...
-!        C
-!        C     In all places where the subsystem state changes
-!        C     increment the subsystem counter using ZZCTRINC.
-!        C
-!              CALL ZZCTRINC( SUBCTR )
-!              ...
-!        C
-!        C     Make a special entry that checks and resets input
-!        C     user counter to the current subsystem counter and
-!        C     indicates whether it was updated using ZZCTRCHK.
-!        C
-!              ENTRY <entry_name> ( USRCTR, UPDATE )
-!
-!              CALL ZZCTRCHK( SUBCTR, USRCTR, UPDATE )
-!
-!              RETURN
-!              ...
-!
-!     The users of the subsystem services initialize a counter array
-!     ("user counter") using ZZCTRUIN, save it, and check against the
-!     subsystem's counter and update, if needed, using the subsystem's
-!     entry point, like this:
-!
-!        C
-!        C     Include zzctr.inc to access CTRSIZ.
-!        C
-!              INCLUDE              'zzctr.inc'
-!              ...
-!        C
-!        C     In local variable declarations declare and save
-!        C     user counter. Also declare an update flag.
-!        C
-!              INTEGER               USRCTR ( CTRSIZ )
-!              LOGICAL               UPDATE
-!              ...
-!              SAVE                  USRCTR
-!              ...
-!        C
-!        C     In all places where initialization is done initialize
-!        C     the user counter using ZZCTRUIN to ensure update on
-!        C     the first check.
-!        C
-!              IF ( FIRST ) THEN
-!                 ...
-!                 CALL ZZCTRUIN( USRCTR )
-!                 FIRST = .FALSE.
-!              END IF
-!              ...
-!        C
-!        C     In all places where there is a need to check for
-!        C     the subsystem state change call subsystem's entry
-!        C     that checks and updates the user counter based on
-!        C     value of the subsystem counter.
-!        C
-!              CALL <entry_name> ( USRCTR, UPDATE )
-!
-!              IF ( UPDATE ) THEN
-!
-!        C
-!        C        Do what needs to be done when the subsystem
-!        C        state has changed.
-!        C
-!                 ...
-!
-!              END IF
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     B.V. Semenov    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
-!
-
-!
-!     Local variables.
-!
-
-!
-!     Save EVERYTHING.
-!
-
-!
-!     Initial values.
-!
-!     Constants (SPICELIB computed them on the first call).
-!
-
-!
-!     Standard SPICE error handling.
 
       !>## Detailed Input
       !>
@@ -1695,281 +2887,6 @@ contains
       return
       end associate
       end procedure cltext
-
-!$Procedure RDKER ( Read a kernel file )
-!
-!     PEPPER: SPICELIB's umbrella routine RDKER is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_rdker. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Open and read the contents of a SPICE ASCII kernel file.
-!
-! $ Detailed_Input
-!
-!     All input is through entry RDKNEW.
-!
-! $ Detailed_Output
-!
-!     All output is through entry RDKDAT.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If RDKER is called directly, the error SPICE(BOGUSENTRY) is
-!         signaled.
-!
-! $ Files
-!
-!     The SPICE ASCII kernel file KERNEL is opened by RDKNEW and read
-!     by RDKDAT. The entry point RDKLIN is available for reporting
-!     the name of the open file and the number of the last line that
-!     was read from that file.
-!
-! $ Particulars
-!
-!     RDKER should never be called directly, but should instead be
-!     accessed only through its entry points, RDKNEW, RDKDAT and
-!     RDKLIN.
-!
-! $ Examples
-!
-!     In the following example, RDKNEW and RDKDAT are used to read
-!     the contents of a kernel file.
-!
-!     Let the file KERNEL contain the following lines.
-!
-!        =============================================================
-!
-!        DELTA_T_A is defined to be 32.184 seconds, and should not
-!        be changed except under the most unusual circumstances.
-!
-!        \begindata
-!
-!        DELTA_T_A       =   32.184
-!
-!        \begintext
-!
-!        The next three items determine the relativistic correction
-!        in the difference ET - TAI. To turn the correction off,
-!        just set K to zero.
-!
-!        \begindata
-!
-!        K               =    1.657D-3
-!        ORBIT_ECC       =    1.671D-2
-!        MEAN_ANOM       = (  6.239996D0,  1.99096871D-7 )
-!
-!        =============================================================
-!
-!     Then the code fragment
-!
-!        CALL RDKNEW ( KERNEL )
-!        CALL RDKDAT ( LINE, EOF )
-!
-!        DO WHILE ( (.NOT. EOF) .AND. ( .NOT. FAILED () ) )
-!           WRITE (6,*) LINE
-!           CALL RDKDAT ( LINE, EOF )
-!        END DO
-!
-!     prints the following lines.
-!
-!        =============================================================
-!        DELTA_T_A       =   32.184
-!        K               =    1.657D-3
-!        ORBIT_ECC       =    1.671D-2
-!        MEAN_ANOM       = (  6.239996D0,  1.99096871D-7 )
-!        =============================================================
-!
-! $ Restrictions
-!
-!     1)  The input file must be opened and initialized by RDKNEW prior
-!         to the first call to RDKDAT.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     H.A. Neilan        (JPL)
-!     B.V. Semenov       (JPL)
-!     M.J. Spencer       (JPL)
-!     W.L. Taber         (JPL)
-!     I.M. Underwood     (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 3.7.0, 28-NOV-2021 (BVS)
-!
-!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
-!
-!-    SPICELIB Version 3.6.1, 17-JUN-2021 (JDR)
-!
-!        Edited the header of the RDKER umbrella routine and all its
-!        entry entry points to comply with NAIF standard.
-!
-!-    SPICELIB Version 3.6.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GCC_C.
-!
-!-    SPICELIB Version 3.5.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-CC_C.
-!
-!-    SPICELIB Version 3.4.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
-!
-!-    SPICELIB Version 3.3.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
-!
-!-    SPICELIB Version 3.2.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-64BIT-MS_C.
-!
-!-    SPICELIB Version 3.1.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-INTEL_C.
-!
-!-    SPICELIB Version 3.0.0, 11-FEB-2008 (NJB)
-!
-!        Entry points RDKNEW and RDKDAT have been updated so as to be
-!        able to parse text kernel lines containing tab characters.
-!
-!-    SPICELIB Version 2.5.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GCC_C.
-!
-!-    SPICELIB Version 2.4.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-INTEL_C.
-!
-!-    SPICELIB Version 2.3.0, 14-NOV-2005 (BVS)
-!
-!        Reinstated HP_C environment.
-!
-!-    SPICELIB Version 2.2.0, 26-OCT-2005 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-GCC_C.
-!
-!-    SPICELIB Version 2.1.0, 03-OCT-2005 (EDW)
-!
-!        File rdker.f made a master file so as to
-!        add the ZZSETNNREAD call. This call will exist
-!        only in FORTRAN source intended for conversion
-!        to C by the f2c utility.
-!
-!        The ZZSETNNREAD call activates and deactivates
-!        the non-native text line read capability for the
-!        CSPICE toolkit.
-!
-!-    SPICELIB Version 2.0.1, 22-AUG-2001 (EDW)
-!
-!        Corrected ENDIF to END IF.
-!
-!-    SPICELIB Version 2.0.0, 20-SEP-1995 (WLT)
-!
-!         The entry point RDKLIN was added.
-!
-!-    SPICELIB Version 1.3.0, 22-SEP-1993 (NJB)
-!
-!         Updated for port to NeXT. The "previous kernel" is now closed
-!         only if there actually was a previous kernel.
-!
-!-    SPICELIB Version 1.2.0, 01-JUN-1992 (MJS)
-!
-!         RDKER now initializes the variables BEGDAT and BEGTXT
-!         in a portable way. On the first valid entry to this routine,
-!         the backslash character in the form CHAR(92) is concatenated
-!         individually to 'begindata' and 'begintext'.
-!
-!-    SPICELIB Version 1.1.1, 10-MAR-1992 (WLT)
-!
-!         Comment section for permuted index source lines was added
-!         following the header.
-!
-!-    SPICELIB Version 1.1.0, 07-DEC-1990 (HAN)
-!
-!         The declarations for BEGDAT and BEGTXT were changed from
-!         CHARACTER*10 to CHARACTER*(*).
-!
-!-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-!
-
-! $ Revisions
-!
-!-     SPICELIB Version 2.0.0, 20-SEP-1995 (WLT)
-!
-!         The entry point RDKLIN was added.
-!
-!-     SPICELIB Version 1.3.0, 22-SEP-1993 (NJB)
-!
-!         Updated for port to NeXT. The "previous kernel" is now closed
-!         only if there actually was a previous kernel.
-!
-!         In the last version of this routine, on the first entry into
-!         the routine, the variable FILE, which records the name of
-!         the last kernel accessed, was passed to CLTEXT.  CLTEXT
-!         executed an INQUIRE statement using this name, which was
-!         not initialized. On the NeXT, this caused the INQUIRE
-!         statement to fail.
-!
-!-     SPICELIB Version 1.2.0, 01-JUN-1992 (MJS)
-!
-!         RDKER now initializes the variables BEGDAT and BEGTXT
-!         in a portable way. On the first valid entry to this routine,
-!         the backslash character in the form CHAR(92) is concatenated
-!         individually to 'begindata' and 'begintext'. As a result of
-!         this change, this module is no longer considered environment
-!         specific. All references in the header to the previous method
-!         of initialization were removed.
-!
-!         FILE is now initialized to ' '. Before this modification, if
-!         a call to RDKDAT was performed prior to RDKNEW, RDTEXT
-!         would have printed out garbage (on some machines) in its
-!         error message when notifying the user that it couldn't read
-!         from FILE.
-!
-!-     SPICELIB Version 1.1.0, 7-DEC-1990 (HAN)
-!
-!         The declarations for BEGDAT and BEGTXT were changed from
-!         CHARACTER*10 to CHARACTER*(*). The fixed length of 10 was
-!         not long enough.
-!
-!-     Beta Version 1.1.0, 9-MAR-1989 (HAN)
-!
-!         Moved the declaration of the parameters BEGDAT and
-!         BEGTXT from the code to the $Declarations section.
-!         Filled out the Brief I/O and $Parameters sections.
-!
-
-!     Because some environments (such as the SUN) treat the backslash
-!     character as a special character, some gyrations are needed to
-!     put it into a variable in a "portable" way. This is the reason
-!     for the following block of declarations. Admittedly this is
-!     bizarre, but it works.
-!
-
-!
-!     The ASCII decimal code for the tab character is 9.
-!
-
-!
-!     Save EVERYTHING.
-!
-
-!
-!     Standard SPICE error handling.
 
       !>## Detailed Input
       !>
@@ -5695,242 +6612,6 @@ contains
       return
 
       end procedure tpartv
-
-!$Procedure ZZTIME ( Private, Time --- time parsing utilities )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZTIME is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zztime. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due
-!     to the volatile nature of this routine.
-!
-!     This is an umbrella routine for a collection of entry points
-!     to the time parsing utility functions.
-!
-! $ Detailed_Input
-!
-!     See Individual Entry Points.
-!
-! $ Detailed_Output
-!
-!     See Individual Entry Points.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If ZZTIME is called directly the error 'SPICE(BOGUSENTRY)'
-!         is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This routine serves as an umbrella for a collection of
-!     related entry points that are used to parse time strings.
-!
-!     Normal usage is to first call ZZTOKNS to create an internal
-!     representation for a time string. This internal representations
-!     maintains a list of identified substrings from the original
-!     input time string. For example the call to ZZTOKNS using
-!     the string
-!
-!       '1996 JAN 25 12:18:19.199'
-!        123456789012345678901234
-!
-!     yields the following internal representation:
-!
-!       'ibmbibi:i:i.i'
-!
-!     where the individual tokens correspond to the substrings
-!     indicated in the following table:
-!
-!       Identifier    Substring          meaning
-!       ----------    -------------      ----------------
-!         i           from 01 to 04      unsigned integer
-!         b           from 05 to 05      blanks or tab
-!         m           from 06 to 08      month
-!         b           from 09 to 09      blanks or tab
-!         i           from 10 to 11      unsigned integer
-!         b           from 12 to 12      blank or tab
-!         i           from 13 to 14      unsigned integer
-!         :           from 15 to 15      colon
-!         i           from 16 to 17      unsigned integer
-!         :           from 18 to 18      colon
-!         i           from 19 to 20      unsigned integer
-!         .           from 21 to 21      decimal point
-!         i           from 22 to 24      unsigned integer
-!
-!     These substrings may be combined and reidentified, removed
-!     or re-identified using the various entry points listed here:
-!
-!     ZZCMBT   combine several tokens into a single token
-!              for example you might scan right to left and replace
-!              the token sequence i.i by n (for number). In this
-!              case the substring boundaries of n would be from 19
-!              to 24.
-!
-!     ZZGREP   returns the current internal representation
-!              in the case above 'ibmbibi:i:i.i'
-!
-!     ZZISPT   returns TRUE if a pair of letters from a list are
-!              present in the internal representation. This is
-!              used primarily to detect erroneous substrings such
-!              as ',,' or ':,'
-!
-!     ZZIST    Return TRUE if a particular letter is present in the
-!              string.
-!
-!     ZZNOTE   Returns the substring boundaries associated with
-!              a letter and removes the letter from the internal
-!              representation. This is used primarily for calendar
-!              string modifiers such as 'B.C.', 'A.D.' etc.
-!
-!     ZZREMT   remove a letter from the internal representation.
-!              In the input example you might remove all white space
-!              markers.
-!
-!     ZZSUBT   substitute a different letter for one listed in the
-!              input one for one. For example after removing blanks
-!              you might substitute YmD for imi.
-!
-!     ZZVALT   replace an integer by a new marker if the integer
-!              lies withing a particular range. For example
-!              you might replace any integer between 1000 and 10000
-!              by Y (for year).
-!
-!     Once all substitutions and removals have been performed that
-!     can be made, the entry point ZZUNPCK allows you to extract
-!     year(Y), month(m), day or month(D), day of year (y), hours(H),
-!     minutes(M) and seconds(S) from the input string
-!
-! $ Examples
-!
-!     See TPARTV.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     B.V. Semenov    (JPL)
-!     W.L. Taber      (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.7.0, 08-NOV-2020 (EDW)
-!
-!        Added 'Z' to list of recognized tokens, marked as
-!        no op.
-!
-!-    SPICELIB Version 1.6.0, 05-FEB-2014 (EDW) (BVS)
-!
-!        BUG FIX: entry point ZZUNPCK: added error check on ITEM value.
-!        Failure to perform this check can cause BADSUBSCRIPT error
-!        signals from CSPICE code on invalid time strings.
-!
-!        BUG FIX: entry point ZZTOKNS: added checks for token indexes
-!        overflowing the maximum number of tokens and for the character
-!        positions in the time picture overflowing the time picture
-!        length. Both overflows previously resulted in segmentation
-!        faults for invalid input time strings that contained too many
-!        recognizable tokens or were too long and required too many
-!        characters in the picture representation.
-!
-!-    SPICELIB Version 1.5.0, 08-MAR-2009 (NJB)
-!
-!        Bug fix: in entry point ZZTOKNS, changed upper
-!        bound used to detect non-printing characters from 128
-!        to 126.
-!
-!        Bug fix: added error handling to this routine. Header
-!        already referred to SPICE(BOGUSENTRY) error, but no
-!        such error was signaled.
-!
-!        Changed upper bound of arrays NAMES, F, and L from 128
-!        to 126.
-!
-!        Re-ordered header sections in various entry points.
-!
-!-    SPICELIB Version 1.4.0, 27-OCT-2006 (BVS)
-!
-!        Fixed the bug in the ZZTOKNS entry that in the case of a one
-!        character long blank input time string caused the TO variable
-!        be set to the value greater than the string length, triggering
-!        an OUT OF BOUNDS runtime error on HP. Added to ZZTOKNS a
-!        separate check for the blank input strings.
-!
-!-    SPICELIB Version 1.3.0, 13-Nov-2000 (WLT)
-!
-!        Changed the call to EQSTR to a call to SAMSBI so as to
-!        guard against overflowing strings.
-!
-!-    SPICELIB Version 1.2.0, 09-DEC-1999 (WLT)
-!
-!        The main routine (which should never be called) now returns
-!        the value .FALSE.
-!
-!-    SPICELIB Version 1.1.0, 30-JUN-1999 (WLT)
-!
-!        Added a RETURN statement at the end of the main routine.
-!        Enhanced error message for the case when the input string
-!        to ZZTOKNS has a non-printing character.
-!
-!-    SPICELIB Version 1.0.0, 8-APR-1996 (WLT)
-!
-
-!
-!     Entry points
-!
-
-!
-!     Standard Parameters
-!
-
-!
-!     LOWER
-!     UPPER
-!     MIXED
-!
-
-!
-!     FULL
-!     SHORT
-!
-
-!
-!     Maximum number of tokens that a valid time string can contain.
-!
-
-!
-!     Length of the string buffer containing the time string picture.
-!
-
-!
-!     Representation Variables.
-!
-
-!
-!     Token Recognition Variables.
-!
-!     At the moment there are 53 recognized substrings, we
-!     make room for 70 just so we won't have to increase
-!     the parameter NRECOG soon.
 
       !>## Abstract
       !>
@@ -11755,764 +12436,6 @@ contains
 
       return
       end procedure zzrvbf
-
-!$Procedure POOL ( Maintain a pool of kernel variables )
-!
-!     PEPPER: SPICELIB's umbrella routine POOL is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_pool. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Maintain a pool of variables read from SPICE ASCII kernel files.
-!
-! $ Detailed_Input
-!
-!     See the ENTRY points for a discussion of their arguments.
-!
-! $ Detailed_Output
-!
-!     See the ENTRY points for a discussion of their arguments.
-!
-! $ Parameters
-!
-!     MAXVAR   is the maximum number of variables that the
-!              kernel pool may contain at any one time.
-!              MAXVAR should be a prime number.
-!
-!              Here's a list of primes that should make
-!              it easy to upgrade MAXVAR when/if the need arises.
-!
-!                  103
-!                  199
-!                  307
-!                  401
-!                  503
-!                  601
-!                  701
-!                  751
-!                  811
-!                  911
-!                 1013
-!                 1213
-!                 1303
-!                 1511
-!                 1811
-!                 1913
-!                 2003
-!                 2203
-!                 2503
-!                 2803
-!                 3203
-!                 3607
-!                 4001
-!                 4507
-!                 4801
-!                 5003 Current Value
-!                 6007
-!                 6521
-!                 7001
-!                 7507
-!                 8009
-!                 8501
-!                 9001
-!                 9511
-!                10007
-!                10501
-!                11003
-!                11503
-!
-!     MAXLEN   is the maximum length of the variable names that
-!              can be stored in the kernel pool (also set in
-!              zzrvar.f).
-!
-!     MAXVAL   is the maximum number of distinct values that
-!              may belong to the variables in the kernel pool.
-!              Each variable must have at least one value, and
-!              may have any number, so long as the total number
-!              does not exceed MAXVAL. MAXVAL must be at least
-!              as large as MAXVAR.
-!
-!     MAXAGT   is the maximum number of agents that can be
-!              associated with a given kernel variable.
-!
-!     MAXCHR   is the maximum number of characters that can be
-!              stored in a component of a string valued kernel
-!              variable.
-!
-!     MXNOTE   is the maximum sum of the sizes of the sets of
-!              agents in the range of the mapping that associates
-!              with each watched kernel variable a set of agents
-!              that "watch" that variable.
-!
-!     MAXLIN   is the maximum number of character strings that
-!              can be stored as data for kernel pool variables.
-!
-!     CTRSIZ   is the dimension of the counter array used by
-!              various SPICE subsystems to uniquely identify
-!              changes in their states. This parameter is
-!              defined in the private include file 'zzctr.inc'.
-!
-! $ Exceptions
-!
-!     1)  If POOL is called directly, the error SPICE(BOGUSENTRY) is
-!         signaled.
-!
-! $ Files
-!
-!     See the ENTRY points for a discussion of their arguments.
-!
-! $ Particulars
-!
-!     POOL should never be called directly, but should instead be
-!     accessed only through its entry points.
-!
-!     The purpose of this routine is to maintain a pool of variables
-!     read from ASCII kernel files. The following entry points may be
-!     used to access the pool.
-!
-!           CLPOOL         Clears the pool.
-!
-!           LDPOOL         Loads the variables from a kernel file into
-!                          the pool.
-!
-!           RTPOOL         Returns the value of a variable from
-!                          the pool. (Obsolete use GDPOOL)
-!
-!           EXPOOL         Confirms the existence of a numeric
-!                          variable in the pool.
-!
-!           WRPOOL         Writes the contents of the pool to an
-!                          ASCII kernel file.
-!
-!           SWPOOL         Sets up a "watcher" on a variable so that
-!                          various "agents" can be notified when a
-!                          variable has been updated.
-!
-!           CVPOOL         Indicates whether or not an agent's
-!                          variable has been updated since the last
-!                          time an agent checked with the pool.
-!
-!           GCPOOL         Returns the value of a string valued
-!                          variable in the pool.
-!
-!           GDPOOL         Returns the d.p. value of a numeric valued
-!                          variable in the pool.
-!
-!           GIPOOL         Returns the integer value of a numeric valued
-!                          variable in the pool.
-!
-!           DTPOOL         Returns the attributes of a variable in the
-!                          pool.
-!
-!           PCPOOL         Allows the insertion of a character variable
-!                          directly into the kernel pool without
-!                          supplying a text kernel.
-!
-!           PDPOOL         Allows the insertion of a double precision
-!                          variable directly into the kernel pool
-!                          without supplying a text kernel.
-!
-!           PIPOOL         Allows the insertion of an integer variable
-!                          directly into the kernel pool without
-!                          supplying a text kernel.
-!
-!           LMPOOL         Similar to LDPOOL, but the text kernel is
-!                          stored in an array of strings instead of an
-!                          external file.
-!
-!           SZPOOL         allows run time retrieval of kernel pool
-!                          memory parameters.
-!
-!           DVPOOL         allows deletion of a specific variable from
-!                          the kernel pool. (CLPOOL deletes all
-!                          variables from the kernel pool.)
-!
-!           GNPOOL         assists in determining which variables are
-!                          defined in the kernel pool via variable name
-!                          template matching.
-!
-!           DWPOOL         deletes a watch from the watcher system.
-!
-!     Nominally, the kernel pool contains up to MAXVAR separate
-!     variables, up to MAXVAL numeric values, and up to MAXLIN string
-!     values. The names of the individual variables may contain up to
-!     MAXLEN characters.
-!
-! $ Examples
-!
-!     The following code fragment demonstrates how the data from
-!     several kernel files can be loaded into a kernel pool. After the
-!     pool is loaded, the values in the pool are written to a kernel
-!     file.
-!
-!     C
-!     C     Store in an array the names of the kernel files whose
-!     C     values will be loaded into the kernel pool.
-!     C
-!           FNAME (1) = 'AXES.KER'
-!           FNAME (2) = 'GM.KER'
-!           FNAME (3) = 'LEAP_SECONDS.KER'
-!
-!     C
-!     C     Clear the kernel pool. (This is optional.)
-!     C
-!           CALL CLPOOL
-!
-!     C
-!     C     Load the variables from the three kernel files into the
-!     C     the kernel pool.
-!     C
-!           DO I = 1, 3
-!             CALL LDPOOL ( FNAME (I) )
-!           END DO
-!
-!     C
-!     C     We can examine the values associated with any d.p. variable
-!     C     in the kernel pool using GDPOOL.
-!     C
-!           CALL GDPOOL ( VARIABLE, START, ROOM, NVALS, VALUES, FOUND )
-!
-!     C
-!     C     Open the text file 'NEWKERNEL.KER'.
-!     C
-!           CALL TXTOPN ( NEWKERNEL.KER', UNIT )
-!
-!     C
-!     C     Write the values in the kernel pool to the file.
-!     C
-!           CALL WRPOOL ( UNIT )
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     H.A. Neilan        (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     R.E. Thurman       (JPL)
-!     F.S. Turner        (JPL)
-!     I.M. Underwood     (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 10.2.0, 27-AUG-2021 (JDR) (BVS) (NJB)
-!
-!        Changed input argument name KERNEL to FNAME in entry point
-!        LDPOOL for consistency with other routines.
-!
-!        Edited the header of the umbrella routine and all its entry
-!        points.
-!
-!        Updated SZPOOL $Detailed_Input section.
-!
-!-    SPICELIB Version 10.1.0, 14-JUL-2014 (NJB) (BVS)
-!
-!        Updated header of WRPOOL to improve accuracy of
-!        that routine's output description.
-!
-!        Updated header of CVPOOL to improve accuracy of
-!        the description of the output argument UPDATE.
-!
-!        Updated header of CLPOOL to improve the description
-!        of behavior of the watcher subsystem.
-!
-!        Last update was 17-JAN-2014 (BVS) (NJB)
-!
-!        Increased key POOL parameters as follows:
-!
-!           MAXVAR    5003 ->  26003
-!           MAXVAL  200000 -> 400000
-!           MAXLIN    4000 ->  15000
-!
-!        Decreased MXNOTE factor F (MXNOTE=MAXVAR*F) from 10 to 5.
-!
-!        Updated the main umbrella argument list to include the POOL
-!        state counter. Added the private entry point ZZPCTRCK allowing
-!        other routines to check their saved POOL state counter against
-!        the current POOL state counter to detect and act on the POOL
-!        state change.
-!
-!        Updated $Index_Entries sections of entry points PCPOOL, PDPOOL,
-!        and PIPOOL.
-!
-!-    SPICELIB Version 10.0.0, 24-MAY-2010 (EDW) (NJB)
-!
-!        Added an error check on the length of the kernel pool variable
-!        name argument in:
-!
-!           PCPOOL
-!           PDPOOL
-!           PIPOOL
-!
-!        to enforce the variable name length does not exceed MAXLEN.
-!
-!        Increased MAXVAL to 200000.
-!
-!-    SPICELIB Version 9.0.0, 19-MAR-2009 (NJB)
-!
-!        Added watch deletion entry point DWPOOL and private entry
-!        point ZZVUPOOL. Re-implemented watcher system to improve
-!        efficiency, particularly of watch deletion. Bug fix: corrected
-!        watcher overflow detection logic in SWPOOL. Updated header
-!        code examples to use TXTOPN instead of GETLUN and a Fortran
-!        OPEN statement; also to use GDPOOL instead of RTPOOL, except in
-!        the header of RTPOOL itself.
-!
-!        Code examples in SWPOOL and CVPOOL were updated to handle
-!        kernel pool fetch failures.
-!
-!        Existing entry points modified as part of this update were:
-!
-!           POOL
-!           CLPOOL
-!           CVPOOL
-!           DTPOOL
-!           DVPOOL
-!           EXPOOL
-!           GCPOOL
-!           GDPOOL
-!           GIPOOL
-!           GNPOOL
-!           LDPOOL
-!           LMPOOL
-!           PCPOOL
-!           PDPOOL
-!           PIPOOL
-!           RTPOOL
-!           SWPOOL
-!           WRPOOL
-!
-!        Code examples using RTPOOL were updated to use GDPOOL, except
-!        in the header of RTPOOL itself. Code examples using GETLUN and
-!        an in-line Fortran OPEN statement were updated to use TXTOPN.
-!
-!        Various typos in comments throughout this file were fixed.
-!
-!-    SPICELIB Version 8.3.0, 22-DEC-2004 (NJB)
-!
-!        Fixed bug in DVPOOL. Made corrections to comments in
-!        other entry points. The updated routines are DTPOOL,
-!        DVPOOL, EXPOOL, GCPOOL, GDPOOL, GIPOOL, RTPOOL.
-!
-!-    SPICELIB Version 8.2.0, 24-JAN-2003 (BVS)
-!
-!        Increased MAXVAL to 40000.
-!
-!-    SPICELIB Version 8.1.0, 13-MAR-2001 (FST) (NJB)
-!
-!        Increased kernel pool size and agent parameters. MAXVAR is now
-!        5003, MAXVAL is 10000, MAXLIN is 4000, MXNOTE is 2000, and
-!        MAXAGT is 1000.
-!
-!        Modified Fortran output formats used in entry point WRPOOL to
-!        remove list-directed formatting. This change was made to
-!        work around problems with the way f2c translates list-
-!        directed I/O.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!        Added the entry point DVPOOL to allow the removal of a variable
-!        from the kernel pool.
-!
-!        Added the entry point GNPOOL to allow users to determine
-!        variables that are present in the kernel pool
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
-!        to the routine.
-!
-!        The entry point RTPOOL should now be regarded as obsolete
-!        and is maintained solely for backward compatibility with
-!        existing routines that make use of it.
-!
-!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
-!
-!        The entry points SWPOOL and CVPOOL were added.
-!
-!-    SPICELIB Version 5.0.0, 22-AUG-1990 (NJB)
-!
-!        Increased value of parameter MAXVAL to 5000 to accommodate
-!        storage of SCLK coefficients in the kernel pool.
-!
-!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
-!
-!        All entry points except POOL and CLPOOL now initialize the
-!        pool if it has not been done yet.
-!
-!-    SPICELIB Version 3.0.0, 23-OCT-1989 (HAN)
-!
-!        Added declaration of FAILED. FAILED is checked in the
-!        DO-loops in LDPOOL and WRPOOL to prevent infinite looping.
-!
-!-    SPICELIB Version 2.0.0, 18-OCT-1989 (RET)
-!
-!       A FAILED test was inserted into the control of the DO-loop which
-!       reads in each kernel variable in LDPOOL.
-!
-!-    SPICELIB Version 1.2.0, 09-MAR-1989 (HAN)
-!
-!        Parameters BEGDAT and BEGTXT have been moved into the
-!        $Declarations section.
-!
-!-    SPICELIB Version 1.1.0, 16-FEB-1989 (IMU) (NJB)
-!
-!        Parameters MAXVAR, MAXVAL, MAXLEN moved into $Declarations.
-!        (Actually, MAXLEN was implicitly 32 characters, and has only
-!        now been made an explicit---and changeable---limit.)
-!
-!        Declaration of unused function FAILED removed.
-!
-!-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
-!
-
-! $ Revisions
-!
-!-    SPICELIB Version 8.3.0, 22-DEC-2004 (NJB)
-!
-!        Fixed bug in DVPOOL. Made corrections to comments in
-!        other entry points. The updated routines are DTPOOL,
-!        DVPOOL, EXPOOL, GCPOOL, GDPOOL, GIPOOL, RTPOOL.
-!
-!-    SPICELIB Version 8.2.0, 24-JAN-2003 (BVS)
-!
-!        Increased MAXVAL to 40000.
-!
-!-    SPICELIB Version 8.1.0, 13-MAR-2001 (FST) (NJB)
-!
-!        Increased kernel pool size and agent parameters. MAXVAR is now
-!        5003, MAXVAL is 10000, MAXLIN is 4000, MXNOTE is 2000, and
-!        MAXAGT is 1000.
-!
-!        Modified Fortran output formats used in entry point WRPOOL to
-!        remove list-directed formatting. This change was made to
-!        work around problems with the way f2c translates list-
-!        directed I/O.
-!
-!-    SPICELIB Version 8.0.0, 04-JUN-1999 (WLT)
-!
-!        Added the entry points PCPOOL, PDPOOL and PIPOOL to allow
-!        direct insertion of data into the kernel pool without having
-!        to read an external file.
-!
-!        Added the interface LMPOOL that allows SPICE
-!        programs to load text kernels directly from memory
-!        instead of requiring a text file.
-!
-!        Added the entry point SZPOOL to return kernel pool definition
-!        parameters.
-!
-!-    SPICELIB Version 7.0.0, 20-SEP-1995 (WLT)
-!
-!        The implementation of the kernel pool was completely redone
-!        to improve performance in loading and fetching data. In
-!        addition the pool was upgraded so that variables may be
-!        either string or numeric valued.
-!
-!        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
-!        to the routine.
-!
-!        The entry point RTPOOL should now be regarded as obsolete
-!        and is maintained solely for backward compatibility with
-!        existing routines that make use of it.
-!
-!        The basic data structure used to maintain the list of
-!        variable names and values was replaced with a hash table
-!        implementation. Data and names are accessed by means
-!        of a hash function and linked lists of pointers to existing
-!        variable names and data values.
-!
-!-    SPICELIB Version 6.0.0, 31-MAR-1992 (WLT)
-!
-!        The entry points SWPOOL (set watch on a pool variable)
-!        and CVPOOL (check variable for update) so that routines
-!        that buffer data stored in the kernel pool can fetch
-!        that data only when it is updated.
-!
-!        Also the control of initializations was modified to be
-!        consistent with other SPICELIB practices.
-!
-!        Finally, the revision history was upgraded so that the
-!        version number increases over time. This wasn't true
-!        before. In addition some early revision data that referred to
-!        pre-SPICELIB modifications were removed. This editing of
-!        the version numbers makes it unlikely that anyone can track
-!        down which previous version of this routine they have by
-!        looking at the version number. The best way to determine
-!        the routine you had previously is to compare the dates
-!        stored in the Version line of the routine.
-!
-!-    SPICELIB Version 5.0.0, 22-AUG-1990 (NJB)
-!
-!        Increased value of parameter MAXVAL to 5000 to accommodate
-!        storage of SCLK coefficients in the kernel pool.
-!
-!        Also, changed version number in previous revisions entry
-!        from SPICELIB Version 2.0.0 to SPICELIB Version 2.0.0. The
-!        last version entry in the $Version section had been
-!        Version 1.0.0, dated later than the entry for `version 2'
-!        in the $Revisions section!
-!
-!-    SPICELIB Version 4.0.0, 12-JUN-1990 (IMU)
-!
-!        All entry points except POOL and CLPOOL now initialize the
-!        pool if it has not been done yet.
-!
-!-    SPICELIB Version 3.0.0, 23-OCT-1989 (HAN)
-!
-!        Added declaration of FAILED. FAILED is checked in the
-!        DO-loops in LDPOOL and WRPOOL to prevent infinite looping.
-!
-!-    SPICELIB Version 2.0.0, 18-OCT-1989 (RET)
-!
-!       A FAILED test was inserted into the control of the DO-loop which
-!       reads in each kernel variable.
-!
-!       Previously, if the error action 'RETURN' had been set by a
-!       calling program, and the call to RDKNEW by LDPOOL failed,
-!       then execution would continue through LDPOOL, with SPICELIB
-!       routines returning upon entry. This meant that the routine
-!       RDKVAR never got a chance to set the EOF flag, which was the
-!       only control of the DO-loop. An infinite loop resulted in such
-!       cases. The FAILED test resolves that situation.
-!
-!-    SPICELIB Version 1.2.0, 9-MAR-1989 (HAN)
-!
-!        Parameters BEGDAT and BEGTXT have been moved into the
-!        $Declarations section.
-!
-!-    SPICELIB Version 1.1.0, 16-FEB-1989 (IMU) (NJB)
-!
-!        Parameters MAXVAR, MAXVAL, MAXLEN moved into $Declarations.
-!        (Actually, MAXLEN was implicitly 32 characters, and has only
-!        now been made an explicit---and changeable---limit.)
-!
-!        Declaration of unused function FAILED removed.
-!
-!-    SPICELIB Version 1.0.0, 8-JAN-1989 (IMU)
-!
-
-!
-!     Private SPICELIB functions
-!
-
-!
-!     The next two variables are for use in traversing linked lists.
-!
-
-!
-!     Because some environments (such as the SUN) are too stupid to
-!     treat the backslash character correctly we have to go through
-!     some gyrations to put it into a variable in a "portable" way.
-!     This is the reason for the following block of declarations.
-!     Admittedly this is bizarre, but it works.
-!
-
-!
-!     The following is the hash table used for holding kernel pool
-!     variables.  Here's the basic structure:
-!
-!     The function ZZHASH computes the address of the head of a linked
-!     list that contains the collisions for the range of ZZHASH.
-!
-!     The head node of the collision lists is stored in NAMLST.
-!
-!     If NAMLST has a value zero then
-!
-!        there is no name corresponding to that value of the
-!        hash function.
-!
-!     If NAMLST is non-zero then
-!
-!        it is the head node of the list of names that have been
-!        stored so far.
-!
-!        The list of addresses of names is stored in NMPOOL.
-!        The names that have been stored so far are in PNAMES.
-!
-!     The data associated with  PNAMES is pointed to by DATLST
-!     and CHPOOL or DPPOOL.  If a name of interest is stored in
-!     PNAMES(I) then the DATLST(I) points to the first data node
-!     associated with the name.
-!
-!     If DATLST(I) is less than zero then
-!
-!        its opposite is the address of the first node of
-!        character data associated with PNAMES(I).
-!
-!     If DATLST(I) is positive then
-!
-!        it points to the address of the first node of numeric
-!        data associated with PNAMES(I).
-!
-!     If DATLST(I) is zero
-!
-!        there is no data associated with PNAMES(I).
-!
-!     The arrays DPPOOL and CHPOOL are linked list pools that
-!     give the address lists of values associated with a name.
-!
-!     The actual data is stored in DPVALS and CHVALS.
-!
-!     Here's a picture of how this all works.
-!
-!                                             Linked list Pool
-!                                             of HASH collisions
-!                       NAMLST                  NMPOOL         PNAME
-!                     +------------+          +---------+    +--------+
-!                     |            |          |         |    |        |
-!                     +------------+ if not 0 +---------+    +--------+
-!  ZZHASH( NAME ) --->|  Head Node | ---.     |         |    |        |
-!                     +------------+    |     +---------+    +--------+
-!                                       |     |         |    |        |
-!                                       |     +---------+    +--------+
-!                                       `-->  |Head of  |    |Name    |
-!                                             |collision|    |corresp.|
-!                                             |list for | -. |to head |
-!                                             | NAME    |  | |of list |
-!                                             +---------+  | +--------+
-!                                             |         |  | |        |
-!                                             +---------+  | +--------+
-!                                             |         |  | |        |
-!                                             +---------+  | +--------+
-!                                             |Next Node|<-' |NextName|
-!                                             +---------+etc.+--------+
-!                                                  .              .
-!                                                  .              .
-!                                                  .              .
-!                                             +---------+    +--------+
-!                                             |         |    |        |
-!                                             +---------+    +--------+
-!
-!      Linked       Variable    Heads of
-!      List Pool     Names      Data lists
-!       NMPOOL       PNAME       DATLST
-!     +--------+   +--------+   +---------+          Head of linked list
-!     |        |   |        |   |         |     .--> in DPPOOL linked
-!     +--------+   +--------+   +---------+    |     list pool
-!     |        |   |        |   |         |    |
-!     +--------+   +--------+   +---------+    | Positive Value
-!     |        |<->|        |<->|         |---<
-!     +--------+   +--------+   +---------+    |
-!     |        |   |        |   |         |    | Negative Value
-!     +--------+   +--------+   +---------+    |
-!     |        |   |        |   |         |    `--> Opposite of head
-!     +--------+   +--------+   +---------+          of linked list
-!     |        |   |        |   |         |          in CHPOOL linked
-!     +--------+   +--------+   +---------+          list pool.
-!
-!      Linked                Values
-!      List Pool             of data
-!       DPPOOL (CHPOOL)      DPVALS (CHVALS)
-!     +------------+         +------------+
-!     |            |         |            |
-!     +------------+         +------------+
-!     |            |         |            |
-!     +------------+         +------------+
-!     | HEAD       |--. <--> | head value |
-!     +------------+  |      +------------+
-!     |            |  |      |            |
-!     +------------+  |      +------------+
-!     |            |  |      |            |
-!     +------------+  |      +------------+
-!     | Node 2     |<-' <--> | 2nd value  |
-!     +------------+ etc.    +------------+
-!     |            |         |            |
-!     +------------+         +------------+
-!     |            |         |            |
-!     +------------+         +------------+
-!     |            |         |            |
-!     +------------+         +------------+
-!     |            |         |            |
-!     +------------+         +------------+
-!     |            |         |            |
-!     +------------+         +------------+
-!     |            |         |            |
-!     +------------+         +------------+
-!
-
-!
-!     The WT... variables make up the data structure that
-!     maps variables to their associated agents (WTAGNT).
-!     A diagram of the watcher data structure is shown below.
-!
-!      Watched     Heads of     Agent linked  Agent names
-!      variables   agent lists  list pool
-!       WTVARS       WTPTR        WTPOOL        WTAGNT
-!     +--------+   +--------+   +---------+   +---------+
-!     |        |   |        |   |         |   |         |
-!     +--------+   +--------+   +---------+   +---------+
-!     |        |   |        |   |         |   |         |
-!     +--------+   +--------+   +---------+   +---------+
-!     |        |<->|        |<->|         |<->|         |
-!     +--------+   +--------+   +---------+   +---------+
-!     |        |   |        |   |         |   |         |
-!     +--------+   +--------+   +---------+   +---------+
-!     |        |   |        |   |         |   |         |
-!     +--------+   +--------+   +---------+   +---------+
-!     |        |   |        |   |         |   |         |
-!     +--------+   +--------+   +---------+   +---------+
-!
-
-!
-!     Agents contains the list of agents that need to be notified
-!     about updates to their variables.  NOTIFY and ACTIVE are both
-!     temporary sets.
-!
-!     These variables are declared with the size MXNOTE because
-!     they must be able to hold the largest possible number
-!     of agents that could be associated with a kernel variable.
-!
-
-!
-!     First is our initialization flag.
-!
-
-!
-!     POOL state counter.
-!
-
-!
-!     The remaining local variables...
-!
-
-!
-!     Save EVERYTHING.
-!
-
-!
-!     Set up the definition of our in-line functions.
-!
-
-!
-!     Standard SPICE error handling.
 
       !>## Detailed Input
       !>

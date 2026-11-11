@@ -5,6 +5,1354 @@
 !> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_geometry.f90.
+!>
+!>## LXNAME (Lex names)
+!>
+!> PEPPER: SPICELIB's umbrella routine LXNAME is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_lxname. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Umbrella routine for name scanning entry points.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points for descriptions of their inputs.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points for descriptions of their outputs.
+!>
+!>### Parameters
+!>
+!>     See the entry points for descriptions of their parameters.
+!>
+!>### Exceptions
+!>
+!>     See the entry points for descriptions of the exceptions specific
+!>     to those entry points.
+!>
+!>     1)  If this routine is called directly, the error
+!>         SPICE(BOGUSENTRY) is signaled.
+!>
+!>### Files
+!>
+!>     None.
+!>
+!>### Particulars
+!>
+!>     Many computer languages include tokens that represent names.
+!>     Examples of names include procedure names and variable names.
+!>     The term `identifier' is generally used to indicate this type
+!>     of token. Rules for constructing identifiers vary from
+!>     language to language, but identifiers conforming to the
+!>     following rules are widely recognized:
+!>
+!>        1)  The first character of the identifier is a letter.
+!>
+!>        2)  The remaining characters are letters or numbers.
+!>
+!>        3)  The length of the identifier is less than some specified
+!>            limit.
+!>
+!>     This suite of routines has its own set of default rules for
+!>     forming identifiers. These rules are somewhat more liberal
+!>     than those listed above. Rule (1) above still holds, but
+!>     trailing characters may include letters, numbers, and the
+!>     special characters
+!>
+!>        $
+!>        _  (underscore)
+!>
+!>     No mechanism for enforcing rule (3) is provided; this task is
+!>     left to the caller, since this routine would be unnecessarily
+!>     complicated by the need to construct diagnostic messages.
+!>
+!>     The entry point LXIDNT (Lex identifier) recognizes valid
+!>     identifier tokens, using either the default character sets
+!>     for the head and tail of the identifier, or character sets
+!>     specified in the last call to LXCSID.
+!>
+!>     In order to use this suite of routines to scan identifiers that
+!>     conform to the default rules, a program normally calls the entry
+!>     point LXDFID (Lex, default identifier specification) once to
+!>     obtain the default `identifier specification'. This specification
+!>     is an integer array in which the allowed head and tail character
+!>     sets are specified. This specification is then saved and supplied
+!>     to the entry point LXIDNT (Lex identifier) whenever LXIDNT is
+!>     called to scan an identifier. The entry point LXIDNT  recognizes
+!>     valid identifier tokens, using an input identifier specification
+!>     to decide which head and tail characters are allowed in an
+!>     identifier.
+!>
+!>     The scanning code using these routines might have the following
+!>     structure:
+!>
+!>              INTEGER               IDSPEC ( LBCELL : MXSPEC )
+!>                 .
+!>                 .
+!>                 .
+!>        C
+!>        C     Initialize the identifier specification, using the
+!>        C     default:
+!>        C
+!>              CALL SSIZEI ( MXSPEC, IDSPEC )
+!>              CALL LXDFID ( IDSPEC )
+!>                 .
+!>                 .
+!>                 .
+!>        C
+!>        C     Scan string:
+!>        C
+!>              DO WHILE ( <more tokens> )
+!>                       .
+!>                       .
+!>                       .
+!>                 IF ( <test for identifier> ) THEN
+!>
+!>                    CALL LXIDNT ( IDSPEC, STRING, FIRST, LAST, NCHARS )
+!>
+!>                    IF ( NCHARS .GT. 0 ) THEN
+!>
+!>                       [Identifier was found--process result]
+!>
+!>                    ELSE
+!>
+!>                       [Token at starting at location FIRST was not
+!>                        an identifier--handle alternatives]
+!>
+!>                    END IF
+!>
+!>                 ELSE
+!>
+!>                    [ perform tests for other tokens ]
+!>
+!>                 END IF
+!>
+!>              END DO
+!>
+!>     It is possible to override the default rules by calling the
+!>     entry point LXCSID (Lex, custom identifier characters).  This
+!>     routine allows the caller to specify the precise set of
+!>     characters allowed as the first character (`head') of the
+!>     identifier, as well as those allowed in the remainder (`tail')
+!>     of the identifier.
+!>
+!>     If a custom identifier specification is desired, the call to
+!>     LXDFID in the pseudo code above would be replaced by a call to
+!>     LXCSID. After setting the strings HDCHRS and TLCHRS to contain,
+!>     respectively, the allowed head and tail identifier characters, the
+!>     following call would produce an identifier specification structure
+!>     IDSPEC representing these set of allowed characters.
+!>
+!>        CALL LXCSID ( HDCHRS, TLCHRS, IDSPEC )
+!>
+!>     The array IDSPEC obtained from LXCSID would be used as input to
+!>     LXIDNT, instead of using the array obtained by calling LXDFID.
+!>
+!>### Examples
+!>
+!>     1)  The following table illustrates the behavior of the scanning
+!>         entry point LXIDNT when the default identifier syntax is in
+!>         effect:
+!>
+!>         STRING CONTENTS             FIRST   LAST   NCHAR
+!>         ==========================================================
+!>         WHERE A LT B                1       5      5
+!>         WHERE A LT B                7       7      1
+!>         WHERE A.LT.B                7       7      1
+!>         WHERE (A0)LT(B8)            8       9      2
+!>         WHERE A0$LT_B7              7       14     8
+!>         WHERE A LT B                12      12     1
+!>         WHERE A .LT. B              9       8      0
+!>
+!>     2)  The following table illustrates the behavior of the scanning
+!>         entry point LXIDNT when a custom identifier syntax is used.
+!>         The call
+!>
+!>            CALL LXCSID ( HDCHRS, TLCHRS, IDSPEC )
+!>
+!>         where
+!>
+!>            HDCHRS = 'abcdefghijklmnopqrstuvwxyz'
+!>
+!>         and
+!>
+!>            TLCHRS = 'abcdefghijklmnopqrstuvwxyz012345.'
+!>
+!>        will produce an identifier specification IDSPEC that,
+!>        when supplied as an input to LXIDNT, will cause LXIDNT
+!>        to perform in accordance with the table shown below:
+!>
+!>         STRING CONTENTS             FIRST   LAST   NCHAR
+!>         ==========================================================
+!>         WHERE A LT B                1       0      0
+!>         where a lt b                1       5      5
+!>         WHERE a LT b                7       7      1
+!>         WHERE a.LT.b                7       8      2
+!>         WHERE (a0)LT(b8)            14      14     1
+!>         WHERE (a0)LT(b5)            14      15     2
+!>         WHERE a0.lt.b8              7       13     7
+!>         WHERE a0$lt_b7              7       8      2
+!>         where a .lt. b              9       12     4
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>     B.V. Semenov       (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
+!>
+!>        Added IMPLICIT NONE statement.
+!>
+!>        Edited the header to comply with NAIF standard.
+!>
+!>-    SPICELIB Version 1.0.1, 10-FEB-2014 (BVS)
+!>
+!>        Added LBCELL to the $Brief_I/O section.
+!>
+!>-    SPICELIB Version 1.0.0, 25-OCT-1995 (NJB)
+!>
+!>### Implementation notes
+!>
+!>     IDSPEC parameters:
+!>
+!>## SCTRAN (SCLK name/ID code translation)
+!>
+!> PEPPER: SPICELIB's umbrella routine SCTRAN is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_sctran. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     Convert between SCLK name strings and ID codes.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points for a discussion of their arguments.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points for a discussion of their arguments.
+!>
+!>### Parameters
+!>
+!>     MAXLEN   is the maximum allowed length, in characters, of a
+!>              string containing the name of a spacecraft clock.
+!>
+!>### Exceptions
+!>
+!>     See the entry points for a discussion of exceptions specific to
+!>     those routines.
+!>
+!>     1)  This is an umbrella subroutine that contains declarations
+!>         for its entry points. This routine should never be called
+!>         directly. If it is, the error SPICE(BOGUSENTRY) is signaled.
+!>
+!>### Files
+!>
+!>     None.
+!>
+!>### Particulars
+!>
+!>     This set of subroutines centralizes the mapping between
+!>     spacecraft clock names and their corresponding NAIF integer
+!>     codes. Translation between these names and codes is frequently
+!>     required by user interface functions.
+!>
+!>     The set of supported clocks is identical to the set of spacecraft
+!>     supported by BODTRN. The mapping may be extended by calling
+!>     BODDEF.
+!>
+!>### Examples
+!>
+!>     See the entry points for examples of their usage.
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 1.2.1, 12-AUG-2021 (JDR)
+!>
+!>        Edited the header to comply with NAIF standard.
+!>
+!>-    SPICELIB Version 1.2.0, 29-OCT-2001 (NJB)
+!>
+!>        Bug fix: modified algorithm to handle case where string
+!>        "SCLK" appears in SCLK name.
+!>
+!>-    SPICELIB Version 1.1.0, 25-FEB-2000 (NJB)
+!>
+!>        Updated to use BODTRN for SCLK name/code mapping.
+!>
+!>-    SPICELIB Version 1.0.0, 17-NOV-1995 (NJB)
+!>
+!>### Revisions
+!>
+!>-    SPICELIB Version 1.2.0, 29-OCT-2001 (NJB)
+!>
+!>        Bug fix: modified algorithm to handle case where string
+!>        "SCLK" appears in SCLK name.  SCN2ID now uses POSR to locate
+!>        the substring "SCLK" in the input string.
+!>
+!>## ZZDSKSEL (DSK, segment selection callback umbrella)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZDSKSEL is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zzdsksel. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     SPICE Private routine intended solely for the support of SPICE
+!>     routines. Users should not call this routine directly due to the
+!>     volatile nature of this routine.
+!>
+!>     This is the umbrella routine for DSK segment selection functions
+!>     that are passed by ZZDSKSNS. Entry points for initializing
+!>     segment selection functions are included as well.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points for descriptions of their inputs.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points for descriptions of their outputs.
+!>
+!>### Parameters
+!>
+!>     None.
+!>
+!>### Exceptions
+!>
+!>     1)  If this routine is called directly the error
+!>         SPICE(BOGUSENTRY) is signaled.
+!>
+!>     See the entry points for descriptions of exceptions
+!>     applicable to those entry points.
+!>
+!>### Files
+!>
+!>     This routine makes use of DSK files loaded by the ZZDSKBSR
+!>     subsystem.
+!>
+!>     Frame kernels may be required in order to perform transformations
+!>     from DSK segment frames to the output frame. In some cases,
+!>     additional kernels such as CK kernels and SCLK kernels could be
+!>     required to support the offset vector lookup.
+!>
+!>### Particulars
+!>
+!>     The entry points of this routine are used to search for
+!>     segments matching specified criteria among the set of DSK
+!>     segment descriptors stored in the ZZDSKBSR subsystem.
+!>
+!>     For each kind of search, there is an initialization entry point
+!>     used to store search parameters, and there is a corresponding
+!>     segment comparison entry point. The comparison entry points are
+!>     callback routines that are passed to ZZDSKSNS.
+!>
+!>     The supported search types and associated entry points are
+!>     listed below.
+!>
+!>         Match body ID only
+!>         ------------------
+!>
+!>           Initialization:       ZZDSKSBD
+!>           Segment comparison:   ZZDSKBDC
+!>
+!>         Match nothing:
+!>
+!>           Segment comparison:   ZZDSKNOT
+!>
+!>           This routine is used to force the ZZDSKSBF package to
+!>           build a complete segment list for a specified body.
+!>
+!>     The remaining entry points are included to support the SMAP
+!>     Alpha DSK Toolkit. They may be useful for DSK type 4 in a
+!>     future SPICELIB version.
+!>
+!>         Match body ID, surface list, and time
+!>         -------------------------------------
+!>
+!>           Initialization:       ZZDSKSIT
+!>           Segment comparison:   ZZDSKCIT
+!>
+!>         Match body ID, time, and coordinates
+!>         ------------------------------------
+!>
+!>           Initialization:       ZZDSKUSC
+!>           Segment comparison:   ZZDSKUMC
+!>
+!>         Match body ID, surface ID, frame ID, coordinate system,
+!>         coordinate parameters, time, and coordinates
+!>         ------------------------------------------------------
+!>
+!>           Initialization:       ZZDSKMSC
+!>           Segment comparison:   ZZDSKMMC
+!>
+!>         Match body ID, surface ID, frame ID, data class, time,
+!>         and whether coverage includes a specified position vector
+!>         ---------------------------------------------------------
+!>
+!>           Initialization:       ZZDSKSRC
+!>           Segment comparison:   ZZDSKMRC
+!>
+!>### Examples
+!>
+!>     None.
+!>
+!>### Restrictions
+!>
+!>     This is a private routine. It is meant to be used only by the DSK
+!>     subsystem.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 1.1.0, 23-NOV-2020 (JDR) (NJB)
+!>
+!>        Fixed typo in short error message in entry point ZZDSKMRC.
+!>        Corrected Brief_I/O descriptions of input DSKDSC in all entry
+!>        points that accept this input argument.
+!>
+!>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
+!>
+!>        Added entry point ZZDSKNOT.
+!>
+!>        05-FEB-2016 (NJB)
+!>
+!>        29-APR-2015 (NJB)
+!>
+!>           Updated description of ZZDSKUMC to specify that the body,
+!>           not the surface, is matched.
+!>
+!>        10-OCT-2014 (NJB)
+!>
+!>           Added time-independent body search routines
+!>
+!>              ZZDSKSBD, ZZDSKCBD
+!>
+!>        29-SEP-2014 (NJB)
+!>
+!>           Updated ZZDSKUSC, ZZDSKUMC to use body IDs.
+!>
+!>        18-SEP-2014 (NJB)
+!>
+!>           Updated ZZDSKCIT, ZZDSKSIT to use list of surfaces as well
+!>           as a body ID. Updated umbrella ZZDSKSEL to support new
+!>           arguments.
+!>
+!>        15-SEP-2014 (NJB)
+!>
+!>           Utilities for selecting segments via
+!>           calls to ZZDSKSNS
+!>
+!>        13-MAY-2010 (NJB)
+!>
+!>           Developed to support SMAP Alpha DSK Toolkit.
+!>
+!>### Implementation notes
+!>
+!>     Constants (SPICELIB computed them on the first call).
+!>
+!>     Set return value.
+!>
+!>## ZZNRDDP (Shell for deep space entry points)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZNRDDP is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zznrddp. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>    This subroutine is a shell for the routines needed by DPSPCE
+!>    for calculating deep space effects on a vehicle.
+!>
+!>### Detailed Input
+!>
+!>     AO          the original semimajor axis of the orbit.
+!>
+!>     ELEMS       is an array containing two-line element data
+!>                 as prescribed below. The elements XNDD6O and BSTAR
+!>                 must already be scaled by the proper exponent stored
+!>                 in the two line elements set.  Moreover, the
+!>                 various items must be converted to the units shown
+!>                 here.
+!>
+!>                    ELEMS (  1 ) = XNDT2O in radians/minute**2
+!>                    ELEMS (  2 ) = XNDD6O in radians/minute**3
+!>                    ELEMS (  3 ) = BSTAR
+!>                    ELEMS (  4 ) = XINCL  in radians
+!>                    ELEMS (  5 ) = XNODEO in radians
+!>                    ELEMS (  6 ) = EO
+!>                    ELEMS (  7 ) = OMEGAO in radians
+!>                    ELEMS (  8 ) = XMO    in radians
+!>                    ELEMS (  9 ) = XNO    in radians/minute
+!>                    ELEMS ( 10 ) = EPOCH of the elements in seconds
+!>                                   past ephemeris epoch J2000.
+!>
+!>     EM          is the perturbed eccentricity from the mean
+!>                 eccentricity at epoch at time T.
+!>
+!>     OMGASM      the value of the argument of perigee after the
+!>                 perturbations at the time of interest are
+!>                 added
+!>
+!>     OMGDOT      the time derivative of the argument of perigee
+!>
+!>     T           is the total time from the epoch, in minutes, of the
+!>                 element set at which to calculate the state.
+!>
+!>     XINC        is the perturbed inclination of the orbit plane from
+!>                 the mean inclination at the epoch at time T
+!>
+!>     XLL         a long-period periodic term dependent on inclination,
+!>                 eccentricity and argument of periapsis
+!>
+!>     XLLDOT      the time derivative of the XLL long-period term
+!>
+!>     XN          is the perturbed mean motion from the 'mean' mean
+!>                 motion at epoch at time T.
+!>
+!>     XNODES      is the value of the argument of the ascending node
+!>                 after the perturbations at the time of interest are
+!>                 added.
+!>
+!>     XNODOT      the time derivative of the mean motion
+!>
+!>     XNODP       original mean motion of the orbit.
+!>
+!>### Detailed Output
+!>
+!>     None
+!>
+!>### Parameters
+!>
+!>     None.
+!>
+!>### Exceptions
+!>
+!>     Error free.
+!>
+!>### Files
+!>
+!>     None.
+!>
+!>### Particulars
+!>
+!>     This subroutine is a shell for the entry points used by the
+!>     propagator for deep space orbits, where a deep space orbit is one
+!>     which has a period greater the 225 minutes.  The entry points
+!>     are
+!>
+!>     ZZDPINIT - initialize variables for the deep space regime
+!>     ZZDPSEC  - calculates and updates secular perturbation terms
+!>     ZZDPPER  - calculates and updates periodic perturbation terms
+!>                particularly as caused by the sun and the moon
+!>
+!>     The names of several constants defined in the Spacetrack 3 report
+!>     have been changed.
+!>
+!>     D2201 to DG( 1  )
+!>     D2211 to DG( 2  )
+!>     D3210 to DG( 3  )
+!>     D3222 to DG( 4  )
+!>     D4410 to DG( 5  )
+!>     D4422 to DG( 6  )
+!>     D5220 to DG( 7  )
+!>     D5232 to DG( 8  )
+!>     D5421 to DG( 9  )
+!>     D5433 to DG( 10 )
+!>
+!>     The names of variables changed from the Spacetrack 3 report
+!>
+!>     DEL1  to  DEL( 1 )
+!>     DEL2  to  DEL( 2 )
+!>     DEL3  to  DEL( 3 )
+!>     SSL   to  SSX( 1 )
+!>     SSG   to  SSX( 2 )
+!>     SSH   to  SSX( 3 )
+!>     SSE   to  SSX( 4 )
+!>     SSI   to  SSX( 5 )
+!>     OMGDT to  OMGDOT
+!>
+!>     The entry point ZZDPPER was modified to insure that the
+!>     perturbations on the elements are zero at the epoch.  This was
+!>     not correctly handled in the Spacetrack 3 report.
+!>
+!>### Examples
+!>
+!>     Never call this subroutine directly.
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Literature References
+!>
+!>     Hoots, Felix R., Ronald L. Roehrich (31 December 1988). "Models
+!>     for Propagation of NORAD Element Sets". United States Department
+!>     of Defense Spacetrack Report (3).
+!>
+!>     Vallado, David A., Paul Crawford, Richard Hujsak, and
+!>     Kelso, T. S., "Revisiting Spacetrack Report #3," AIAA/AAS
+!>     Astrodynamics Specialist Conference, Keystone, CO, Aug 2006.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     B.V. Semenov       (JPL)
+!>     W.L. Taber         (JPL)
+!>     E.D. Wright        (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 2.2.0, 14-OCT-2021 (NJB)
+!>
+!>        Bug fix: fixed routine name in CHKIN/CHKOUT calls (NRDDP
+!>        -> ZZNRDDP).
+!>
+!>        Fixed typos in comments.
+!>
+!>-    SPICELIB Version 2.1.0, 03-JUL-2016 (EDW)
+!>
+!>        The "Revisiting Spacetrack Report #3" by Vallado et. al.
+!>        indicates the negative inclination modification as a mistake.
+!>        That code was removed.
+!>
+!>        Eliminated bug in ZZDPINIT that allowed NaN contamination
+!>        for zero inclination orbits.
+!>
+!>-    SPICELIB Version 2.0.0, 20-JAN-2012 (EDW)
+!>
+!>        Eliminated use of the DOPERT boolean in ZZDPINIT.
+!>        Refer to that entry point "Version" section for details.
+!>
+!>        Added proper citation for Spacetrack 3 (Hoots) and
+!>        Revisiting Spacetrak 3 (Vallado).
+!>
+!>        Added proper Declarations section.
+!>
+!>-    SPICELIB Version 1.5.1, 19-SEP-2006 (EDW)
+!>
+!>        Added text to previously empty Declarations section
+!>        in ZZDPINIT, ZZDPPER, ZZDPSEC.
+!>
+!>-    SPICELIB Version 1.5.0, 20-JAN-1999 (EDW) (WLT)
+!>
+!>        OMGDOT, named in an ENTRY point argument list
+!>        was not passed via an argument list. Solaris exhibited a
+!>        bus error because of this situation. All ENTRY point
+!>        arguments are passed only by argument lists and are declared
+!>        in the umbrella subroutine's, ZZNRDDP, argument list.
+!>
+!>        Combined the various SSL, SSG, SSH, SSI, SSE variables into
+!>        the vector SSX.
+!>
+!>        Removed the dependency upon the UTC/ET leapsecond kernel.
+!>
+!>        Alphabetized all variable declaration lists.
+!>
+!>        All arguments passed through entry points listed as arguments
+!>        of ZZNRDDP. OMGDT renamed OMGDOT to be consistent with other
+!>        deep space two line element routines.
+!>
+!>-    SPICELIB Version 1.0.0, 1-APR-1997 (EDW)
+!>
+!>### Implementation notes
+!>
+!>     Define rather a large number of local parameters.
+!>
+!>     Save everything just to be sure.
+!>
+!>## ZZSRFTRN (Surface name/ID mapping umbrella)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZSRFTRN is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zzsrftrn. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     SPICE Private routine intended solely for the support of SPICE
+!>     routines.  Users should not call this routine directly due to the
+!>     volatile nature of this routine.
+!>
+!>     Umbrella routine for surface name/ID mapping entry points
+!>     and the data structures they use.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points for descriptions of their inputs.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points for descriptions of their outputs.
+!>
+!>### Parameters
+!>
+!>     None.
+!>
+!>### Exceptions
+!>
+!>     1) If this routine is called directly, the error
+!>        SPICE(BOGUSENTRY) is signaled.
+!>
+!>### Files
+!>
+!>     Surface-to-name mappings may be defined at run time by loading
+!>     text kernels containing kernel variable assignments of the form
+!>
+!>        NAIF_SURFACE_NAME += ( <surface name 1>, ... )
+!>        NAIF_SURFACE_CODE += ( <surface code 1>, ... )
+!>        NAIF_SURFACE_BODY += ( <body code 1>,    ... )
+!>
+!>     Here the set of the three Ith list items on the right hand side
+!>     of the three assignments define the Ith surface name/ID mapping.
+!>
+!>     The same effect can be achieved using assignments formatted as
+!>     follows:
+!>
+!>        NAIF_SURFACE_NAME += <surface name 1>
+!>        NAIF_SURFACE_CODE += <surface code 1>
+!>        NAIF_SURFACE_BODY += <body code 1>
+!>
+!>        NAIF_SURFACE_NAME += <surface name 2>
+!>        NAIF_SURFACE_CODE += <surface code 2>
+!>        NAIF_SURFACE_BODY += <body code 2>
+!>
+!>           ...
+!>
+!>     Note the use of the
+!>
+!>        +=
+!>
+!>     operator; this operator appends to rather than overwrites the
+!>     kernel variable named on the left hand side of the assignment.
+!>
+!>### Particulars
+!>
+!>     This umbrella routine contains declarations of data structures
+!>     that support surface name/ID mapping.
+!>
+!>     This umbrella routine contains the following entry points:
+!>
+!>        ZZSRFC2N   {Surface code to name}
+!>        ZZSRFN2C   {Surface name to code}
+!>        ZZSRFTRK   {Track surface map updates}
+!>
+!>### Examples
+!>
+!>     See the routines
+!>
+!>        SRFC2S
+!>        SRFCSS
+!>        SRFS2C
+!>        SRFSCC
+!>
+!>### Restrictions
+!>
+!>     None.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman    (JPL)
+!>     B.V. Semenov    (JPL)
+!>     E.D. Wright     (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 1.0.1, 05-NOV-2021 (NJB)
+!>
+!>        Corrected I/O descriptions in header of entry point ZZSRFC2N.
+!>
+!>-    SPICELIB Version 1.0.0, 01-APR-2016 (NJB) (EDW) (BVS)
+!>
+!>### Implementation notes
+!>
+!>     Hash control area items.
+!>
+!>     Data structures in this package
+!>     ===============================
+!>
+!>     The kernel variable table
+!>     -------------------------
+!>
+!>     This table contains file scope arrays populated with the values
+!>     of the kernel variables that define the surface name/ID mapping.
+!>     These arrays contain
+!>
+!>        - surface names
+!>        - surface ID codes
+!>        - bodies associated with surface name/ID pairs
+!>        - an array of normalized names. These names are
+!>          upper case, left-justified, and compressed so that
+!>          the names contain no consecutive, embedded blanks
+!>
+!>     The surface ID table
+!>     --------------------
+!>
+!>     This table enables pairs of surface IDs and body IDs to be mapped
+!>     to surface names. The table consists of
+!>
+!>        - a singly linked list pool
+!>        - a list head array
+!>        - a pointer array that maps pool nodes to
+!>          indices in the kernel variable table
+!>
+!>     The pointer array maps each node belonging to a collision list in
+!>     the pool to the index in the kernel table of the associated
+!>     values. The kernel table values used by this mapping are
+!>
+!>        - the  surface ID code
+!>        - the body ID code
+!>        - the original surface name
+!>
+!>     An integer hash function is used to map each surface ID to the
+!>     index in the list head array where the index of the head node for
+!>     that surface ID is located.
+!>
+!>     The layout of the structure is:
+!>
+!>                                                 Kernel variable table
+!>                                                 (only the portions
+!>                                                 used here are shown)
+!>
+!>                                                         body IDs
+!>                                                            |
+!>   +-- integer_hash( surface ID )                           |  original
+!>   |                                            surface IDs |  surface
+!>   |                                                   |    |   names
+!>   |                                                   |    |    |
+!>   |  list heads     list pool   pointer array         |    |    |
+!>   |  +---------+    +--------+  +-----------+        +--+ +--+ +--+
+!>   |  |         |    |        |  |           |   +--->|  | |  | |  |
+!>   |  +---------+    +--------+  +-----------+   |    +--+ +--+ +--+
+!>   +->|         |-+  | ^   *  |->|           |---+    |  | |  | |  |
+!>      +---------+ |  +-|---|--+  +-----------+        +--+ +--+ +--+
+!>                  |    |   |
+!>          ...     |    |...|          ...                   ...
+!>                  |    |   |
+!>      +---------+ |  +-|---|--+  +-----------+        +--+ +--+ +--+
+!>      |         | +->| *   |  |->|           |---+ +->|  | |  | |  |
+!>      +---------+    +-----|--+  +-----------+   | |  +--+ +--+ +--+
+!>          ...           ...|          ...      +-|-+        ...
+!>      +---------+    +-----|--+  +-----------+ | |    +--+ +--+ +--+
+!>      |         |    |     v  |->|           |-+ +--->|  | |  | |  |
+!>      +---------+    +--------+  +-----------+        +--+ +--+ +--+
+!>
+!>      ----------------------------------------        --------------
+!>                       NROOM                              MXNSRF
+!>
+!>      The diagram above is not to scale: the arrays on the left have
+!>      available length NROOM, while the arrays on the right have
+!>      length MXNSRF.
+!>
+!>      Note that the pool array is dimensioned (LBSNGL:NROOM). Elements
+!>      at indices -1 and 0 contain the size and location of the
+!>      first free element, respectively.
+!>
+!>     The surface name table
+!>     ----------------------
+!>
+!>     This table enables pairs of surface names and body IDs to be
+!>     mapped to surface IDs. The structure is parallel to that of
+!>     the surface ID table; it contains
+!>
+!>        - a singly linked list pool
+!>        - a list head array
+!>        - a pointer array that maps pool nodes to
+!>          indices in the kernel variable table
+!>
+!>     The pointer array maps each node belonging to a collision list in
+!>     the pool to the index in the kernel table of the associated
+!>     values. The kernel table values used by this mapping are
+!>
+!>        - the normalized surface name
+!>        - the surface ID code
+!>        - the body ID code
+!>
+!>     An string hash function is used to map each surface name to the
+!>     index in the list head array where the index of the head node for
+!>     that surface ID is located.
+!>
+!>     The hash function is applied to the input string after it has
+!>     been normalized and then had all embedded blanks compressed out.
+!>     This allows the hash function terminate when it encounters the
+!>     first blank in the input string, while taking into account all
+!>     non-blank characters in the string. This makes it efficient while
+!>     enabling it to discriminate well between strings that may have
+!>     initial words in common. These compressed strings are not used
+!>     for any other purpose than hashing. For detection of the correct
+!>     matching elements in the kernel table, the normalized version
+!>     of the input string (which may contain blanks) is used.
+!>
+!>     The layout of the structure is:
+!>
+!>                                                 Kernel variable table
+!>                                                 (only the portions
+!>                                                 used here are shown)
+!>
+!>                                                         body IDs
+!>                                                            |
+!>   +-- string_hash(surface name)                            |
+!>   |                                         normalized     |  surface
+!>   |                                         surface names  |   IDs
+!>   |                                                   |    |    |
+!>   |                                                   |    |    |
+!>   |  list heads     list pool   pointer array         |    |    |
+!>   |  +---------+    +--------+  +-----------+        +--+ +--+ +--+
+!>   |  |         |    |        |  |           |   +--->|  | |  | |  |
+!>   |  +---------+    +--------+  +-----------+   |    +--+ +--+ +--+
+!>   +->|         |-+  | ^   *  |->|           |---+    |  | |  | |  |
+!>      +---------+ |  +-|---|--+  +-----------+        +--+ +--+ +--+
+!>                  |    |   |
+!>          ...     |    |...|          ...                   ...
+!>                  |    |   |
+!>      +---------+ |  +-|---|--+  +-----------+        +--+ +--+ +--+
+!>      |         | +->| *   |  |->|           |---+ +->|  | |  | |  |
+!>      +---------+    +-----|--+  +-----------+   | |  +--+ +--+ +--+
+!>          ...           ...|          ...      +-|-+        ...
+!>      +---------+    +-----|--+  +-----------+ | |    +--+ +--+ +--+
+!>      |         |    |     v  |->|           |-+ +--->|  | |  | |  |
+!>      +---------+    +--------+  +-----------+        +--+ +--+ +--+
+!>
+!>      ----------------------------------------        --------------
+!>                       NROOM                              MXNSRF
+!>
+!>      The diagram above is not to scale: the arrays on the left have
+!>      available length NROOM, while the arrays on the right have
+!>      length MXNSRF.
+!>
+!>      Note that the pool array is dimensioned (LBSNGL:NROOM). Elements
+!>      at indices -1 and 0 contain the size and location of the
+!>      first free element, respectively.
+!>
+!>     Declarations of data structures
+!>     ===============================
+!>
+!>        Kernel variable table
+!>        =====================
+!>
+!>        Input names:                 KERNAM
+!>        Input surface IDs:           KERSID
+!>        Input body IDs:              KERBID
+!>
+!>        Normalized names:            NRMNAM
+!>
+!>     Each of these surface names is prefixed with an 11-character
+!>     string containing the associated body ID.
+!>
+!>        Surface ID table
+!>        ================
+!>
+!>        Surface ID list heads:       SIDHLS
+!>        Surface ID pool:             SIDPOL
+!>        Surface ID name pointers:    SIDIDX
+!>
+!>        Surface Name table
+!>        ==================
+!>
+!>        Surface name list heads:     SNMHLS
+!>        Surface name pool:           SNMPOL
+!>        Surface name ID pointers:    SNMIDP
+!>
+!>     Other local declarations:
+!>
+!>     POLCTR tracks the state of the kernel pool.
+!>     SRFCTR tracks the state of the surface mapping
+!>     kernel variables.
+!>
+!>## ZZDSKSBF (DSK, manage the API segment buffer)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZDSKSBF is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zzdsksbf. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     SPICE Private routine intended solely for the support of SPICE
+!>     routines. Users should not call this routine directly due to the
+!>     volatile nature of this routine.
+!>
+!>     Manage the DSK API segment buffer data structure.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points.
+!>
+!>### Parameters
+!>
+!>     None.
+!>
+!>### Exceptions
+!>
+!>     1)  If this routine is called directly, it signals the error
+!>         SPICE(BOGUSENTRY).
+!>
+!>     See the entry points for descriptions of errors specific to
+!>     those routines.
+!>
+!>### Files
+!>
+!>     This routine makes use of DSK files loaded by the ZZDSKBSR
+!>     subsystem.
+!>
+!>### Particulars
+!>
+!>     This routine is meant to be used only by the DSK subsystem.
+!>
+!>     Data structure management
+!>     =========================
+!>
+!>     This routine manages data structures used by SPICELIB geometry
+!>     APIs to perform efficient computations using DSK data. This is
+!>     the umbrella routine in which these structures are declared.
+!>
+!>     This routine also contains entry points that use these data
+!>     structures to perform geometric computations using DSK data.
+!>     See the section titled "Computations" below.
+!>
+!>     In a sense, ZZDSKSBF sits "above" the ZZDSKBSR subsystem.
+!>     High-level geometry routines access the data stored in the
+!>     ZZDSKSBF arrays directly; they don't call entry points of
+!>     ZZDSKBSR.
+!>
+!>     The ZZDSKSBF subsystem maintains two logical tables: a body
+!>     table and a segment table. Both tables are designed to store
+!>     a fixed maximum number of items; there is no "virtual storage"
+!>     concept that applies.
+!>
+!>     Items in both tables have priority assigned on a first-in,
+!>     first-out basis. When it becomes necessary to remove an
+!>     item to make room for another, the lowest-indexed item is
+!>     removed first, and the tables are compressed so that the
+!>     remaining items are contiguous.
+!>
+!>     When the state of the underlying ZZDSKBSR system changes due to
+!>     loading or unloading of DSK files, the ZZDSKSBF body and segment
+!>     tables must be re-initialized. Entry points of ZZDSKSBF
+!>     perform this action by calling ZZDSKSBI.
+!>
+!>     In addition to the tables maintained by this subsystem, a
+!>     counter is maintained. This counter is used to determine
+!>     whether the locally buffered data are in sync with the
+!>     information stored in the ZZDSKBSR subsystem.
+!>
+!>     Computations
+!>     ============
+!>
+!>     This routine contains the following entry points that use
+!>     buffered segment data to perform computations:
+!>
+!>        ZZSBFXR:    prepare for and compute unprioritized
+!>                    ray-surface intercept using DSK data.
+!>
+!>        ZZSBFXRI:   prepare for and compute unprioritized
+!>                    ray-surface intercept using DSK data; return data
+!>                    source information such as file handle, DLA
+!>                    descriptor, and plate ID as well.
+!>
+!>        ZZSBFNRM:   prepare for and compute outward normal
+!>                    vector at a specified surface point,
+!>                    using unprioritized DSK data.
+!>
+!>### Examples
+!>
+!>     See usage in ZZDSKSBF.
+!>
+!>### Restrictions
+!>
+!>     1) This is a private routine.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman   (JPL)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 1.0.0, 22-FEB-2017 (NJB)
+!>
+!>        Added FAILED calls in each entry point.
+!>
+!>        17-MAY-2016 (NJB)
+!>
+!>### Implementation notes
+!>
+!>     Sizes of source info arrays returned by
+!>     ZZDSKBUX:
+!>
+!>     Body table variables
+!>     --------------------
+!>
+!>        BTNBOD  is the number of bodies in the body table.
+!>
+!>        BTBODY  is an array of body ID codes.
+!>
+!>        BTSEGP  is an array of pointers (start indices) to entries in
+!>                the segment table. The Ith pointer indicates the start
+!>                index for entries for the Ith body.
+!>
+!>        BTSTSZ  is an array of segment table entry counts. The Ith
+!>                element of BTSTSZ is the number of entries in the
+!>                segment table for the Ith body.
+!>
+!>     Segment table variables
+!>
+!>## ZZSINUTL (Utilities for generalized ray intercept)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZSINUTL is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zzsinutl. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     SPICE Private routine intended solely for the support of SPICE
+!>     routines. Users should not call this routine directly due to the
+!>     volatile nature of this routine.
+!>
+!>     This is the umbrella routine for utilities supporting the
+!>     generalized ray-surface intercept capability used by SINCPT.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points.
+!>
+!>### Parameters
+!>
+!>     None.
+!>
+!>### Exceptions
+!>
+!>     1)  If this routine is called directly, the error
+!>         SPICE(BOGUSENTRY) is signaled.
+!>
+!>     2)  See the entry points for descriptions of errors specific to
+!>         those routines.
+!>
+!>### Files
+!>
+!>     This routine makes use of DSK files loaded by the ZZDSKBSR
+!>     subsystem.
+!>
+!>     If any loaded DSK segment has a reference frame that is not
+!>     centered at the segment's central (target) body, SPK data are
+!>     required to compute the offset between the frame's center and
+!>     the segment's center.
+!>
+!>     Frame kernels may be required in order to look up a segment's
+!>     frame center offset. In some cases, additional kernels such
+!>     as CK kernels and SCLK kernels could be required to support
+!>     the offset vector lookup.
+!>
+!>     This routine uses PCK data for target body reference
+!>     ellipsoids.
+!>
+!>### Particulars
+!>
+!>     This routine is meant to be used only SPICELIB.
+!>
+!>     This routine contains the following entry points that support
+!>     the generalized ray-surface intercept algorithm used by SINCPT:
+!>
+!>        ZZSUELIN:   Initialize ray intercept and near point utilities
+!>                    for ellipsoidal target surface
+!>
+!>        ZZSUDSKI:   Initialize ray intercept and near point utilities
+!>                    for DSK target surface
+!>
+!>        ZZMINRAD:   Return minimum spherical bounding radius for
+!>                    surface
+!>
+!>        ZZMAXRAD:   Return maximum spherical bounding radius for
+!>                    surface
+!>
+!>        ZZRAYSFX:   Compute ray-surface intercept given inputs
+!>                    set by ZZSUELIN or ZZSUDSKI
+!>
+!>        ZZRAYNP:    Compute nearest point on surface to ray given
+!>                    inputs set by ZZSUELIN or ZZSUDSKI
+!>
+!>     The geometric computation routines ZZRAYSFX, ZZRAYNP are
+!>     used as callback routines by the generalized SINCPT algorithm.
+!>
+!>### Examples
+!>
+!>     See usage in SINCPT, ZZSFXCOR.
+!>
+!>### Restrictions
+!>
+!>     1)  This is a private routine.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>
+!>### Version
+!>
+!>-    SPICELIB Version 1.0.1, 17-OCT-2021 (NJB) (JDR)
+!>
+!>        Edited the header to comply with NAIF standard.
+!>
+!>        Updated comments.
+!>
+!>-    SPICELIB Version 1.0.0, 01-JUN-2016 (NJB)
+!>
+!>        Updated comments. Updated error handling in ZZSUDSKI.
+!>
+!>        11-FEB-2016 (NJB)
+!>
+!>           Added header.
+!>
+!>        02-NOV-2015 (NJB)
+!>
+!>           No longer requires ellipsoidal radii for
+!>           initialization for DSK intercept computations.
+!>
+!>        10-OCT-2015 (NJB)
+!>
+!>           Now includes dsk.inc.
+!>
+!>        30-JAN-2015 (NJB)
+!>
+!>           Updated to provide an entry point returning a global
+!>           minimum surface radius. The argument list has been
+!>           changed to accommodate this new output.
+!>
+!>        17-OCT-2014 (NJB)
+!>
+!>### Implementation notes
+!>
+!>     Target types:
+!>
+!>## ZZTANUTL (DSK, tangent ray utilities)
+!>
+!> PEPPER: SPICELIB's umbrella routine ZZTANUTL is not a procedure any more: its entry points are the module procedures below, and its saved variables are in pepper_state_zztanutl. Its documentation follows.
+!>
+!>### Abstract
+!>
+!>     SPICE Private routine intended solely for the support of SPICE
+!>     routines. Users should not call this routine directly due to the
+!>     volatile nature of this routine.
+!>
+!>     This is the umbrella routine for utilities supporting the
+!>     tangent ray finding capability used by LIMBPT and TERMPT.
+!>
+!>### Detailed Input
+!>
+!>     See the entry points.
+!>
+!>### Detailed Output
+!>
+!>     See the entry points.
+!>
+!>### Parameters
+!>
+!>     See the entry points.
+!>
+!>### Exceptions
+!>
+!>     1)  If this routine is called directly, it signals the error
+!>         SPICE(BOGUSENTRY).
+!>
+!>     See the entry points for descriptions of errors specific to
+!>     those routines.
+!>
+!>### Files
+!>
+!>     This routine makes use of DSK files loaded by the ZZDSKBSR
+!>     subsystem.
+!>
+!>     If any loaded DSK segment has a reference frame that is not
+!>     centered at the segment's central (target) body, SPK data are
+!>     required to compute the offset between the frame's center and
+!>     the segment's center.
+!>
+!>     Frame kernels may be required in order to look up a segment's
+!>     frame center offset. In some cases, additional kernels such
+!>     as CK kernels and SCLK kernels could be required to support
+!>     the offset vector lookup.
+!>
+!>     This routine uses PCK data for target body reference
+!>     ellipsoids.
+!>
+!>### Particulars
+!>
+!>     This routine is meant to be used only by the DSK subsystem.
+!>
+!>     This routine contains the following entry points that support
+!>     the generalized ray-surface intercept algorithm used by SINCPT:
+!>
+!>        ZZTANINI:   Initialize tangent ray utilities for limb or
+!>                    terminator computation. Terminators may be
+!>                    umbral or penumbral.
+!>
+!>        ZZTANSTA:   Compute state of ray for a given input angle.
+!>                    State is "occulted" or "not occulted." When
+!>                    the state is occulted, return the ray-surface
+!>                    intercept point.
+!>
+!>### Examples
+!>
+!>     See usage in ZZTANGNT.
+!>
+!>### Restrictions
+!>
+!>     1) This is a private routine.
+!>
+!>### Literature References
+!>
+!>     None.
+!>
+!>### Author and Institution
+!>
+!>     N.J. Bachman   (JPL)
+!>
+!>### Version
+!>
+!>-     SPICELIB Version 1.0.0 16-FEB-2016 (NJB)
+!>
+!>        Added error handling and headers.
+!>
+!>        Original version 26-OCT-2015 (NJB)
 submodule (pepper_instance) pepper_geometry
 
    implicit none
@@ -12611,234 +13959,6 @@ contains
       return
       end procedure lx4sgn
 
-!$Procedure LXNAME ( Lex names )
-!
-!     PEPPER: SPICELIB's umbrella routine LXNAME is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_lxname. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Umbrella routine for name scanning entry points.
-!
-! $ Detailed_Input
-!
-!     See the entry points for descriptions of their inputs.
-!
-! $ Detailed_Output
-!
-!     See the entry points for descriptions of their outputs.
-!
-! $ Parameters
-!
-!     See the entry points for descriptions of their parameters.
-!
-! $ Exceptions
-!
-!     See the entry points for descriptions of the exceptions specific
-!     to those entry points.
-!
-!     1)  If this routine is called directly, the error
-!         SPICE(BOGUSENTRY) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     Many computer languages include tokens that represent names.
-!     Examples of names include procedure names and variable names.
-!     The term `identifier' is generally used to indicate this type
-!     of token. Rules for constructing identifiers vary from
-!     language to language, but identifiers conforming to the
-!     following rules are widely recognized:
-!
-!        1)  The first character of the identifier is a letter.
-!
-!        2)  The remaining characters are letters or numbers.
-!
-!        3)  The length of the identifier is less than some specified
-!            limit.
-!
-!     This suite of routines has its own set of default rules for
-!     forming identifiers. These rules are somewhat more liberal
-!     than those listed above. Rule (1) above still holds, but
-!     trailing characters may include letters, numbers, and the
-!     special characters
-!
-!        $
-!        _  (underscore)
-!
-!     No mechanism for enforcing rule (3) is provided; this task is
-!     left to the caller, since this routine would be unnecessarily
-!     complicated by the need to construct diagnostic messages.
-!
-!     The entry point LXIDNT (Lex identifier) recognizes valid
-!     identifier tokens, using either the default character sets
-!     for the head and tail of the identifier, or character sets
-!     specified in the last call to LXCSID.
-!
-!     In order to use this suite of routines to scan identifiers that
-!     conform to the default rules, a program normally calls the entry
-!     point LXDFID (Lex, default identifier specification) once to
-!     obtain the default `identifier specification'. This specification
-!     is an integer array in which the allowed head and tail character
-!     sets are specified. This specification is then saved and supplied
-!     to the entry point LXIDNT (Lex identifier) whenever LXIDNT is
-!     called to scan an identifier. The entry point LXIDNT  recognizes
-!     valid identifier tokens, using an input identifier specification
-!     to decide which head and tail characters are allowed in an
-!     identifier.
-!
-!     The scanning code using these routines might have the following
-!     structure:
-!
-!              INTEGER               IDSPEC ( LBCELL : MXSPEC )
-!                 .
-!                 .
-!                 .
-!        C
-!        C     Initialize the identifier specification, using the
-!        C     default:
-!        C
-!              CALL SSIZEI ( MXSPEC, IDSPEC )
-!              CALL LXDFID ( IDSPEC )
-!                 .
-!                 .
-!                 .
-!        C
-!        C     Scan string:
-!        C
-!              DO WHILE ( <more tokens> )
-!                       .
-!                       .
-!                       .
-!                 IF ( <test for identifier> ) THEN
-!
-!                    CALL LXIDNT ( IDSPEC, STRING, FIRST, LAST, NCHARS )
-!
-!                    IF ( NCHARS .GT. 0 ) THEN
-!
-!                       [Identifier was found--process result]
-!
-!                    ELSE
-!
-!                       [Token at starting at location FIRST was not
-!                        an identifier--handle alternatives]
-!
-!                    END IF
-!
-!                 ELSE
-!
-!                    [ perform tests for other tokens ]
-!
-!                 END IF
-!
-!              END DO
-!
-!     It is possible to override the default rules by calling the
-!     entry point LXCSID (Lex, custom identifier characters).  This
-!     routine allows the caller to specify the precise set of
-!     characters allowed as the first character (`head') of the
-!     identifier, as well as those allowed in the remainder (`tail')
-!     of the identifier.
-!
-!     If a custom identifier specification is desired, the call to
-!     LXDFID in the pseudo code above would be replaced by a call to
-!     LXCSID. After setting the strings HDCHRS and TLCHRS to contain,
-!     respectively, the allowed head and tail identifier characters, the
-!     following call would produce an identifier specification structure
-!     IDSPEC representing these set of allowed characters.
-!
-!        CALL LXCSID ( HDCHRS, TLCHRS, IDSPEC )
-!
-!     The array IDSPEC obtained from LXCSID would be used as input to
-!     LXIDNT, instead of using the array obtained by calling LXDFID.
-!
-! $ Examples
-!
-!     1)  The following table illustrates the behavior of the scanning
-!         entry point LXIDNT when the default identifier syntax is in
-!         effect:
-!
-!         STRING CONTENTS             FIRST   LAST   NCHAR
-!         ==========================================================
-!         WHERE A LT B                1       5      5
-!         WHERE A LT B                7       7      1
-!         WHERE A.LT.B                7       7      1
-!         WHERE (A0)LT(B8)            8       9      2
-!         WHERE A0$LT_B7              7       14     8
-!         WHERE A LT B                12      12     1
-!         WHERE A .LT. B              9       8      0
-!
-!     2)  The following table illustrates the behavior of the scanning
-!         entry point LXIDNT when a custom identifier syntax is used.
-!         The call
-!
-!            CALL LXCSID ( HDCHRS, TLCHRS, IDSPEC )
-!
-!         where
-!
-!            HDCHRS = 'abcdefghijklmnopqrstuvwxyz'
-!
-!         and
-!
-!            TLCHRS = 'abcdefghijklmnopqrstuvwxyz012345.'
-!
-!        will produce an identifier specification IDSPEC that,
-!        when supplied as an input to LXIDNT, will cause LXIDNT
-!        to perform in accordance with the table shown below:
-!
-!         STRING CONTENTS             FIRST   LAST   NCHAR
-!         ==========================================================
-!         WHERE A LT B                1       0      0
-!         where a lt b                1       5      5
-!         WHERE a LT b                7       7      1
-!         WHERE a.LT.b                7       8      2
-!         WHERE (a0)LT(b8)            14      14     1
-!         WHERE (a0)LT(b5)            14      15     2
-!         WHERE a0.lt.b8              7       13     7
-!         WHERE a0$lt_b7              7       8      2
-!         where a .lt. b              9       12     4
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!     B.V. Semenov       (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
-!
-!        Added IMPLICIT NONE statement.
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.0.1, 10-FEB-2014 (BVS)
-!
-!        Added LBCELL to the $Brief_I/O section.
-!
-!-    SPICELIB Version 1.0.0, 25-OCT-1995 (NJB)
-!
-
-!
-!     IDSPEC parameters:
-!
-
-!
-!     Standard SPICE error handling.
-
       !>## Detailed Input
       !>
       !>     IDSPEC   is an integer cell containing a specification of
@@ -17765,101 +18885,6 @@ contains
       return
       end associate
       end procedure scps01
-
-!$Procedure SCTRAN  ( SCLK name/ID code translation )
-!
-!     PEPPER: SPICELIB's umbrella routine SCTRAN is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_sctran. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     Convert between SCLK name strings and ID codes.
-!
-! $ Detailed_Input
-!
-!     See the entry points for a discussion of their arguments.
-!
-! $ Detailed_Output
-!
-!     See the entry points for a discussion of their arguments.
-!
-! $ Parameters
-!
-!     MAXLEN   is the maximum allowed length, in characters, of a
-!              string containing the name of a spacecraft clock.
-!
-! $ Exceptions
-!
-!     See the entry points for a discussion of exceptions specific to
-!     those routines.
-!
-!     1)  This is an umbrella subroutine that contains declarations
-!         for its entry points. This routine should never be called
-!         directly. If it is, the error SPICE(BOGUSENTRY) is signaled.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This set of subroutines centralizes the mapping between
-!     spacecraft clock names and their corresponding NAIF integer
-!     codes. Translation between these names and codes is frequently
-!     required by user interface functions.
-!
-!     The set of supported clocks is identical to the set of spacecraft
-!     supported by BODTRN. The mapping may be extended by calling
-!     BODDEF.
-!
-! $ Examples
-!
-!     See the entry points for examples of their usage.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.2.1, 12-AUG-2021 (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!-    SPICELIB Version 1.2.0, 29-OCT-2001 (NJB)
-!
-!        Bug fix: modified algorithm to handle case where string
-!        "SCLK" appears in SCLK name.
-!
-!-    SPICELIB Version 1.1.0, 25-FEB-2000 (NJB)
-!
-!        Updated to use BODTRN for SCLK name/code mapping.
-!
-!-    SPICELIB Version 1.0.0, 17-NOV-1995 (NJB)
-!
-
-! $ Revisions
-!
-!-    SPICELIB Version 1.2.0, 29-OCT-2001 (NJB)
-!
-!        Bug fix: modified algorithm to handle case where string
-!        "SCLK" appears in SCLK name.  SCN2ID now uses POSR to locate
-!        the substring "SCLK" in the input string.
-!
-
-!
-!     Standard SPICE error handling.
 
       !>## Detailed Input
       !>
@@ -23082,179 +24107,6 @@ contains
 
       return
       end procedure zzdsksbr
-
-!$Procedure ZZDSKSEL ( DSK, segment selection callback umbrella )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZDSKSEL is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zzdsksel. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     This is the umbrella routine for DSK segment selection functions
-!     that are passed by ZZDSKSNS. Entry points for initializing
-!     segment selection functions are included as well.
-!
-! $ Detailed_Input
-!
-!     See the entry points for descriptions of their inputs.
-!
-! $ Detailed_Output
-!
-!     See the entry points for descriptions of their outputs.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If this routine is called directly the error
-!         SPICE(BOGUSENTRY) is signaled.
-!
-!     See the entry points for descriptions of exceptions
-!     applicable to those entry points.
-!
-! $ Files
-!
-!     This routine makes use of DSK files loaded by the ZZDSKBSR
-!     subsystem.
-!
-!     Frame kernels may be required in order to perform transformations
-!     from DSK segment frames to the output frame. In some cases,
-!     additional kernels such as CK kernels and SCLK kernels could be
-!     required to support the offset vector lookup.
-!
-! $ Particulars
-!
-!     The entry points of this routine are used to search for
-!     segments matching specified criteria among the set of DSK
-!     segment descriptors stored in the ZZDSKBSR subsystem.
-!
-!     For each kind of search, there is an initialization entry point
-!     used to store search parameters, and there is a corresponding
-!     segment comparison entry point. The comparison entry points are
-!     callback routines that are passed to ZZDSKSNS.
-!
-!     The supported search types and associated entry points are
-!     listed below.
-!
-!         Match body ID only
-!         ------------------
-!
-!           Initialization:       ZZDSKSBD
-!           Segment comparison:   ZZDSKBDC
-!
-!         Match nothing:
-!
-!           Segment comparison:   ZZDSKNOT
-!
-!           This routine is used to force the ZZDSKSBF package to
-!           build a complete segment list for a specified body.
-!
-!     The remaining entry points are included to support the SMAP
-!     Alpha DSK Toolkit. They may be useful for DSK type 4 in a
-!     future SPICELIB version.
-!
-!         Match body ID, surface list, and time
-!         -------------------------------------
-!
-!           Initialization:       ZZDSKSIT
-!           Segment comparison:   ZZDSKCIT
-!
-!         Match body ID, time, and coordinates
-!         ------------------------------------
-!
-!           Initialization:       ZZDSKUSC
-!           Segment comparison:   ZZDSKUMC
-!
-!         Match body ID, surface ID, frame ID, coordinate system,
-!         coordinate parameters, time, and coordinates
-!         ------------------------------------------------------
-!
-!           Initialization:       ZZDSKMSC
-!           Segment comparison:   ZZDSKMMC
-!
-!         Match body ID, surface ID, frame ID, data class, time,
-!         and whether coverage includes a specified position vector
-!         ---------------------------------------------------------
-!
-!           Initialization:       ZZDSKSRC
-!           Segment comparison:   ZZDSKMRC
-!
-! $ Examples
-!
-!     None.
-!
-! $ Restrictions
-!
-!     This is a private routine. It is meant to be used only by the DSK
-!     subsystem.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 23-NOV-2020 (JDR) (NJB)
-!
-!        Fixed typo in short error message in entry point ZZDSKMRC.
-!        Corrected Brief_I/O descriptions of input DSKDSC in all entry
-!        points that accept this input argument.
-!
-!-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
-!
-!        Added entry point ZZDSKNOT.
-!
-!        05-FEB-2016 (NJB)
-!
-!        29-APR-2015 (NJB)
-!
-!           Updated description of ZZDSKUMC to specify that the body,
-!           not the surface, is matched.
-!
-!        10-OCT-2014 (NJB)
-!
-!           Added time-independent body search routines
-!
-!              ZZDSKSBD, ZZDSKCBD
-!
-!        29-SEP-2014 (NJB)
-!
-!           Updated ZZDSKUSC, ZZDSKUMC to use body IDs.
-!
-!        18-SEP-2014 (NJB)
-!
-!           Updated ZZDSKCIT, ZZDSKSIT to use list of surfaces as well
-!           as a body ID. Updated umbrella ZZDSKSEL to support new
-!           arguments.
-!
-!        15-SEP-2014 (NJB)
-!
-!           Utilities for selecting segments via
-!           calls to ZZDSKSNS
-!
-!        13-MAY-2010 (NJB)
-!
-!           Developed to support SMAP Alpha DSK Toolkit.
-!
-
-!     Constants (SPICELIB computed them on the first call).
-!
-
-!
-!     Set return value.
 
       !>## Abstract
       !>
@@ -47066,221 +47918,6 @@ contains
       return
       end procedure zzinlat0
 
-!$Procedure ZZNRDDP ( Shell for deep space entry points )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZNRDDP is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zznrddp. Its documentation follows.
-!
-
-! $ Abstract
-!
-!    This subroutine is a shell for the routines needed by DPSPCE
-!    for calculating deep space effects on a vehicle.
-!
-! $ Detailed_Input
-!
-!     AO          the original semimajor axis of the orbit.
-!
-!     ELEMS       is an array containing two-line element data
-!                 as prescribed below. The elements XNDD6O and BSTAR
-!                 must already be scaled by the proper exponent stored
-!                 in the two line elements set.  Moreover, the
-!                 various items must be converted to the units shown
-!                 here.
-!
-!                    ELEMS (  1 ) = XNDT2O in radians/minute**2
-!                    ELEMS (  2 ) = XNDD6O in radians/minute**3
-!                    ELEMS (  3 ) = BSTAR
-!                    ELEMS (  4 ) = XINCL  in radians
-!                    ELEMS (  5 ) = XNODEO in radians
-!                    ELEMS (  6 ) = EO
-!                    ELEMS (  7 ) = OMEGAO in radians
-!                    ELEMS (  8 ) = XMO    in radians
-!                    ELEMS (  9 ) = XNO    in radians/minute
-!                    ELEMS ( 10 ) = EPOCH of the elements in seconds
-!                                   past ephemeris epoch J2000.
-!
-!     EM          is the perturbed eccentricity from the mean
-!                 eccentricity at epoch at time T.
-!
-!     OMGASM      the value of the argument of perigee after the
-!                 perturbations at the time of interest are
-!                 added
-!
-!     OMGDOT      the time derivative of the argument of perigee
-!
-!     T           is the total time from the epoch, in minutes, of the
-!                 element set at which to calculate the state.
-!
-!     XINC        is the perturbed inclination of the orbit plane from
-!                 the mean inclination at the epoch at time T
-!
-!     XLL         a long-period periodic term dependent on inclination,
-!                 eccentricity and argument of periapsis
-!
-!     XLLDOT      the time derivative of the XLL long-period term
-!
-!     XN          is the perturbed mean motion from the 'mean' mean
-!                 motion at epoch at time T.
-!
-!     XNODES      is the value of the argument of the ascending node
-!                 after the perturbations at the time of interest are
-!                 added.
-!
-!     XNODOT      the time derivative of the mean motion
-!
-!     XNODP       original mean motion of the orbit.
-!
-! $ Detailed_Output
-!
-!     None
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     Error free.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     This subroutine is a shell for the entry points used by the
-!     propagator for deep space orbits, where a deep space orbit is one
-!     which has a period greater the 225 minutes.  The entry points
-!     are
-!
-!     ZZDPINIT - initialize variables for the deep space regime
-!     ZZDPSEC  - calculates and updates secular perturbation terms
-!     ZZDPPER  - calculates and updates periodic perturbation terms
-!                particularly as caused by the sun and the moon
-!
-!     The names of several constants defined in the Spacetrack 3 report
-!     have been changed.
-!
-!     D2201 to DG( 1  )
-!     D2211 to DG( 2  )
-!     D3210 to DG( 3  )
-!     D3222 to DG( 4  )
-!     D4410 to DG( 5  )
-!     D4422 to DG( 6  )
-!     D5220 to DG( 7  )
-!     D5232 to DG( 8  )
-!     D5421 to DG( 9  )
-!     D5433 to DG( 10 )
-!
-!     The names of variables changed from the Spacetrack 3 report
-!
-!     DEL1  to  DEL( 1 )
-!     DEL2  to  DEL( 2 )
-!     DEL3  to  DEL( 3 )
-!     SSL   to  SSX( 1 )
-!     SSG   to  SSX( 2 )
-!     SSH   to  SSX( 3 )
-!     SSE   to  SSX( 4 )
-!     SSI   to  SSX( 5 )
-!     OMGDT to  OMGDOT
-!
-!     The entry point ZZDPPER was modified to insure that the
-!     perturbations on the elements are zero at the epoch.  This was
-!     not correctly handled in the Spacetrack 3 report.
-!
-! $ Examples
-!
-!     Never call this subroutine directly.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     Hoots, Felix R., Ronald L. Roehrich (31 December 1988). "Models
-!     for Propagation of NORAD Element Sets". United States Department
-!     of Defense Spacetrack Report (3).
-!
-!     Vallado, David A., Paul Crawford, Richard Hujsak, and
-!     Kelso, T. S., "Revisiting Spacetrack Report #3," AIAA/AAS
-!     Astrodynamics Specialist Conference, Keystone, CO, Aug 2006.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     B.V. Semenov       (JPL)
-!     W.L. Taber         (JPL)
-!     E.D. Wright        (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 2.2.0, 14-OCT-2021 (NJB)
-!
-!        Bug fix: fixed routine name in CHKIN/CHKOUT calls (NRDDP
-!        -> ZZNRDDP).
-!
-!        Fixed typos in comments.
-!
-!-    SPICELIB Version 2.1.0, 03-JUL-2016 (EDW)
-!
-!        The "Revisiting Spacetrack Report #3" by Vallado et. al.
-!        indicates the negative inclination modification as a mistake.
-!        That code was removed.
-!
-!        Eliminated bug in ZZDPINIT that allowed NaN contamination
-!        for zero inclination orbits.
-!
-!-    SPICELIB Version 2.0.0, 20-JAN-2012 (EDW)
-!
-!        Eliminated use of the DOPERT boolean in ZZDPINIT.
-!        Refer to that entry point "Version" section for details.
-!
-!        Added proper citation for Spacetrack 3 (Hoots) and
-!        Revisiting Spacetrak 3 (Vallado).
-!
-!        Added proper Declarations section.
-!
-!-    SPICELIB Version 1.5.1, 19-SEP-2006 (EDW)
-!
-!        Added text to previously empty Declarations section
-!        in ZZDPINIT, ZZDPPER, ZZDPSEC.
-!
-!-    SPICELIB Version 1.5.0, 20-JAN-1999 (EDW) (WLT)
-!
-!        OMGDOT, named in an ENTRY point argument list
-!        was not passed via an argument list. Solaris exhibited a
-!        bus error because of this situation. All ENTRY point
-!        arguments are passed only by argument lists and are declared
-!        in the umbrella subroutine's, ZZNRDDP, argument list.
-!
-!        Combined the various SSL, SSG, SSH, SSI, SSE variables into
-!        the vector SSX.
-!
-!        Removed the dependency upon the UTC/ET leapsecond kernel.
-!
-!        Alphabetized all variable declaration lists.
-!
-!        All arguments passed through entry points listed as arguments
-!        of ZZNRDDP. OMGDT renamed OMGDOT to be consistent with other
-!        deep space two line element routines.
-!
-!-    SPICELIB Version 1.0.0, 1-APR-1997 (EDW)
-!
-
-!
-!     Define rather a large number of local parameters.
-!
-
-!
-!     Save everything just to be sure.
-!
-
-!
-!     Standard SPICE error handling.
-
       !>## Detailed Input
       !>
       !>     AO          the original semimajor axis of the orbit.
@@ -56188,321 +56825,6 @@ contains
 
       return
       end procedure zzsegbox
-
-!$Procedure ZZSRFTRN ( Surface name/ID mapping umbrella )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZSRFTRN is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zzsrftrn. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines.  Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     Umbrella routine for surface name/ID mapping entry points
-!     and the data structures they use.
-!
-! $ Detailed_Input
-!
-!     See the entry points for descriptions of their inputs.
-!
-! $ Detailed_Output
-!
-!     See the entry points for descriptions of their outputs.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1) If this routine is called directly, the error
-!        SPICE(BOGUSENTRY) is signaled.
-!
-! $ Files
-!
-!     Surface-to-name mappings may be defined at run time by loading
-!     text kernels containing kernel variable assignments of the form
-!
-!        NAIF_SURFACE_NAME += ( <surface name 1>, ... )
-!        NAIF_SURFACE_CODE += ( <surface code 1>, ... )
-!        NAIF_SURFACE_BODY += ( <body code 1>,    ... )
-!
-!     Here the set of the three Ith list items on the right hand side
-!     of the three assignments define the Ith surface name/ID mapping.
-!
-!     The same effect can be achieved using assignments formatted as
-!     follows:
-!
-!        NAIF_SURFACE_NAME += <surface name 1>
-!        NAIF_SURFACE_CODE += <surface code 1>
-!        NAIF_SURFACE_BODY += <body code 1>
-!
-!        NAIF_SURFACE_NAME += <surface name 2>
-!        NAIF_SURFACE_CODE += <surface code 2>
-!        NAIF_SURFACE_BODY += <body code 2>
-!
-!           ...
-!
-!     Note the use of the
-!
-!        +=
-!
-!     operator; this operator appends to rather than overwrites the
-!     kernel variable named on the left hand side of the assignment.
-!
-! $ Particulars
-!
-!     This umbrella routine contains declarations of data structures
-!     that support surface name/ID mapping.
-!
-!     This umbrella routine contains the following entry points:
-!
-!        ZZSRFC2N   {Surface code to name}
-!        ZZSRFN2C   {Surface name to code}
-!        ZZSRFTRK   {Track surface map updates}
-!
-! $ Examples
-!
-!     See the routines
-!
-!        SRFC2S
-!        SRFCSS
-!        SRFS2C
-!        SRFSCC
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!     B.V. Semenov    (JPL)
-!     E.D. Wright     (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 05-NOV-2021 (NJB)
-!
-!        Corrected I/O descriptions in header of entry point ZZSRFC2N.
-!
-!-    SPICELIB Version 1.0.0, 01-APR-2016 (NJB) (EDW) (BVS)
-!
-
-!     Hash control area items.
-!
-
-!
-!     Data structures in this package
-!     ===============================
-!
-!     The kernel variable table
-!     -------------------------
-!
-!     This table contains file scope arrays populated with the values
-!     of the kernel variables that define the surface name/ID mapping.
-!     These arrays contain
-!
-!        - surface names
-!        - surface ID codes
-!        - bodies associated with surface name/ID pairs
-!        - an array of normalized names. These names are
-!          upper case, left-justified, and compressed so that
-!          the names contain no consecutive, embedded blanks
-!
-!     The surface ID table
-!     --------------------
-!
-!     This table enables pairs of surface IDs and body IDs to be mapped
-!     to surface names. The table consists of
-!
-!        - a singly linked list pool
-!        - a list head array
-!        - a pointer array that maps pool nodes to
-!          indices in the kernel variable table
-!
-!     The pointer array maps each node belonging to a collision list in
-!     the pool to the index in the kernel table of the associated
-!     values. The kernel table values used by this mapping are
-!
-!        - the  surface ID code
-!        - the body ID code
-!        - the original surface name
-!
-!     An integer hash function is used to map each surface ID to the
-!     index in the list head array where the index of the head node for
-!     that surface ID is located.
-!
-!     The layout of the structure is:
-!
-!                                                 Kernel variable table
-!                                                 (only the portions
-!                                                 used here are shown)
-!
-!                                                         body IDs
-!                                                            |
-!   +-- integer_hash( surface ID )                           |  original
-!   |                                            surface IDs |  surface
-!   |                                                   |    |   names
-!   |                                                   |    |    |
-!   |  list heads     list pool   pointer array         |    |    |
-!   |  +---------+    +--------+  +-----------+        +--+ +--+ +--+
-!   |  |         |    |        |  |           |   +--->|  | |  | |  |
-!   |  +---------+    +--------+  +-----------+   |    +--+ +--+ +--+
-!   +->|         |-+  | ^   *  |->|           |---+    |  | |  | |  |
-!      +---------+ |  +-|---|--+  +-----------+        +--+ +--+ +--+
-!                  |    |   |
-!          ...     |    |...|          ...                   ...
-!                  |    |   |
-!      +---------+ |  +-|---|--+  +-----------+        +--+ +--+ +--+
-!      |         | +->| *   |  |->|           |---+ +->|  | |  | |  |
-!      +---------+    +-----|--+  +-----------+   | |  +--+ +--+ +--+
-!          ...           ...|          ...      +-|-+        ...
-!      +---------+    +-----|--+  +-----------+ | |    +--+ +--+ +--+
-!      |         |    |     v  |->|           |-+ +--->|  | |  | |  |
-!      +---------+    +--------+  +-----------+        +--+ +--+ +--+
-!
-!      ----------------------------------------        --------------
-!                       NROOM                              MXNSRF
-!
-!      The diagram above is not to scale: the arrays on the left have
-!      available length NROOM, while the arrays on the right have
-!      length MXNSRF.
-!
-!      Note that the pool array is dimensioned (LBSNGL:NROOM). Elements
-!      at indices -1 and 0 contain the size and location of the
-!      first free element, respectively.
-!
-!     The surface name table
-!     ----------------------
-!
-!     This table enables pairs of surface names and body IDs to be
-!     mapped to surface IDs. The structure is parallel to that of
-!     the surface ID table; it contains
-!
-!        - a singly linked list pool
-!        - a list head array
-!        - a pointer array that maps pool nodes to
-!          indices in the kernel variable table
-!
-!     The pointer array maps each node belonging to a collision list in
-!     the pool to the index in the kernel table of the associated
-!     values. The kernel table values used by this mapping are
-!
-!        - the normalized surface name
-!        - the surface ID code
-!        - the body ID code
-!
-!     An string hash function is used to map each surface name to the
-!     index in the list head array where the index of the head node for
-!     that surface ID is located.
-!
-!     The hash function is applied to the input string after it has
-!     been normalized and then had all embedded blanks compressed out.
-!     This allows the hash function terminate when it encounters the
-!     first blank in the input string, while taking into account all
-!     non-blank characters in the string. This makes it efficient while
-!     enabling it to discriminate well between strings that may have
-!     initial words in common. These compressed strings are not used
-!     for any other purpose than hashing. For detection of the correct
-!     matching elements in the kernel table, the normalized version
-!     of the input string (which may contain blanks) is used.
-!
-!     The layout of the structure is:
-!
-!                                                 Kernel variable table
-!                                                 (only the portions
-!                                                 used here are shown)
-!
-!                                                         body IDs
-!                                                            |
-!   +-- string_hash(surface name)                            |
-!   |                                         normalized     |  surface
-!   |                                         surface names  |   IDs
-!   |                                                   |    |    |
-!   |                                                   |    |    |
-!   |  list heads     list pool   pointer array         |    |    |
-!   |  +---------+    +--------+  +-----------+        +--+ +--+ +--+
-!   |  |         |    |        |  |           |   +--->|  | |  | |  |
-!   |  +---------+    +--------+  +-----------+   |    +--+ +--+ +--+
-!   +->|         |-+  | ^   *  |->|           |---+    |  | |  | |  |
-!      +---------+ |  +-|---|--+  +-----------+        +--+ +--+ +--+
-!                  |    |   |
-!          ...     |    |...|          ...                   ...
-!                  |    |   |
-!      +---------+ |  +-|---|--+  +-----------+        +--+ +--+ +--+
-!      |         | +->| *   |  |->|           |---+ +->|  | |  | |  |
-!      +---------+    +-----|--+  +-----------+   | |  +--+ +--+ +--+
-!          ...           ...|          ...      +-|-+        ...
-!      +---------+    +-----|--+  +-----------+ | |    +--+ +--+ +--+
-!      |         |    |     v  |->|           |-+ +--->|  | |  | |  |
-!      +---------+    +--------+  +-----------+        +--+ +--+ +--+
-!
-!      ----------------------------------------        --------------
-!                       NROOM                              MXNSRF
-!
-!      The diagram above is not to scale: the arrays on the left have
-!      available length NROOM, while the arrays on the right have
-!      length MXNSRF.
-!
-!      Note that the pool array is dimensioned (LBSNGL:NROOM). Elements
-!      at indices -1 and 0 contain the size and location of the
-!      first free element, respectively.
-!
-!     Declarations of data structures
-!     ===============================
-!
-!        Kernel variable table
-!        =====================
-!
-!        Input names:                 KERNAM
-!        Input surface IDs:           KERSID
-!        Input body IDs:              KERBID
-!
-!
-!        Normalized names:            NRMNAM
-!
-!     Each of these surface names is prefixed with an 11-character
-!     string containing the associated body ID.
-!
-
-!
-!        Surface ID table
-!        ================
-!
-!        Surface ID list heads:       SIDHLS
-!        Surface ID pool:             SIDPOL
-!        Surface ID name pointers:    SIDIDX
-!
-
-!        Surface Name table
-!        ==================
-!
-!        Surface name list heads:     SNMHLS
-!        Surface name pool:           SNMPOL
-!        Surface name ID pointers:    SNMIDP
-!
-
-!
-!     Other local declarations:
-!
-
-!
-!     POLCTR tracks the state of the kernel pool.
-!     SRFCTR tracks the state of the surface mapping
-!     kernel variables.
-!
-
-!
-!     Initial values
 
       !>## Abstract
       !>
@@ -74456,159 +74778,6 @@ contains
       return
       end procedure zzdskbux
 
-!$Procedure ZZDSKSBF ( DSK, manage the API segment buffer )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZDSKSBF is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zzdsksbf. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     Manage the DSK API segment buffer data structure.
-!
-! $ Detailed_Input
-!
-!     See the entry points.
-!
-! $ Detailed_Output
-!
-!     See the entry points.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If this routine is called directly, it signals the error
-!         SPICE(BOGUSENTRY).
-!
-!     See the entry points for descriptions of errors specific to
-!     those routines.
-!
-! $ Files
-!
-!     This routine makes use of DSK files loaded by the ZZDSKBSR
-!     subsystem.
-!
-! $ Particulars
-!
-!     This routine is meant to be used only by the DSK subsystem.
-!
-!     Data structure management
-!     =========================
-!
-!     This routine manages data structures used by SPICELIB geometry
-!     APIs to perform efficient computations using DSK data. This is
-!     the umbrella routine in which these structures are declared.
-!
-!     This routine also contains entry points that use these data
-!     structures to perform geometric computations using DSK data.
-!     See the section titled "Computations" below.
-!
-!     In a sense, ZZDSKSBF sits "above" the ZZDSKBSR subsystem.
-!     High-level geometry routines access the data stored in the
-!     ZZDSKSBF arrays directly; they don't call entry points of
-!     ZZDSKBSR.
-!
-!     The ZZDSKSBF subsystem maintains two logical tables: a body
-!     table and a segment table. Both tables are designed to store
-!     a fixed maximum number of items; there is no "virtual storage"
-!     concept that applies.
-!
-!     Items in both tables have priority assigned on a first-in,
-!     first-out basis. When it becomes necessary to remove an
-!     item to make room for another, the lowest-indexed item is
-!     removed first, and the tables are compressed so that the
-!     remaining items are contiguous.
-!
-!     When the state of the underlying ZZDSKBSR system changes due to
-!     loading or unloading of DSK files, the ZZDSKSBF body and segment
-!     tables must be re-initialized. Entry points of ZZDSKSBF
-!     perform this action by calling ZZDSKSBI.
-!
-!     In addition to the tables maintained by this subsystem, a
-!     counter is maintained. This counter is used to determine
-!     whether the locally buffered data are in sync with the
-!     information stored in the ZZDSKBSR subsystem.
-!
-!     Computations
-!     ============
-!
-!     This routine contains the following entry points that use
-!     buffered segment data to perform computations:
-!
-!        ZZSBFXR:    prepare for and compute unprioritized
-!                    ray-surface intercept using DSK data.
-!
-!        ZZSBFXRI:   prepare for and compute unprioritized
-!                    ray-surface intercept using DSK data; return data
-!                    source information such as file handle, DLA
-!                    descriptor, and plate ID as well.
-!
-!        ZZSBFNRM:   prepare for and compute outward normal
-!                    vector at a specified surface point,
-!                    using unprioritized DSK data.
-!
-! $ Examples
-!
-!     See usage in ZZDSKSBF.
-!
-! $ Restrictions
-!
-!     1) This is a private routine.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 22-FEB-2017 (NJB)
-!
-!        Added FAILED calls in each entry point.
-!
-!        17-MAY-2016 (NJB)
-!
-
-!
-!     Sizes of source info arrays returned by
-!     ZZDSKBUX:
-!
-
-!
-!     Body table variables
-!     --------------------
-!
-!        BTNBOD  is the number of bodies in the body table.
-!
-!        BTBODY  is an array of body ID codes.
-!
-!        BTSEGP  is an array of pointers (start indices) to entries in
-!                the segment table. The Ith pointer indicates the start
-!                index for entries for the Ith body.
-!
-!        BTSTSZ  is an array of segment table entry counts. The Ith
-!                element of BTSTSZ is the number of entries in the
-!                segment table for the Ith body.
-!
-
-!
-!     Segment table variables
-!
-
-!
-!     Initial values
-
       !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
@@ -79628,145 +79797,6 @@ contains
       return
       end associate
       end procedure srfnrm
-
-!$Procedure ZZSINUTL ( Utilities for generalized ray intercept )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZSINUTL is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zzsinutl. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     This is the umbrella routine for utilities supporting the
-!     generalized ray-surface intercept capability used by SINCPT.
-!
-! $ Detailed_Input
-!
-!     See the entry points.
-!
-! $ Detailed_Output
-!
-!     See the entry points.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     1)  If this routine is called directly, the error
-!         SPICE(BOGUSENTRY) is signaled.
-!
-!     2)  See the entry points for descriptions of errors specific to
-!         those routines.
-!
-! $ Files
-!
-!     This routine makes use of DSK files loaded by the ZZDSKBSR
-!     subsystem.
-!
-!     If any loaded DSK segment has a reference frame that is not
-!     centered at the segment's central (target) body, SPK data are
-!     required to compute the offset between the frame's center and
-!     the segment's center.
-!
-!     Frame kernels may be required in order to look up a segment's
-!     frame center offset. In some cases, additional kernels such
-!     as CK kernels and SCLK kernels could be required to support
-!     the offset vector lookup.
-!
-!     This routine uses PCK data for target body reference
-!     ellipsoids.
-!
-! $ Particulars
-!
-!     This routine is meant to be used only SPICELIB.
-!
-!     This routine contains the following entry points that support
-!     the generalized ray-surface intercept algorithm used by SINCPT:
-!
-!        ZZSUELIN:   Initialize ray intercept and near point utilities
-!                    for ellipsoidal target surface
-!
-!        ZZSUDSKI:   Initialize ray intercept and near point utilities
-!                    for DSK target surface
-!
-!        ZZMINRAD:   Return minimum spherical bounding radius for
-!                    surface
-!
-!        ZZMAXRAD:   Return maximum spherical bounding radius for
-!                    surface
-!
-!        ZZRAYSFX:   Compute ray-surface intercept given inputs
-!                    set by ZZSUELIN or ZZSUDSKI
-!
-!        ZZRAYNP:    Compute nearest point on surface to ray given
-!                    inputs set by ZZSUELIN or ZZSUDSKI
-!
-!     The geometric computation routines ZZRAYSFX, ZZRAYNP are
-!     used as callback routines by the generalized SINCPT algorithm.
-!
-! $ Examples
-!
-!     See usage in SINCPT, ZZSFXCOR.
-!
-! $ Restrictions
-!
-!     1)  This is a private routine.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.1, 17-OCT-2021 (NJB) (JDR)
-!
-!        Edited the header to comply with NAIF standard.
-!
-!        Updated comments.
-!
-!-    SPICELIB Version 1.0.0, 01-JUN-2016 (NJB)
-!
-!        Updated comments. Updated error handling in ZZSUDSKI.
-!
-!        11-FEB-2016 (NJB)
-!
-!           Added header.
-!
-!        02-NOV-2015 (NJB)
-!
-!           No longer requires ellipsoidal radii for
-!           initialization for DSK intercept computations.
-!
-!        10-OCT-2015 (NJB)
-!
-!           Now includes dsk.inc.
-!
-!        30-JAN-2015 (NJB)
-!
-!           Updated to provide an entry point returning a global
-!           minimum surface radius. The argument list has been
-!           changed to accommodate this new output.
-!
-!        17-OCT-2014 (NJB)
-!
-
-!     Target types:
-!
-
-!
-!     Initial values
 
       !>## Abstract
       !>
@@ -90641,104 +90671,6 @@ contains
       return
       end associate
       end procedure subslr
-
-!$Procedure ZZTANUTL ( DSK, tangent ray utilities )
-!
-!     PEPPER: SPICELIB's umbrella routine ZZTANUTL is not a procedure any more:
-!     its entry points are the module procedures below, and its saved
-!     variables are in pepper_state_zztanutl. Its documentation follows.
-!
-
-! $ Abstract
-!
-!     SPICE Private routine intended solely for the support of SPICE
-!     routines. Users should not call this routine directly due to the
-!     volatile nature of this routine.
-!
-!     This is the umbrella routine for utilities supporting the
-!     tangent ray finding capability used by LIMBPT and TERMPT.
-!
-! $ Detailed_Input
-!
-!     See the entry points.
-!
-! $ Detailed_Output
-!
-!     See the entry points.
-!
-! $ Parameters
-!
-!     See the entry points.
-!
-! $ Exceptions
-!
-!     1)  If this routine is called directly, it signals the error
-!         SPICE(BOGUSENTRY).
-!
-!     See the entry points for descriptions of errors specific to
-!     those routines.
-!
-! $ Files
-!
-!     This routine makes use of DSK files loaded by the ZZDSKBSR
-!     subsystem.
-!
-!     If any loaded DSK segment has a reference frame that is not
-!     centered at the segment's central (target) body, SPK data are
-!     required to compute the offset between the frame's center and
-!     the segment's center.
-!
-!     Frame kernels may be required in order to look up a segment's
-!     frame center offset. In some cases, additional kernels such
-!     as CK kernels and SCLK kernels could be required to support
-!     the offset vector lookup.
-!
-!     This routine uses PCK data for target body reference
-!     ellipsoids.
-!
-! $ Particulars
-!
-!     This routine is meant to be used only by the DSK subsystem.
-!
-!     This routine contains the following entry points that support
-!     the generalized ray-surface intercept algorithm used by SINCPT:
-!
-!        ZZTANINI:   Initialize tangent ray utilities for limb or
-!                    terminator computation. Terminators may be
-!                    umbral or penumbral.
-!
-!        ZZTANSTA:   Compute state of ray for a given input angle.
-!                    State is "occulted" or "not occulted." When
-!                    the state is occulted, return the ray-surface
-!                    intercept point.
-!
-! $ Examples
-!
-!     See usage in ZZTANGNT.
-!
-! $ Restrictions
-!
-!     1) This is a private routine.
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman   (JPL)
-!
-! $ Version
-!
-!-     SPICELIB Version 1.0.0 16-FEB-2016 (NJB)
-!
-!        Added error handling and headers.
-!
-!        Original version 26-OCT-2015 (NJB)
-!
-
-!
-!     Saved variables
 
       !>## Abstract
       !>
