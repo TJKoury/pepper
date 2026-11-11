@@ -4,6 +4,12 @@ PEPPER: Planetary Ephemerides, Positions, Pointing, Events & Rotations.
 
 PEPPER provides tools for computing planetary ephemerides, positions, pointing, events, and rotations, leveraging modern Fortran features for high performance and maintainability. It can be thought of as a modern, thread-safe reimagining and replacement for SPICELIB, the Fortran 77 SPICE library that has been developed by NASA's NAIF for decades. PEPPER aims not to rewrite the SPICELIB code from scratch or convert it into another language, but to modernize, improve, and add new features to it while maintaining compatibility with existing SPICELIB applications and tools.
 
+PEPPER can be used from three languages:
+
+- **Fortran:** the library itself, with SPICELIB's routines as methods of an instance (`spice%furnsh`) and of its per-thread contexts (`ctx%spkezr`).
+- **C and C++:** a C interface (`include/pepper.h`), generated from the Fortran interfaces (see [The C interface](#the-c-interface)).
+- **Python:** [PepperyPy](python/README.md), with [SpiceyPy](https://github.com/AndrewAnnex/SpiceyPy)'s API, so SpiceyPy programs run with `import pepperypy as spice`, 3 to 5 times faster and safe to call from several threads (see [Python: PepperyPy](#python-pepperypy)).
+
 ## Features
 
 - Compute planetary ephemerides with high precision.
