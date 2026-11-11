@@ -13,11 +13,16 @@
 !>   centers; ROTGET and FRMGET ask the provider for the orientation.
 !> - **KCLEAR** removes both; CLPOOL keeps the frames (it writes their
 !>   definitions into the emptied pool).
+!> - **Providers may make queries** (states, frames, names, the pool), which
+!>   may call providers in turn; the routines on these paths are recursive,
+!>   and more than MAX_PROVIDER_DEPTH nested provider calls (a provider that
+!>   depends on itself) signal SPICE(RECURSIONTOODEEP).
 submodule (pepper_instance) pepper_programmatic
 
    implicit none
 
    character(*), parameter :: virtual_ident = 'PROGRAMMATIC EPHEMERIS'  !! the virtual segments' identifier
+   integer(ip), parameter :: max_provider_depth = 50  !! nested provider calls allowed (see enter_provider)
    integer(ip), parameter :: virtual_type = 100  !! the virtual segments' SPK type
 
 contains
@@ -171,8 +176,10 @@ contains
       if ( ctx%failed() ) return
       do i = 1, ctx%spice%nprovided_spk
          if ( ctx%spice%provided_spk(i)%handle == handle ) then
+            if ( .not. enter_provider ( ctx, 'body', ctx%spice%provided_spk(i)%body ) ) return
             call ctx%spice%provided_spk(i)%provider%state ( ctx, ctx%spice%provided_spk(i)%body, et, &
                                                             state, found )
+            ctx%provider_depth = ctx%provider_depth - 1
             if ( ctx%failed() ) return
             if ( .not. found ) then
                state = 0.0_wp
@@ -380,7 +387,9 @@ contains
       if ( ctx%failed() ) return
       do i = 1, ctx%spice%nprovided_frames
          if ( ctx%spice%provided_frames(i)%code == frame ) then
+            if ( .not. enter_provider ( ctx, 'frame', frame ) ) return
             call ctx%spice%provided_frames(i)%provider%rotation ( ctx, frame, et, rotate, outfrm, found )
+            ctx%provider_depth = ctx%provider_depth - 1
             return
          end if
       end do
@@ -405,7 +414,9 @@ contains
       if ( ctx%failed() ) return
       do i = 1, ctx%spice%nprovided_frames
          if ( ctx%spice%provided_frames(i)%code == frame ) then
+            if ( .not. enter_provider ( ctx, 'frame', frame ) ) return
             call ctx%spice%provided_frames(i)%provider%transform ( ctx, frame, et, xform, outfrm, found )
+            ctx%provider_depth = ctx%provider_depth - 1
             return
          end if
       end do
@@ -439,5 +450,35 @@ contains
          found    = .false.
       end if
    end procedure frame_procedure_transform
+
+   ! ----------------------------------------------------------------------
+   ! Nesting
+   ! ----------------------------------------------------------------------
+
+   !> Count a provider call that begins, or signal SPICE(RECURSIONTOODEEP)
+   !> if MAX_PROVIDER_DEPTH calls are already in progress. Providers may make
+   !> queries that call providers in turn (a frame defined by bodies' states,
+   !> a body defined from other bodies); so many nested calls mean that a
+   !> provider depends on itself, which would recurse until the stack is
+   !> exhausted. (A provider may ask for its own body at another epoch,
+   !> where a file covers it: the depth, not the bodies, is limited.)
+   logical function enter_provider ( ctx, what, id ) result ( ok )
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: what  !! 'body' or 'frame'
+      integer(ip), intent(in) :: id  !! the body's or frame's ID code
+      ok = ctx%provider_depth < max_provider_depth
+      if ( ok ) then
+         ctx%provider_depth = ctx%provider_depth + 1
+         return
+      end if
+      call ctx%setmsg ( 'Programmatic providers are nested # deep at the ' &
+      //            'provider of # #: a provider''s result probably ' &
+      //            'depends on itself (its body''s state or its frame''s ' &
+      //            'orientation, through the queries it makes).' )
+      call ctx%errint ( '#', max_provider_depth )
+      call ctx%errch  ( '#', what )
+      call ctx%errint ( '#', id )
+      call ctx%sigerr ( 'SPICE(RECURSIONTOODEEP)' )
+   end function enter_provider
 
 end submodule pepper_programmatic

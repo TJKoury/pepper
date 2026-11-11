@@ -162,6 +162,14 @@ call ctx%pxform('MY_FRAME', 'J2000', et, rot)
   (`clpool` keeps the frames, as it keeps the loaded files).
 - Providers are called from any context, so from several threads at once:
   they must not change shared data.
+- A provider may make queries through the context it is given (states,
+  frame transformations, names, kernel variables), which may call other
+  providers: a frame defined by bodies' states (a two-body frame), a body
+  defined from other bodies. It must not change the kernels or run a GF
+  search. A provider whose result depends on itself (more than 50 nested
+  provider calls) gives SPICE(RECURSIONTOODEEP). A provider procedure that
+  can be nested (its queries reach bodies or frames of the same provider
+  type) must be `recursive`.
 
 ## Results of any size
 

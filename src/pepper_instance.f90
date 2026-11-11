@@ -259,6 +259,12 @@ module pepper_instance
       ! routines for two levels and refused a third.)
       integer(ip), allocatable :: dynamic_frames(:)  !! the frames (1 to ndynamic)
       integer(ip) :: ndynamic = 0  !! number of frames being evaluated
+      ! Programmatic providers being evaluated (PEPPER; pepper_programmatic):
+      ! a provider may query bodies and frames whose providers are called in
+      ! turn; past max_provider_depth nested calls, a provider probably
+      ! depends on itself (SPICE(RECURSIONTOODEEP) instead of a stack
+      ! overflow).
+      integer(ip) :: provider_depth = 0  !! number of provider calls in progress
       ! Per-context state of the subsystems (allocated when first used).
       ! >>> generated context state components (tools/modularize_ctx.py)
       ! --- pepper_pool
@@ -1878,7 +1884,7 @@ module pepper_instance
       end subroutine spice_remove_frame
 
       !> The state of [[ephemeris_procedure]]: its procedure's.
-      module subroutine ephemeris_procedure_state ( self, ctx, body, et, state, found )
+      recursive module subroutine ephemeris_procedure_state ( self, ctx, body, et, state, found )
          class(ephemeris_procedure), intent(in) :: self  !! the provider
          class(pepper_context), intent(inout) :: ctx  !! the context of the query
          integer(ip), intent(in) :: body  !! the body's ID code
@@ -1888,7 +1894,7 @@ module pepper_instance
       end subroutine ephemeris_procedure_state
 
       !> The transformation of [[frame_procedure]]: its procedure's.
-      module subroutine frame_procedure_transform ( self, ctx, frame, et, xform, relative, found )
+      recursive module subroutine frame_procedure_transform ( self, ctx, frame, et, xform, relative, found )
          class(frame_procedure), intent(in) :: self  !! the provider
          class(pepper_context), intent(inout) :: ctx  !! the context of the query
          integer(ip), intent(in) :: frame  !! the frame's ID code
@@ -1900,7 +1906,7 @@ module pepper_instance
 
       !> A [[frame_provider]]'s rotation: by default, the rotation block of
       !> its `transform`.
-      module subroutine frame_provider_rotation ( self, ctx, frame, et, rotate, relative, found )
+      recursive module subroutine frame_provider_rotation ( self, ctx, frame, et, rotate, relative, found )
          class(frame_provider), intent(in) :: self  !! the provider
          class(pepper_context), intent(inout) :: ctx  !! the context of the query
          integer(ip), intent(in) :: frame  !! the frame's ID code
@@ -1912,7 +1918,7 @@ module pepper_instance
 
       !> The state of a programmatic ephemeris's virtual segment (SPKPVN's
       !> type 100): its provider's, at ET (PEPPER).
-      module subroutine provided_state ( ctx, handle, et, state )
+      recursive module subroutine provided_state ( ctx, handle, et, state )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! the virtual file's handle
          real(wp), intent(in) :: et  !! the epoch
@@ -1920,7 +1926,7 @@ module pepper_instance
       end subroutine provided_state
 
       !> The rotation of a programmatic frame (ROTGET's class 7) (PEPPER).
-      module subroutine provided_rotation ( ctx, frame, et, rotate, outfrm, found )
+      recursive module subroutine provided_rotation ( ctx, frame, et, rotate, outfrm, found )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: frame  !! the frame's ID code
          real(wp), intent(in) :: et  !! the epoch
@@ -1931,7 +1937,7 @@ module pepper_instance
 
       !> The state transformation of a programmatic frame (FRMGET's class 7)
       !> (PEPPER).
-      module subroutine provided_transform ( ctx, frame, et, xform, outfrm, found )
+      recursive module subroutine provided_transform ( ctx, frame, et, xform, outfrm, found )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: frame  !! the frame's ID code
          real(wp), intent(in) :: et  !! the epoch
@@ -9515,7 +9521,7 @@ module pepper_instance
       !> of motion.
       !>
       !> MAXREC     P   Maximum length of records returned by SPKRnn.
-      module subroutine spkpvn ( ctx, handle, descr, et, ref, state, center )
+      recursive module subroutine spkpvn ( ctx, handle, descr, et, ref, state, center )
       use pepper_inc_spkrec
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! File handle.
@@ -9634,7 +9640,7 @@ module pepper_instance
 
       !> Return the matrix that transforms position vectors from one
       !> specified frame to another at a specified epoch.
-      module subroutine pxform ( ctx, from, to, et, rotate )
+      recursive module subroutine pxform ( ctx, from, to, et, rotate )
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: from  !! Name of the frame to transform from.
@@ -9645,7 +9651,7 @@ module pepper_instance
 
       !> Return the state transformation matrix from one frame to
       !> another at a specified epoch.
-      module subroutine sxform ( ctx, from, to, et, xform )
+      recursive module subroutine sxform ( ctx, from, to, et, xform )
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: from  !! Name of the frame to transform from.
@@ -10672,7 +10678,7 @@ module pepper_instance
       !> Return the position of a target body relative to an observing
       !> body, optionally corrected for light time (planetary aberration)
       !> and stellar aberration.
-      module subroutine spkpos ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
+      recursive module subroutine spkpos ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: targ  !! Target body name.
@@ -10782,7 +10788,7 @@ module pepper_instance
       !> where the observer has constant velocity in a specified reference
       !> frame. The observer's state is provided by the calling program
       !> rather than by loaded SPK files.
-      module subroutine spkcvo ( ctx, target, et, outref, refloc, abcorr, obssta, obsepc, obsctr, obsref, state, lt )
+      recursive module subroutine spkcvo ( ctx, target, et, outref, refloc, abcorr, obssta, obsepc, obsctr, obsref, state, lt )
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10802,7 +10808,7 @@ module pepper_instance
       !> Return the state (position and velocity) of a target body
       !> relative to an observing body, optionally corrected for light
       !> time (planetary aberration) and stellar aberration.
-      module subroutine spkezr ( ctx, targ, et, ref, abcorr, obs, starg, lt )
+      recursive module subroutine spkezr ( ctx, targ, et, ref, abcorr, obs, starg, lt )
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: targ  !! Target body name.
@@ -10832,7 +10838,7 @@ module pepper_instance
 
       !> The state of a prepared query at one epoch (PEPPER): [[spkezr]]'s
       !> result, to the last bit. Bound as the generic `query_state`.
-      module subroutine query_state_one ( ctx, q, et, state, lt )
+      recursive module subroutine query_state_one ( ctx, q, et, state, lt )
          class(pepper_context), intent(inout) :: ctx  !! the context
          type(state_query), intent(inout) :: q  !! the query (its segment cache is updated)
          real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
@@ -10842,7 +10848,7 @@ module pepper_instance
 
       !> The states of a prepared query at many epochs (PEPPER). Bound as the
       !> generic `query_state`.
-      module subroutine query_state_batch ( ctx, q, ets, states, lts )
+      recursive module subroutine query_state_batch ( ctx, q, ets, states, lts )
          class(pepper_context), intent(inout) :: ctx  !! the context
          type(state_query), intent(inout) :: q  !! the query (its segment cache is updated)
          real(wp), intent(in) :: ets(:)  !! the epochs (TDB seconds past J2000)
@@ -10864,7 +10870,7 @@ module pepper_instance
 
       !> The rotation of a prepared frame query at one epoch (PEPPER):
       !> [[pxform]]'s result. Bound as the generic `query_rotation`.
-      module subroutine query_rotation_one ( ctx, q, et, rotate )
+      recursive module subroutine query_rotation_one ( ctx, q, et, rotate )
          class(pepper_context), intent(inout) :: ctx  !! the context
          type(rotation_query), intent(inout) :: q  !! the query
          real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
@@ -10873,7 +10879,7 @@ module pepper_instance
 
       !> The rotations of a prepared frame query at many epochs (PEPPER).
       !> Bound as the generic `query_rotation`.
-      module subroutine query_rotation_batch ( ctx, q, ets, rotations )
+      recursive module subroutine query_rotation_batch ( ctx, q, ets, rotations )
          class(pepper_context), intent(inout) :: ctx  !! the context
          type(rotation_query), intent(inout) :: q  !! the query
          real(wp), intent(in) :: ets(:)  !! the epochs (TDB seconds past J2000)
@@ -10883,7 +10889,7 @@ module pepper_instance
       !> The state transformation of a prepared frame query at one epoch
       !> (PEPPER): [[sxform]]'s result. Bound as the generic
       !> `query_transform`.
-      module subroutine query_transform_one ( ctx, q, et, xform )
+      recursive module subroutine query_transform_one ( ctx, q, et, xform )
          class(pepper_context), intent(inout) :: ctx  !! the context
          type(rotation_query), intent(inout) :: q  !! the query
          real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
@@ -10892,7 +10898,7 @@ module pepper_instance
 
       !> The state transformations of a prepared frame query at many epochs
       !> (PEPPER). Bound as the generic `query_transform`.
-      module subroutine query_transform_batch ( ctx, q, ets, xforms )
+      recursive module subroutine query_transform_batch ( ctx, q, ets, xforms )
          class(pepper_context), intent(inout) :: ctx  !! the context
          type(rotation_query), intent(inout) :: q  !! the query
          real(wp), intent(in) :: ets(:)  !! the epochs (TDB seconds past J2000)
@@ -10919,7 +10925,7 @@ module pepper_instance
       !> where the observer has constant position in a specified reference
       !> frame. The observer's position is provided by the calling program
       !> rather than by loaded SPK files.
-      module subroutine spkcpo ( ctx, target, et, outref, refloc, abcorr, obspos, obsctr, obsref, state, lt )
+      recursive module subroutine spkcpo ( ctx, target, et, outref, refloc, abcorr, obspos, obsctr, obsref, state, lt )
       use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: target  !! Name of target ephemeris object.
@@ -10938,7 +10944,7 @@ module pepper_instance
       !> having constant velocity in a specified reference frame. The
       !> target's state is provided by the calling program rather than by
       !> loaded SPK files.
-      module subroutine spkcvt ( ctx, trgsta, trgepc, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
+      recursive module subroutine spkcvt ( ctx, trgsta, trgepc, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10959,7 +10965,7 @@ module pepper_instance
       !> having constant position in a specified reference frame. The
       !> target's position is provided by the calling program rather than
       !> by loaded SPK files.
-      module subroutine spkcpt ( ctx, trgpos, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
+      recursive module subroutine spkcpt ( ctx, trgpos, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
       use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: trgpos ( 3 )  !! Target position relative to center of motion.

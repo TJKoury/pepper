@@ -128,6 +128,31 @@ call spice%remove_frame(name)
 - Adding a frame again (the same code) replaces it; a name or code of a
   built-in frame is refused (SPICE(FRAMEEXISTS)).
 
+### Providers that make queries
+
+A provider gets the context of the query, so it may make queries of its
+own: a frame defined by bodies' states (a two-body frame, X toward a body,
+Z along the orbital angular momentum), a body defined from other bodies (a
+midpoint, a Lagrange point). These queries may call providers in turn.
+
+- **Reentrancy:** the paths that a provider re-enters are recursive: the
+  frame routines already were (dynamic frames make ephemeris queries), and
+  SPKPVN, the provider calls, the entry points a provider calls (SPKEZR,
+  SPKPOS, SPKCPO, SPKCPT, SPKCVO, SPKCVT, PXFORM, SXFORM) and the prepared
+  queries' routines are now too. gfortran's `-frecursive` (and Intel
+  Fortran's `-recursive`, in `fpm.toml`) keep all locals on the stack. The
+  saved "last input" caches were already safe across nesting (dynamic
+  frames, phase 14).
+- **Cycles:** a provider whose result depends on itself (its body's state
+  at the same epoch, its frame's orientation) would recurse until the stack
+  is exhausted. The context counts the provider calls in progress; past 50,
+  SPICE(RECURSIONTOODEEP). The depth is limited, not the bodies: a provider
+  may ask for its own body at another epoch, where a file covers it.
+- **Contract:** a provider must not change the kernels (`spice%furnsh`,
+  `add_*`) or run a GF search (whose state is in the context). A provider
+  procedure that can be nested (its queries reach bodies or frames of the
+  same provider type) must be `recursive`.
+
 ### Clean-up with the rest of the system
 
 - **KCLEAR** removes every programmatic ephemeris (their virtual files
@@ -172,6 +197,12 @@ call spice%remove_frame(name)
   CLPOOL and after UNLOAD of a text kernel the frames still do;
   `remove_ephemeris`, `remove_frame`.
 - **GF:** a distance search on a programmatic body (a known crossing time).
+- **Providers that make queries:** a two-body frame (PXFORM, SPKEZR), a
+  midpoint body, both together with corrections and through a prepared
+  query, a provider asking for its own body at an epoch a file covers, a
+  cycle (SPICE(RECURSIONTOODEEP), then the context works again);
+  `test_parallel`: a provider that queries another programmatic body, from
+  4 threads.
 
 ## Status
 

@@ -33,6 +33,10 @@ source-form = "default"
 [features]
 # No preprocessor directives (preprocessor_plan.md): only compiler options.
 platform.gfortran.flags = "-frecursive -fallow-argument-mismatch"
+platform.ifx.flags = "-recursive"
+platform.ifort.flags = "-recursive"
+platform.windows.ifx.flags = "/recursive"
+platform.windows.ifort.flags = "/recursive"
 
 [profiles]
 default = ["platform"]

@@ -30,9 +30,15 @@ source-form = "default"
 # interfaces); NAIF's tspice test code does (tspice/fpm.toml). -frecursive
 # puts all local variables that are not saved on the stack (gfortran
 # otherwise makes large local arrays static), which is needed for reentrant,
-# thread-safe code.
+# thread-safe code, and for queries made by programmatic providers
+# (pepper_programmatic); Intel Fortran's counterpart is -recursive
+# (/recursive on Windows).
 [features]
 platform.gfortran.flags = "-frecursive"
+platform.ifx.flags = "-recursive"
+platform.ifort.flags = "-recursive"
+platform.windows.ifx.flags = "/recursive"
+platform.windows.ifort.flags = "/recursive"
 
 [profiles]
 default = ["platform"]

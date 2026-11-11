@@ -5,6 +5,7 @@ module test_programmatic_providers
    implicit none
    private
    public :: linear_motion, spinning_frame, fixed_frame, refusing, failing, linear_state_of, spin_xform
+   public :: two_body_frame, midpoint, selfish, own_past
 
    !> Linear motion: r0 + v (t - t0), relative to the registered center.
    type, extends(ephemeris_provider) :: linear_motion
@@ -44,7 +45,107 @@ module test_programmatic_providers
       procedure :: transform => fixed_transform
    end type fixed_frame
 
+   !> A two-body frame (a provider that queries states): X from CENTER to
+   !> TARGET, Z along their relative angular momentum.
+   type, extends(frame_provider) :: two_body_frame
+      character(16) :: target = ' '  !! the body the X axis points to
+      character(16) :: center = ' '  !! the body the frame is centered on
+   contains
+      procedure :: transform => two_body_transform
+   end type two_body_frame
+
+   !> A body midway between two others (a provider that queries states):
+   !> half the state of A relative to B, B being its registered center.
+   type, extends(ephemeris_provider) :: midpoint
+      integer(ip) :: a = 0  !! one body
+      integer(ip) :: b = 0  !! the other (the registered center)
+   contains
+      procedure :: state => midpoint_state
+   end type midpoint
+
+   !> A provider that asks for its own body's state at the same epoch: a
+   !> cycle.
+   type, extends(ephemeris_provider) :: selfish
+   contains
+      procedure :: state => selfish_state
+   end type selfish
+
+   !> A provider that asks for its own body's state at an earlier epoch
+   !> (where a file covers the body): not a cycle.
+   type, extends(ephemeris_provider) :: own_past
+      real(wp) :: lag = 0  !! how much earlier (s)
+   contains
+      procedure :: state => own_past_state
+   end type own_past
+
 contains
+
+   recursive subroutine two_body_transform(self, ctx, frame, et, xform, relative, found)
+      class(two_body_frame), intent(in) :: self
+      class(pepper_context), intent(inout) :: ctx
+      integer(ip), intent(in) :: frame
+      real(wp), intent(in) :: et
+      real(wp), intent(out) :: xform(6, 6)
+      integer(ip), intent(out) :: relative
+      logical, intent(out) :: found
+      real(wp) :: st(6), lt, x(3), y(3), z(3)
+      xform = 0
+      relative = 1
+      call ctx%spkezr(trim(self%target), et, 'J2000', 'NONE', trim(self%center), st, lt)
+      found = .not. ctx%failed()
+      if (.not. found) return
+      x = st(1:3)/norm2(st(1:3))
+      z = cross(st(1:3), st(4:6))
+      z = z/norm2(z)
+      y = cross(z, x)
+      xform(1:3, 1) = x  ! the frame's axes in J2000: from the frame to J2000
+      xform(1:3, 2) = y
+      xform(1:3, 3) = z
+      xform(4:6, 4:6) = xform(1:3, 1:3)
+   end subroutine two_body_transform
+
+   recursive subroutine midpoint_state(self, ctx, body, et, state, found)
+      class(midpoint), intent(in) :: self
+      class(pepper_context), intent(inout) :: ctx
+      integer(ip), intent(in) :: body
+      real(wp), intent(in) :: et
+      real(wp), intent(out) :: state(6)
+      logical, intent(out) :: found
+      real(wp) :: lt
+      call ctx%spkgeo(self%a, et, 'J2000', self%b, state, lt)
+      state = 0.5_wp*state
+      found = .not. ctx%failed()
+   end subroutine midpoint_state
+
+   recursive subroutine selfish_state(self, ctx, body, et, state, found)
+      class(selfish), intent(in) :: self
+      class(pepper_context), intent(inout) :: ctx
+      integer(ip), intent(in) :: body
+      real(wp), intent(in) :: et
+      real(wp), intent(out) :: state(6)
+      logical, intent(out) :: found
+      real(wp) :: lt
+      call ctx%spkgeo(body, et, 'J2000', 399_ip, state, lt)
+      found = .not. ctx%failed()
+   end subroutine selfish_state
+
+   recursive subroutine own_past_state(self, ctx, body, et, state, found)
+      class(own_past), intent(in) :: self
+      class(pepper_context), intent(inout) :: ctx
+      integer(ip), intent(in) :: body
+      real(wp), intent(in) :: et
+      real(wp), intent(out) :: state(6)
+      logical, intent(out) :: found
+      real(wp) :: lt
+      call ctx%spkgeo(body, et - self%lag, 'J2000', 399_ip, state, lt)
+      found = .not. ctx%failed()
+   end subroutine own_past_state
+
+   pure function cross(a, b) result(c)
+      real(wp), intent(in) :: a(3), b(3)  !! the vectors
+      real(wp) :: c(3)
+      c = [a(2)*b(3) - a(3)*b(2), a(3)*b(1) - a(1)*b(3), a(1)*b(2) - a(2)*b(1)]
+   end function cross
 
    !> The state of a linear motion at ET.
    pure function linear_state_of(p, et) result(state)
@@ -195,6 +296,7 @@ program test_programmatic
    call test_priority()
    call test_errors()
    call test_gf()
+   call test_nested()
    call test_cleanup()
 
    call spice%kclear()
@@ -531,6 +633,55 @@ contains
       if (size(r, 2) == 1) call check(abs(r(1, 1) - 600.0_wp) < 1.0e-5_wp .and. abs(r(2, 1) - 1400.0_wp) < 1.0e-5_wp, &
                                       'GF on a programmatic body: [600, 1400]')
    end subroutine test_gf
+
+   !> Providers that make queries of their own: a two-body frame (states), a
+   !> body midway between two others (states), both together, through
+   !> SPKEZR with corrections and prepared queries; a provider asking for
+   !> its own body at an epoch a file covers; a cycle (SPICE(RECURSIONTOODEEP),
+   !> after which the context works again).
+   subroutine test_nested()
+      type(state_query) :: q
+      real(wp) :: st(6), st2(6), lt, lt2, rot(3, 3), et, u(3)
+      et = 3.0e5_wp
+      call spice%add_frame('P7_TWOBODY', 1400320_ip, 399_ip, two_body_frame(target='9001', center='EARTH'))
+      call spice%add_ephemeris(9020_ip, 399_ip, 'J2000', t0, t1, midpoint(a=9001, b=399))
+      call check(no_error('nested setup'), 'providers that make queries: setup')
+      ! the two-body frame: its X axis along the Earth-to-9001 direction
+      call ctx%pxform('P7_TWOBODY', 'J2000', et, rot)
+      st = linear_state_of(m9001, et)
+      u = st(1:3)/norm2(st(1:3))
+      call check(no_error('two-body pxform') .and. maxval(abs(rot(:, 1) - u)) < 1.0e-15_wp, &
+                 'a frame whose provider calls SPKEZR (PXFORM)')
+      call ctx%spkezr('9001', et, 'P7_TWOBODY', 'NONE', 'EARTH', st, lt)
+      call check(no_error('two-body spkezr') .and. abs(st(2)) < 1.0e-9_wp .and. abs(st(3)) < 1.0e-9_wp, &
+                 'a body on the X axis of its two-body frame')
+      ! the midpoint body
+      call ctx%spkgeo(9020_ip, et, 'J2000', 399_ip, st, lt)
+      call check(no_error('midpoint') .and. all(st == 0.5_wp*linear_state_of(m9001, et)), &
+                 'a body whose provider calls SPKGEO')
+      ! both, with corrections, and through a prepared query
+      call ctx%spkezr('9020', et, 'P7_TWOBODY', 'NONE', 'EARTH', st, lt)
+      call check(no_error('both') .and. abs(st(2)) < 1.0e-9_wp .and. abs(st(3)) < 1.0e-9_wp .and. st(1) > 0, &
+                 'the midpoint body in the two-body frame')
+      call ctx%spkezr('9020', et, 'P7_TWOBODY', 'CN+S', 'EARTH BARYCENTER', st, lt)
+      call ctx%prepare_state(q, '9020', 'EARTH BARYCENTER', 'P7_TWOBODY', 'CN+S')
+      call ctx%query_state(q, et, st2, lt2)
+      call check(no_error('nested corrections') .and. all(st == st2) .and. lt == lt2, &
+                 'nested providers with corrections: SPKEZR = prepared query')
+      ! a provider asking for its own body at an epoch a file covers
+      call spice%add_ephemeris(9003_ip, 399_ip, 'J2000', 0.0_wp, 1.0e6_wp, own_past(lag=2.0e6_wp))
+      call ctx%spkgeo(9003_ip, et, 'J2000', 399_ip, st, lt)
+      call check(no_error('own past') .and. all(st == linear_state_of(m9003a, et - 2.0e6_wp)), &
+                 'a provider asking for its own body at an epoch a file covers')
+      call spice%remove_ephemeris(9003_ip)
+      ! a cycle: an error, not a stack overflow; then the context works
+      call spice%add_ephemeris(9021_ip, 399_ip, 'J2000', t0, t1, selfish())
+      call ctx%spkgeo(9021_ip, et, 'J2000', 399_ip, st, lt)
+      call check(short_error() == 'SPICE(RECURSIONTOODEEP)', 'a provider that depends on itself')
+      call ctx%spkezr('9001', et, 'J2000', 'LT+S', 'EARTH', st, lt)
+      call check(no_error('after the cycle'), 'the context works after the cycle')
+      call spice%remove_ephemeris(9021_ip)
+   end subroutine test_nested
 
    !> CLPOOL and UNLOAD of a text kernel keep the frames; remove_frame and
    !> KCLEAR remove them; KCLEAR removes the bodies.

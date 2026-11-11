@@ -17,7 +17,8 @@
 !>   SPKACS and SPKEZ, statement for statement, on these states.
 !>
 !> The arithmetic is SPICELIB's, in the same order, so the results are
-!> identical. Cases outside the fast path (a chain longer than SPKGEO's 20
+!> identical. The routines are recursive: a programmatic provider evaluated
+!> by a query may make queries of its own (pepper_programmatic). Cases outside the fast path (a chain longer than SPKGEO's 20
 !> links, missing data, the relativistic correction) are evaluated by the
 !> SPICELIB routines, with their errors.
 submodule (pepper_instance) pepper_queries
@@ -307,7 +308,7 @@ contains
 
    !> Whether a frame's orientation relative to the inertial frames is
    !> constant: an inertial frame, or a chain of TK frames ending at one.
-   logical function frame_is_constant ( ctx, frame ) result ( constant )
+   recursive logical function frame_is_constant ( ctx, frame ) result ( constant )
       use pepper_inc_frmtyp, only: inertl, tk
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: frame  !! the frame's ID code
@@ -337,7 +338,7 @@ contains
 
    !> The index in Q%SEGS of a segment (added if new): its center, frame
    !> and type, and for types 2 and 3 the record directory (SPKR02, SPKR03).
-   integer(ip) function segment_slot ( ctx, q, handle, descr ) result ( k )
+   recursive integer(ip) function segment_slot ( ctx, q, handle, descr ) result ( k )
       class(pepper_context), intent(inout) :: ctx  !! the context
       type(state_query), intent(inout) :: q  !! the query
       integer(ip), intent(in) :: handle  !! the segment's file
@@ -383,7 +384,7 @@ contains
    !> The state of a segment's body relative to its center at ET, in the
    !> segment's frame: SPKPVN, with the current record kept for types 2
    !> and 3 (whose record is chosen as SPKR02 and SPKR03 choose it).
-   subroutine evaluate_segment ( ctx, q, k, et, state )
+   recursive subroutine evaluate_segment ( ctx, q, k, et, state )
       class(pepper_context), intent(inout) :: ctx  !! the context
       type(state_query), intent(inout) :: q  !! the query
       integer(ip), intent(in) :: k  !! the segment's index in Q%SEGS
@@ -422,7 +423,7 @@ contains
    !> SPKGEO. The target's chain is found first from the segments'
    !> descriptors, and only its links up to the body where it meets the
    !> observer's chain are evaluated (SPKGEO evaluates all of them).
-   subroutine fast_geo ( ctx, q, targ, et, refid, refname, obs, state, lt )
+   recursive subroutine fast_geo ( ctx, q, targ, et, refid, refname, obs, state, lt )
       use pepper_constants, only: clight
       use pepper_math, only: mxv, mxvg, vnorm
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -644,7 +645,7 @@ contains
 
    !> The light-time corrected state of TARG relative to an observer whose
    !> state relative to the solar system barycenter is STOBS: SPKLTC.
-   subroutine fast_ltc ( ctx, q, targ, et, refid, refname, stobs, starg, lt, dlt )
+   recursive subroutine fast_ltc ( ctx, q, targ, et, refid, refname, stobs, starg, lt, dlt )
       use pepper_constants, only: clight
       use pepper_math, only: vdot, vnorm
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -725,7 +726,7 @@ contains
 
    !> The apparent state of TARG relative to an observer whose state and
    !> acceleration relative to the barycenter are STOBS and ACCOBS: SPKAPS.
-   subroutine fast_aps ( ctx, q, targ, et, refid, refname, stobs, accobs, starg, lt, dlt )
+   recursive subroutine fast_aps ( ctx, q, targ, et, refid, refname, stobs, accobs, starg, lt, dlt )
       class(pepper_context), intent(inout) :: ctx  !! the context
       type(state_query), intent(inout) :: q  !! the query
       integer(ip), intent(in) :: targ  !! the target
@@ -754,7 +755,7 @@ contains
 
    !> The apparent state of TARG relative to OBS in an inertial frame:
    !> SPKACS.
-   subroutine fast_acs ( ctx, q, targ, et, refid, refname, obs, starg, lt, dlt )
+   recursive subroutine fast_acs ( ctx, q, targ, et, refid, refname, obs, starg, lt, dlt )
       class(pepper_context), intent(inout) :: ctx  !! the context
       type(state_query), intent(inout) :: q  !! the query
       integer(ip), intent(in) :: targ  !! the target
@@ -790,7 +791,7 @@ contains
    !> The apparent state in a non-inertial frame: SPKEZ's branch for those
    !> frames (the state in J2000, rotated at the epoch of the frame's
    !> center corrected for light time).
-   subroutine fast_noninertial ( ctx, q, et, starg, lt )
+   recursive subroutine fast_noninertial ( ctx, q, et, starg, lt )
       use pepper_math, only: mxvg
       class(pepper_context), intent(inout) :: ctx  !! the context
       type(state_query), intent(inout) :: q  !! the query

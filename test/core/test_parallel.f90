@@ -29,7 +29,7 @@ program test_parallel
    character(*), parameter :: fk = 'test_parallel.tf'
    character(*), parameter :: spk_mem = 'test_parallel_mem.bsp'  !! the SPK's copy, loaded in memory
    integer, parameter :: nepoch = 2000  !! number of query epochs
-   integer, parameter :: nres = 6 + 1 + 3 + 1 + 9 + 9 + 1 + 6 + 9  !! results per epoch
+   integer, parameter :: nres = 6 + 1 + 3 + 1 + 9 + 9 + 1 + 6 + 9 + 6  !! results per epoch
    integer, parameter :: nthreads = 4
    type(pepper_spice), target :: spice
    type(pepper_spice), target :: memspice  !! the same kernels, the SPK in memory
@@ -40,6 +40,7 @@ program test_parallel
    character(40) :: refutc(nepoch), parutc(nepoch)
    integer :: failures = 0, pass, i, nbad, errors
    type(ephemeris_procedure) :: eproc  !! a programmatic body (PEPPER_P, 9100)
+   type(ephemeris_procedure) :: nproc  !! a programmatic body whose provider queries 9100 (9101)
    type(frame_procedure) :: fproc  !! a programmatic frame (PEPPER_SPIN)
 
    setup => spice%context()
@@ -62,6 +63,9 @@ program test_parallel
    call spice%add_frame('PEPPER_SPIN', 1400500_ip, 1000_ip, fproc)
    call memspice%add_ephemeris(9100_ip, 1000_ip, 'J2000', 0.0_wp, 3.0e6_wp, eproc)
    call memspice%add_frame('PEPPER_SPIN', 1400500_ip, 1000_ip, fproc)
+   nproc%f => nested_body
+   call spice%add_ephemeris(9101_ip, 1001_ip, 'J2000', 0.0_wp, 3.0e6_wp, nproc)
+   call memspice%add_ephemeris(9101_ip, 1001_ip, 'J2000', 0.0_wp, 3.0e6_wp, nproc)
    call check(.not. spice%failed() .and. .not. memspice%failed(), 'a programmatic body and frame')
 
    et = [(1.0e5_wp + (1.8e6_wp*(i - 1))/(nepoch - 1), i = 1, nepoch)]
@@ -142,7 +146,22 @@ contains
       call ctx%spkezr('9100', t, 'PEPPER_SPIN', 'LT+S', 'PEPPER_B', res(31:36), lt)
       call ctx%pxform('PEPPER_SPIN', 'PEPPER_TK', t, rot)
       res(37:45) = reshape(rot, [9])
+      call ctx%spkezr('9101', t, 'PEPPER_SPIN', 'CN+S', 'PEPPER_A', res(46:51), lt)
    end subroutine queries
+
+   !> A programmatic body whose provider queries programmatic body 9100:
+   !> halfway from PEPPER_B to it (nested providers, from every thread).
+   recursive subroutine nested_body(c, body, et, state, found)
+      class(pepper_context), intent(inout) :: c  !! the context
+      integer(ip), intent(in) :: body  !! the body
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp), intent(out) :: state(6)  !! the state relative to PEPPER_B
+      logical, intent(out) :: found  !! a state is available
+      real(wp) :: lt
+      call c%spkgeo(9100_ip, et, 'J2000', 1001_ip, state, lt)
+      state = 0.5_wp*state
+      found = .not. c%failed()
+   end subroutine nested_body
 
    !> A programmatic body circling PEPPER_A (an ephemeris_procedure).
    subroutine programmatic_body(c, body, et, state, found)
