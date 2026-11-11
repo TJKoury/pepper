@@ -5,9 +5,6 @@
 **PEPPER**: Planetary Ephemerides, Positions, Pointing, Events & Rotations.
 
 [![Language](https://img.shields.io/badge/-Fortran-734f96?logo=fortran&logoColor=white)](https://github.com/topics/fortran)
-[![Language](https://img.shields.io/badge/-Python-3776AB?logo=python&logoColor=white)](https://github.com/topics/python)
-[![Language](https://img.shields.io/badge/-C-A8B9CC?logo=c&logoColor=white)](https://github.com/topics/c)
-[![Language](https://img.shields.io/badge/-C%2B%2B-00599C?logo=cplusplus&logoColor=white)](https://github.com/topics/cpp)
 
 ## Overview
 
@@ -282,6 +279,8 @@ end do
 
 ## Python: PepperyPy
 
+[![Language](https://img.shields.io/badge/-Python-3776AB?logo=python&logoColor=white)](https://github.com/topics/python)
+
 [PepperyPy](python/README.md) is PEPPER's Python interface, with
 [SpiceyPy](https://github.com/AndrewAnnex/SpiceyPy)'s API: SpiceyPy programs
 run with `import pepperypy as spice`. Queries from several threads run in
@@ -307,6 +306,9 @@ SpiceyPy's functions in [python/COVERAGE.md](python/COVERAGE.md), and the
 design in [pepperypy_plan.md](pepperypy_plan.md).
 
 ## The C interface
+
+[![Language](https://img.shields.io/badge/-C-A8B9CC?logo=c&logoColor=white)](https://github.com/topics/c)
+[![Language](https://img.shields.io/badge/-C%2B%2B-00599C?logo=cplusplus&logoColor=white)](https://github.com/topics/cpp)
 
 `include/pepper.h` declares PEPPER's C interface (`src/capi`): an instance
 and its contexts as opaque pointers, and every routine of a context whose
