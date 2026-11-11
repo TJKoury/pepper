@@ -14,13 +14,13 @@
 !> The kernels must not be changed while contexts are in use in other
 !> threads; a context must not be used by two threads at the same time;
 !> the instance must outlive its contexts:
-!>
+!>```fortran
 !>     type(pepper_spice), target :: spice
 !>     type(pepper_context) :: ctx
 !>     call spice%furnsh('kernels.tm')
 !>     if (spice%failed()) ...
 !>     ctx = spice%new_context()
-!>
+!>```
 !> Errors work as in SPICELIB, but per context and without a traceback: a
 !> routine that fails signals an error (ctx%sigerr, with a short message
 !> and an optional long message built with ctx%setmsg/errch/errdp/errint),
