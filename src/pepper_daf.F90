@@ -18899,6 +18899,92 @@ contains
       end associate
       end procedure dafec
 
+      !> All the comment lines of a DAF, each of any length (PEPPER).
+      module procedure daf_comments
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip), parameter :: inteoc = 4  ! end of the comments
+      integer(ip), parameter :: mxcrec = 1000  ! comment characters in a record
+      character(60) :: ifname
+      character(mxcrec) :: crecrd
+      character(:), allocatable :: text
+      integer(ip) :: bward
+      integer(ip) :: daflun
+      integer(ip) :: eoc
+      integer(ip) :: free
+      integer(ip) :: fward
+      integer(ip) :: iostat
+      integer(ip) :: k
+      integer(ip) :: ncomr
+      integer(ip) :: nd
+      integer(ip) :: ni
+      allocate ( lines(0) )
+      if ( ctx%failed() ) return
+      call dafsih ( ctx, handle, 'READ' )
+      call zzddhhlu ( ctx, handle, 'DAF', .false., daflun )
+      call dafrfr ( ctx, handle, nd, ni, ifname, fward, bward, free )
+      if ( ctx%failed() ) return
+!
+!     The comment area: records 2 to FWARD-1, its end marked by EOT.
+!
+      ncomr = fward - 2
+      if ( ncomr < 1 ) return
+      allocate ( character(mxcrec*ncomr) :: text )
+      do k = 1, ncomr
+         read ( daflun, rec=k+1, iostat=iostat ) crecrd
+         if ( iostat /= 0 ) then
+            call ctx%setmsg ( 'Error reading comment area of' // &
+                          ' binary file named ''#''.'     // &
+                          ' IOSTAT = #.'                   )
+            call ctx%errfnm ( '#', daflun                      )
+            call ctx%errint ( '#', iostat                      )
+            call ctx%sigerr ( 'SPICE(FILEREADFAILED)'          )
+            return
+         end if
+         text((k-1)*mxcrec+1:k*mxcrec) = crecrd
+      end do
+      eoc = index ( text, char(inteoc) )
+      if ( eoc == 0 ) then
+         if ( verify ( text, char(0) ) /= 0 ) then
+            call ctx%setmsg ( 'The comment area in the DAF file'   // &
+                          ' ''#'' may be damaged. The end of'  // &
+                          ' the comments could not be found.'   )
+            call ctx%errfnm ( '#', daflun                           )
+            call ctx%sigerr ( 'SPICE(BADCOMMENTAREA)'               )
+         end if
+         return
+      end if
+      call split_comment_lines ( text(1:eoc-1), lines )
+      end procedure daf_comments
+
+      !> Split a comment area's text into lines (PEPPER).
+      module procedure split_comment_lines
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip) :: b
+      integer(ip) :: e
+      integer(ip) :: k
+      integer(ip) :: n
+      n = 0
+      do k = 1, len ( text )
+         if ( text(k:k) == char(0) ) n = n + 1
+      end do
+      if ( len ( text ) > 0 ) then
+         if ( text(len(text):len(text)) /= char(0) ) n = n + 1
+      end if
+      allocate ( lines(n) )
+      b = 1
+      do k = 1, n
+         e = index ( text(b:), char(0) )
+         if ( e == 0 ) then
+            lines(k)%s = text(b:)
+         else
+            lines(k)%s = text(b:b+e-2)
+            b = b + e
+         end if
+      end do
+      end procedure split_comment_lines
+
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF opened for write access

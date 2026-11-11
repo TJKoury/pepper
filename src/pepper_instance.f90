@@ -41,6 +41,7 @@ module pepper_instance
    use pepper_hash, only: name_hash
    use pepper_output, only: wrline, byebye
    use pepper_containers, only: string, string_map
+   use pepper_windows, only: interval_list
    ! The state types of the subsystems, and the routines that set the
    ! initial values of the large ones.
    use pepper_states
@@ -730,6 +731,9 @@ module pepper_instance
       procedure, non_overridable :: gcpool
       procedure, non_overridable :: pool_string
       procedure, non_overridable :: pool_names
+      procedure, non_overridable :: pool_values
+      procedure, non_overridable :: pool_integers
+      procedure, non_overridable :: pool_strings
       procedure, non_overridable :: gdpool
       procedure, non_overridable :: gipool
       procedure, non_overridable :: dtpool
@@ -740,12 +744,16 @@ module pepper_instance
       ! --- pepper_bodies
       procedure, non_overridable :: bodn2c
       procedure, non_overridable :: bodc2n
+      procedure, non_overridable :: body_name => body_name_of
       procedure, non_overridable :: bods2c
       procedure, non_overridable :: bodc2s
       procedure, non_overridable :: bodfnd
       procedure, non_overridable :: bodvar
       procedure, non_overridable :: bodvcd
       procedure, non_overridable :: bodvrd
+      procedure, non_overridable :: body_values_by_name
+      procedure, non_overridable :: body_values_by_code
+      generic :: body_values => body_values_by_name, body_values_by_code
       ! --- end pepper_bodies
       ! --- pepper_files
       procedure, non_overridable :: idw2at
@@ -794,6 +802,7 @@ module pepper_instance
       procedure, non_overridable :: dafac
       procedure, non_overridable :: dafdc
       procedure, non_overridable :: dafec
+      procedure, non_overridable :: daf_comments
       procedure, non_overridable :: dafbna
       procedure, non_overridable :: dafada
       procedure, non_overridable :: dafena
@@ -872,6 +881,7 @@ module pepper_instance
       procedure, non_overridable :: dasacu
       procedure, non_overridable :: dasdc
       procedure, non_overridable :: dasec
+      procedure, non_overridable :: das_comments
       procedure, non_overridable :: dasecu
       procedure, non_overridable :: dasbt
       procedure, non_overridable :: dastb
@@ -901,11 +911,15 @@ module pepper_instance
       procedure, non_overridable :: dskn02
       procedure, non_overridable :: dskp02
       procedure, non_overridable :: dskv02
+      procedure, non_overridable :: dsk_plates
+      procedure, non_overridable :: dsk_vertices
       procedure, non_overridable :: dskz02
       procedure, non_overridable :: dskmi2
       procedure, non_overridable :: dskrb2
       procedure, non_overridable :: dskobj
       procedure, non_overridable :: dsksrf
+      procedure, non_overridable :: dsk_objects
+      procedure, non_overridable :: dsk_surfaces
       ! --- end pepper_dsk_files
       ! --- pepper_segments
       procedure, non_overridable :: spksfs
@@ -925,6 +939,8 @@ module pepper_instance
       procedure, non_overridable :: ktotal
       procedure, non_overridable :: kdata
       procedure, non_overridable :: kinfo
+      procedure, non_overridable :: kernel_data
+      procedure, non_overridable :: kernel_info
       ! --- end pepper_keeper
       ! --- pepper_time
       procedure, non_overridable :: badkpv
@@ -1032,6 +1048,7 @@ module pepper_instance
       ! --- pepper_frames
       procedure, non_overridable :: namfrm
       procedure, non_overridable :: frmnam
+      procedure, non_overridable :: frame_name => frame_name_of
       procedure, non_overridable :: frinfo
       procedure, non_overridable :: cidfrm
       procedure, non_overridable :: cnmfrm
@@ -1081,14 +1098,18 @@ module pepper_instance
       ! --- end pepper_sclk_api
       ! --- pepper_ck_api
       procedure, non_overridable :: ckobj
+      procedure, non_overridable :: ck_objects
       procedure, non_overridable :: ckgp
       procedure, non_overridable :: ckgpav
       procedure, non_overridable :: ckcov
+      procedure, non_overridable :: ck_coverage
       ! --- end pepper_ck_api
       ! --- pepper_pck_api
       procedure, non_overridable :: pckcov
+      procedure, non_overridable :: pck_coverage
       procedure, non_overridable :: pckeul
       procedure, non_overridable :: pckfrm
+      procedure, non_overridable :: pck_frames
       procedure, non_overridable :: bodeul
       ! --- end pepper_pck_api
       ! --- pepper_dsk_write
@@ -1102,9 +1123,11 @@ module pepper_instance
       procedure, non_overridable :: sgwvpk
       procedure, non_overridable :: sgwes
       procedure, non_overridable :: spkcov
+      procedure, non_overridable :: spk_coverage
       procedure, non_overridable :: spkgeo
       procedure, non_overridable :: spkgps
       procedure, non_overridable :: spkobj
+      procedure, non_overridable :: spk_objects
       procedure, non_overridable :: spkpds
       procedure, non_overridable :: spks01
       procedure, non_overridable :: spks02
@@ -1317,6 +1340,9 @@ module pepper_instance
       procedure, non_overridable :: edterm
       procedure, non_overridable :: getelm
       procedure, non_overridable :: getfvn
+      procedure, non_overridable :: fov_by_code
+      procedure, non_overridable :: fov_by_name
+      generic :: fov => fov_by_code, fov_by_name
       procedure, non_overridable :: lx4dec
       procedure, non_overridable :: oscltx
       procedure, non_overridable :: pgrrec
@@ -1341,6 +1367,7 @@ module pepper_instance
       procedure, non_overridable :: inedpl
       procedure, non_overridable :: pjelpl
       procedure, non_overridable :: srfc2s
+      procedure, non_overridable :: surface_name
       procedure, non_overridable :: srfcss
       procedure, non_overridable :: srfs2c
       procedure, non_overridable :: srfscc
@@ -1361,6 +1388,8 @@ module pepper_instance
       procedure, non_overridable :: subslr
       procedure, non_overridable :: limbpt
       procedure, non_overridable :: termpt
+      procedure, non_overridable :: limb_points
+      procedure, non_overridable :: terminator_points
       ! --- end pepper_geometry
       ! --- pepper_gf
       procedure, non_overridable :: gfbail
@@ -1380,6 +1409,20 @@ module pepper_instance
       procedure, non_overridable :: gfudb
       procedure, non_overridable :: gfuds
       procedure, non_overridable :: gfevnt
+      procedure, non_overridable :: gf_distance
+      procedure, non_overridable :: gf_position
+      procedure, non_overridable :: gf_subpoint
+      procedure, non_overridable :: gf_intercept
+      procedure, non_overridable :: gf_separation
+      procedure, non_overridable :: gf_occultation
+      procedure, non_overridable :: gf_illumination
+      procedure, non_overridable :: gf_phase
+      procedure, non_overridable :: gf_range_rate
+      procedure, non_overridable :: gf_target_in_fov
+      procedure, non_overridable :: gf_ray_in_fov
+      procedure, non_overridable :: gf_user_scalar
+      procedure, non_overridable :: gf_user_boolean
+      procedure, non_overridable :: gf_event
       procedure, non_overridable :: gfdist
       procedure, non_overridable :: gfilum
       procedure, non_overridable :: gfpa
@@ -1409,6 +1452,10 @@ module pepper_instance
       procedure, non_overridable :: ekrcec
       procedure, non_overridable :: ekrced
       procedure, non_overridable :: ekrcei
+      procedure, non_overridable :: ek_values_real
+      procedure, non_overridable :: ek_values_int
+      procedure, non_overridable :: ek_values_str
+      generic :: ek_values => ek_values_real, ek_values_int, ek_values_str
       procedure, non_overridable :: ekaclc
       procedure, non_overridable :: ekacld
       procedure, non_overridable :: ekacli
@@ -2321,6 +2368,16 @@ module pepper_instance
          real(wp), intent(in) :: right  !! Left, right endpoints of new interval.
          real(wp), intent(inout) :: window    ( lbcell:* )  !! Input, output window.
       end subroutine wninsd
+
+      !> Insert an interval into a window being built (PEPPER): [[wninsd]]
+      !> for an [[interval_list]], which grows as needed. Signals
+      !> SPICE(BADENDPOINTS), as [[wninsd]], if LEFT > RIGHT.
+      module subroutine insert_interval ( ctx, left, right, window )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: left  !! the start of the interval
+         real(wp), intent(in) :: right  !! the end of the interval
+         type(interval_list), intent(inout) :: window  !! the window
+      end subroutine insert_interval
 
       !> Place the intersection of two double precision windows into
       !> a third window.
@@ -3854,6 +3911,35 @@ module pepper_instance
          type(string), allocatable, intent(out) :: names(:)  !! the matching names
       end subroutine pool_names
 
+      !> All the values of a numeric kernel variable (PEPPER; [[gdpool]] with
+      !> the size taken from the pool).
+      module subroutine pool_values ( ctx, name, values, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: name  !! the name of the variable
+         real(wp), allocatable, intent(out) :: values(:)  !! its values (size 0 if not found)
+         logical, intent(out) :: found  !! the variable is in the pool and numeric
+      end subroutine pool_values
+
+      !> All the values of a numeric kernel variable, rounded to integers
+      !> (PEPPER; [[gipool]] with the size taken from the pool).
+      !>
+      !> A value outside the range of integers signals SPICE(INTOUTOFRANGE).
+      module subroutine pool_integers ( ctx, name, values, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: name  !! the name of the variable
+         integer(ip), allocatable, intent(out) :: values(:)  !! its values (size 0 if not found)
+         logical, intent(out) :: found  !! the variable is in the pool and numeric
+      end subroutine pool_integers
+
+      !> All the values of a character kernel variable, each of any length
+      !> (PEPPER; [[gcpool]] with the size taken from the pool).
+      module subroutine pool_strings ( ctx, name, values, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: name  !! the name of the variable
+         type(string), allocatable, intent(out) :: values(:)  !! its values (size 0 if not found)
+         logical, intent(out) :: found  !! the variable is in the pool and of character type
+      end subroutine pool_strings
+
       !> Return one string value of a character kernel variable, of any
       !> length (PEPPER; [[gcpool]] truncates to the length of its output).
       module subroutine pool_string ( ctx, name, nth, value, found, n )
@@ -4461,6 +4547,30 @@ module pepper_instance
          integer(ip), intent(out) :: dim  !! Number of values returned.
          real(wp), intent(out) :: values  ( * )  !! Values.
       end subroutine bodvrd
+
+      !> All the values of a body constant, the body given by name (PEPPER;
+      !> [[bodvrd]] with the size taken from the pool). Bound as the generic
+      !> `body_values`.
+      !>
+      !> The errors are those of [[bodvrd]], except SPICE(ARRAYTOOSMALL).
+      module subroutine body_values_by_name ( ctx, body, item, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: body  !! the body name (or ID code as a string)
+         character(*), intent(in) :: item  !! the item, e.g. 'RADII' (the variable BODYnnn_<item>)
+         real(wp), allocatable, intent(out) :: values(:)  !! the values (size 0 after an error)
+      end subroutine body_values_by_name
+
+      !> All the values of a body constant, the body given by its ID code
+      !> (PEPPER; [[bodvcd]] with the size taken from the pool). Bound as the
+      !> generic `body_values`.
+      !>
+      !> The errors are those of [[bodvcd]], except SPICE(ARRAYTOOSMALL).
+      module subroutine body_values_by_code ( ctx, body, item, values )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: body  !! the body ID code
+         character(*), intent(in) :: item  !! the item, e.g. 'RADII' (the variable BODYnnn_<item>)
+         real(wp), allocatable, intent(out) :: values(:)  !! the values (size 0 after an error)
+      end subroutine body_values_by_code
 
    end interface
    ! --- end pepper_bodies
@@ -5267,6 +5377,17 @@ module pepper_instance
          character(*), intent(out) :: buffer(*)  !! Buffer where extracted comment lines are placed.
          logical, intent(out) :: done  !! Indicates whether all comments have been extracted.
       end subroutine dafec
+
+      !> All the comment lines of a DAF, each of any length (PEPPER; [[dafec]]
+      !> without a buffer). It reads the comment area directly: it does not
+      !> change the position of [[dafec]] in the file.
+      !>
+      !> The errors are those of [[dafec]], without SPICE(COMMENTTOOLONG).
+      module subroutine daf_comments ( ctx, handle, lines )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! the handle of a DAF open for reading
+         type(string), allocatable, intent(out) :: lines(:)  !! the comment lines (size 0 after an error)
+      end subroutine daf_comments
 
       !> Begin a new array in a DAF.
       module subroutine dafbna ( ctx, handle, sum, name )
@@ -6083,6 +6204,25 @@ module pepper_instance
          logical, intent(out) :: done  !! Indicates whether all comments have been extracted.
       end subroutine dasec
 
+      !> All the comment lines of a DAS file, each of any length (PEPPER;
+      !> [[dasec]] without a buffer). It reads the comment area directly: it
+      !> does not change the position of [[dasec]] in the file.
+      !>
+      !> The errors are those of [[dasec]], without SPICE(COMMENTTOOLONG).
+      module subroutine das_comments ( ctx, handle, lines )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! the handle of a DAS file open for reading
+         type(string), allocatable, intent(out) :: lines(:)  !! the comment lines (size 0 after an error)
+      end subroutine das_comments
+
+      !> Split a comment area's text into lines at its end-of-line marks
+      !> (NUL) (PEPPER; used by [[daf_comments]] and [[das_comments]]). Text
+      !> after the last mark is a line too.
+      pure module subroutine split_comment_lines ( text, lines )
+         character(*), intent(in) :: text  !! the comment text
+         type(string), allocatable, intent(out) :: lines(:)  !! the lines
+      end subroutine split_comment_lines
+
       !> Extract comments from a previously opened binary DAS file to a
       !> previously opened text file attached to a Fortran logical unit.
       module subroutine dasecu ( ctx, handle, comlun, comnts )
@@ -6556,6 +6696,24 @@ module pepper_instance
          real(wp), intent(out) :: vrtces ( 3, * )  !! Array containing vertices.
       end subroutine dskv02
 
+      !> All the plates of a type 2 DSK segment (PEPPER; [[dskp02]] with the
+      !> size from [[dskz02]]).
+      module subroutine dsk_plates ( ctx, handle, dladsc, plates )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! the handle of the DSK file
+         integer(ip), intent(in) :: dladsc(*)  !! the DLA descriptor of the segment
+         integer(ip), allocatable, intent(out) :: plates(:,:)  !! the plates, shape (3, n): vertex indices (n = 0 after an error)
+      end subroutine dsk_plates
+
+      !> All the vertices of a type 2 DSK segment (PEPPER; [[dskv02]] with
+      !> the size from [[dskz02]]).
+      module subroutine dsk_vertices ( ctx, handle, dladsc, vertices )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! the handle of the DSK file
+         integer(ip), intent(in) :: dladsc(*)  !! the DLA descriptor of the segment
+         real(wp), allocatable, intent(out) :: vertices(:,:)  !! the vertices, shape (3, n) (n = 0 after an error)
+      end subroutine dsk_vertices
+
       !> Return plate model size parameters---plate count and
       !> vertex count---for a type 2 DSK segment.
       module subroutine dskz02 ( ctx, handle, dladsc, nv, np )
@@ -6624,6 +6782,14 @@ module pepper_instance
                                                               !! file.
       end subroutine dskobj
 
+      !> The bodies of a DSK file (PEPPER; [[dskobj]] without a set cell):
+      !> their ID codes, sorted, without duplicates.
+      module subroutine dsk_objects ( ctx, file, ids )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! the DSK file
+         integer(ip), allocatable, intent(out) :: ids(:)  !! the body ID codes (size 0 after an error)
+      end subroutine dsk_objects
+
       !> Find the set of surface ID codes for all surfaces associated with
       !> a given body in a specified DSK file.
       module subroutine dsksrf ( ctx, dskfnm, bodyid, srfids )
@@ -6636,6 +6802,15 @@ module pepper_instance
          integer(ip), intent(inout) :: srfids ( lbcell : * )  !! Set of ID codes of surfaces in DSK
                                                               !! file.
       end subroutine dsksrf
+
+      !> The surfaces of a body in a DSK file (PEPPER; [[dsksrf]] without a
+      !> set cell): their ID codes, sorted, without duplicates.
+      module subroutine dsk_surfaces ( ctx, file, body, ids )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! the DSK file
+         integer(ip), intent(in) :: body  !! the body ID code
+         integer(ip), allocatable, intent(out) :: ids(:)  !! the surface ID codes (size 0 after an error)
+      end subroutine dsk_surfaces
 
    end interface
    ! --- end pepper_dsk_files
@@ -6957,6 +7132,32 @@ module pepper_instance
          character(*), intent(out) :: srcfil  !! Name of the source file used to load FILE.
          logical, intent(out) :: found  !! .TRUE. if the specified file could be located.
       end subroutine kinfo
+
+      !> The data of the nth kernel of a kind loaded through FURNSH, with
+      !> file names of any length (PEPPER; [[kdata]], which truncates to its
+      !> arguments' lengths).
+      module subroutine kernel_data ( ctx, which, kind, file, filtyp, source, handle, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: which  !! the index of the kernel among those of KIND
+         character(*), intent(in) :: kind  !! the kinds of kernel ('ALL', 'SPK', 'CK TEXT', ..., as [[kdata]])
+         character(:), allocatable, intent(out) :: file  !! the file name (empty if not found)
+         character(:), allocatable, intent(out) :: filtyp  !! the kernel type: SPK, CK, PCK, DSK, EK, TEXT or META
+         character(:), allocatable, intent(out) :: source  !! the meta-kernel it was loaded from (empty if loaded directly)
+         integer(ip), intent(out) :: handle  !! its handle (0 for a text or meta-kernel)
+         logical, intent(out) :: found  !! a kernel was found
+      end subroutine kernel_data
+
+      !> The data of a kernel loaded through FURNSH, with file names of any
+      !> length (PEPPER; [[kinfo]], which truncates to its arguments'
+      !> lengths).
+      module subroutine kernel_info ( ctx, file, filtyp, source, handle, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! the file name, as loaded
+         character(:), allocatable, intent(out) :: filtyp  !! the kernel type: SPK, CK, PCK, DSK, EK, TEXT or META
+         character(:), allocatable, intent(out) :: source  !! the meta-kernel it was loaded from (empty if loaded directly)
+         integer(ip), intent(out) :: handle  !! its handle (0 for a text or meta-kernel)
+         logical, intent(out) :: found  !! the file is loaded
+      end subroutine kernel_info
 
       !> Clear the KEEPER subsystem: unload all kernels, clear the kernel
       !> pool, and re-initialize the subsystem. Existing watches on kernel
@@ -9372,6 +9573,14 @@ module pepper_instance
          integer(ip), intent(inout) :: ids ( lbcell : * )  !! Set of ID codes of objects in CK file.
       end subroutine ckobj
 
+      !> The objects of a CK file (PEPPER; [[ckobj]] without a set cell):
+      !> their ID codes, sorted, without duplicates.
+      module subroutine ck_objects ( ctx, file, ids )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! the CK file
+         integer(ip), allocatable, intent(out) :: ids(:)  !! the ID codes (size 0 after an error)
+      end subroutine ck_objects
+
       !> Get pointing (attitude) for a specified spacecraft clock time.
       module subroutine ckgp ( ctx, inst, sclkdp, tol, ref, cmat, clkout, found )
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
@@ -9414,7 +9623,7 @@ module pepper_instance
          integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
          real(wp), intent(in) :: tol  !! Tolerance in ticks.
          character(*), intent(in) :: timsys  !! Time system used to represent coverage.
-         real(wp), intent(inout) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+         type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       end subroutine zzckcv01
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -9429,7 +9638,7 @@ module pepper_instance
          integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
          real(wp), intent(in) :: tol  !! Tolerance in ticks.
          character(*), intent(in) :: timsys  !! Time system used to represent coverage.
-         real(wp), intent(inout) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+         type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       end subroutine zzckcv02
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -9444,7 +9653,7 @@ module pepper_instance
          integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
          real(wp), intent(in) :: tol  !! Tolerance in ticks.
          character(*), intent(in) :: timsys  !! Time system used to represent coverage.
-         real(wp), intent(inout) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+         type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       end subroutine zzckcv03
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -9462,7 +9671,7 @@ module pepper_instance
          integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
          real(wp), intent(in) :: tol  !! Tolerance in ticks.
          character(*), intent(in) :: timsys  !! Time system used to represent coverage.
-         real(wp), intent(inout) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+         type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       end subroutine zzckcv04
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -9479,7 +9688,7 @@ module pepper_instance
          real(wp), intent(in) :: dc     ( 2 )  !! D.p. component of CK segment descriptor.
          real(wp), intent(in) :: tol  !! Tolerance in ticks.
          character(*), intent(in) :: timsys  !! Time system used to represent coverage.
-         real(wp), intent(inout) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+         type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       end subroutine zzckcv05
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -9496,7 +9705,7 @@ module pepper_instance
          real(wp), intent(in) :: dc     ( 2 )  !! D.p. component of CK segment descriptor.
          real(wp), intent(in) :: tol  !! Tolerance in ticks.
          character(*), intent(in) :: timsys  !! Time system used to represent coverage.
-         real(wp), intent(inout) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+         type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       end subroutine zzckcv06
 
       !> Find the coverage window for a specified object in a specified CK
@@ -9513,6 +9722,25 @@ module pepper_instance
          real(wp), intent(inout) :: cover ( lbcell : * )  !! Window giving coverage for IDCODE.
       end subroutine ckcov
 
+      !> The coverage of an object in a CK file (PEPPER; [[ckcov]] without
+      !> a window cell).
+      !>
+      !> The result is a window as an array: each column an interval
+      !> [start, stop] (TDB seconds past J2000), sorted and disjoint
+      !> ([[pepper_windows]]). The errors are those of [[ckcov]],
+      !> without SPICE(WINDOWEXCESS). With TIMSYS = 'SCLK' the times are
+      !> encoded spacecraft clock ticks.
+      module subroutine ck_coverage ( ctx, file, inst, needav, level, tol, timsys, intervals )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! the CK file
+         integer(ip), intent(in) :: inst  !! the ID code of the object (instrument or structure)
+         logical, intent(in) :: needav  !! only the coverage with angular velocity
+         character(*), intent(in) :: level  !! 'SEGMENT' or 'INTERVAL'
+         real(wp), intent(in) :: tol  !! the tolerance in ticks by which intervals are expanded
+         character(*), intent(in) :: timsys  !! the time system of the result: 'TDB' or 'SCLK'
+         real(wp), allocatable, intent(out) :: intervals(:,:)  !! the coverage, shape (2, n) (n = 0 after an error)
+      end subroutine ck_coverage
+
    end interface
    ! --- end pepper_ck_api
    ! --- pepper_pck_api
@@ -9527,6 +9755,20 @@ module pepper_instance
          integer(ip), intent(in) :: idcode  !! Class ID code of PCK reference frame.
          real(wp), intent(inout) :: cover  ( lbcell : * )  !! Window giving coverage in PCKFNM for IDCODE.
       end subroutine pckcov
+
+      !> The coverage of a frame in a binary PCK file (PEPPER; [[pckcov]]
+      !> without a window cell).
+      !>
+      !> The result is a window as an array: each column an interval
+      !> [start, stop] (TDB seconds past J2000), sorted and disjoint
+      !> ([[pepper_windows]]). The errors are those of [[pckcov]],
+      !> without SPICE(WINDOWEXCESS).
+      module subroutine pck_coverage ( ctx, file, frame, intervals )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! the binary PCK file
+         integer(ip), intent(in) :: frame  !! the frame class ID code
+         real(wp), allocatable, intent(out) :: intervals(:,:)  !! the coverage, shape (2, n) (n = 0 after an error)
+      end subroutine pck_coverage
 
       !> This routine is obsolete. It supports only the type 02 binary
       !> PCK format. It is maintained only for backward compatibility
@@ -9547,6 +9789,14 @@ module pepper_instance
          character(*), intent(in) :: pckfnm  !! Name of PCK file.
          integer(ip), intent(inout) :: ids    ( lbcell : * )  !! Set of frame class ID codes of frames in PCK file.
       end subroutine pckfrm
+
+      !> The frames of a binary PCK file (PEPPER; [[pckfrm]] without a set
+      !> cell): their class ID codes, sorted, without duplicates.
+      module subroutine pck_frames ( ctx, file, ids )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! the binary PCK file
+         integer(ip), allocatable, intent(out) :: ids(:)  !! the frame class ID codes (size 0 after an error)
+      end subroutine pck_frames
 
       !> Return the Euler angles needed to compute the transformation from
       !> inertial to body-fixed coordinates for any body in the kernel
@@ -9697,6 +9947,20 @@ module pepper_instance
          real(wp), intent(inout) :: cover ( lbcell : * )  !! Window giving coverage in SPKFNM for IDCODE.
       end subroutine spkcov
 
+      !> The coverage of an object in an SPK file (PEPPER; [[spkcov]]
+      !> without a window cell).
+      !>
+      !> The result is a window as an array: each column an interval
+      !> [start, stop] (TDB seconds past J2000), sorted and disjoint
+      !> ([[pepper_windows]]). The errors are those of [[spkcov]],
+      !> without SPICE(WINDOWEXCESS).
+      module subroutine spk_coverage ( ctx, file, body, intervals )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! the SPK file
+         integer(ip), intent(in) :: body  !! the NAIF ID code of the object
+         real(wp), allocatable, intent(out) :: intervals(:,:)  !! the coverage, shape (2, n) (n = 0 after an error)
+      end subroutine spk_coverage
+
       !> Compute the geometric state (position and velocity) of a target
       !> body relative to an observing body.
       recursive module subroutine spkgeo ( ctx, targ, et, ref, obs, state, lt )
@@ -9732,6 +9996,14 @@ module pepper_instance
          character(*), intent(in) :: spkfnm  !! Name of SPK file.
          integer(ip), intent(inout) :: ids    ( lbcell : * )  !! Set of ID codes of objects in SPK file.
       end subroutine spkobj
+
+      !> The objects of an SPK file (PEPPER; [[spkobj]] without a set
+      !> cell): their ID codes, sorted, without duplicates.
+      module subroutine spk_objects ( ctx, file, ids )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! the SPK file
+         integer(ip), allocatable, intent(out) :: ids(:)  !! the ID codes (size 0 after an error)
+      end subroutine spk_objects
 
       !> Perform routine error checks and if all check pass, pack the
       !> descriptor for an SPK segment
@@ -13199,6 +13471,35 @@ module pepper_instance
          real(wp), intent(out) :: bounds ( 3, * )  !! FOV boundary vectors.
       end subroutine getfvn
 
+      !> The field of view of an instrument given by its ID code, with all
+      !> its boundary vectors and a frame name of any length (PEPPER;
+      !> [[getfov]] with the size taken from the pool). Bound as the generic
+      !> `fov`.
+      !>
+      !> The errors are those of [[getfov]], except SPICE(BOUNDARYTOOBIG).
+      module subroutine fov_by_code ( ctx, instid, shape, frame, bsight, bounds )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: instid  !! the NAIF ID code of the instrument
+         character(:), allocatable, intent(out) :: shape  !! the FOV shape: CIRCLE, ELLIPSE, POLYGON or RECTANGLE
+         character(:), allocatable, intent(out) :: frame  !! the frame of the vectors
+         real(wp), intent(out) :: bsight(3)  !! the boresight vector
+         real(wp), allocatable, intent(out) :: bounds(:,:)  !! the boundary vectors, shape (3, n) (n = 0 after an error)
+      end subroutine fov_by_code
+
+      !> The field of view of an instrument given by name, with all its
+      !> boundary vectors and a frame name of any length (PEPPER; [[getfvn]]
+      !> with the size taken from the pool). Bound as the generic `fov`.
+      !>
+      !> The errors are those of [[getfvn]], except SPICE(BOUNDARYTOOBIG).
+      module subroutine fov_by_name ( ctx, inst, shape, frame, bsight, bounds )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: inst  !! the name of the instrument
+         character(:), allocatable, intent(out) :: shape  !! the FOV shape: CIRCLE, ELLIPSE, POLYGON or RECTANGLE
+         character(:), allocatable, intent(out) :: frame  !! the frame of the vectors
+         real(wp), intent(out) :: bsight(3)  !! the boresight vector
+         real(wp), allocatable, intent(out) :: bounds(:,:)  !! the boundary vectors, shape (3, n) (n = 0 after an error)
+      end subroutine fov_by_name
+
       !> Scan a string from a specified starting position for the
       !> end of a decimal number.
       module subroutine lx4dec ( ctx, string, first, last, nchar )
@@ -13752,6 +14053,18 @@ module pepper_instance
          integer(ip), intent(in) :: surfid  !! Surface ID code.
          logical, intent(out) :: found  !! Found flag.
       end subroutine zzsrfc2n
+
+      !> The name of a surface from its ID code and body, of any length
+      !> (PEPPER; the body of [[zzsrfc2n]], which truncates to its argument's
+      !> length). Unlike [[srfc2s]], a surface without a name gives an empty
+      !> NAME, not the code as a string.
+      module subroutine surface_name ( ctx, code, body, name, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: code  !! the surface ID code
+         integer(ip), intent(in) :: body  !! the ID code of the body of the surface
+         character(:), allocatable, intent(out) :: name  !! the surface name (empty if not found)
+         logical, intent(out) :: found  !! the surface has a name
+      end subroutine surface_name
 
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due to the
@@ -14681,6 +14994,129 @@ module pepper_instance
          real(wp), intent(out) :: epochs ( * )  !! Times associated with terminator points.
          real(wp), intent(out) :: trmvcs ( 3, * )  !! Terminator vectors emanating from the observer.
       end subroutine termpt
+
+      !> Limb points on a target body, without a limit on their number
+      !> (PEPPER; [[limbpt]] without MAXN). The outputs are allocated to
+      !> the number of points found.
+      !>
+      !> The errors are those of [[limbpt]], without SPICE(OUTOFROOM) and the
+      !> checks of MAXN; NCUTS must be positive.
+      module subroutine limb_points ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, tangts )
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: method  !! the computation method, as for [[limbpt]]
+         character(*), intent(in) :: target  !! the name of the target body
+         real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+         character(*), intent(in) :: fixref  !! the body-fixed, body-centered target body frame
+         character(*), intent(in) :: abcorr  !! the aberration correction
+         character(*), intent(in) :: corloc  !! the aberration correction locus
+         character(*), intent(in) :: obsrvr  !! the name of the observing body
+         real(wp), intent(in) :: refvec ( 3 )  !! the reference vector for the cutting half-planes
+         real(wp), intent(in) :: rolstp  !! the roll angular step between the cutting half-planes
+         integer(ip), intent(in) :: ncuts  !! the number of cutting half-planes
+         real(wp), intent(in) :: schstp  !! the angular step size for searching (DSK shapes)
+         real(wp), intent(in) :: soltol  !! the solution convergence tolerance (DSK shapes)
+         integer(ip), allocatable, intent(out) :: npts(:)  !! the number of points of each cut (size 0 after an error)
+         real(wp), allocatable, intent(out) :: points(:,:)  !! the limb points, shape (3, n) (n = 0 after an error)
+         real(wp), allocatable, intent(out) :: epochs(:)  !! the epochs of the points
+         real(wp), allocatable, intent(out) :: tangts(:,:)  !! the tangent vectors from the observer to the points, shape (3, n)
+      end subroutine limb_points
+      !> Terminator points on a target body, without a limit on their
+      !> number (PEPPER; [[termpt]] without MAXN). The outputs are allocated
+      !> to the number of points found.
+      !>
+      !> The errors are those of [[termpt]], without SPICE(OUTOFROOM) and the
+      !> checks of MAXN; NCUTS must not be negative.
+      module subroutine terminator_points ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, trmvcs )
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: method  !! the computation method, as for [[termpt]]
+         character(*), intent(in) :: ilusrc  !! the illumination source
+         character(*), intent(in) :: target  !! the name of the target body
+         real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+         character(*), intent(in) :: fixref  !! the body-fixed, body-centered target body frame
+         character(*), intent(in) :: abcorr  !! the aberration correction
+         character(*), intent(in) :: corloc  !! the aberration correction locus
+         character(*), intent(in) :: obsrvr  !! the name of the observing body
+         real(wp), intent(in) :: refvec ( 3 )  !! the reference vector for the cutting half-planes
+         real(wp), intent(in) :: rolstp  !! the roll angular step between the cutting half-planes
+         integer(ip), intent(in) :: ncuts  !! the number of cutting half-planes
+         real(wp), intent(in) :: schstp  !! the angular step size for searching (DSK shapes)
+         real(wp), intent(in) :: soltol  !! the solution convergence tolerance (DSK shapes)
+         integer(ip), allocatable, intent(out) :: npts(:)  !! the number of points of each cut (size 0 after an error)
+         real(wp), allocatable, intent(out) :: points(:,:)  !! the terminator points, shape (3, n) (n = 0 after an error)
+         real(wp), allocatable, intent(out) :: epochs(:)  !! the epochs of the points
+         real(wp), allocatable, intent(out) :: trmvcs(:,:)  !! the vectors from the observer to the points, shape (3, n)
+      end subroutine terminator_points
+      !> The work of [[limb_points]] and [[limbpt]] (PEPPER: the body of
+      !> SPICELIB's LIMBPT with outputs that grow). The outputs hold NOUT
+      !> points.
+      module subroutine limb_points_body ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, tangts, nout )
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: method  !! the computation method, as for [[limbpt]]
+         character(*), intent(in) :: target  !! the name of the target body
+         real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+         character(*), intent(in) :: fixref  !! the body-fixed, body-centered target body frame
+         character(*), intent(in) :: abcorr  !! the aberration correction
+         character(*), intent(in) :: corloc  !! the aberration correction locus
+         character(*), intent(in) :: obsrvr  !! the name of the observing body
+         real(wp), intent(in) :: refvec ( 3 )  !! the reference vector for the cutting half-planes
+         real(wp), intent(in) :: rolstp  !! the roll angular step between the cutting half-planes
+         integer(ip), intent(in) :: ncuts  !! the number of cutting half-planes
+         real(wp), intent(in) :: schstp  !! the angular step size for searching (DSK shapes)
+         real(wp), intent(in) :: soltol  !! the solution convergence tolerance (DSK shapes)
+         integer(ip), allocatable, intent(out) :: npts(:)  !! the number of points of each cut (size 0 after an error)
+         real(wp), allocatable, intent(out) :: points(:,:)  !! the limb points, shape (3, n) (n = 0 after an error)
+         real(wp), allocatable, intent(out) :: epochs(:)  !! the epochs of the points
+         real(wp), allocatable, intent(out) :: tangts(:,:)  !! the tangent vectors from the observer to the points, shape (3, n)
+         integer(ip), intent(out) :: nout  !! the number of points stored in the outputs (their size may be larger)
+      end subroutine limb_points_body
+      !> The work of [[terminator_points]] and [[termpt]] (PEPPER: the
+      !> body of SPICELIB's TERMPT with outputs that grow). The outputs hold
+      !> NOUT points.
+      module subroutine terminator_points_body ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, trmvcs, nout )
+      use pepper_inc_dsk
+      use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      use pepper_inc_zzdsk
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: method  !! the computation method, as for [[termpt]]
+         character(*), intent(in) :: ilusrc  !! the illumination source
+         character(*), intent(in) :: target  !! the name of the target body
+         real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+         character(*), intent(in) :: fixref  !! the body-fixed, body-centered target body frame
+         character(*), intent(in) :: abcorr  !! the aberration correction
+         character(*), intent(in) :: corloc  !! the aberration correction locus
+         character(*), intent(in) :: obsrvr  !! the name of the observing body
+         real(wp), intent(in) :: refvec ( 3 )  !! the reference vector for the cutting half-planes
+         real(wp), intent(in) :: rolstp  !! the roll angular step between the cutting half-planes
+         integer(ip), intent(in) :: ncuts  !! the number of cutting half-planes
+         real(wp), intent(in) :: schstp  !! the angular step size for searching (DSK shapes)
+         real(wp), intent(in) :: soltol  !! the solution convergence tolerance (DSK shapes)
+         integer(ip), allocatable, intent(out) :: npts(:)  !! the number of points of each cut (size 0 after an error)
+         real(wp), allocatable, intent(out) :: points(:,:)  !! the terminator points, shape (3, n) (n = 0 after an error)
+         real(wp), allocatable, intent(out) :: epochs(:)  !! the epochs of the points
+         real(wp), allocatable, intent(out) :: trmvcs(:,:)  !! the vectors from the observer to the points, shape (3, n)
+         integer(ip), intent(out) :: nout  !! the number of points stored in the outputs (their size may be larger)
+      end subroutine terminator_points_body
 
    end interface
    ! --- end pepper_geometry
@@ -15834,6 +16270,406 @@ module pepper_instance
          procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
          procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
       end subroutine gfevnt
+
+      !> The cells of a GF search with windows as arrays (PEPPER): the
+      !> confinement window as a cell, and a result cell and work windows
+      !> of a size that the search cannot exceed. The GF solver finds at
+      !> most one transition per STEP in each confinement interval, so no
+      !> window holds more than B = sum (ceiling(length/STEP) + 2) intervals;
+      !> the cells have room for 2B. Signals SPICE(INSUFFICIENTMEMORY) if
+      !> they cannot be allocated.
+      module subroutine gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n)
+         real(wp), intent(in) :: step  !! the search step
+         real(wp), allocatable, intent(out) :: cnf(:)  !! the confinement window as a cell
+         real(wp), allocatable, intent(out) :: res(:)  !! an empty result cell of size MW
+         integer(ip), intent(out) :: mw  !! the size of the result cell and of the work windows
+         real(wp), allocatable, intent(out), optional :: work(:,:)  !! NWMAX empty work windows of size MW
+      end subroutine gf_cells
+
+      !> A GF search on the observer-target distance (PEPPER; [[gfdist]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfdist]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_distance ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+         real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      end subroutine gf_distance
+
+      !> A GF search on a coordinate of a position vector (PEPPER; [[gfposc]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfposc]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_position ( ctx, target, frame, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: frame  !! Name of the reference frame for coordinate calculations.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+         character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+         real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      end subroutine gf_position
+
+      !> A GF search on a coordinate of a sub-observer point (PEPPER; [[gfsubc]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfsubc]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_subpoint ( ctx, target, fixref, method, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
+         character(*), intent(in) :: method  !! Name of method type for subpoint calculation.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+         character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+         real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      end subroutine gf_subpoint
+
+      !> A GF search on a coordinate of a surface intercept vector (PEPPER; [[gfsntc]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfsntc]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_intercept ( ctx, target, fixref, method, abcorr, obsrvr, dref, dvec, crdsys, coord, relate, refval, adjust, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
+         character(*), intent(in) :: method  !! Name of method type for surface intercept calculation.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: dref  !! Reference frame of direction vector DVEC.
+         real(wp), intent(in) :: dvec   (3)  !! Pointing direction vector from OBSRVR.
+         character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+         character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      end subroutine gf_intercept
+
+      !> A GF search on the angular separation of two bodies (PEPPER; [[gfsep]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfsep]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_separation ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: targ1  !! Name of first body.
+         character(*), intent(in) :: shape1  !! Name of shape model describing the first body.
+         character(*), intent(in) :: frame1  !! The body-fixed reference frame of the first body.
+         character(*), intent(in) :: targ2  !! Name of second body.
+         character(*), intent(in) :: shape2  !! Name of the shape model describing the second body.
+         character(*), intent(in) :: frame2  !! The body-fixed reference frame of the second body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the angular separation value and REFVAL.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Absolute extremum adjustment value.
+         real(wp), intent(in) :: step  !! Step size in seconds for finding angular separation events.
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+         real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      end subroutine gf_separation
+
+      !> A GF search on occultations or transits (PEPPER; [[gfoclt]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfoclt]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_occultation ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: occtyp  !! Type of occultation.
+         character(*), intent(in) :: front  !! Name of body occulting the other.
+         character(*), intent(in) :: fshape  !! Type of shape model used for front body.
+         character(*), intent(in) :: fframe  !! Body-fixed, body-centered frame for front body.
+         character(*), intent(in) :: back  !! Name of body occulted by the other.
+         character(*), intent(in) :: bshape  !! Type of shape model used for back body.
+         character(*), intent(in) :: bframe  !! Body-fixed, body-centered frame for back body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         real(wp), intent(in) :: step  !! Step size in seconds for finding occultation events.
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+         real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      end subroutine gf_occultation
+
+      !> A GF search on an illumination angle (PEPPER; [[gfilum]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfilum]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_illumination ( ctx, method, angtyp, target, illmn, fixref, abcorr, obsrvr, spoint, relate, refval, adjust, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzholdd
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: method  !! Computation method.
+         character(*), intent(in) :: angtyp  !! Type of illumination angle.
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: illmn  !! Name of the illumination source.
+         character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+         real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      end subroutine gf_illumination
+
+      !> A GF search on the phase angle (PEPPER; [[gfpa]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfpa]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_phase ( ctx, target, illmn, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: illmn  !! Name of the illuminating body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+         real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      end subroutine gf_phase
+
+      !> A GF search on the range rate (PEPPER; [[gfrr]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfrr]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_range_rate ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         character(*), intent(in) :: relate  !! Relational operator.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+         real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      end subroutine gf_range_rate
+
+      !> A GF search on a target in an instrument field of view (PEPPER; [[gftfov]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gftfov]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_target_in_fov ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: inst  !! Name of the instrument.
+         character(*), intent(in) :: target  !! Name of the target body.
+         character(*), intent(in) :: tshape  !! Type of shape model used for target body.
+         character(*), intent(in) :: tframe  !! Body-fixed, body-centered frame for target body.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         real(wp), intent(in) :: step  !! Step size in seconds for finding FOV events.
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+         real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      end subroutine gf_target_in_fov
+
+      !> A GF search on a ray in an instrument field of view (PEPPER; [[gfrfov]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfrfov]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_ray_in_fov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzholdd
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: inst  !! Name of the instrument.
+         real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+         character(*), intent(in) :: rframe  !! Reference frame of ray's direction vector.
+         character(*), intent(in) :: abcorr  !! Aberration correction flag.
+         character(*), intent(in) :: obsrvr  !! Name of the observing body.
+         real(wp), intent(in) :: step  !! Step size in seconds for finding FOV events.
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+         real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      end subroutine gf_ray_in_fov
+
+      !> A GF search on a user-defined scalar quantity (PEPPER; [[gfuds]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfuds]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_user_scalar ( ctx, udfuns, udqdec, relate, refval, adjust, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
+         real(wp), intent(in) :: refval  !! Value used as reference for scalar quantity condition.
+         real(wp), intent(in) :: adjust  !! Allowed variation for absolute extremal geometric conditions.
+         real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+         real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+         procedure(gf_scalar) :: udfuns  !! Name of the routine that computes a scalar quantity corresponding to an ET.
+         procedure(gf_decr_x) :: udqdec  !! Name of the routine that computes whether the scalar quantity is decreasing.
+      end subroutine gf_user_scalar
+
+      !> A GF search on a user-defined boolean quantity (PEPPER; [[gfudb]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfudb]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_user_boolean ( ctx, udfuns, udfunb, step, cnfine, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzholdd
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         real(wp), intent(in) :: step  !! Constant step size in seconds for finding geometric events.
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+         real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+         procedure(gf_scalar) :: udfuns  !! Name of the routine that computes a scalar quantity corresponding to an ET.
+         procedure(gf_boolean) :: udfunb  !! Name of the routine returning the boolean value corresponding to an ET.
+      end subroutine gf_user_boolean
+
+      !> A GF search on a geometric quantity, with the caller's step and refinement routines (PEPPER; [[gfevnt]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfevnt]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      !> STEP is not used by the search: give the smallest step that UDSTEP
+      !> returns (a smaller one may give SPICE(WINDOWEXCESS)).
+      module subroutine gf_event ( ctx, udstep, udrefn, gquant, qnpars, qpnams, qcpars, qdpars, qipars, qlpars, op, refval, tol, adjust, step, cnfine, rpt, udrepi, udrepu, udrepf, bail, udbail, result )
+      use pepper_inc_gf
+      use pepper_inc_zzgf
+      use pepper_inc_zzabcorr
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), parameter :: lbcell = -5
+         character(*), intent(in) :: gquant  !! Type of geometric quantity.
+         integer(ip), intent(in) :: qnpars  !! Number of quantity definition parameters.
+         character(*), intent(in) :: qpnams ( * )  !! Names of quantity definition parameters.
+         character(*), intent(in) :: qcpars ( * )  !! Array of character quantity definition parameters.
+         real(wp), intent(in) :: qdpars ( * )  !! Array of double precision quantity definition parameters.
+         integer(ip), intent(in) :: qipars ( * )  !! Array of integer quantity definition parameters.
+         logical, intent(in) :: qlpars ( * )  !! Array of logical quantity definition parameters.
+         character(*), intent(in) :: op  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
+         real(wp), intent(in) :: refval  !! Reference value.
+         real(wp), intent(in) :: tol  !! Convergence tolerance in seconds
+         real(wp), intent(in) :: adjust  !! Absolute extremum adjustment value.
+         real(wp), intent(in) :: step  !! the smallest step UDSTEP returns: it sizes the work windows (PEPPER)
+         real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+         logical, intent(in) :: rpt  !! Progress reporter on (.TRUE.) or off (.FALSE.).
+         logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
+         procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
+         real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+         procedure(gf_step) :: udstep  !! Name of the routine that computes and returns a time step.
+         procedure(gf_refine) :: udrefn  !! Name of the routine that computes a refined time.
+         procedure(gf_rep_init) :: udrepi  !! Function that initializes progress reporting.
+         procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
+         procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
+      end subroutine gf_event
 
       !> Determine time intervals over which a specified constraint on
       !> observer-target distance is met.
@@ -18129,6 +18965,46 @@ module pepper_instance
          integer(ip), intent(out) :: ivals  ( * )  !! Integer values in column entry.
          logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine ekrcei
+
+      !> All the values of a double precision or time column entry of an EK
+      !> record (PEPPER; [[ekrced]] with the size of the entry). Bound as the
+      !> generic `ek_values`.
+      module subroutine ek_values_real ( ctx, handle, segno, recno, column, values, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! the handle of the EK file
+         integer(ip), intent(in) :: segno  !! the segment number
+         integer(ip), intent(in) :: recno  !! the record number
+         character(*), intent(in) :: column  !! the column name
+         real(wp), allocatable, intent(out) :: values(:)  !! the values (size 0 if null, or after an error)
+         logical, intent(out) :: isnull  !! the entry is null
+      end subroutine ek_values_real
+
+      !> All the values of an integer column entry of an EK record (PEPPER;
+      !> [[ekrcei]] with the size of the entry). Bound as the generic
+      !> `ek_values`.
+      module subroutine ek_values_int ( ctx, handle, segno, recno, column, values, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! the handle of the EK file
+         integer(ip), intent(in) :: segno  !! the segment number
+         integer(ip), intent(in) :: recno  !! the record number
+         character(*), intent(in) :: column  !! the column name
+         integer(ip), allocatable, intent(out) :: values(:)  !! the values (size 0 if null, or after an error)
+         logical, intent(out) :: isnull  !! the entry is null
+      end subroutine ek_values_int
+
+      !> All the values of a character column entry of an EK record, each of
+      !> its full length (PEPPER; [[ekrcec]] with the size of the entry).
+      !> Bound as the generic `ek_values`. Values of fixed-length columns
+      !> are returned without their trailing blanks.
+      module subroutine ek_values_str ( ctx, handle, segno, recno, column, values, isnull )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! the handle of the EK file
+         integer(ip), intent(in) :: segno  !! the segment number
+         integer(ip), intent(in) :: recno  !! the record number
+         character(*), intent(in) :: column  !! the column name
+         type(string), allocatable, intent(out) :: values(:)  !! the values (size 0 if null, or after an error)
+         logical, intent(out) :: isnull  !! the entry is null
+      end subroutine ek_values_str
 
       !> Add an entire class 7 column to an EK segment.
       module subroutine zzekac07 ( ctx, handle, segdsc, coldsc, ivals, nlflgs, wkindx )

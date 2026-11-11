@@ -14804,6 +14804,108 @@ contains
       end associate
       end procedure pool_names
 
+      !> All the values of a numeric kernel variable (PEPPER).
+      module procedure pool_values
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip) :: i
+      found = .false.
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
+      if ( ctx%failed() ) then
+         allocate ( values(0) )
+         return
+      end if
+      if ( ps%first ) call zzpini ( ctx, ps )
+      i = ps%find ( name )
+      if ( i == 0 ) then
+         allocate ( values(0) )
+      else if ( ps%vars(i)%kind /= pool_numeric ) then
+         allocate ( values(0) )
+      else
+         values = ps%vars(i)%dvals(1:ps%vars(i)%n)
+         found  = .true.
+      end if
+      end associate
+      end procedure pool_values
+
+      !> All the values of a numeric kernel variable, rounded to integers
+      !> (PEPPER).
+      module procedure pool_integers
+      use pepper_kinds, only: ip, wp
+      use pepper_constants, only: intmax, intmin
+      implicit none
+      integer(ip) :: i
+      integer(ip) :: k
+      found = .false.
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
+      if ( ctx%failed() ) then
+         allocate ( values(0) )
+         return
+      end if
+      if ( ps%first ) call zzpini ( ctx, ps )
+      i = ps%find ( name )
+      if ( i == 0 ) then
+         allocate ( values(0) )
+         return
+      else if ( ps%vars(i)%kind /= pool_numeric ) then
+         allocate ( values(0) )
+         return
+      end if
+      allocate ( values(ps%vars(i)%n) )
+      do k = 1, ps%vars(i)%n
+         if (       ps%vars(i)%dvals(k) >= real( intmin, wp ) &
+              .and. ps%vars(i)%dvals(k) <= real( intmax, wp )   ) then
+            values(k) = nint ( ps%vars(i)%dvals(k), ip )
+         else
+            call ctx%setmsg ( 'The value associated with index # ' &
+            //            'of the kernel variable # is ' &
+            //            'outside the range of integers. ' &
+            //            'The value stored was: # .'      )
+            call ctx%errint ( '#', k                     )
+            call ctx%errch  ( '#', trim(name)            )
+            call ctx%errdp  ( '#', ps%vars(i)%dvals(k)   )
+            call ctx%sigerr ( 'SPICE(INTOUTOFRANGE)'     )
+            deallocate ( values )
+            allocate ( values(0) )
+            return
+         end if
+      end do
+      found = .true.
+      end associate
+      end procedure pool_integers
+
+      !> All the values of a character kernel variable, each of any length
+      !> (PEPPER).
+      module procedure pool_strings
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip) :: i
+      integer(ip) :: k
+      found = .false.
+      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
+      associate ( ps => ctx%spice%pool )
+      if ( ctx%failed() ) then
+         allocate ( values(0) )
+         return
+      end if
+      if ( ps%first ) call zzpini ( ctx, ps )
+      i = ps%find ( name )
+      if ( i == 0 ) then
+         allocate ( values(0) )
+      else if ( ps%vars(i)%kind /= pool_character ) then
+         allocate ( values(0) )
+      else
+         allocate ( values(ps%vars(i)%n) )
+         do k = 1, ps%vars(i)%n
+            values(k)%s = ps%vars(i)%cvals(k)%s
+         end do
+         found = .true.
+      end if
+      end associate
+      end procedure pool_strings
+
       !>## Detailed Input
       !>
       !>     NAME     is the name of the variable whose values are to be

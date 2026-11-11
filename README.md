@@ -99,3 +99,44 @@ error handling starts with SPICELIB's settings (`erract`, `errprt` and
 
 Bugs and inconsistencies found in SPICELIB N0067 are listed in
 `spicelib_bugs.md`; the design and its history are in `plan.md`.
+
+## Results of any size
+
+SPICELIB makes the caller size every output array, and fails (or truncates)
+when the result is larger. For these routines PEPPER has variants that return
+allocatable results of the size of the data. The SPICELIB forms stay, with
+their arguments unchanged.
+
+| SPICELIB | PEPPER |
+|---|---|
+| `gdpool`, `gipool`, `gcpool` | `pool_values(name, values, found)`, `pool_integers`, `pool_strings` |
+| `bodvrd`, `bodvcd` | `body_values(body, item, values)` (body by name or code) |
+| `getfov`, `getfvn` | `fov(inst, shape, frame, bsight, bounds)` (instrument by code or name) |
+| `bodc2n`, `frmnam`, `srfc2s` | `body_name(code, name, found)`, `frame_name(code, name, found)`, `surface_name(code, body, name, found)` |
+| `kdata`, `kinfo` | `kernel_data(which, kind, file, filtyp, source, handle, found)`, `kernel_info(file, filtyp, source, handle, found)` |
+| `spkcov`, `ckcov`, `pckcov` | `spk_coverage(file, body, intervals)`, `ck_coverage(file, inst, needav, level, tol, timsys, intervals)`, `pck_coverage(file, frame, intervals)` |
+| `spkobj`, `ckobj`, `pckfrm`, `dskobj`, `dsksrf` | `spk_objects(file, ids)`, `ck_objects`, `pck_frames`, `dsk_objects`, `dsk_surfaces(file, body, ids)` |
+| `dskp02`, `dskv02` | `dsk_plates(handle, dladsc, plates)`, `dsk_vertices(handle, dladsc, vertices)` |
+| `dafec`, `dasec` | `daf_comments(handle, lines)`, `das_comments(handle, lines)` |
+| `ekrced`, `ekrcei`, `ekrcec` | `ek_values(handle, segno, recno, column, values, isnull)` (real, integer or string values) |
+| `limbpt`, `termpt` | `limb_points(...)`, `terminator_points(...)`: the inputs without `maxn` |
+| `gfdist`, `gfposc`, `gfsubc`, `gfsntc`, `gfsep`, `gfoclt`, `gfilum`, `gfpa`, `gfrr`, `gftfov`, `gfrfov`, `gfuds`, `gfudb`, `gfevnt` | `gf_distance`, `gf_position`, `gf_subpoint`, `gf_intercept`, `gf_separation`, `gf_occultation`, `gf_illumination`, `gf_phase`, `gf_range_rate`, `gf_target_in_fov`, `gf_ray_in_fov`, `gf_user_scalar`, `gf_user_boolean`, `gf_event`: the inputs without `mw`, `nw` and `work` |
+
+Strings are `character(:), allocatable`, lists of strings `type(string)`
+arrays (`pepper_containers`). A window (a coverage, a GF result or
+confinement window) is an array `intervals(2, n)`, each column an interval
+[start, stop], sorted and disjoint; a set of IDs is a sorted integer array.
+`pepper_windows` converts them to and from SPICELIB's cells
+(`window_to_cell`, `cell_to_window`, `set_to_cell`, `cell_to_set`) for the
+cell, set and window routines. After an error the results are empty (size 0).
+
+```fortran
+real(wp), allocatable :: radii(:), cover(:,:), result(:,:)
+
+call ctx%body_values('EARTH', 'RADII', radii)
+call ctx%spk_coverage('de440.bsp', 301, cover)
+call ctx%gf_distance('MOON', 'NONE', 'EARTH', '<', 4.0e5_wp, 0.0_wp, 3600.0_wp, cover, result)
+do i = 1, size(result, 2)
+   print *, result(:, i)
+end do
+```

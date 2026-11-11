@@ -310,10 +310,29 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-DEC-2004 (NJB)
       module procedure ckobj
-      use pepper_kinds, only: ip, wp
+      use pepper_kinds, only: ip
       implicit none
+      integer(ip), allocatable :: list(:)
+      integer(ip) :: k
+!
+!     PEPPER: the IDs are found by CK_OBJECTS; here they are added to
+!     the set IDS.
+!
+      if ( ctx%failed() ) return
+      call ck_objects ( ctx, ckfnm, list )
+      do k = 1, size ( list )
+         if ( ctx%failed() ) return
+         call insrti ( ctx, list(k), ids )
+      end do
+      end procedure ckobj
 
-      integer(ip), parameter :: lbcell = -5
+      module procedure ck_objects
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: append_id, sort_unique
+      implicit none
+      integer(ip), allocatable :: list(:)  ! the IDs found (unsorted, with duplicates)
+      integer(ip) :: nlist  ! the number of IDs in LIST
+
 
       integer(ip), parameter :: lnsize = 80
 
@@ -335,12 +354,14 @@ contains
 !
 !     Standard SPICE error handling.
 !
+      allocate ( ids(0) )
+      nlist = 0
       if ( ctx%failed() ) return
 
 !
 !     See whether GETFAT thinks we've got a CK file.
 !
-      call getfat ( ctx, ckfnm, arch, kertyp )
+      call getfat ( ctx, file, arch, kertyp )
 
       if ( ctx%failed() ) return
 
@@ -351,7 +372,7 @@ contains
          //            'by this routine.  If the input file is an ' &
          //            'CK file in transfer format, run TOBIN on ' &
          //            'the file to convert it to binary format.'   )
-         call ctx%errch  ( '#',  ckfnm                                  )
+         call ctx%errch  ( '#',  file                                  )
          call ctx%errch  ( '#',  arch                                   )
          call ctx%sigerr ( 'SPICE(INVALIDFORMAT)'                       )
          return
@@ -367,7 +388,7 @@ contains
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                        )
-         call ctx%errch  ( '#',  ckfnm                                  )
+         call ctx%errch  ( '#',  file                                  )
          call ctx%errch  ( '#',  arch                                   )
          call ctx%sigerr ( 'SPICE(INVALIDARCHTYPE)'                     )
          return
@@ -382,7 +403,7 @@ contains
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                        )
-         call ctx%errch  ( '#',  ckfnm                                  )
+         call ctx%errch  ( '#',  file                                  )
          call ctx%errch  ( '#',  kertyp                                 )
          call ctx%sigerr ( 'SPICE(INVALIDFILETYPE)'                     )
          return
@@ -392,7 +413,7 @@ contains
 !
 !     Open the file for reading.
 !
-      call dafopr ( ctx, ckfnm, handle )
+      call dafopr ( ctx, file, handle )
 
       if ( ctx%failed() ) return
 
@@ -423,7 +444,7 @@ contains
 !        The insertion algorithm will handle duplicates; no special
 !        action is required here.
 !
-         call insrti ( ctx, ic(1), ids )
+         call append_id ( list, nlist, ic(1) )
 
          call daffna ( ctx, found )
 
@@ -434,8 +455,12 @@ contains
 !
       call dafcls ( ctx, handle )
 
+      if ( .not. ctx%failed() ) then
+         ids = list(1:nlist)
+         call sort_unique ( ids )
+      end if
       return
-      end procedure ckobj
+      end procedure ck_objects
 
       !>## Detailed Input
       !>
@@ -2766,7 +2791,7 @@ contains
 
             end if
 
-            call wninsd ( ctx, begin, finish, schedl )
+            call insert_interval ( ctx, begin, finish, schedl )
 
          end do
 
@@ -3008,7 +3033,7 @@ contains
 
             end if
 
-            call wninsd ( ctx, begin, finish, schedl )
+            call insert_interval ( ctx, begin, finish, schedl )
 
          end do
 
@@ -3401,7 +3426,7 @@ contains
 !
 !        Insert the interval into the window.
 !
-         call wninsd ( ctx, begin, finish, schedl )
+         call insert_interval ( ctx, begin, finish, schedl )
 
       end do
 
@@ -3647,7 +3672,7 @@ contains
 !
 !        Store the results in the schedule.
 !
-         call wninsd ( ctx, left, right, schedl )
+         call insert_interval ( ctx, left, right, schedl )
 
       end do
 
@@ -4065,7 +4090,7 @@ contains
 !        Insert the interval into the window.
 !
          if ( begin <= finish ) then
-            call wninsd ( ctx, begin, finish, schedl )
+            call insert_interval ( ctx, begin, finish, schedl )
          end if
 
       end do
@@ -4437,7 +4462,7 @@ contains
 !
          if ( begin <= finish ) then
 
-            call wninsd ( ctx, begin, finish, schedl )
+            call insert_interval ( ctx, begin, finish, schedl )
 
             if ( ctx%failed() ) return
 
@@ -5073,10 +5098,27 @@ contains
       !>-    SPICELIB Version 1.0.0, 07-JAN-2005 (NJB)
       module procedure ckcov
       use pepper_kinds, only: ip, wp
+      implicit none
+      real(wp), allocatable :: intervals(:,:)
+      integer(ip) :: k
+!
+!     PEPPER: the coverage is found by CK_COVERAGE; here it is added
+!     to COVER (the union of the two).
+!
+      if ( ctx%failed() ) return
+      call ck_coverage ( ctx, ckfnm, idcode, needav, level, tol, timsys, intervals )
+      do k = 1, size ( intervals, 2 )
+         if ( ctx%failed() ) return
+         call wninsd ( ctx, intervals(1,k), intervals(2,k), cover )
+      end do
+      end procedure ckcov
+
+      module procedure ck_coverage
+      use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       implicit none
+      type(interval_list) :: window  ! the coverage being built
 
-      integer(ip), parameter :: lbcell = -5
 
       character(*), parameter :: kwintv = 'INTERVAL'
 
@@ -5112,6 +5154,7 @@ contains
 !
 !     Standard SPICE error handling.
 !
+      allocate ( intervals(2,0) )
       if ( ctx%failed() ) return
 
 !
@@ -5151,7 +5194,7 @@ contains
 !
 !     See whether GETFAT thinks we've got a CK file.
 !
-      call getfat ( ctx, ckfnm, arch, kertyp )
+      call getfat ( ctx, file, arch, kertyp )
 
       if ( ctx%failed() ) return
 
@@ -5162,7 +5205,7 @@ contains
          //            'by this routine.  If the input file is an ' &
          //            'CK file in transfer format, run TOBIN on ' &
          //            'the file to convert it to binary format.'  )
-         call ctx%errch  ( '#',  ckfnm                                 )
+         call ctx%errch  ( '#',  file                                 )
          call ctx%errch  ( '#',  arch                                  )
          call ctx%sigerr ( 'SPICE(INVALIDFORMAT)'                      )
          return
@@ -5178,7 +5221,7 @@ contains
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         call ctx%errch  ( '#',  ckfnm                                 )
+         call ctx%errch  ( '#',  file                                 )
          call ctx%errch  ( '#',  arch                                  )
          call ctx%sigerr ( 'SPICE(INVALIDARCHTYPE)'                    )
          return
@@ -5193,7 +5236,7 @@ contains
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         call ctx%errch  ( '#',  ckfnm                                 )
+         call ctx%errch  ( '#',  file                                 )
          call ctx%errch  ( '#',  kertyp                                )
          call ctx%sigerr ( 'SPICE(INVALIDFILETYPE)'                    )
          return
@@ -5228,7 +5271,7 @@ contains
 !
       if ( istdb ) then
 
-         call ckmeta ( ctx, idcode, 'SCLK', clkid )
+         call ckmeta ( ctx, inst, 'SCLK', clkid )
 
          if ( ctx%failed() ) return
 
@@ -5237,7 +5280,7 @@ contains
 !
 !     Open the file for reading.
 !
-      call dafopr ( ctx, ckfnm, handle )
+      call dafopr ( ctx, file, handle )
 
       if ( ctx%failed() ) return
 
@@ -5278,7 +5321,7 @@ contains
 !
          avok = ( ic(4) == 1 ) .or. ( .not. needav )
 
-         if (  ( ic(1) == idcode )  .and.  avok  ) then
+         if (  ( ic(1) == inst )  .and.  avok  ) then
 !
 !           This segment is for the body of interest.  If angular
 !           velocity is needed, this segment has it.
@@ -5309,7 +5352,7 @@ contains
                end if
 
                if ( dctol(1) <= dctol(2) ) then
-                  call wninsd ( ctx,  dctol(1),  dctol(2),  cover )
+                  call insert_interval ( ctx,  dctol(1),  dctol(2), window )
                end if
 
             else
@@ -5327,32 +5370,32 @@ contains
                if ( dtype == 1 ) then
 
                   call zzckcv01 ( ctx, handle, segbeg, segend, &
-                                  clkid,  tol,    timsys, cover )
+                                  clkid,  tol,    timsys, window )
 
                else if ( dtype == 2 ) then
 
                   call zzckcv02 ( ctx, handle, segbeg, segend, &
-                                  clkid,  tol,    timsys, cover )
+                                  clkid,  tol,    timsys, window )
 
                else if ( dtype == 3 ) then
 
                   call zzckcv03 ( ctx, handle, segbeg, segend, &
-                                  clkid,  tol,    timsys, cover )
+                                  clkid,  tol,    timsys, window )
 
                else if ( dtype == 4 ) then
 
                   call zzckcv04 ( ctx, handle, segbeg, segend, &
-                                  clkid,  tol,    timsys, cover )
+                                  clkid,  tol,    timsys, window )
 
                else if ( dtype == 5 ) then
 
                   call zzckcv05 ( ctx, handle, segbeg, segend, clkid, &
-                                  dc,     tol,    timsys, cover )
+                                  dc,     tol,    timsys, window )
 
                else if ( dtype == 6 ) then
 
                   call zzckcv06 ( ctx, handle, segbeg, segend, clkid, &
-                                  dc,     tol,    timsys, cover )
+                                  dc,     tol,    timsys, window )
 
                else
 
@@ -5385,7 +5428,8 @@ contains
 !
       call dafcls ( ctx, handle )
 
+      if ( .not. ctx%failed() ) call window%window ( intervals )
       return
-      end procedure ckcov
+      end procedure ck_coverage
 
 end submodule pepper_ck_api

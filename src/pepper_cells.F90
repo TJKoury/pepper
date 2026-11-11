@@ -14179,6 +14179,21 @@ contains
       return
       end procedure wninsd
 
+      !> Insert an interval into a window being built (PEPPER).
+      module procedure insert_interval
+      use pepper_kinds, only: wp
+      implicit none
+      if ( ctx%failed() ) return
+      if ( left > right ) then
+         call ctx%setmsg ( 'Left endpoint was *. Right endpoint was *.' )
+         call ctx%errdp  ( '*', left  )
+         call ctx%errdp  ( '*', right )
+         call ctx%sigerr ( 'SPICE(BADENDPOINTS)' )
+         return
+      end if
+      call window%insert ( left, right )
+      end procedure insert_interval
+
       !>## Detailed Input
       !>
       !>     A,

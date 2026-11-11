@@ -47377,4 +47377,332 @@ contains
 
       end procedure gfsubc
 
+      !> The cells of a GF search with windows as arrays (PEPPER).
+      module procedure gf_cells
+      use, intrinsic :: iso_fortran_env, only: int64
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: window_to_cell
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      integer(int64) :: b
+      integer(int64) :: words
+      integer(ip) :: i
+      integer :: stat
+      real(wp) :: bound
+      real(wp) :: span
+      mw = 0
+      call window_to_cell ( cnfine, cnf )
+!
+!     The bound on the number of intervals in any window of the search.
+!     A step that is not positive is left for the search to reject.
+!
+      bound = 8.0_wp
+      do i = 1, size ( cnfine, 2, ip )
+         bound = bound + 2.0_wp
+         span  = cnfine(2,i) - cnfine(1,i)
+         if ( step > 0.0_wp .and. span > 0.0_wp ) then
+            bound = bound + min ( span / step, 1.0e15_wp ) + 1.0_wp
+         end if
+      end do
+      b = int ( min ( bound, 1.0e16_wp ), int64 )
+      words = 4 * b
+      if ( words > int ( huge(mw), int64 ) - 8 ) then
+         stat = 1
+      else
+         mw = int ( words, ip )
+         allocate ( res(-5:mw), stat=stat )
+         if ( stat == 0 .and. present ( work ) ) allocate ( work(-5:mw, nwmax), stat=stat )
+      end if
+      if ( stat /= 0 ) then
+         call ctx%setmsg ( 'The windows of a GF search over # intervals ' // &
+                           'with a step of # s would hold up to # ' // &
+                           'intervals each; they could not be allocated.' )
+         call ctx%errint ( '#', size ( cnfine, 2, ip ) )
+         call ctx%errdp  ( '#', step )
+         call ctx%errdp  ( '#', real ( 2*b, wp ) )
+         call ctx%sigerr ( 'SPICE(INSUFFICIENTMEMORY)' )
+         return
+      end if
+      call ssized ( ctx, mw, res )
+      if ( present ( work ) ) then
+         do i = 1, nwmax
+            call ssized ( ctx, mw, work(:,i) )
+         end do
+      end if
+      end procedure gf_cells
+
+      !> A GF search on the observer-target distance, with windows as arrays (PEPPER).
+      module procedure gf_distance
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: cell_to_window
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      real(wp), allocatable :: cnf(:)
+      real(wp), allocatable :: res(:)
+      real(wp), allocatable :: work(:,:)
+      integer(ip) :: mw
+      allocate ( result(2,0) )
+      if ( ctx%failed() ) return
+      call gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
+      if ( ctx%failed() ) return
+      call gfdist ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnf, mw, nwmax, &
+                    work, res )
+      if ( ctx%failed() ) return
+      call cell_to_window ( res, result )
+      end procedure gf_distance
+
+      !> A GF search on a coordinate of a position vector, with windows as arrays (PEPPER).
+      module procedure gf_position
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: cell_to_window
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      real(wp), allocatable :: cnf(:)
+      real(wp), allocatable :: res(:)
+      real(wp), allocatable :: work(:,:)
+      integer(ip) :: mw
+      allocate ( result(2,0) )
+      if ( ctx%failed() ) return
+      call gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
+      if ( ctx%failed() ) return
+      call gfposc ( ctx, target, frame, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, &
+                    step, cnf, mw, nwmax, work, res )
+      if ( ctx%failed() ) return
+      call cell_to_window ( res, result )
+      end procedure gf_position
+
+      !> A GF search on a coordinate of a sub-observer point, with windows as arrays (PEPPER).
+      module procedure gf_subpoint
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: cell_to_window
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      real(wp), allocatable :: cnf(:)
+      real(wp), allocatable :: res(:)
+      real(wp), allocatable :: work(:,:)
+      integer(ip) :: mw
+      allocate ( result(2,0) )
+      if ( ctx%failed() ) return
+      call gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
+      if ( ctx%failed() ) return
+      call gfsubc ( ctx, target, fixref, method, abcorr, obsrvr, crdsys, coord, relate, refval, &
+                    adjust, step, cnf, mw, nwmax, work, res )
+      if ( ctx%failed() ) return
+      call cell_to_window ( res, result )
+      end procedure gf_subpoint
+
+      !> A GF search on a coordinate of a surface intercept vector, with windows as arrays (PEPPER).
+      module procedure gf_intercept
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: cell_to_window
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      real(wp), allocatable :: cnf(:)
+      real(wp), allocatable :: res(:)
+      real(wp), allocatable :: work(:,:)
+      integer(ip) :: mw
+      allocate ( result(2,0) )
+      if ( ctx%failed() ) return
+      call gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
+      if ( ctx%failed() ) return
+      call gfsntc ( ctx, target, fixref, method, abcorr, obsrvr, dref, dvec, crdsys, coord, &
+                    relate, refval, adjust, step, cnf, mw, nwmax, work, res )
+      if ( ctx%failed() ) return
+      call cell_to_window ( res, result )
+      end procedure gf_intercept
+
+      !> A GF search on the angular separation of two bodies, with windows as arrays (PEPPER).
+      module procedure gf_separation
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: cell_to_window
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      real(wp), allocatable :: cnf(:)
+      real(wp), allocatable :: res(:)
+      real(wp), allocatable :: work(:,:)
+      integer(ip) :: mw
+      allocate ( result(2,0) )
+      if ( ctx%failed() ) return
+      call gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
+      if ( ctx%failed() ) return
+      call gfsep ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, relate, &
+                    refval, adjust, step, cnf, mw, nwmax, work, res )
+      if ( ctx%failed() ) return
+      call cell_to_window ( res, result )
+      end procedure gf_separation
+
+      !> A GF search on occultations or transits, with windows as arrays (PEPPER).
+      module procedure gf_occultation
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: cell_to_window
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      real(wp), allocatable :: cnf(:)
+      real(wp), allocatable :: res(:)
+      integer(ip) :: mw
+      allocate ( result(2,0) )
+      if ( ctx%failed() ) return
+      call gf_cells ( ctx, cnfine, step, cnf, res, mw )
+      if ( ctx%failed() ) return
+      call gfoclt ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, &
+                    step, cnf, res )
+      if ( ctx%failed() ) return
+      call cell_to_window ( res, result )
+      end procedure gf_occultation
+
+      !> A GF search on an illumination angle, with windows as arrays (PEPPER).
+      module procedure gf_illumination
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: cell_to_window
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      real(wp), allocatable :: cnf(:)
+      real(wp), allocatable :: res(:)
+      real(wp), allocatable :: work(:,:)
+      integer(ip) :: mw
+      allocate ( result(2,0) )
+      if ( ctx%failed() ) return
+      call gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
+      if ( ctx%failed() ) return
+      call gfilum ( ctx, method, angtyp, target, illmn, fixref, abcorr, obsrvr, spoint, relate, &
+                    refval, adjust, step, cnf, mw, nwmax, work, res )
+      if ( ctx%failed() ) return
+      call cell_to_window ( res, result )
+      end procedure gf_illumination
+
+      !> A GF search on the phase angle, with windows as arrays (PEPPER).
+      module procedure gf_phase
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: cell_to_window
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      real(wp), allocatable :: cnf(:)
+      real(wp), allocatable :: res(:)
+      real(wp), allocatable :: work(:,:)
+      integer(ip) :: mw
+      allocate ( result(2,0) )
+      if ( ctx%failed() ) return
+      call gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
+      if ( ctx%failed() ) return
+      call gfpa ( ctx, target, illmn, abcorr, obsrvr, relate, refval, adjust, step, cnf, mw, &
+                    nwmax, work, res )
+      if ( ctx%failed() ) return
+      call cell_to_window ( res, result )
+      end procedure gf_phase
+
+      !> A GF search on the range rate, with windows as arrays (PEPPER).
+      module procedure gf_range_rate
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: cell_to_window
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      real(wp), allocatable :: cnf(:)
+      real(wp), allocatable :: res(:)
+      real(wp), allocatable :: work(:,:)
+      integer(ip) :: mw
+      allocate ( result(2,0) )
+      if ( ctx%failed() ) return
+      call gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
+      if ( ctx%failed() ) return
+      call gfrr ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnf, mw, nwmax, &
+                    work, res )
+      if ( ctx%failed() ) return
+      call cell_to_window ( res, result )
+      end procedure gf_range_rate
+
+      !> A GF search on a target in an instrument field of view, with windows as arrays (PEPPER).
+      module procedure gf_target_in_fov
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: cell_to_window
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      real(wp), allocatable :: cnf(:)
+      real(wp), allocatable :: res(:)
+      integer(ip) :: mw
+      allocate ( result(2,0) )
+      if ( ctx%failed() ) return
+      call gf_cells ( ctx, cnfine, step, cnf, res, mw )
+      if ( ctx%failed() ) return
+      call gftfov ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, step, cnf, res )
+      if ( ctx%failed() ) return
+      call cell_to_window ( res, result )
+      end procedure gf_target_in_fov
+
+      !> A GF search on a ray in an instrument field of view, with windows as arrays (PEPPER).
+      module procedure gf_ray_in_fov
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: cell_to_window
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      real(wp), allocatable :: cnf(:)
+      real(wp), allocatable :: res(:)
+      integer(ip) :: mw
+      allocate ( result(2,0) )
+      if ( ctx%failed() ) return
+      call gf_cells ( ctx, cnfine, step, cnf, res, mw )
+      if ( ctx%failed() ) return
+      call gfrfov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnf, res )
+      if ( ctx%failed() ) return
+      call cell_to_window ( res, result )
+      end procedure gf_ray_in_fov
+
+      !> A GF search on a user-defined scalar quantity, with windows as arrays (PEPPER).
+      module procedure gf_user_scalar
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: cell_to_window
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      real(wp), allocatable :: cnf(:)
+      real(wp), allocatable :: res(:)
+      real(wp), allocatable :: work(:,:)
+      integer(ip) :: mw
+      allocate ( result(2,0) )
+      if ( ctx%failed() ) return
+      call gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
+      if ( ctx%failed() ) return
+      call gfuds ( ctx, udfuns, udqdec, relate, refval, adjust, step, cnf, mw, nwmax, work, &
+                    res )
+      if ( ctx%failed() ) return
+      call cell_to_window ( res, result )
+      end procedure gf_user_scalar
+
+      !> A GF search on a user-defined boolean quantity, with windows as arrays (PEPPER).
+      module procedure gf_user_boolean
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: cell_to_window
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      real(wp), allocatable :: cnf(:)
+      real(wp), allocatable :: res(:)
+      integer(ip) :: mw
+      allocate ( result(2,0) )
+      if ( ctx%failed() ) return
+      call gf_cells ( ctx, cnfine, step, cnf, res, mw )
+      if ( ctx%failed() ) return
+      call gfudb ( ctx, udfuns, udfunb, step, cnf, res )
+      if ( ctx%failed() ) return
+      call cell_to_window ( res, result )
+      end procedure gf_user_boolean
+
+      !> A GF search on a geometric quantity, with the caller's step and refinement routines, with windows as arrays (PEPPER).
+      module procedure gf_event
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: cell_to_window
+      use pepper_inc_gf, only: nwmax
+      implicit none
+      real(wp), allocatable :: cnf(:)
+      real(wp), allocatable :: res(:)
+      real(wp), allocatable :: work(:,:)
+      integer(ip) :: mw
+      allocate ( result(2,0) )
+      if ( ctx%failed() ) return
+      call gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
+      if ( ctx%failed() ) return
+      call gfevnt ( ctx, udstep, udrefn, gquant, qnpars, qpnams, qcpars, qdpars, qipars, &
+                    qlpars, op, refval, tol, adjust, cnf, rpt, udrepi, udrepu, udrepf, mw, &
+                    nwmax, work, bail, udbail, res )
+      if ( ctx%failed() ) return
+      call cell_to_window ( res, result )
+      end procedure gf_event
+
 end submodule pepper_gf

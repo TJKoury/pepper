@@ -5491,6 +5491,48 @@ contains
       end associate
       end procedure kinfo
 
+      !> The data of the nth kernel of a kind loaded through FURNSH, with
+      !> file names of any length (PEPPER).
+      module procedure kernel_data
+      use pepper_kinds, only: ip
+      implicit none
+      character(len=longest_kernel_name(ctx)) :: f
+      character(len=longest_kernel_name(ctx)) :: s
+      character(8) :: t
+      call kdata ( ctx, which, kind, f, t, s, handle, found )
+      file   = trim ( f )
+      filtyp = trim ( t )
+      source = trim ( s )
+      end procedure kernel_data
+
+      !> The data of a kernel loaded through FURNSH, with file names of any
+      !> length (PEPPER).
+      module procedure kernel_info
+      use pepper_kinds, only: ip
+      implicit none
+      character(len=longest_kernel_name(ctx)) :: s
+      character(8) :: t
+      call kinfo ( ctx, file, t, s, handle, found )
+      filtyp = trim ( t )
+      source = trim ( s )
+      end procedure kernel_info
+
+      !> The length of the longest file name among the kernels loaded
+      !> through FURNSH (at least 1).
+      pure integer(ip) function longest_kernel_name ( ctx ) result ( n )
+      use pepper_kinds, only: ip
+      implicit none
+      class(pepper_context), intent(in) :: ctx  !! the context
+      integer(ip) :: j
+      n = 1
+      if ( .not. allocated ( ctx%spice%keeper ) ) return
+      associate ( kt => ctx%spice%keeper )
+      do j = 1, kt%loaded
+         n = max ( n, len ( kt%kernels(j)%name, ip ) )
+      end do
+      end associate
+      end function longest_kernel_name
+
       !>## Detailed Input
       !>
       !>     None. This routine operates by side effects. See $Particulars

@@ -77,6 +77,7 @@
       subroutine zzckcv01 ( handle,  arrbeg,  arrend, &
                             sclkid,  tol,     timsys,  schedl  )
       use pepper_instance, only: pepper_context, pepper_zzckcv01 => zzckcv01
+      use pepper_windows, only: interval_list
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
@@ -88,9 +89,16 @@
       real(wp) :: tol  !! Tolerance in ticks.
       character(*) :: timsys  !! Time system used to represent coverage.
       real(wp) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+      type(interval_list) :: list  ! the coverage of the segment
+      integer(ip) :: k
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzckcv01 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
+      ! PEPPER: the routine adds the coverage to an interval list; here it
+      ! is added to the window cell SCHEDL.
+      call pepper_zzckcv01 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, list )
+      do k = 1, list%n
+         call ctx%wninsd ( list%intervals(1,k), list%intervals(2,k), schedl )
+      end do
       end subroutine zzckcv01
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -101,6 +109,7 @@
       subroutine zzckcv02 ( handle,  arrbeg,  arrend, &
                             sclkid,  tol,     timsys,  schedl  )
       use pepper_instance, only: pepper_context, pepper_zzckcv02 => zzckcv02
+      use pepper_windows, only: interval_list
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
@@ -112,9 +121,16 @@
       real(wp) :: tol  !! Tolerance in ticks.
       character(*) :: timsys  !! Time system used to represent coverage.
       real(wp) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+      type(interval_list) :: list  ! the coverage of the segment
+      integer(ip) :: k
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzckcv02 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
+      ! PEPPER: the routine adds the coverage to an interval list; here it
+      ! is added to the window cell SCHEDL.
+      call pepper_zzckcv02 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, list )
+      do k = 1, list%n
+         call ctx%wninsd ( list%intervals(1,k), list%intervals(2,k), schedl )
+      end do
       end subroutine zzckcv02
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -125,6 +141,7 @@
       subroutine zzckcv03 ( handle,  arrbeg,  arrend, &
                             sclkid,  tol,     timsys,  schedl  )
       use pepper_instance, only: pepper_context, pepper_zzckcv03 => zzckcv03
+      use pepper_windows, only: interval_list
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
@@ -136,9 +153,16 @@
       real(wp) :: tol  !! Tolerance in ticks.
       character(*) :: timsys  !! Time system used to represent coverage.
       real(wp) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+      type(interval_list) :: list  ! the coverage of the segment
+      integer(ip) :: k
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzckcv03 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
+      ! PEPPER: the routine adds the coverage to an interval list; here it
+      ! is added to the window cell SCHEDL.
+      call pepper_zzckcv03 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, list )
+      do k = 1, list%n
+         call ctx%wninsd ( list%intervals(1,k), list%intervals(2,k), schedl )
+      end do
       end subroutine zzckcv03
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -149,6 +173,7 @@
       subroutine zzckcv04 ( handle,  arrbeg,  arrend, &
                             sclkid,  tol,     timsys,  schedl  )
       use pepper_instance, only: pepper_context, pepper_zzckcv04 => zzckcv04
+      use pepper_windows, only: interval_list
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_ckparam
@@ -161,9 +186,16 @@
       real(wp) :: tol  !! Tolerance in ticks.
       character(*) :: timsys  !! Time system used to represent coverage.
       real(wp) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+      type(interval_list) :: list  ! the coverage of the segment
+      integer(ip) :: k
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzckcv04 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
+      ! PEPPER: the routine adds the coverage to an interval list; here it
+      ! is added to the window cell SCHEDL.
+      call pepper_zzckcv04 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, list )
+      do k = 1, list%n
+         call ctx%wninsd ( list%intervals(1,k), list%intervals(2,k), schedl )
+      end do
       end subroutine zzckcv04
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -174,6 +206,7 @@
       subroutine zzckcv05 ( handle,  arrbeg,  arrend,  sclkid, &
                             dc,      tol,     timsys,  schedl  )
       use pepper_instance, only: pepper_context, pepper_zzckcv05 => zzckcv05
+      use pepper_windows, only: interval_list
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_ck05
@@ -187,9 +220,16 @@
       real(wp) :: tol  !! Tolerance in ticks.
       character(*) :: timsys  !! Time system used to represent coverage.
       real(wp) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+      type(interval_list) :: list  ! the coverage of the segment
+      integer(ip) :: k
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzckcv05 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, schedl )
+      ! PEPPER: the routine adds the coverage to an interval list; here it
+      ! is added to the window cell SCHEDL.
+      call pepper_zzckcv05 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, list )
+      do k = 1, list%n
+         call ctx%wninsd ( list%intervals(1,k), list%intervals(2,k), schedl )
+      end do
       end subroutine zzckcv05
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -200,6 +240,7 @@
       subroutine zzckcv06 ( handle, arrbeg, arrend, sclkid, &
                             dc,     tol,    timsys, schedl )
       use pepper_instance, only: pepper_context, pepper_zzckcv06 => zzckcv06
+      use pepper_windows, only: interval_list
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_inc_ck06
@@ -213,9 +254,16 @@
       real(wp) :: tol  !! Tolerance in ticks.
       character(*) :: timsys  !! Time system used to represent coverage.
       real(wp) :: schedl ( lbcell:* )  !! An initialized window/schedule of interval
+      type(interval_list) :: list  ! the coverage of the segment
+      integer(ip) :: k
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzckcv06 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, schedl )
+      ! PEPPER: the routine adds the coverage to an interval list; here it
+      ! is added to the window cell SCHEDL.
+      call pepper_zzckcv06 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, list )
+      do k = 1, list%n
+         call ctx%wninsd ( list%intervals(1,k), list%intervals(2,k), schedl )
+      end do
       end subroutine zzckcv06
 
       !> Find the coverage window for a specified object in a specified CK

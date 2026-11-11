@@ -39778,6 +39778,76 @@ contains
       end associate
       end procedure getfvn
 
+      !> The field of view of an instrument given by its ID code, with all
+      !> its boundary vectors and a frame name of any length (PEPPER).
+      module procedure fov_by_code
+      use pepper_kinds, only: ip, wp
+      use pepper_strings, only: intstr
+      implicit none
+      character(16) :: id
+      character(:), allocatable :: frmnam
+      character(1) :: type
+      integer(ip) :: room
+      integer(ip) :: n
+      logical :: found
+      bsight = 0.0_wp
+      shape  = ''
+      frame  = ''
+      allocate ( bounds(3,0) )
+      if ( ctx%failed() ) return
+!
+!     The room: the boundary vectors in the pool (INS#_FOV_BOUNDARY or
+!     INS#_FOV_BOUNDARY_CORNERS), or at most 4 for an FOV given by
+!     angles. The frame name's length: that of INS#_FOV_FRAME.
+!
+      call intstr ( instid, id )
+      room = 4
+      call dtpool ( ctx, 'INS' // trim(id) // '_FOV_BOUNDARY', found, n, type )
+      if ( found ) room = max ( room, n/3 )
+      call dtpool ( ctx, 'INS' // trim(id) // '_FOV_BOUNDARY_CORNERS', found, n, type )
+      if ( found ) room = max ( room, n/3 )
+      call pool_string ( ctx, 'INS' // trim(id) // '_FOV_FRAME', 1, frmnam, found )
+
+      block
+         character(32) :: s
+         character(max(1,len(frmnam))) :: f
+         real(wp), allocatable :: b(:,:)
+         allocate ( b(3,room) )
+         call getfov ( ctx, instid, room, s, f, bsight, n, b )
+         if ( ctx%failed() ) return
+         shape  = trim ( s )
+         frame  = trim ( f )
+         bounds = b(:,1:n)
+      end block
+      end procedure fov_by_code
+
+      !> The field of view of an instrument given by name, with all its
+      !> boundary vectors and a frame name of any length (PEPPER).
+      module procedure fov_by_name
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: instid
+      logical :: found
+      bsight = 0.0_wp
+      shape  = ''
+      frame  = ''
+      allocate ( bounds(3,0) )
+      if ( ctx%failed() ) return
+      call bods2c ( ctx, inst, instid, found )
+      if ( ctx%failed() ) return
+      if ( .not. found ) then
+         call ctx%setmsg ( '''#'' is not a recognized name for an ' &
+         //            'instrument. The cause of this '          &
+         //            'problem may be that you have not loaded '  &
+         //            'a required frame kernel or instrument '    &
+         //            'kernel.'                                   )
+         call ctx%errch  ( '#', inst                                  )
+         call ctx%sigerr ( 'SPICE(IDCODENOTFOUND)'                    )
+         return
+      end if
+      call fov_by_code ( ctx, instid, shape, frame, bsight, bounds )
+      end procedure fov_by_name
+
       !>## Detailed Input
       !>
       !>     STRING   is any character string.
@@ -57140,6 +57210,20 @@ contains
       !>-    SPICELIB Version 1.0.0, 01-APR-2016 (NJB) (EDW) (BVS)
       module procedure zzsrfc2n
       use pepper_kinds, only: ip
+      implicit none
+      character(:), allocatable :: name
+!
+!     PEPPER: the work is done by SURFACE_NAME, which returns the name
+!     at its full length.
+!
+      call surface_name ( ctx, surfid, bodyid, name, found )
+      if ( found ) srfnam = name
+      end procedure zzsrfc2n
+
+      !> The name of a surface from its ID code and body, of any length
+      !> (PEPPER).
+      module procedure surface_name
+      use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
       use pepper_inc_srftrn
       use pepper_inc_zzctr
@@ -57152,6 +57236,8 @@ contains
       integer(ip) :: node
       integer(ip) :: lookat
       logical :: lupdte
+      name  = ''
+      found = .false.
       if ( .not. allocated ( ctx%zzsrftrn_state ) ) allocate ( ctx%zzsrftrn_state )
       associate ( srf => ctx%zzsrftrn_state%srf, &
                   polctr => ctx%zzsrftrn_state%polctr, &
@@ -57223,13 +57309,13 @@ contains
 !
 !     Find the hash value of the squished input name.
 !
-      idx   = srf%id_index ( surfid, bodyid )
+      idx   = srf%id_index ( code, body )
       found = idx > 0
-      if ( found ) srfnam = srf%names(idx)%s
+      if ( found ) name = srf%names(idx)%s
 
       return
       end associate
-      end procedure zzsrfc2n
+      end procedure surface_name
 
       !>## Abstract
       !>
@@ -93662,6 +93748,84 @@ contains
       !>
       !>        Based on original version 14-NOV-2015 (NJB)
       module procedure limbpt
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip), allocatable :: np(:)
+      real(wp), allocatable :: p(:,:)
+      real(wp), allocatable :: e(:)
+      real(wp), allocatable :: v(:,:)
+      integer(ip) :: i
+      integer(ip) :: n
+      integer(ip) :: total
+!
+!     PEPPER: the points are found by LIMB_POINTS, which has no limit
+!     on their number; here they are copied to the caller's arrays,
+!     whose room is MAXN. (SPICELIB's LIMBPT compared each cut's count with MAXN, not the running total:
+!     see spicelib_bugs.md.)
+!
+      if ( ctx%failed() ) return
+      if ( maxn < 1 ) then
+         call ctx%setmsg ( 'MAXN = #; MAXN is required ' &
+         //            'to be at least 1.'           )
+         call ctx%errint ( '#',  maxn                    )
+         call ctx%sigerr ( 'SPICE(INVALIDSIZE)'          )
+         return
+      end if
+      if (  ( ncuts < 1 ) .or. ( ncuts > maxn )  ) then
+         call ctx%setmsg ( 'NCUTS = #; MAXN = #; NCUTS is required ' &
+         //            'to be non-negative and no larger than ' &
+         //            'MAXN.'                                 )
+         call ctx%errint ( '#',  ncuts                             )
+         call ctx%errint ( '#',  maxn                              )
+         call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                   )
+         return
+      end if
+      call limb_points ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, np, p, e, v )
+      if ( ctx%failed() ) return
+      total = 0
+      do i = 1, ncuts
+         if ( total + np(i) > maxn ) then
+            call ctx%setmsg ( 'Out of room in output arrays. Index of ' &
+            //            'cutting half-plane is # out of #. ' &
+            //            'Number of limb points collected so far ' &
+            //            'is #. Available room is #.'             )
+            call ctx%errint ( '#', i                                   )
+            call ctx%errint ( '#', ncuts                               )
+            call ctx%errint ( '#', total + np(i)                       )
+            call ctx%errint ( '#', maxn - total                        )
+            call ctx%sigerr ( 'SPICE(OUTOFROOM)'                       )
+            return
+         end if
+         total = total + np(i)
+      end do
+      npts(1:ncuts) = np
+      n = size ( e )
+      points(:,1:n) = p
+      epochs(1:n)   = e
+      tangts(:,1:n)  = v
+      end procedure limbpt
+
+      !> Limb points on a target body, without a limit on their number
+      !> (PEPPER).
+      module procedure limb_points
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: n
+      call limb_points_body ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, tangts, n )
+      if ( ctx%failed() ) then
+         if ( allocated ( npts ) ) deallocate ( npts )
+         if ( allocated ( points ) ) deallocate ( points )
+         if ( allocated ( epochs ) ) deallocate ( epochs )
+         if ( allocated ( tangts ) ) deallocate ( tangts )
+         allocate ( npts(0), points(3,0), epochs(0), tangts(3,0) )
+         return
+      end if
+      points = points(:,1:n)
+      epochs = epochs(1:n)
+      tangts = tangts(:,1:n)
+      end procedure limb_points
+
+      module procedure limb_points_body
        use pepper_containers, only: grow, grow_cell
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
@@ -93730,7 +93894,6 @@ contains
       integer(ip) :: j
       integer(ip) :: numitr
       integer(ip) :: obscde
-      integer(ip) :: room
       integer(ip) :: to
       integer(ip) :: total
       integer(ip) :: trgcde
@@ -94097,29 +94260,14 @@ contains
       first  = .false.
 
 !
-!     Check MAXN.
-!
-      if ( maxn < 1 ) then
-
-         call ctx%setmsg ( 'MAXN = #; MAXN is required ' &
-         //            'to be at least 1.'           )
-         call ctx%errint ( '#',  maxn                    )
-         call ctx%sigerr ( 'SPICE(INVALIDSIZE)'          )
-         return
-
-      end if
-
 !
 !     Check NCUTS; there must be room for at least one limb point
 !     for each cut. NCUTS may not be negative.
 !
-      if (  ( ncuts < 1 ) .or. ( ncuts > maxn )  ) then
+      if ( ncuts < 1 ) then
 
-         call ctx%setmsg ( 'NCUTS = #; MAXN = #; NCUTS is required ' &
-         //            'to be non-negative and no larger than ' &
-         //            'MAXN.'                                 )
+         call ctx%setmsg ( 'NCUTS = #; NCUTS is required to be positive.' )
          call ctx%errint ( '#',  ncuts                             )
-         call ctx%errint ( '#',  maxn                              )
          call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                   )
          return
 
@@ -94196,29 +94344,14 @@ contains
       if ( ctx%failed() ) return
 
 !
-!     Check MAXN.
-!
-      if ( maxn < 1 ) then
-
-         call ctx%setmsg ( 'MAXN = #; MAXN is required ' &
-         //            'to be at least 1.'           )
-         call ctx%errint ( '#',  maxn                    )
-         call ctx%sigerr ( 'SPICE(INVALIDSIZE)'          )
-         return
-
-      end if
-
 !
 !     Check NCUTS; there must be room for at least one limb point
 !     for each cut. NCUTS may not be negative.
 !
-      if (  ( ncuts < 1 ) .or. ( ncuts > maxn )  ) then
+      if ( ncuts < 1 ) then
 
-         call ctx%setmsg ( 'NCUTS = #; MAXN = #; NCUTS is required ' &
-         //            'to be non-negative and no larger than ' &
-         //            'MAXN.'                                 )
+         call ctx%setmsg ( 'NCUTS = #; NCUTS is required to be positive.' )
          call ctx%errint ( '#',  ncuts                             )
-         call ctx%errint ( '#',  maxn                              )
          call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                   )
          return
 
@@ -94264,7 +94397,9 @@ contains
 !
 !     Find limb points on the target.
 !
-      npts(1:ncuts) = 0
+      allocate ( npts(ncuts) )
+      npts = 0
+      allocate ( points(3,16), epochs(16), tangts(3,16) )
 !
 !     PEPPER: the window of transitions in a cutting half-plane and the
 !     buffer of points grow as ZZTANGNT finds points (SPICELIB: 2000
@@ -94366,7 +94501,6 @@ contains
          end if
 
          to    = 1
-         room  = maxn
          total = 0
 
 !
@@ -94529,27 +94663,13 @@ contains
 
             total = total + npts(i)
 
-            if ( npts(i) > room ) then
-
-               call ctx%setmsg ( 'Out of room in output arrays. Index of ' &
-               //            'cutting half-plane is # out of #. ' &
-               //            'Number of limb points collected so far ' &
-               //            'is #. Available room is #.'             )
-               call ctx%errint ( '#', i                                   )
-               call ctx%errint ( '#', ncuts                               )
-               call ctx%errint ( '#', total                               )
-               call ctx%errint ( '#', room                                )
-               call ctx%sigerr ( 'SPICE(OUTOFROOM)'                       )
-               return
-
-            end if
-
 !
 !           Transfer the limb points we found to the output limb point
 !           array. Set the elements of the surface vector array as we
 !           go. Store in each element of the output array the epoch
 !           associated with the target center.
 !
+            call grow_points ( points, epochs, tangts, to + npts(i) - 1 )
             do j = 1, npts(i)
 
                points(1:3,to) = pntbuf(1:3,j)
@@ -94601,7 +94721,6 @@ contains
          if ( ctx%failed() ) return
 
          to    = 1
-         room  = maxn
          total = 0
 !
 !        Loop over the half planes, collecting limb points for
@@ -94971,27 +95090,13 @@ contains
 
             total = total + npts(i)
 
-            if ( npts(i) > room ) then
-
-               call ctx%setmsg ( 'Out of room in output arrays. Index of ' &
-               //            'cutting half-plane is # out of #. ' &
-               //            'Number of limb points collected so far ' &
-               //            'is #. Available room is #.'             )
-               call ctx%errint ( '#', i                                   )
-               call ctx%errint ( '#', ncuts                               )
-               call ctx%errint ( '#', total                               )
-               call ctx%errint ( '#', room                                )
-               call ctx%sigerr ( 'SPICE(OUTOFROOM)'                       )
-               return
-
-            end if
-
 !
 !           Transfer the limb points we found to the output limb
 !           point array. Set the elements of the surface vector
 !           array as we go. In this case, we set the elements of
 !           the output target epoch array as well.
 !
+            call grow_points ( points, epochs, tangts, to + npts(i) - 1 )
             do j = 1, npts(i)
 
                points(1:3,to) = pntbuf(1:3,j)
@@ -95018,9 +95123,10 @@ contains
 
       end if
 
+      nout = to - 1
       return
       end associate
-      end procedure limbpt
+      end procedure limb_points_body
 
       !>## Abstract
       !>
@@ -96795,6 +96901,84 @@ contains
       !>
       !>        Original version 18-NOV-2015 (NJB)
       module procedure termpt
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip), allocatable :: np(:)
+      real(wp), allocatable :: p(:,:)
+      real(wp), allocatable :: e(:)
+      real(wp), allocatable :: v(:,:)
+      integer(ip) :: i
+      integer(ip) :: n
+      integer(ip) :: total
+!
+!     PEPPER: the points are found by TERMINATOR_POINTS, which has no limit
+!     on their number; here they are copied to the caller's arrays,
+!     whose room is MAXN. (SPICELIB's TERMPT took the room of a cut once per point:
+!     see spicelib_bugs.md.)
+!
+      if ( ctx%failed() ) return
+      if ( maxn < 1 ) then
+         call ctx%setmsg ( 'MAXN = #; MAXN is required ' &
+         //            'to be at least 1.'           )
+         call ctx%errint ( '#',  maxn                    )
+         call ctx%sigerr ( 'SPICE(INVALIDSIZE)'          )
+         return
+      end if
+      if (  ( ncuts < 0 ) .or. ( ncuts > maxn )  ) then
+         call ctx%setmsg ( 'NCUTS = #; MAXN = #; NCUTS is required ' &
+         //            'to be non-negative and no larger than ' &
+         //            'MAXN.'                                 )
+         call ctx%errint ( '#',  ncuts                             )
+         call ctx%errint ( '#',  maxn                              )
+         call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                   )
+         return
+      end if
+      call terminator_points ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, np, p, e, v )
+      if ( ctx%failed() ) return
+      total = 0
+      do i = 1, ncuts
+         if ( total + np(i) > maxn ) then
+            call ctx%setmsg ( 'Out of room in output arrays. Index of ' &
+            //            'cutting half-plane is # out of #. ' &
+            //            'Number of terminator points collected so far ' &
+            //            'is #. Available room is #.'             )
+            call ctx%errint ( '#', i                                   )
+            call ctx%errint ( '#', ncuts                               )
+            call ctx%errint ( '#', total + np(i)                       )
+            call ctx%errint ( '#', maxn - total                        )
+            call ctx%sigerr ( 'SPICE(OUTOFROOM)'                       )
+            return
+         end if
+         total = total + np(i)
+      end do
+      npts(1:ncuts) = np
+      n = size ( e )
+      points(:,1:n) = p
+      epochs(1:n)   = e
+      trmvcs(:,1:n)  = v
+      end procedure termpt
+
+      !> Terminator points on a target body, without a limit on their number
+      !> (PEPPER).
+      module procedure terminator_points
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: n
+      call terminator_points_body ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, trmvcs, n )
+      if ( ctx%failed() ) then
+         if ( allocated ( npts ) ) deallocate ( npts )
+         if ( allocated ( points ) ) deallocate ( points )
+         if ( allocated ( epochs ) ) deallocate ( epochs )
+         if ( allocated ( trmvcs ) ) deallocate ( trmvcs )
+         allocate ( npts(0), points(3,0), epochs(0), trmvcs(3,0) )
+         return
+      end if
+      points = points(:,1:n)
+      epochs = epochs(1:n)
+      trmvcs = trmvcs(:,1:n)
+      end procedure terminator_points
+
+      module procedure terminator_points_body
        use pepper_containers, only: grow, grow_cell
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
@@ -96854,7 +97038,6 @@ contains
       integer(ip) :: j
       integer(ip) :: numitr
       integer(ip) :: obscde
-      integer(ip) :: room
       integer(ip) :: to
       integer(ip) :: total
       logical :: attblk ( nabcor )
@@ -97274,29 +97457,14 @@ contains
       first  = .false.
 
 !
-!     Check MAXN.
-!
-      if ( maxn < 1 ) then
-
-         call ctx%setmsg ( 'MAXN = #; MAXN is required ' &
-         //            'to be at least 1.'           )
-         call ctx%errint ( '#',  maxn                    )
-         call ctx%sigerr ( 'SPICE(INVALIDSIZE)'          )
-         return
-
-      end if
-
 !
 !     Check NCUTS; there must be room for at least one terminator point
 !     for each cut. NCUTS may not be negative.
 !
-      if (  ( ncuts < 0 ) .or. ( ncuts > maxn )  ) then
+      if ( ncuts < 0 ) then
 
-         call ctx%setmsg ( 'NCUTS = #; MAXN = #; NCUTS is required ' &
-         //            'to be non-negative and no larger than ' &
-         //            'MAXN.'                                 )
+         call ctx%setmsg ( 'NCUTS = #; NCUTS is required to be non-negative.' )
          call ctx%errint ( '#',  ncuts                             )
-         call ctx%errint ( '#',  maxn                              )
          call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                   )
          return
 
@@ -97433,7 +97601,9 @@ contains
 !
 !     Find terminator points on the target.
 !
-      npts(1:ncuts) = 0
+      allocate ( npts(ncuts) )
+      npts = 0
+      allocate ( points(3,16), epochs(16), trmvcs(3,16) )
 !
 !     PEPPER: the window of transitions in a cutting half-plane and the
 !     buffer of points grow as ZZTANGNT finds points (SPICELIB: 2000
@@ -97502,7 +97672,6 @@ contains
          end if
 
          to    = 1
-         room  = maxn
          total = 0
 
 !
@@ -97641,27 +97810,13 @@ contains
 
             total = total + npts(i)
 
-            if ( npts(i) > room ) then
-
-               call ctx%setmsg ( 'Out of room in output arrays. Index of ' &
-               //            'cutting half-plane is # out of #. ' &
-               //            'Number of terminator points collected ' &
-               //            'so far is #. Available room is #.'      )
-               call ctx%errint ( '#', i                                   )
-               call ctx%errint ( '#', ncuts                               )
-               call ctx%errint ( '#', total                               )
-               call ctx%errint ( '#', room                                )
-               call ctx%sigerr ( 'SPICE(OUTOFROOM)'                       )
-               return
-
-            end if
-
 !
 !           Transfer the terminator points we found to the output
 !           terminator point array. Set the elements of the tangent
 !           vector array as we go. Store in each element of the output
 !           array the epoch associated with the target center.
 !
+            call grow_points ( points, epochs, trmvcs, to + npts(i) - 1 )
             do j = 1, npts(i)
 
                points(1:3,to) = pntbuf(1:3,j)
@@ -97670,8 +97825,6 @@ contains
                epochs( to ) = trgepc
 
                to           = to + 1
-
-               room         = room - npts(i)
 
             end do
 
@@ -97708,7 +97861,6 @@ contains
          if ( ctx%failed() ) return
 
          to    = 1
-         room  = maxn
          total = 0
 !
 !        Loop over the half planes, collecting terminator points for
@@ -97945,27 +98097,13 @@ contains
 
             total   = total + npts(i)
 
-            if ( npts(i) > room ) then
-
-               call ctx%setmsg ( 'Out of room in output arrays. Index of ' &
-               //            'cutting half-plane is # out of #. ' &
-               //            'Number of terminator points collected ' &
-               //            'so far is #. Available room is #.'      )
-               call ctx%errint ( '#', i                                   )
-               call ctx%errint ( '#', ncuts                               )
-               call ctx%errint ( '#', total                               )
-               call ctx%errint ( '#', room                                )
-               call ctx%sigerr ( 'SPICE(OUTOFROOM)'                       )
-               return
-
-            end if
-
 !
 !           Transfer the terminator points we found to the output
 !           terminator point array. Set the elements of the tangent
 !           vector array as we go. In this case, we set the elements of
 !           the output target epoch array as well.
 !
+            call grow_points ( points, epochs, trmvcs, to + npts(i) - 1 )
             do j = 1, npts(i)
 
                points(1:3,to) = pntbuf(1:3,j)
@@ -97986,8 +98124,6 @@ contains
 
                to         = to + 1
 
-               room       = room - npts(i)
-
             end do
 !
 !           We've found the terminator points and observer-terminator
@@ -98005,9 +98141,38 @@ contains
 
       end if
 
+      nout = to - 1
       return
       end associate
-      end procedure termpt
+      end procedure terminator_points_body
+
+      !> Make room for at least N points in the outputs of
+      !> [[limb_points_body]] and [[terminator_points_body]] (PEPPER): the
+      !> arrays at least double when they grow.
+      pure subroutine grow_points ( points, epochs, vecs, n )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      real(wp), allocatable, intent(inout) :: points(:,:)  !! the points, shape (3, capacity)
+      real(wp), allocatable, intent(inout) :: epochs(:)  !! their epochs
+      real(wp), allocatable, intent(inout) :: vecs(:,:)  !! their vectors, shape (3, capacity)
+      integer(ip), intent(in) :: n  !! the number of points needed
+      real(wp), allocatable :: t2(:,:)
+      real(wp), allocatable :: t1(:)
+      integer(ip) :: cap
+      integer(ip) :: m
+      m = size ( epochs, kind=ip )
+      if ( n <= m ) return
+      cap = max ( n, 2*m )
+      allocate ( t2(3,cap) )
+      t2(:,1:m) = points
+      call move_alloc ( t2, points )
+      allocate ( t2(3,cap) )
+      t2(:,1:m) = vecs
+      call move_alloc ( t2, vecs )
+      allocate ( t1(cap) )
+      t1(1:m) = epochs
+      call move_alloc ( t1, epochs )
+      end subroutine grow_points
 
    !> PEPPER: allocate the ZZDSKSBF state of a context, and grow its segment
    !> table so that the segments of BODYID fit after those already in it

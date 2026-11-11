@@ -1,9 +1,22 @@
 # Phase 7: outputs sized by PEPPER (design)
 
 Phase 7 of [`limits.md`](limits.md): routines whose outputs the caller must
-size get variants that return allocatable results. This document proposes
-the API and the order of the work; the decisions marked **Decide** need your
-choice before any code.
+size get variants that return allocatable results. This document proposed
+the API and the order of the work.
+
+**Status: done.** Decisions: D1 A (new names, readable: `pool_values`,
+`spk_coverage`, `gf_distance`, ...), D2 A (plain arrays). What was built,
+and where it differs from this design, is in `limits.md` (phase 7):
+
+- 7b and 7d need no bound: the SPICELIB bodies moved into the new routines,
+  which collect their results in arrays that grow, and the SPICELIB routines
+  became wrappers that copy into the caller's cells or arrays.
+- `daf_comments` and `das_comments` read the comment area directly instead of
+  calling DAFEC/DASEC, whose reading position they would have moved.
+- `gf_event` takes one more argument, the smallest step of its step routine,
+  to size the work windows (its step is a callback).
+- The window converters also have set counterparts (`set_to_cell`,
+  `cell_to_set`).
 
 ## The problem
 
@@ -45,7 +58,7 @@ a fixed size: its own.
 
 ## Decisions
 
-### D1. Names (**Decide**)
+### D1. Names (decided: A)
 
 **A. New names** that say what they return, as PEPPER's existing
 extensions do (`ctx%pool_string`, `ctx%pool_names`, `ctx%message`):
@@ -72,7 +85,7 @@ as the SPICELIB form, so those need new names anyway.
 **Recommendation: A**, with a table in the documentation from each SPICELIB
 routine to its new form. The names below follow A.
 
-### D2. Windows and sets (**Decide**)
+### D2. Windows and sets (decided: A)
 
 **A. Plain arrays:** a window is `real(wp), allocatable :: intervals(:,:)`
 of shape (2, n), each column a [start, stop] interval, sorted and disjoint;
@@ -188,13 +201,11 @@ unchanged.
    check of how many work windows each search uses (NW) and whether their
    size follows the same bound.
 
-## Questions for you
+## Questions (answered)
 
-1. **D1:** new names (A, recommended) or SPICELIB names overloaded (B)?
-2. **D2:** plain arrays for windows and sets (A, recommended), or a window
-   type (B)?
-3. **Names of the new routines:** are names like `pool_values`,
-   `spk_coverage`, `gf_distance` the style you want, or would you prefer
-   something closer to SPICELIB (`gdpool_all`, `spkcov_all`, ...)?
-4. **Scope:** are the cell, set, window and symbol-table routines right to
-   leave out? (A program can keep using them with the converters.)
+1. **D1:** new names.
+2. **D2:** plain arrays.
+3. **Names of the new routines:** readable names, as proposed (`pool_values`,
+   `spk_coverage`, `gf_distance`, ...).
+4. **Scope:** the cell, set, window and symbol-table routines are left out;
+   programs use them with the converters of `pepper_windows`.

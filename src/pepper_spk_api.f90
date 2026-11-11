@@ -4320,8 +4320,25 @@ contains
       module procedure spkcov
       use pepper_kinds, only: ip, wp
       implicit none
+      real(wp), allocatable :: intervals(:,:)
+      integer(ip) :: k
+!
+!     PEPPER: the coverage is found by SPK_COVERAGE; here it is added
+!     to COVER (the union of the two).
+!
+      if ( ctx%failed() ) return
+      call spk_coverage ( ctx, spkfnm, idcode, intervals )
+      do k = 1, size ( intervals, 2 )
+         if ( ctx%failed() ) return
+         call wninsd ( ctx, intervals(1,k), intervals(2,k), cover )
+      end do
+      end procedure spkcov
 
-      integer(ip), parameter :: lbcell = -5
+      module procedure spk_coverage
+      use pepper_kinds, only: ip, wp
+      implicit none
+      type(interval_list) :: window  ! the coverage being built
+
 
       integer(ip), parameter :: lnsize = 80
 
@@ -4343,13 +4360,14 @@ contains
 !
 !     Standard SPICE error handling.
 !
+      allocate ( intervals(2,0) )
       if ( ctx%failed() ) return
 
 !
 !     See whether GETFAT thinks we've got a binary SPK file.
 !     If not, indicate the specific problem.
 !
-      call getfat ( ctx, spkfnm, arch, kertyp )
+      call getfat ( ctx, file, arch, kertyp )
 
       if ( ctx%failed() ) return
 
@@ -4360,7 +4378,7 @@ contains
          //            'by this routine.  If the input file is an ' &
          //            'SPK file in transfer format, run TOBIN on ' &
          //            'the file to convert it to binary format.'  )
-         call ctx%errch  ( '#',  spkfnm                                )
+         call ctx%errch  ( '#',  file                                )
          call ctx%errch  ( '#',  arch                                  )
          call ctx%sigerr ( 'SPICE(INVALIDFORMAT)'                      )
          return
@@ -4376,7 +4394,7 @@ contains
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         call ctx%errch  ( '#',  spkfnm                                )
+         call ctx%errch  ( '#',  file                                )
          call ctx%errch  ( '#',  arch                                  )
          call ctx%sigerr ( 'SPICE(INVALIDARCHTYPE)'                    )
          return
@@ -4391,7 +4409,7 @@ contains
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         call ctx%errch  ( '#',  spkfnm                                )
+         call ctx%errch  ( '#',  file                                )
          call ctx%errch  ( '#',  kertyp                                )
          call ctx%sigerr ( 'SPICE(INVALIDFILETYPE)'                    )
          return
@@ -4401,7 +4419,7 @@ contains
 !
 !     Open the file for reading.
 !
-      call dafopr ( ctx, spkfnm, handle )
+      call dafopr ( ctx, file, handle )
 
       if ( ctx%failed() ) return
 
@@ -4426,12 +4444,12 @@ contains
          call dafgs ( ctx, descr )
          call dafus ( ctx, descr, nd, ni, dc, ic )
 
-         if ( ic(1) == idcode ) then
+         if ( ic(1) == body ) then
 !
 !           This segment is for the body of interest.  Insert the
 !           coverage bounds into the coverage window.
 !
-            call wninsd ( ctx, dc(1), dc(2), cover )
+            call insert_interval ( ctx, dc(1), dc(2), window )
 
          end if
 
@@ -4444,8 +4462,9 @@ contains
 !
       call dafcls ( ctx, handle )
 
+      if ( .not. ctx%failed() ) call window%window ( intervals )
       return
-      end procedure spkcov
+      end procedure spk_coverage
 
       !>## Detailed Input
       !>
@@ -6599,10 +6618,29 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-DEC-2004 (NJB)
       module procedure spkobj
-      use pepper_kinds, only: ip, wp
+      use pepper_kinds, only: ip
       implicit none
+      integer(ip), allocatable :: list(:)
+      integer(ip) :: k
+!
+!     PEPPER: the IDs are found by SPK_OBJECTS; here they are added to
+!     the set IDS.
+!
+      if ( ctx%failed() ) return
+      call spk_objects ( ctx, spkfnm, list )
+      do k = 1, size ( list )
+         if ( ctx%failed() ) return
+         call insrti ( ctx, list(k), ids )
+      end do
+      end procedure spkobj
 
-      integer(ip), parameter :: lbcell = -5
+      module procedure spk_objects
+      use pepper_kinds, only: ip, wp
+      use pepper_windows, only: append_id, sort_unique
+      implicit none
+      integer(ip), allocatable :: list(:)  ! the IDs found (unsorted, with duplicates)
+      integer(ip) :: nlist  ! the number of IDs in LIST
+
 
       integer(ip), parameter :: lnsize = 80
 
@@ -6624,12 +6662,14 @@ contains
 !
 !     Standard SPICE error handling.
 !
+      allocate ( ids(0) )
+      nlist = 0
       if ( ctx%failed() ) return
 
 !
 !     See whether GETFAT thinks we've got an SPK file.
 !
-      call getfat ( ctx, spkfnm, arch, kertyp )
+      call getfat ( ctx, file, arch, kertyp )
 
       if ( ctx%failed() ) return
 
@@ -6640,7 +6680,7 @@ contains
          //            'by this routine.  If the input file is an ' &
          //            'SPK file in transfer format, run TOBIN on ' &
          //            'the file to convert it to binary format.'  )
-         call ctx%errch  ( '#',  spkfnm                                )
+         call ctx%errch  ( '#',  file                                )
          call ctx%errch  ( '#',  arch                                  )
          call ctx%sigerr ( 'SPICE(INVALIDFORMAT)'                      )
          return
@@ -6656,7 +6696,7 @@ contains
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         call ctx%errch  ( '#',  spkfnm                                )
+         call ctx%errch  ( '#',  file                                )
          call ctx%errch  ( '#',  arch                                  )
          call ctx%sigerr ( 'SPICE(INVALIDARCHTYPE)'                    )
          return
@@ -6671,7 +6711,7 @@ contains
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         call ctx%errch  ( '#',  spkfnm                                )
+         call ctx%errch  ( '#',  file                                )
          call ctx%errch  ( '#',  kertyp                                )
          call ctx%sigerr ( 'SPICE(INVALIDFILETYPE)'                    )
          return
@@ -6681,7 +6721,7 @@ contains
 !
 !     Open the file for reading.
 !
-      call dafopr ( ctx, spkfnm, handle )
+      call dafopr ( ctx, file, handle )
 
       if ( ctx%failed() ) return
 
@@ -6711,7 +6751,7 @@ contains
 !        The insertion algorithm will handle duplicates; no special
 !        action is required here.
 !
-         call insrti ( ctx, ic(1), ids )
+         call append_id ( list, nlist, ic(1) )
 
          call daffna ( ctx, found )
 
@@ -6722,8 +6762,12 @@ contains
 !
       call dafcls ( ctx, handle )
 
+      if ( .not. ctx%failed() ) then
+         ids = list(1:nlist)
+         call sort_unique ( ids )
+      end if
       return
-      end procedure spkobj
+      end procedure spk_objects
 
       !>## Detailed Input
       !>

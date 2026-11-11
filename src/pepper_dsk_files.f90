@@ -13019,6 +13019,46 @@ contains
       return
       end procedure dskv02
 
+      !> All the plates of a type 2 DSK segment (PEPPER).
+      module procedure dsk_plates
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip) :: n
+      integer(ip) :: np
+      integer(ip) :: nv
+      allocate ( plates(3,0) )
+      if ( ctx%failed() ) return
+      call dskz02 ( ctx, handle, dladsc, nv, np )
+      if ( ctx%failed() .or. np < 1 ) return
+      deallocate ( plates )
+      allocate ( plates(3,np) )
+      call dskp02 ( ctx, handle, dladsc, 1, np, n, plates )
+      if ( ctx%failed() ) then
+         deallocate ( plates )
+         allocate ( plates(3,0) )
+      end if
+      end procedure dsk_plates
+
+      !> All the vertices of a type 2 DSK segment (PEPPER).
+      module procedure dsk_vertices
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip) :: n
+      integer(ip) :: np
+      integer(ip) :: nv
+      allocate ( vertices(3,0) )
+      if ( ctx%failed() ) return
+      call dskz02 ( ctx, handle, dladsc, nv, np )
+      if ( ctx%failed() .or. nv < 1 ) return
+      deallocate ( vertices )
+      allocate ( vertices(3,nv) )
+      call dskv02 ( ctx, handle, dladsc, 1, nv, n, vertices )
+      if ( ctx%failed() ) then
+         deallocate ( vertices )
+         allocate ( vertices(3,0) )
+      end if
+      end procedure dsk_vertices
+
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -14955,12 +14995,42 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 22-AUG-2016 (NJB)
       module procedure dskobj
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip), allocatable :: list(:)
+      integer(ip) :: k
+!
+!     PEPPER: the IDs are found by DSK_OBJECTS; here they are added to
+!     the set BODIDS.
+!
+      if ( ctx%failed() ) return
+      call dsk_objects ( ctx, dskfnm, list )
+      do k = 1, size ( list )
+         if ( ctx%failed() ) return
+         if ( elemi ( ctx, list(k), bodids ) ) cycle
+         if ( cardi( ctx,bodids) == sizei( ctx,bodids) ) then
+            call ctx%setmsg ( 'Cannot append body ID # to cell ' &
+            //            'while reading DSK file #. ' &
+            //            'Cell size is #.'                 )
+            call ctx%errint ( '#', list(k)                      )
+            call ctx%errch  ( '#', dskfnm                       )
+            call ctx%errint ( '#', sizei( ctx, bodids )              )
+            call ctx%sigerr ( 'SPICE(CELLTOOSMALL)'             )
+            return
+         end if
+         call insrti ( ctx, list(k), bodids )
+      end do
+      end procedure dskobj
+
+      module procedure dsk_objects
       use pepper_kinds, only: ip, wp
+      use pepper_windows, only: append_id, sort_unique
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
+      integer(ip), allocatable :: list(:)  ! the IDs found (unsorted, with duplicates)
+      integer(ip) :: nlist  ! the number of IDs in LIST
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip), parameter :: toklen = 4
 
@@ -14976,12 +15046,14 @@ contains
 
       logical :: found
 
+      allocate ( ids(0) )
+      nlist = 0
       if ( ctx%failed() ) return
 
 !
 !     See whether GETFAT thinks we've got a DSK file.
 !
-      call getfat ( ctx, dskfnm, arch, kertyp )
+      call getfat ( ctx, file, arch, kertyp )
 
       if ( ctx%failed() ) return
 
@@ -14992,7 +15064,7 @@ contains
          //            'by this routine. If the input file is an ' &
          //            'DSK file in transfer format, run TOBIN on ' &
          //            'the file to convert it to binary format.'  )
-         call ctx%errch  ( '#',  dskfnm                                )
+         call ctx%errch  ( '#',  file                                )
          call ctx%errch  ( '#',  arch                                  )
          call ctx%sigerr ( 'SPICE(INVALIDFORMAT)'                      )
          return
@@ -15008,7 +15080,7 @@ contains
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         call ctx%errch  ( '#',  dskfnm                                )
+         call ctx%errch  ( '#',  file                                )
          call ctx%errch  ( '#',  arch                                  )
          call ctx%sigerr ( 'SPICE(INVALIDARCHTYPE)'                    )
          return
@@ -15023,7 +15095,7 @@ contains
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         call ctx%errch  ( '#',  dskfnm                                )
+         call ctx%errch  ( '#',  file                                )
          call ctx%errch  ( '#',  kertyp                                )
          call ctx%sigerr ( 'SPICE(INVALIDFILETYPE)'                    )
          return
@@ -15033,7 +15105,7 @@ contains
 !
 !     Open the DSK for read access; start a forward search.
 !
-      call dasopr ( ctx, dskfnm, handle )
+      call dasopr ( ctx, file, handle )
       call dlabfs ( ctx, handle, nxtdsc, found )
 
       if ( ctx%failed() ) return
@@ -15050,35 +15122,12 @@ contains
 !        The body ID is at location CTRIDX ("center index")
 !        of the DSK descriptor.
 !
-!        Append, rather than insert, the new ID. We'll
-!        turn the cell into a set at the end of the loop.
-!
-!        Before appending, make sure there's room in the cell
-!        for another entry. We can't afford to let APPNDI
-!        catch an out-of-room error, because we would lose
-!        the ability to close the file.
+!        Append, rather than insert, the new ID (PEPPER: to an array
+!        that grows; it is sorted at the end).
 !
          bid = nint( dskdsc(ctridx) )
 
-         if ( cardi( ctx,bodids) == sizei( ctx,bodids) ) then
-!
-!           We're going to signal an error. Close the DSK
-!           first.
-!
-            call dskcls ( ctx, handle, .false. )
-
-            call ctx%setmsg ( 'Cannot append body ID # to cell ' &
-            //            'while reading DSK file #. ' &
-            //            'Cell size is #.'                 )
-            call ctx%errint ( '#', bid                          )
-            call ctx%errch  ( '#', dskfnm                       )
-            call ctx%errint ( '#', sizei( ctx, bodids )              )
-            call ctx%sigerr ( 'SPICE(CELLTOOSMALL)'             )
-            return
-
-         end if
-
-         call appndi ( ctx, bid, bodids )
+         call append_id ( list, nlist, bid )
 !
 !        Fetch the DLA descriptor of the next segment.
 !
@@ -15086,12 +15135,14 @@ contains
 
       end do
 
-      call validi ( ctx, sizei( ctx,bodids), cardi( ctx,bodids), bodids )
-
       call dascls ( ctx, handle )
 
+      if ( .not. ctx%failed() ) then
+         ids = list(1:nlist)
+         call sort_unique ( ids )
+      end if
       return
-      end procedure dskobj
+      end procedure dsk_objects
 
       !>## Detailed Input
       !>
@@ -15277,12 +15328,42 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 22-AUG-2016 (NJB)
       module procedure dsksrf
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip), allocatable :: list(:)
+      integer(ip) :: k
+!
+!     PEPPER: the IDs are found by DSK_SURFACES; here they are added to
+!     the set SRFIDS.
+!
+      if ( ctx%failed() ) return
+      call dsk_surfaces ( ctx, dskfnm, bodyid, list )
+      do k = 1, size ( list )
+         if ( ctx%failed() ) return
+         if ( elemi ( ctx, list(k), srfids ) ) cycle
+         if ( cardi( ctx,srfids) == sizei( ctx,srfids) ) then
+            call ctx%setmsg ( 'Cannot append surface ID # to cell ' &
+            //            'while reading DSK file #. ' &
+            //            'Cell size is #.'                 )
+            call ctx%errint ( '#', list(k)                      )
+            call ctx%errch  ( '#', dskfnm                       )
+            call ctx%errint ( '#', sizei( ctx, srfids )              )
+            call ctx%sigerr ( 'SPICE(CELLTOOSMALL)'             )
+            return
+         end if
+         call insrti ( ctx, list(k), srfids )
+      end do
+      end procedure dsksrf
+
+      module procedure dsk_surfaces
       use pepper_kinds, only: ip, wp
+      use pepper_windows, only: append_id, sort_unique
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
+      integer(ip), allocatable :: list(:)  ! the IDs found (unsorted, with duplicates)
+      integer(ip) :: nlist  ! the number of IDs in LIST
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip), parameter :: toklen = 4
 
@@ -15299,12 +15380,14 @@ contains
 
       logical :: found
 
+      allocate ( ids(0) )
+      nlist = 0
       if ( ctx%failed() ) return
 
 !
 !     See whether GETFAT thinks we've got a DSK file.
 !
-      call getfat ( ctx, dskfnm, arch, kertyp )
+      call getfat ( ctx, file, arch, kertyp )
 
       if ( ctx%failed() ) return
 
@@ -15315,7 +15398,7 @@ contains
          //            'by this routine. If the input file is an ' &
          //            'DSK file in transfer format, run TOBIN on ' &
          //            'the file to convert it to binary format.'  )
-         call ctx%errch  ( '#',  dskfnm                                )
+         call ctx%errch  ( '#',  file                                )
          call ctx%errch  ( '#',  arch                                  )
          call ctx%sigerr ( 'SPICE(INVALIDFORMAT)'                      )
          return
@@ -15331,7 +15414,7 @@ contains
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         call ctx%errch  ( '#',  dskfnm                                )
+         call ctx%errch  ( '#',  file                                )
          call ctx%errch  ( '#',  arch                                  )
          call ctx%sigerr ( 'SPICE(INVALIDARCHTYPE)'                    )
          return
@@ -15346,7 +15429,7 @@ contains
          //            'non-native file lacking binary file format ' &
          //            'information. It''s also possible the file ' &
          //            'has been corrupted.'                       )
-         call ctx%errch  ( '#',  dskfnm                                )
+         call ctx%errch  ( '#',  file                                )
          call ctx%errch  ( '#',  kertyp                                )
          call ctx%sigerr ( 'SPICE(INVALIDFILETYPE)'                    )
          return
@@ -15356,7 +15439,7 @@ contains
 !
 !     Open the DSK for read access; start a forward search.
 !
-      call dasopr ( ctx, dskfnm, handle )
+      call dasopr ( ctx, file, handle )
       call dlabfs ( ctx, handle, nxtdsc, found )
 
       if ( ctx%failed() ) return
@@ -15375,36 +15458,15 @@ contains
 !
          bid = nint( dskdsc(ctridx) )
 
-         if ( bid == bodyid ) then
+         if ( bid == body ) then
 
             sid = nint( dskdsc(srfidx) )
 !
-!           Append, rather than insert, the new ID. We'll turn the cell
-!           into a set at the end of the loop.
+!           Append, rather than insert, the new ID (PEPPER: to an array that
+!           grows; it is sorted at the end).
 !
-!           Before appending, make sure there's room in the cell for
-!           another entry. We can't afford to let APPNDI catch an
-!           out-of-room error, because we would lose the ability to
-!           close the file.
-!
-            if ( cardi( ctx,srfids) == sizei( ctx,srfids) ) then
-!
-!              We're going to signal an error. Close the DSK first.
-!
-               call dskcls ( ctx, handle, .false. )
 
-               call ctx%setmsg ( 'Cannot append surface ID # to ' &
-               //            'cell while reading DSK file #. ' &
-               //            'Cell size is #.'                 )
-               call ctx%errint ( '#', sid                          )
-               call ctx%errch  ( '#', dskfnm                       )
-               call ctx%errint ( '#', sizei( ctx, srfids )              )
-               call ctx%sigerr ( 'SPICE(CELLTOOSMALL)'             )
-               return
-
-            end if
-
-            call appndi ( ctx, sid, srfids )
+            call append_id ( list, nlist, sid )
 
          end if
 !
@@ -15414,11 +15476,13 @@ contains
 
       end do
 
-      call validi ( ctx, sizei( ctx,srfids), cardi( ctx,srfids), srfids )
-
       call dascls ( ctx, handle )
 
+      if ( .not. ctx%failed() ) then
+         ids = list(1:nlist)
+         call sort_unique ( ids )
+      end if
       return
-      end procedure dsksrf
+      end procedure dsk_surfaces
 
 end submodule pepper_dsk_files

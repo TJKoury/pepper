@@ -11596,6 +11596,150 @@ contains
       return
       end procedure ekrcei
 
+      !> All the values of a double precision or time column entry of an EK
+      !> record (PEPPER).
+      module procedure ek_values_real
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: n
+      integer(ip) :: nvals
+      integer(ip) :: seg
+      isnull = .false.
+      allocate ( values(0) )
+      if ( ctx%failed() ) return
+      call ek_entry_size ( ctx, handle, segno, recno, column, n )
+      if ( ctx%failed() ) return
+      deallocate ( values )
+      allocate ( values(max(n,1)) )
+      seg = segno
+      call ekrced ( ctx, handle, seg, recno, column, nvals, values, isnull )
+      if ( ctx%failed() .or. isnull ) then
+         deallocate ( values )
+         allocate ( values(0) )
+      else
+         values = values(1:nvals)
+      end if
+      end procedure ek_values_real
+
+      !> All the values of an integer column entry of an EK record (PEPPER).
+      module procedure ek_values_int
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip) :: n
+      integer(ip) :: nvals
+      integer(ip) :: seg
+      isnull = .false.
+      allocate ( values(0) )
+      if ( ctx%failed() ) return
+      call ek_entry_size ( ctx, handle, segno, recno, column, n )
+      if ( ctx%failed() ) return
+      deallocate ( values )
+      allocate ( values(max(n,1)) )
+      seg = segno
+      call ekrcei ( ctx, handle, seg, recno, column, nvals, values, isnull )
+      if ( ctx%failed() .or. isnull ) then
+         deallocate ( values )
+         allocate ( values(0) )
+      else
+         values = values(1:nvals)
+      end if
+      end procedure ek_values_int
+
+      !> All the values of a character column entry of an EK record, each
+      !> of its full length (PEPPER).
+      module procedure ek_values_str
+      use pepper_kinds, only: ip
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      use pepper_inc_ektype
+      implicit none
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: segdsc ( sdscsz )
+      integer(ip) :: class
+      integer(ip) :: cvlen
+      integer(ip) :: k
+      integer(ip) :: n
+      integer(ip) :: nvals
+      integer(ip) :: recptr
+      integer(ip) :: seg
+      character(1) :: one(1)
+      isnull = .false.
+      allocate ( values(0) )
+      if ( ctx%failed() ) return
+      call zzeksdsc ( ctx, handle, segno,  segdsc          )
+      call zzekcdsc ( ctx, handle, segdsc, column, coldsc  )
+      if ( ctx%failed() ) return
+      class = coldsc(clsidx)
+      seg   = segno
+      if ( coldsc(typidx) /= chr .or. .not. any ( class == [3, 6, 9] ) ) then
+!
+!        Not a character column: EKRCEC signals the error.
+!
+         call ekrcec ( ctx, handle, seg, recno, column, nvals, one, isnull )
+         return
+      end if
+      if ( class == 3 ) then
+!
+!        A variable-length string: read its length first.
+!
+         call zzektrdp ( ctx, handle, segdsc(rtidx), recno, recptr )
+         call zzekrd03 ( ctx, handle, segdsc, coldsc, recptr, cvlen, one(1), isnull )
+         if ( ctx%failed() .or. isnull ) return
+         block
+            character(len=max(cvlen,1)) :: buf
+            call zzekrd03 ( ctx, handle, segdsc, coldsc, recptr, cvlen, buf, isnull )
+            if ( ctx%failed() ) return
+            deallocate ( values )
+            allocate ( values(1) )
+            values(1)%s = buf(1:cvlen)
+         end block
+      else
+!
+!        Fixed-length strings: the column's length.
+!
+         call ek_entry_size ( ctx, handle, segno, recno, column, n )
+         if ( ctx%failed() ) return
+         block
+            character(len=max(coldsc(lenidx),1)) :: buf(max(n,1))
+            call ekrcec ( ctx, handle, seg, recno, column, nvals, buf, isnull )
+            if ( ctx%failed() .or. isnull ) return
+            deallocate ( values )
+            allocate ( values(nvals) )
+            do k = 1, nvals
+               values(k)%s = trim ( buf(k) )
+            end do
+         end block
+      end if
+      end procedure ek_values_str
+
+      !> The number of values of a column entry of an EK record: 1 for the
+      !> scalar column classes, the size of the entry for the array classes
+      !> (PEPPER).
+      subroutine ek_entry_size ( ctx, handle, segno, recno, column, n )
+      use pepper_kinds, only: ip
+      use pepper_inc_ekcoldsc
+      use pepper_inc_eksegdsc
+      implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of the EK file
+      integer(ip), intent(in) :: segno  !! the segment number
+      integer(ip), intent(in) :: recno  !! the record number
+      character(*), intent(in) :: column  !! the column name
+      integer(ip), intent(out) :: n  !! the number of values of the entry
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: segdsc ( sdscsz )
+      integer(ip) :: recptr
+      n = 1
+      call zzeksdsc ( ctx, handle, segno,  segdsc          )
+      call zzekcdsc ( ctx, handle, segdsc, column, coldsc  )
+      if ( ctx%failed() ) return
+      if ( any ( coldsc(clsidx) == [4, 5, 6] ) ) then
+         call zzektrdp ( ctx, handle, segdsc(rtidx), recno, recptr )
+         if ( ctx%failed() ) return
+         n = zzekesiz ( ctx, handle, segdsc, coldsc, recptr )
+      end if
+      end subroutine ek_entry_size
+
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.

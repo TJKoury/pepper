@@ -708,13 +708,48 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      characters) expect the whole-string results.
 
    Phase 6 is done.
-7. **API for caller buffers** (E; design: [`phase7_design.md`](phase7_design.md)):
-   - **Allocatable outputs:** variants like `gdpool(name, values)` with
-     `values` allocatable, `bodvrd`, `getfov`, `spkcov` into a window type,
-     and GF searches with allocated work windows.
-   - **The legacy wrappers** in tspice keep the cell versions, possibly built
-     on the new ones.
-   - **What stays:** the fixed-size interfaces, for compatibility.
+7. **API for caller buffers** (E; design: [`phase7_design.md`](phase7_design.md)). Done:
+   variants that return allocatable results of the size of the data, with
+   readable names (decisions D1 A, D2 A), the SPICELIB forms unchanged. The
+   table of routines is in the README ("Results of any size"). Test:
+   `test/core/test_outputs.f90` (each variant against its SPICELIB form, and
+   past the size where that fails or truncates).
+   - **7a (pool, constants, FOV, names, kernel data):** `pool_values`,
+     `pool_integers`, `pool_strings` read the pool directly; `body_values`
+     and `fov` (generics: by name or code) take the size from the pool and
+     call BODVCD's checks and GETFOV; `body_name`, `frame_name` are bindings
+     of the existing `body_name_of`, `frame_name_of`; `surface_name` is the
+     body of ZZSRFC2N (which now copies its result); `kernel_data`,
+     `kernel_info` size their buffers from the longest loaded file name.
+   - **7b (coverage, objects):** not a bound but the SPICELIB bodies: each
+     routine's body moved into the new one (`spk_coverage`, `ck_coverage`,
+     `pck_coverage`, `spk_objects`, `ck_objects`, `pck_frames`,
+     `dsk_objects`, `dsk_surfaces`), which builds an `interval_list`
+     (`pepper_windows`, WNINSD's union on a growing array) or a growing ID
+     array; SPKCOV and the others call it and insert the result into the
+     caller's cell (with their WINDOWEXCESS, SETEXCESS, CELLTOOSMALL).
+     ZZCKCV01-06 add to an `interval_list` (`insert_interval` keeps
+     WNINSD's BADENDPOINTS); their legacy wrappers convert to the cell.
+   - **7c (DSK, comments, EK):** `dsk_plates`, `dsk_vertices` (size from
+     DSKZ02); `daf_comments`, `das_comments` read the comment records
+     directly (lines of any length; DAFEC's and DASEC's reading position is
+     left alone); `ek_values` (generic over real, integer and string
+     values) takes the size of the entry (ZZEKESIZ) and reads a
+     variable-length string's length first.
+   - **7d (LIMBPT, TERMPT):** no bound needed: phase 6 had made their cut
+     buffers grow, and now their outputs grow too (`limb_points_body`,
+     `terminator_points_body`: the SPICELIB bodies without MAXN). LIMBPT and
+     TERMPT check MAXN and the room against the total: both had room bugs
+     (`spicelib_bugs.md`).
+   - **7e (GF):** a bound, as designed: the solver finds at most one
+     transition per step, so no window of a search holds more than
+     B = sum(ceiling(length/STEP) + 2) intervals over the confinement
+     intervals; `gf_cells` allocates the result cell and NWMAX work windows
+     with room for 2B (a year in steps of an hour: about 35,000 values per
+     window, 4 MB in all) and signals SPICE(INSUFFICIENTMEMORY) when they
+     cannot be allocated. `gf_event` takes the smallest step of its step
+     routine as an extra argument, to size the windows.
+   - **The legacy wrappers** in tspice keep the cell versions.
 
 Phases 1 to 3 can be done in any order after 0. Phase 2 has the most
 user-visible value (the number of kernels). Phase 5 has the largest memory and

@@ -10927,6 +10927,72 @@ contains
       end associate
       end procedure bodvrd
 
+      !> All the values of a body constant, the body given by name (PEPPER).
+      module procedure body_values_by_name
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip) :: code
+      logical :: found
+      if ( ctx%failed() ) then
+         allocate ( values(0) )
+         return
+      end if
+      call bods2c ( ctx, body, code, found )
+      if ( .not. found ) then
+         allocate ( values(0) )
+         if ( ctx%failed() ) return
+         call ctx%setmsg ( 'The body name # could not be translated ' // &
+                       'to a NAIF ID code.  The cause of this '   // &
+                       'problem may be that you need an updated ' // &
+                       'version of the SPICE Toolkit.'            )
+         call ctx%errch  ( '#', body                                  )
+         call ctx%sigerr ( 'SPICE(NOTRANSLATION)'                     )
+         return
+      end if
+      call body_values_by_code ( ctx, code, item, values )
+      end procedure body_values_by_name
+
+      !> All the values of a body constant, the body given by its ID code
+      !> (PEPPER).
+      module procedure body_values_by_code
+      use pepper_kinds, only: ip
+      use pepper_strings, only: intstr
+      implicit none
+      character(16) :: code
+      character(:), allocatable :: varnam
+      character(1) :: type
+      integer(ip) :: n
+      logical :: found
+      if ( ctx%failed() ) then
+         allocate ( values(0) )
+         return
+      end if
+!
+!     The variable BODYnnn_<item>, of any length (BODVCD's name is cut
+!     at 32 characters).
+!
+      call intstr ( body, code )
+      varnam = 'BODY' // trim(code) // '_' // trim(item)
+      call dtpool ( ctx, varnam, found, n, type )
+      if ( .not. found ) then
+         allocate ( values(0) )
+         call ctx%setmsg ( 'The variable # could not be found in the ' // &
+                       'kernel pool.'                              )
+         call ctx%errch  ( '#', varnam                                 )
+         call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)'                  )
+         return
+      end if
+      if ( type /= 'N' ) then
+         allocate ( values(0) )
+         call ctx%setmsg ( 'The data associated with variable # ' // &
+                       'are not of numeric type.'             )
+         call ctx%errch  ( '#', varnam                            )
+         call ctx%sigerr ( 'SPICE(TYPEMISMATCH)'                  )
+         return
+      end if
+      call pool_values ( ctx, varnam, values, found )
+      end procedure body_values_by_code
+
       !> Add a name/code pair to the defined names (SPICELIB's [[zzboddef]]). The
       !> pair is recorded in the instance, so that all its contexts see it.
       module procedure zzboddef

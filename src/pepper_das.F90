@@ -24615,6 +24615,40 @@ contains
       end associate
       end procedure dasec
 
+      !> All the comment lines of a DAS file, each of any length (PEPPER).
+      module procedure das_comments
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip), parameter :: nchrec = 1024  ! characters in a record
+      character(8) :: idword
+      character(60) :: ifname
+      character(nchrec) :: crecrd
+      character(:), allocatable :: text
+      integer(ip) :: daslun
+      integer(ip) :: k
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: nresvc
+      integer(ip) :: nresvr
+      allocate ( lines(0) )
+      if ( ctx%failed() ) return
+      call dassih ( ctx, handle, 'READ' )
+      call zzddhhlu ( ctx, handle, 'DAS', .false., daslun )
+      call dasrfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
+      if ( ctx%failed() .or. ncomc == 0 ) return
+!
+!     The comment area: NCOMC characters in the records after the
+!     reserved records.
+!
+      allocate ( character(nchrec*ncomr) :: text )
+      do k = 1, ncomr
+         call dasioc ( ctx, 'READ', daslun, 1+nresvr+k, crecrd )
+         if ( ctx%failed() ) return
+         text((k-1)*nchrec+1:k*nchrec) = crecrd
+      end do
+      call split_comment_lines ( text(1:min(ncomc, len(text))), lines )
+      end procedure das_comments
+
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle for a binary DAS file that has been
