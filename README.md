@@ -15,6 +15,46 @@ PEPPER provides tools for computing planetary ephemerides, positions, pointing, 
 How PEPPER differs from SPICELIB (thread safety, the limits it removes, speed
 comparisons): [pepper_vs_spicelib.md](pepper_vs_spicelib.md).
 
+## SPICE documentation
+
+PEPPER keeps SPICELIB's routines, their names, arguments and behavior
+(`call spkezr(...)` becomes `call ctx%spkezr(...)`; see "Usage"), so NAIF's
+documentation of the SPICE Toolkit for Fortran (N0067) applies. What
+PEPPER changes is in [pepper_vs_spicelib.md](pepper_vs_spicelib.md).
+
+- [NAIF](https://naif.jpl.nasa.gov/naif/), the Navigation and Ancillary
+  Information Facility of NASA's Jet Propulsion Laboratory, which develops
+  SPICE.
+- [The SPICE Toolkit for Fortran](https://naif.jpl.nasa.gov/naif/toolkit_FORTRAN.html):
+  the packages of SPICELIB N0067 that PEPPER started from.
+- [Toolkit documentation](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/index.html),
+  and the [SPICELIB routines](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/spicelib/index.html)
+  (each routine's header; PEPPER's FORD documentation, `pixi run docs`, has
+  them too).
+- [Required reading](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/index.html),
+  the documents on each subsystem, among them:
+  [kernels](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/kernel.html),
+  [SPK](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/spk.html) (ephemerides),
+  [frames](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/frames.html),
+  [time](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/time.html),
+  [aberration corrections](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/abcorr.html),
+  [NAIF IDs](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/naif_ids.html),
+  [PCK](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/pck.html),
+  [CK](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/ck.html),
+  [SCLK](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/sclk.html),
+  [DSK](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/dsk.html),
+  [GF](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/gf.html) (geometry finder),
+  [EK](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/ek.html),
+  [cells](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/cells.html),
+  [windows](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/windows.html),
+  [error handling](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/error.html)
+  (PEPPER: per context; see "Usage").
+- [Tutorials](https://naif.jpl.nasa.gov/naif/tutorials.html): NAIF's
+  introductions to SPICE and each subsystem.
+- [Data](https://naif.jpl.nasa.gov/naif/data.html) and the
+  [generic kernels](https://naif.jpl.nasa.gov/pub/naif/generic_kernels/)
+  (planetary ephemerides, leap seconds, planetary constants, frames).
+
 ## Building and testing
 
 PEPPER builds with [fpm](https://fpm.fortran-lang.org); the development
