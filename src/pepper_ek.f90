@@ -37761,7 +37761,7 @@ contains
       !>        violation.
       module procedure zzekcchk
       use pepper_kinds, only: ip
-      use pepper_strings, only: repmc
+      use pepper_strings, only: repmc_inplace
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -37872,7 +37872,7 @@ contains
             errmsg = 'Column <#> is not present in any table in FROM '// &
                      'clause.'
 
-            call repmc ( errmsg, '#', eqryc(cb:ce), errmsg )
+            call repmc_inplace ( errmsg, '#', eqryc(cb:ce) )
 
             errptr = lxb(2)
             return
@@ -37883,7 +37883,7 @@ contains
             errmsg = 'Column name <#> is ambiguous; a qualifying '// &
                      'table name or alias is required.'
 
-            call repmc ( errmsg, '#', eqryc(cb:ce), errmsg )
+            call repmc_inplace ( errmsg, '#', eqryc(cb:ce) )
 
             errptr = lxb(2)
             return
@@ -37910,7 +37910,7 @@ contains
             error  = .true.
             errmsg = 'Table name <#> is not present in FROM clause.'
 
-            call repmc ( errmsg, '#', eqryc(tb:te), errmsg )
+            call repmc_inplace ( errmsg, '#', eqryc(tb:te) )
 
             errptr = lxb(1)
             return
@@ -37944,8 +37944,8 @@ contains
             error  =  .true.
             errmsg =  'Column <#> does not exist in table <#>.'
 
-            call repmc ( errmsg, '#', eqryc(cb:ce), errmsg )
-            call repmc ( errmsg, '#', eqryc(tb:te), errmsg )
+            call repmc_inplace ( errmsg, '#', eqryc(cb:ce) )
+            call repmc_inplace ( errmsg, '#', eqryc(tb:te) )
 
             errptr = lxb(2)
             return
@@ -38100,7 +38100,7 @@ contains
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
       module procedure zzekpcol
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: repmc, ucase
+      use pepper_strings, only: ucase, repmc_inplace
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -38262,7 +38262,7 @@ contains
             error  =  .true.
             errmsg =  'Table name <#> does not match table or alias '// &
                       'from query.'
-            call repmc ( errmsg, '#', tmptab, errmsg )
+            call repmc_inplace ( errmsg, '#', tmptab )
             return
          end if
 
@@ -38295,8 +38295,8 @@ contains
             error  =  .true.
             errmsg =  'Column name <#> does not appear in the '// &
                       'qualifying table <#>.'
-            call repmc ( errmsg, '#', column, errmsg )
-            call repmc ( errmsg, '#', tmptab, errmsg )
+            call repmc_inplace ( errmsg, '#', column )
+            call repmc_inplace ( errmsg, '#', tmptab )
             return
 
          end if
@@ -38343,7 +38343,7 @@ contains
             error  =  .true.
             errmsg =  'Column name <#> does not appear in any table '// &
                       'in FROM clause of query.'
-            call repmc ( errmsg, '#', column, errmsg )
+            call repmc_inplace ( errmsg, '#', column )
             return
 
          else if ( nmatch > 1 ) then
@@ -38351,7 +38351,7 @@ contains
             error  =  .true.
             errmsg =  'Column name <#> is ambiguous without '// &
                       'a qualifying table name.'
-            call repmc ( errmsg, '#', column, errmsg )
+            call repmc_inplace ( errmsg, '#', column )
             return
 
          end if
@@ -38511,7 +38511,7 @@ contains
       !>     Initial values
       module procedure zzeksemc
       use pepper_kinds, only: ip
-      use pepper_strings, only: repmc
+      use pepper_strings, only: repmc_inplace, repmi_inplace
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -38626,8 +38626,8 @@ contains
             error  =  .true.
             errmsg =  'Non-scalar column <#> having size # found '  // &
                       'in query constraint.'
-            call repmc  ( errmsg, '#', query(lxb(1):lxe(2)), errmsg )
-            call repmi  ( ctx, errmsg, '#', lhssiz,               errmsg )
+            call repmc_inplace ( errmsg, '#', query(lxb(1):lxe(2)) )
+            call repmi_inplace ( errmsg, '#', lhssiz )
 
             errptr =  lxb(1)
             return
@@ -38659,8 +38659,8 @@ contains
                      'with character columns.  Column <#> has type '// &
                      '#.'
 
-            call repmc ( errmsg, '#', query(lxb(1):lxe(1)),  errmsg )
-            call repmc ( errmsg, '#', typstr(lhstyp),        errmsg )
+            call repmc_inplace ( errmsg, '#', query(lxb(1):lxe(1)) )
+            call repmc_inplace ( errmsg, '#', typstr(lhstyp) )
 
             errptr  =  lxb(1)
             return
@@ -38694,8 +38694,8 @@ contains
                error  =  .true.
                errmsg =  'Non-scalar column <#> having size # found '// &
                          'in query constraint.'
-               call repmc  ( errmsg, '#', query(lxb(1):lxe(2)), errmsg )
-               call repmi  ( ctx, errmsg, '#', rhssiz,               errmsg )
+               call repmc_inplace ( errmsg, '#', query(lxb(1):lxe(2)) )
+               call repmi_inplace ( errmsg, '#', rhssiz )
 
                errptr =  lxb(2)
                return
@@ -38719,10 +38719,10 @@ contains
                   errmsg = 'Data type mismatch: column <#> has data ' // &
                            'type #; column <#> has data type #.'
 
-                  call repmc (errmsg, '#', query(lxb(1):lxe(1)), errmsg)
-                  call repmc (errmsg, '#', typstr(lhstyp),       errmsg)
-                  call repmc (errmsg, '#', query(lxb(2):lxe(2)), errmsg)
-                  call repmc (errmsg, '#', typstr(rhstyp),       errmsg)
+                  call repmc_inplace (errmsg, '#', query(lxb(1):lxe(1)))
+                  call repmc_inplace (errmsg, '#', typstr(lhstyp))
+                  call repmc_inplace (errmsg, '#', query(lxb(2):lxe(2)))
+                  call repmc_inplace (errmsg, '#', typstr(rhstyp))
 
                   errptr = lxb(2)
                   return
@@ -38760,10 +38760,10 @@ contains
                   errmsg = 'Data type mismatch: column <#> has data ' // &
                            'type #; value <#> has data type #.'
 
-                  call repmc (errmsg, '#', query(lxb(1):lxe(1)), errmsg)
-                  call repmc (errmsg, '#', typstr(lhstyp),       errmsg)
-                  call repmc (errmsg, '#', query(lxb(2):lxe(2)), errmsg)
-                  call repmc (errmsg, '#', typstr(rhstyp),       errmsg)
+                  call repmc_inplace (errmsg, '#', query(lxb(1):lxe(1)))
+                  call repmc_inplace (errmsg, '#', typstr(lhstyp))
+                  call repmc_inplace (errmsg, '#', query(lxb(2):lxe(2)))
+                  call repmc_inplace (errmsg, '#', typstr(rhstyp))
 
                   errptr = lxb(2)
                   return
@@ -38810,8 +38810,8 @@ contains
             error  =  .true.
             errmsg =  'Non-scalar column <#> having size # found '  // &
                       'in order-by column.'
-            call repmc  ( errmsg, '#', query(lxb(1):lxe(2)), errmsg )
-            call repmi  ( ctx, errmsg, '#', attdsc(4),            errmsg )
+            call repmc_inplace ( errmsg, '#', query(lxb(1):lxe(2)) )
+            call repmi_inplace ( errmsg, '#', attdsc(4) )
 
             errptr =  lxb(1)
             return
@@ -39824,7 +39824,7 @@ contains
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
       module procedure zzeknres
       use pepper_kinds, only: ip
-      use pepper_strings, only: repmc
+      use pepper_strings, only: repmc_inplace
       use pepper_inc_ekbool
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
@@ -39911,7 +39911,7 @@ contains
                lxb    =  eqryi ( base + eqblex )
                lxe    =  eqryi ( base + eqelex )
 
-               call repmc ( errmsg, '#', query(lxb:lxe), errmsg )
+               call repmc_inplace ( errmsg, '#', query(lxb:lxe) )
 
                errptr = lxb
 
@@ -39944,7 +39944,7 @@ contains
                lxb    =  eqryi ( base + eqblex )
                lxe    =  eqryi ( base + eqelex )
 
-               call repmc ( errmsg, '#', query(lxb:lxe), errmsg )
+               call repmc_inplace ( errmsg, '#', query(lxb:lxe) )
 
                errptr = lxb
 
@@ -39996,7 +39996,7 @@ contains
             lxb    =  eqryi ( base + eqblex )
             lxe    =  eqryi ( base + eqelex )
 
-            call repmc ( errmsg, '#', query(lxb:lxe), errmsg )
+            call repmc_inplace ( errmsg, '#', query(lxb:lxe) )
 
             errptr = lxb
 
@@ -41784,7 +41784,7 @@ contains
       module procedure stcf01
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr
-      use pepper_strings, only: repmc
+      use pepper_strings, only: repmc_inplace, repmd_inplace
       implicit none
 
 !
@@ -41853,11 +41853,11 @@ contains
 !
 !     Construct query using inputs and chosen template.
 !
-      call repmc( query, '#', catnam,     query )
-      call repmd( ctx, query, '#', ramin,  15, query )
-      call repmd( ctx, query, '#', ramax,  15, query )
-      call repmd( ctx, query, '#', decmin, 15, query )
-      call repmd( ctx, query, '#', decmax, 15, query )
+      call repmc_inplace ( query, '#', catnam )
+      call repmd_inplace ( query, '#', ramin,  15 )
+      call repmd_inplace ( query, '#', ramax,  15 )
+      call repmd_inplace ( query, '#', decmin, 15 )
+      call repmd_inplace ( query, '#', decmax, 15 )
 
 !
 !     Submit query and get number of stars. Check for

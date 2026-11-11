@@ -2054,7 +2054,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
       module procedure countc
       use pepper_kinds, only: ip
-      use pepper_strings, only: astrip
+      use pepper_strings, only: astrip_inplace
       implicit none
 
       integer(ip) :: chars
@@ -2148,7 +2148,7 @@ contains
 !              Remove the printable characters from the line.  If
 !              any characters remain, signal an error.
 !
-               call astrip ( line, char( 32), char(126), line )
+               call astrip_inplace ( line, char( 32), char(126) )
 
                if ( line /= ' ' ) then
 
@@ -2428,7 +2428,7 @@ contains
       module procedure hx2int
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
-      use pepper_strings, only: repmc
+      use pepper_strings, only: repmc_inplace
       integer(ip), parameter :: base = 16
 !
 !     Character codes and limits (SPICELIB computed them on the first
@@ -2602,7 +2602,7 @@ contains
                error  = .true.
                errmsg = 'ERROR: Illegal character ''#'''  // &
                         ' encountered.'
-               call repmc( errmsg, '#', char( letter ), errmsg )
+               call repmc_inplace ( errmsg, '#', char( letter ) )
                return
 
             end if
@@ -2655,7 +2655,7 @@ contains
                error  = .true.
                errmsg = 'ERROR: Illegal character ''#'''  // &
                         ' encountered.'
-               call repmc( errmsg, '#', char( letter ), errmsg )
+               call repmc_inplace ( errmsg, '#', char( letter ) )
                return
 
             end if

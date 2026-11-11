@@ -1204,7 +1204,7 @@ contains
       !>        file and the ID word does not completely fill 8 characters.
       module procedure getfat
       use pepper_kinds, only: ip
-      use pepper_strings, only: nextwd, ucase
+      use pepper_strings, only: nextwd_inplace, ucase_inplace
       use pepper_inc_zzddhman
       implicit none
 
@@ -1550,8 +1550,8 @@ contains
 !     Identify the architecture and type, if we can.
 !
       tmpwrd = adjustl(tmpwrd)
-      call ucase  ( tmpwrd, tmpwrd         )
-      call nextwd ( tmpwrd, idword, tmpwrd )
+      call ucase_inplace ( tmpwrd )
+      call nextwd_inplace ( tmpwrd, idword )
 
       if ( idword == 'DAFETF' ) then
 

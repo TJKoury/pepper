@@ -1,5 +1,10 @@
 todo notes
 
+fix aliasing issues
+remove line ending check for platform
+
+
+
 * remove include files completely. replace with modules and parameters
 * get rid of the 'statement functions' (e.g., in jul2gr)
 * clean up code docstrings, remove unnecessary clutter

@@ -632,7 +632,7 @@ contains
       recursive subroutine dynamic_frame_xform ( ctx, infram, center, et, xform, basfrm )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: latrec, mxmg, mxvg, polyds, vhat, vsep
-      use pepper_strings, only: cmprss, eqstr, intstr, ucase
+      use pepper_strings, only: cmprss, eqstr, intstr, ucase, cmprss_inplace, ucase_inplace
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       use pepper_inc_zzdyn
@@ -1336,16 +1336,16 @@ contains
 
                if ( ctx%failed() ) return
 
-               call cmprss ( ' ', 0, axname, axname )
-               call ucase  ( axname,         axname )
+               call cmprss_inplace ( ' ', 0, axname )
+               call ucase_inplace ( axname )
 
 !
 !              Set the sign flag associated with the axis.
 !
                negate  =  axname(1:1) == '-'
 
-               call cmprss ( '-', 0, axname, axname )
-               call cmprss ( '+', 0, axname, axname )
+               call cmprss_inplace ( '-', 0, axname )
+               call cmprss_inplace ( '+', 0, axname )
 
                axis(i) = findloc(axes, axname, dim=1)
 
@@ -1382,8 +1382,8 @@ contains
 
                if ( ctx%failed() ) return
 
-               call cmprss ( ' ',    0, vecdef(i), vecdef(i) )
-               call ucase  ( vecdef(i),            vecdef(i) )
+               call cmprss_inplace ( ' ',    0, vecdef(i) )
+               call ucase_inplace ( vecdef(i) )
 
                if (  vecdef(i) == kvposv  ) then
 !
@@ -1878,8 +1878,8 @@ contains
 
                   if ( ctx%failed() ) return
 
-                  call cmprss ( ' ', 0, spec, spec )
-                  call ucase  ( spec,         spec )
+                  call cmprss_inplace ( ' ', 0, spec )
+                  call ucase_inplace ( spec )
 
                   if ( spec == kvrecc ) then
 !
@@ -2402,7 +2402,7 @@ contains
       recursive subroutine dynamic_frame_rotation ( ctx, infram, center, et, rotate, basfrm )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: latrec, mxm, mxv, polyds, vhat, vsep
-      use pepper_strings, only: cmprss, eqstr, intstr, ucase
+      use pepper_strings, only: cmprss, eqstr, intstr, ucase, cmprss_inplace, ucase_inplace
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       use pepper_inc_zzdyn
@@ -3087,16 +3087,16 @@ contains
 
                if ( ctx%failed() ) return
 
-               call cmprss ( ' ', 0, axname, axname )
-               call ucase  ( axname,         axname )
+               call cmprss_inplace ( ' ', 0, axname )
+               call ucase_inplace ( axname )
 
 !
 !              Set the sign flag associated with the axis.
 !
                negate  =  axname(1:1) == '-'
 
-               call cmprss ( '-', 0, axname, axname )
-               call cmprss ( '+', 0, axname, axname )
+               call cmprss_inplace ( '-', 0, axname )
+               call cmprss_inplace ( '+', 0, axname )
 
                axis(i) = findloc(axes, axname, dim=1)
 
@@ -3133,8 +3133,8 @@ contains
 
                if ( ctx%failed() ) return
 
-               call cmprss ( ' ',    0, vecdef(i), vecdef(i) )
-               call ucase  ( vecdef(i),            vecdef(i) )
+               call cmprss_inplace ( ' ',    0, vecdef(i) )
+               call ucase_inplace ( vecdef(i) )
 
                if (  vecdef(i) == kvposv  ) then
 !
@@ -3566,8 +3566,8 @@ contains
 
                   if ( ctx%failed() ) return
 
-                  call cmprss ( ' ', 0, spec, spec )
-                  call ucase  ( spec,         spec )
+                  call cmprss_inplace ( ' ', 0, spec )
+                  call ucase_inplace ( spec )
 
                   if ( spec == kvrecc ) then
 !

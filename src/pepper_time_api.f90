@@ -2929,7 +2929,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO) (IMU)
       module procedure utc2et
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: repmc
+      use pepper_strings, only: repmc_inplace
       implicit none
 
 !
@@ -3003,7 +3003,7 @@ contains
             error = 'UTC2ET does not support the specification ' &
             //      'of a time system in a string.  The time ' &
             //      'system # was specified. Try the routine STR2ET.'
-            call repmc  ( error, '#', modify(system), error )
+            call repmc_inplace ( error, '#', modify(system) )
 
             call ctx%setmsg ( error )
             call ctx%sigerr ( 'SPICE(INVALIDTIMESTRING)' )
@@ -3014,7 +3014,7 @@ contains
             error = 'UTC2ET does not support the specification ' &
             //      'of a time zone in a time string.  The time ' &
             //      'zone ''#'' was specified. Try the routine STR2ET.'
-            call repmc  ( error, '#', modify(zone), error )
+            call repmc_inplace ( error, '#', modify(zone) )
             call ctx%setmsg ( error )
             call ctx%sigerr ( 'SPICE(INVALIDTIMESTRING)' )
             return
@@ -3843,7 +3843,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j1950, j2000, spd
       use pepper_arrays, only: bsrchc
-      use pepper_strings, only: lcase, prefix, rtrim, scanrj, ucase
+      use pepper_strings, only: prefix, rtrim, scanrj, lcase_inplace, ucase_inplace
       implicit none
       integer(ip), parameter :: currnt = 1
       integer(ip), parameter :: begin = currnt
@@ -4998,23 +4998,23 @@ contains
 !              the possible MONTYP values are checked explicitly.
 !
                if      ( montyp == id(umon)  ) then
-                  call ucase ( mymon, mymon )
+                  call ucase_inplace ( mymon )
                   mymon(4:) = ' '
                   mylen     = 3
                else if ( montyp == id(mmon)   ) then
                   mymon(4:) = ' '
                   mylen     = 3
                else if ( montyp == id(lmon)   ) then
-                  call lcase ( mymon, mymon )
+                  call lcase_inplace ( mymon )
                   mymon(4:) = ' '
                   mylen     = 3
                else if ( montyp == id(mmnth) ) then
                   mylen     = mlen(indx)
                else if ( montyp == id(umnth) ) then
-                  call ucase ( mymon, mymon )
+                  call ucase_inplace ( mymon )
                   mylen     = mlen(indx)
                else if ( montyp == id(lmnth) ) then
-                  call lcase ( mymon, mymon )
+                  call lcase_inplace ( mymon )
                   mylen     = mlen(indx)
                end if
 
@@ -5033,23 +5033,23 @@ contains
 !              the possible WKTYP values are checked explicitly.
 !
                if      ( wktyp == id(uwkd)   ) then
-                  call ucase ( mywkd, mywkd )
+                  call ucase_inplace ( mywkd )
                   mywkd(4:) = ' '
                   mylen     = 3
                else if ( wktyp == id(mwkd)   ) then
                   mywkd(4:) = ' '
                   mylen     = 3
                else if ( wktyp == id(lwkd)   ) then
-                  call lcase ( mywkd, mywkd )
+                  call lcase_inplace ( mywkd )
                   mywkd(4:) = ' '
                   mylen     = 3
                else if ( wktyp == id(mweekd) ) then
                   mylen     = wklen(indx)
                else if ( wktyp == id(uweekd) ) then
-                  call ucase ( mywkd, mywkd )
+                  call ucase_inplace ( mywkd )
                   mylen     = wklen(indx)
                else if ( wktyp == id(lweekd) ) then
-                  call lcase ( mywkd, mywkd )
+                  call lcase_inplace ( mywkd )
                   mylen     = wklen(indx)
                end if
 

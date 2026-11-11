@@ -1784,7 +1784,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 29-NOV-1995 (WLT)
       module procedure ana
       use pepper_kinds, only: ip
-      use pepper_strings, only: replch, ucase
+      use pepper_strings, only: ucase, replch_inplace
       implicit none
       integer(ip), parameter :: anwrds = 22
       integer(ip), parameter :: awrds = 33
@@ -1811,8 +1811,8 @@ contains
       if ( .not. allocated ( ctx%ana_state ) ) allocate ( ctx%ana_state )
       associate ( start => ctx%ana_state%start )
       call ucase ( word,              myword )
-      call replch( myword, '''', ' ', myword )
-      call replch( myword, '"',  ' ', myword )
+      call replch_inplace ( myword, '''', ' ' )
+      call replch_inplace ( myword, '"',  ' ' )
       myword = adjustl(myword)
       call ucase ( case,              mycase )
 
@@ -9424,7 +9424,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc
       use pepper_math, only: unorm, vcrss, vhat, vnorm, vperp, vrotv
-      use pepper_strings, only: eqstr, rtrim, suffix, ucase
+      use pepper_strings, only: eqstr, rtrim, suffix, ucase_inplace
       implicit none
       real(wp) :: crsang_1(1)  !! one-element copy of crsang (array argument)
       real(wp) :: refang_1(1)  !! one-element copy of refang (array argument)
@@ -9572,7 +9572,7 @@ contains
 !     Create an upper case, left justified value for SHAPE.  This will
 !     provide the desired case-insensitivity to the keyword value.
 !
-      call ucase ( shape, shape )
+      call ucase_inplace ( shape )
       shape = adjustl(shape)
 
 !
@@ -11610,7 +11610,7 @@ contains
       module procedure iso2utc
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
-      use pepper_strings, only: repmc, rtrim
+      use pepper_strings, only: rtrim, repmc_inplace
       implicit none
 
       integer(ip), parameter :: nmnths = 12
@@ -11776,7 +11776,7 @@ contains
                  'yyyy-mm-ddThh:mm:ss[.ss...].  The input '     // &
                  'string was #. '
 
-         call repmc  ( error, '#', mystr(1:l), error )
+         call repmc_inplace ( error, '#', mystr(1:l) )
          return
 
       end if
@@ -11793,7 +11793,7 @@ contains
                  'format. You''ve '                             // &
                  'supplied a time string of the form '          // &
                  '# ... '
-         call repmc ( error, '#', ascii(1:7), error )
+         call repmc_inplace ( error, '#', ascii(1:7) )
          return
 
       end if
@@ -12277,7 +12277,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 22-MAY-2012 (NJB)
       module procedure kplfrm
       use pepper_kinds, only: ip
-      use pepper_strings, only: repmc
+      use pepper_strings, only: repmi_inplace
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_ninert
       use pepper_inc_nninrt
@@ -12407,7 +12407,7 @@ contains
 !
                kvname = 'FRAME_<code>_NAME'
 
-               call repmi ( ctx, kvname, '<code>', idcode, kvname )
+               call repmi_inplace ( kvname, '<code>', idcode )
 
                call ctx%pool_string ( kvname, 1_ip, tmpnam, found )
 
@@ -12423,7 +12423,7 @@ contains
 !
                   kvclas = 'FRAME_<integer>_CLASS'
 
-                  call repmi ( ctx, kvclas, '<integer>', idcode, kvclas )
+                  call repmi_inplace ( kvclas, '<integer>', idcode )
 
 !
 !                    Look for the frame class.
@@ -15918,6 +15918,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 07-JAN-1997 (WLT)
       module procedure plnsns
       use pepper_kinds, only: ip, wp
+      use pepper_strings, only: repmi_inplace
       implicit none
       real(wp) :: rate_1(1)  !! one-element copy of rate (array argument)
 
@@ -15947,7 +15948,7 @@ contains
 !     Create the name of the item to look up in the kernel pool.
 !
       item = 'BODY#_PM'
-      call repmi ( ctx, item, '#', bodid, item )
+      call repmi_inplace ( item, '#', bodid )
 
 !
 !     See if this item exists in the kernel pool.
@@ -17835,7 +17836,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
       module procedure repmct
       use pepper_kinds, only: ip
-      use pepper_strings, only: lcase, ucase
+      use pepper_strings, only: lcase_inplace, ucase_inplace
       implicit none
 
       integer(ip), parameter :: maxlcn = 145
@@ -17858,7 +17859,7 @@ contains
 !     Bail out if RTCASE is not recognized.
 !
       tmpcas = adjustl(rtcase)
-      call ucase ( tmpcas, tmpcas )
+      call ucase_inplace ( tmpcas )
 
       if (        ( tmpcas /= 'U' ) &
             .and. ( tmpcas /= 'L' ) &
@@ -17914,11 +17915,11 @@ contains
 !
       if ( tmpcas == 'L' ) then
 
-         call lcase ( card, card )
+         call lcase_inplace ( card )
 
       else if ( tmpcas == 'C' ) then
 
-         call lcase ( card(2:), card(2:) )
+         call lcase_inplace ( card(2:) )
 
       end if
 
@@ -18711,7 +18712,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 25-FEB-1993 (JML)
       module procedure scps01
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: lparsm, nparsd, repmc
+      use pepper_strings, only: lparsm, nparsd, repmc_inplace, repmi_inplace
       use pepper_inc_sclk
       implicit none
       integer(ip) :: nfield_1(1)  !! one-element copy of nfield (array argument)
@@ -18808,9 +18809,9 @@ contains
          msg = 'Input clock string # has # fields; maximum for this ' // &
                'spacecraft clock is #.'
 
-         call repmc ( msg, '#', clkstr, msg )
-         call repmi ( ctx, msg, '#', n,      msg )
-         call repmi ( ctx, msg, '#', nfield, msg )
+         call repmc_inplace ( msg, '#', clkstr )
+         call repmi_inplace ( msg, '#', n )
+         call repmi_inplace ( msg, '#', nfield )
 
          return
 
@@ -18835,8 +18836,8 @@ contains
             msg = 'Could not parse SCLK component # from ' // &
                   '# as a number.'
 
-            call repmc ( msg, '#', cmp(i), msg )
-            call repmc ( msg, '#', clkstr, msg )
+            call repmc_inplace ( msg, '#', cmp(i) )
+            call repmc_inplace ( msg, '#', clkstr )
 
             return
 
@@ -18857,9 +18858,9 @@ contains
             msg = 'Component number #, # in the SCLK string ' // &
                   ' # is invalid.'
 
-            call repmi ( ctx, msg, '#', i,      msg )
-            call repmc ( msg, '#', cmp(i), msg )
-            call repmc ( msg, '#', clkstr, msg )
+            call repmi_inplace ( msg, '#', i )
+            call repmc_inplace ( msg, '#', cmp(i) )
+            call repmc_inplace ( msg, '#', clkstr )
 
             return
 
@@ -19884,7 +19885,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 18-SEP-1996 (WLT)
       module procedure stdio
       use pepper_kinds, only: ip
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       implicit none
 
       integer(ip), parameter :: wdsize = 8
@@ -19892,7 +19893,7 @@ contains
       character(wdsize) :: myname
 
       myname = adjustl(name)
-      call ucase ( myname, myname )
+      call ucase_inplace ( myname )
 
       if ( myname == 'STDIN' ) then
          unit = 5
@@ -26257,7 +26258,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, twopi
       use pepper_math, only: frame, latrec, mxv, pl2nvc, vdot, vnorm, vsep
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       implicit none
 
       integer(ip), parameter :: ubel = 9
@@ -26313,7 +26314,7 @@ contains
 !     Check the terminator type.
 !
       loctyp = adjustl(type)
-      call ucase ( loctyp, loctyp )
+      call ucase_inplace ( loctyp )
 
       if (  loctyp == 'UMBRAL' ) then
 
@@ -28102,7 +28103,7 @@ contains
       module procedure zzgetelm
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: rpd, twopi
-      use pepper_strings, only: nparsd, nparsi, repmc
+      use pepper_strings, only: nparsd, nparsi, repmc_inplace, repmd_inplace, repmi_inplace
       implicit none
       integer(ip), parameter :: start = 0
       integer(ip), parameter :: kndt20 = start  + 1
@@ -28253,8 +28254,8 @@ contains
 !
          error = 'Line 1 of the TLE pair tagged with vehicle ID #1,' &
             //   '  line 2 of TLE pair tagged with vehicle ID #2'
-         call repmc ( error, '#1', lines(1)(2:7), error )
-         call repmc ( error, '#2', lines(2)(2:7), error )
+         call repmc_inplace ( error, '#1', lines(1)(2:7) )
+         call repmc_inplace ( error, '#2', lines(2)(2:7) )
 
          ok = .false.
 
@@ -28275,9 +28276,9 @@ contains
             error = 'Line #1 of the TLE has incorrect data length.' &
                //   ' Expected length 68 or 69 elements, ' &
                //   'actual length: #2. TLE line value: #3'
-            call repmi ( ctx, error, '#1', k                 , error )
-            call repmi ( ctx, error, '#2', len_trim(lines(k)), error )
-            call repmc ( error, '#3', lines(k)          , error )
+            call repmi_inplace ( error, '#1', k )
+            call repmi_inplace ( error, '#2', len_trim(lines(k)) )
+            call repmc_inplace ( error, '#3', lines(k) )
 
             ok = .false.
 
@@ -28359,8 +28360,8 @@ contains
 !
             error = 'An error occurred while trying to ' &
             //      'parse the term #. The diagnostic was:  # '
-            call repmc ( error, '#', term(i)  , error )
-            call repmc ( error, '#', errprs(i), error )
+            call repmc_inplace ( error, '#', term(i) )
+            call repmc_inplace ( error, '#', errprs(i) )
 
             ok = .false.
 
@@ -28377,7 +28378,7 @@ contains
 
             error = 'NEXP (exponent) not a single digit. ' &
                     //'Actual value #1'
-            call repmi ( ctx, error, '#1', nexp, error )
+            call repmi_inplace ( error, '#1', nexp )
 
             ok = .false.
 
@@ -28389,7 +28390,7 @@ contains
 
             error = 'BEXP (exponent) not a single digit. ' &
                     //'Actual value #1'
-            call repmi ( ctx, error, '#1', bexp, error )
+            call repmi_inplace ( error, '#1', bexp )
 
             ok = .false.
 
@@ -28406,7 +28407,7 @@ contains
 
             error = 'NODE0 (RA acend node) expected bounds [0,360). ' &
                     //'Actual value #1'
-            call repmd ( ctx, error, '#1', node0, 4, error )
+            call repmd_inplace ( error, '#1', node0, 4 )
 
             ok = .false.
 
@@ -28421,7 +28422,7 @@ contains
 
             error = 'OMEGA (arg periap) expected bounds [0,360). ' &
                     //'Actual value #1'
-            call repmd ( ctx, error, '#1', omega, 4, error )
+            call repmd_inplace ( error, '#1', omega, 4 )
 
             ok = .false.
 
@@ -28435,7 +28436,7 @@ contains
 
             error = 'MO (mean anomoly) expected bounds [0,360). ' &
                     //'Actual value #1'
-            call repmd ( ctx, error, '#1', mo, 4, error )
+            call repmd_inplace ( error, '#1', mo, 4 )
 
             ok = .false.
 
@@ -28449,7 +28450,7 @@ contains
 
             error = 'INCL (inclination) expected bounds [0,180). ' &
                     //'Actual value #1'
-            call repmd ( ctx, error, '#1', incl, 4, error )
+            call repmd_inplace ( error, '#1', incl, 4 )
 
             ok = .false.
 
@@ -28463,7 +28464,7 @@ contains
 
             error = 'NO (mean motion) expected bounds (0,20). ' &
                     //'Actual value #1'
-            call repmd ( ctx, error, '#1', no, 4, error )
+            call repmd_inplace ( error, '#1', no, 4 )
 
             ok = .false.
 
@@ -42689,7 +42690,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 03-SEP-1990 (JML) (RET)
       module procedure scpars
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: cpos, nparsi, repmc
+      use pepper_strings, only: cpos, nparsi, repmc_inplace, repmi_inplace
       use pepper_inc_sclk
       implicit none
       real(wp), allocatable :: pstart(:), pstop(:), ptotls(:)
@@ -42795,7 +42796,7 @@ contains
          msg = 'Unable to parse the partition number from SCLK ' // &
                'string #.'
 
-         call repmc ( msg, '#', sclkch, msg )
+         call repmc_inplace ( msg, '#', sclkch )
 
          return
 
@@ -42889,7 +42890,7 @@ contains
             msg = 'Unable to parse the partition number from SCLK ' // &
                   'string #.'
 
-            call repmc ( msg, '#', sclkch, msg )
+            call repmc_inplace ( msg, '#', sclkch )
 
             return
 
@@ -42902,11 +42903,11 @@ contains
             msg = 'Partition number # taken from SCLK string ' // &
                   '# is not in acceptable range 1 to #.'
 
-            call repmi ( ctx, msg, '#', part,   msg )
+            call repmi_inplace ( msg, '#', part )
 
-            call repmc ( msg, '#', sclkch, msg )
+            call repmc_inplace ( msg, '#', sclkch )
 
-            call repmi ( ctx, msg, '#', nparts, msg )
+            call repmi_inplace ( msg, '#', nparts )
 
             return
 
@@ -42921,9 +42922,9 @@ contains
             msg = 'SCLK count from # does not fall in the ' // &
                   'boundaries of partition number #.'
 
-            call repmc ( msg, '#', sclkch( pos+1 : ), msg )
+            call repmc_inplace ( msg, '#', sclkch( pos+1 : ) )
 
-            call repmi ( ctx, msg, '#', part, msg )
+            call repmi_inplace ( msg, '#', part )
 
             return
 
@@ -42951,9 +42952,9 @@ contains
             msg = 'SCLK count # does not fall in the boundaries ' // &
                   'of any of the partitions for spacecraft #.'
 
-            call repmc ( msg, '#', sclkch( pos+1 : ), msg )
+            call repmc_inplace ( msg, '#', sclkch( pos+1 : ) )
 
-            call repmi ( ctx, msg, '#', sc, msg )
+            call repmi_inplace ( msg, '#', sc )
 
             return
 
@@ -46878,7 +46879,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_math, only: vnorm
-      use pepper_strings, only: repmc
+      use pepper_strings, only: repmc_inplace, repmi_inplace
       use pepper_inc_errhnd
       use pepper_inc_dla
       use pepper_inc_dsk
@@ -47274,12 +47275,12 @@ contains
 
             do i = 1, nsurf-1
 
-               call repmc  ( errmsg, '@', '*, @',    errmsg )
-               call repmi  ( ctx, errmsg, '*', srflst(i), errmsg )
+               call repmc_inplace ( errmsg, '@', '*, @' )
+               call repmi_inplace ( errmsg, '*', srflst(i) )
 
             end do
 
-            call repmi  ( ctx, errmsg, '@', srflst(nsurf), errmsg )
+            call repmi_inplace ( errmsg, '@', srflst(nsurf) )
 
          end if
 
@@ -52666,7 +52667,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi, twopi
       use pepper_math, only: reclat
-      use pepper_strings, only: intstr, ucase
+      use pepper_strings, only: intstr, repmi_inplace, ucase_inplace
       implicit none
       real(wp) :: rate_1(1)  !! one-element copy of rate (array argument)
 
@@ -52715,7 +52716,7 @@ contains
       if ( ctx%failed() ) return
 
       mytype = adjustl(type)
-      call ucase ( mytype, mytype )
+      call ucase_inplace ( mytype )
 
       if ( mytype == 'PLANETOGRAPHIC' ) then
 !
@@ -52827,7 +52828,7 @@ contains
 !     determine the sense of the body rotation.
 !
       bpmkwd = 'BODY#_PM'
-      call repmi ( ctx, bpmkwd, '#', body, bpmkwd )
+      call repmi_inplace ( bpmkwd, '#', body )
 
       call dtpool ( ctx, bpmkwd, found, n, kwtype )
 
@@ -54056,7 +54057,7 @@ contains
       !>        line.
       module procedure rdkvar
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: nextwd, nparsd, replch
+      use pepper_strings, only: nparsd, nextwd_inplace, replch_inplace
       implicit none
 
       integer(ip), parameter :: lbcell = -5
@@ -54115,7 +54116,7 @@ contains
 !        Replace commas with blanks. We make no distinctions between
 !        the two.
 !
-         call replch ( line, comma, blank, line )
+         call replch_inplace ( line, comma, blank )
 
 !
 !        The first word on the first line should be the name of a
@@ -54123,8 +54124,8 @@ contains
 !
          if ( status == 'BEGIN' ) then
 
-            call nextwd ( line, varnam, line )
-            call nextwd ( line, dirctv, line )
+            call nextwd_inplace ( line, varnam )
+            call nextwd_inplace ( line, dirctv )
 
 !
 !           If this is replacement (=) and not an addition (+=),
@@ -54142,10 +54143,10 @@ contains
 !           plant a bogus right parenthesis, to make the following loop
 !           terminate after one iteration.
 !
-            call nextwd ( line, cvalue, line )
+            call nextwd_inplace ( line, cvalue )
 
             if ( cvalue == lparen ) then
-               call nextwd ( line, cvalue, line )
+               call nextwd_inplace ( line, cvalue )
             else
                line = rparen
             end if
@@ -54155,7 +54156,7 @@ contains
 !
          else
 
-            call nextwd ( line, cvalue, line )
+            call nextwd_inplace ( line, cvalue )
 
          end if
 
@@ -54197,7 +54198,7 @@ contains
                                           tabptr, &
                                           tabval )
 
-            call nextwd ( line, cvalue, line )
+            call nextwd_inplace ( line, cvalue )
 
          end do
 
@@ -60484,13 +60485,12 @@ contains
 !
             if (  all(bounds(:,j) == 0.0_wp) .or. all(bounds(:,i) == 0.0_wp) ) then
 
-               errmsg = 'The # boundary vector is the zero vector.'
-
                if (  all(bounds(:,i) == 0.0_wp)  ) then
                   j = i
                end if
 
-               call repmot ( ctx, errmsg, '#', j, 'L', errmsg )
+               call repmot ( ctx, 'The # boundary vector is the zero vector.', &
+                             '#', j, 'L', errmsg )
                call ctx%setmsg ( errmsg                      )
                call ctx%sigerr ( 'SPICE(ZEROVECTOR)'         )
 
@@ -67784,7 +67784,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: mxv, vdist, vnorm, vsep
-      use pepper_strings, only: eqchr, eqstr, repmc, ucase
+      use pepper_strings, only: eqchr, eqstr, repmc_inplace, ucase_inplace
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
@@ -67930,7 +67930,7 @@ contains
 !     correction flag.
 !
       loccor = adjustl(abcorr)
-      call ucase ( loccor, loccor )
+      call ucase_inplace ( loccor )
 
 !
 !     Check for stellar aberration in the aberration correction flag.
@@ -67942,7 +67942,7 @@ contains
 !     correction flag; we'll do our state lookups without stellar
 !     aberration correction.
 !
-      call repmc ( loccor, '+S', ' ', loccor )
+      call repmc_inplace ( loccor, '+S', ' ' )
 
 !
 !     Decide whether the aberration correction is for received or

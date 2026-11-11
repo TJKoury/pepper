@@ -1193,7 +1193,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
       module procedure repmot
       use pepper_kinds, only: ip
-      use pepper_strings, only: lcase, ucase
+      use pepper_strings, only: lcase_inplace, ucase_inplace
       implicit none
 
       integer(ip), parameter :: maxlon = 147
@@ -1216,7 +1216,7 @@ contains
 !     Bail out if RTCASE is not recognized.
 !
       tmpcas = adjustl(rtcase)
-      call ucase ( tmpcas, tmpcas )
+      call ucase_inplace ( tmpcas )
 
       if (        ( tmpcas /= 'U' ) &
             .and. ( tmpcas /= 'L' ) &
@@ -1272,11 +1272,11 @@ contains
 !
       if ( tmpcas == 'L' ) then
 
-         call lcase ( ord, ord )
+         call lcase_inplace ( ord )
 
       else if ( tmpcas == 'C' ) then
 
-         call lcase ( ord(2:), ord(2:) )
+         call lcase_inplace ( ord(2:) )
 
       end if
 
@@ -3993,7 +3993,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
       module procedure furnsh
       use pepper_kinds, only: ip
-      use pepper_strings, only: pos, repmc, rtrim, samsub
+      use pepper_strings, only: pos, rtrim, samsub, repmc_inplace
       implicit none
       integer(ip), parameter :: typlen = 8
       integer(ip), parameter :: wdsize = 32
@@ -4265,11 +4265,9 @@ contains
 !        kernel.  Make up a message template for use if ZZLDKER
 !        runs into a problem.
 !
-         nofile = 'The @ file ''#'' specified by KERNELS_TO_LOAD ' &
-         //       'in the file @ #'
-
-         call repmot ( ctx, nofile, '@', filnum, 'L', nofile )
-         call repmc  ( nofile, '@', file,        nofile )
+         call repmot ( ctx, 'The @ file ''#'' specified by KERNELS_TO_LOAD ' &
+                       //   'in the file @ #', '@', filnum, 'L', nofile )
+         call repmc_inplace ( nofile, '@', file )
 
          !
          !     PEPPER: ZZDDHF2H may keep its result for the file during the

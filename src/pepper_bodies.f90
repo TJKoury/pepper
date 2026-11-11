@@ -6211,7 +6211,7 @@ contains
 
       module procedure zzbodget
       use pepper_kinds, only: ip
-      use pepper_strings, only: cmprss, ucase
+      use pepper_strings, only: cmprss_inplace, ucase_inplace
       use pepper_inc_zzbodtrn
       implicit none
       integer(ip) :: i
@@ -6238,8 +6238,8 @@ contains
 
          do i = 1, nperm
             bltnor(i) = adjustl(bltnam(i))
-            call ucase  (         bltnor(i), bltnor(i) )
-            call cmprss ( ' ', 1, bltnor(i), bltnor(i) )
+            call ucase_inplace ( bltnor(i) )
+            call cmprss_inplace ( ' ', 1, bltnor(i) )
          end do
 
 !

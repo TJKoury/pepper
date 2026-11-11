@@ -4253,7 +4253,7 @@ contains
       use pepper_constants, only: dpr, halfpi
       use pepper_containers, only: grow
       use pepper_math, only: frame, mxv, ucrss, vhat, vhatip, vnorm, vrotv, vsep
-      use pepper_strings, only: cmprss, ucase
+      use pepper_strings, only: cmprss, ucase_inplace
       use pepper_inc_zzabcorr
       use pepper_inc_zzocced
       use pepper_inc_gf
@@ -4377,7 +4377,7 @@ contains
 !     specifier.
 !
       svtshp = adjustl(tshape)
-      call ucase ( svtshp, svtshp )
+      call ucase_inplace ( svtshp )
 
 !
 !     Note for maintenance programmer: these checks will
@@ -4486,7 +4486,7 @@ contains
 !
          ctx%zzgffvu_state%svtfrm = tframe
          ctx%zzgffvu_state%svtfrm = adjustl(tframe)
-         call ucase ( ctx%zzgffvu_state%svtfrm, ctx%zzgffvu_state%svtfrm )
+         call ucase_inplace ( ctx%zzgffvu_state%svtfrm )
 
 !
 !        Obtain the center of the frame. If the target is an ephemeris
@@ -4592,7 +4592,7 @@ contains
 !     this version of the aberration correction specifier.
 !
       call cmprss ( ' ', 0, abcorr, svcorr )
-      call ucase ( svcorr, svcorr )
+      call ucase_inplace ( svcorr )
 
 !
 !     Process the target body's radii, if applicable.
@@ -4661,7 +4661,7 @@ contains
 !     Save the instrument's name.
 !
       svinam = adjustl(inst)
-      call ucase ( svinam, svinam )
+      call ucase_inplace ( svinam )
 
 !
 !     Look up the instrument parameters.
@@ -4710,7 +4710,7 @@ contains
 !     and in upper case.
 !
       svishp = adjustl(svishp)
-      call ucase ( svishp, svishp )
+      call ucase_inplace ( svishp )
 
 !
 !     If the instrument's shape is 'RECTANGLE', map it to
@@ -4773,7 +4773,7 @@ contains
 !     case form.
 !
       svishp = adjustl(svishp)
-      call ucase ( svishp, svishp )
+      call ucase_inplace ( svishp )
 
 !
 !     We can make the search more efficient by computing any
@@ -5783,7 +5783,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 23-MAY-2012 (NJB) (EDW)
       module procedure zzgfilin
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: cmprss, esrchc, ucase
+      use pepper_strings, only: cmprss, esrchc, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: bdnmln = 36
@@ -5920,7 +5920,7 @@ contains
 !     string; ensure the string is in upper case.
 !
       call cmprss ( ' ', 0, abcorr, svcorr )
-      call ucase  ( svcorr,         svcorr )
+      call ucase_inplace ( svcorr )
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
@@ -5972,7 +5972,7 @@ contains
 !
       ctx%zzgfilu_state%svmeth = method  ! PEPPER: allocated to the length of METHOD
       ctx%zzgfilu_state%svmeth = adjustl(method)
-      call ucase ( ctx%zzgfilu_state%svmeth, ctx%zzgfilu_state%svmeth )
+      call ucase_inplace ( ctx%zzgfilu_state%svmeth )
 
       if ( ctx%zzgfilu_state%svmeth /= 'ELLIPSOID' ) then
 
@@ -5990,7 +5990,7 @@ contains
 !
       ctx%zzgfilu_state%svref = fixref
       ctx%zzgfilu_state%svref = adjustl(fixref)
-      call ucase ( ctx%zzgfilu_state%svref,  ctx%zzgfilu_state%svref )
+      call ucase_inplace ( ctx%zzgfilu_state%svref )
 
 !
 !     Look up the frame attributes; make sure the frame is centered
@@ -6640,7 +6640,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (LSE) (WLT) (NJB) (EDW)
       module procedure zzgfocin
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: eqstr, suffix, ucase
+      use pepper_strings, only: eqstr, suffix, ucase_inplace
       use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -6927,7 +6927,7 @@ contains
 !     type string.
 !
       svtype = adjustl(occtyp)
-      call ucase ( svtype, svtype )
+      call ucase_inplace ( svtype )
 
 !
 !     Check the occultation type.
@@ -10250,7 +10250,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 14-APR-2008 (NJB) (EDW)
       module procedure zzgfspin
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: cmprss, ucase
+      use pepper_strings, only: cmprss, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
       real(wp) :: axes1 (3)
@@ -10359,7 +10359,7 @@ contains
 !     string; ensure the string is in upper case.
 !
       call cmprss ( ' ', 0, abcorr, svabcr )
-      call ucase  ( svabcr, svabcr )
+      call ucase_inplace ( svabcr )
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
@@ -10377,7 +10377,7 @@ contains
 !     Check shapes...
 !
       shape(1) = adjustl(shape(1))
-      call ucase ( shape(1), shape(1) )
+      call ucase_inplace ( shape(1) )
 
 !
 !     If we pass the error check, then SHAPE(1) exists in SVSHAP.
@@ -10421,7 +10421,7 @@ contains
       end if
 
       shape(2) = adjustl(shape(2))
-      call ucase ( shape(2), shape(2) )
+      call ucase_inplace ( shape(2) )
 
 !
 !     If we pass the error check, then SHAPE(2) exists in SVSHAP.
@@ -16490,7 +16490,7 @@ contains
       module subroutine gfocce ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, &
             obsrvr, tol, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, cnfine, result )
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_gf
       use pepper_inc_zzdsk
       implicit none
@@ -16587,11 +16587,11 @@ contains
 !
       lbshap = bshape
       lbshap = adjustl(bshape)
-      call ucase ( lbshap, lbshap )
+      call ucase_inplace ( lbshap )
 
       lfshap = fshape
       lfshap = adjustl(fshape)
-      call ucase ( lfshap, lfshap )
+      call ucase_inplace ( lfshap )
 
 !
 !     Note for maintenance programmer: these checks will
@@ -17389,7 +17389,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 14-NOV-2013 (SCK) (NJB)
       module procedure occult
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_gf
       use pepper_inc_occult
       use pepper_inc_dsk
@@ -17483,19 +17483,19 @@ contains
 !
       shap1 = shape1
       shap1 = adjustl(shape1)
-      call ucase ( shap1,  shap1 )
+      call ucase_inplace ( shap1 )
 
       shap2 = shape2
       shap2 = adjustl(shape2)
-      call ucase ( shap2,  shap2 )
+      call ucase_inplace ( shap2 )
 
       fname = targ1
       fname = adjustl(targ1)
-      call ucase ( fname,  fname )
+      call ucase_inplace ( fname )
 
       bname = targ2
       bname = adjustl(targ2)
-      call ucase ( bname,  bname )
+      call ucase_inplace ( bname )
 
 !
 !     The variable ELLPS2 is a flag that indicates whether both targets
@@ -18741,7 +18741,7 @@ contains
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
       module procedure zzgfdiin
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: cmprss, ucase
+      use pepper_strings, only: cmprss, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
       real(wp) :: lt
@@ -18807,7 +18807,7 @@ contains
 !     string; ensure the string is in upper case.
 !
       call cmprss ( ' ', 0, abcorr, svcorr )
-      call ucase  ( svcorr,         svcorr )
+      call ucase_inplace ( svcorr )
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
@@ -19136,7 +19136,7 @@ contains
       !>-    SPICELIB version 1.0.0 19-OCT-2010 (EDW)(NJB)
       module procedure zzgfpain
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: cmprss, ucase
+      use pepper_strings, only: cmprss, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
       character(*), parameter :: ref = 'J2000'
@@ -19228,7 +19228,7 @@ contains
 !     string; ensure the string is in upper case.
 !
       call cmprss ( ' ', 0, abcorr, svabco )
-      call ucase  ( svabco,         svabco )
+      call ucase_inplace ( svabco )
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
@@ -19994,7 +19994,7 @@ contains
             bail, udbail, result )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: swapi
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_gf
       implicit none
       integer(ip), parameter :: lbcell = -5
@@ -20108,7 +20108,7 @@ contains
 !     Make sure the requested comparison is one we recognize.
 !
       locrel = adjustl(relate)
-      call ucase ( locrel, locrel )
+      call ucase_inplace ( locrel )
 
       qcnum = findloc(cnames, locrel, dim=1)
 
@@ -21042,7 +21042,7 @@ contains
             udbail, result )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: swapi
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_gf
       implicit none
       integer(ip), parameter :: lbcell = -5
@@ -21155,7 +21155,7 @@ contains
 !     Make sure the requested comparison is one we recognize.
 !
       locrel = adjustl(relate)
-      call ucase ( locrel, locrel )
+      call ucase_inplace ( locrel )
 
       qcnum = findloc(cnames, locrel, dim=1)
 
@@ -22474,7 +22474,7 @@ contains
       !>-    SPICELIB version 1.0.0 09-OCT-2009 (LSE)(EDW)
       module procedure zzgfrrin
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: cmprss, ucase
+      use pepper_strings, only: cmprss, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
       real(wp) :: lt
@@ -22547,7 +22547,7 @@ contains
 !     string; ensure the string is in upper case.
 !
       call cmprss ( ' ', 0, abcorr, svabco )
-      call ucase  ( svabco,         svabco )
+      call ucase_inplace ( svabco )
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
@@ -29724,7 +29724,7 @@ contains
       module procedure zzgfcoin
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
-      use pepper_strings, only: cmprss, ucase
+      use pepper_strings, only: cmprss, cmprss_inplace, ucase_inplace
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -29831,7 +29831,7 @@ contains
 !     string; ensure the string is in upper case.
 !
       call cmprss ( ' ', 0, abcorr, svcorr )
-      call ucase  ( svcorr,         svcorr )
+      call ucase_inplace ( svcorr )
 
 !
 !     Check the aberration correction. If SPKEZR can't handle it,
@@ -29845,8 +29845,8 @@ contains
 !     Store a compressed, upper case, left-justified copy of VECDEF.
 !
       svvdef = adjustl(vecdef)
-      call cmprss ( ' ', 1, svvdef, svvdef )
-      call ucase ( svvdef,          svvdef )
+      call cmprss_inplace ( ' ', 1, svvdef )
+      call ucase_inplace ( svvdef )
 
 !
 !     Check SVVDEF.
@@ -29869,8 +29869,8 @@ contains
 !     Store a compressed, upper case, left-justified copy of CRDSYS.
 !
       svcsys = adjustl(crdsys)
-      call cmprss ( ' ', 0, svcsys, svcsys )
-      call ucase ( svcsys,          svcsys )
+      call cmprss_inplace ( ' ', 0, svcsys )
+      call ucase_inplace ( svcsys )
 
       sysidx = findloc(sysnms, svcsys, dim=1)
 
@@ -29889,8 +29889,8 @@ contains
 !     Store a compressed, upper case, left-justified copy of CRDNAM.
 !
       svcrd = adjustl(crdnam)
-      call cmprss ( ' ', 1, svcrd, svcrd )
-      call ucase  ( svcrd,         svcrd )
+      call cmprss_inplace ( ' ', 1, svcrd )
+      call ucase_inplace ( svcrd )
 
 !
 !     Find and save the index of the coordinate name in the list of
@@ -29916,7 +29916,7 @@ contains
 !
       ctx%zzgfcou_state%svref = ref
       ctx%zzgfcou_state%svref = adjustl(ref)
-      call ucase ( ctx%zzgfcou_state%svref, ctx%zzgfcou_state%svref )
+      call ucase_inplace ( ctx%zzgfcou_state%svref )
 
 !
 !     The remaining work is a function of the vector definition
@@ -30086,7 +30086,7 @@ contains
 !
             ctx%zzgfcou_state%svmeth = method  ! PEPPER: allocated to the length of METHOD
             ctx%zzgfcou_state%svmeth = adjustl(method)
-            call ucase ( ctx%zzgfcou_state%svmeth, ctx%zzgfcou_state%svmeth )
+            call ucase_inplace ( ctx%zzgfcou_state%svmeth )
 
          else
 !
@@ -32177,7 +32177,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi, twopi
       use pepper_math, only: smsgnd
-      use pepper_strings, only: cmprss, ucase
+      use pepper_strings, only: cmprss_inplace, ucase_inplace
       use pepper_inc_gf
       use pepper_inc_zzgf
       implicit none
@@ -32496,7 +32496,7 @@ contains
 !     requested comparison operation.
 !
       uop = adjustl(relate)
-      call ucase ( uop,    uop )
+      call ucase_inplace ( uop )
 
 !
 !     Reject bad operators.
@@ -32576,12 +32576,12 @@ contains
 !     coordinate system and coordinate names.
 !
       nrmsys = adjustl(crdsys)
-      call cmprss ( ' ',   0, nrmsys, nrmsys )
-      call ucase  ( nrmsys,           nrmsys )
+      call cmprss_inplace ( ' ',   0, nrmsys )
+      call ucase_inplace ( nrmsys )
 
       nrmcrd = adjustl(crdnam)
-      call cmprss ( ' ',   1, nrmcrd, nrmcrd )
-      call ucase  ( nrmcrd,           nrmcrd )
+      call cmprss_inplace ( ' ',   1, nrmcrd )
+      call ucase_inplace ( nrmcrd )
 
 !
 !     Make an initial call to the coordinate utility initialization
@@ -34634,7 +34634,7 @@ contains
             crdsys, crdnam, relate, refval, tol, adjust, udstep, udrefn, rpt, udrepi, udrepu, &
             udrepf, bail, udbail, mw, nw, work, cnfine, result )
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: cmprss, ucase
+      use pepper_strings, only: cmprss_inplace, ucase_inplace
       use pepper_inc_gf
       use pepper_inc_zzgf
       implicit none
@@ -34751,7 +34751,7 @@ contains
 !     recognize.
 !
       uop = adjustl(relate)
-      call ucase ( uop,     uop )
+      call ucase_inplace ( uop )
 
       loc = findloc(cnames, uop, dim=1)
 
@@ -34789,8 +34789,8 @@ contains
 !     input vector definition method.
 !
       locvdf = adjustl(vecdef)
-      call cmprss ( ' ', 1, locvdf, locvdf )
-      call ucase  ( locvdf,         locvdf )
+      call cmprss_inplace ( ' ', 1, locvdf )
+      call ucase_inplace ( locvdf )
 
 !
 !     If the vector definition method is "surface intercept,"
@@ -34916,8 +34916,8 @@ contains
 !     input coordinate name.
 !
       loccrd = adjustl(crdnam)
-      call cmprss ( ' ', 1, loccrd, loccrd )
-      call ucase  ( loccrd,         loccrd )
+      call cmprss_inplace ( ' ', 1, loccrd )
+      call ucase_inplace ( loccrd )
 
 !
 !     If the coordinate of interest is longitude or right ascension, we
@@ -36409,7 +36409,7 @@ contains
             qipars, qlpars, op, refval, tol, adjust, cnfine, rpt, udrepi, udrepu, udrepf, mw, nw, &
             work, bail, udbail, result )
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -36560,7 +36560,7 @@ contains
 !
 
       quant = adjustl(gquant)
-      call ucase ( quant,  quant )
+      call ucase_inplace ( quant )
 
       qtnum = findloc(qnames, quant, dim=1)
 
@@ -36600,10 +36600,10 @@ contains
       do i = 1, qnpars
 
          pnames(i) = adjustl(qpnams(i))
-         call ucase ( pnames(i), pnames(i) )
+         call ucase_inplace ( pnames(i) )
 
          cpars(i) = adjustl(qcpars(i))
-         call ucase ( cpars(i),  cpars(i) )
+         call ucase_inplace ( cpars(i) )
 
       end do
 
@@ -36877,7 +36877,7 @@ contains
 !
 
       uop = adjustl(op)
-      call ucase ( uop,  uop )
+      call ucase_inplace ( uop )
 
       loc = findloc(cnames, uop, dim=1)
 

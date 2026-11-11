@@ -3488,7 +3488,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
       module procedure namfrm
       use pepper_kinds, only: ip
-      use pepper_strings, only: prefix, ucase
+      use pepper_strings, only: prefix, ucase_inplace
       use pepper_inc_ninert
       use pepper_inc_nninrt
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
@@ -3513,7 +3513,7 @@ contains
 !
       allocate ( character(len(frname)) :: pname )
       pname = adjustl(frname)
-      call ucase ( pname,  pname )
+      call ucase_inplace ( pname )
       call framex_code ( ctx, pname, frcode, found )
       return
       end procedure namfrm

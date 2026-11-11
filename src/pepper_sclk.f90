@@ -697,7 +697,7 @@ contains
       !>     Standard SPICE error handling.
       module procedure scli01
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: repmc, suffix
+      use pepper_strings, only: repmc, suffix, repmc_inplace, repmi_inplace
       use pepper_inc_sclk
       implicit none
       integer(ip), parameter :: msglen = 320
@@ -745,7 +745,7 @@ contains
       tmpnam = name
 
       call suffix ( '_#',    0,       tmpnam )
-      call repmi  ( ctx, tmpnam, '#', -sc, tmpnam )
+      call repmi_inplace ( tmpnam, '#', -sc )
 
 !
 !     Make sure we have enough room for the item in our output
@@ -836,9 +836,9 @@ contains
          if (  (  n < lb(i) ) .or. ( n > ub(i) )  ) then
 
             call repmi  ( ctx,  nummsg, '#', n,      errmsg )
-            call repmc  (  errmsg, '#', tmpnam, errmsg )
-            call repmi  ( ctx,  errmsg, '#', lb(i),  errmsg )
-            call repmi  ( ctx,  errmsg, '#', ub(i),  errmsg )
+            call repmc_inplace ( errmsg, '#', tmpnam )
+            call repmi_inplace ( errmsg, '#', lb(i) )
+            call repmi_inplace ( errmsg, '#', ub(i) )
             call ctx%setmsg (  errmsg                      )
             call ctx%sigerr ( 'SPICE(SIZEOUTOFRANGE)'      )
             return
@@ -864,7 +864,7 @@ contains
          if (  ( ival(1) < 1 ) .or. ( ival(1) > ndelim )  ) then
 
             call repmc  (  bvlmsg, '#', tmpnam,  errmsg )
-            call repmi  ( ctx,  errmsg, '#', ival(1), errmsg )
+            call repmi_inplace ( errmsg, '#', ival(1) )
             call ctx%setmsg (  errmsg                       )
             call ctx%sigerr ( 'SPICE(VALUEOUTOFRANGE)'      )
             return
@@ -878,7 +878,7 @@ contains
          if (  ( ival(1) < 1 ) .or. ( ival(1) > mxnfld )  ) then
 
             call repmc  (  bvlmsg, '#', tmpnam,  errmsg )
-            call repmi  ( ctx,  errmsg, '#', ival(1), errmsg )
+            call repmi_inplace ( errmsg, '#', ival(1) )
             call ctx%setmsg (  errmsg                       )
             call ctx%sigerr ( 'SPICE(VALUEOUTOFRANGE)'      )
             return
@@ -892,7 +892,7 @@ contains
          if (  ( ival(1) < 1 ) .or. ( ival(1) > mxtsys )  ) then
 
             call repmc  (  bvlmsg, '#', tmpnam,  errmsg )
-            call repmi  ( ctx,  errmsg, '#', ival(1), errmsg )
+            call repmi_inplace ( errmsg, '#', ival(1) )
             call ctx%setmsg (  errmsg                       )
             call ctx%sigerr ( 'SPICE(VALUEOUTOFRANGE)'      )
             return
@@ -1146,7 +1146,7 @@ contains
       !>     Standard SPICE error handling.
       module procedure scld01
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: repmc, suffix
+      use pepper_strings, only: repmc, suffix, repmc_inplace, repmd_inplace, repmi_inplace
       use pepper_inc_sclk
       implicit none
       integer(ip) :: nfield_1(1)  !! one-element copy of nfield (array argument)
@@ -1195,7 +1195,7 @@ contains
       tmpnam = name
 
       call suffix ( '_#',    0,        tmpnam )
-      call repmi  ( ctx, tmpnam, '#', -sc,  tmpnam )
+      call repmi_inplace ( tmpnam, '#', -sc )
 
 !
 !     Make sure we have enough room for the item in our output
@@ -1286,9 +1286,9 @@ contains
          if (  (  n < lb(i) ) .or. ( n > ub(i) )  ) then
 
             call repmi  ( ctx,  nummsg, '#', n,      errmsg )
-            call repmc  (  errmsg, '#', tmpnam, errmsg )
-            call repmi  ( ctx,  errmsg, '#', lb(i),  errmsg )
-            call repmi  ( ctx,  errmsg, '#', ub(i),  errmsg )
+            call repmc_inplace ( errmsg, '#', tmpnam )
+            call repmi_inplace ( errmsg, '#', lb(i) )
+            call repmi_inplace ( errmsg, '#', ub(i) )
             call ctx%setmsg (  errmsg                      )
             call ctx%sigerr ( 'SPICE(SIZEOUTOFRANGE)'      )
             return
@@ -1322,7 +1322,7 @@ contains
 
             if ( dval(i) < 1.0_wp ) then
                call repmc  (  bvlmsg, '#', tmpnam,      errmsg )
-               call repmd  ( ctx,  errmsg, '#', dval(i), 14, errmsg )
+               call repmd_inplace ( errmsg, '#', dval(i), 14 )
                call ctx%setmsg (  errmsg                           )
                call ctx%sigerr ( 'SPICE(VALUEOUTOFRANGE)'          )
                return
@@ -1340,7 +1340,7 @@ contains
          kvname = namlst( nflidx )(:kvnmln)
 
          call suffix ( '_#',    0,        kvname )
-         call repmi  ( ctx, kvname, '#', -sc,  kvname )
+         call repmi_inplace ( kvname, '#', -sc )
 
          call gipool ( ctx, kvname, 1, 1, nf, nfield_1, found )
          nfield = nfield_1(1)
@@ -1595,7 +1595,7 @@ contains
       !>     Initial values
       module procedure zzscad01
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: suffix
+      use pepper_strings, only: suffix, repmi_inplace
       use pepper_containers, only: grow
       use pepper_inc_errhnd
       use pepper_inc_zzsc01
@@ -1646,7 +1646,7 @@ contains
       kvname = namlst
       do i = 1, nkitem
          call suffix ( '_#',        0,         kvname(i) )
-         call repmi  ( ctx, kvname(i),  '#',  -sc,  kvname(i) )
+         call repmi_inplace ( kvname(i),  '#',  -sc )
       end do
       do i = 1, ndp
          call dtpool ( ctx, kvname(i), found, kvsize(i), kvtype(i) )
@@ -4533,6 +4533,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
+      use pepper_strings, only: repmi_inplace
       implicit none
       integer(ip) :: clktyp_1(1)  !! one-element copy of clktyp (array argument)
       integer(ip), parameter :: errlen = 240
@@ -4619,7 +4620,7 @@ contains
 !        Get the SCLK type of the input SCLK.
 !
          kvname = 'SCLK_DATA_TYPE_#'
-         call repmi  ( ctx, kvname,  '#',  -sc,  kvname )
+         call repmi_inplace ( kvname,  '#',  -sc )
 
          call gipool ( ctx, kvname, 1, 1, n, clktyp_1, found )
          clktyp = clktyp_1(1)

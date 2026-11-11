@@ -3384,7 +3384,7 @@ contains
       module procedure hx2dp
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
-      use pepper_strings, only: repmc
+      use pepper_strings, only: repmc_inplace, repmi_inplace
       implicit none
       integer(ip), parameter :: maxman = 31
       character(1), parameter :: expchr = '^'
@@ -3625,7 +3625,7 @@ contains
 
             error  = .true.
             errmsg = 'ERROR: Illegal character ''#'' encountered.'
-            call repmc( errmsg, '#', char( letter ), errmsg )
+            call repmc_inplace ( errmsg, '#', char( letter ) )
             return
 
          end if
@@ -3638,7 +3638,7 @@ contains
 
             error  = .true.
             errmsg = 'ERROR: Too many digits in the mantissa (> #).'
-            call repmi ( ctx, errmsg, '#', maxman, errmsg )
+            call repmi_inplace ( errmsg, '#', maxman )
             return
 
          end if
@@ -6210,7 +6210,7 @@ contains
       !>     Standard SPICE error handling.
       module procedure zzdafgfr
       use pepper_kinds, only: ip
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: frlocr = 1
@@ -6261,7 +6261,7 @@ contains
 !        integer code.
 !
          call zzplatfm ( ctx, 'FILE_FORMAT', tmpstr )
-         call ucase    ( tmpstr,        tmpstr )
+         call ucase_inplace ( tmpstr )
 
          natbff = findloc(strbff, tmpstr, dim=1)
 
@@ -6759,7 +6759,7 @@ contains
       !>     Standard SPICE error handling.
       module procedure zzdafgdr
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
       character(cbfsiz) :: chrbuf
@@ -6797,7 +6797,7 @@ contains
 !        integer code.
 !
          call zzplatfm ( ctx, 'FILE_FORMAT', tmpstr )
-         call ucase    ( tmpstr,        tmpstr )
+         call ucase_inplace ( tmpstr )
 
          natbff = findloc(strbff, tmpstr, dim=1)
 
@@ -7039,7 +7039,7 @@ contains
       !>     Standard SPICE error handling.
       module procedure zzdafgsr
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: dplen = 8
@@ -7086,7 +7086,7 @@ contains
 !        integer code.
 !
          call zzplatfm ( ctx, 'FILE_FORMAT', tmpstr )
-         call ucase    ( tmpstr,        tmpstr )
+         call ucase_inplace ( tmpstr )
 
          natbff = findloc(strbff, tmpstr, dim=1)
 
@@ -11214,7 +11214,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 03-SEP-1991 (NJB) (WLT)
       module procedure dafsih
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: inteoc = 4
@@ -11265,7 +11265,7 @@ contains
 !     Get an upper case, left-justified copy of ACCESS.
 !
       acc = adjustl(access)
-      call ucase ( acc,    acc )
+      call ucase_inplace ( acc )
 
 !
 !     Make sure we recognize the access type specified by the caller.
@@ -13791,7 +13791,7 @@ contains
       module procedure zzxlated
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmin
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: dpblen = 128
@@ -13840,7 +13840,7 @@ contains
 !        Fetch the native binary file format.
 !
          call zzplatfm ( ctx, 'FILE_FORMAT', tmpstr )
-         call ucase    ( tmpstr,        tmpstr )
+         call ucase_inplace ( tmpstr )
 
          natbff = findloc(strbff, tmpstr, dim=1)
 
@@ -23522,7 +23522,7 @@ contains
       !>        for details of the modification.
       module procedure dafbt
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: rtrim
+      use pepper_strings, only: rtrim, repmi_inplace
       implicit none
 
       character(*), parameter :: quote = ''''
@@ -23874,8 +23874,8 @@ contains
             dtacnt = isumry(ni) - isumry(ni-1) + 1
 
             line = begarr // ' #' // ' #'
-            call repmi ( ctx, line, '#', numarr, line )
-            call repmi ( ctx, line, '#', dtacnt, line )
+            call repmi_inplace ( line, '#', numarr )
+            call repmi_inplace ( line, '#', dtacnt )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
             if ( iostat /= 0 ) then
@@ -23963,7 +23963,7 @@ contains
 !              in the buffer.
 !
                line = '#'
-               call repmi ( ctx, line, '#', numdta, line )
+               call repmi_inplace ( line, '#', numdta )
                write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
                if ( iostat /= 0 ) then
@@ -23999,8 +23999,8 @@ contains
             end do
 
             line = endarr // ' #' // ' #'
-            call repmi ( ctx, line, '#', numarr, line )
-            call repmi ( ctx, line, '#', dtacnt, line )
+            call repmi_inplace ( line, '#', numarr )
+            call repmi_inplace ( line, '#', dtacnt )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
             if ( iostat /= 0 ) then
@@ -24024,7 +24024,7 @@ contains
 !     Write out the number of arrays processed.
 !
       line = totarr // ' #'
-      call repmi ( ctx, line, '#', numarr, line )
+      call repmi_inplace ( line, '#', numarr )
       write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
       if ( iostat /= 0 ) then
@@ -25746,7 +25746,7 @@ contains
       !>        for details of the modification.
       module procedure daftb
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: nextwd, nparsi
+      use pepper_strings, only: nextwd, nparsi, nextwd_inplace
       implicit none
 
 !     Local Parameters
@@ -26041,7 +26041,7 @@ contains
 !
 !           Get the array number.
 !
-            call nextwd( rest, word, rest           )
+            call nextwd_inplace ( rest, word )
             call nparsi( word, barr, errmsg, errptr )
 
             if ( errmsg /= ' ' ) then
@@ -26057,7 +26057,7 @@ contains
 !
 !           Parse the count of double precision numbers in the array.
 !
-            call nextwd( rest, word, rest           )
+            call nextwd_inplace ( rest, word )
             call nparsi( word, bcnt, errmsg, errptr )
 
             if ( errmsg /= ' ' ) then
@@ -26084,7 +26084,7 @@ contains
 !
 !           Get the array number.
 !
-            call nextwd( rest, word, rest           )
+            call nextwd_inplace ( rest, word )
             call nparsi( word, earr, errmsg, errptr )
 
             if ( errmsg /= ' ' ) then
@@ -26100,7 +26100,7 @@ contains
 !
 !           Parse the count of double precision numbers in the array.
 !
-            call nextwd( rest, word, rest           )
+            call nextwd_inplace ( rest, word )
             call nparsi( word, ecnt, errmsg, errptr )
 
             if ( errmsg /= ' ' ) then
@@ -26159,7 +26159,7 @@ contains
 !           We have the total arrays keyword to parse, so get
 !           the total number of arrays processed.
 !
-            call nextwd( rest, word, rest             )
+            call nextwd_inplace ( rest, word )
             call nparsi( word, numarr, errmsg, errptr )
 
             if ( errmsg /= ' ' ) then

@@ -4767,7 +4767,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: mxv, mxvg, vnorm
-      use pepper_strings, only: frstnp, intstr, prefix, suffix
+      use pepper_strings, only: frstnp, intstr, prefix, suffix, repmi_inplace
       use pepper_inc_ninert
       use pepper_inc_zzctr
       implicit none
@@ -5229,7 +5229,7 @@ contains
          if ( found ) then
             call prefix ( '# (',  0,        tname )
             call suffix ( ')',    0,        tname )
-            call repmi  ( ctx, tname, '#', targ, tname )
+            call repmi_inplace ( tname, '#', targ )
          else
             call intstr ( targ, tname )
          end if
@@ -5239,7 +5239,7 @@ contains
          if ( found ) then
             call prefix ( '# (',  0,       oname )
             call suffix ( ')',    0,       oname )
-            call repmi  ( ctx, oname, '#', obs, oname )
+            call repmi_inplace ( oname, '#', obs )
          else
             call intstr ( obs, oname )
          end if
@@ -5623,7 +5623,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: mxv, vnorm
-      use pepper_strings, only: frstnp, intstr, prefix, suffix
+      use pepper_strings, only: frstnp, intstr, prefix, suffix, repmi_inplace
       use pepper_inc_ninert
       use pepper_inc_zzctr
       implicit none
@@ -6087,7 +6087,7 @@ contains
          if ( found ) then
             call prefix ( '# (',  0,        tname )
             call suffix ( ')',    0,        tname )
-            call repmi  ( ctx, tname, '#', targ, tname )
+            call repmi_inplace ( tname, '#', targ )
          else
             call intstr ( targ, tname )
          end if
@@ -6097,7 +6097,7 @@ contains
          if ( found ) then
             call prefix ( '# (',  0,       oname )
             call suffix ( ')',    0,       oname )
-            call repmi  ( ctx, oname, '#', obs, oname )
+            call repmi_inplace ( oname, '#', obs )
          else
             call intstr ( obs, oname )
          end if

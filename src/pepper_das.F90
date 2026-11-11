@@ -9350,7 +9350,7 @@ contains
       !>     Standard SPICE error handling.
       module procedure dassih
       use pepper_kinds, only: ip
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
@@ -9427,7 +9427,7 @@ contains
 !     Get an upper case, left-justified copy of ACCESS.
 !
       acc = adjustl(access)
-      call ucase ( acc,    acc )
+      call ucase_inplace ( acc )
 
 !
 !     Make sure we recognize the access type specified by the caller.
@@ -24916,7 +24916,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 29-OCT-1992 (KRG)
       module procedure dasbt
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: rtrim
+      use pepper_strings, only: rtrim, repmi_inplace
       implicit none
 
       character(*), parameter :: quote = ''''
@@ -25369,8 +25369,8 @@ contains
 !           comment characters.
 !
             line = begcom // ' #' // ' #'
-            call repmi ( ctx, line, '#', numblk, line )
-            call repmi ( ctx, line, '#', numdta, line  )
+            call repmi_inplace ( line, '#', numblk )
+            call repmi_inplace ( line, '#', numdta )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
             if ( iostat /= 0 ) then
@@ -25410,8 +25410,8 @@ contains
 !           comment characters.
 !
             line = endcom // ' #' // ' #'
-            call repmi ( ctx, line, '#', numblk, line )
-            call repmi ( ctx, line, '#', numdta, line )
+            call repmi_inplace ( line, '#', numblk )
+            call repmi_inplace ( line, '#', numdta )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
             if ( iostat /= 0 ) then
@@ -25440,8 +25440,8 @@ contains
 !        count of comment characters
 !
          line = tcmblk // ' #' // ' #'
-         call repmi ( ctx, line, '#', numblk, line )
-         call repmi ( ctx, line, '#', ncomc, line  )
+         call repmi_inplace ( line, '#', numblk )
+         call repmi_inplace ( line, '#', ncomc )
          write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
          if ( iostat /= 0 ) then
@@ -25512,8 +25512,8 @@ contains
 !           number, and the data count for the block.
 !
             line = bcblk // ' #' // ' #'
-            call repmi ( ctx, line, '#', numblk, line )
-            call repmi ( ctx, line, '#', numdta, line )
+            call repmi_inplace ( line, '#', numblk )
+            call repmi_inplace ( line, '#', numdta )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
             if ( iostat /= 0 ) then
@@ -25561,8 +25561,8 @@ contains
 !           and the data count for the block.
 !
             line = ecblk // ' #' // ' #'
-            call repmi ( ctx, line, '#', numblk, line )
-            call repmi ( ctx, line, '#', numdta, line )
+            call repmi_inplace ( line, '#', numblk )
+            call repmi_inplace ( line, '#', numdta )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
             if ( iostat /= 0 ) then
@@ -25592,8 +25592,8 @@ contains
 !        processed, and the count of double precision data items.
 !
          line = tcblks // ' #' // ' #'
-         call repmi ( ctx, line, '#', numblk, line )
-         call repmi ( ctx, line, '#', ncdata, line )
+         call repmi_inplace ( line, '#', numblk )
+         call repmi_inplace ( line, '#', ncdata )
          write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
          if ( iostat /= 0 ) then
@@ -25640,8 +25640,8 @@ contains
 !           number, and the data count for the block.
 !
             line = bdblk // ' #' // ' #'
-            call repmi ( ctx, line, '#', numblk, line )
-            call repmi ( ctx, line, '#', numdta, line )
+            call repmi_inplace ( line, '#', numblk )
+            call repmi_inplace ( line, '#', numdta )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
             if ( iostat /= 0 ) then
@@ -25686,8 +25686,8 @@ contains
 !           and the data count for the block.
 !
             line = edblk // ' #' // ' #'
-            call repmi ( ctx, line, '#', numblk, line )
-            call repmi ( ctx, line, '#', numdta, line )
+            call repmi_inplace ( line, '#', numblk )
+            call repmi_inplace ( line, '#', numdta )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
             if ( iostat /= 0 ) then
@@ -25717,8 +25717,8 @@ contains
 !        processed, and the count of double precision data items.
 !
          line = tdblks// ' #' // ' #'
-         call repmi ( ctx, line, '#', numblk, line )
-         call repmi ( ctx, line, '#', nddata, line )
+         call repmi_inplace ( line, '#', numblk )
+         call repmi_inplace ( line, '#', nddata )
          write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
          if ( iostat /= 0 ) then
@@ -25765,8 +25765,8 @@ contains
 !           and the data count for the block.
 !
             line = biblk // ' #' // ' #'
-            call repmi ( ctx, line, '#', numblk, line )
-            call repmi ( ctx, line, '#', numdta, line )
+            call repmi_inplace ( line, '#', numblk )
+            call repmi_inplace ( line, '#', numdta )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
             if ( iostat /= 0 ) then
@@ -25811,8 +25811,8 @@ contains
 !           and the data count for the block.
 !
             line = eiblk // ' #' // ' #'
-            call repmi ( ctx, line, '#', numblk, line )
-            call repmi ( ctx, line, '#', numdta, line )
+            call repmi_inplace ( line, '#', numblk )
+            call repmi_inplace ( line, '#', numdta )
             write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
             if ( iostat /= 0 ) then
@@ -25842,8 +25842,8 @@ contains
 !        processed, and the count of double precision data items.
 !
          line = tiblks // ' #' // ' #'
-         call repmi ( ctx, line, '#', numblk, line )
-         call repmi ( ctx, line, '#', nidata, line )
+         call repmi_inplace ( line, '#', numblk )
+         call repmi_inplace ( line, '#', nidata )
          write (xfrlun,fmt='(A)',iostat=iostat) line(:rtrim(line))
 
          if ( iostat /= 0 ) then
@@ -26064,7 +26064,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 02-NOV-1992 (KRG)
       module procedure dastb
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: nextwd, nparsi
+      use pepper_strings, only: nextwd, nparsi, nextwd_inplace
       implicit none
       integer(ip) :: nidata_1(1)  !! one-element copy of nidata (array argument)
       integer(ip) :: nddata_1(1)  !! one-element copy of nddata (array argument)
@@ -26552,7 +26552,7 @@ contains
 !
 !              Get the comment block index.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, bindex, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -26574,7 +26574,7 @@ contains
 !
 !              Parse the count of characters in the block.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, bcount, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -26606,7 +26606,7 @@ contains
 !
 !              Get the data block index.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, eindex, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -26628,7 +26628,7 @@ contains
 !
 !              Parse the count of characters in the DAS array.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, ecount, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -26702,7 +26702,7 @@ contains
 !              We have the total comment blocks keyword to parse, so
 !              get the total number of comment blocks processed.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, numblk, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -26724,7 +26724,7 @@ contains
 !
 !              Parse the total count of comment characters.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, tcount, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -26961,7 +26961,7 @@ contains
 !
 !              Get the block number.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, bindex, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -26983,7 +26983,7 @@ contains
 !
 !              Parse the count of characters in the block.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, bcount, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27015,7 +27015,7 @@ contains
 !
 !              Get the data block index.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, eindex, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27037,7 +27037,7 @@ contains
 !
 !              Parse the count of characters in the DAS array.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, ecount, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27111,7 +27111,7 @@ contains
 !              We have the total data blocks keyword to parse, so get
 !              the total number of character data blocks processed.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, numblk, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27133,7 +27133,7 @@ contains
 !
 !              Parse the total count of characters.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, tcount, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27352,7 +27352,7 @@ contains
 !
 !              Get the block number.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, bindex, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27374,7 +27374,7 @@ contains
 !
 !              Parse the count of double precision numbers in the block.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, bcount, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27407,7 +27407,7 @@ contains
 !
 !              Get the data block index.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, eindex, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27429,7 +27429,7 @@ contains
 !
 !              Parse the count of double precision numbers in the block.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, ecount, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27504,7 +27504,7 @@ contains
 !              We have the total data blocks keyword to parse, so get
 !              the total number of character data blocks processed.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, numblk, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27526,7 +27526,7 @@ contains
 !
 !              Parse the total count of double precision numbers.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, tcount, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27743,7 +27743,7 @@ contains
 !
 !              Get the block number.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, bindex, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27765,7 +27765,7 @@ contains
 !
 !              Parse the count of integers in the block.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, bcount, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27797,7 +27797,7 @@ contains
 !
 !              Get the data block index.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, eindex, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27819,7 +27819,7 @@ contains
 !
 !              Parse the count of integers in the block.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, ecount, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27893,7 +27893,7 @@ contains
 !              We have the total data blocks keyword to parse, so get
 !              the total number of character data blocks processed.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, numblk, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then
@@ -27915,7 +27915,7 @@ contains
 !
 !              Parse the total count of integers.
 !
-               call nextwd ( rest, word, rest             )
+               call nextwd_inplace ( rest, word )
                call nparsi ( word, tcount, errmsg, errptr )
 
                if ( errmsg /= ' ' ) then

@@ -3608,11 +3608,11 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 05-FEB-2014 (BVS)
       module procedure zztknerr
-      use pepper_strings, only: repmc
+      use pepper_strings, only: repmc, repmc_inplace
 
       implicit none
       call repmc ( templt, '#', string, error )
-      call repmc ( error,  '#', token,  error )
+      call repmc_inplace ( error,  '#', token )
       status = .false.
 
       return
@@ -3691,7 +3691,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 25-APR-1996 (WLT)
       module procedure zzmkpc
       use pepper_kinds, only: ip
-      use pepper_strings, only: zzrepsub
+      use pepper_strings, only: zzrepsub_inplace
       implicit none
 
       integer(ip), parameter :: maxplc = 14
@@ -3747,7 +3747,7 @@ contains
 !     We now let REPSUB do the work of replacing the substring
 !     PICTUR(B:E) with the marker we've constructed.
 !
-      call zzrepsub ( pictur, b, e, mymark(1:last), pictur )
+      call zzrepsub_inplace ( pictur, b, e, mymark(1:last) )
 
       return
 
@@ -4046,7 +4046,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
       module procedure tcheck
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: repmc
+      use pepper_strings, only: repmc_inplace, repmd_inplace, repmi_inplace
       implicit none
       integer(ip) :: divble
       integer(ip) :: era
@@ -4161,7 +4161,7 @@ contains
          ok    = .false.
          error = 'The type of the time vector specified was #, ' &
          //      'only ''YD'' and ''YMD'' are recognized. '
-         call repmc ( error, '#', type, error )
+         call repmc_inplace ( error, '#', type )
          return
 
       end if
@@ -4173,7 +4173,7 @@ contains
          ok    = .false.
          error = 'The year value was #.  This must be an ' &
          //      'integral value. '
-         call repmd ( ctx, error,  '#', tvec(1), 8, error )
+         call repmd_inplace ( error,  '#', tvec(1), 8 )
 
          return
       end if
@@ -4194,9 +4194,9 @@ contains
             //      'The correct range for the day of year for ' &
             //      'this year is from 1 to #. '
 
-            call repmd ( ctx, error, '#', tvec(2), 8, error )
-            call repmi ( ctx, error, '#', year,       error )
-            call repmi ( ctx, error, '#', 365+leapdy, error )
+            call repmd_inplace ( error, '#', tvec(2), 8 )
+            call repmi_inplace ( error, '#', year )
+            call repmi_inplace ( error, '#', 365+leapdy )
             return
 
          end if
@@ -4216,7 +4216,7 @@ contains
             error = 'The month specified, #, was not an integer. ' &
             //      'The month must be an integer in the range ' &
             //      'from 1 to 12. '
-            call repmd ( ctx, error,  '#', tvec(2), 3, error )
+            call repmd_inplace ( error,  '#', tvec(2), 3 )
             return
 
          else if (      tvec(2) <   1.0_wp &
@@ -4226,7 +4226,7 @@ contains
             error = 'The month specified was #.  The month must ' &
             //      'be an integer in the range from 1 to 12 ' &
             //      '(inclusive). '
-            call repmi ( ctx, error, '#', month, error )
+            call repmi_inplace ( error, '#', month )
             return
 
          else if (      tvec(3) < 1.0_wp &
@@ -4236,10 +4236,10 @@ contains
             error = 'The day of the month specified for the ' &
             //      'month of # was #.  For # the day must be at ' &
             //      'least 1.0D0 and less than #. '
-            call repmc ( error, '#', mnames(month), error )
-            call repmd ( ctx, error, '#', tvec(3), 3,    error )
-            call repmc ( error, '#', mnames(month), error )
-            call repmd ( ctx, error, '#', dinmon(month)+1.0_wp, 2, error )
+            call repmc_inplace ( error, '#', mnames(month) )
+            call repmd_inplace ( error, '#', tvec(3), 3 )
+            call repmc_inplace ( error, '#', mnames(month) )
+            call repmd_inplace ( error, '#', dinmon(month)+1.0_wp, 2 )
             return
 
          end if
@@ -4260,7 +4260,7 @@ contains
 
          ok    = .false.
          error = messge
-         call repmd ( ctx, error,  '#', tvec(hour), 2, error )
+         call repmd_inplace ( error,  '#', tvec(hour), 2 )
          return
 
       else if (     tvec(minute) >= 60.0_wp &
@@ -4270,7 +4270,7 @@ contains
          error = 'The minutes component of the time specified ' &
          //      'was #. This value must be greater than or ' &
          //      'equal to 0.0 and less than 60.0. '
-         call repmd ( ctx, error,  '#', tvec(minute), 2, error )
+         call repmd_inplace ( error,  '#', tvec(minute), 2 )
          return
 
       end if
@@ -4310,7 +4310,7 @@ contains
             //      'last minute of June ' &
             //      '30 and December 31). The value supplied was #. '
 
-            call repmd ( ctx, error,  '#', tvec(second), 8, error )
+            call repmd_inplace ( error,  '#', tvec(second), 8 )
             return
 
          end if
@@ -4342,9 +4342,9 @@ contains
                   //      'However the ''#'' component has value ' &
                   //      '#. '
 
-                  call repmc ( error, '#', cname(comp), error )
-                  call repmc ( error, '#', cname(k),    error )
-                  call repmd ( ctx, error, '#', tvec(j), 2,  error )
+                  call repmc_inplace ( error, '#', cname(comp) )
+                  call repmc_inplace ( error, '#', cname(k) )
+                  call repmd_inplace ( error, '#', tvec(j), 2 )
                   return
                end if
 
@@ -5825,7 +5825,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       use pepper_arrays, only: bsrchc
-      use pepper_strings, only: prefix, repmc, rtrim, suffix, ucase, zzinssub
+      use pepper_strings, only: prefix, rtrim, suffix, ucase, repmc_inplace, zzinssub_inplace
       implicit none
 
 !
@@ -6369,13 +6369,13 @@ contains
          type   = ' '
 
          error = string
-         call zzinssub ( error, '>', to+1, error )
-         call zzinssub ( error, '<', from, error )
+         call zzinssub_inplace ( error, '>', to+1 )
+         call zzinssub_inplace ( error, '<', from )
          call prefix ( 'There are two successive delimiters <#> ' &
          //            'in the input string.  This is an ' &
          //            'ambiguous input. '' ', &
                         0, error)
-         call repmc  ( error, '#', string(from:to), error )
+         call repmc_inplace ( error, '#', string(from:to) )
          call suffix ( '''', 0, error )
          pictur = ' '
          return
@@ -6405,13 +6405,13 @@ contains
 
          resolv = zznote ( ctx, 'Q', from, to )
          error  = string
-         call zzinssub ( error, '>', to+1, error )
-         call zzinssub ( error, '<', from, error )
+         call zzinssub_inplace ( error, '>', to+1 )
+         call zzinssub_inplace ( error, '<', from )
          call prefix ( 'An unexpected delimiter (''#'') was ' &
          //            'encountered in the input string. '' ', &
                              0, error )
          call suffix ( '''', 0, error )
-         call repmc  ( error, '#', string(from:to), error )
+         call repmc_inplace ( error, '#', string(from:to) )
          pictur = ' '
          succes = .false.
          return
@@ -6480,13 +6480,13 @@ contains
          type   = ' '
          error  =  string
 
-         call zzinssub ( error, '>', e+1, error )
-         call zzinssub ( error, '<', b,   error )
+         call zzinssub_inplace ( error, '>', e+1 )
+         call zzinssub_inplace ( error, '<', b )
          call prefix ( 'The substring "#" is a duplicate ' &
          //            'modifier of the input string: '' ', &
                                0,               error )
          call suffix ( '''',   0,               error )
-         call repmc  ( error, '#', string(b:e), error )
+         call repmc_inplace ( error, '#', string(b:e) )
          pictur = ' '
          return
       end if
@@ -6507,13 +6507,13 @@ contains
          type   = ' '
          error  =  string
 
-         call zzinssub ( error, '>', e+1, error )
-         call zzinssub ( error, '<', b,   error )
+         call zzinssub_inplace ( error, '>', e+1 )
+         call zzinssub_inplace ( error, '<', b )
          call prefix ( 'The substring "#" could not ' &
          //            'be resolved in the input string: '' ', &
                                0,               error )
          call suffix ( '''',   0,               error )
-         call repmc  ( error, '#', string(b:e), error )
+         call repmc_inplace ( error, '#', string(b:e) )
          pictur = ' '
          return
 
@@ -6531,21 +6531,21 @@ contains
          b     = max(b1, b2)
          e     = max(e1, e2)
 
-         call zzinssub ( error, '>', e+1, error )
-         call zzinssub ( error, '<', b, error )
+         call zzinssub_inplace ( error, '>', e+1 )
+         call zzinssub_inplace ( error, '<', b )
 
          b     = min(b1, b2)
          e     = min(e1, e2)
 
-         call zzinssub ( error, '>', e+1, error )
-         call zzinssub ( error, '<', b, error )
+         call zzinssub_inplace ( error, '>', e+1 )
+         call zzinssub_inplace ( error, '<', b )
 
          call prefix ( 'Both a month "#" and day of year ' &
          //            'delimiter "#" appear in the input ' &
          //            'string: '' ', 0, error )
          call suffix ( '''',          0, error )
-         call repmc  ( error, '#', string(b1:e1), error )
-         call repmc  ( error, '#', string(b2:e2), error )
+         call repmc_inplace ( error, '#', string(b1:e1) )
+         call repmc_inplace ( error, '#', string(b2:e2) )
          pictur = ' '
          return
 
@@ -6700,7 +6700,7 @@ contains
       !>     So far we haven't combined anything.
       module procedure zzcmbt
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: pos, posr, zzrepsub
+      use pepper_strings, only: pos, posr, zzrepsub_inplace
       implicit none
       logical :: yes
       parameter           ( yes = .true.  )
@@ -6766,7 +6766,7 @@ contains
 !
 !        Perform the substitution in the representation
 !
-         call zzrepsub ( rep, from, to, letter, rep )
+         call zzrepsub_inplace ( rep, from, to, letter )
 !
 !        Now update the begins and ends of tokens in the original
 !        string.
@@ -7793,7 +7793,8 @@ contains
       !>     table.
       module procedure zztokns
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: lx4uns, prefix, repmc, rtrim, samchi, samsbi, suffix, ucase, zzinssub
+      use pepper_strings, only: lx4uns, prefix, rtrim, samchi, samsbi, suffix, ucase, &
+         repmc_inplace, repmi_inplace, zzinssub_inplace
       implicit none
       logical :: yes
       parameter           ( yes = .true.  )
@@ -7882,13 +7883,13 @@ contains
                   'because it contains more than @ recognizable ' // &
                   'tokens. The token that could not be processed ' // &
                   'was ''#''.'
-         call repmi ( ctx, tknerr, '@', maxtkn, tknerr )
+         call repmi_inplace ( tknerr, '@', maxtkn )
 
          picerr = 'The input time string ''#'' cannot be processed '// &
                   'because the internal picture describing it ' // &
                   'requires more than @ characters. The token that ' // &
                   'could not be processed was ''#''.'
-         call repmi ( ctx, picerr, '@', piclen, picerr )
+         call repmi_inplace ( picerr, '@', piclen )
 
 !
 !        Below is the list of recognized substrings. The basic
@@ -8569,7 +8570,7 @@ contains
 !
             error = string
 
-            call zzinssub ( error, '<', next,   error )
+            call zzinssub_inplace ( error, '<', next )
 
 !
 !           Overwrite the non-printing character with a
@@ -8583,8 +8584,8 @@ contains
             //            'character (ASCII #) at position # of the ' &
             //            'time string: ', 1, error )
 
-            call repmi ( ctx, error, '#', item, error )
-            call repmi ( ctx, error, '#', next, error )
+            call repmi_inplace ( error, '#', item )
+            call repmi_inplace ( error, '#', next )
 
             zztokns = no
             return
@@ -8762,8 +8763,8 @@ contains
 
                error = string
 
-               call zzinssub ( error, '>', from + 1, error )
-               call zzinssub ( error, '<', from,     error )
+               call zzinssub_inplace ( error, '>', from + 1 )
+               call zzinssub_inplace ( error, '<', from )
 
                call prefix ( 'The input string contains an ' &
                //            'unrecognizable substring beginning ' &
@@ -8771,7 +8772,7 @@ contains
                                   0, error )
                call suffix ( '"', 0, error )
 
-               call repmc ( error, '#', string(from:from), error )
+               call repmc_inplace ( error, '#', string(from:from) )
                zztokns = no
                return
 
@@ -8905,7 +8906,8 @@ contains
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
       module procedure zzunpck
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: nparsd, pos, prefix, repmc, suffix, ucase, zzinssub, zzrepsub
+      use pepper_strings, only: nparsd, pos, prefix, suffix, ucase, repmc_inplace, repmi_inplace, &
+         zzinssub_inplace, zzrepsub_inplace
       implicit none
       logical :: yes
       parameter           ( yes = .true.  )
@@ -8995,7 +8997,7 @@ contains
             error = 'A character at location #1 does not ' &
          //         'have ASCII value [32,126] for REP string.'
 
-            call repmi ( ctx, error, '#1', i,   error )
+            call repmi_inplace ( error, '#1', i )
 
 !
 !           Error condition, return.
@@ -9015,11 +9017,11 @@ contains
             call nparsd   ( string(j:k), tvec(1), error, ptr )
 
             if ( yabbrv ) then
-               call zzrepsub ( pictur, pbegs(i), pends(i), &
-                              'YR', pictur )
+               call zzrepsub_inplace ( pictur, pbegs(i), pends(i), &
+                              'YR' )
             else
-               call zzrepsub ( pictur, pbegs(i), pends(i), &
-                              'YYYY', pictur )
+               call zzrepsub_inplace ( pictur, pbegs(i), pends(i), &
+                              'YYYY' )
             end if
 
          else if ( item == ichar('m') ) then
@@ -9032,7 +9034,7 @@ contains
 
             if ( value == 0 ) then
                call nparsd  ( string(j:k), tvec(2), error, ptr )
-               call zzrepsub( pictur, pbegs(i), pends(i), 'MM', pictur )
+               call zzrepsub_inplace ( pictur, pbegs(i), pends(i), 'MM' )
             else
                tvec(2) = real( value, wp )
             end if
@@ -9114,14 +9116,14 @@ contains
 
             error = string
 
-            call zzinssub ( error, '>', k+1,  error )
-            call zzinssub ( error, '<', j,    error )
+            call zzinssub_inplace ( error, '>', k+1 )
+            call zzinssub_inplace ( error, '<', j )
 
             call prefix ( 'The meaning of the integer <#> could ' &
             //            'not be determined: ''', 1, error )
             call suffix ( '''', 0, error )
 
-            call repmc ( error, '#', string(j:k), error )
+            call repmc_inplace ( error, '#', string(j:k) )
 
             e       = 0
             pic     = ' '
@@ -9132,13 +9134,13 @@ contains
 
             error = string
 
-            call zzinssub ( error, '>', k+1,  error )
-            call zzinssub ( error, '<',  j,   error )
+            call zzinssub_inplace ( error, '>', k+1 )
+            call zzinssub_inplace ( error, '<',  j )
 
             call prefix ( 'The meaning of the decimal number <#> ' &
             //            'could not be determined: ', 1, error )
 
-            call repmc ( error, '#', string(j:k), error )
+            call repmc_inplace ( error, '#', string(j:k) )
 
             e       = 0
             pic     = ' '
@@ -9149,13 +9151,13 @@ contains
 
             error = string
 
-            call zzinssub ( error, '>', k+1,  error )
-            call zzinssub ( error, '<',  j,   error )
+            call zzinssub_inplace ( error, '>', k+1 )
+            call zzinssub_inplace ( error, '<',  j )
 
             call prefix ( 'An unexpected # ("#") was encountered ' &
             //            'in the time string: ', 1, error )
-            call repmc ( error, '#', names(item),    error )
-            call repmc ( error, '#', string(j:k),    error )
+            call repmc_inplace ( error, '#', names(item) )
+            call repmc_inplace ( error, '#', string(j:k) )
 
             pic     = ' '
             e       = 0
@@ -9256,7 +9258,7 @@ contains
          error = 'The year associated with the calendar string ' &
          //      '"#" could not be identified. '
 
-         call repmc ( error, '#', string, error )
+         call repmc_inplace ( error, '#', string )
 
       else if ( nyear > 1 ) then
 
@@ -9271,16 +9273,16 @@ contains
          j = begs(p2)
          k = ends(p2)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
-         call repmc  ( messge, '#', string(j:k), messge )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
+         call repmc_inplace ( messge, '#', string(j:k) )
 
          j = begs(p1)
          k = ends(p1)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
-         call repmc  ( messge, '#', string(j:k), messge )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
+         call repmc_inplace ( messge, '#', string(j:k) )
 
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
@@ -9300,14 +9302,14 @@ contains
          j = begs(p2)
          k = ends(p2)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
 
          j = begs(p1)
          k = ends(p1)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
 
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
@@ -9325,16 +9327,16 @@ contains
          j = begs(p2)
          k = ends(p2)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
-         call repmc  ( messge, '#', string(j:k), messge )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
+         call repmc_inplace ( messge, '#', string(j:k) )
 
          j = begs(p1)
          k = ends(p1)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
-         call repmc  ( messge, '#', string(j:k), messge )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
+         call repmc_inplace ( messge, '#', string(j:k) )
 
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
@@ -9352,16 +9354,16 @@ contains
          j = begs(p2)
          k = ends(p2)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
-         call repmc  ( messge, '#', string(j:k), messge )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
+         call repmc_inplace ( messge, '#', string(j:k) )
 
          j = begs(p1)
          k = ends(p1)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
-         call repmc  ( messge, '#', string(j:k), messge )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
+         call repmc_inplace ( messge, '#', string(j:k) )
 
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
@@ -9379,16 +9381,16 @@ contains
          j = begs(p2)
          k = ends(p2)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
-         call repmc  ( messge, '#', string(j:k), messge )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
+         call repmc_inplace ( messge, '#', string(j:k) )
 
          j = begs(p1)
          k = ends(p1)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
-         call repmc  ( messge, '#', string(j:k), messge )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
+         call repmc_inplace ( messge, '#', string(j:k) )
 
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
@@ -9406,16 +9408,16 @@ contains
          j = begs(p2)
          k = ends(p2)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
-         call repmc  ( messge, '#', string(j:k), messge )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
+         call repmc_inplace ( messge, '#', string(j:k) )
 
          j = begs(p1)
          k = ends(p1)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
-         call repmc  ( messge, '#', string(j:k), messge )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
+         call repmc_inplace ( messge, '#', string(j:k) )
 
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
@@ -9433,16 +9435,16 @@ contains
          j = begs(p2)
          k = ends(p2)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
-         call repmc  ( messge, '#', string(j:k), messge )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
+         call repmc_inplace ( messge, '#', string(j:k) )
 
          j = begs(p1)
          k = ends(p1)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
-         call repmc  ( messge, '#', string(j:k), messge )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
+         call repmc_inplace ( messge, '#', string(j:k) )
 
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
@@ -9460,16 +9462,16 @@ contains
          j = begs(p2)
          k = ends(p2)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
-         call repmc  ( messge, '#', string(j:k), messge )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
+         call repmc_inplace ( messge, '#', string(j:k) )
 
          j = begs(p1)
          k = ends(p1)
 
-         call zzinssub ( error, '>', k+1, error )
-         call zzinssub ( error, '<', j,   error )
-         call repmc  ( messge, '#', string(j:k), messge )
+         call zzinssub_inplace ( error, '>', k+1 )
+         call zzinssub_inplace ( error, '<', j )
+         call repmc_inplace ( messge, '#', string(j:k) )
 
          call prefix ( messge, 1, error )
          call suffix ( '"',    0, error )
@@ -9479,14 +9481,14 @@ contains
          error = 'Neither a month nor day of year could be ' &
          //      'identified in the input time string: "#" '
 
-         call repmc ( error, '#', string, error )
+         call repmc_inplace ( error, '#', string )
 
       else if ( nmon == 1 .and. nday == 0 ) then
 
          error = 'A month was identified in the time string "#", ' &
          //      'but a day of month could not be identified. '
 
-         call repmc ( error, '#', string, error )
+         call repmc_inplace ( error, '#', string )
 
       else if ( nmon == 0 .and. nday == 1 ) then
 
@@ -9494,7 +9496,7 @@ contains
          //      'string "#", but the month it belongs to could ' &
          //      'not be identified. '
 
-         call repmc ( error, '#', string, error )
+         call repmc_inplace ( error, '#', string )
 
       else if ( nmin  > nhour ) then
 
@@ -9502,7 +9504,7 @@ contains
          //      'identified in the time string "#", but the ' &
          //      'hours component could not be identified. '
 
-         call repmc ( error, '#', string, error )
+         call repmc_inplace ( error, '#', string )
 
       else if ( nsec  > nmin  ) then
 
@@ -9510,7 +9512,7 @@ contains
          //      'identified in the time string "#", but the ' &
          //      'minutes component could not be identified. '
 
-         call repmc ( error, '#', string, error )
+         call repmc_inplace ( error, '#', string )
 
       end if
 
@@ -10169,7 +10171,7 @@ contains
       module procedure tparse
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
-      use pepper_strings, only: repmc
+      use pepper_strings, only: repmc_inplace
       implicit none
 
 !
@@ -10238,7 +10240,7 @@ contains
             errmsg = 'TPARSE does not support the specification ' &
             //      'of a time system in a string.  The time ' &
             //      'system # was specified. '
-            call repmc ( errmsg, '#', modify(system), errmsg )
+            call repmc_inplace ( errmsg, '#', modify(system) )
             return
 
          else if ( modify(zone) /= ' ' ) then
@@ -10246,7 +10248,7 @@ contains
             errmsg = 'TPARSE does not support the specification ' &
             //      'of a time zone in a time string.  The time ' &
             //      'zone ''#'' was specified. '
-            call repmc ( errmsg, '#', modify(zone), errmsg )
+            call repmc_inplace ( errmsg, '#', modify(zone) )
             return
 
          else if ( modify(ampm) /= ' ' ) then
@@ -10359,7 +10361,7 @@ contains
          //      '(year day-of-year).  You''ve entered a string ' &
          //      'of the type #. '
 
-         call repmc ( errmsg, '#', type, errmsg )
+         call repmc_inplace ( errmsg, '#', type )
 
       end if
 

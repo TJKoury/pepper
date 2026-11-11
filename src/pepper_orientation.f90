@@ -934,7 +934,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, j2000, rpd, spd, twopi
       use pepper_math, only: mxm, vdotg
-      use pepper_strings, only: suffix
+      use pepper_strings, only: suffix, repmi_inplace
       use pepper_inc_errhnd
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
@@ -1111,7 +1111,7 @@ contains
 !           better error message.
 !
             item = 'BODY#_PM'
-            call repmi  ( ctx, item, '#',   body, item  )
+            call repmi_inplace ( item, '#',   body )
             call dtpool ( ctx, item, found, nw,   dtype )
 
             if ( .not. found ) then
@@ -1200,10 +1200,10 @@ contains
 !           most one is allowed to be present.
 !
             item   =  'BODY#_CONSTANTS_JED_EPOCH'
-            call repmi ( ctx, item, '#', refid, item )
+            call repmi_inplace ( item, '#', refid )
 
             item2  =  'BODY#_CONSTS_JED_EPOCH'
-            call repmi ( ctx, item2, '#', refid, item2 )
+            call repmi_inplace ( item2, '#', refid )
 
             call gdpool ( ctx, item, 1, 1, dim, pckepc_1, found )
             pckepc = pckepc_1(1)
@@ -1244,12 +1244,12 @@ contains
 !           default frame is J2000, symbolized by the code J2CODE.
 !
             item   =  'BODY#_CONSTANTS_REF_FRAME'
-            call repmi ( ctx, item, '#', refid, item )
+            call repmi_inplace ( item, '#', refid )
 
             item2  =  'BODY#_CONSTS_REF_FRAME'
-            call repmi ( ctx, item2, '#', refid, item2 )
+            call repmi_inplace ( item2, '#', refid )
 
-            call repmi  ( ctx, item, '#', refid, item              )
+            call repmi_inplace ( item, '#', refid )
             call gipool ( ctx, item, 1, 1, dim, pcref_1, found )
             pcref = pcref_1(1)
 
@@ -2004,7 +2004,7 @@ contains
       module procedure tkfram
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ident, q2m, sharpr, vdot, vhatg
-      use pepper_strings, only: intstr, rtrim, ucase
+      use pepper_strings, only: intstr, rtrim, repmi_inplace, ucase_inplace
       implicit none
       integer(ip), parameter :: bufsiz = 200
       integer(ip), parameter :: wdsize = 32
@@ -2117,7 +2117,7 @@ contains
 !        frame.
 !
          oldagt = 'TKFRAME_#'
-         call repmi ( ctx, oldagt, '#', oldid, oldagt )
+         call repmi_inplace ( oldagt, '#', oldid )
 
       end if
 
@@ -2335,7 +2335,7 @@ contains
 !        Convert SPEC to upper case so that we can easily check
 !        to see if this is one of the expected specification types.
 !
-         call ucase ( spec, spec )
+         call ucase_inplace ( spec )
 
          if ( spec == 'MATRIX' ) then
 !
@@ -3472,7 +3472,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 14-DEC-2008 (NJB)
       module procedure zznofcon
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: repmc, suffix
+      use pepper_strings, only: suffix, repmc_inplace, repmi_inplace
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
 
       implicit none
@@ -3555,18 +3555,16 @@ contains
 
       end do
 
-      errmsg = 'At epoch # TDB (# TDB), there is ' &
-      //       'insufficient information available to ' &
-      //       'transform from reference frame # (@) to ' &
-      //       'reference frame # (@).'
-
-      call repmf ( ctx, errmsg, '#', et,     14, 'E', errmsg )
-      call repmc ( errmsg, '#', timstr,          errmsg )
+      call repmf ( ctx, 'At epoch # TDB (# TDB), there is ' &
+                   //   'insufficient information available to ' &
+                   //   'transform from reference frame # (@) to ' &
+                   //   'reference frame # (@).', '#', et, 14, 'E', errmsg )
+      call repmc_inplace ( errmsg, '#', timstr )
 
       do i = 1, 2
 
-         call repmi ( ctx, errmsg, '#', frames(i), errmsg )
-         call repmc ( errmsg, '@', name(i)%s,   errmsg )
+         call repmi_inplace ( errmsg, '#', frames(i) )
+         call repmc_inplace ( errmsg, '@', name(i)%s )
 
       end do
 
@@ -3582,13 +3580,13 @@ contains
             phrase = 'Frame # could be transformed to frame # (@).'
 
             if ( havnam(i) ) then
-               call repmc ( phrase, '#', name(i)%s,   phrase )
+               call repmc_inplace ( phrase, '#', name(i)%s )
             else
-               call repmi ( ctx, phrase, '#', frames(i), phrase )
+               call repmi_inplace ( phrase, '#', frames(i) )
             end if
 
-            call repmi ( ctx, phrase, '#', endps(i),  phrase )
-            call repmc ( phrase, '@', bname(i)%s,  phrase )
+            call repmi_inplace ( phrase, '#', endps(i) )
+            call repmc_inplace ( phrase, '@', bname(i)%s )
 
             call suffix ( phrase, 1, errmsg )
 
@@ -3616,7 +3614,7 @@ contains
                      //       'must be loaded in order to use this ' &
                      //       'frame.'
 
-                     call repmi ( ctx, phrase, '#', clssid, phrase )
+                     call repmi_inplace ( phrase, '#', clssid )
 
                      call suffix ( phrase, 1, errmsg )
 
@@ -3634,8 +3632,8 @@ contains
                         //       'structure #, with corresponding ' &
                         //       'SCLK ID #, is currently loaded.'
 
-                        call repmi ( ctx, phrase, '#', clssid, phrase )
-                        call repmi ( ctx, phrase, '#', sclkid, phrase )
+                        call repmi_inplace ( phrase, '#', clssid )
+                        call repmi_inplace ( phrase, '#', sclkid )
 
                         call suffix ( phrase, 1, errmsg )
 
@@ -3687,12 +3685,12 @@ contains
                   //       'frame.'
 
                   if ( havnam(i) ) then
-                     call repmc ( phrase, '#', name(i)%s,   phrase )
+                     call repmc_inplace ( phrase, '#', name(i)%s )
                   else
-                     call repmi ( ctx, phrase, '#', frames(i), phrase )
+                     call repmi_inplace ( phrase, '#', frames(i) )
                   end if
 
-                  call repmi ( ctx, phrase, '#', clssid, phrase )
+                  call repmi_inplace ( phrase, '#', clssid )
 
                   call suffix ( phrase, 1, errmsg )
 
@@ -3710,8 +3708,8 @@ contains
                      //       'structure #, with corresponding ' &
                      //       'SCLK ID #, is currently loaded.'
 
-                     call repmi ( ctx, phrase, '#', clssid, phrase )
-                     call repmi ( ctx, phrase, '#', sclkid, phrase )
+                     call repmi_inplace ( phrase, '#', clssid )
+                     call repmi_inplace ( phrase, '#', sclkid )
 
                      call suffix ( phrase, 1, errmsg )
 

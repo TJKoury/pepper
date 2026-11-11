@@ -1548,6 +1548,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, j2000, rpd, spd, twopi
       use pepper_math, only: mxm, vdotg
+      use pepper_strings, only: repmi_inplace
       implicit none
       ! PEPPER: work arrays of the kernel variables' sizes (SPICELIB: saved
       ! arrays of MAXANG, 200, values)
@@ -1664,10 +1665,10 @@ contains
 !        most one is allowed to be present.
 !
          item   =  'BODY#_CONSTANTS_JED_EPOCH'
-         call repmi ( ctx, item, '#', refid, item )
+         call repmi_inplace ( item, '#', refid )
 
          item2  =  'BODY#_CONSTS_JED_EPOCH'
-         call repmi ( ctx, item2, '#', refid, item2 )
+         call repmi_inplace ( item2, '#', refid )
 
          call gdpool ( ctx, item, 1, 1, dim, conepc_1, found )
          conepc = conepc_1(1)
@@ -1725,12 +1726,12 @@ contains
          call irfnum ( ctx, 'J2000', j2code )
 
          item   =  'BODY#_CONSTANTS_REF_FRAME'
-         call repmi ( ctx, item, '#', refid, item )
+         call repmi_inplace ( item, '#', refid )
 
          item2  =  'BODY#_CONSTS_REF_FRAME'
-         call repmi ( ctx, item2, '#', refid, item2 )
+         call repmi_inplace ( item2, '#', refid )
 
-         call repmi  ( ctx, item, '#', refid, item            )
+         call repmi_inplace ( item, '#', refid )
          call gipool ( ctx, item, 1, 1, dim, ref_1, found )
          ref = ref_1(1)
 

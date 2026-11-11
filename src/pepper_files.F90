@@ -1518,7 +1518,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 13-AUGUST-2001 (FST)
       module procedure zzddhini
       use pepper_kinds, only: ip
-      use pepper_strings, only: nextwd, ucase
+      use pepper_strings, only: nextwd_inplace, ucase_inplace
       use pepper_inc_zzddhman
       implicit none
 
@@ -1556,7 +1556,7 @@ contains
 !     Get the native binary file format.
 !
       call zzplatfm ( ctx, 'FILE_FORMAT', tmpstr )
-      call ucase    ( tmpstr,        tmpstr )
+      call ucase_inplace ( tmpstr )
 
       natbff = findloc(strbff(1:numbff), tmpstr, dim=1)
 
@@ -1589,7 +1589,7 @@ contains
 !        off.
 !
          i = i + 1
-         call nextwd ( linstr, tmpstr, linstr )
+         call nextwd_inplace ( linstr, tmpstr )
 
 !
 !        See if we're done.
@@ -1895,7 +1895,7 @@ contains
       !>     Left justify and convert the input to upper case.
       module procedure zzddhgsd
       use pepper_kinds, only: ip
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: locsiz = 8
@@ -1911,7 +1911,7 @@ contains
                   strarc => ctx%zzddhgsd%strarc, &
                   strbff => ctx%zzddhgsd%strbff )
       tmpstr = adjustl(class)
-      call ucase ( tmpstr, tmpstr )
+      call ucase_inplace ( tmpstr )
 
       clsid = findloc(clslst, tmpstr, dim=1)
 
@@ -2580,7 +2580,7 @@ contains
       !>     Standard SPICE error handling.
       module procedure zzddhppf
       use pepper_kinds, only: ip
-      use pepper_strings, only: pos, ucase
+      use pepper_strings, only: pos, ucase_inplace
       use pepper_inc_zzddhman
       use pepper_inc_zzftprms
       implicit none
@@ -2831,7 +2831,7 @@ contains
       if ( arch == das ) then
 
          call zzplatfm ( ctx, 'FILE_FORMAT', bffidw )
-         call ucase    ( bffidw,        bffidw )
+         call ucase_inplace ( bffidw )
 
          bff = findloc(strbff(1:numbff), bffidw, dim=1)
 
@@ -3578,7 +3578,7 @@ contains
       module procedure zzxlatei
       use pepper_kinds, only: ip
       use pepper_constants, only: intmin
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: shft8 = 2**8
@@ -3621,7 +3621,7 @@ contains
 !        Fetch the native binary file format.
 !
          call zzplatfm ( ctx, 'FILE_FORMAT', tmpstr )
-         call ucase    ( tmpstr,        tmpstr )
+         call ucase_inplace ( tmpstr )
 
          natbff = findloc(strbff, tmpstr, dim=1)
 
@@ -5625,7 +5625,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 05-FEB-2015 (NJB)
       module procedure zzddhnfc
       use pepper_kinds, only: ip
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
       character(strsiz) :: tmpstr
@@ -5651,7 +5651,7 @@ contains
 !        integer code.
 !
          call zzplatfm ( ctx, 'FILE_FORMAT', tmpstr )
-         call ucase    ( tmpstr,        tmpstr )
+         call ucase_inplace ( tmpstr )
 
          savbff = findloc(strbff, tmpstr, dim=1)
 
@@ -5845,7 +5845,7 @@ contains
       module procedure zzddhopn
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
-      use pepper_strings, only: repmc, rtrim, ucase
+      use pepper_strings, only: rtrim, ucase_inplace
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: scrlen = 4096  !! PEPPER: room for the OS's name of a scratch file
@@ -5945,7 +5945,7 @@ contains
 !     corresponding integer code.
 !
       tmpstr = method
-      call ucase ( tmpstr, tmpstr )
+      call ucase_inplace ( tmpstr )
       accmet = findloc(stramh, tmpstr, dim=1)
 
 !
@@ -5972,7 +5972,7 @@ contains
 !     the appropriate integer code.
 !
       tmpstr = arch
-      call ucase ( tmpstr, tmpstr )
+      call ucase_inplace ( tmpstr )
       filarc = findloc(strarc, tmpstr, dim=1)
 
 !
@@ -6704,7 +6704,7 @@ contains
       module procedure zzddhcls
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
       character(strsiz) :: tmpstr
@@ -6784,7 +6784,7 @@ contains
 !     to prevent one architecture's code from stepping on another's.
 !
       tmpstr = arch
-      call ucase ( tmpstr, tmpstr )
+      call ucase_inplace ( tmpstr )
       filarc = findloc(strarc, tmpstr, dim=1)
 
 !
@@ -7021,7 +7021,7 @@ contains
       module procedure zzddhhlu
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
       character(strsiz) :: tmpstr
@@ -7114,7 +7114,7 @@ contains
 !     to prevent one architectures code from stepping on another's.
 !
       tmpstr = arch
-      call ucase ( tmpstr, tmpstr )
+      call ucase_inplace ( tmpstr )
       filarc = findloc(strarc, tmpstr, dim=1)
 
 !
@@ -7366,7 +7366,7 @@ contains
       module procedure zzddhunl
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
       character(strsiz) :: tmpstr
@@ -7478,7 +7478,7 @@ contains
 !     to prevent one architectures code from stepping on another's.
 !
       tmpstr = arch
-      call ucase ( tmpstr, tmpstr )
+      call ucase_inplace ( tmpstr )
       filarc = findloc(strarc, tmpstr, dim=1)
 
 !

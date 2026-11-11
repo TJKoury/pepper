@@ -2246,7 +2246,7 @@ contains
       !>     Standard SPICE error handling.
       module procedure zzekpdec
       use pepper_kinds, only: ip
-      use pepper_strings, only: cmprss, eqstr, lparsm, nparsi, ucase
+      use pepper_strings, only: eqstr, lparsm, nparsi, cmprss_inplace, ucase_inplace
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
       use pepper_inc_ektype
@@ -2331,7 +2331,7 @@ contains
 !     left-justified.
 !
       do i = 1, n
-         call ucase( tokens(i), tokens(i) )
+         call ucase_inplace ( tokens(i) )
       end do
 
 !
@@ -2436,9 +2436,9 @@ contains
 !
 !           CHARACTER**
 !
-         call cmprss ( ' ', 0, tokens(tokloc), tokens(tokloc) )
-         call cmprss ( '(', 0, tokens(tokloc), tokens(tokloc) )
-         call cmprss ( ')', 0, tokens(tokloc), tokens(tokloc) )
+         call cmprss_inplace ( ' ', 0, tokens(tokloc) )
+         call cmprss_inplace ( '(', 0, tokens(tokloc) )
+         call cmprss_inplace ( ')', 0, tokens(tokloc) )
 
          if ( tokens(tokloc)(10:10) /= '*' ) then
 
@@ -3384,7 +3384,7 @@ contains
       !>     Find the location of the named item.
       module procedure zzekreqi
       use pepper_kinds, only: ip
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_ekquery
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: namlen = 32
@@ -3403,7 +3403,7 @@ contains
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzekreqi_state ) ) allocate ( ctx%zzekreqi_state )
       tmpnam = adjustl(name)
-      call ucase ( tmpnam, tmpnam )
+      call ucase_inplace ( tmpnam )
 
       i  =  findloc(namlst, tmpnam, dim=1)
 
@@ -4596,7 +4596,8 @@ contains
       module procedure zzekscan
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc
-      use pepper_strings, only: beint, frstpc, lxqstr, nparsd, parsqs, prefix, repmc, rtrim, suffix, ucase
+      use pepper_strings, only: beint, frstpc, lxqstr, nparsd, parsqs, prefix, rtrim, suffix, &
+         ucase, repmc_inplace, repmi_inplace
       use pepper_inc_ekkeyw
       use pepper_inc_ektokn
       use pepper_inc_ekqlimit
@@ -4804,8 +4805,8 @@ contains
 
                errmsg  =  'Maximum allowed number of tokens is #; at '// &
                           'least # tokens are present in QUERY.'
-               call repmi ( ctx, errmsg, '#', maxntk,   errmsg )
-               call repmi ( ctx, errmsg, '#', maxntk+1, errmsg )
+               call repmi_inplace ( errmsg, '#', maxntk )
+               call repmi_inplace ( errmsg, '#', maxntk+1 )
 
                scnerr = .true.
                return
@@ -4851,7 +4852,7 @@ contains
             if ( nchars == 0 ) then
 
                errmsg = 'Invalid quoted string at location #.'
-               call repmi ( ctx, errmsg, '#', cptr, errmsg )
+               call repmi_inplace ( errmsg, '#', cptr )
 
                scnerr = .true.
                return
@@ -4871,9 +4872,9 @@ contains
                           'string at location #; # chars needed; ' // &
                           'only # are available.'
 
-               call repmi  ( ctx, errmsg, '#', cptr,    errmsg )
-               call repmi  ( ctx, errmsg, '#', nchars,  errmsg )
-               call repmi  ( ctx, errmsg, '#', room,    errmsg )
+               call repmi_inplace ( errmsg, '#', cptr )
+               call repmi_inplace ( errmsg, '#', nchars )
+               call repmi_inplace ( errmsg, '#', room )
 
                scnerr = .true.
                return
@@ -4892,13 +4893,12 @@ contains
 
                call prefix ( '#', 2, errmsg )
 
-               call repmc  ( errmsg, &
+               call repmc_inplace ( errmsg, &
                              '#', &
                              'Error occurred while parsing '    // &
-                             'quoted string token at location #:', &
-                             errmsg                        )
+                             'quoted string token at location #:' )
 
-               call repmi  ( ctx, errmsg, '#', cptr, errmsg )
+               call repmi_inplace ( errmsg, '#', cptr )
 
                scnerr = .true.
 
@@ -4955,7 +4955,7 @@ contains
             if ( nchars == 0 ) then
 
                errmsg = 'Invalid numeric token at location #.'
-               call repmi ( ctx, errmsg, '#', cptr, errmsg )
+               call repmi_inplace ( errmsg, '#', cptr )
 
                scnerr = .true.
                return
@@ -4975,9 +4975,9 @@ contains
                           'available in the NUMVLS array; # are ' // &
                           'required.'
 
-               call repmi  ( ctx, errmsg, '#', cptr,     errmsg )
-               call repmi  ( ctx, errmsg, '#', maxnum,   errmsg )
-               call repmi  ( ctx, errmsg, '#', maxnum+1, errmsg )
+               call repmi_inplace ( errmsg, '#', cptr )
+               call repmi_inplace ( errmsg, '#', maxnum )
+               call repmi_inplace ( errmsg, '#', maxnum+1 )
 
                scnerr = .true.
                return
@@ -4999,13 +4999,12 @@ contains
 
                call prefix ( '#', 2, errmsg )
 
-               call repmc  ( errmsg, &
+               call repmc_inplace ( errmsg, &
                              '#', &
                              'Error found in numeric ' // &
-                             'token at location #:', &
-                             errmsg                        )
+                             'token at location #:' )
 
-               call repmi  ( ctx, errmsg, '#', cptr+ptr-1, errmsg )
+               call repmi_inplace ( errmsg, '#', cptr+ptr-1 )
 
                scnerr = .true.
                return
@@ -5053,7 +5052,7 @@ contains
 !              NCHARS should never equal zero.
 !
                errmsg = 'Invalid identifier at location #.'
-               call repmi ( ctx, errmsg, '#', cptr, errmsg )
+               call repmi_inplace ( errmsg, '#', cptr )
 
                scnerr = .true.
                return
@@ -5072,9 +5071,9 @@ contains
                           'string at location #; # chars needed; ' // &
                           'only # are available.'
 
-               call repmi  ( ctx, errmsg, '#', cptr,   errmsg )
-               call repmi  ( ctx, errmsg, '#', nchars, errmsg )
-               call repmi  ( ctx, errmsg, '#', room,   errmsg )
+               call repmi_inplace ( errmsg, '#', cptr )
+               call repmi_inplace ( errmsg, '#', nchars )
+               call repmi_inplace ( errmsg, '#', room )
 
                scnerr = .true.
                return
@@ -5168,7 +5167,7 @@ contains
             else
 
                errmsg = 'Invalid character found at location #. '
-               call repmi  ( ctx, errmsg, '#', cptr, errmsg )
+               call repmi_inplace ( errmsg, '#', cptr )
 !
 !              If the offending character is printable, include it
 !              in the error message.  Otherwise, include the integer
@@ -5177,12 +5176,12 @@ contains
                if ( frstpc(chr) > 0 ) then
 
                   call suffix ( '<character> = ''#''',   2, errmsg )
-                  call repmc  ( errmsg, '#', chr,           errmsg )
+                  call repmc_inplace ( errmsg, '#', chr )
 
                else
 
                   call suffix ( 'ICHAR(<character>) = #', 2, errmsg )
-                  call repmi  ( ctx, errmsg, '#', ichar(chr),     errmsg )
+                  call repmi_inplace ( errmsg, '#', ichar(chr) )
 
                end if
 
@@ -5861,7 +5860,7 @@ contains
       !>     Local parameters
       module procedure zzektcnv
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: cmprss, posr, repmc, rtrim, suffix, ucase
+      use pepper_strings, only: cmprss, posr, rtrim, suffix, repmc_inplace, ucase_inplace
       use pepper_inc_ektype
       implicit none
       integer(ip), parameter :: lnsize = 80
@@ -5909,7 +5908,7 @@ contains
 !
       call cmprss ( ' ',   1,  timstr,  locstr )
       locstr = adjustl(locstr)
-      call ucase  ( locstr,             locstr )
+      call ucase_inplace ( locstr )
 
       loc  =  posr ( locstr, 'SCLK', rtrim(locstr) )
 
@@ -5930,7 +5929,7 @@ contains
                errmsg = 'Time conversion failed; SCLK type '// &
                         '<#> was not recognized.'
 
-               call repmc ( errmsg, '#', timstr(:loc-1),  errmsg )
+               call repmc_inplace ( errmsg, '#', timstr(:loc-1) )
 
             else
 
@@ -5964,7 +5963,7 @@ contains
 
             errmsg =  'The string <#> didn''t parse '                 // &
                       'as a spacecraft clock string.'
-            call repmc  ( errmsg, '#', timstr, errmsg )
+            call repmc_inplace ( errmsg, '#', timstr )
             call suffix ( sclmsg,  3,          errmsg )
             return
 
@@ -6239,7 +6238,7 @@ contains
       !>     Find the location of the named item.
       module procedure zzekweqi
       use pepper_kinds, only: ip
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase_inplace
       use pepper_inc_ekquery
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: namlen = 32
@@ -6258,7 +6257,7 @@ contains
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzekweqi_state ) ) allocate ( ctx%zzekweqi_state )
       tmpnam = adjustl(name)
-      call ucase ( tmpnam, tmpnam )
+      call ucase_inplace ( tmpnam )
 
       i  =  findloc(namlst, tmpnam, dim=1)
 
@@ -12233,7 +12232,7 @@ contains
       !>     Standard SPICE error handling.
       module procedure zzeknrml
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: repmc
+      use pepper_strings, only: repmc_inplace, repmi_inplace
       use pepper_inc_ekkeyw
       use pepper_inc_ekopcd
       use pepper_inc_ekqlimit
@@ -12650,8 +12649,8 @@ contains
                lxe     =  lxends(i)
                error   =  .true.
                prserr  =  'Unexpected keyword # found at location #.'
-               call repmc  ( prserr, '#', query(lxb:lxe), prserr )
-               call repmi  ( ctx, prserr, '#', lxb,            prserr )
+               call repmc_inplace ( prserr, '#', query(lxb:lxe) )
+               call repmi_inplace ( prserr, '#', lxb )
                return
 
             end if
@@ -12664,8 +12663,8 @@ contains
             lxe     =  lxends(i)
             error   =  .true.
             prserr  =  'Unexpected token # found at location #.'
-            call repmc  ( prserr, '#', query(lxb:lxe), prserr )
-            call repmi  ( ctx, prserr, '#', lxb,            prserr )
+            call repmc_inplace ( prserr, '#', query(lxb:lxe) )
+            call repmi_inplace ( prserr, '#', lxb )
             return
 
          end if
@@ -18348,7 +18347,7 @@ contains
       !>        at one time was a limitation of the EK query language.
       module procedure zzekpars
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: repmc
+      use pepper_strings, only: repmc_inplace, repmi_inplace
       use pepper_inc_ektokn
       use pepper_inc_ekkeyw
       use pepper_inc_ekbool
@@ -19583,8 +19582,8 @@ contains
             lxe    =  lxends(toknum)
             prserr = 'Invalid keyword at location #. '  // &
                      'Actual token was: #'
-            call repmi ( ctx, prserr, '#', lxb,            prserr )
-            call repmc ( prserr, '#', query(lxb:lxe), prserr )
+            call repmi_inplace ( prserr, '#', lxb )
+            call repmc_inplace ( prserr, '#', query(lxb:lxe) )
 
          else if ( errtyp == 'TABLE_OR_COLUMN_EXP' ) then
 
@@ -19592,8 +19591,8 @@ contains
             lxe    =  lxends(toknum)
             prserr = 'Table or column name expected at location ' // &
                      '#. Actual token was: #'
-            call repmi ( ctx, prserr, '#', lxb,            prserr )
-            call repmc ( prserr, '#', query(lxb:lxe), prserr )
+            call repmi_inplace ( prserr, '#', lxb )
+            call repmc_inplace ( prserr, '#', query(lxb:lxe) )
 
          else if ( errtyp == 'TABLE_EXP' ) then
 
@@ -19601,8 +19600,8 @@ contains
             lxe    =  lxends(toknum)
             prserr = 'Table name expected at location #. '  // &
                      'Actual token was: #'
-            call repmi ( ctx, prserr, '#', lxb,            prserr )
-            call repmc ( prserr, '#', query(lxb:lxe), prserr )
+            call repmi_inplace ( prserr, '#', lxb )
+            call repmc_inplace ( prserr, '#', query(lxb:lxe) )
 
          else if ( errtyp == 'COLUMN_EXP' ) then
 
@@ -19610,8 +19609,8 @@ contains
             lxe    =  lxends(toknum)
             prserr = 'Column name expected at location #. '  // &
                      'Actual token was: #'
-            call repmi ( ctx, prserr, '#', lxb,            prserr )
-            call repmc ( prserr, '#', query(lxb:lxe), prserr )
+            call repmi_inplace ( prserr, '#', lxb )
+            call repmc_inplace ( prserr, '#', query(lxb:lxe) )
 
          else if ( errtyp == 'ALIAS_EXP' ) then
 
@@ -19619,8 +19618,8 @@ contains
             lxe    =  lxends(toknum)
             prserr = 'Table alias, comma, or keyword expected at ' // &
                      'location #. Actual token was: #'
-            call repmi ( ctx, prserr, '#', lxb,            prserr )
-            call repmc ( prserr, '#', query(lxb:lxe), prserr )
+            call repmi_inplace ( prserr, '#', lxb )
+            call repmc_inplace ( prserr, '#', query(lxb:lxe) )
 
          else if ( errtyp == 'COMMA_OR_KEY_EXP' ) then
 
@@ -19628,16 +19627,16 @@ contains
             lxe    =  lxends(toknum)
             prserr = 'Comma or keyword expected at ' // &
                      'location #. Actual token was: #'
-            call repmi ( ctx, prserr, '#', lxb,            prserr )
-            call repmc ( prserr, '#', query(lxb:lxe), prserr )
+            call repmi_inplace ( prserr, '#', lxb )
+            call repmc_inplace ( prserr, '#', query(lxb:lxe) )
 
          else if ( errtyp == 'COMMA_EXP' ) then
 
             lxb    =  lxbegs(toknum)
             lxe    =  lxends(toknum)
             prserr = 'Comma expected at location #. Actual token was: #'
-            call repmi ( ctx, prserr, '#', lxb,            prserr )
-            call repmc ( prserr, '#', query(lxb:lxe), prserr )
+            call repmi_inplace ( prserr, '#', lxb )
+            call repmc_inplace ( prserr, '#', query(lxb:lxe) )
 
          else if ( errtyp == 'MORE_TOKENS_EXP' ) then
 
@@ -19647,17 +19646,17 @@ contains
 
             prserr = 'The keyword # was expected at location ' // &
                      '#. Actual token was: #'
-            call repmc ( prserr, '#', expkey,         prserr )
-            call repmi ( ctx, prserr, '#', lxb,            prserr )
-            call repmc ( prserr, '#', query(lxb:lxe), prserr )
+            call repmc_inplace ( prserr, '#', expkey )
+            call repmi_inplace ( prserr, '#', lxb )
+            call repmc_inplace ( prserr, '#', query(lxb:lxe) )
 
          else if ( errtyp == 'BAD_TOKEN' ) then
 
             lxb    =  lxbegs(toknum)
             lxe    =  lxends(toknum)
             prserr = 'Invalid token at location #. Token was: #'
-            call repmi ( ctx, prserr, '#', lxb,            prserr )
-            call repmc ( prserr, '#', query(lxb:lxe), prserr )
+            call repmi_inplace ( prserr, '#', lxb )
+            call repmc_inplace ( prserr, '#', query(lxb:lxe) )
 
 !
 !        PEPPER: the TOO_MANY_* errors cannot occur any more (no maximum
@@ -19667,25 +19666,25 @@ contains
 
             prserr  =  'Number of tables in "FROM" clause exceeds ' // &
                        'allowed maximum of #.'
-            call repmi  ( ctx, prserr, '#', maxtab, prserr )
+            call repmi_inplace ( prserr, '#', maxtab )
 
          else if ( errtyp == 'TOO_MANY_ORD_COLS' ) then
 
             prserr  =  'Number of order-by columns exceeds allowed ' // &
                        'maximum of #.'
-            call repmi  ( ctx, prserr, '#', maxtab, prserr )
+            call repmi_inplace ( prserr, '#', maxtab )
 
          else if ( errtyp == 'TOO_MANY_SEL_COLS' ) then
 
             prserr  =  'Number of SELECT columns exceeds allowed ' // &
                        'maximum of #.'
-            call repmi  ( ctx, prserr, '#', maxsel, prserr )
+            call repmi_inplace ( prserr, '#', maxsel )
 
          else if ( errtyp /= 'WHERE_ERROR' ) then
 
             prserr  =  'SPICE(BUG)--Unrecognized error type.  Type ' // &
                        'was #.'
-            call repmc ( prserr, '#', errtyp, prserr )
+            call repmc_inplace ( prserr, '#', errtyp )
 
          end if
 
@@ -27099,7 +27098,7 @@ contains
       !>     Local parameters
       module procedure zzekbs01
       use pepper_kinds, only: ip
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase, ucase_inplace
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
       use pepper_inc_ekcnamsz
@@ -27272,7 +27271,7 @@ contains
       cpage  =  ' '
 
       tmptnm = adjustl(tabnam)
-      call ucase  ( tmptnm, tmptnm )
+      call ucase_inplace ( tmptnm )
 
       cpage ( :tnamsz )  =  tmptnm
 
@@ -27521,7 +27520,7 @@ contains
       !>     Local parameters
       module procedure zzekbs02
       use pepper_kinds, only: ip
-      use pepper_strings, only: ucase
+      use pepper_strings, only: ucase, ucase_inplace
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
       use pepper_inc_ekcnamsz
@@ -27688,7 +27687,7 @@ contains
       cpage  =  ' '
 
       tmptnm = adjustl(tabnam)
-      call ucase  ( tmptnm, tmptnm )
+      call ucase_inplace ( tmptnm )
 
       cpage ( :tnamsz )  =  tmptnm
 

@@ -4,6 +4,11 @@
 !> have no saved state and do not signal SPICE errors. Moved here from
 !> src/spicelib by tools/modularize.py; the external procedures with the
 !> original interface are in tspice/src/legacy/pepper_legacy_strings.f90.
+!>
+!> The `_inplace` variants ([[ucase_inplace]], [[repmc_inplace]], ...) change
+!> one `intent(inout)` string. The library calls them where SPICELIB passes
+!> one variable as both the input and the output string, which Fortran does
+!> not allow.
 module pepper_strings
 
    implicit none
@@ -18,6 +23,12 @@ module pepper_strings
       quote, replch, replwd, repmc, rjust, rtrim, samch, samchi, samsbi,&
       samsub, scanrj, shiftl, shiftr, sigdgt, suffix, ucase, wdcnt, wdindx,&
       zzinssub, zzrepsub
+
+   ! In-place variants (one INTENT(INOUT) string instead of the input and
+   ! output strings; see the comment before ucase_inplace).
+   public :: astrip_inplace, cmprss_inplace, lcase_inplace, nextwd_inplace,&
+      repmc_inplace, repmd_inplace, repmi_inplace, replch_inplace,&
+      ucase_inplace, zzinssub_inplace, zzrepsub_inplace
 
 contains
 
@@ -2799,8 +2810,7 @@ contains
       if (      ( e      == 0 ) &
            .or. ( delims /= 0 ) ) then
 
-         call shiftl ( wordsq(berase:), eerase-berase+1, ' ', &
-                       wordsq(berase:)                        )
+         wordsq(berase:) = wordsq(eerase+1:)
          substr = ' '
          return
 
@@ -2838,8 +2848,7 @@ contains
 !
       substr = wordsq ( begstr : endstr )
 
-      call shiftl ( wordsq(berase:), eerase-berase+1, ' ', &
-                    wordsq(berase:)                         )
+      wordsq(berase:) = wordsq(eerase+1:)
 
       return
       end subroutine kxtrct
@@ -12919,7 +12928,7 @@ contains
             thisi = i
 
             call zzinssub ( string, ']', nexti, error )
-            call zzinssub ( error,  '[', thisi, error )
+            call zzinssub_inplace ( error,  '[', thisi )
             call prefix ( unxpch,  1,         error )
 
             ptr   = i
@@ -13079,7 +13088,7 @@ contains
                thisi = i
 
                call zzinssub ( string, ']', nexti, error )
-               call zzinssub ( error,  '[', thisi, error )
+               call zzinssub_inplace ( error,  '[', thisi )
                call prefix ( unxpch,  1,         error )
 
                ptr   = i
@@ -13106,7 +13115,7 @@ contains
                thisi = i
 
                call zzinssub ( string, ']', nexti, error )
-               call zzinssub ( error,  '[', thisi, error )
+               call zzinssub_inplace ( error,  '[', thisi )
                call prefix ( unxppt,  1,         error )
 
                ptr    = i
@@ -13136,7 +13145,7 @@ contains
                thisi = i
 
                call zzinssub ( string, ']', nexti, error )
-               call zzinssub ( error,  '[', thisi, error )
+               call zzinssub_inplace ( error,  '[', thisi )
                call prefix ( unxpch,  1,         error )
 
                ptr   =  i
@@ -13157,7 +13166,7 @@ contains
                thisi = i
 
                call zzinssub ( string, ']', nexti, error )
-               call zzinssub ( error,  '[', thisi, error )
+               call zzinssub_inplace ( error,  '[', thisi )
                call prefix ( unxpsn,  1,         error )
 
                ptr   = i
@@ -13186,7 +13195,7 @@ contains
                thisi = i
 
                call zzinssub ( string, ']', nexti, error )
-               call zzinssub ( error,  '[', thisi, error )
+               call zzinssub_inplace ( error,  '[', thisi )
                call prefix ( unxpch,  1,         error )
 
                ptr   = i
@@ -13216,7 +13225,7 @@ contains
                thisi = i
 
                call zzinssub ( string, ']', nexti, error )
-               call zzinssub ( error,  '[', thisi, error )
+               call zzinssub_inplace ( error,  '[', thisi )
                call prefix ( unxpch,  1,         error )
 
                ptr   = i
@@ -13240,7 +13249,7 @@ contains
             thisi = i
 
             call zzinssub ( string, ']', nexti, error )
-            call zzinssub ( error,  '[', thisi, error )
+            call zzinssub_inplace ( error,  '[', thisi )
             call prefix ( unxpch,  1,         error )
 
             ptr   = i
@@ -13762,5 +13771,411 @@ contains
 
       return
       end subroutine lx4uns
+
+!=======================================================================
+!     In-place variants.
+!
+!     SPICELIB code often passes one variable as both the input and
+!     the output string of a routine, e.g. CALL REPMC ( MSG, '#', X,
+!     MSG ). Fortran does not allow that: a dummy argument that is
+!     changed must not be reached through another dummy argument, and
+!     the compiler may optimize on that assumption. The library calls
+!     these variants instead; they have one INTENT(INOUT) string. The
+!     results are the same as those of the original routines with the
+!     output string equal to the input string.
+!=======================================================================
+
+      !> Uppercase a string in place: the in-place form of [[ucase]].
+      elemental subroutine ucase_inplace ( string )
+      use pepper_kinds, only: ip
+      implicit none
+
+      character(*), intent(inout) :: string  !! String to convert to uppercase.
+
+      integer(ip), parameter :: lowa = ichar ('a')
+      integer(ip), parameter :: lowz = ichar ('z')
+      integer(ip), parameter :: shift = ichar ('A') - lowa
+
+      integer(ip) :: i
+      integer(ip) :: ich
+
+      do i = 1, len (string)
+         ich = ichar ( string(i:i) )
+         if ( ( ich >= lowa ) .and. ( ich <= lowz ) ) then
+            string(i:i) = char ( ich + shift )
+         end if
+      end do
+
+      end subroutine ucase_inplace
+
+      !> Lowercase a string in place: the in-place form of [[lcase]].
+      elemental subroutine lcase_inplace ( string )
+      use pepper_kinds, only: ip
+      implicit none
+
+      character(*), intent(inout) :: string  !! String to convert to lowercase.
+
+      integer(ip), parameter :: uppera = ichar ('A')
+      integer(ip), parameter :: upperz = ichar ('Z')
+      integer(ip), parameter :: shift = ichar ('a') - uppera
+
+      integer(ip) :: i
+      integer(ip) :: ich
+
+      do i = 1, len (string)
+         ich = ichar ( string(i:i) )
+         if ( ( ich >= uppera ) .and. ( ich <= upperz ) ) then
+            string(i:i) = char ( ich + shift )
+         end if
+      end do
+
+      end subroutine lcase_inplace
+
+      !> Replace every occurrence of a character in a string, in place:
+      !> the in-place form of [[replch]].
+      elemental subroutine replch_inplace ( string, old, new )
+      use pepper_kinds, only: ip
+      implicit none
+
+      character(*), intent(inout) :: string  !! String in which to replace characters.
+      character(1), intent(in) :: old  !! Character to be replaced.
+      character(1), intent(in) :: new  !! Replacement character.
+
+      integer(ip) :: i
+
+      do i = 1, len (string)
+         if ( string(i:i) == old ) then
+            string(i:i) = new
+         end if
+      end do
+
+      end subroutine replch_inplace
+
+      !> Compress runs of a delimiter in a string, in place: the in-place
+      !> form of [[cmprss]].
+      !>
+      !> Runs of more than N consecutive occurrences of DELIM are reduced
+      !> to N occurrences; the string is padded on the right with blanks.
+      elemental subroutine cmprss_inplace ( delim, n, string )
+      use pepper_kinds, only: ip
+      implicit none
+
+      character(1), intent(in) :: delim  !! Delimiter to be compressed.
+      integer(ip), intent(in) :: n  !! Maximum consecutive occurrences of DELIM.
+      character(*), intent(inout) :: string  !! String to compress.
+
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: count
+
+!
+!     The output position J never passes the input position I, so the
+!     characters can be moved left within the string as they are read.
+!
+      count = 0
+      j     = 0
+
+      do i = 1, len (string)
+
+         if ( string(i:i) == delim ) then
+            count = count + 1
+            if ( count > n ) cycle
+         else
+            count = 0
+         end if
+
+         j = j + 1
+         if ( j < i ) string(j:j) = string(i:i)
+
+      end do
+
+      if ( j < len (string) ) then
+         string(j+1:) = ' '
+      end if
+
+      end subroutine cmprss_inplace
+
+      !> Remove the characters in an ASCII range from a string, in place:
+      !> the in-place form of [[astrip]].
+      elemental subroutine astrip_inplace ( string, asciib, asciie )
+      use pepper_kinds, only: ip
+      implicit none
+
+      character(*), intent(inout) :: string  !! String to strip.
+      character(1), intent(in) :: asciib  !! First ASCII character in range to be stripped.
+      character(1), intent(in) :: asciie  !! Last ASCII character in range to be stripped.
+
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: lwrbnd
+      integer(ip) :: uprbnd
+
+      lwrbnd = ichar ( asciib )
+      uprbnd = ichar ( asciie )
+
+!
+!     The output position J never passes the input position I.
+!
+      j = 0
+
+      do i = 1, len_trim (string)
+         k = ichar ( string(i:i) )
+         if ( ( k < lwrbnd ) .or. ( k > uprbnd ) ) then
+            j = j + 1
+            if ( j < i ) string(j:j) = string(i:i)
+         end if
+      end do
+
+      if ( j < len (string) ) then
+         string(j+1:) = ' '
+      end if
+
+      end subroutine astrip_inplace
+
+      !> Remove the next word from a string: the form of [[nextwd]] whose
+      !> REST is the input string.
+      !>
+      !> NEXT receives the first word of STRING (blank if STRING is
+      !> blank), and STRING is replaced by the remainder, left-justified.
+      elemental subroutine nextwd_inplace ( string, next )
+      use pepper_kinds, only: ip
+      implicit none
+
+      character(*), intent(inout) :: string  !! On input, the string; on output, the remaining part, left-justified.
+      character(*), intent(out) :: next  !! The next word in the string.
+
+      integer(ip) :: begin
+      integer(ip) :: last
+
+      begin = verify ( string, ' ' )
+
+      if ( begin == 0 ) then
+         next = ' '
+         return
+      end if
+
+      last = scan ( string(begin:), ' ' )
+
+      if ( last == 0 ) then
+         next   = string(begin:)
+         string = ' '
+      else
+         last   = begin + last - 2
+         next   = string(begin:last)
+         string = adjustl ( string(last+1:) )
+      end if
+
+      end subroutine nextwd_inplace
+
+      !> Insert a substring into a string at a given position, in place:
+      !> the in-place form of [[zzinssub]].
+      !>
+      !> Characters shifted past the end of STRING are lost. If LOC is
+      !> beyond the end of STRING, STRING is unchanged.
+      elemental subroutine zzinssub_inplace ( string, sub, loc )
+      use pepper_kinds, only: ip
+      implicit none
+
+      character(*), intent(inout) :: string  !! String into which SUB is inserted.
+      character(*), intent(in) :: sub  !! Substring to be inserted.
+      integer(ip), intent(in) :: loc  !! Position at which SUB is to be inserted.
+
+      integer(ip) :: myloc
+      integer(ip) :: subend
+
+      myloc = max ( 1, loc )
+
+      if ( myloc > len (string) ) return
+
+      subend = myloc - 1 + len (sub)
+
+!
+!     Shift the tail right (Fortran evaluates the right side of a
+!     character assignment before storing, so the overlap is allowed).
+!
+      if ( subend < len (string) ) then
+         string(subend+1:) = string(myloc:)
+      end if
+
+      string( myloc : min(subend,len(string)) ) = sub
+
+      end subroutine zzinssub_inplace
+
+      !> Replace the substring (LEFT:RIGHT) of a string with another
+      !> string, in place: the in-place form of [[zzrepsub]].
+      !>
+      !> LEFT is limited to the range 1 to LEN(STRING)+1. If RIGHT is
+      !> less than LEFT-1, STRING is unchanged. Characters shifted past
+      !> the end of STRING are lost; vacated characters become blanks.
+      elemental subroutine zzrepsub_inplace ( string, left, right, sub )
+      use pepper_kinds, only: ip
+      implicit none
+
+      character(*), intent(inout) :: string  !! String in which the substring is replaced.
+      integer(ip), intent(in) :: left  !! Start of the substring to be replaced.
+      integer(ip), intent(in) :: right  !! End of the substring to be replaced.
+      character(*), intent(in) :: sub  !! Replacement string.
+
+      integer(ip) :: n
+      integer(ip) :: myleft
+      integer(ip) :: myrght
+      integer(ip) :: nsub
+      integer(ip) :: ntail
+      integer(ip) :: last
+
+      if ( right < left-1 ) return
+
+      n      = len ( string )
+      myleft = min ( n+1, max(1, left) )
+      myrght = max ( myleft-1, right )
+
+!
+!     NSUB characters of SUB fit after the first MYLEFT-1 characters;
+!     NTAIL characters of the tail (MYRGHT+1:) fit after them.
+!
+      nsub  = min ( n-myleft+1, len(sub) )
+      ntail = max ( 0, min(n-myleft+1-nsub, n-myrght) )
+      last  = myleft - 1 + nsub + ntail
+
+!
+!     Move the tail first (the overlap is allowed; see
+!     [[zzinssub_inplace]]), then store the replacement.
+!
+      if ( ntail > 0 ) then
+         string(myleft+nsub : last) = string(myrght+1 : myrght+ntail)
+      end if
+
+      string(myleft : myleft+nsub-1) = sub
+
+      if ( last < n ) then
+         string(last+1:) = ' '
+      end if
+
+      end subroutine zzrepsub_inplace
+
+      !> Replace a marker in a string with a character string, in place:
+      !> the in-place form of [[repmc]].
+      !>
+      !> The first occurrence of MARKER (ignoring its leading and trailing
+      !> blanks) is replaced by VALUE without its leading and trailing
+      !> blanks, or by a single blank if VALUE is blank.
+      elemental subroutine repmc_inplace ( string, marker, value )
+      use pepper_kinds, only: ip
+      implicit none
+
+      character(*), intent(inout) :: string  !! String in which the marker is replaced.
+      character(*), intent(in) :: marker  !! Marker to be replaced.
+      character(*), intent(in) :: value  !! Replacement string.
+
+      integer(ip) :: mrkpsb
+      integer(ip) :: mrkpse
+
+      call find_marker ( string, marker, mrkpsb, mrkpse )
+
+      if ( mrkpsb == 0 ) return
+
+      if ( value == ' ' ) then
+         call zzrepsub_inplace ( string, mrkpsb, mrkpse, ' ' )
+      else
+         call zzrepsub_inplace ( string, mrkpsb, mrkpse, &
+                                 value( verify(value, ' ') : len_trim(value) ) )
+      end if
+
+      end subroutine repmc_inplace
+
+      !> Replace a marker in a string with an integer, in place: the
+      !> in-place form of [[repmi]].
+      elemental subroutine repmi_inplace ( string, marker, value )
+      use pepper_kinds, only: ip
+      implicit none
+
+      character(*), intent(inout) :: string  !! String in which the marker is replaced.
+      character(*), intent(in) :: marker  !! Marker to be replaced.
+      integer(ip), intent(in) :: value  !! Replacement value.
+
+      integer(ip), parameter :: maxli = 11  ! Maximum length of an integer.
+
+      character(maxli) :: substr
+
+      integer(ip) :: mrkpsb
+      integer(ip) :: mrkpse
+
+      call find_marker ( string, marker, mrkpsb, mrkpse )
+
+      if ( mrkpsb == 0 ) return
+
+      call intstr ( value, substr )
+
+      call zzrepsub_inplace ( string, mrkpsb, mrkpse, substr(:len_trim(substr)) )
+
+      end subroutine repmi_inplace
+
+      !> Replace a marker in a string with a double precision number, in
+      !> place: the in-place form of [[repmd]].
+      elemental subroutine repmd_inplace ( string, marker, value, sigdig )
+      use pepper_kinds, only: ip, wp
+      implicit none
+
+      character(*), intent(inout) :: string  !! String in which the marker is replaced.
+      character(*), intent(in) :: marker  !! Marker to be replaced.
+      real(wp), intent(in) :: value  !! Replacement value.
+      integer(ip), intent(in) :: sigdig  !! Significant digits in replacement text.
+
+      integer(ip), parameter :: maxldp = 23  ! Maximum length of a DP number.
+
+      character(maxldp) :: substr
+
+      integer(ip) :: mrkpsb
+      integer(ip) :: mrkpse
+      integer(ip) :: subnbf
+      integer(ip) :: subnbl
+
+      call find_marker ( string, marker, mrkpsb, mrkpse )
+
+      if ( mrkpsb == 0 ) return
+
+      call dpstr ( value, sigdig, substr )
+
+      subnbf = verify ( substr, ' ' )
+      subnbl = len_trim ( substr )
+
+      if ( subnbf /= 0 ) then
+         call zzrepsub_inplace ( string, mrkpsb, mrkpse, substr(subnbf:subnbl) )
+      end if
+
+      end subroutine repmd_inplace
+
+      !> Locate the first occurrence of a marker in a string, ignoring
+      !> the marker's leading and trailing blanks (as [[repmc]] does).
+      !>
+      !> FIRST is 0 if MARKER is blank or does not occur in STRING.
+      pure subroutine find_marker ( string, marker, first, last )
+      use pepper_kinds, only: ip
+      implicit none
+
+      character(*), intent(in) :: string  !! String to search.
+      character(*), intent(in) :: marker  !! Marker to find.
+      integer(ip), intent(out) :: first  !! Index of the first character of the marker in STRING.
+      integer(ip), intent(out) :: last  !! Index of the last character of the marker in STRING.
+
+      integer(ip) :: mrknbf
+      integer(ip) :: mrknbl
+
+      first = 0
+      last  = 0
+
+      if ( marker == ' ' ) return
+
+      mrknbf = verify ( marker, ' ' )
+      mrknbl = len_trim ( marker )
+
+      first = index ( string, marker(mrknbf:mrknbl) )
+
+      if ( first /= 0 ) then
+         last = first + mrknbl - mrknbf
+      end if
+
+      end subroutine find_marker
 
 end module pepper_strings

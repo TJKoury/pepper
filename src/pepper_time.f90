@@ -2226,7 +2226,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 17-SEP-1996 (WLT)
       module procedure dpfmt
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: dpstr, ncpos, pos, rjust
+      use pepper_strings, only: dpstr, ncpos, pos
       implicit none
 
       integer(ip), parameter :: wdsize = 32
@@ -2504,7 +2504,7 @@ contains
             call dpstr ( x, sigdig, mystr )
             mystr(1:1) = sign
             str = adjustl(mystr)
-            call rjust ( str(1:lastch), str(1:lastch) )
+            str(1:lastch) = adjustr ( str(1:lastch) )
 
          end if
 
@@ -2563,7 +2563,7 @@ contains
             call dpstr ( x, sigdig, mystr )
             mystr(1:1) = sign
             str = adjustl(mystr)
-            call rjust ( str(1:lastch), str(1:lastch) )
+            str(1:lastch) = adjustr ( str(1:lastch) )
             return
 
          end if
@@ -3165,7 +3165,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
       module procedure repmf
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: ucase, zzrepsub
+      use pepper_strings, only: zzrepsub, ucase_inplace
       implicit none
 
       integer(ip), parameter :: maxlfd = 56
@@ -3216,7 +3216,7 @@ contains
 !     number to text, and substitute the text for the marker.
 !
       gdfmt = adjustl(format)
-      call ucase   ( gdfmt,  gdfmt )
+      call ucase_inplace ( gdfmt )
 
       call dpstrf  ( ctx, value, sigdig, gdfmt, substr )
 
@@ -4271,7 +4271,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax, intmin, spd
       use pepper_arrays, only: lstlti
-      use pepper_strings, only: cmprss, intstr
+      use pepper_strings, only: intstr, cmprss_inplace
       implicit none
       integer(ip), parameter :: dp400y = 365*400 + 97
       integer(ip), parameter :: dp100y = 365*100 + 24
@@ -4658,7 +4658,7 @@ contains
       //     ':' &
       //     sstr(1:6)
 
-      call cmprss ( ' ', 1, date, date )
+      call cmprss_inplace ( ' ', 1, date )
       date = adjustl(date)
 
       calstr = date
@@ -5156,7 +5156,7 @@ contains
       use pepper_constants, only: j2000, spd
       use pepper_arrays, only: bsrchc, lstled, lstlei, lstlti, orderc, reordc, reordi, reordl
       use pepper_math, only: odd
-      use pepper_strings, only: nextwd, ucase
+      use pepper_strings, only: nextwd, ucase_inplace
       use pepper_inc_zzctr
       use pepper_containers, only: grow
       implicit none
@@ -5681,8 +5681,8 @@ contains
 !
       call nextwd ( from,   myfrom, rest )
       call nextwd ( to,     myto,   rest )
-      call ucase  ( myfrom, myfrom       )
-      call ucase  ( myto,   myto         )
+      call ucase_inplace ( myfrom )
+      call ucase_inplace ( myto )
 
 !
 !     Make sure that the FROM and TO are recognized time types.
@@ -6541,7 +6541,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 13-NOV-1996 (WLT)
       module procedure timdef
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: prefix, ucase
+      use pepper_strings, only: prefix, ucase_inplace
       implicit none
       integer(ip), parameter :: wdsize = 16
       integer(ip), parameter :: nzones = 8
@@ -6567,10 +6567,10 @@ contains
 !     Normalize the input.
 !
       myactn = adjustl(action)
-      call ucase ( myactn, myactn )
+      call ucase_inplace ( myactn )
 
       myitem = adjustl(item)
-      call ucase ( myitem, myitem )
+      call ucase_inplace ( myitem )
 
 !
 !     Admittedly, the decision making below is not very elegant.
@@ -6581,7 +6581,7 @@ contains
       if ( myactn == 'SET' ) then
 
          myval = adjustl(value)
-         call ucase ( myval,  myval  )
+         call ucase_inplace ( myval )
 
          if      ( myitem == 'SYSTEM' ) then
 
@@ -7953,7 +7953,7 @@ contains
       !>     Initial values
       module procedure str2et
       use pepper_kinds, only: ip, wp
-      use pepper_strings, only: prefix, repmc
+      use pepper_strings, only: prefix, repmc_inplace, repmi_inplace
       implicit none
       integer(ip), parameter :: smwdsz = 16
       integer(ip), parameter :: lnsize = 80
@@ -8493,8 +8493,8 @@ contains
          //       'second that immediately follows the time #:#:59 ' &
          //       'on  # # and # #. '
 
-         call repmc ( error,  '#', timstr,           error  )
-         call repmc ( error , '#', modify(zone)(3:), error  )
+         call repmc_inplace ( error,  '#', timstr )
+         call repmc_inplace ( error , '#', modify(zone)(3:) )
 
       else if ( zoned ) then
 !
@@ -8507,8 +8507,8 @@ contains
          //       'second that immediately follows the time #:#:59 ' &
          //       'on  # # and # #.'
 
-         call repmc ( error,  '#', timstr,           error  )
-         call repmc ( error , '#', modify(zone)(3:), error  )
+         call repmc_inplace ( error,  '#', timstr )
+         call repmc_inplace ( error , '#', modify(zone)(3:) )
 
       else
 !
@@ -8521,14 +8521,14 @@ contains
          //       'immediately follows the time #:#:59  on # # ' &
          //       'and # #.'' '
 
-         call repmc ( error,  '#', timstr,           error  )
+         call repmc_inplace ( error,  '#', timstr )
 
       end if
 
 !
 !     First fill in the year portion of the error message.
 !
-      call repmi ( ctx, error , '#', orgnyr, error  )
+      call repmi_inplace ( error , '#', orgnyr )
 
       mon(1) =  6.0_wp
       mon(2) = 12.0_wp
@@ -8567,8 +8567,8 @@ contains
       call dpfmt ( ctx, hour,   '0x', hstr )
       call dpfmt ( ctx, minute, '0x', mstr )
 
-      call repmc ( error , '#', hstr, error  )
-      call repmc ( error , '#', mstr, error  )
+      call repmc_inplace ( error , '#', hstr )
+      call repmc_inplace ( error , '#', mstr )
 
 !
 !     Last step we generate the month and day corresponding
@@ -8614,8 +8614,8 @@ contains
 
             if ( year == orgnyr ) then
 
-               call repmc ( error, '#', mname(month), error  )
-               call repmi ( ctx, error, '#', day,          error  )
+               call repmc_inplace ( error, '#', mname(month) )
+               call repmi_inplace ( error, '#', day )
 
             end if
 
