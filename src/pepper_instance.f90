@@ -423,7 +423,6 @@ module pepper_instance
       type(recpgr_state), allocatable :: recpgr_state  !! state of [[recpgr]]
       type(subpt_state), allocatable :: subpt_state  !! state of [[subpt]]
       type(subsol_state), allocatable :: subsol_state  !! state of [[subsol]]
-      type(tostdo_state), allocatable :: tostdo_state  !! state of [[tostdo]]
       type(zzcnquad_state), allocatable :: zzcnquad_state  !! state of [[zzcnquad]]
       type(zzdsksph_state), allocatable :: zzdsksph_state  !! state of [[zzdsksph]]
       type(zznrddp_state), allocatable :: zznrddp_state  !! state of ZZNRDDP
@@ -1329,7 +1328,6 @@ module pepper_instance
       procedure, non_overridable :: sphsd
       procedure, non_overridable :: spkpv
       procedure, non_overridable :: srfrec
-      procedure, non_overridable :: stdio
       procedure, non_overridable :: surfpt
       procedure, non_overridable :: twovxf
       procedure, non_overridable :: uddf
@@ -12637,14 +12635,6 @@ module pepper_instance
          real(wp), intent(in) :: lat  !! Latitude of point in radians.
          real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of the point.
       end subroutine srfrec
-
-      !> Return the logical unit associated with some standard input or
-      !> standard output.
-      module subroutine stdio ( ctx, name, unit )
-         class(pepper_context), intent(inout) :: ctx  !! the context
-         character(*), intent(in) :: name  !! is the name of a logical unit to return.
-         integer(ip), intent(out) :: unit  !! is the logical unit associated with NAME.
-      end subroutine stdio
 
       !> Determine the intersection of a line-of-sight vector with the
       !> surface of an ellipsoid.

@@ -1005,22 +1005,6 @@
       call ctx%srfrec ( body, lon, lat, rectan )
       end subroutine srfrec
 
-      !> Return the logical unit associated with some standard input or
-      !> standard output.
-      !>
-      !> Legacy interface: calls ctx%stdio with the legacy context.
-      subroutine stdio ( name, unit )
-      use pepper_instance, only: pepper_context
-      use pepper_legacy_context, only: legacy_context
-      use pepper_kinds, only: ip
-      implicit none
-      character(*) :: name  !! is the name of a logical unit to return.
-      integer(ip) :: unit  !! is the logical unit associated with NAME.
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%stdio ( name, unit )
-      end subroutine stdio
-
       !> Determine the intersection of a line-of-sight vector with the
       !> surface of an ellipsoid.
       !>

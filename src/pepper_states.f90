@@ -19,6 +19,7 @@
 !> tools/modularize_ctx.py had generated.)
 module pepper_states
 
+   use, intrinsic :: iso_fortran_env, only: output_unit
    use pepper_kinds, only: ip, wp
    use pepper_containers, only: grow, string, string_map, int_map
    use pepper_segment_index, only: segment_index, segment_reuse
@@ -2986,17 +2987,6 @@ module pepper_states
       logical :: first  !! true until the buffer pool is initialized
    end type tkfram_state
 
-   ! ------------------------------------------------------------------ TOSTDO
-
-   !> Write a line of text to standard output.
-   !>
-   !> The saved variables of SPICELIB's [[tostdo]] routines (entry points tostdo),
-   !> held in [[pepper_context]] (one per thread).
-   type, public :: tostdo_state
-      integer(ip) :: stdout = 0  !! logical unit of standard output (from [[stdio]])
-      logical :: first = .true.  !! first call: the standard output unit not yet obtained
-   end type tostdo_state
-
    ! ------------------------------------------------------------------ TTRANS
 
    integer(ip), parameter :: ttrans_maxvar = 1
@@ -4274,14 +4264,12 @@ module pepper_states
       real(wp) :: done = 0.0_wp  !! amount of work done so far
       real(wp) :: entire = 0.0_wp  !! total amount of work to be done
       character(mxendm) :: finish = ' '  !! progress report end message
-      logical :: first = .true.  !! first call: standard output unit not yet looked up
       integer(ip) :: ls = 1  !! nonblank length of the begin message (set by [[zzgftswk]])
       real(wp) :: lstsec = 0.0_wp  !! system time of the last report, seconds past midnight
       character(mxbegm) :: start = ' '  !! progress report begin message
-      integer(ip) :: stdout = 6  !! logical unit of standard output
       real(wp) :: step = 0.0_wp  !! minimum seconds between progress reports (0 to 3600)
       real(wp) :: svincr = 0.0_wp  !! last increment passed to [[zzgfwkin]]
-      integer(ip) :: svunit = 6  !! logical unit the progress report is written to
+      integer(ip) :: svunit = output_unit  !! logical unit the progress report is written to (standard output unless [[zzgfwkun]] sets another)
    end type zzgfrpwk_state
 
    ! ------------------------------------------------------------------ ZZGFRRU

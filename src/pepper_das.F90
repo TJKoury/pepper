@@ -2411,22 +2411,13 @@ contains
       !>
       !>     Beta Version 1.0.0, 17-DEC-1992 (KRG)
       module procedure writln
+#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
+      use, intrinsic :: iso_fortran_env, only: output_unit
+#endif
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
 
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-!     Local Parameters
-!
-!     Set a value for the logical unit which represents the standard
-!     output device, commonly a terminal. A value of 6 is widely used,
-!     but the Fortran standard does not specify a value, so it may be
-!     different for different fortran implementations.
-!
-      integer(ip) :: stdout
-      parameter           ( stdout = 6 )
-#else
-#endif
 !     Local variables
 !
       integer(ip) :: iostat
@@ -2451,7 +2442,7 @@ contains
 !     specifier FMT='(A)', which does not use any vertical carriage
 !     control characters.
 !
-       if ( unit == stdout ) then
+       if ( unit == output_unit ) then
           write ( unit, *, iostat=iostat ) line(:rtrim(line))
        else
           write ( unit, fmt='(A)', iostat=iostat ) line(:rtrim(line))

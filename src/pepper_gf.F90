@@ -21800,6 +21800,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
       module procedure zzgftswk
+      use, intrinsic :: iso_fortran_env, only: output_unit
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim
       use pepper_inc_zzgf
@@ -21815,32 +21816,17 @@ contains
                   done => ctx%zzgfrpwk_state%done, &
                   entire => ctx%zzgfrpwk_state%entire, &
                   finish => ctx%zzgfrpwk_state%finish, &
-                  first => ctx%zzgfrpwk_state%first, &
                   ls => ctx%zzgfrpwk_state%ls, &
                   lstsec => ctx%zzgfrpwk_state%lstsec, &
                   start => ctx%zzgfrpwk_state%start, &
-                  stdout => ctx%zzgfrpwk_state%stdout, &
                   step => ctx%zzgfrpwk_state%step, &
                   svunit => ctx%zzgfrpwk_state%svunit )
       if ( ctx%failed() ) return
 
 !
-!     On the first pass, obtain the logical unit for
-!     standard output.
+!     PEPPER: the report goes to standard output (OUTPUT_UNIT of
+!     ISO_FORTRAN_ENV) unless the caller sets another unit (ZZGFWKUN).
 !
-      if ( first ) then
-
-         call stdio ( ctx, 'STDOUT', stdout )
-
-!
-!        The output unit is STDOUT unless the caller
-!        sets it to something else.
-!
-         svunit = stdout
-
-         first  = .false.
-
-      end if
 
 !
 !     Save the inputs and set the amount of work done to 0
@@ -21880,7 +21866,7 @@ contains
 !     Display a blank line, make sure we don't overwrite anything
 !     at the bottom of the screen. The display the message.
 !
-      if ( svunit == stdout ) then
+      if ( svunit == output_unit ) then
 
          call zzgfdsps ( ctx, 1, messge, 'A', 0 )
 
@@ -21950,6 +21936,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
       module procedure zzgfwkin
+      use, intrinsic :: iso_fortran_env, only: output_unit
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim
       use pepper_inc_zzgf
@@ -21968,7 +21955,6 @@ contains
                   ls => ctx%zzgfrpwk_state%ls, &
                   lstsec => ctx%zzgfrpwk_state%lstsec, &
                   start => ctx%zzgfrpwk_state%start, &
-                  stdout => ctx%zzgfrpwk_state%stdout, &
                   step => ctx%zzgfrpwk_state%step, &
                   svincr => ctx%zzgfrpwk_state%svincr, &
                   svunit => ctx%zzgfrpwk_state%svunit )
@@ -22006,7 +21992,7 @@ contains
                             ' '            // &
                             finish(1:rtrim(finish))
 
-            if ( svunit == stdout ) then
+            if ( svunit == output_unit ) then
 
                call zzgfdsps ( ctx, 0, messge, 'A', 0 )
 
@@ -22229,17 +22215,7 @@ contains
       real(wp) :: fractn
       real(wp) :: tvec ( 6 )
       if ( .not. allocated ( ctx%zzgfrpwk_state ) ) allocate ( ctx%zzgfrpwk_state )
-      associate ( first => ctx%zzgfrpwk_state%first, &
-                  stdout => ctx%zzgfrpwk_state%stdout, &
-                  svunit => ctx%zzgfrpwk_state%svunit )
-      if ( first ) then
-
-         call stdio ( ctx, 'STDOUT', stdout )
-
-         first  = .false.
-
-      end if
-
+      associate ( svunit => ctx%zzgfrpwk_state%svunit )
       svunit = unit
 
       return
@@ -26125,7 +26101,6 @@ contains
       integer(ip) :: i
       integer(ip) :: long
       integer(ip) :: short
-      integer(ip) :: stdout
       integer(ip) :: unit
       if ( .not. allocated ( ctx%gfrprt_state ) ) allocate ( ctx%gfrprt_state )
       associate ( copyb => ctx%gfrprt_state%copyb, &
@@ -26354,7 +26329,6 @@ contains
       integer(ip) :: i
       integer(ip) :: long
       integer(ip) :: short
-      integer(ip) :: stdout
       integer(ip) :: unit
       if ( .not. allocated ( ctx%gfrprt_state ) ) allocate ( ctx%gfrprt_state )
       associate ( t0 => ctx%gfrprt_state%t0, &
@@ -26488,6 +26462,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (WLT) (IMU)
       module procedure gfrepf
+      use, intrinsic :: iso_fortran_env, only: output_unit
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
@@ -26506,7 +26481,6 @@ contains
       integer(ip) :: i
       integer(ip) :: long
       integer(ip) :: short
-      integer(ip) :: stdout
       integer(ip) :: tcheck
       integer(ip) :: unit
       if ( .not. allocated ( ctx%gfrprt_state ) ) allocate ( ctx%gfrprt_state )
@@ -26523,9 +26497,7 @@ contains
 !
       call zzgfwkmo ( ctx, unit, total, freq, tcheck, begin, end, incr )
 
-      call stdio ( ctx, 'STDOUT', stdout )
-
-      if ( unit /= stdout ) then
+      if ( unit /= output_unit ) then
 !
 !        We're not currently writing to standard output, so we're
 !        done.

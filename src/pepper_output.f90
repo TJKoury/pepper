@@ -9,6 +9,7 @@
 !> they cannot signal any).
 module pepper_output
 
+   use, intrinsic :: iso_fortran_env, only: output_unit
    use pepper_kinds, only: ip
 
    implicit none
@@ -28,24 +29,24 @@ contains
       dev = adjustl(device)
       if (upper(dev) == 'NULL') return
       if (upper(dev) == 'SCREEN') then
-         write (*, '(a)', iostat=ios) trim(line)
+         write (output_unit, '(a)', iostat=ios) trim(line)
          return
       end if
       inquire (file=trim(dev), opened=opened, exist=exists, number=unit, iostat=ios)
       if (ios /= 0) then
-         write (*, '(a)') 'SPICE(INQUIREFAILED)', 'WRLINE: File = ' // trim(dev)
+         write (output_unit, '(a)') 'SPICE(INQUIREFAILED)', 'WRLINE: File = ' // trim(dev)
          return
       end if
       if (.not. (opened .and. exists)) then
          open (newunit=unit, file=trim(dev), status='new', action='write', iostat=ios)
          if (ios /= 0) then
-            write (*, '(a)') 'SPICE(FILEOPENFAILED)', ' ', &
+            write (output_unit, '(a)') 'SPICE(FILEOPENFAILED)', ' ', &
                'WRLINE: An error occurred while attempting to open ' // trim(dev) // '.'
             return
          end if
       end if
       write (unit, '(a)', iostat=ios) trim(line)
-      if (ios /= 0) write (*, '(a)') 'WRLINE: An error occurred while attempting to WRITE to ' // &
+      if (ios /= 0) write (output_unit, '(a)') 'WRLINE: An error occurred while attempting to WRITE to ' // &
          trim(dev) // '.'
    end subroutine wrline
 
@@ -56,7 +57,7 @@ contains
       logical :: opened
       inquire (file=trim(adjustl(device)), opened=opened, number=unit, iostat=ios)
       if (ios /= 0) then
-         write (*, '(a)') 'SPICE(INQUIREFAILED)', 'CLLINE:  File = ' // trim(device)
+         write (output_unit, '(a)') 'SPICE(INQUIREFAILED)', 'CLLINE:  File = ' // trim(device)
          return
       end if
       if (opened) close (unit)
