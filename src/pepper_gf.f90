@@ -3818,7 +3818,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (NJB)
       module procedure zzgfdsps
       use pepper_kinds, only: ip
-      use pepper_strings, only: rtrim, suffix
+      use pepper_strings, only: rtrim
       implicit none
 
       integer(ip), parameter :: lnsize = 80
@@ -3826,7 +3826,6 @@ contains
       character(lnsize) :: tmpstr
 
       integer(ip) :: i
-      integer(ip) :: iostat
       integer(ip) :: l
 
 !
@@ -3834,56 +3833,21 @@ contains
 !
       tmpstr = string
       l      = rtrim(tmpstr)
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-!     Write leading blank lines, if any.
-#else
-!     Write leading blank lines, if any. We use cursor control
-!     here so as to avoid overwriting the last status line.
-#endif
+!
+!     PEPPER: plain lines on every platform: the leading blank lines,
+!     the status line, the trailing blank lines. (SPICELIB moved the
+!     cursor with ANSI escape sequences, except on Windows with Intel
+!     Fortran, so that each status line overwrote the previous one;
+!     terminals that do not interpret them show them as text.)
+!
       do i = 1, nlead
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
          call tostdo ( ctx, ' ' )
-#else
-         write (*, '(A)' ) char(27)//'[B'
-#endif
       end do
 
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-!     Write the status line without special cursor control.
-#else
-!     Write the status line, then move the cursor up one line.
-!     This places the cursor at the start of the line that
-!     was just written.
-#endif
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      call tostdo ( ctx,   tmpstr( : rtrim(tmpstr) )   )
-#else
-      call suffix (  char(27)//'[A', 0, tmpstr )
+      call tostdo ( ctx, tmpstr(:l) )
 
-      write ( *, '(A)', iostat = iostat ) tmpstr( : rtrim(tmpstr) )
-
-      if ( iostat /= 0  ) then
-
-         call ctx%setmsg ( 'Error writing to standard output: IOSTAT = #.' )
-         call ctx%errint ( '#', iostat                                     )
-         call ctx%sigerr ( 'SPICE(WRITEFAILED)'                            )
-         return
-
-      end if
-#endif
-
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-!     Write trailing blank lines, if any.
-#else
-!     Write trailing blank lines, if any. We use cursor control
-!     here so as to avoid overwriting the last status line.
-#endif
       do i = 1, ntrail
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
          call tostdo ( ctx, ' ' )
-#else
-         write (*, '(A)' ) char(27)//'[B'
-#endif
       end do
 
       return

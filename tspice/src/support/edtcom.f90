@@ -407,11 +407,7 @@
 
       SAVE
 
-#if defined(SPICE_COMPILER_INTEL)
-      DATA     EDITOR    / 'edit'  /
-#else
       DATA     EDITOR    / 'emacs' /
-#endif
       DATA     FIRST     / .TRUE.  /
 
 !

@@ -1,6 +1,7 @@
 !$Procedure F_TANGPT2 ( Test tangent point routine TANGPT, part 2 )
 
       SUBROUTINE F_TANGPT2 ( OK )
+      use, intrinsic :: iso_fortran_env, only: compiler_version
       use pepper_inc_zzdsk
       use pepper_inc_zzabcorr
 
@@ -25,6 +26,11 @@
 ! $ Declarations
 
       IMPLICIT NONE
+!
+!     PEPPER: INTEL is true with Intel Fortran, whose results need some
+!     looser tolerances (selected at compile time in N0067).
+!
+      LOGICAL               INTEL
 
 
       LOGICAL               OK
@@ -359,6 +365,8 @@
 !
 !     Open the test family.
 !
+      INTEL = INDEX ( COMPILER_VERSION(), 'Intel' ) .GT. 0
+
       CALL TOPEN ( 'F_TANGPT2' )
 !
 !     NOTE: because this is a master file, the character sequence
@@ -813,11 +821,11 @@
                      IF ( GEOM ) THEN
 
 
-#if defined(SPICE_COMPILER_INTEL)
-                        TOL = 5.D-14
-#else
-                        TOL = VTIGHT
-#endif
+                        IF ( INTEL ) THEN
+                           TOL = 5.D-14
+                        ELSE
+                           TOL = VTIGHT
+                        END IF
                      ELSE IF ( USECN ) THEN
 !
 !                       We're using converged light time corrections.
@@ -840,11 +848,11 @@
 !                             Tolerance for these cases is platform-
 !                             dependent.
 
-#if defined(SPICE_COMPILER_INTEL)
-                              TOL = 1.D-11
-#else
-                              TOL = VTIGHT
-#endif
+                              IF ( INTEL ) THEN
+                                 TOL = 1.D-11
+                              ELSE
+                                 TOL = VTIGHT
+                              END IF
                            ELSE
                               TOL = VTIGHT
                            END IF
@@ -918,11 +926,11 @@
 !                             Tolerance for these cases is platform-
 !                             dependent.
 
-#if defined(SPICE_COMPILER_INTEL)
-                              TOL = 1.D-11
-#else
-                              TOL = VTIGHT
-#endif
+                              IF ( INTEL ) THEN
+                                 TOL = 1.D-11
+                              ELSE
+                                 TOL = VTIGHT
+                              END IF
                            ELSE
                               TOL = VTIGHT
                            END IF
@@ -1248,11 +1256,11 @@
 !
 
 
-#if defined(SPICE_COMPILER_INTEL)
-                           TOL = 5.D-7
-#else
-                           TOL = 1.D-7
-#endif
+                           IF ( INTEL ) THEN
+                              TOL = 5.D-7
+                           ELSE
+                              TOL = 1.D-7
+                           END IF
 
                            CALL CHCKSD ( 'TRGEPC', TRGEPC, '~', &
                                                    XPTEPC, TOL, OK )
@@ -1490,11 +1498,11 @@
 !                                         Tolerance for these cases is
 !                                         platform-dependent.
 
-#if defined(SPICE_COMPILER_INTEL)
-                                          TOL = 5.D-10
-#else
-                                          TOL = 1.D-10
-#endif
+                                          IF ( INTEL ) THEN
+                                             TOL = 5.D-10
+                                          ELSE
+                                             TOL = 1.D-10
+                                          END IF
                                        ELSE
                                           TOL = 1.D-10
                                        END IF

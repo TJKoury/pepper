@@ -243,14 +243,6 @@
 
 
 !
-#if defined(SPICE_COMPILER_INTEL)
-#else
-!     Other functions
-!
-      INTEGER               IARGC
-
-!
-#endif
 !     Local Variables
 !
       INTEGER               ARGLEN
@@ -260,10 +252,6 @@
 
       INTEGER               HOWMNY
       INTEGER               I
-#if defined(SPICE_COMPILER_INTEL)
-      INTEGER*2             STATUS
-#else
-#endif
 
       LOGICAL               FIRST
 
@@ -272,23 +260,12 @@
       DATA                  FIRST  / .TRUE. /
 
 !
-#if defined(SPICE_COMPILER_INTEL)
-!     Call the FORTRAN library function NARGS to determine how many
-!     words are on the command line. This number includes the command
-!     itself; we won't include that in the output string. Get the
-!     words one at a time and construct the output string and we're
-!     done.
-#else
-!     Call the FORTRAN library function iargc to determine how many
-!     words are on the command line. Then, get the arguments one at a
-!     time and construct the output string.
-#endif
+!     PEPPER: COMMAND_ARGUMENT_COUNT and GET_COMMAND_ARGUMENT (standard
+!     Fortran) in place of IARGC/GETARG (GFORTRAN) and NARGS/GETARG
+!     (Intel). Get the arguments one at a time and construct the
+!     output string.
 !
-#if defined(SPICE_COMPILER_INTEL)
-      HOWMNY = NARGS() - 1
-#else
-      HOWMNY = IARGC()
-#endif
+      HOWMNY = COMMAND_ARGUMENT_COUNT()
       I      = 1
       LINE   = ' '
 
@@ -298,11 +275,7 @@
 
       DO WHILE ( I .LE. HOWMNY )
 
-#if defined(SPICE_COMPILER_INTEL)
-         CALL GETARG ( I, ARGMNT, STATUS )
-#else
-         CALL GETARG ( I, ARGMNT )
-#endif
+         CALL GET_COMMAND_ARGUMENT ( I, ARGMNT )
 
          IF ( FIRST ) THEN
             CALL SUFFIX ( ARGMNT, 0, LINE )

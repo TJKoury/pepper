@@ -16360,45 +16360,19 @@ contains
       !>        code was rearranged to reflect this. There is now only a single
       !>        READ statement.
       module procedure prompt
+      use, intrinsic :: iso_fortran_env, only: input_unit, output_unit
       use pepper_kinds, only: ip
       implicit none
 
       integer(ip) :: iostat
 
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-!     The following code should be used in the following environments:
-!     VAX/FORTRAN, IBM-PC/Lahey Fortran, MacIntosh/Language Systems
-!     Fortran
-#else
-#endif
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      write (*,fmt='(" ",A,$)', iostat=iostat ) dspmsg
-#else
-!     The code below should be used in the following environments:
 !
-!     SUN/Fortran,
-!     HP/HP-Fortran,
-!     Silicon Graphics/Silicon Graphics Fortran,
-!     DEC Alpha-OSF/1--DEC Fortran,
-!     NeXT/Absoft Fortran
-!     PC Linux/Fort77
+!     PEPPER: the prompt is written without advancing to a new line
+!     (standard Fortran; SPICELIB used the "$" edit descriptor, with a
+!     leading blank for carriage control on Windows with Intel Fortran).
 !
-      write (*,fmt='(A,$)', iostat=iostat ) dspmsg
-#endif
-
-!
-!     If none of the write statements above works on a particular
-!     unsupported platform, read on...
-!
-!     Although, this isn't really what you want, if you need to port
-!     this quickly to an environment that does not support the format
-!     statement in any of the cases above, you can comment out the
-!     write statement above and un-comment the write statement below.
-!     In this way you can get a program working quickly in the new
-!     environment while you figure out how to control cursor
-!     positioning.
-!
-!      WRITE (*,*, IOSTAT=IOSTAT ) DSPMSG
+      write ( output_unit, fmt='(A)', advance='NO', iostat=iostat ) dspmsg
+      if ( iostat == 0 ) flush ( output_unit )
 !
 !     Check for a write error. It's not likely, but the standard output
 !     can be redirected. Better safe than confused later.
@@ -16423,7 +16397,7 @@ contains
 !     Now that we've written out the prompt and there was no error, we
 !     can read in the response.
 !
-      read  (*,fmt='(A)', iostat=iostat ) buffer
+      read ( input_unit, fmt='(A)', iostat=iostat ) buffer
 
       if ( iostat /= 0 ) then
 

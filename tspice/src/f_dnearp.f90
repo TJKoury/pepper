@@ -176,7 +176,6 @@
 !
 !     --- Case: -------------------------------------------------------
 !
-#if defined(SPICE_COMPILER_INTEL)
       CALL TCASE ( 'Make sure that the found flag is set to ' &
       //           'FALSE for a point on the focal set of the ' &
       //           'ellipsoid. ' )
@@ -203,8 +202,6 @@
 !
 !     --- Case: -------------------------------------------------------
 !
-#else
-#endif
       CALL TCASE ( 'Check the results of DNEARP when the body in ' &
       //           'question is the unit sphere. ' )
 

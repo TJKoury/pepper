@@ -360,29 +360,12 @@ contains
       implicit none
 
 !
-!     We have provided values for several popular machines. Remove
-!     the comment character in front of the value for your machine,
-!     or provide your own value. Numbers are provided in a variety
-!     of formats: decimal, hex, and binary. These last two formats
-!     are not portable; but then, neither are the values.
+!     PEPPER: one value for every platform. CHBASE is used by ENCHAR and
+!     DECHAR, which encode integers in characters held in memory only;
+!     any value up to 256 works with every compiler (SPICELIB used 256
+!     on Windows with Intel Fortran, 128 elsewhere).
 !
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-!     VAX, VAX FORTRAN
-!     Sun, Sun FORTRAN
-!     IBM PC, Microsoft FORTRAN, Lahey EM/32 FORTRAN
-!     Macintosh, Language Systems FORTRAN
-!     HP-UX 9000/750, FORTRAN/9000 Series 700 computers
-!     Silicon Graphics, IRIX OS, SGI FORTRAN 77
-!     DEC Alpha, OSF/1, DEC FORTRAN-77
-!     NeXT, Mach OS, Absoft Fortran 77
-#else
-!     PC Linux, g77 or fort77
-#endif
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      chbase = 256
-#else
       chbase = 128
-#endif
 
       return
       end procedure chbase

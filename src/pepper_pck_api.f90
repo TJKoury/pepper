@@ -761,7 +761,6 @@ contains
 
       integer(ip), parameter :: nt = 3
 
-      integer(ip), parameter :: filen = 128
 
       character(40) :: ident
 

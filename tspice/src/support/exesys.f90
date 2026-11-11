@@ -287,25 +287,10 @@
       LOGICAL               RETURN
 
 !
-#if defined(SPICE_COMPILER_INTEL)
-!     System functions
-!
-      LOGICAL             SYSTEMQQ
-      EXTERNAL            SYSTEMQQ
-
-      INTEGER             GETLASTERRORQQ
-      EXTERNAL            GETLASTERRORQQ
-
-!
-#else
-#endif
 !     Local variables
 !
       INTEGER               STATUS
-#if defined(SPICE_COMPILER_INTEL)
-      LOGICAL               SUCCES
-#else
-#endif
+      INTEGER               CMDSTA
 
 
 !
@@ -318,39 +303,28 @@
       END IF
 
 
-#if defined(SPICE_COMPILER_INTEL)
 !
-      SUCCES  =  SYSTEMQQ (   CMD( :RTRIM(CMD)  )   )
-#else
-#endif
+!     PEPPER: EXECUTE_COMMAND_LINE (standard Fortran) in place of
+!     SYSTEM (GFORTRAN) and SYSTEMQQ (Intel). STATUS is the command's
+!     exit status, or the processor's error code if it could not run.
+!
+      CALL EXECUTE_COMMAND_LINE ( CMD( :RTRIM(CMD) ), EXITSTAT = STATUS, &
+                                  CMDSTAT = CMDSTA )
 
-#if defined(SPICE_COMPILER_INTEL)
-      IF ( .NOT. SUCCES ) THEN
-#else
-      CALL SYSTEM ( CMD( :RTRIM(CMD) ), STATUS  )
+      IF ( CMDSTA .NE. 0 ) THEN
+         STATUS = CMDSTA
+      END IF
 
       IF ( STATUS .NE. 0 ) THEN
-#endif
 !
 !        Uh, we've got a problem.
 !
-#if defined(SPICE_COMPILER_INTEL)
-         STATUS  =  GETLASTERRORQQ()
-
-         CALL SETMSG ( 'The "SYSTEMQQ" call '     // &
-                       'returned code # in response to command #.'  )
-         CALL ERRINT ( '#',  STATUS                                 )
-         CALL ERRCH  ( '#',  CMD                                    )
-         CALL SIGERR ( 'SPICE(SYSTEMCALLFAILED)'                    )
-         CALL CHKOUT ( 'EXESYS'                                     )
-#else
          CALL SETMSG ( 'The "system" call returned ' // &
                        'code # in response to command #.'        )
          CALL ERRINT ( '#',  STATUS                              )
          CALL ERRCH  ( '#',  CMD                                 )
          CALL SIGERR ( 'SPICE(SYSTEMCALLFAILED)'                 )
          CALL CHKOUT ( 'EXESYS'                                  )
-#endif
          RETURN
 
       END IF

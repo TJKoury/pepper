@@ -115,16 +115,10 @@
 !
 ! $ Particulars
 !
-#if defined(SPICE_COMPILER_INTEL)
-!     Call the function 'GETENVQQ( ENVVAR, VALUE )', provided to obtain
-!     environment variable values. Given the name of an environment
-!     variable, and it returns the length of the value, or zero if an
-!     error occurs, storing in VALUE the value of the specified
-#else
-!     Call the subroutine 'GETENV( ENVVAR, VALUE )', provided for
-!     UNIX compatibility. Given the name of an environment variable,
-!     this subroutine storing in VALUE the value of the specified
-#endif
+!     PEPPER: call GET_ENVIRONMENT_VARIABLE (standard Fortran; SPICELIB
+!     called GETENV with GFORTRAN and GETENVQQ with Intel Fortran).
+!     Given the name of an environment variable, it stores in VALUE the
+!     value of the specified
 !     environment variable or a blank string if an error occurs.
 !
 ! $ Examples
@@ -293,29 +287,14 @@
 !
 !     SPICELIB functions
 !
-#if defined(SPICE_COMPILER_INTEL)
-#else
-      INTEGER               RTRIM
-#endif
 
       LOGICAL               RETURN
-#if defined(SPICE_COMPILER_INTEL)
-
-!
-!     Other Functions
-!
-      INTEGER               GETENVQQ
-#else
-#endif
 !
 !     Local variables
 !
       CHARACTER*(VALLEN)    MYVALU
-#if defined(SPICE_COMPILER_INTEL)
-
       INTEGER               LENGTH
-#else
-#endif
+      INTEGER               STATUS
 !
 !     Standard SPICE error handling.
 !
@@ -337,39 +316,16 @@
          MYVALU = ' '
 
       ELSE
-#if defined(SPICE_COMPILER_INTEL)
 !
-!        Attempt to get the value for the environment variable. A
-!        LENGTH of zero (0) is returned if the environment variable
-!        is not defined, otherwise LENGTH is the length of the value.
+!        PEPPER: GET_ENVIRONMENT_VARIABLE in place of GETENV and
+!        GETENVQQ. A value that does not fit in VALUE is returned
+!        blank, as before.
 !
-         LENGTH = GETENVQQ ( ENVVAR, MYVALU )
-#else
-#endif
+         CALL GET_ENVIRONMENT_VARIABLE ( ENVVAR, MYVALU, LENGTH, STATUS )
 
-#if defined(SPICE_COMPILER_INTEL)
-         IF ( LENGTH .GT. 0 ) THEN
-#else
-         CALL GETENV ( ENVVAR, MYVALU )
-#endif
-
-#if defined(SPICE_COMPILER_INTEL)
-            IF ( LENGTH .GT. LEN (VALUE) ) THEN
-#else
-         IF ( MYVALU .NE. ' ' ) THEN
-
-            IF ( RTRIM (MYVALU) .GT. LEN (VALUE) ) THEN
-#endif
-               MYVALU = ' '
-            END IF
-#if defined(SPICE_COMPILER_INTEL)
-
-         ELSE
-
+         IF (      ( STATUS .NE. 0 )                                    &
+              .OR. ( LENGTH .GT. LEN (VALUE) ) ) THEN
             MYVALU = ' '
-#else
-#endif
-
          END IF
 
       END IF

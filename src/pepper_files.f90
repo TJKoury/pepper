@@ -411,6 +411,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 22-FEB-1999 (FST)
       module procedure zzplatfm
+      use, intrinsic :: iso_fortran_env, only: compiler_version
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase
       implicit none
@@ -448,38 +449,14 @@ contains
          attcpy (0) = defrpy
 
 !
-!        Platform/Environment specific assignments follow.
+!        Platform/Environment specific assignments follow. PEPPER: the
+!        system, the compiler and the text format are found at run time,
+!        in standard Fortran (SPICELIB had them compiled in for each
+!        platform): see PLATFORM_SYSTEM.
 !
-
-#if defined(SPICE_OS_MACOS)
-         attcpy (idxsys) = 'INTEL MAC'
-#else
-         attcpy (idxsys) = 'PC'
-#endif
-
-#if defined(SPICE_OS_MACOS)
-         attcpy (idxos) = 'MAC OS-X'
-#elif defined(SPICE_OS_LINUX)
-         attcpy (idxos) = 'LINUX'
-#elif defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-         attcpy (idxos) = 'MICROSOFT WINDOWS'
-#else
-         attcpy (idxos) = 'MICROSOFT WINDOWS/CYGWIN'
-#endif
-
-#if defined(SPICE_COMPILER_INTEL)
-         attcpy (idxcmp) = 'INTEL FORTRAN/64BIT'
-#else
-         attcpy (idxcmp) = 'GFORTRAN/64BIT'
-#endif
-
+         call platform_system ( attcpy(idxsys), attcpy(idxos), attcpy(idxtfm) )
+         attcpy (idxcmp) = compiler_version()
          attcpy (idxfmt) = 'LTL-IEEE'
-
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-         attcpy (idxtfm) = 'CR-LF'
-#else
-         attcpy (idxtfm) = 'LF'
-#endif
 
          attcpy (idxrbf) = 'BIG-IEEE LTL-IEEE'
 
@@ -509,6 +486,47 @@ contains
       return
       end associate
       end procedure zzplatfm
+
+      !> The system, the operating system and the line terminator of text
+      !> files of the platform the program runs on (PEPPER; for
+      !> [[zzplatfm]]).
+      !>
+      !> Standard Fortran has no inquiry for the operating system: Windows
+      !> sets the environment variable OS to Windows_NT, and Cygwin, macOS and
+      !> Linux are recognized by files that only they have. The Fortran
+      !> run-time libraries end the lines of text files with CR-LF on
+      !> Windows and with LF elsewhere (including Cygwin).
+      subroutine platform_system ( system, os, text_format )
+      implicit none
+      character(*), intent(out) :: system  !! 'PC' or 'MAC'
+      character(*), intent(out) :: os  !! the operating system ('<UNAVAILABLE>' if not recognized)
+      character(*), intent(out) :: text_format  !! the line terminator of text files: 'LF' or 'CR-LF'
+      character(16) :: osvar
+      integer :: status
+      system      = 'PC'
+      os          = '<UNAVAILABLE>'
+      text_format = 'LF'
+      call get_environment_variable ( 'OS', osvar, status=status )
+      if ( exists ( '/usr/bin/cygwin1.dll' ) ) then
+         os = 'MICROSOFT WINDOWS/CYGWIN'
+      else if ( status == 0 .and. osvar == 'Windows_NT' ) then
+         os          = 'MICROSOFT WINDOWS'
+         text_format = 'CR-LF'
+      else if ( exists ( '/System/Library/CoreServices/SystemVersion.plist' ) ) then
+         system = 'MAC'
+         os     = 'MAC OS-X'
+      else if ( exists ( '/proc/version' ) ) then
+         os = 'LINUX'
+      end if
+      contains
+         !> Whether a file exists.
+         logical function exists ( file )
+         character(*), intent(in) :: file  !! the file name
+         integer :: ios
+         inquire ( file=file, exist=exists, iostat=ios )
+         if ( ios /= 0 ) exists = .false.
+         end function exists
+      end subroutine platform_system
 
       !>## Abstract
       !>

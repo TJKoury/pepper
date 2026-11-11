@@ -2411,9 +2411,6 @@ contains
       !>
       !>     Beta Version 1.0.0, 17-DEC-1992 (KRG)
       module procedure writln
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-      use, intrinsic :: iso_fortran_env, only: output_unit
-#endif
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
@@ -2422,34 +2419,14 @@ contains
 !
       integer(ip) :: iostat
 
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-!     Some environments make a distinction between a text file and the
-!     terminal screen when writing to a logical unit using list directed
-!     writes of character strings or the FMT='(A)' format specifier. The
-!     difference has to do with the interpretation of the first
-!     character in the output string which is supposed to control the
-!     vertical spacing. This control character is required for writing
-!     to the standard output device, but not for writing to a text file.
-!     This is a pretty dumb thing to do, but we have to live with it.
-#else
-!     UNIX based fortran implementations typically do not distinguish
-!     between a text file and the standard output unit, so no leading
-!     vertical spacing character is required.
-#endif
-#if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
-!     So, we check to see if we are writing to the standard output unit
-!     and perform a list directed write, otherwise we use the format
-!     specifier FMT='(A)', which does not use any vertical carriage
-!     control characters.
 !
-       if ( unit == output_unit ) then
-          write ( unit, *, iostat=iostat ) line(:rtrim(line))
-       else
-          write ( unit, fmt='(A)', iostat=iostat ) line(:rtrim(line))
-       end if
-#else
+!     PEPPER: the same formatted write for every unit and platform.
+!     (SPICELIB wrote to standard output with list-directed output on
+!     Windows with Intel Fortran, against carriage control taking the
+!     first character; Fortran compilers apply carriage control only
+!     when asked to.)
+!
       write ( unit, fmt='(A)', iostat=iostat ) line(:rtrim(line))
-#endif
 !
 !     Check to see if we got a write error, and signal it if we did.
 !     Also check in.

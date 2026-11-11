@@ -31,15 +31,8 @@ implicit-external = true
 source-form = "default"
 
 [features]
-platform.macos.flags = "-DSPICE_OS_MACOS"
-platform.linux.flags = "-DSPICE_OS_LINUX"
-platform.windows.flags = "-DSPICE_OS_WINDOWS"
-platform.cygwin.flags = "-DSPICE_OS_CYGWIN"
-platform.gfortran.flags = "-DSPICE_COMPILER_GFORTRAN -frecursive -fallow-argument-mismatch"
-platform.ifx.flags = "-DSPICE_COMPILER_INTEL"
-platform.ifort.flags = "-DSPICE_COMPILER_INTEL"
-platform.windows.ifx.flags = "/fpp"
-platform.windows.ifort.flags = "/fpp"
+# No preprocessor directives (preprocessor_plan.md): only compiler options.
+platform.gfortran.flags = "-frecursive -fallow-argument-mismatch"
 
 [profiles]
 default = ["platform"]

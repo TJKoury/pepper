@@ -316,68 +316,15 @@
          CALL CHKIN ( 'EDTCMD' )
       END IF
 
-#if defined(SPICE_COMPILER_INTEL)
-!     VAX:
 !
-!        Computer:         VAX 11/780
-!        Operating System: VAX VMS 5.3
-!        Fortran:          VAX FORTRAN 5.5
-
-#else
-#endif
-!
-!
-#if defined(SPICE_COMPILER_INTEL)
-!     PC-MS:
-#else
-!     SUN:
-#endif
-!
-#if defined(SPICE_COMPILER_INTEL)
-!        Computer:         PC
-!        Operating System: Microsoft DOS 5.00
-!        Fortran:          Microsoft Powerstation Fortran V1.0
-#else
-!        Computer:         Sun SPARCstation 2
-!        Operating System: Sun OS 4.1.2
-!        Fortran:          Sun FORTRAN 1.3.1
-!
-!     HP:
-!
-!        Computer:         HP 715/50
-!        Operating System: HP-UX 9.01
-!        Fortran:          HP-UX.09.00.24
-!                          HP-UX FORTRAN/9000
-!                             Series 700 B2408A.09.00
-!                             Series 800 B2409B.09.00
-!
-!     NEXT:
-!
-!        Computer:         NeXT
-!        Operating System: NeXtStep 3.0, 3.2
-!        Fortran:          Absoft Fortran V3.2
-!        NEXT (NeXT 3.0, Absoft Fortran 3.2):
-!
-!        Computer:         Alpha/OSF1
-!        Operating System: OSF1 V3.2
-!        Fortran:        : DEC Fortran Compiler Driver V3.5-053
-#endif
+!     PEPPER: one form for every platform (the editor runs through EXESYS,
+!     which uses the standard EXECUTE_COMMAND_LINE).
 !
 !
 !     Build the edit command to be passed to the system.
 !
       LOCCMD = CMD
       CALL SUFFIX ( FILE, 1, LOCCMD )
-#if defined(SPICE_COMPILER_INTEL)
-#else
-
-!
-!     For safety, append a null to the command.  If the user has
-!     linked to a C version of the "system" function, this may
-!     save us much grief.
-!
-      CALL SUFFIX ( CHAR(0), 0, LOCCMD )
-#endif
 
 !
 !     Invoke the editor.
