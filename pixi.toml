@@ -39,3 +39,37 @@ compare-anise = { cmd = "python bench/compare_anise.py", description = "Speed of
 
 [environments]
 anise = { features = ["anise"], solve-group = "default" }
+python = { features = ["python"], solve-group = "default" }
+
+# PepperyPy, the Python interface (python/, capi/; pepperypy_plan.md):
+# Cython extension modules over PEPPER's C interface, built by meson-python.
+# pixi run -e python py-build / py-test
+[feature.python.dependencies]
+cython = ">=3.1"
+meson = ">=1.6"
+meson-python = ">=0.17"
+ninja = "*"
+numpy = ">=2.0"
+pip = "*"
+pkg-config = "*"
+pytest = "*"
+spiceypy = "*"   # only for the tests: SpiceyPy (CSPICE) as the reference
+pandas = "*"     # only for SpiceyPy's own test suite (py-test-spiceypy)
+
+# The C compiler for the Cython modules: gcc of gfortran's version on Linux
+# (c-compiler would want another); the system's (Xcode) clang on macOS.
+[feature.python.target.linux-64.dependencies]
+gcc = "16.*"
+
+[feature.python.target.linux-aarch64.dependencies]
+gcc = "16.*"
+
+
+[feature.python.tasks]
+gen-capi = { cmd = "python tools/gen_capi.py", description = "Generate PEPPER's C interface and PepperyPy's wrappers from the Fortran interfaces (src/capi/pepper_capi.f90, include/pepper.h, python/src/pepperypy/*.pxi)" }
+py-build = { cmd = "pip install --no-build-isolation --no-deps -e . -Cbuild-dir=build/py-editable", description = "Build and install PepperyPy in the environment (editable: rebuilt on import after a change)" }
+py-test = { cmd = "pytest python/tests", depends-on = ["py-build"], description = "Run PepperyPy's tests (SpiceyPy as the reference; the kernels are downloaded once)" }
+test-capi = { cmd = "meson setup build/capi --reconfigure && meson test -C build/capi capi --print-errorlogs", description = "Build and run the C test of PEPPER's C interface (capi/test_capi.c)" }
+py-bench = { cmd = "python python/bench/bench_pepperypy.py", depends-on = ["py-build"], description = "Speed of PepperyPy against SpiceyPy (python/bench/bench_pepperypy.py)" }
+py-test-spiceypy = { cmd = "python python/tools/run_spiceypy_suite.py", depends-on = ["py-build"], description = "Run SpiceyPy's own test suite (test_wrapper.py, from the installed SpiceyPy) against PepperyPy, and summarize" }
+py-coverage = { cmd = "python python/tools/coverage.py", depends-on = ["py-build"], description = "Write python/COVERAGE.md: SpiceyPy's functions PepperyPy has, and why not the others" }

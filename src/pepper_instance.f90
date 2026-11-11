@@ -21779,6 +21779,24 @@ contains
       call spice%closed_files%get(name, value, was_closed)
    end function was_closed
 
+   !> True if a file connected to a unit was opened by PEPPER, so that
+   !> reading it through a unit of its own is safe: it was closed through
+   !> this instance (a context still has a unit on it, closed when the
+   !> context next uses its unit table), or its unit is one NEWUNIT= gave
+   !> (negative), as all of PEPPER's are: another instance's, or another
+   !> context's. SPICELIB refused to load a file connected to a unit it did
+   !> not know (SPICE(EXTERNALOPEN), SPICE(FILEOPENCONFLICT)); with several
+   !> instances and contexts, one process opens a kernel on several units.
+   logical function opened_by_pepper(spice, name)
+      type(pepper_spice), intent(in) :: spice  !! the instance
+      character(*), intent(in) :: name  !! name of the file
+      integer :: unit, ios
+      opened_by_pepper = was_closed(spice, name)
+      if (opened_by_pepper) return
+      inquire (file=name, number=unit, iostat=ios)
+      opened_by_pepper = ios == 0 .and. unit < 0 .and. unit /= -1
+   end function opened_by_pepper
+
    !> If files were closed (through any context) since this context last
    !> looked, close this context's units for the handles that are not in the
    !> file table any more, and mark their rows of the unit table free. Only

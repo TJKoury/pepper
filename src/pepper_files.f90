@@ -6114,10 +6114,12 @@ contains
 !
 !        PEPPER: a unit of another context may still be connected to a
 !        file that was closed (it closes it when it next uses its unit
-!        table); that is not an error.
+!        table); that is not an error. Nor, for reading, is a unit of
+!        another instance (see opened_by_pepper).
 !
          if ( ( .not. locfnd ) .and. ( inqopn ) .and. &
-              ( .not. was_closed ( ctx%spice, locfnm ) ) ) then
+              ( .not. was_closed ( ctx%spice, locfnm ) ) .and. &
+              ( .not. ( accmet == read .and. opened_by_pepper ( ctx%spice, locfnm ) ) ) ) then
 
 !
 !           Get the unit to include in the error message.

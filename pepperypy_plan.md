@@ -7,7 +7,8 @@ through: instances and contexts (thread-safe queries, several kernel sets in
 one process), prepared and batch queries, results of any size, programmatic
 ephemerides and frames.
 
-Status: design; nothing implemented.
+Status: implemented (phases 1 to 5; phase 6, wheels, not yet). See
+"Implementation" at the end for what differs from the design below.
 
 ## SpiceyPy as it is (8.x)
 
@@ -461,3 +462,59 @@ callables, and the registry keeps the callables alive.
   context, which would give up the threading).
 - **The `ContextInUseError` check:** always on (not only in a debug mode).
 - **Name:** PepperyPy as the project, `pepperypy` as the import name.
+
+## Implementation
+
+What was built, and where it differs from the design above.
+
+- **The C interface** is in `src/capi` (`pepper_capi_core.f90`, by hand:
+  handles, strings, buffers, errors, GF callbacks, providers, prepared
+  queries; `pepper_capi.f90`, generated), so fpm builds and checks it with
+  the library; the header is `include/pepper.h`; `capi/test_capi.c` is its C
+  test (`pixi run -e python test-capi`).
+- **The generator** (`tools/gen_capi.py`) reads the interfaces themselves
+  (`pepper_instance.f90`; the pure procedures of `pepper_math`,
+  `pepper_strings`, `pepper_arrays`; the constants) rather than a table of
+  signatures: 831 procedures (618 of contexts, 16 of instances, 197
+  pure), with the kinds of arguments it knows (scalars, strings, fixed and
+  argument-sized arrays, assumed-size inputs, arrays of strings, cells,
+  results of any size). Tables cover what Fortran does not say: sizes of
+  assumed-size results, CSPICE's 0-based indices, found flags SpiceyPy
+  returns, arrays CSPICE writes as rows. The Python parameters follow
+  SpiceyPy's (read from the installed SpiceyPy): by name, then by position;
+  SpiceyPy's size parameters are accepted and ignored; dimensions it omits
+  are taken from the arrays.
+- **The build** is at the repository's root (`pyproject.toml`,
+  `meson.build`), not in `python/`: meson needs PEPPER's sources in its
+  source tree. PEPPER is a static library linked into one extension module
+  (`pepperypy._core`); the Python sources are in `python/src/pepperypy`.
+- **Classes:** Cython cannot include methods into a class body, so the
+  generated methods are base classes: `_ContextBase` → `_ContextRoutines`
+  (generated) → `Context`, and the same for `Spice`.
+- **The GIL** is released only around long calls (GF, geometry, DSK, EK,
+  files, coverage, batches): around a short call, releasing and taking
+  back the GIL cost more than the call when threads contend for it, and
+  one-call-per-epoch loops got slower with more threads (1.2 µs per call
+  on 1 thread, 5.3 µs on 8). Batches scale: 0.62 µs per epoch on 1 thread,
+  0.16 µs on 8.
+- **Vectorized calls** loop in Cython over the scalar call (no batch shims
+  but the prepared queries'): the loop costs less than the Python around
+  it.
+- **The gfortran runtime:** a program whose main is not Fortran must set
+  gfortran's runtime options as gfortran's main does, or a file cannot be
+  opened on a second unit (IOSTAT 5004), which every second context does:
+  `pepper_runtime_init()` (`pepper.h`), called at import.
+- **PEPPER fixes found by the tests:** loading a file again after
+  UNLOAD/KCLEAR while a context that had read it was not used since
+  (SPICE(EXTERNALOPEN)), and loading into a second instance a file the
+  first had open: GETFAT and ZZDDHOPN accept, for reading, a file open on
+  PEPPER's units (`opened_by_pepper`; `test/core/test_context.f90`).
+- **Tests:** `python/tests` (144): ~130 calls compared with SpiceyPy
+  (CSPICE) to 1e-12, errors and found flags, GF searches with cells, DAF
+  reading, windows; threads (serial results to the last bit, per-thread
+  errors, `ContextInUseError`), instances, `KernelPool`, prepared queries,
+  results of any size, GF and provider callbacks (with exceptions).
+  SpiceyPy's own suite (`py-test-spiceypy`): 524 of 638 pass.
+- **Not done:** wheels (phase 6); the Fortran table provider (phase 5's
+  second half); SpiceyPy's functions on its ctypes structures (planes,
+  ellipses, DLA and DSK descriptors, EK queries) — see `python/COVERAGE.md`.

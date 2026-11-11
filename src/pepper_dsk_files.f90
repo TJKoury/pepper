@@ -1331,6 +1331,19 @@ contains
 !
 !        Reject open files not known to the handle manager subsystem.
 !
+!        PEPPER: a unit of PEPPER may be connected to the file: another
+!        context's, still open on a file closed through the instance (it
+!        is closed when the context next uses its unit table), or another
+!        instance's. That is not an external open: the file is opened
+!        again below, on a unit of its own (see opened_by_pepper).
+!        (Loading a file again after UNLOAD or KCLEAR, while a context that
+!        had read it was not used since, failed; so did loading a file
+!        another instance had loaded.)
+!
+         if ( opened ) then
+            if ( opened_by_pepper ( ctx%spice, file ) ) opened = .false.
+         end if
+
          if ( opened ) then
 !
 !           Open files that are not opened within the SPICE

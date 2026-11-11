@@ -619,3 +619,20 @@ fastest time of each operation).
   default instance; NAIF's test suite runs through it. Like SPICELIB, it is
   not thread-safe.
 - **The same files.** PEPPER reads and writes the same kernel files.
+- **A kernel open on several units.** Each context reads the kernels
+  through units of its own, and each instance loads its own: one process
+  opens a file on several units. SPICELIB refuses to load a file that is
+  connected to a unit it did not open (SPICE(EXTERNALOPEN) from GETFAT,
+  SPICE(FILEOPENCONFLICT) from ZZDDHOPN); PEPPER accepts, for reading, a
+  file connected to a unit NEWUNIT= gave (another instance's or context's,
+  `opened_by_pepper`), or to a unit of a context of the same instance that
+  has not seen the file's unloading yet, and reads it through a unit of its
+  own. (Before this, loading a file again after UNLOAD or KCLEAR, while a
+  context that had read it was not used since, failed, and so did loading
+  into a second instance a file the first one had open; PepperyPy's tests
+  found both.)
+- **The gfortran runtime.** gfortran's runtime opens a file on a second
+  unit only with GNU extensions allowed, which the main program gfortran
+  makes sets. A program whose main is not Fortran (C, C++, Python) calls
+  `pepper_runtime_init()` first (`include/pepper.h`; PepperyPy does it at
+  import); otherwise the second unit gets IOSTAT 5004.

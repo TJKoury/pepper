@@ -1,0 +1,35 @@
+# PepperyPy: PEPPER's Python interface (SpiceyPy's API over PEPPER).
+# Built by meson-python from meson.build (PEPPER's Fortran sources, its C
+# interface and the Cython extension). The Python sources are in python/.
+[build-system]
+build-backend = "mesonpy"
+requires = ["meson-python>=0.17", "meson>=1.6", "cython>=3.1", "numpy>=2.0"]
+
+[project]
+name = "pepperypy"
+version = "0.1.0"
+description = "A Python interface to PEPPER, the thread-safe modern Fortran SPICE library, with SpiceyPy's API"
+readme = "python/README.md"
+requires-python = ">=3.10"
+license = { file = "python/LICENSE" }
+authors = [{ name = "Jacob Williams" }]
+dependencies = ["numpy>=1.23.5"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Fortran",
+    "Programming Language :: Cython",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+
+[project.optional-dependencies]
+test = ["pytest", "spiceypy"]
+
+[project.urls]
+Homepage = "https://github.com/jacobwilliams/pepper"
+
+[tool.meson-python.args]
+install = ["--skip-subprojects"]
+
+[tool.pytest.ini_options]
+testpaths = ["python/tests"]
