@@ -14,7 +14,10 @@ files as needed (as SPICELIB), and with the binary kernels loaded in memory
 (FURNSH's in_memory, as ANISE). Both make the same queries at the same
 epochs: 100000 pseudo-random epochs
 over 20 years from J2000, and 100000 sequential epochs one minute apart (the
-"sequential" rows). Each program runs --runs times; the table has the
+"sequential" rows). With the kernels in memory, PEPPER's side also runs the
+queries as prepared queries (prepare_state/query_state, prepare_rotation/
+query_rotation/query_transform), one epoch at a time: the second table
+compares them with ANISE. Each program runs --runs times; the table has the
 fastest time of each operation. The checksums (sums of the results) of the
 two sides are compared. The results go to build/compare_anise/results.md
 (and .json).
@@ -86,6 +89,17 @@ def mem_key(key):
 MEM_KEYS = {mem_key(k) for k in OPERATIONS}
 
 
+def prep_key(key):
+    """PEPPER's key of the same operation as a prepared query (kernels in
+    memory)."""
+    if key.endswith("_seq"):
+        return key[:-4] + "_prep_seq"
+    return key + "_prep"
+
+
+PREP_KEYS = {prep_key(k) for k in OPERATIONS if not k.startswith(("load_set", "anise_"))}
+
+
 def run(cmd, cwd):
     """Run a command; return its standard output (stop on failure)."""
     p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
@@ -99,7 +113,7 @@ def parse(out):
     res = {}
     for line in out.splitlines():
         parts = line.split("|")
-        if len(parts) == 4 and (parts[0] in OPERATIONS or parts[0] in MEM_KEYS):
+        if len(parts) == 4 and (parts[0] in OPERATIONS or parts[0] in MEM_KEYS or parts[0] in PREP_KEYS):
             res[parts[0]] = (float(parts[2]), float(parts[3]))
     return res
 
@@ -141,6 +155,29 @@ def table(best):
     return "\n".join(rows)
 
 
+def table_prepared(best):
+    """The Markdown table of ANISE against PEPPER's prepared queries (the
+    binary kernels in memory; one epoch at a time)."""
+    rows = ["| Operation | ANISE 0.10.6 (µs) | PEPPER, prepared query, in memory (µs) | Speedup over ANISE | Checksums agree |",
+            "|---|--:|--:|--:|:-:|"]
+    group = None
+    for key, (g, desc) in OPERATIONS.items():
+        if key.startswith(("load_set", "anise_")):
+            continue
+        a, pp = best["anise"].get(key), best["pepper"].get(prep_key(key))
+        if a is None or pp is None:
+            continue
+        if g != group:
+            rows.append(f"| **{g}** | | | | |")
+            group = g
+        if key.startswith("spkpos"):
+            desc += " (PEPPER: a state query, which also computes the velocity)"
+        ok = abs(a[1] - pp[1]) <= 1e-8 * max(abs(a[1]), abs(pp[1]), 1.0)
+        agree = "yes" if ok else f"no ({a[1]:.15g} / {pp[1]:.15g})"
+        rows.append(f"| {desc} | {fmt(a[0])} | {fmt(pp[0])} | {a[0] / pp[0]:.2g}× | {agree} |")
+    return "\n".join(rows)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--kernels", help="directory of the real kernels")
@@ -150,7 +187,10 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     jpath = os.path.join(OUT, "results.json")
     if args.report:
-        print(table(json.load(open(jpath))))
+        best = json.load(open(jpath))
+        print(table(best))
+        print()
+        print(table_prepared(best))
         return
     if not args.kernels:
         ap.error("--kernels is required")
@@ -165,12 +205,12 @@ def main():
         print(f"run {r + 1} of {args.runs}", flush=True)
         results["pepper"].append(parse(run(["fpm", "test", "bench_anise", "--profile", "release", "--", kernels], cwd=ROOT)))
         results["anise"].append(parse(run([ANISE_EXE, kernels], cwd=ROOT)))
-    keys = list(OPERATIONS) + sorted(MEM_KEYS)
+    keys = list(OPERATIONS) + sorted(MEM_KEYS) + sorted(PREP_KEYS)
     best = {side: {k: min((r[k] for r in runs if k in r), key=lambda x: x[0])
                    for k in keys if any(k in r for r in runs)}
             for side, runs in results.items()}
     json.dump(best, open(jpath, "w"), indent=1)
-    md = table(best)
+    md = table(best) + "\n\n" + table_prepared(best)
     open(os.path.join(OUT, "results.md"), "w").write(md + "\n")
     print(md)
 

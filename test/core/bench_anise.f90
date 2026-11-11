@@ -8,11 +8,17 @@
 !> `key|n|microseconds per operation|checksum` (the checksum, a sum of
 !> results, shows that both sides compute the same thing). Without an
 !> argument (as in `pixi run test`) it does nothing.
+!>
+!> With the kernels in memory, the operations are also timed as prepared
+!> queries (`prepare_state`/`query_state`, `prepare_rotation`/
+!> `query_rotation`/`query_transform`), one epoch at a time: the keys end in
+!> `_prep` (`_prep_seq` for the sequential epochs). The SPKPOS rows are state
+!> queries (they also compute the velocity).
 program bench_anise
 
    use, intrinsic :: iso_fortran_env, only: int64
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance, only: pepper_spice, pepper_context, state_query, rotation_query
 
    implicit none
 
@@ -49,6 +55,11 @@ program bench_anise
    call bench_states(seq, '_mem_seq')
    call bench_frames(ets, '_mem')
    call bench_frames(seq, '_mem_seq')
+   ! prepared queries, the kernels in memory (one epoch at a time)
+   call bench_states_prepared(ets, '_prep')
+   call bench_states_prepared(seq, '_prep_seq')
+   call bench_frames_prepared(ets, '_prep')
+   call bench_frames_prepared(seq, '_prep_seq')
 
 contains
 
@@ -188,5 +199,94 @@ contains
       end do
       call report('pxform_moon_me' // suffix, nq, now() - t0, sum)
    end subroutine bench_frames
+
+   !> The states of `bench_states` as prepared queries, one epoch at a time;
+   !> `suffix` is appended to the keys.
+   subroutine bench_states_prepared(et, suffix)
+      real(wp), intent(in) :: et(:)  !! the epochs (TDB seconds past J2000)
+      character(*), intent(in) :: suffix  !! for the keys
+      type(state_query) :: q
+      real(wp) :: t0, state(6), lt, sum
+      integer(ip) :: k
+      call ctx%prepare_state(q, 'MOON', 'EARTH', 'J2000', 'NONE')
+      sum = 0; t0 = now()
+      do k = 1, nq
+         call ctx%query_state(q, et(k), state, lt)
+         sum = sum + state(1)
+      end do
+      call report('spkezr_moon' // suffix, nq, now() - t0, sum)
+      call ctx%prepare_state(q, '301', '399', 'J2000', 'NONE')
+      sum = 0; t0 = now()
+      do k = 1, nq
+         call ctx%query_state(q, et(k), state, lt)
+         sum = sum + state(1)
+      end do
+      call report('spkgeo_moon' // suffix, nq, now() - t0, sum)
+      call ctx%prepare_state(q, 'MARS BARYCENTER', 'EARTH', 'ECLIPJ2000', 'LT+S')
+      sum = 0; t0 = now()
+      do k = 1, nq
+         call ctx%query_state(q, et(k), state, lt)
+         sum = sum + state(1)
+      end do
+      call report('spkezr_mars_lts' // suffix, nq, now() - t0, sum)
+      call ctx%prepare_state(q, 'MARS BARYCENTER', 'EARTH', 'ECLIPJ2000', 'LT')
+      sum = 0; t0 = now()
+      do k = 1, nq
+         call ctx%query_state(q, et(k), state, lt)
+         sum = sum + state(1) + state(4)
+      end do
+      call report('spkezr_mars_lt' // suffix, nq, now() - t0, sum)
+      call ctx%prepare_state(q, 'MARS BARYCENTER', 'EARTH', 'ECLIPJ2000', 'LT+S')
+      sum = 0; t0 = now()
+      do k = 1, nq
+         call ctx%query_state(q, et(k), state, lt)
+         sum = sum + state(1)
+      end do
+      call report('spkpos_mars_lts' // suffix, nq, now() - t0, sum)
+      call ctx%prepare_state(q, 'SUN', 'EARTH', 'J2000', 'CN+S')
+      sum = 0; t0 = now()
+      do k = 1, nq
+         call ctx%query_state(q, et(k), state, lt)
+         sum = sum + state(1)
+      end do
+      call report('spkpos_sun_cns' // suffix, nq, now() - t0, sum)
+   end subroutine bench_states_prepared
+
+   !> The frame transformations of `bench_frames` as prepared queries, one
+   !> epoch at a time; `suffix` is appended to the keys.
+   subroutine bench_frames_prepared(et, suffix)
+      real(wp), intent(in) :: et(:)  !! the epochs (TDB seconds past J2000)
+      character(*), intent(in) :: suffix  !! for the keys
+      type(rotation_query) :: q
+      real(wp) :: t0, rot(3, 3), xform(6, 6), sum
+      integer(ip) :: k
+      call ctx%prepare_rotation(q, 'J2000', 'ITRF93')
+      sum = 0; t0 = now()
+      do k = 1, nq
+         call ctx%query_rotation(q, et(k), rot)
+         sum = sum + rot(1, 1)
+      end do
+      call report('pxform_itrf93' // suffix, nq, now() - t0, sum)
+      sum = 0; t0 = now()
+      do k = 1, nq
+         call ctx%query_transform(q, et(k), xform)
+         sum = sum + xform(4, 1)
+      end do
+      call report('sxform_itrf93' // suffix, nq, now() - t0, sum)
+      call ctx%prepare_rotation(q, 'J2000', 'IAU_MARS')
+      sum = 0; t0 = now()
+      do k = 1, nq
+         call ctx%query_rotation(q, et(k), rot)
+         sum = sum + rot(1, 1)
+      end do
+      call report('pxform_iau_mars' // suffix, nq, now() - t0, sum)
+      call ctx%prepare_rotation(q, 'MOON_ME', 'J2000')
+      sum = 0; t0 = now()
+      do k = 1, nq
+         call ctx%query_rotation(q, et(k), rot)
+         sum = sum + rot(1, 1)
+      end do
+      call report('pxform_moon_me' // suffix, nq, now() - t0, sum)
+   end subroutine bench_frames_prepared
 
 end program bench_anise

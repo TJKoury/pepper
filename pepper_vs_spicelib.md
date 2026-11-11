@@ -416,9 +416,10 @@ With the binary kernels read from their files as needed:
   IAU_MARS, the text PCK's polynomials): rotations that do not depend on
   time (inertial and fixed TK frames, such as J2000 to ECLIPJ2000) are
   computed once and are 14 times faster.
-- **Against ANISE** (next section): ANISE takes 0.35 µs for the Moon from
-  the Earth and 0.78 µs for Mars from the Earth with LT+S; prepared queries
-  take 0.12 and 0.54 µs.
+- **Against ANISE:** see "Prepared queries against ANISE" in the next
+  section (the same queries at the same epochs): 3 times faster than ANISE
+  for the Moon from the Earth, 1.5 to 3 times for corrected states, 1.7 to
+  19 times for frames.
 - **Batches** give the speed of the single queries: the gain is in the
   preparation. A batch is the place for further work (see
   `modernization_options.md`).
@@ -520,6 +521,52 @@ the apparent position, including the rate of change of the stellar
 aberration correction, which needs the observer's acceleration; ANISE's
 applies the correction to the position only. The LT and SPKPOS rows compare
 the same quantities.
+
+### Prepared queries against ANISE
+
+The same queries at the same epochs, with PEPPER's prepared queries
+(`prepare_state`/`query_state`, `prepare_rotation`/`query_rotation`/
+`query_transform`; see "Prepared queries" above), the binary kernels in
+memory, one epoch at a time as ANISE is called. From the same run as the
+table above (`pixi run -e anise compare-anise`, 7 runs of each side, the
+fastest time of each operation).
+
+| Operation | ANISE 0.10.6 (µs) | PEPPER, prepared query, in memory (µs) | Speedup over ANISE | Checksums agree |
+|---|--:|--:|--:|:-:|
+| **States, random epochs** | | | | |
+| SPKEZR Moon from Earth, J2000, no correction | 0.344 | 0.115 | 3× | yes |
+| SPKGEO Moon from Earth, by code | 0.359 | 0.113 | 3.2× | yes |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S (PEPPER's velocity includes the rate of the stellar aberration, ANISE's does not) | 0.753 | 0.513 | 1.5× | yes |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT | 0.722 | 0.26 | 2.8× | yes |
+| SPKPOS Mars barycenter from Earth, ECLIPJ2000, LT+S (PEPPER: a state query, which also computes the velocity) | 0.743 | 0.51 | 1.5× | yes |
+| SPKPOS Sun from Earth, J2000, CN+S (PEPPER: a state query, which also computes the velocity) | 1.13 | 0.504 | 2.2× | yes |
+| **States, sequential epochs** | | | | |
+| SPKEZR Moon from Earth, J2000, no correction | 0.329 | 0.0928 | 3.5× | yes |
+| SPKGEO Moon from Earth, by code | 0.347 | 0.0926 | 3.8× | yes |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S (PEPPER's velocity includes the rate of the stellar aberration, ANISE's does not) | 0.743 | 0.485 | 1.5× | yes |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT | 0.71 | 0.231 | 3.1× | yes |
+| SPKPOS Mars barycenter from Earth, ECLIPJ2000, LT+S (PEPPER: a state query, which also computes the velocity) | 0.735 | 0.483 | 1.5× | yes |
+| SPKPOS Sun from Earth, J2000, CN+S (PEPPER: a state query, which also computes the velocity) | 1.12 | 0.473 | 2.4× | yes |
+| **Frames, random epochs** | | | | |
+| PXFORM J2000 to ITRF93 (binary PCK) | 0.465 | 0.253 | 1.8× | yes |
+| SXFORM J2000 to ITRF93 | 0.459 | 0.273 | 1.7× | yes |
+| PXFORM J2000 to IAU_MARS (text PCK) | 9.47 | 0.548 | 17× | yes |
+| PXFORM MOON_ME to J2000 (FK + binary PCK) | 0.595 | 0.554 | 1.1× | yes |
+| **Frames, sequential epochs** | | | | |
+| PXFORM J2000 to ITRF93 (binary PCK) | 0.416 | 0.205 | 2× | yes |
+| SXFORM J2000 to ITRF93 | 0.418 | 0.233 | 1.8× | yes |
+| PXFORM J2000 to IAU_MARS (text PCK) | 9.08 | 0.469 | 19× | yes |
+| PXFORM MOON_ME to J2000 (FK + binary PCK) | 0.595 | 0.531 | 1.1× | yes |
+
+- **States:** 3 to 3.8 times faster than ANISE for geometric states, 2.8 to
+  3.1 times with LT, 2.2 to 2.4 times with CN+S. With LT+S, 1.5 times, while
+  PEPPER computes more: its velocity includes the rate of change of the
+  stellar aberration correction, for which SPKACS evaluates the observer at
+  two more epochs.
+- **SPKPOS rows:** PEPPER answers them with a state query, which also
+  computes the velocity; ANISE computes the position.
+- **Frames:** 1.7 to 2 times for ITRF93 (binary PCK), 17 to 19 times for
+  IAU_MARS (text PCK: ANISE's is slow), 1.1 times for MOON_ME.
 
 ### Where the differences come from
 
