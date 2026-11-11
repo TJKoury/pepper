@@ -177,10 +177,11 @@ frame transformations, GF searches, prepared queries). See
 ```fortran
 use pepper_instance, only: ephemeris_provider, frame_provider, pepper_context
 
-type, extends(ephemeris_provider) :: my_orbit     ! the program's data and code
+type, extends(ephemeris_provider) :: my_orbit  ! your provider type: its components hold the orbit data
+
    real(wp) :: r0(3), v(3)
 contains
-   procedure :: state => my_orbit_state           ! (self, ctx, body, et, state, found)
+   procedure :: state => my_orbit_state  ! (self, ctx, body, et, state, found)
 end type
 
 call spice%add_ephemeris(-999, 399, 'J2000', t0, t1, my_orbit(r0, v))
