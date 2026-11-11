@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekcnamsz
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -13,8 +15,7 @@ module pepper_inc_ekcnamsz
 !
 !     Size of column name, in characters.
 !
-   integer               cnamsz
-   parameter           ( cnamsz = 32 )
+   integer(ip), parameter :: cnamsz = 32
 
 !
 !     End Include Section:  EK Column Name Size

@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_zzocced
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -36,51 +38,44 @@ module pepper_inc_zzocced
 !        -3                    Total occultation of first target by
 !                              second.
 !
-   integer               total1
-   parameter           ( total1 = -3 )
+   integer(ip), parameter :: total1 = -3
 
 !
 !        -2                    Annular occultation of first target by
 !                              second.  The second target does not
 !                              block the limb of the first.
 !
-   integer               annlr1
-   parameter           ( annlr1 = -2 )
+   integer(ip), parameter :: annlr1 = -2
 
 !
 !        -1                    Partial occultation of first target by
 !                              second target.
 !
-   integer               partl1
-   parameter           ( partl1 = -1 )
+   integer(ip), parameter :: partl1 = -1
 
 !
 !         0                    No occultation or transit:  both objects
 !                              are completely visible to the observer.
 !
-   integer               noocc
-   parameter           ( noocc  =  0 )
+   integer(ip), parameter :: noocc = 0
 
 !
 !         1                    Partial occultation of second target by
 !                              first target.
 !
-   integer               partl2
-   parameter           ( partl2 =  1 )
+   integer(ip), parameter :: partl2 = 1
 
 !
 !         2                    Annular occultation of second target by
 !                              first.
 !
-   integer               annlr2
-   parameter           ( annlr2 =  2 )
+   integer(ip), parameter :: annlr2 = 2
 
 !
 !         3                    Total occultation of second target by
 !                              first.
 !
-   integer               total2
-   parameter           ( total2 =  3 )
+   integer(ip), parameter :: total2 = 3
 
 !
 !     End include file zzocced.inc

@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_pck20
 
+   use pepper_kinds, only: ip, wp
+
    implicit none
 
    public
@@ -35,8 +37,7 @@ module pepper_inc_pck20
 !                    increased, and comments describing the record size
 !                    must be changed.
 !
-   integer               maxdeg
-   parameter           ( maxdeg = 50 )
+   integer(ip), parameter :: maxdeg = 50
 
 !
 !     DTOL,
@@ -67,15 +68,13 @@ module pepper_inc_pck20
 !     Absolute tolerance for coverage gap at endpoints
 !     of segment coverage interval, in seconds:
 !
-   double precision      dtol
-   parameter           ( dtol   = 1.d-4  )
+   real(wp), parameter :: dtol = 1.0e-4_wp
 
 !
 !     Relative tolerance for coverage gap at endpoints
 !     of segment coverage interval:
 !
-   double precision      tolscl
-   parameter           ( tolscl = 1.d-12 )
+   real(wp), parameter :: tolscl = 1.0e-12_wp
 
 !
 !     End of include file pck20.inc.

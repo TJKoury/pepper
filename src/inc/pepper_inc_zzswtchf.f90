@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_zzswtchf
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -49,14 +51,11 @@ module pepper_inc_zzswtchf
 !-    SPICELIB Version 1.0.0, 03-DEC-2021 (NJB) (BVS)
 !
 
-   integer               maxfrm
-   parameter           ( maxfrm =  1013 )
+   integer(ip), parameter :: maxfrm = 1013
 
-   integer               maxbas
-   parameter           ( maxbas =  15000 )
+   integer(ip), parameter :: maxbas = 15000
 
-   integer               lbsngl
-   parameter           ( lbsngl =  -5 )
+   integer(ip), parameter :: lbsngl = -5
 
 !
 !     End of INCLUDE file zzswtchf.inc

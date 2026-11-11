@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekjrs
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -13,8 +15,7 @@ module pepper_inc_ekjrs
 !
 !     Maximum number of join row sets in a join row set union:
 !
-   integer               mxjrs
-   parameter           ( mxjrs  = 200 )
+   integer(ip), parameter :: mxjrs = 200
 
 !
 !     The layout of a join row set in the EK scratch area is shown
@@ -65,32 +66,27 @@ module pepper_inc_ekjrs
 !
 !     Base-relative index of join row set size
 !
-   integer               jszidx
-   parameter           ( jszidx = 1 )
+   integer(ip), parameter :: jszidx = 1
 
 !
 !     Index of row vector count
 !
-   integer               jrcidx
-   parameter           ( jrcidx = 2 )
+   integer(ip), parameter :: jrcidx = 2
 
 !
 !     Index of table count
 !
-   integer               jtcidx
-   parameter           ( jtcidx = 3 )
+   integer(ip), parameter :: jtcidx = 3
 
 !
 !     Index of segment vector count
 !
-   integer               jscidx
-   parameter           ( jscidx = 4 )
+   integer(ip), parameter :: jscidx = 4
 
 !
 !     Base address of first segment vector
 !
-   integer               jsvbas
-   parameter           ( jsvbas = 4 )
+   integer(ip), parameter :: jsvbas = 4
 !
 !
 !     End Include Section:  EK Join Row Set Parameters

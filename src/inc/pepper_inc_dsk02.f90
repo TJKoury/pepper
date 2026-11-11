@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_dsk02
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -98,32 +100,23 @@ module pepper_inc_dsk02
 !           +-----------------+
 !
 !
-   integer               ixnv
-   parameter           ( ixnv   =          1 )
+   integer(ip), parameter :: ixnv = 1
 
-   integer               ixnp
-   parameter           ( ixnp   = ixnv   + 1 )
+   integer(ip), parameter :: ixnp = ixnv + 1
 
-   integer               ixnvxt
-   parameter           ( ixnvxt = ixnp   + 1 )
+   integer(ip), parameter :: ixnvxt = ixnp + 1
 
-   integer               ixvgrx
-   parameter           ( ixvgrx = ixnvxt + 1 )
+   integer(ip), parameter :: ixvgrx = ixnvxt + 1
 
-   integer               ixcgsc
-   parameter           ( ixcgsc = ixvgrx + 3 )
+   integer(ip), parameter :: ixcgsc = ixvgrx + 3
 
-   integer               ixvxps
-   parameter           ( ixvxps = ixcgsc + 1 )
+   integer(ip), parameter :: ixvxps = ixcgsc + 1
 
-   integer               ixvxls
-   parameter           ( ixvxls = ixvxps + 1 )
+   integer(ip), parameter :: ixvxls = ixvxps + 1
 
-   integer               ixvtls
-   parameter           ( ixvtls = ixvxls + 1 )
+   integer(ip), parameter :: ixvtls = ixvxls + 1
 
-   integer               ixplat
-   parameter           ( ixplat = ixvtls + 1 )
+   integer(ip), parameter :: ixplat = ixvtls + 1
 
 !
 !        D.p. layout:
@@ -140,90 +133,65 @@ module pepper_inc_dsk02
 !           | Vertices        |  3*NV elements
 !           +-----------------+
 !
-   integer               ixdscr
-   parameter           ( ixdscr = 1 )
+   integer(ip), parameter :: ixdscr = 1
 
 !
 !     This local parameter MUST be kept consistent with
 !     the parameter DSKDSZ which is declared in dskdsc.inc.
 !
-   integer               dscsz2
-   parameter           ( dscsz2 = 24 )
+   integer(ip), parameter :: dscsz2 = 24
 
-   integer               ixvtbd
-   parameter           ( ixvtbd = ixdscr + dscsz2 )
+   integer(ip), parameter :: ixvtbd = ixdscr + dscsz2
 
-   integer               ixvxor
-   parameter           ( ixvxor = ixvtbd + 6 )
+   integer(ip), parameter :: ixvxor = ixvtbd + 6
 
-   integer               ixvxsz
-   parameter           ( ixvxsz = ixvxor + 3 )
+   integer(ip), parameter :: ixvxsz = ixvxor + 3
 
-   integer               ixvert
-   parameter           ( ixvert = ixvxsz + 1 )
+   integer(ip), parameter :: ixvert = ixvxsz + 1
 
 !
 !     Integer item keyword parameters used by fetch routines:
 !
-   integer               kwnv
-   parameter           ( kwnv   = 1 )
+   integer(ip), parameter :: kwnv = 1
 
-   integer               kwnp
-   parameter           ( kwnp   = kwnv   + 1 )
+   integer(ip), parameter :: kwnp = kwnv + 1
 
-   integer               kwnvxt
-   parameter           ( kwnvxt = kwnp   + 1 )
+   integer(ip), parameter :: kwnvxt = kwnp + 1
 
-   integer               kwvgrx
-   parameter           ( kwvgrx = kwnvxt + 1 )
+   integer(ip), parameter :: kwvgrx = kwnvxt + 1
 
-   integer               kwcgsc
-   parameter           ( kwcgsc = kwvgrx + 1 )
+   integer(ip), parameter :: kwcgsc = kwvgrx + 1
 
-   integer               kwvxps
-   parameter           ( kwvxps = kwcgsc + 1 )
+   integer(ip), parameter :: kwvxps = kwcgsc + 1
 
-   integer               kwvxls
-   parameter           ( kwvxls = kwvxps + 1 )
+   integer(ip), parameter :: kwvxls = kwvxps + 1
 
-   integer               kwvtls
-   parameter           ( kwvtls = kwvxls + 1 )
+   integer(ip), parameter :: kwvtls = kwvxls + 1
 
-   integer               kwplat
-   parameter           ( kwplat = kwvtls + 1 )
+   integer(ip), parameter :: kwplat = kwvtls + 1
 
-   integer               kwvxpt
-   parameter           ( kwvxpt = kwplat + 1 )
+   integer(ip), parameter :: kwvxpt = kwplat + 1
 
-   integer               kwvxpl
-   parameter           ( kwvxpl = kwvxpt + 1 )
+   integer(ip), parameter :: kwvxpl = kwvxpt + 1
 
-   integer               kwvtpt
-   parameter           ( kwvtpt = kwvxpl + 1 )
+   integer(ip), parameter :: kwvtpt = kwvxpl + 1
 
-   integer               kwvtpl
-   parameter           ( kwvtpl = kwvtpt + 1 )
+   integer(ip), parameter :: kwvtpl = kwvtpt + 1
 
-   integer               kwcgpt
-   parameter           ( kwcgpt = kwvtpl + 1 )
+   integer(ip), parameter :: kwcgpt = kwvtpl + 1
 
 !
 !     Double precision item keyword parameters used by fetch routines:
 !
-   integer               kwdsc
-   parameter           ( kwdsc  = kwcgpt + 1 )
+   integer(ip), parameter :: kwdsc = kwcgpt + 1
 
-   integer               kwvtbd
-   parameter           ( kwvtbd = kwdsc  + 1 )
+   integer(ip), parameter :: kwvtbd = kwdsc + 1
 
-   integer               kwvxor
-   parameter           ( kwvxor = kwvtbd + 1 )
+   integer(ip), parameter :: kwvxor = kwvtbd + 1
 
-   integer               kwvxsz
-   parameter           ( kwvxsz = kwvxor + 1 )
+   integer(ip), parameter :: kwvxsz = kwvxor + 1
 
-   integer               kwvert
-   parameter           ( kwvert = kwvxsz + 1 )
+   integer(ip), parameter :: kwvert = kwvxsz + 1
 
 !
 !     The parameters below formerly were declared in pltmax.inc.
@@ -244,15 +212,13 @@ module pepper_inc_dsk02
 !     MAXVRT is the maximum number of vertices the triangular
 !            plate model software will support.
 !
-   integer               maxvrt
-   parameter           ( maxvrt = 16000002  )
+   integer(ip), parameter :: maxvrt = 16000002
 
 !
 !     MAXPLT is the maximum number of plates that the triangular
 !            plate model software will support.
 !
-   integer               maxplt
-   parameter           ( maxplt = 2*(maxvrt - 2) )
+   integer(ip), parameter :: maxplt = 2*(maxvrt - 2)
 
 !
 !     MAXNPV is the maximum allowed number of vertices, not taking into
@@ -261,27 +227,23 @@ module pepper_inc_dsk02
 !     Note that this value is not sufficient to create a vertex-plate
 !     mapping for a model of maximum plate count.
 !
-   integer               maxnpv
-   parameter           ( maxnpv = 3*maxplt/2 + 1 )
+   integer(ip), parameter :: maxnpv = 3*maxplt/2 + 1
 
 !
 !     MAXVOX is the maximum number of voxels.
 !
-   integer               maxvox
-   parameter           ( maxvox = 100000000 )
+   integer(ip), parameter :: maxvox = 100000000
 
 !
 !     MAXCGR is the maximum size of the coarse voxel grid.
 !
-   integer               maxcgr
-   parameter           ( maxcgr = 100000 )
+   integer(ip), parameter :: maxcgr = 100000
 
 !
 !     MAXEDG is the maximum allowed number of vertex or plate
 !     neighbors a vertex may have.
 !
-   integer               maxedg
-   parameter           ( maxedg = 120 )
+   integer(ip), parameter :: maxedg = 120
 
 !     DSK type 2 spatial index parameters
 !     ===================================
@@ -317,39 +279,32 @@ module pepper_inc_dsk02
 !
 !     Grid extent:
 !
-   integer               sivgrx
-   parameter           ( sivgrx = 1 )
+   integer(ip), parameter :: sivgrx = 1
 !
 !     Coarse grid scale:
 !
-   integer               sicgsc
-   parameter           ( sicgsc = sivgrx + 3 )
+   integer(ip), parameter :: sicgsc = sivgrx + 3
 !
 !     Voxel pointer count:
 !
-   integer               sivxnp
-   parameter           ( sivxnp = sicgsc + 1 )
+   integer(ip), parameter :: sivxnp = sicgsc + 1
 !
 !     Voxel-plate list count:
 !
-   integer               sivxnl
-   parameter           ( sivxnl = sivxnp + 1 )
+   integer(ip), parameter :: sivxnl = sivxnp + 1
 !
 !     Vertex-plate list count:
 !
-   integer               sivtnl
-   parameter           ( sivtnl = sivxnl + 1 )
+   integer(ip), parameter :: sivtnl = sivxnl + 1
 !
 !     Coarse grid pointers:
 !
-   integer               sicgrd
-   parameter           ( sicgrd = sivtnl + 1 )
+   integer(ip), parameter :: sicgrd = sivtnl + 1
 
 !
 !     Size of fixed-size portion of integer component:
 !
-   integer               ixifix
-   parameter           ( ixifix = maxcgr + 7 )
+   integer(ip), parameter :: ixifix = maxcgr + 7
 
 !
 !        DSK type 2 spatial index double precision component
@@ -369,24 +324,20 @@ module pepper_inc_dsk02
 !
 !     Vertex bounds:
 !
-   integer               sivtbd
-   parameter           ( sivtbd = 1 )
+   integer(ip), parameter :: sivtbd = 1
 !
 !     Voxel grid origin:
 !
-   integer               sivxor
-   parameter           ( sivxor = sivtbd + 6 )
+   integer(ip), parameter :: sivxor = sivtbd + 6
 !
 !     Voxel size:
 !
-   integer               sivxsz
-   parameter           ( sivxsz = sivxor + 3 )
+   integer(ip), parameter :: sivxsz = sivxor + 3
 
 !
 !     Size of fixed-size portion of double precision component:
 !
-   integer               ixdfix
-   parameter           ( ixdfix = 10 )
+   integer(ip), parameter :: ixdfix = 10
 
 !
 !     The limits below are used to define a suggested maximum
@@ -396,28 +347,24 @@ module pepper_inc_dsk02
 !
 !     Maximum number of entries in voxel-plate pointer array:
 !
-   integer               maxvxp
-   parameter           ( maxvxp = maxplt / 2 )
+   integer(ip), parameter :: maxvxp = maxplt / 2
 
 !
 !     Maximum cell size:
 !
-   integer               maxcel
-   parameter           ( maxcel = 60000000 )
+   integer(ip), parameter :: maxcel = 60000000
 
 !
 !     Maximum number of entries in voxel-plate list:
 !
-   integer               mxnvls
-   parameter           ( mxnvls = maxcel + maxvxp/2 )
+   integer(ip), parameter :: mxnvls = maxcel + maxvxp/2
 
 !
 !     Spatial index integer component size:
 !
-   integer               spaisz
-   parameter           ( spaisz =   ixifix + maxvxp &
-   + mxnvls + maxvrt &
-   + maxnpv          )
+   integer(ip), parameter :: spaisz = ixifix + maxvxp &
+      + mxnvls + maxvrt &
+      + maxnpv
 
 !
 !     End of include file dsk02.inc

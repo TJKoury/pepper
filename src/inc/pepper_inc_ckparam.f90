@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ckparam
 
+   use pepper_kinds, only: ip, wp
+
    implicit none
 
    public
@@ -48,11 +50,9 @@ module pepper_inc_ckparam
 !     Number of quaternion components and number of quaternion and
 !     angular rate components together.
 !
-   integer               qsiz
-   parameter           ( qsiz   = 4 )
+   integer(ip), parameter :: qsiz = 4
 
-   integer               qavsiz
-   parameter           ( qavsiz = 7 )
+   integer(ip), parameter :: qavsiz = 7
 
 !
 !     CK Type 1 parameters:
@@ -62,11 +62,9 @@ module pepper_inc_ckparam
 !     CK1RSZ   maximum size of a record passed between CKR01
 !              and CKE01.
 !
-   integer               ck1dtp
-   parameter           ( ck1dtp = 1 )
+   integer(ip), parameter :: ck1dtp = 1
 
-   integer               ck1rsz
-   parameter           ( ck1rsz = 8 )
+   integer(ip), parameter :: ck1rsz = 8
 
 !
 !     CK Type 2 parameters:
@@ -76,11 +74,9 @@ module pepper_inc_ckparam
 !     CK2RSZ   maximum size of a record passed between CKR02
 !              and CKE02.
 !
-   integer               ck2dtp
-   parameter           ( ck2dtp = 2 )
+   integer(ip), parameter :: ck2dtp = 2
 
-   integer               ck2rsz
-   parameter           ( ck2rsz = 10 )
+   integer(ip), parameter :: ck2rsz = 10
 
 !
 !     CK Type 3 parameters:
@@ -90,11 +86,9 @@ module pepper_inc_ckparam
 !     CK3RSZ   maximum size of a record passed between CKR03
 !              and CKE03.
 !
-   integer               ck3dtp
-   parameter           ( ck3dtp = 3 )
+   integer(ip), parameter :: ck3dtp = 3
 
-   integer               ck3rsz
-   parameter           ( ck3rsz = 17 )
+   integer(ip), parameter :: ck3rsz = 17
 
 !
 !     CK Type 4 parameters:
@@ -122,20 +116,15 @@ module pepper_inc_ckparam
 !
 !                 CK4RSZ = ( CK4MXD + 1 ) * QAVSIZ + CK4SFT
 !
-   integer               ck4dtp
-   parameter           ( ck4dtp = 4 )
+   integer(ip), parameter :: ck4dtp = 4
 
-   double precision      ck4pcd
-   parameter           ( ck4pcd = 128.d0 )
+   real(wp), parameter :: ck4pcd = 128.0_wp
 
-   integer               ck4mxd
-   parameter           ( ck4mxd = 18 )
+   integer(ip), parameter :: ck4mxd = 18
 
-   integer               ck4sft
-   parameter           ( ck4sft = 10 )
+   integer(ip), parameter :: ck4sft = 10
 
-   integer               ck4rsz
-   parameter           ( ck4rsz = ( ck4mxd + 1 ) * qavsiz + ck4sft )
+   integer(ip), parameter :: ck4rsz = ( ck4mxd + 1 ) * qavsiz + ck4sft
 
 !
 !     CK Type 5 parameters:
@@ -161,20 +150,15 @@ module pepper_inc_ckparam
 !
 !                 CK5RSZ = ( CK5MXD + 1 ) * CK5MXP + CK5MET
 !
-   integer               ck5dtp
-   parameter           ( ck5dtp = 5 )
+   integer(ip), parameter :: ck5dtp = 5
 
-   integer               ck5mxd
-   parameter           ( ck5mxd = 23 )
+   integer(ip), parameter :: ck5mxd = 23
 
-   integer               ck5met
-   parameter           ( ck5met =  4 )
+   integer(ip), parameter :: ck5met = 4
 
-   integer               ck5mxp
-   parameter           ( ck5mxp = 14 )
+   integer(ip), parameter :: ck5mxp = 14
 
-   integer               ck5rsz
-   parameter           ( ck5rsz = (ck5mxd + 1) * ck5mxp  +  ck5met )
+   integer(ip), parameter :: ck5rsz = (ck5mxd + 1) * ck5mxp + ck5met
 
 !
 !     CK Type 6 parameters:
@@ -207,25 +191,20 @@ module pepper_inc_ckparam
 !              requires half the window size used by subtype 3 for a
 !              given polynomial degree.
 !
-   integer               ck6dtp
-   parameter           ( ck6dtp =  6 )
+   integer(ip), parameter :: ck6dtp = 6
 
-   integer               ck6mxd
-   parameter           ( ck6mxd = 23 )
+   integer(ip), parameter :: ck6mxd = 23
 
-   integer               ck6met
-   parameter           ( ck6met =  4 )
+   integer(ip), parameter :: ck6met = 4
 
 !
 !     The parameter CK6PS3 must be in sync with C06PS3 defined in
 !     ck06.inc.
 !
-   integer               ck6ps3
-   parameter           ( ck6ps3 = 7 )
+   integer(ip), parameter :: ck6ps3 = 7
 
-   integer               ck6rsz
-   parameter           ( ck6rsz =   ( ck6mxd + 1 ) * ( ck6ps3 + 1 ) &
-   +   ck6met                        )
+   integer(ip), parameter :: ck6rsz = ( ck6mxd + 1 ) * ( ck6ps3 + 1 ) &
+      + ck6met
 
 !
 !
@@ -233,7 +212,6 @@ module pepper_inc_ckparam
 !     must be set to the maximum of all CKxRSZ parameters (currently
 !     CK5RSZ.)
 !
-   integer               ckmrsz
-   parameter           ( ckmrsz = ck5rsz )
+   integer(ip), parameter :: ckmrsz = ck5rsz
 
 end module pepper_inc_ckparam

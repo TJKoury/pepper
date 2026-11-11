@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekclas07
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -16,20 +18,17 @@ module pepper_inc_ekclas07
 !
 !     Data array base address:
 !
-   integer               dbix07
-   parameter           ( dbix07 = 1 )
+   integer(ip), parameter :: dbix07 = 1
 
 !
 !     Null flag array base address:
 !
-   integer               nfix07
-   parameter           ( nfix07 = 2 )
+   integer(ip), parameter :: nfix07 = 2
 
 !
 !     Size of class 7 metadata array:
 !
-   integer               mdsz07
-   parameter           ( mdsz07 = 2 )
+   integer(ip), parameter :: mdsz07 = 2
 
 !
 !     End Include Section:  EK Column Class 7 Parameters

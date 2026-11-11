@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekquery
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -36,8 +38,7 @@ module pepper_inc_ekquery
 !
 !     Encoded query architecture type:
 !
-   integer               eqarch
-   parameter           ( eqarch = 2 )
+   integer(ip), parameter :: eqarch = 2
 
 !
 !     `Name resolution' consists of:
@@ -66,24 +67,21 @@ module pepper_inc_ekquery
 !     query has been initialized.  Values are ITRUE or IFALSE.  See the
 !     include file ekbool.inc for parameter values.
 !
-   integer               eqinit
-   parameter           ( eqinit = eqarch + 1 )
+   integer(ip), parameter :: eqinit = eqarch + 1
 
 !
 !     Parse status---this flag indicates whether the parsing operation
 !     that produced an encoded query has been completed. Values are
 !     ITRUE or IFALSE.
 !
-   integer               eqpars
-   parameter           ( eqpars = eqinit + 1 )
+   integer(ip), parameter :: eqpars = eqinit + 1
 
 !
 !     Name resolution status---this flag indicates whether names
 !     have been resolved in an encoded query.  Values are ITRUE or
 !     IFALSE.
 !
-   integer               eqnres
-   parameter           ( eqnres = eqpars + 1 )
+   integer(ip), parameter :: eqnres = eqpars + 1
 
 !
 !     Time resolution status---this flag indicates whether time values
@@ -91,27 +89,23 @@ module pepper_inc_ekquery
 !     consists of converting strings representing time values to ET.
 !     Values of the status are ITRUE or IFALSE.
 !
-   integer               eqtres
-   parameter           ( eqtres = eqnres + 1 )
+   integer(ip), parameter :: eqtres = eqnres + 1
 
 !
 !     Semantic check status---this flag indicates whether semantic
 !     checking of constraints has been performed.
 !
-   integer               eqschk
-   parameter           ( eqschk = eqtres + 1 )
+   integer(ip), parameter :: eqschk = eqtres + 1
 
 !
 !     Number of tables specified in FROM clause:
 !
-   integer               eqntab
-   parameter           ( eqntab = eqschk + 1 )
+   integer(ip), parameter :: eqntab = eqschk + 1
 
 !
 !     Number of constraints in query:
 !
-   integer               eqncns
-   parameter           ( eqncns = eqntab + 1 )
+   integer(ip), parameter :: eqncns = eqntab + 1
 
 !
 !     A special value is used to indicate the `maximal' constraint---
@@ -119,50 +113,42 @@ module pepper_inc_ekquery
 !     are equivalent to the maximal constraint, the location EQNCNS
 !     is assigned the value EQMXML
 !
-   integer               eqmxml
-   parameter           ( eqmxml = -1 )
+   integer(ip), parameter :: eqmxml = -1
 
 !
 !     Number of constraint conjunctions:
 !
-   integer               eqncnj
-   parameter           ( eqncnj = eqncns + 1 )
+   integer(ip), parameter :: eqncnj = eqncns + 1
 
 !
 !     Number of order-by columns:
 !
-   integer               eqnord
-   parameter           ( eqnord = eqncnj + 1 )
+   integer(ip), parameter :: eqnord = eqncnj + 1
 
 !
 !     Number of SELECT columns:
 !
-   integer               eqnsel
-   parameter           ( eqnsel = eqnord + 1 )
+   integer(ip), parameter :: eqnsel = eqnord + 1
 
 !
 !     Size of double precision buffer:
 !
-   integer               eqnsiz
-   parameter           ( eqnsiz = eqnsel + 1 )
+   integer(ip), parameter :: eqnsiz = eqnsel + 1
 
 !
 !     `Free' pointer into double precision buffer:
 !
-   integer               eqnptr
-   parameter           ( eqnptr = eqnsiz + 1 )
+   integer(ip), parameter :: eqnptr = eqnsiz + 1
 
 !
 !     Size of character string buffer:
 !
-   integer               eqcsiz
-   parameter           ( eqcsiz = eqnptr + 1 )
+   integer(ip), parameter :: eqcsiz = eqnptr + 1
 
 !
 !     `Free' pointer into character string buffer:
 !
-   integer               eqcptr
-   parameter           ( eqcptr = eqcsiz + 1 )
+   integer(ip), parameter :: eqcptr = eqcsiz + 1
 
 !
 !     The following four base pointers will be valid after a query
@@ -170,26 +156,22 @@ module pepper_inc_ekquery
 !
 !     Base pointer for SELECT column descriptors:
 !
-   integer               eqbsel
-   parameter           ( eqbsel = eqcptr + 1 )
+   integer(ip), parameter :: eqbsel = eqcptr + 1
 
 !
 !     Base pointer for constraint descriptors:
 !
-   integer               eqbcon
-   parameter           ( eqbcon = eqbsel + 1 )
+   integer(ip), parameter :: eqbcon = eqbsel + 1
 
 !
 !     Base pointer for conjunction sizes:
 !
-   integer               eqbcnj
-   parameter           ( eqbcnj = eqbcon + 1 )
+   integer(ip), parameter :: eqbcnj = eqbcon + 1
 
 !
 !     Base pointer for order-by column descriptors:
 !
-   integer               eqbord
-   parameter           ( eqbord = eqbcon + 1 )
+   integer(ip), parameter :: eqbord = eqbcon + 1
 
 !
 !     After the quantities named above, the integer array contains
@@ -199,8 +181,7 @@ module pepper_inc_ekquery
 !     after the input query has been re-arranged as a disjunction of
 !     conjunctions of constraints.
 !
-   integer               eqvbas
-   parameter           ( eqvbas = eqbord )
+   integer(ip), parameter :: eqvbas = eqbord
 
 !
 !     The offsets of specific elements within descriptors are
@@ -246,20 +227,15 @@ module pepper_inc_ekquery
 !
 !     Parameters for string value descriptor elements:
 !
-   integer               eqdtyp
-   parameter           ( eqdtyp = 1 )
+   integer(ip), parameter :: eqdtyp = 1
 
-   integer               eqblex
-   parameter           ( eqblex = eqdtyp + 1 )
+   integer(ip), parameter :: eqblex = eqdtyp + 1
 
-   integer               eqelex
-   parameter           ( eqelex = eqblex + 1 )
+   integer(ip), parameter :: eqelex = eqblex + 1
 
-   integer               eqbstr
-   parameter           ( eqbstr = eqelex + 1 )
+   integer(ip), parameter :: eqbstr = eqelex + 1
 
-   integer               eqestr
-   parameter           ( eqestr = eqbstr + 1 )
+   integer(ip), parameter :: eqestr = eqbstr + 1
 
 !
 !     Numeric value descriptors are similar to those for string values,
@@ -267,16 +243,14 @@ module pepper_inc_ekquery
 !     they represent.  This pointer is the index of the value in the
 !     encoded query's numeric buffer.
 !
-   integer               eqvptr
-   parameter           ( eqvptr = eqelex + 1 )
+   integer(ip), parameter :: eqvptr = eqelex + 1
 
 !
 !     All value descriptors have the same size.  In order to allow
 !     table descriptors to have the same size as value descriptors,
 !     we include an extra element in the descriptor.
 !
-   integer               eqvdsz
-   parameter           ( eqvdsz = 6 )
+   integer(ip), parameter :: eqvdsz = 6
 
 !
 !     Column Descriptors
@@ -287,11 +261,9 @@ module pepper_inc_ekquery
 !     position of the column in the logical table to which the column
 !     belongs.  The index element is filled in during name resolution.
 !
-   integer               eqbcol
-   parameter           ( eqbcol = 1 )
+   integer(ip), parameter :: eqbcol = 1
 
-   integer               eqcidx
-   parameter           ( eqcidx = eqvdsz )
+   integer(ip), parameter :: eqcidx = eqvdsz
 
 !
 !     Table Descriptors
@@ -303,11 +275,9 @@ module pepper_inc_ekquery
 !     The index element is filled in during name resolution.  Aliases
 !     and table names have identical descriptor structures.
 !
-   integer               eqbtab
-   parameter           ( eqbtab = 1 )
+   integer(ip), parameter :: eqbtab = 1
 
-   integer               eqtord
-   parameter           ( eqtord = eqvdsz )
+   integer(ip), parameter :: eqtord = eqvdsz
 
 !
 !     Constraint descriptors
@@ -319,47 +289,39 @@ module pepper_inc_ekquery
 !          in two columns or the value in a column and a literal
 !          value.  The values of this element are EQCOL and EQVAL.
 !
-   integer               eqctyp
-   parameter           ( eqctyp = 1 )
+   integer(ip), parameter :: eqctyp = 1
 
-   integer               eqcol
-   parameter           ( eqcol  = 1 )
+   integer(ip), parameter :: eqcol = 1
 
-   integer               eqval
-   parameter           ( eqval  = 2 )
+   integer(ip), parameter :: eqval = 2
 
 !
 !
 !        - A descriptor for the table used to qualify the
 !          column name on the left side of the constraint.
 !
-   integer               eqltab
-   parameter           ( eqltab = eqctyp + 1 )
+   integer(ip), parameter :: eqltab = eqctyp + 1
 
 !
 !        - A character value descriptor for the column name on the left
 !          side of the query.
 !
-   integer               eqlcol
-   parameter           ( eqlcol = eqltab + eqvdsz )
+   integer(ip), parameter :: eqlcol = eqltab + eqvdsz
 
 !
 !        - An operator code indicating the relational operator used
 !          in the constraint.
 !
-   integer               eqopcd
-   parameter           ( eqopcd = eqlcol + eqvdsz )
+   integer(ip), parameter :: eqopcd = eqlcol + eqvdsz
 
 !
 !        If the constraint compares values from two columns, the
 !        next items are table and column name descriptors that apply to
 !        the column named on the right side of the relational operator.
 !
-   integer               eqrtab
-   parameter           ( eqrtab = eqopcd + 1 )
+   integer(ip), parameter :: eqrtab = eqopcd + 1
 
-   integer               eqrcol
-   parameter           ( eqrcol = eqrtab + eqvdsz )
+   integer(ip), parameter :: eqrcol = eqrtab + eqvdsz
 
 !
 !        If the constraint has a literal value on the right side, the
@@ -367,14 +329,12 @@ module pepper_inc_ekquery
 !
 !        - a value descriptor.
 !
-   integer               eqbval
-   parameter           ( eqbval = eqopcd + 1 )
+   integer(ip), parameter :: eqbval = eqopcd + 1
 
 !
 !        - Size of a constraint descriptor:
 !
-   integer               eqcdsz
-   parameter           ( eqcdsz = 2 + 4*eqvdsz )
+   integer(ip), parameter :: eqcdsz = 2 + 4*eqvdsz
 
 !
 !     Conjunction sizes
@@ -394,32 +354,26 @@ module pepper_inc_ekquery
 !     itself; one additional element is used to indicate the direction
 !     of the ordering (ascending vs descending).
 !
-   integer               eqotab
-   parameter           ( eqotab = 1 )
+   integer(ip), parameter :: eqotab = 1
 
-   integer               eqocol
-   parameter           ( eqocol = eqotab + eqvdsz )
+   integer(ip), parameter :: eqocol = eqotab + eqvdsz
 
 !
 !        - The last integer in the descriptor indicates whether the
 !          order direction is ascending or descending.
 !
-   integer               eqodir
-   parameter           ( eqodir = eqocol + eqvdsz )
+   integer(ip), parameter :: eqodir = eqocol + eqvdsz
 !
 !        - Size of an order-by column descriptor:
 !
-   integer               eqodsz
-   parameter           ( eqodsz = 1 + 2*eqvdsz )
+   integer(ip), parameter :: eqodsz = 1 + 2*eqvdsz
 
 !
 !     Codes indicating sense of ordering (ascending vs descending):
 !
-   integer               eqasnd
-   parameter           ( eqasnd = 0 )
+   integer(ip), parameter :: eqasnd = 0
 
-   integer               eqdsnd
-   parameter           ( eqdsnd = 1 )
+   integer(ip), parameter :: eqdsnd = 1
 
 !
 !     SELECT Column Descriptors
@@ -429,17 +383,14 @@ module pepper_inc_ekquery
 !     the table containing the column and for the name of the column
 !     itself.
 !
-   integer               eqstab
-   parameter           ( eqstab = 1 )
+   integer(ip), parameter :: eqstab = 1
 
-   integer               eqscol
-   parameter           ( eqscol = eqstab + eqvdsz )
+   integer(ip), parameter :: eqscol = eqstab + eqvdsz
 
 !
 !        - Size of a SELECT column descriptor:
 !
-   integer               eqsdsz
-   parameter           ( eqsdsz = 2*eqvdsz )
+   integer(ip), parameter :: eqsdsz = 2*eqvdsz
 
 !
 !     Miscellaneous parameters:
@@ -465,13 +416,12 @@ module pepper_inc_ekquery
 !    .                              +  MAXSEL * EQSDSZ     )
 !
 
-   integer               eqimin
-   parameter           ( eqimin =   eqvbas &
-   +  10     * eqvdsz * 2 &
-   +  1000   * eqcdsz &
-   +  1000 &
-   +  10     * eqodsz &
-   +  50     * eqsdsz     )
+   integer(ip), parameter :: eqimin = eqvbas &
+      + 10 * eqvdsz * 2 &
+      + 1000 * eqcdsz &
+      + 1000 &
+      + 10 * eqodsz &
+      + 50 * eqsdsz
 
 !
 !     End Include Section:  EK Encoded Query Internal Parameters

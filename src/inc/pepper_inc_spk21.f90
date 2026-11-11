@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_spk21
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -44,8 +46,7 @@ module pepper_inc_spk21
 !                 MAXTRM is the largest allowed value of MAXDIM.
 !
 !
-   integer               maxtrm
-   parameter           ( maxtrm = 25 )
+   integer(ip), parameter :: maxtrm = 25
 
 !
 !     End of include file spk21.inc.

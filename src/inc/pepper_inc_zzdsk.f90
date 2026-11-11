@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_zzdsk
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -40,71 +42,57 @@ module pepper_inc_zzdsk
 !
 !     Parameters supporting METHOD string parsing:
 !
-   integer               dskshp
-   parameter           ( dskshp = 2 )
+   integer(ip), parameter :: dskshp = 2
 
-   integer               ellshp
-   parameter           ( ellshp = 1 )
+   integer(ip), parameter :: ellshp = 1
 
 !
 !     Local method length.
 !
-   integer               mthlen
-   parameter           ( mthlen = 500 )
+   integer(ip), parameter :: mthlen = 500
 
 !
 !     Length of sub-point type string.
 !
-   integer               sublen
-   parameter           ( sublen = 20 )
+   integer(ip), parameter :: sublen = 20
 
 !
 !     Length of curve type string.
 !
-   integer               cvtlen
-   parameter           ( cvtlen = 20 )
+   integer(ip), parameter :: cvtlen = 20
 
 !
 !     Limb type parameter codes.
 !
-   integer               tangnt
-   parameter           ( tangnt = 1 )
+   integer(ip), parameter :: tangnt = 1
 
-   integer               guided
-   parameter           ( guided = 2 )
+   integer(ip), parameter :: guided = 2
 
 !
 !     Length of terminator type string.
 !
-   integer               tmtlen
-   parameter           ( tmtlen = 20 )
+   integer(ip), parameter :: tmtlen = 20
 
 !
 !     Terminator type and limb parameter codes.
 !
-   integer               lmbcrv
-   parameter           ( lmbcrv = 0 )
+   integer(ip), parameter :: lmbcrv = 0
 
-   integer               umbral
-   parameter           ( umbral = 1 )
+   integer(ip), parameter :: umbral = 1
 
-   integer               pnmbrl
-   parameter           ( pnmbrl = 2 )
+   integer(ip), parameter :: pnmbrl = 2
 
 !
 !     Length of aberration correction locus string.
 !
-   integer               acllen
-   parameter           ( acllen = 25 )
+   integer(ip), parameter :: acllen = 25
 
 !
 !     Aberration correction locus codes.
 !
-   integer               ctrcor
-   parameter           ( ctrcor = 1 )
+   integer(ip), parameter :: ctrcor = 1
 
-   integer               ellcor
-   parameter           ( ellcor = 2 )
+   integer(ip), parameter :: ellcor = 2
 
 !
 !     End of include file zzdsk.inc

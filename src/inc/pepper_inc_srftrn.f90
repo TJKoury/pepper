@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_srftrn
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -30,14 +32,12 @@ module pepper_inc_srftrn
 !
 !     Maximum number of surface name/ID mapping entries:
 !
-   integer               mxnsrf
-   parameter           ( mxnsrf = 2000 )
+   integer(ip), parameter :: mxnsrf = 2000
 
 !
 !     Maximum length of a surface name string:
 !
-   integer               sfnmln
-   parameter           ( sfnmln = 36 )
+   integer(ip), parameter :: sfnmln = 36
 
 !
 !     End of file srftrn.inc.

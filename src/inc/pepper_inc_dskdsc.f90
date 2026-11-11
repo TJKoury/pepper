@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_dskdsc
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -88,14 +90,12 @@ module pepper_inc_dskdsc
 !
 !     Surface ID code:
 !
-   integer               srfidx
-   parameter           ( srfidx = 1 )
+   integer(ip), parameter :: srfidx = 1
 
 !
 !     Central ephemeris object NAIF ID:
 !
-   integer               ctridx
-   parameter           ( ctridx = srfidx + 1 )
+   integer(ip), parameter :: ctridx = srfidx + 1
 
 !
 !     Data class:
@@ -103,74 +103,59 @@ module pepper_inc_dskdsc
 !     The "data class" is a code indicating the category of
 !     data contained in the segment.
 !
-   integer               clsidx
-   parameter           ( clsidx = ctridx + 1 )
+   integer(ip), parameter :: clsidx = ctridx + 1
 
 !
 !     Data type:
 !
-   integer               typidx
-   parameter           ( typidx = clsidx + 1 )
+   integer(ip), parameter :: typidx = clsidx + 1
 
 !
 !     Frame ID:
 !
-   integer               frmidx
-   parameter           ( frmidx = typidx + 1 )
+   integer(ip), parameter :: frmidx = typidx + 1
 
 !
 !     Coordinate system code:
 !
-   integer               sysidx
-   parameter           ( sysidx = frmidx + 1 )
+   integer(ip), parameter :: sysidx = frmidx + 1
 
 !
 !     Coordinate system parameter start index:
 !
-   integer               paridx
-   parameter           ( paridx = sysidx + 1 )
+   integer(ip), parameter :: paridx = sysidx + 1
 
 !
 !     Number of coordinate system parameters:
 !
-   integer               nsypar
-   parameter           ( nsypar = 10 )
+   integer(ip), parameter :: nsypar = 10
 
 !
 !     Ranges for coordinate bounds:
 !
-   integer               mn1idx
-   parameter           ( mn1idx = paridx + nsypar )
+   integer(ip), parameter :: mn1idx = paridx + nsypar
 
-   integer               mx1idx
-   parameter           ( mx1idx = mn1idx + 1 )
+   integer(ip), parameter :: mx1idx = mn1idx + 1
 
-   integer               mn2idx
-   parameter           ( mn2idx = mx1idx + 1 )
+   integer(ip), parameter :: mn2idx = mx1idx + 1
 
-   integer               mx2idx
-   parameter           ( mx2idx = mn2idx + 1 )
+   integer(ip), parameter :: mx2idx = mn2idx + 1
 
-   integer               mn3idx
-   parameter           ( mn3idx = mx2idx + 1 )
+   integer(ip), parameter :: mn3idx = mx2idx + 1
 
-   integer               mx3idx
-   parameter           ( mx3idx = mn3idx + 1 )
+   integer(ip), parameter :: mx3idx = mn3idx + 1
 
 !
 !     Coverage time bounds:
 !
-   integer               btmidx
-   parameter           ( btmidx = mx3idx + 1 )
+   integer(ip), parameter :: btmidx = mx3idx + 1
 
-   integer               etmidx
-   parameter           ( etmidx = btmidx + 1 )
+   integer(ip), parameter :: etmidx = btmidx + 1
 
 !
 !     Descriptor size (24):
 !
-   integer               dskdsz
-   parameter           ( dskdsz = etmidx )
+   integer(ip), parameter :: dskdsz = etmidx
 
 !
 !     Data class values:
@@ -182,16 +167,14 @@ module pepper_inc_dskdsc
 !                maps each planetodetic longitude and latitude pair to
 !                a unique altitude.
 !
-   integer               svfcls
-   parameter           ( svfcls = 1 )
+   integer(ip), parameter :: svfcls = 1
 !
 !        Class 2 indicates a general surface. Surfaces that
 !                have multiple points for a given pair of domain
 !                coordinates---for example, multiple radii for a given
 !                latitude and longitude---belong to class 2.
 !
-   integer               gencls
-   parameter           ( gencls = 2 )
+   integer(ip), parameter :: gencls = 2
 
 !
 !
@@ -207,8 +190,7 @@ module pepper_inc_dskdsc
 !        coordinate is radius.
 !
 !
-   integer               latsys
-   parameter           ( latsys = 1 )
+   integer(ip), parameter :: latsys = 1
 
 !
 !        Code 2 refers to the cylindrical system.
@@ -218,8 +200,7 @@ module pepper_inc_dskdsc
 !        orthogonal coordinate is Z.
 !
 !
-   integer               cylsys
-   parameter           ( cylsys = 2 )
+   integer(ip), parameter :: cylsys = 2
 
 !
 !        Code 3 refers to the rectangular system.
@@ -229,8 +210,7 @@ module pepper_inc_dskdsc
 !        orthogonal coordinate is Z.
 !
 !
-   integer               recsys
-   parameter           ( recsys = 3 )
+   integer(ip), parameter :: recsys = 3
 
 !
 !        Code 4 refers to the planetodetic/geodetic system.
@@ -240,8 +220,7 @@ module pepper_inc_dskdsc
 !        latitude. The third, orthogonal coordinate is altitude.
 !
 !
-   integer               pdtsys
-   parameter           ( pdtsys = 4 )
+   integer(ip), parameter :: pdtsys = 4
 
 !
 !     End of include file dskdsc.inc

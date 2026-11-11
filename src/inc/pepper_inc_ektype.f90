@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ektype
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -22,20 +24,17 @@ module pepper_inc_ektype
 !
 !     Character type:
 !
-   integer               chr
-   parameter           ( chr  = 1 )
+   integer(ip), parameter :: chr = 1
 
 !
 !     Double precision type:
 !
-   integer               dp
-   parameter           ( dp   = 2 )
+   integer(ip), parameter :: dp = 2
 
 !
 !     Integer type:
 !
-   integer               int
-   parameter           ( int  = 3 )
+   integer(ip), parameter :: int = 3
 
 !
 !     `Time' type:
@@ -47,8 +46,7 @@ module pepper_inc_ektype
 !     has a special role in the EK specification and code, time values
 !     are identified as a type distinct from double precision numbers.
 !
-   integer               time
-   parameter           ( time = 4 )
+   integer(ip), parameter :: time = 4
 
 !
 !     End Include Section:  EK Data Types

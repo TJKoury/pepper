@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ektree
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -91,44 +93,37 @@ module pepper_inc_ektree
 !
 !     Maximum number of children allowed in a child node:
 !
-   integer               mxkidc
-   parameter           ( mxkidc = 63 )
+   integer(ip), parameter :: mxkidc = 63
 
 !
 !     Maximum number of keys allowed in a child node:
 !
-   integer               mxkeyc
-   parameter           ( mxkeyc = mxkidc - 1 )
+   integer(ip), parameter :: mxkeyc = mxkidc - 1
 
 !
 !     Minimum number of children allowed in a child node:
 !
-   integer               mnkidc
-   parameter           ( mnkidc =  ( 2*mxkidc + 1 ) / 3  )
+   integer(ip), parameter :: mnkidc = ( 2*mxkidc + 1 ) / 3
 
 !
 !     Minimum number of keys allowed in a child node:
 !
-   integer               mnkeyc
-   parameter           ( mnkeyc =  mnkidc - 1  )
+   integer(ip), parameter :: mnkeyc = mnkidc - 1
 
 !
 !     Maximum number of children allowed in the root node:
 !
-   integer               mxkidr
-   parameter           ( mxkidr =   2 * ( (2*mxkidc - 2)/3 )  +  1  )
+   integer(ip), parameter :: mxkidr = 2 * ( (2*mxkidc - 2)/3 ) + 1
 
 !
 !     Maximum number of keys allowed in the root node:
 !
-   integer               mxkeyr
-   parameter           ( mxkeyr =   mxkidr - 1   )
+   integer(ip), parameter :: mxkeyr = mxkidr - 1
 
 !
 !     Minimum number of children allowed in the root node:
 !
-   integer               mnkidr
-   parameter           ( mnkidr =  2   )
+   integer(ip), parameter :: mnkidr = 2
 
 !
 !
@@ -142,63 +137,53 @@ module pepper_inc_ektree
 !
 !     Location of version code:
 !
-   integer               trtype
-   parameter           ( trtype = 1 )
+   integer(ip), parameter :: trtype = 1
 
 !
 !     Version code:
 !
-   integer               trvers
-   parameter           ( trvers = 1 )
+   integer(ip), parameter :: trvers = 1
 
 !
 !     Location of node count:
 !
-   integer               trnnod
-   parameter           ( trnnod = trtype + 1 )
+   integer(ip), parameter :: trnnod = trtype + 1
 
 !
 !     Location of total key count for the tree:
 !
-   integer               trnkey
-   parameter           ( trnkey = trnnod + 1 )
+   integer(ip), parameter :: trnkey = trnnod + 1
 
 !
 !     Location of tree depth:
 !
-   integer               trdpth
-   parameter           ( trdpth = trnkey + 1 )
+   integer(ip), parameter :: trdpth = trnkey + 1
 
 !
 !     Location of count of keys in root node:
 !
-   integer               trnkr
-   parameter           ( trnkr  = trdpth + 1 )
+   integer(ip), parameter :: trnkr = trdpth + 1
 
 !
 !     Base address of keys in the root node:
 !
-   integer               trkeyr
-   parameter           ( trkeyr = trnkr )
+   integer(ip), parameter :: trkeyr = trnkr
 
 !
 !     Base address of child pointers in root node:
 !
-   integer               trkidr
-   parameter           ( trkidr = trkeyr + mxkeyr + 1 )
+   integer(ip), parameter :: trkidr = trkeyr + mxkeyr + 1
 
 !
 !     Base address of data pointers in the root node (allow room for
 !     overflow):
 !
-   integer               trdatr
-   parameter           ( trdatr = trkidr + mxkidr + 1 )
+   integer(ip), parameter :: trdatr = trkidr + mxkidr + 1
 
 !
 !     Size of root node:
 !
-   integer               trsizr
-   parameter           ( trsizr = trdatr + mxkeyr + 1 )
+   integer(ip), parameter :: trsizr = trdatr + mxkeyr + 1
 
 !
 !     The following parameters are for child nodes only:
@@ -206,33 +191,28 @@ module pepper_inc_ektree
 !
 !     Location of number of keys in node:
 !
-   integer               trnkc
-   parameter           ( trnkc  =  1 )
+   integer(ip), parameter :: trnkc = 1
 
 !
 !     Base address of keys in child nodes:
 !
-   integer               trkeyc
-   parameter           ( trkeyc = trnkc )
+   integer(ip), parameter :: trkeyc = trnkc
 
 !
 !     Base address of child pointers in child nodes:
 !
-   integer               trkidc
-   parameter           ( trkidc = trkeyc + mxkeyc + 1 )
+   integer(ip), parameter :: trkidc = trkeyc + mxkeyc + 1
 
 !
 !     Base address of data pointers in child nodes (allow room
 !     for overflow):
 !
-   integer               trdatc
-   parameter           ( trdatc = trkidc + mxkidc + 1 )
+   integer(ip), parameter :: trdatc = trkidc + mxkidc + 1
 
 !
 !     Size of child node:
 !
-   integer               trsizc
-   parameter           ( trsizc = trdatc + mxkeyc + 1 )
+   integer(ip), parameter :: trsizc = trdatc + mxkeyc + 1
 
 !
 !     A number of EK tree routines must declare stacks of fixed
@@ -251,8 +231,7 @@ module pepper_inc_ektree
 !     This formula yields a capacity of over 1 billion keys for a
 !     tree of depth 6.
 !
-   integer               trmxdp
-   parameter           ( trmxdp = 10 )
+   integer(ip), parameter :: trmxdp = 10
 
 !
 !     End Include Section:  EK Tree Parameters

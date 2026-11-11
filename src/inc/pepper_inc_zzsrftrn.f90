@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_zzsrftrn
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -41,14 +43,12 @@ module pepper_inc_zzsrftrn
 !
 !        srftrn.inc.
 !
-   integer               nroom
-   parameter           ( nroom   = 2003 )
+   integer(ip), parameter :: nroom = 2003
 
 !
 !     Singly-linked list pool lower bound:
 !
-   integer               lbsngl
-   parameter           ( lbsngl = -5 )
+   integer(ip), parameter :: lbsngl = -5
 
 !
 !     End of file zzsrftrn.inc.

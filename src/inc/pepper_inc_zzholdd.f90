@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_zzholdd
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -74,20 +76,16 @@ module pepper_inc_zzholdd
 !     OP codes. The values exist in the integer domain
 !     [ -ZZNOP, -1],
 !
-   integer               zzget
-   parameter           ( zzget     = -1 )
+   integer(ip), parameter :: zzget = -1
 
-   integer               zzput
-   parameter           ( zzput     = -2 )
+   integer(ip), parameter :: zzput = -2
 
-   integer               zzreset
-   parameter           ( zzreset   = -3 )
+   integer(ip), parameter :: zzreset = -3
 
 !
 !     Current number of OP codes.
 !
-   integer               zznop
-   parameter           ( zznop     =  3 )
+   integer(ip), parameter :: zznop = 3
 
 !
 !     ID codes. The values exist in the integer domain
@@ -97,34 +95,29 @@ module pepper_inc_zzholdd
 !
 !     General use, primarily testing.
 !
-   integer               gen
-   parameter           ( gen       = 1 )
+   integer(ip), parameter :: gen = 1
 
 !
 !     The user defined GF reference value.
 !
-   integer               gf_ref
-   parameter           ( gf_ref    = 2 )
+   integer(ip), parameter :: gf_ref = 2
 
 !
 !     The user defined GF convergence tolerance.
 !
-   integer               gf_tol
-   parameter           ( gf_tol    = 3 )
+   integer(ip), parameter :: gf_tol = 3
 
 !
 !     The user defined GF step for numeric differentiation.
 !
-   integer               gf_dt
-   parameter           ( gf_dt     = 4 )
+   integer(ip), parameter :: gf_dt = 4
 
 !
 !     Current number of ID codes, dimension of array
 !     in ZZHOLDD. Bad things can happen if this parameter
 !     does not have the proper value.
 !
-   integer               nid
-   parameter           ( nid       = 4 )
+   integer(ip), parameter :: nid = 4
 
 !
 !     End of file zzholdd.inc.

@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekarch
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -18,8 +20,7 @@ module pepper_inc_ekarch
 !
 !     Architecture code:
 !
-   integer               archid
-   parameter           ( archid = 8 )
+   integer(ip), parameter :: archid = 8
 
 !
 !     End Include Section:  EK Architecture Version Parameters

@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_spk12
 
+   use pepper_kinds, only: ip, wp
+
    implicit none
 
    public
@@ -41,8 +43,7 @@ module pepper_inc_spk12
 !                       MAXREC = ( 3 * ( MAXDEG + 1 ) )  +  3
 !
 !
-   integer               maxdeg
-   parameter           ( maxdeg = 27 )
+   integer(ip), parameter :: maxdeg = 27
 
 !
 !     TOLSCL         is a tolerance scale factor (also called a
@@ -70,8 +71,7 @@ module pepper_inc_spk12
 !     Tolerance scale for coverage gap at the endpoints
 !     of the segment coverage interval:
 !
-   double precision      tolscl
-   parameter           ( tolscl = 1.d-13 )
+   real(wp), parameter :: tolscl = 1.0e-13_wp
 
 !
 !     End of include file spk12.inc.

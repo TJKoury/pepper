@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekglimit
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -17,8 +19,7 @@ module pepper_inc_ekglimit
 !     This limit applies to logical tables as well, since all segments
 !     in a logical table must have the same column definitions.
 !
-   integer               mxclsg
-   parameter           ( mxclsg = 100 )
+   integer(ip), parameter :: mxclsg = 100
 
 !
 !     End Include Section:  EK General Limit Parameters

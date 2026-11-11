@@ -81,3 +81,4 @@ logo = "./media/logo.svg"
 graph_maxdepth = 4
 graph_maxnodes = 300
 graph_project_maxnodes = 1000
+sort = "src"

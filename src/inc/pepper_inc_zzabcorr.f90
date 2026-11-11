@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_zzabcorr
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -78,43 +80,34 @@ module pepper_inc_zzabcorr
 
 !     Number of aberration correction choices:
 !
-   integer               nabcor
-   parameter           ( nabcor = 15 )
+   integer(ip), parameter :: nabcor = 15
 
 !
 !     Aberration correction attribute block size
 !     (number of aberration correction attributes):
 !
-   integer               abatsz
-   parameter           ( abatsz = 6 )
+   integer(ip), parameter :: abatsz = 6
 
 !
 !     Indices of attributes within an aberration correction
 !     attribute block:
 !
-   integer               geoidx
-   parameter           ( geoidx = 1 )
+   integer(ip), parameter :: geoidx = 1
 
-   integer               ltidx
-   parameter           ( ltidx  = geoidx + 1 )
+   integer(ip), parameter :: ltidx = geoidx + 1
 
-   integer               stlidx
-   parameter           ( stlidx = ltidx  + 1 )
+   integer(ip), parameter :: stlidx = ltidx + 1
 
-   integer               cnvidx
-   parameter           ( cnvidx = stlidx + 1 )
+   integer(ip), parameter :: cnvidx = stlidx + 1
 
-   integer               xmtidx
-   parameter           ( xmtidx = cnvidx + 1 )
+   integer(ip), parameter :: xmtidx = cnvidx + 1
 
-   integer               relidx
-   parameter           ( relidx = xmtidx + 1 )
+   integer(ip), parameter :: relidx = xmtidx + 1
 
 !
 !     Maximum length of an aberration correction string:
 !
-   integer               corlen
-   parameter           ( corlen = 5 )
+   integer(ip), parameter :: corlen = 5
 
 !
 !     End of include file zzabcorr.inc

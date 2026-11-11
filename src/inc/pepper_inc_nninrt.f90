@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_nninrt
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -13,8 +15,7 @@ module pepper_inc_nninrt
 !     software.
 !
 !
-   integer               nninrt
-   parameter           ( nninrt = 124 )
+   integer(ip), parameter :: nninrt = 124
 
 ! $ Brief_I/O
 !

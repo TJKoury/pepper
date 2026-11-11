@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_dsktol
 
+   use pepper_kinds, only: ip, wp
+
    implicit none
 
    public
@@ -55,14 +57,12 @@ module pepper_inc_dsktol
 !
 !     This parameter is user-adjustable.
 !
-   double precision      xfract
-   parameter           ( xfract = 1.d-10 )
+   real(wp), parameter :: xfract = 1.0e-10_wp
 
 !
 !     The keyword for setting or retrieving this factor is
 !
-   integer               keyxfr
-   parameter           ( keyxfr = 1 )
+   integer(ip), parameter :: keyxfr = 1
 
 !
 !     Greedy segment selection factor
@@ -84,14 +84,12 @@ module pepper_inc_dsktol
 !     software implementation. This parameter may be changed in a
 !     future version of SPICE.
 !
-   double precision      sgreed
-   parameter           ( sgreed = 1.d-8 )
+   real(wp), parameter :: sgreed = 1.0e-8_wp
 
 !
 !     The keyword for setting or retrieving this factor is
 !
-   integer               keysgr
-   parameter           ( keysgr = keyxfr + 1 )
+   integer(ip), parameter :: keysgr = keyxfr + 1
 
 !
 !     Segment pad margin
@@ -116,14 +114,12 @@ module pepper_inc_dsktol
 !     value of this margin, when applied to a segment's boundary
 !     dimensions.
 
-   double precision      sgpadm
-   parameter           ( sgpadm = 1.d-10 )
+   real(wp), parameter :: sgpadm = 1.0e-10_wp
 
 !
 !     The keyword for setting or retrieving this factor is
 !
-   integer               keyspm
-   parameter           ( keyspm = keysgr + 1 )
+   integer(ip), parameter :: keyspm = keysgr + 1
 
 !
 !     Surface-point membership margin
@@ -141,14 +137,12 @@ module pepper_inc_dsktol
 !     routines that make use of the surface-point mapping won't
 !     work properly.
 !
-   double precision      ptmemm
-   parameter           ( ptmemm = 1.d-7 )
+   real(wp), parameter :: ptmemm = 1.0e-7_wp
 
 !
 !     The keyword for setting or retrieving this factor is
 !
-   integer               keyptm
-   parameter           ( keyptm = keyspm + 1 )
+   integer(ip), parameter :: keyptm = keyspm + 1
 
 !
 !     Angular rounding margin
@@ -164,16 +158,14 @@ module pepper_inc_dsktol
 !
 !     Units are radians.
 !
-   double precision      angmrg
-   parameter           ( angmrg = 1.d-12 )
+   real(wp), parameter :: angmrg = 1.0e-12_wp
 
 !
 !     This parameter is not user-adjustable.
 !
 !     The keyword for retrieving this parameter is
 !
-   integer               keyamg
-   parameter           ( keyamg = keyptm + 1 )
+   integer(ip), parameter :: keyamg = keyptm + 1
 
 !
 !     Longitude alias margin
@@ -193,16 +185,14 @@ module pepper_inc_dsktol
 !
 !     Units are radians.
 !
-   double precision      lonali
-   parameter           ( lonali = 1.d-12 )
+   real(wp), parameter :: lonali = 1.0e-12_wp
 
 !
 !     This parameter is not user-adjustable.
 !
 !     The keyword for retrieving this parameter is
 !
-   integer               keylal
-   parameter           ( keylal = keyamg + 1 )
+   integer(ip), parameter :: keylal = keyamg + 1
 
 !
 !     End of include file dsktol.inc

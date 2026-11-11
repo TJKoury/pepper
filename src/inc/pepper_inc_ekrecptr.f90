@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekrecptr
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -59,23 +61,17 @@ module pepper_inc_ekrecptr
 !     In EKs that are not shadowed, all records have status OLD.
 !
 !
-   integer               old
-   parameter           ( old    =          1 )
+   integer(ip), parameter :: old = 1
 
-   integer               update
-   parameter           ( update = old    + 1 )
+   integer(ip), parameter :: update = old + 1
 
-   integer               new
-   parameter           ( new    = update + 1 )
+   integer(ip), parameter :: new = update + 1
 
-   integer               delold
-   parameter           ( delold = new    + 1 )
+   integer(ip), parameter :: delold = new + 1
 
-   integer               delnew
-   parameter           ( delnew = delold + 1 )
+   integer(ip), parameter :: delnew = delold + 1
 
-   integer               delupd
-   parameter           ( delupd = delnew + 1 )
+   integer(ip), parameter :: delupd = delnew + 1
 
 !
 !     The following parameters refer to indices within the record
@@ -83,8 +79,7 @@ module pepper_inc_ekrecptr
 !
 !     Index of status indicator:
 !
-   integer               staidx
-   parameter           ( staidx = 1 )
+   integer(ip), parameter :: staidx = 1
 
 !
 !     Each record pointer contains a pointer to its companion:  for a
@@ -98,8 +93,7 @@ module pepper_inc_ekrecptr
 !
 !     Index of record's companion pointer:
 !
-   integer               rcpidx
-   parameter           ( rcpidx = staidx + 1 )
+   integer(ip), parameter :: rcpidx = staidx + 1
 
 !
 !     Each data item is referenced by an integer.  The meaning of
@@ -111,14 +105,12 @@ module pepper_inc_ekrecptr
 !
 !     Base address of data pointers:
 !
-   integer               dptbas
-   parameter           ( dptbas = 2 )
+   integer(ip), parameter :: dptbas = 2
 
 !
 !     Maximum record pointer size:
 !
-   integer               mxrpsz
-   parameter           ( mxrpsz = 254 )
+   integer(ip), parameter :: mxrpsz = 254
 
 !
 !     Data pointers are given the value UNINIT to start with; this
@@ -126,14 +118,11 @@ module pepper_inc_ekrecptr
 !     distinct from the value NULL.  NOBACK indicates an uninitialized
 !     backup column entry.
 !
-   integer               uninit
-   parameter           ( uninit = -1 )
+   integer(ip), parameter :: uninit = -1
 
-   integer               null
-   parameter           ( null   = uninit - 1 )
+   integer(ip), parameter :: null = uninit - 1
 
-   integer               noback
-   parameter           ( noback = null   - 1 )
+   integer(ip), parameter :: noback = null - 1
 
 !
 !     End Include Section:  EK Record Pointer Parameters

@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekopcd
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -47,35 +49,25 @@ module pepper_inc_ekopcd
 !     are used to test whether a value of any type is null.
 !
 !
-   integer               eq
-   parameter           ( eq     =         1 )
+   integer(ip), parameter :: eq = 1
 
-   integer               ge
-   parameter           ( ge     =  eq  +  1 )
+   integer(ip), parameter :: ge = eq + 1
 
-   integer               gt
-   parameter           ( gt     =  ge  +  1 )
+   integer(ip), parameter :: gt = ge + 1
 
-   integer               le
-   parameter           ( le     =  gt  +  1 )
+   integer(ip), parameter :: le = gt + 1
 
-   integer               lt
-   parameter           ( lt     =  le  +  1 )
+   integer(ip), parameter :: lt = le + 1
 
-   integer               ne
-   parameter           ( ne     =  lt  +  1 )
+   integer(ip), parameter :: ne = lt + 1
 
-   integer               like
-   parameter           ( like   =  ne     +  1 )
+   integer(ip), parameter :: like = ne + 1
 
-   integer               unlike
-   parameter           ( unlike =  like   +  1 )
+   integer(ip), parameter :: unlike = like + 1
 
-   integer               isnull
-   parameter           ( isnull =  unlike +  1 )
+   integer(ip), parameter :: isnull = unlike + 1
 
-   integer               notnul
-   parameter           ( notnul =  isnull +  1 )
+   integer(ip), parameter :: notnul = isnull + 1
 
 !
 !     End Include Section:  EK Operator Codes

@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekcoldsc
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -22,14 +24,12 @@ module pepper_inc_ekcoldsc
 !     parameter SDSCSZ, which defines the size of a segment descriptor,
 !     is declared in the include file eksegdsc.inc.
 !
-   integer               cdoff
-   parameter           ( cdoff  = 24 )
+   integer(ip), parameter :: cdoff = 24
 
 !
 !     Size of column descriptor
 !
-   integer               cdscsz
-   parameter           ( cdscsz = 11 )
+   integer(ip), parameter :: cdscsz = 11
 
 !
 !     Indices of various pieces of column descriptors:
@@ -39,8 +39,7 @@ module pepper_inc_ekcoldsc
 !     word `class' to distinguish this item from the column's data
 !     type.)
 !
-   integer               clsidx
-   parameter           ( clsidx = 1 )
+   integer(ip), parameter :: clsidx = 1
 
 !
 !     TYPIDX is the index of the column's data type code (CHR, INT, DP,
@@ -48,30 +47,26 @@ module pepper_inc_ekcoldsc
 !     will frequently be convenient to look up the type directly.
 !
 !
-   integer               typidx
-   parameter           ( typidx = clsidx + 1 )
+   integer(ip), parameter :: typidx = clsidx + 1
 
 !
 !     LENIDX is the index of the column's string length value, if the
 !     column has character type.  A value of IFALSE in this element of
 !     the descriptor indicates that the strings have variable length.
 !
-   integer               lenidx
-   parameter           ( lenidx = typidx + 1 )
+   integer(ip), parameter :: lenidx = typidx + 1
 
 !
 !     SIZIDX is the index of the column's element size value.  This
 !     descriptor element is meaningful for columns with fixed-size
 !     entries.  For variable-sized columns, this value is IFALSE.
 !
-   integer               sizidx
-   parameter           ( sizidx = lenidx + 1 )
+   integer(ip), parameter :: sizidx = lenidx + 1
 
 !
 !     NAMIDX is the index of the base address of the column's name.
 !
-   integer               namidx
-   parameter           ( namidx = sizidx + 1 )
+   integer(ip), parameter :: namidx = sizidx + 1
 
 !
 !     IXTIDX is the data type of the column's index.  IXTIDX
@@ -79,8 +74,7 @@ module pepper_inc_ekcoldsc
 !     that are not indexed, the location IXTIDX contains the boolean
 !     value IFALSE.
 !
-   integer               ixtidx
-   parameter           ( ixtidx = namidx + 1 )
+   integer(ip), parameter :: ixtidx = namidx + 1
 
 !
 !     IXPIDX is a pointer to the column's index.  IXTPDX contains a
@@ -88,30 +82,26 @@ module pepper_inc_ekcoldsc
 !     interpretation of the pointer depends on the data type of the
 !     index.
 !
-   integer               ixpidx
-   parameter           ( ixpidx = ixtidx + 1 )
+   integer(ip), parameter :: ixpidx = ixtidx + 1
 
 !
 !     NFLIDX is the index of a flag indicating whether nulls are
 !     permitted in the column.  The value at location NFLIDX is
 !     ITRUE if nulls are permitted and IFALSE otherwise.
 !
-   integer               nflidx
-   parameter           ( nflidx = ixpidx + 1 )
+   integer(ip), parameter :: nflidx = ixpidx + 1
 
 !
 !     ORDIDX is the index of the column's ordinal position in the
 !     list of columns belonging to the column's parent segment.
 !
-   integer               ordidx
-   parameter           ( ordidx = nflidx + 1 )
+   integer(ip), parameter :: ordidx = nflidx + 1
 
 !
 !     METIDX is the index of the column's integer metadata pointer.
 !     This pointer is a DAS integer address.
 !
-   integer               metidx
-   parameter           ( metidx = ordidx + 1 )
+   integer(ip), parameter :: metidx = ordidx + 1
 
 !
 !     The last position in the column descriptor is reserved.  No

@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_zzgf
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -129,20 +131,17 @@ module pepper_inc_zzgf
 !
 !     Number of workspace windows used by ZZGFREL:
 !
-   integer               nwrel
-   parameter           ( nwrel  = 5 )
+   integer(ip), parameter :: nwrel = 5
 
 !
 !     Number of additional workspace windows used by ZZGFLONG:
 !
-   integer               nwlong
-   parameter           ( nwlong = 7 )
+   integer(ip), parameter :: nwlong = 7
 
 !
 !     Index of "existence window" used by ZZGFCSLV:
 !
-   integer               exwidx
-   parameter           ( exwidx = nwrel + nwlong + 1 )
+   integer(ip), parameter :: exwidx = nwrel + nwlong + 1
 
 !
 !     Progress report parameters:
@@ -155,17 +154,14 @@ module pepper_inc_zzgf
 !     "percent complete" substring, should not be long enough
 !     to cause wrap-around on any platform's terminal window.
 !
-   integer               mxbegm
-   parameter           ( mxbegm = 55 )
+   integer(ip), parameter :: mxbegm = 55
 
-   integer               mxendm
-   parameter           ( mxendm = 13 )
+   integer(ip), parameter :: mxendm = 13
 
 !
 !     Total progress report message length upper bound:
 !
-   integer               mxmsg
-   parameter           ( mxmsg  = mxbegm + mxendm + 10 )
+   integer(ip), parameter :: mxmsg = mxbegm + mxendm + 10
 
 !
 !     End of file zzgf.inc.

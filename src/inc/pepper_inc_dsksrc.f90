@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_dsksrc
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -34,13 +36,11 @@ module pepper_inc_dsksrc
 !
 !     Size of double precision source information component:
 !
-   integer               dcsize
-   parameter           ( dcsize = 1 )
+   integer(ip), parameter :: dcsize = 1
 
 !     Size of integer source information component:
 !
-   integer               icsize
-   parameter           ( icsize = 1 )
+   integer(ip), parameter :: icsize = 1
 
 !
 !     The contents of the components are DSK data type-dependent.

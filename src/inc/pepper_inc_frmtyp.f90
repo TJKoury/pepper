@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_frmtyp
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -78,26 +80,19 @@ module pepper_inc_frmtyp
 !-    SPICELIB Version 1.0.0, 10-DEC-1995 (WLT)
 !
 
-   integer               inertl
-   parameter           ( inertl = 1 )
+   integer(ip), parameter :: inertl = 1
 
-   integer               pck
-   parameter           ( pck    = inertl + 1 )
+   integer(ip), parameter :: pck = inertl + 1
 
-   integer               ck
-   parameter           ( ck     = pck    + 1 )
+   integer(ip), parameter :: ck = pck + 1
 
-   integer               tk
-   parameter           ( tk     = ck     + 1 )
+   integer(ip), parameter :: tk = ck + 1
 
-   integer               dyn
-   parameter           ( dyn    = tk     + 1 )
+   integer(ip), parameter :: dyn = tk + 1
 
-   integer               swtch
-   parameter           ( swtch  = dyn    + 1 )
+   integer(ip), parameter :: swtch = dyn + 1
 
-   integer               all
-   parameter           ( all    = -1 )
+   integer(ip), parameter :: all = -1
 
 !
 !     End of INCLUDE file frmtyp.inc

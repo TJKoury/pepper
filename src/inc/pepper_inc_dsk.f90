@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_dsk
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -15,8 +17,7 @@ module pepper_inc_dsk
 !
 !     Maximum size of surface ID list.
 !
-   integer               maxsrf
-   parameter           ( maxsrf = 100 )
+   integer(ip), parameter :: maxsrf = 100
 
 !
 !     End of include file dsk.inc

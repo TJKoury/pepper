@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekbool
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -18,14 +20,12 @@ module pepper_inc_ekbool
 !
 !     Integer code indicating `true':
 !
-   integer               itrue
-   parameter           ( itrue  =  1 )
+   integer(ip), parameter :: itrue = 1
 
 !
 !     Integer code indicating `false':
 !
-   integer               ifalse
-   parameter           ( ifalse = -1 )
+   integer(ip), parameter :: ifalse = -1
 
 !
 !     Character code indicating `true':

@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekfilpar
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -23,8 +25,7 @@ module pepper_inc_ekfilpar
 !
 !     Size of file parameter block:
 !
-   integer               fparsz
-   parameter           ( fparsz = 1 )
+   integer(ip), parameter :: fparsz = 1
 
 !
 !     All offsets shown below are relative to the beginning of the
@@ -34,8 +35,7 @@ module pepper_inc_ekfilpar
 !     Index of the segment pointer tree---this location contains the
 !     root page number of the tree:
 !
-   integer               sgtidx
-   parameter           ( sgtidx  =  1 )
+   integer(ip), parameter :: sgtidx = 1
 
 !
 !     End Include Section:  EK File Metadata Parameters

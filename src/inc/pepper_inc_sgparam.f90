@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_sgparam
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -156,8 +158,7 @@ module pepper_inc_sgparam
 !
 !        REFVAL = REF(1) + DBLE (INDEX-1) * REF(2)
 !
-   integer               imple
-   parameter           ( imple  = 0 )
+   integer(ip), parameter :: imple = 0
 
 !
 !     Reference Index Type 1
@@ -183,8 +184,7 @@ module pepper_inc_sgparam
 !     We get the larger index in the event that VALUE is halfway between
 !     X(I) and X(I+1), where X(I) = BUFFER(1) + DBLE (I-1) * REFDAT(2).
 !
-   integer               impcls
-   parameter           ( impcls = 1 )
+   integer(ip), parameter :: impcls = 1
 
 !
 !     Reference Index Type 2
@@ -196,8 +196,7 @@ module pepper_inc_sgparam
 !     that is strictly less than VALUE. The reference values must be in
 !     ascending order, REF(I) < REF(I+1).
 !
-   integer               explt
-   parameter           ( explt  = 2 )
+   integer(ip), parameter :: explt = 2
 
 !
 !     Reference Index Type 3
@@ -209,8 +208,7 @@ module pepper_inc_sgparam
 !     that is less than or equal to VALUE. The reference values must be
 !     in ascending order, REF(I) < REF(I+1).
 !
-   integer               exple
-   parameter           ( exple  = 3 )
+   integer(ip), parameter :: exple = 3
 
 !
 !     Reference Index Type 4
@@ -223,19 +221,16 @@ module pepper_inc_sgparam
 !     the larger index is selected. The reference values must be in
 !     ascending order, REF(I) < REF(I+1).
 !
-   integer               expcls
-   parameter           ( expcls = 4 )
+   integer(ip), parameter :: expcls = 4
 
 !
 !     These parameters define the valid range for the index types. An
 !     index type code, MYTYPE, for a generic segment must satisfy the
 !     relation MNIDXT <= MYTYPE <= MXIDXT.
 !
-   integer               mnidxt
-   parameter           ( mnidxt = 0 )
+   integer(ip), parameter :: mnidxt = 0
 
-   integer               mxidxt
-   parameter           ( mxidxt = 4 )
+   integer(ip), parameter :: mxidxt = 4
 
 !
 !     The following meta data items will appear in all generic segments.
@@ -293,99 +288,83 @@ module pepper_inc_sgparam
 !     Meta Data Item  1
 !     -----------------
 !
-   integer               conbas
-   parameter           ( conbas =  1         )
+   integer(ip), parameter :: conbas = 1
 !
 !     Meta Data Item  2
 !     -----------------
 !
 
-   integer               ncon
-   parameter           ( ncon   = conbas + 1 )
+   integer(ip), parameter :: ncon = conbas + 1
 !
 !     Meta Data Item  3
 !     -----------------
 !
-   integer               rdrbas
-   parameter           ( rdrbas = ncon   + 1 )
+   integer(ip), parameter :: rdrbas = ncon + 1
 !
 !     Meta Data Item  4
 !     -----------------
 !
-   integer               nrdr
-   parameter           ( nrdr   = rdrbas + 1 )
+   integer(ip), parameter :: nrdr = rdrbas + 1
 !
 !     Meta Data Item  5
 !     -----------------
 !
-   integer               rdrtyp
-   parameter           ( rdrtyp = nrdr   + 1 )
+   integer(ip), parameter :: rdrtyp = nrdr + 1
 !
 !     Meta Data Item  6
 !     -----------------
 !
-   integer               refbas
-   parameter           ( refbas = rdrtyp + 1 )
+   integer(ip), parameter :: refbas = rdrtyp + 1
 !
 !     Meta Data Item  7
 !     -----------------
 !
-   integer               nref
-   parameter           ( nref   = refbas + 1 )
+   integer(ip), parameter :: nref = refbas + 1
 !
 !     Meta Data Item  8
 !     -----------------
 !
-   integer               pdrbas
-   parameter           ( pdrbas = nref   + 1 )
+   integer(ip), parameter :: pdrbas = nref + 1
 !
 !     Meta Data Item  9
 !     -----------------
 !
-   integer               npdr
-   parameter           ( npdr   = pdrbas + 1 )
+   integer(ip), parameter :: npdr = pdrbas + 1
 !
 !     Meta Data Item 10
 !     -----------------
 !
-   integer               pdrtyp
-   parameter           ( pdrtyp = npdr   + 1 )
+   integer(ip), parameter :: pdrtyp = npdr + 1
 !
 !     Meta Data Item 11
 !     -----------------
 !
-   integer               pktbas
-   parameter           ( pktbas = pdrtyp + 1 )
+   integer(ip), parameter :: pktbas = pdrtyp + 1
 !
 !     Meta Data Item 12
 !     -----------------
 !
-   integer               npkt
-   parameter           ( npkt   = pktbas + 1 )
+   integer(ip), parameter :: npkt = pktbas + 1
 !
 !     Meta Data Item 13
 !     -----------------
 !
-   integer               rsvbas
-   parameter           ( rsvbas = npkt   + 1 )
+   integer(ip), parameter :: rsvbas = npkt + 1
 !
 !     Meta Data Item 14
 !     -----------------
 !
-   integer               nrsv
-   parameter           ( nrsv   = rsvbas + 1 )
+   integer(ip), parameter :: nrsv = rsvbas + 1
 !
 !     Meta Data Item 15
 !     -----------------
 !
-   integer               pktsz
-   parameter           ( pktsz  = nrsv   + 1 )
+   integer(ip), parameter :: pktsz = nrsv + 1
 !
 !     Meta Data Item 16
 !     -----------------
 !
-   integer               pktoff
-   parameter           ( pktoff = pktsz  + 1 )
+   integer(ip), parameter :: pktoff = pktsz + 1
 !
 !     If new meta data items are to be added to this list, they should
 !     be added above this comment block as described below.
@@ -407,20 +386,17 @@ module pepper_inc_sgparam
 !     Meta Data Item 17
 !     -----------------
 !
-   integer               nmeta
-   parameter           ( nmeta  = pktoff + 1 )
+   integer(ip), parameter :: nmeta = pktoff + 1
 !
 !     Maximum number of meta data items. This is always set equal to
 !     NMETA.
 !
-   integer               mxmeta
-   parameter           ( mxmeta = nmeta )
+   integer(ip), parameter :: mxmeta = nmeta
 !
 !     Minimum number of meta data items that must be present in a DAF
 !     generic segment.  This number is to remain fixed even if more
 !     meta data items are added for compatibility with old DAF files.
 !
-   integer               mnmeta
-   parameter           ( mnmeta = 15 )
+   integer(ip), parameter :: mnmeta = 15
 
 end module pepper_inc_sgparam

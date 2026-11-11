@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_zzsgp4
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -84,48 +86,35 @@ module pepper_inc_zzsgp4
 !      WGS gravitational constants IDs.
 !
 
-   integer                       ngravs
-   parameter                   ( ngravs = 3 )
+   integer(ip), parameter :: ngravs = 3
 
-   integer                       ngravc
-   parameter                   ( ngravc = 8 )
+   integer(ip), parameter :: ngravc = 8
 
-   integer                       wgs721
-   parameter                   ( wgs721 = 1 )
+   integer(ip), parameter :: wgs721 = 1
 
-   integer                       wgs72
-   parameter                   ( wgs72  = 2 )
+   integer(ip), parameter :: wgs72 = 2
 
-   integer                       wgs84
-   parameter                   ( wgs84  = 3 )
+   integer(ip), parameter :: wgs84 = 3
 
 !
 !      Gravitational constant indices.
 !
 
-   integer                       p_rad
-   parameter                   ( p_rad =  1 )
+   integer(ip), parameter :: p_rad = 1
 
-   integer                       p_xke
-   parameter                   ( p_xke =  2 )
+   integer(ip), parameter :: p_xke = 2
 
-   integer                       p_mu
-   parameter                   ( p_mu =   3 )
+   integer(ip), parameter :: p_mu = 3
 
-   integer                       p_tumn
-   parameter                   ( p_tumn = 4 )
+   integer(ip), parameter :: p_tumn = 4
 
-   integer                       p_j2
-   parameter                   ( p_j2 =   5 )
+   integer(ip), parameter :: p_j2 = 5
 
-   integer                       p_j3
-   parameter                   ( p_j3 =   6 )
+   integer(ip), parameter :: p_j3 = 6
 
-   integer                       p_j4
-   parameter                   ( p_j4 =   7 )
+   integer(ip), parameter :: p_j4 = 7
 
-   integer                       p_j3j2
-   parameter                   ( p_j3j2 = 8 )
+   integer(ip), parameter :: p_j3j2 = 8
 
 !
 !     The following parameters give the indices in the GEOPHS
@@ -144,42 +133,31 @@ module pepper_inc_zzsgp4
 !     K_AE  --- index of distance units/earth radius
 !
 
-   integer                       k_j2
-   parameter                   ( k_j2 = 1 )
+   integer(ip), parameter :: k_j2 = 1
 
-   integer                       k_j3
-   parameter                   ( k_j3 = 2 )
+   integer(ip), parameter :: k_j3 = 2
 
-   integer                       k_j4
-   parameter                   ( k_j4 = 3 )
+   integer(ip), parameter :: k_j4 = 3
 
-   integer                       k_ke
-   parameter                   ( k_ke = 4 )
+   integer(ip), parameter :: k_ke = 4
 
-   integer                       k_qo
-   parameter                   ( k_qo = 5 )
+   integer(ip), parameter :: k_qo = 5
 
-   integer                       k_so
-   parameter                   ( k_so = 6 )
+   integer(ip), parameter :: k_so = 6
 
-   integer                       k_er
-   parameter                   ( k_er = 7 )
+   integer(ip), parameter :: k_er = 7
 
-   integer                       k_ae
-   parameter                   ( k_ae = 8 )
+   integer(ip), parameter :: k_ae = 8
 
-   integer                       ngeo
-   parameter                   ( ngeo = k_ae )
+   integer(ip), parameter :: ngeo = k_ae
 
 !
 !     Operation mode values, OPMODE.
 !
 
-   integer                       afspc
-   parameter                   ( afspc  = 1 )
+   integer(ip), parameter :: afspc = 1
 
-   integer                       imprvd
-   parameter                   ( imprvd = 2 )
+   integer(ip), parameter :: imprvd = 2
 
 !
 !     An enumeration of the various components of the
@@ -196,37 +174,26 @@ module pepper_inc_zzsgp4
 !     KNO     --- location of NO
 !
 
-   integer                       kndt20
-   parameter                   ( kndt20 = 1 )
+   integer(ip), parameter :: kndt20 = 1
 
-   integer                       kndd60
-   parameter                   ( kndd60 = 2 )
+   integer(ip), parameter :: kndd60 = 2
 
-   integer                       kbstar
-   parameter                   ( kbstar = 3 )
+   integer(ip), parameter :: kbstar = 3
 
-   integer                       kincl
-   parameter                   ( kincl  = 4 )
+   integer(ip), parameter :: kincl = 4
 
-   integer                       knode0
-   parameter                   ( knode0 = 5 )
+   integer(ip), parameter :: knode0 = 5
 
-   integer                       kecc
-   parameter                   ( kecc   = 6 )
+   integer(ip), parameter :: kecc = 6
 
-   integer                       komega
-   parameter                   ( komega = 7 )
+   integer(ip), parameter :: komega = 7
 
-   integer                       kmo
-   parameter                   ( kmo    = 8 )
+   integer(ip), parameter :: kmo = 8
 
-   integer                       kno
-   parameter                   ( kno    = 9 )
+   integer(ip), parameter :: kno = 9
 
-   integer                       kepoch
-   parameter                   ( kepoch = 10 )
+   integer(ip), parameter :: kepoch = 10
 
-   integer                       nelems
-   parameter                   ( nelems = kepoch )
+   integer(ip), parameter :: nelems = kepoch
 
 end module pepper_inc_zzsgp4

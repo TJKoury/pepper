@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_oscltx
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -31,8 +33,7 @@ module pepper_inc_oscltx
 !     DOUBLE PRECISION   ELTS( OSCXSZ )
 !
 
-   integer               oscxsz
-   parameter           ( oscxsz = 20 )
+   integer(ip), parameter :: oscxsz = 20
 
 !
 !     End of include file oscltx.inc

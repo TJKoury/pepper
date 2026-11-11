@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekqlimit
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -29,22 +31,19 @@ module pepper_inc_ekqlimit
 !     Maximum length of an input query:  MAXQRY.  This value is
 !     currently set to twenty-five 80-character lines.
 !
-   integer               maxqry
-   parameter           ( maxqry = 2000 )
+   integer(ip), parameter :: maxqry = 2000
 
 !
 !     Maximum number of columns that may be listed in the
 !     `order-by clause' of a query:  MAXSEL.  MAXSEL = 50.
 !
-   integer               maxsel
-   parameter           ( maxsel = 50 )
+   integer(ip), parameter :: maxsel = 50
 
 !
 !     Maximum number of tables that may be listed in the `FROM
 !     clause' of a query: MAXTAB.
 !
-   integer               maxtab
-   parameter           ( maxtab = 10 )
+   integer(ip), parameter :: maxtab = 10
 
 !
 !     Maximum number of relational expressions that may be listed
@@ -76,47 +75,40 @@ module pepper_inc_ekqlimit
 !     which contains eight relational expressions.
 !
 !
-   integer               maxcon
-   parameter           ( maxcon = 1000 )
+   integer(ip), parameter :: maxcon = 1000
 
 !
 !     MXJOIN is the maximum number of tables that can be joined.
 !
-   integer               mxjoin
-   parameter           ( mxjoin = 10 )
+   integer(ip), parameter :: mxjoin = 10
 
 !
 !     MXJCON is the maximum number of join constraints allowed.
 !
-   integer               mxjcon
-   parameter           ( mxjcon = 100 )
+   integer(ip), parameter :: mxjcon = 100
 
 !
 !     Maximum number of order-by columns that may be used in the
 !     `order-by clause' of a query: MAXORD. MAXORD = 10.
 !
-   integer               maxord
-   parameter           ( maxord = 10 )
+   integer(ip), parameter :: maxord = 10
 
 !
 !     Maximum number of tokens in a query: 500. Tokens are reserved
 !     words, column names, parentheses, and values. Literal strings
 !     and time values count as single tokens.
 !
-   integer               maxtok
-   parameter           ( maxtok = 500 )
+   integer(ip), parameter :: maxtok = 500
 
 !
 !     Maximum number of numeric tokens in a query:
 !
-   integer               maxqnm
-   parameter           ( maxqnm = 100 )
+   integer(ip), parameter :: maxqnm = 100
 
 !
 !     Maximum total length of character tokens in a query:
 !
-   integer               maxcln
-   parameter           ( maxcln = maxqry )
+   integer(ip), parameter :: maxcln = maxqry
 
 !
 !     Maximum length of literal string values allowed in queries:
@@ -126,8 +118,7 @@ module pepper_inc_ekqlimit
 !     ZZEKSCMP, ZZEKVMCH, ZZEKFRX) compared at most the first MAXSTR
 !     characters of strings; they compare whole strings.
 !
-   integer               maxstr
-   parameter           ( maxstr = 1024 )
+   integer(ip), parameter :: maxstr = 1024
 
 !
 !     End Include Section:  EK Query Limit Parameters

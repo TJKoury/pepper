@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekpage
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -66,98 +68,74 @@ module pepper_inc_ekpage
 !     paging system metadata array:
 !
 !
-   integer               eparch
-   parameter           ( eparch = 1 )
+   integer(ip), parameter :: eparch = 1
 
 !
 !     Number of metadata items per data type:
 !
-   integer               epnipt
-   parameter           ( epnipt = 5 )
+   integer(ip), parameter :: epnipt = 5
 
 !
 !     Character metadata indices:
 !
-   integer               eppszc
-   parameter           ( eppszc = eparch + 1 )
+   integer(ip), parameter :: eppszc = eparch + 1
 
-   integer               epbasc
-   parameter           ( epbasc = eppszc + 1 )
+   integer(ip), parameter :: epbasc = eppszc + 1
 
-   integer               epnpc
-   parameter           ( epnpc  = epbasc + 1 )
+   integer(ip), parameter :: epnpc = epbasc + 1
 
-   integer               epnfpc
-   parameter           ( epnfpc = epnpc  + 1 )
+   integer(ip), parameter :: epnfpc = epnpc + 1
 
-   integer               epfpc
-   parameter           ( epfpc  = epnfpc + 1 )
+   integer(ip), parameter :: epfpc = epnfpc + 1
 
 !
 !     Double precision metadata indices:
 !
-   integer               eppszd
-   parameter           ( eppszd = eppszc + epnipt )
+   integer(ip), parameter :: eppszd = eppszc + epnipt
 
-   integer               epbasd
-   parameter           ( epbasd = eppszd + 1 )
+   integer(ip), parameter :: epbasd = eppszd + 1
 
-   integer               epnpd
-   parameter           ( epnpd  = epbasd + 1 )
+   integer(ip), parameter :: epnpd = epbasd + 1
 
-   integer               epnfpd
-   parameter           ( epnfpd = epnpd  + 1 )
+   integer(ip), parameter :: epnfpd = epnpd + 1
 
-   integer               epfpd
-   parameter           ( epfpd  = epnfpd + 1 )
+   integer(ip), parameter :: epfpd = epnfpd + 1
 
 !
 !     Integer metadata indices:
 !
-   integer               eppszi
-   parameter           ( eppszi = eppszd + epnipt )
+   integer(ip), parameter :: eppszi = eppszd + epnipt
 
-   integer               epbasi
-   parameter           ( epbasi = eppszi + 1 )
+   integer(ip), parameter :: epbasi = eppszi + 1
 
-   integer               epnpi
-   parameter           ( epnpi  = epbasi + 1 )
+   integer(ip), parameter :: epnpi = epbasi + 1
 
-   integer               epnfpi
-   parameter           ( epnfpi = epnpi  + 1 )
+   integer(ip), parameter :: epnfpi = epnpi + 1
 
-   integer               epfpi
-   parameter           ( epfpi  = epnfpi + 1 )
+   integer(ip), parameter :: epfpi = epnfpi + 1
 
 !
 !     Size of metadata area:
 !
-   integer               epmdsz
-   parameter           ( epmdsz = 1 + 3*epnipt )
+   integer(ip), parameter :: epmdsz = 1 + 3*epnipt
 
 !
 !     Page sizes, in units of DAS words of the appropriate type:
 !
-   integer               pgsizc
-   parameter           ( pgsizc = 1024 )
+   integer(ip), parameter :: pgsizc = 1024
 
-   integer               pgsizd
-   parameter           ( pgsizd = 128 )
+   integer(ip), parameter :: pgsizd = 128
 
-   integer               pgsizi
-   parameter           ( pgsizi = 256 )
+   integer(ip), parameter :: pgsizi = 256
 
 !
 !     Default page base addresses:
 !
-   integer               pgbasc
-   parameter           ( pgbasc = 0 )
+   integer(ip), parameter :: pgbasc = 0
 
-   integer               pgbasd
-   parameter           ( pgbasd = 0 )
+   integer(ip), parameter :: pgbasd = 0
 
-   integer               pgbasi
-   parameter           ( pgbasi = 256 )
+   integer(ip), parameter :: pgbasi = 256
 
 !
 !     End Include Section:  EK Das Paging Parameters

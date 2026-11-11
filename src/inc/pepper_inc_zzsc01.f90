@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_zzsc01
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -28,8 +30,7 @@ module pepper_inc_zzsc01
 !
 !     Number of supported SCLK field delimiters:
 !
-   integer               ndelim
-   parameter           ( ndelim = 5 )
+   integer(ip), parameter :: ndelim = 5
 
 !
 !     Supported SCLK string field delimiters:
@@ -39,35 +40,29 @@ module pepper_inc_zzsc01
 !
 !     Time system codes
 !
-   integer               tdb
-   parameter           ( tdb    =      1 )
+   integer(ip), parameter :: tdb = 1
 
-   integer               tdt
-   parameter           ( tdt    =      2 )
+   integer(ip), parameter :: tdt = 2
 
 !
 !     Maximum number of partitions:
 !
-   integer               mxpart
-   parameter           ( mxpart = 9999 )
+   integer(ip), parameter :: mxpart = 9999
 
 !
 !     Maximum number of coefficient records:
 !
-   integer               mxcoef
-   parameter           ( mxcoef = 100000 )
+   integer(ip), parameter :: mxcoef = 100000
 
 !
 !     Maximum number of fields in an SCLK string:
 !
-   integer               mxnfld
-   parameter           ( mxnfld = 10 )
+   integer(ip), parameter :: mxnfld = 10
 
 !
 !     Length of strings used to represent D.P. numbers:
 !
-   integer               dplen
-   parameter           ( dplen = 30 )
+   integer(ip), parameter :: dplen = 30
 
 !
 !     End of duplicated declarations.
@@ -80,73 +75,62 @@ module pepper_inc_zzsc01
 !
 !     Index of number of fields
 !
-   integer               ixnfld
-   parameter           ( ixnfld = 1 )
+   integer(ip), parameter :: ixnfld = 1
 
 !
 !     Index of delimiter code
 !
-   integer               ixdlim
-   parameter           ( ixdlim = ixnfld + 1 )
+   integer(ip), parameter :: ixdlim = ixnfld + 1
 !
 !     Index of time system code
 !
-   integer               ixtsys
-   parameter           ( ixtsys = ixdlim + 1 )
+   integer(ip), parameter :: ixtsys = ixdlim + 1
 
 !
 !     Index of coefficient count. The count is 3 x the number of
 !     coefficient records.
 !
-   integer               ixncof
-   parameter           ( ixncof = ixtsys + 1 )
+   integer(ip), parameter :: ixncof = ixtsys + 1
 
 !
 !     Index of the number of partitions
 !
-   integer               ixnprt
-   parameter           ( ixnprt = ixncof + 1 )
+   integer(ip), parameter :: ixnprt = ixncof + 1
 
 !
 !     Index of the base index in the double precision buffer of the
 !     coefficient set
 !
-   integer               ixbcof
-   parameter           ( ixbcof = ixnprt + 1 )
+   integer(ip), parameter :: ixbcof = ixnprt + 1
 
 !
 !     Index of the base index in the double precision buffer of the
 !     partition start times
 !
-   integer               ixbstr
-   parameter           ( ixbstr = ixbcof + 1 )
+   integer(ip), parameter :: ixbstr = ixbcof + 1
 
 !
 !     Index of the base index in the double precision buffer of the
 !     partition end times
 !
-   integer               ixbend
-   parameter           ( ixbend = ixbstr + 1 )
+   integer(ip), parameter :: ixbend = ixbstr + 1
 
 !
 !     Index of the base index in the double precision buffer of the
 !     SCLK field moduli
 !
-   integer               ixbmod
-   parameter           ( ixbmod  = ixbend + 1 )
+   integer(ip), parameter :: ixbmod = ixbend + 1
 
 !
 !     Index of the base index in the double precision buffer of the
 !     SCLK field offsets
 !
-   integer               ixboff
-   parameter           ( ixboff   = ixbmod + 1 )
+   integer(ip), parameter :: ixboff = ixbmod + 1
 
 !
 !     Number of integer values per clock
 !
-   integer               nivals
-   parameter           ( nivals = ixboff )
+   integer(ip), parameter :: nivals = ixboff
 
 !
 !     Data structure parameters
@@ -155,8 +139,7 @@ module pepper_inc_zzsc01
 !
 !     Maximum number of clocks
 !
-   integer               mxnclk
-   parameter           ( mxnclk = 100 )
+   integer(ip), parameter :: mxnclk = 100
 
 !
 !     DP buffer size
@@ -164,28 +147,24 @@ module pepper_inc_zzsc01
 !     The buffer is large enough to hold data for one clock having the
 !     maximum amount of data.
 !
-   integer               dbufsz
-   parameter           ( dbufsz =   ( 3 * mxcoef ) &
-   + ( 2 * mxpart ) &
-   + ( 2 * mxnfld ) )
+   integer(ip), parameter :: dbufsz = ( 3 * mxcoef ) &
+      + ( 2 * mxpart ) &
+      + ( 2 * mxnfld )
 
 !
 !     Integer buffer size
 !
-   integer               ibufsz
-   parameter           ( ibufsz = nivals * mxnclk )
+   integer(ip), parameter :: ibufsz = nivals * mxnclk
 
 !
 !     Lower bound of control area of singly linked list:
 !
-   integer               lbsngl
-   parameter           ( lbsngl = -5 )
+   integer(ip), parameter :: lbsngl = -5
 
 !
 !     The add-only hash pool for frame IDs is singly linked.
 !
-   integer               cplsiz
-   parameter           ( cplsiz = mxnclk - lbsngl + 1 )
+   integer(ip), parameter :: cplsiz = mxnclk - lbsngl + 1
 
 !
 !     End include file zzsc01.inc

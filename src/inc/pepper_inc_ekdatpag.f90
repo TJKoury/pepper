@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekdatpag
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -56,66 +58,56 @@ module pepper_inc_ekdatpag
 !
 !     Size of encoded integer:
 !
-   integer               encsiz
-   parameter           ( encsiz = 5 )
+   integer(ip), parameter :: encsiz = 5
 
 !
 !     Usable page size:
 !
-   integer               cpsize
-   parameter           ( cpsize = 1014 )
+   integer(ip), parameter :: cpsize = 1014
 
 !
 !     Location of character forward pointer:
 !
-   integer               cfpidx
-   parameter           ( cfpidx = cpsize + 1)
+   integer(ip), parameter :: cfpidx = cpsize + 1
 
 !
 !     Location of character link count:
 !
-   integer               clcidx
-   parameter           ( clcidx = cfpidx + encsiz )
+   integer(ip), parameter :: clcidx = cfpidx + encsiz
 
 !
 !     Double precision data page parameters:
 !
 !     Usable page size:
 !
-   integer               dpsize
-   parameter           ( dpsize = 126 )
+   integer(ip), parameter :: dpsize = 126
 
 !
 !     Location of d.p. forward pointer:
 !
-   integer               dfpidx
-   parameter           ( dfpidx = dpsize + 1)
+   integer(ip), parameter :: dfpidx = dpsize + 1
 
 !
 !     Location of d.p. link count:
 !
-   integer               dlcidx
-   parameter           ( dlcidx = dfpidx + 1 )
+   integer(ip), parameter :: dlcidx = dfpidx + 1
 
 !
 !     Integer data page parameters:
 !
 !     Usable page size:
 !
-   integer               ipsize
-   parameter           ( ipsize = 254 )
+   integer(ip), parameter :: ipsize = 254
 
 !
 !     Location of integer forward pointer:
 !
-   integer               ifpidx
-   parameter           ( ifpidx = ipsize + 1)
+   integer(ip), parameter :: ifpidx = ipsize + 1
 
 !
 !     Location of integer link count:
 !
-   integer               ilcidx
-   parameter           ( ilcidx = ifpidx + 1 )
+   integer(ip), parameter :: ilcidx = ifpidx + 1
 
 !
 !     End Include Section:  EK Data Page Parameters

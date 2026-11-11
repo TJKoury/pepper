@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_zzctr
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -31,8 +33,7 @@ module pepper_inc_zzctr
 !-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
 !
 
-   integer               ctrsiz
-   parameter           ( ctrsiz = 2 )
+   integer(ip), parameter :: ctrsiz = 2
 
 !
 !     End of include file.

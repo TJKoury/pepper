@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_spkrec
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -38,8 +40,7 @@ module pepper_inc_spkrec
 !-    SPICELIB Version 1.0.0, 16-AUG-2002 (NJB)
 !
 
-   integer               maxrec
-   parameter           ( maxrec = 198 )
+   integer(ip), parameter :: maxrec = 198
 
 !
 !     End include file spkrec.inc

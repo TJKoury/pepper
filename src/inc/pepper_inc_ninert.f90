@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ninert
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -12,8 +14,7 @@ module pepper_inc_ninert
 !     frames that are currently known by the SPICE toolkit
 !     software.
 !
-   integer               ninert
-   parameter           ( ninert = 21 )
+   integer(ip), parameter :: ninert = 21
 
 ! $ Brief_I/O
 !

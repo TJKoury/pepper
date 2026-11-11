@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_zzftprms
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -20,8 +22,7 @@ module pepper_inc_zzftprms
 !
 !     Size of FTP Test String Component:
 !
-   integer               sizstr
-   parameter           ( sizstr = 16 )
+   integer(ip), parameter :: sizstr = 16
 
 !
 !     Size of Maximum Expanded FTP Validation String:
@@ -32,32 +33,27 @@ module pepper_inc_zzftprms
 !       corruption at worst doubles the number of characters.
 !       So take 3*SIZSTR to be on the safe side.)
 !
-   integer               sizexp
-   parameter           ( sizexp = (3 * sizstr) )
+   integer(ip), parameter :: sizexp = (3 * sizstr)
 
 !
 !     Size of FTP Validation String Brackets:
 !
-   integer               sizend
-   parameter           ( sizend = 6 )
+   integer(ip), parameter :: sizend = 6
 
 !
 !     Size of FTP Validation String:
 !
-   integer               sizftp
-   parameter           ( sizftp = ( sizstr + 2*sizend ) )
+   integer(ip), parameter :: sizftp = ( sizstr + 2*sizend )
 
 !
 !     Size of DELIM.
 !
-   integer               sizdlm
-   parameter           ( sizdlm = 1 )
+   integer(ip), parameter :: sizdlm = 1
 
 !
 !     Number of character clusters present in the validation string.
 !
-   integer               numtst
-   parameter           ( numtst = 6 )
+   integer(ip), parameter :: numtst = 6
 
 !
 !     End Include Section:  Private FTP Validation String Parameters

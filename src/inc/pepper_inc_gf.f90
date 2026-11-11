@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_gf
 
+   use pepper_kinds, only: ip, wp
+
    implicit none
 
    public
@@ -61,8 +63,7 @@ module pepper_inc_gf
 !
 !     Units are TDB seconds.
 !
-   double precision      cnvtol
-   parameter           ( cnvtol = 1.d-6 )
+   real(wp), parameter :: cnvtol = 1.0e-6_wp
 
 !
 !     NWMAX is the maximum number of windows allowed for user-defined
@@ -77,50 +78,43 @@ module pepper_inc_gf
 !     NWMAX to declare the second dimension of the workspace array
 !     if necessary.
 !
-   integer               nwmax
-   parameter           ( nwmax = 15 )
+   integer(ip), parameter :: nwmax = 15
 
 !
 !     Callers of GFIDST should declare their workspace window
 !     count using NWDIST.
 !
-   integer               nwdist
-   parameter           ( nwdist = 5 )
+   integer(ip), parameter :: nwdist = 5
 
 !
 !     Callers of GFSEP should declare their workspace window
 !     count using NWSEP.
 !
-   integer               nwsep
-   parameter           ( nwsep  = 5 )
+   integer(ip), parameter :: nwsep = 5
 
 !
 !     Callers of GFRR should declare their workspace window
 !     count using NWRR.
 !
-   integer               nwrr
-   parameter           ( nwrr   = 5 )
+   integer(ip), parameter :: nwrr = 5
 
 !
 !     Callers of GFUDS should declare their workspace window
 !     count using NWUDS.
 !
-   integer               nwuds
-   parameter           ( nwuds  = 5 )
+   integer(ip), parameter :: nwuds = 5
 
 !
 !     Callers of GFPA should declare their workspace window
 !     count using NWPA.
 !
-   integer               nwpa
-   parameter           ( nwpa  = 5 )
+   integer(ip), parameter :: nwpa = 5
 
 !
 !     Callers of GFILUM should declare their workspace window
 !     count using NWILUM.
 !
-   integer               nwilum
-   parameter           ( nwilum = 5 )
+   integer(ip), parameter :: nwilum = 5
 
 !
 !     ADDWIN is a parameter used to expand each interval of the search
@@ -128,21 +122,18 @@ module pepper_inc_gf
 !     accommodate searches using equality constraints. The loaded
 !     kernel files must accommodate these expanded time intervals.
 !
-   double precision      addwin
-   parameter           ( addwin = 0.5d0 )
+   real(wp), parameter :: addwin = 0.5_wp
 
 !
 !     FRMNLN is a string length for frame names.
 !
 
-   integer               frmnln
-   parameter           ( frmnln = 32 )
+   integer(ip), parameter :: frmnln = 32
 
 !
 !     FOVTLN -- maximum length for FOV string.
 !
-   integer               fovtln
-   parameter           ( fovtln = 40 )
+   integer(ip), parameter :: fovtln = 40
 
 !
 !     Specify the character strings that are allowed in the
@@ -186,22 +177,18 @@ module pepper_inc_gf
 !     Specify the number of supported occultation types and occultation
 !     type string length:
 !
-   integer               noctyp
-   parameter           ( noctyp = 4 )
+   integer(ip), parameter :: noctyp = 4
 
-   integer               oclln
-   parameter           ( oclln  = 7 )
+   integer(ip), parameter :: oclln = 7
 
-   integer               shplen
-   parameter           ( shplen = 9 )
+   integer(ip), parameter :: shplen = 9
 
 !
 !     Instrument field-of-view (FOV) parameters
 !
 !     Maximum number of FOV boundary vectors:
 !
-   integer               maxvrt
-   parameter           ( maxvrt = 10000 )
+   integer(ip), parameter :: maxvrt = 10000
 
 !
 !     FOV shape parameters:

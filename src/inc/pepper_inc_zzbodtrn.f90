@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_zzbodtrn
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -59,21 +61,18 @@ module pepper_inc_zzbodtrn
 !
 !     Maximum size of a NAME string
 !
-   integer               maxl
-   parameter           ( maxl  =  36 )
+   integer(ip), parameter :: maxl = 36
 
 !
 !     Maximum number of additional names that may be added via the
 !     ZZBODDEF interface.
 !
-   integer               maxp
-   parameter           ( maxp  =  150 )
+   integer(ip), parameter :: maxp = 150
 
 !
 !     Count of default SPICE mapping assignments.
 !
-   integer               nperm
-   parameter           ( nperm = 692 )
+   integer(ip), parameter :: nperm = 692
 
 !
 !     Size of the lists and hashes storing the built-in and
@@ -81,8 +80,7 @@ module pepper_inc_zzbodtrn
 !     this size is the set to the first prime number greater than
 !     ( MAXP + NPERM ).
 !
-   integer               maxe
-   parameter           ( maxe  = 853 )
+   integer(ip), parameter :: maxe = 853
 
 !
 !     Size of the lists and hashes storing the POOL-defined name/ID
@@ -91,7 +89,6 @@ module pepper_inc_zzbodtrn
 !     is set to the first prime number less than MAXLIN defined in
 !     the POOL umbrella routine.
 !
-   integer               nroom
-   parameter           ( nroom = 14983 )
+   integer(ip), parameter :: nroom = 14983
 
 end module pepper_inc_zzbodtrn

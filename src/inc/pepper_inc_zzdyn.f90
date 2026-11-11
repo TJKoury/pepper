@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_zzdyn
 
+   use pepper_kinds, only: ip, wp
+
    implicit none
 
    public
@@ -60,24 +62,21 @@ module pepper_inc_zzdyn
 !     kept consistent with the parameter MAXLEN used in the
 !     POOL umbrella routine.
 !
-   integer               kvnmln
-   parameter           ( kvnmln = 32 )
+   integer(ip), parameter :: kvnmln = 32
 
 !
 !     Length of a character kernel pool datum. This parameter must be
 !     kept consistent with the parameter MAXCHR used in the POOL
 !     umbrella routine.
 !
-   integer               kvlen
-   parameter           ( kvlen  = 80 )
+   integer(ip), parameter :: kvlen = 80
 
 !
 !     Reference frame name length.  This parameter must be
 !     kept consistent with the parameter WDSIZE used in the
 !     FRAMEX umbrella routine.
 !
-   integer               frnmln
-   parameter           ( frnmln = 32 )
+   integer(ip), parameter :: frnmln = 32
 
 !
 !     Body name length.  This parameter is used to provide a level
@@ -90,8 +89,7 @@ module pepper_inc_zzdyn
 !
 !     Current value of MAXL = 36
 !
-   integer               bdnmln
-   parameter           ( bdnmln = 36 )
+   integer(ip), parameter :: bdnmln = 36
 
 !
 !     Numeric parameters
@@ -101,23 +99,20 @@ module pepper_inc_zzdyn
 !     coefficients that may be used to define an Euler angle
 !     in an "Euler frame" definition
 !
-   integer               maxcof
-   parameter           ( maxcof = 20 )
+   integer(ip), parameter :: maxcof = 20
 
 !
 !     The parameter MXNFAC is the maximum number of factors in
 !     a product frame.
 !
-   integer               mxnfac
-   parameter           ( mxnfac = 10 )
+   integer(ip), parameter :: mxnfac = 10
 
 !
 !     The parameter LBSEP is the default angular separation limit for
 !     the vectors defining a two-vector frame.  The angular separation
 !     of the vectors must differ from Pi and 0 by at least this amount.
 !
-   double precision      lbsep
-   parameter           ( lbsep  = 1.d-3 )
+   real(wp), parameter :: lbsep = 1.0e-3_wp
 
 !
 !     The parameter QEXP is used to determine the width of
@@ -158,8 +153,7 @@ module pepper_inc_zzdyn
 !
 !     For smaller values of T0, DELTA should be set to 1.D0.
 !
-   integer               qexp
-   parameter           ( qexp = -27 )
+   integer(ip), parameter :: qexp = -27
 
 !
 !     Frame kernel parameters

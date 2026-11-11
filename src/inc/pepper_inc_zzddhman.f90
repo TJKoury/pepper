@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_zzddhman
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -151,29 +153,25 @@ module pepper_inc_zzddhman
 !     FTSIZE     is the maximum number of files (DAS and DAF) that a
 !                user may have open simultaneously.
 !
-   integer               ftsize
-   parameter           ( ftsize = 5000 )
+   integer(ip), parameter :: ftsize = 5000
 
 !
 !     RSVUNT     is the number of units protected from being locked
 !                to a particular handle by ZZDDHHLU.
 !
-   integer               rsvunt
-   parameter           ( rsvunt = 2 )
+   integer(ip), parameter :: rsvunt = 2
 
 !
 !     SCRUNT     is the number of units protected for use by scratch
 !                files.
 !
-   integer               scrunt
-   parameter           ( scrunt = 1 )
+   integer(ip), parameter :: scrunt = 1
 
 !
 !     UTSIZE     is the maximum number of logical units this manager
 !                will utilize at one time.
 !
-   integer               utsize
-   parameter           ( utsize = 20 + scrunt + rsvunt )
+   integer(ip), parameter :: utsize = 20 + scrunt + rsvunt
 
 !
 !     Access method enumeration.  These parameters are used to
@@ -188,20 +186,15 @@ module pepper_inc_zzddhman
 !
 !     These values are used in the file table variable FTAMH.
 !
-   integer               read
-   parameter           ( read   = 1 )
+   integer(ip), parameter :: read = 1
 
-   integer               write
-   parameter           ( write  = 2 )
+   integer(ip), parameter :: write = 2
 
-   integer               scrtch
-   parameter           ( scrtch = 3 )
+   integer(ip), parameter :: scrtch = 3
 
-   integer               new
-   parameter           ( new    = 4 )
+   integer(ip), parameter :: new = 4
 
-   integer               numamh
-   parameter           ( numamh = 4 )
+   integer(ip), parameter :: numamh = 4
 
 !
 !     Binary file format enumeration.  These parameters are used to
@@ -216,31 +209,24 @@ module pepper_inc_zzddhman
 !
 !     These values are used in the file table variable FTBFF.
 !
-   integer               bigi3e
-   parameter           ( bigi3e = 1 )
+   integer(ip), parameter :: bigi3e = 1
 
-   integer               ltli3e
-   parameter           ( ltli3e = 2 )
+   integer(ip), parameter :: ltli3e = 2
 
-   integer               vaxgfl
-   parameter           ( vaxgfl = 3 )
+   integer(ip), parameter :: vaxgfl = 3
 
-   integer               vaxdfl
-   parameter           ( vaxdfl = 4 )
+   integer(ip), parameter :: vaxdfl = 4
 
-   integer               numbff
-   parameter           ( numbff = 4 )
+   integer(ip), parameter :: numbff = 4
 
 !
 !     Some random string lengths... more documentation required.
 !     For now this will have to suffice.
 !
 
-   integer               strsiz
-   parameter           ( strsiz = 8 )
+   integer(ip), parameter :: strsiz = 8
 
-   integer               strlen
-   parameter           ( strlen = (strsiz+1)*numbff )
+   integer(ip), parameter :: strlen = (strsiz+1)*numbff
 
 !
 !     Architecture enumeration.  These parameters are used to identify
@@ -253,14 +239,11 @@ module pepper_inc_zzddhman
 !
 !     These values will be used in the file table variable FTARC.
 !
-   integer               daf
-   parameter           ( daf = 1 )
+   integer(ip), parameter :: daf = 1
 
-   integer               das
-   parameter           ( das = 2 )
+   integer(ip), parameter :: das = 2
 
-   integer               numarc
-   parameter           ( numarc = 2 )
+   integer(ip), parameter :: numarc = 2
 
 !
 !     For the following environments, record length is measured in
@@ -292,21 +275,18 @@ module pepper_inc_zzddhman
 !                  Absoft Fortran Version 3.2
 !     Source:      NAIF Program
 !
-   integer               recl
-   parameter           ( recl  = 1024 )
+   integer(ip), parameter :: recl = 1024
 
 !
 !     The following parameter defines the size of a string used
 !     to store a filenames on this target platform.
 !
-   integer               filen
-   parameter           ( filen  =  255 )
+   integer(ip), parameter :: filen = 255
 
 !
 !     The following parameter controls the size of the character record
 !     buffer used to read data from non-native files.
 !
-   integer               cbfsiz
-   parameter           ( cbfsiz = 1024 )
+   integer(ip), parameter :: cbfsiz = 1024
 
 end module pepper_inc_zzddhman

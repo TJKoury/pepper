@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_occult
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -79,26 +81,19 @@ module pepper_inc_occult
 !                                       target by first.
 !
 
-   integer               total1
-   parameter           ( total1 = -3 )
+   integer(ip), parameter :: total1 = -3
 
-   integer               annlr1
-   parameter           ( annlr1 = -2 )
+   integer(ip), parameter :: annlr1 = -2
 
-   integer               partl1
-   parameter           ( partl1 = -1 )
+   integer(ip), parameter :: partl1 = -1
 
-   integer               noocc
-   parameter           ( noocc  =  0 )
+   integer(ip), parameter :: noocc = 0
 
-   integer               partl2
-   parameter           ( partl2 =  1 )
+   integer(ip), parameter :: partl2 = 1
 
-   integer               annlr2
-   parameter           ( annlr2 =  2 )
+   integer(ip), parameter :: annlr2 = 2
 
-   integer               total2
-   parameter           ( total2 =  3 )
+   integer(ip), parameter :: total2 = 3
 
 !
 !     End include file occult.inc

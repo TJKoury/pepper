@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_dla
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -35,8 +37,7 @@ module pepper_inc_dla
 !
 !     DAS integer address of DLA version code.
 !
-   integer               veridx
-   parameter           ( veridx = 1 )
+   integer(ip), parameter :: veridx = 1
 
 !
 !     Linked list parameters
@@ -74,17 +75,14 @@ module pepper_inc_dla
 !     The acronyms "LLB" and "LLE" denote "linked list begin"
 !     and "linked list end" respectively.
 !
-   integer               llbidx
-   parameter           ( llbidx = veridx + 1 )
+   integer(ip), parameter :: llbidx = veridx + 1
 
-   integer               lleidx
-   parameter           ( lleidx = llbidx + 1 )
+   integer(ip), parameter :: lleidx = llbidx + 1
 
 !
 !     Null pointer parameter.
 !
-   integer               nulptr
-   parameter           ( nulptr = -1 )
+   integer(ip), parameter :: nulptr = -1
 
 !
 !     Segment descriptor parameters
@@ -115,35 +113,26 @@ module pepper_inc_dla
 !     Parameters defining offsets for segment descriptor elements
 !     follow.
 !
-   integer               bwdidx
-   parameter           ( bwdidx = 1 )
+   integer(ip), parameter :: bwdidx = 1
 
-   integer               fwdidx
-   parameter           ( fwdidx = bwdidx + 1 )
+   integer(ip), parameter :: fwdidx = bwdidx + 1
 
-   integer               ibsidx
-   parameter           ( ibsidx = fwdidx + 1 )
+   integer(ip), parameter :: ibsidx = fwdidx + 1
 
-   integer               iszidx
-   parameter           ( iszidx = ibsidx + 1 )
+   integer(ip), parameter :: iszidx = ibsidx + 1
 
-   integer               dbsidx
-   parameter           ( dbsidx = iszidx + 1 )
+   integer(ip), parameter :: dbsidx = iszidx + 1
 
-   integer               dszidx
-   parameter           ( dszidx = dbsidx + 1 )
+   integer(ip), parameter :: dszidx = dbsidx + 1
 
-   integer               cbsidx
-   parameter           ( cbsidx = dszidx + 1 )
+   integer(ip), parameter :: cbsidx = dszidx + 1
 
-   integer               cszidx
-   parameter           ( cszidx = cbsidx + 1 )
+   integer(ip), parameter :: cszidx = cbsidx + 1
 
 !
 !     Descriptor size:
 !
-   integer               dladsz
-   parameter           ( dladsz = cszidx )
+   integer(ip), parameter :: dladsz = cszidx
 
 !
 !     Other DLA parameters:
@@ -152,14 +141,12 @@ module pepper_inc_dla
 !     DLA format version.  (This number is expected to occur very
 !     rarely at integer address VERIDX in uninitialized DLA files.)
 !
-   integer               fmtver
-   parameter           ( fmtver = 1000000 )
+   integer(ip), parameter :: fmtver = 1000000
 
 !
 !     Characters per DAS comment record.
 !
-   integer               nchrec
-   parameter           ( nchrec = 1024 )
+   integer(ip), parameter :: nchrec = 1024
 
 !
 !     End of include file dla.inc

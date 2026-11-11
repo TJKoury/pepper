@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_ekkeyw
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -45,98 +47,67 @@ module pepper_inc_ekkeyw
 !        WHERE
 !
 
-   integer               kwlen
-   parameter           ( kwlen  =   32 )
+   integer(ip), parameter :: kwlen = 32
 
-   integer               nkeywd
-   parameter           ( nkeywd =   29 )
+   integer(ip), parameter :: nkeywd = 29
 
-   integer               kwall
-   parameter           ( kwall  =          1 )
+   integer(ip), parameter :: kwall = 1
 
-   integer               kwand
-   parameter           ( kwand  = kwall  + 1 )
+   integer(ip), parameter :: kwand = kwall + 1
 
-   integer               kwasnd
-   parameter           ( kwasnd = kwand  + 1 )
+   integer(ip), parameter :: kwasnd = kwand + 1
 
-   integer               kwavg
-   parameter           ( kwavg  = kwasnd + 1 )
+   integer(ip), parameter :: kwavg = kwasnd + 1
 
-   integer               kwbetw
-   parameter           ( kwbetw = kwavg  + 1 )
+   integer(ip), parameter :: kwbetw = kwavg + 1
 
-   integer               kwby
-   parameter           ( kwby   = kwbetw + 1 )
+   integer(ip), parameter :: kwby = kwbetw + 1
 
-   integer               kwcnt
-   parameter           ( kwcnt  = kwby   + 1 )
+   integer(ip), parameter :: kwcnt = kwby + 1
 
-   integer               kwdsnd
-   parameter           ( kwdsnd = kwcnt  + 1 )
+   integer(ip), parameter :: kwdsnd = kwcnt + 1
 
-   integer               kwdstn
-   parameter           ( kwdstn = kwdsnd + 1 )
+   integer(ip), parameter :: kwdstn = kwdsnd + 1
 
-   integer               kweq
-   parameter           ( kweq   = kwdstn + 1 )
+   integer(ip), parameter :: kweq = kwdstn + 1
 
-   integer               kwfrom
-   parameter           ( kwfrom = kweq   + 1 )
+   integer(ip), parameter :: kwfrom = kweq + 1
 
-   integer               kwge
-   parameter           ( kwge   = kwfrom + 1 )
+   integer(ip), parameter :: kwge = kwfrom + 1
 
-   integer               kwgrp
-   parameter           ( kwgrp  = kwge   + 1 )
+   integer(ip), parameter :: kwgrp = kwge + 1
 
-   integer               kwgt
-   parameter           ( kwgt   = kwgrp  + 1 )
+   integer(ip), parameter :: kwgt = kwgrp + 1
 
-   integer               kwhav
-   parameter           ( kwhav  = kwgt   + 1 )
+   integer(ip), parameter :: kwhav = kwgt + 1
 
-   integer               kwis
-   parameter           ( kwis   = kwhav  + 1 )
+   integer(ip), parameter :: kwis = kwhav + 1
 
-   integer               kwle
-   parameter           ( kwle   = kwis   + 1 )
+   integer(ip), parameter :: kwle = kwis + 1
 
-   integer               kwlike
-   parameter           ( kwlike = kwle   + 1 )
+   integer(ip), parameter :: kwlike = kwle + 1
 
-   integer               kwlt
-   parameter           ( kwlt   = kwlike + 1 )
+   integer(ip), parameter :: kwlt = kwlike + 1
 
-   integer               kwmax
-   parameter           ( kwmax  = kwlt   + 1 )
+   integer(ip), parameter :: kwmax = kwlt + 1
 
-   integer               kwmin
-   parameter           ( kwmin  = kwmax  + 1 )
+   integer(ip), parameter :: kwmin = kwmax + 1
 
-   integer               kwne
-   parameter           ( kwne   = kwmin  + 1 )
+   integer(ip), parameter :: kwne = kwmin + 1
 
-   integer               kwnot
-   parameter           ( kwnot  = kwne   + 1 )
+   integer(ip), parameter :: kwnot = kwne + 1
 
-   integer               kwnull
-   parameter           ( kwnull = kwnot  + 1 )
+   integer(ip), parameter :: kwnull = kwnot + 1
 
-   integer               kwor
-   parameter           ( kwor   = kwnull + 1 )
+   integer(ip), parameter :: kwor = kwnull + 1
 
-   integer               kwordr
-   parameter           ( kwordr = kwor   + 1 )
+   integer(ip), parameter :: kwordr = kwor + 1
 
-   integer               kwsel
-   parameter           ( kwsel  = kwordr + 1 )
+   integer(ip), parameter :: kwsel = kwordr + 1
 
-   integer               kwsum
-   parameter           ( kwsum  = kwsel  + 1 )
+   integer(ip), parameter :: kwsum = kwsel + 1
 
-   integer               kwwher
-   parameter           ( kwwher = kwsum  + 1 )
+   integer(ip), parameter :: kwwher = kwsum + 1
 
 !
 !     End Include Section:  EK Keyword Code Parameters

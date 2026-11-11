@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_das
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -45,8 +47,7 @@ module pepper_inc_das
 !        other declarations that conflict with some of those in DAS
 !        routines.
 !
-   integer               ftsize
-   parameter           ( ftsize  = 5000 )
+   integer(ip), parameter :: ftsize = 5000
 
 !
 !     Capacity of DAS data records:
@@ -58,14 +59,11 @@ module pepper_inc_das
 !     These parameters are named to enhance ease of maintenance of
 !     the code; the values should not be changed.
 
-   integer               nwd
-   parameter           ( nwd     =  128 )
+   integer(ip), parameter :: nwd = 128
 
-   integer               nwi
-   parameter           ( nwi     =  256 )
+   integer(ip), parameter :: nwi = 256
 
-   integer               nwc
-   parameter           ( nwc     = 1024 )
+   integer(ip), parameter :: nwc = 1024
 
 !
 !     DAS data type specifiers used in all DAS routines that require
@@ -79,14 +77,11 @@ module pepper_inc_das
 !              parameters are used in all DAS routines that require a
 !              data type specifier.
 !
-   integer               chardt
-   parameter           ( chardt  =  1   )
+   integer(ip), parameter :: chardt = 1
 
-   integer               dpdt
-   parameter           ( dpdt    =  2   )
+   integer(ip), parameter :: dpdt = 2
 
-   integer               intdt
-   parameter           ( intdt   =  3   )
+   integer(ip), parameter :: intdt = 3
 
 !
 !     End of include file das.inc

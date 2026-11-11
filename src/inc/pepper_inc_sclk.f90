@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_sclk
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -63,8 +65,7 @@ module pepper_inc_sclk
 !
 !     Number of supported SCLK field delimiters:
 !
-   integer               ndelim
-   parameter           ( ndelim = 5 )
+   integer(ip), parameter :: ndelim = 5
 
 !
 !     Supported SCLK string field delimiters:
@@ -74,8 +75,7 @@ module pepper_inc_sclk
 !
 !     Maximum number of partitions:
 !
-   integer               mxpart
-   parameter           ( mxpart = 9999 )
+   integer(ip), parameter :: mxpart = 9999
 
 !
 !     Partition string length.
@@ -84,33 +84,28 @@ module pepper_inc_sclk
 !     9999, PRTSTR needs at most 4 characters for the partition number
 !     and one character for the slash.
 !
-   integer               partln
-   parameter           ( partln = 5 )
+   integer(ip), parameter :: partln = 5
 
 !
 !     Maximum number of coefficient records:
 !
-   integer               mxcoef
-   parameter           ( mxcoef = 100000 )
+   integer(ip), parameter :: mxcoef = 100000
 
 !
 !     Maximum number of fields in an SCLK string:
 !
-   integer               mxnfld
-   parameter           ( mxnfld = 10 )
+   integer(ip), parameter :: mxnfld = 10
 
 !
 !     Length of strings used to represent D.P.
 !     numbers:
 !
-   integer               dplen
-   parameter           ( dplen = 30 )
+   integer(ip), parameter :: dplen = 30
 
 !
 !     Maximum number of supported parallel time systems:
 !
-   integer               mxtsys
-   parameter           ( mxtsys = 2 )
+   integer(ip), parameter :: mxtsys = 2
 
 !
 !     End of include file sclk.inc

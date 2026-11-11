@@ -2,6 +2,8 @@
 !> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
 module pepper_inc_errhnd
 
+   use pepper_kinds, only: ip
+
    implicit none
 
    public
@@ -22,14 +24,12 @@ module pepper_inc_errhnd
 !
 !     Maximum length of the long error message:
 !
-   integer               lmsgln
-   parameter           ( lmsgln = 23 * 80 )
+   integer(ip), parameter :: lmsgln = 23 * 80
 
 !
 !     Maximum length of the short error message:
 !
-   integer               smsgln
-   parameter           ( smsgln = 25 )
+   integer(ip), parameter :: smsgln = 25
 
 !
 !     End Include File:  SPICELIB Error Handling Parameters
