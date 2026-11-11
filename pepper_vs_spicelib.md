@@ -34,6 +34,13 @@ machine (details in [Speed](#speed)):
 | Unloading one of 1000 SPKs | 2,074× | 1,814× |
 | Queries from 4 threads (PEPPER only) | | 3.9× over one thread |
 
+[Compared with ANISE](#compared-with-anise), the Rust rewrite of SPICE's
+core, PEPPER is about as fast for states and frames at sequential epochs. It
+is 17 times faster for frames from text PCKs and twice as fast at loading.
+At random epochs ANISE is 8–27 times faster for states and Earth rotations
+(3 times for MOON_ME), because it holds whole kernels in memory while PEPPER
+reads records from the file.
+
 ## Thread safety
 
 SPICELIB keeps its state in `SAVE` variables: the loaded kernels, the kernel
@@ -319,6 +326,106 @@ LT, two PXFORMs, an ET2UTC and an STR2ET; 200000 epochs):
 The machine has 4 performance cores and 6 efficiency cores, so the scaling
 flattens past 4 threads. SPICELIB cannot run these queries in parallel at
 all.
+
+## Compared with ANISE
+
+[ANISE](https://github.com/nyx-space/anise) (nyx-space) is a rewrite of
+SPICE's core in Rust: it reads SPK and binary PCK files and computes states
+and frame transformations, with its own data formats for planetary constants
+and frame definitions. It has a new API, not SPICELIB's. It is thread-safe.
+
+### Method
+
+Two programs make the same queries at the same epochs:
+`test/core/bench_anise.f90` (PEPPER, release build) and `bench/anise` (a Rust
+program on the `anise` crate 0.10.6, the latest stable release; release build
+with `opt-level = 3`, fat LTO and one codegen unit; Rust 1.99). The kernels
+are the real kernels of the SPICELIB comparison. Each operation runs at two
+sets of epochs:
+
+- **Random epochs:** 100000 pseudo-random epochs over 20 years from 2000, as
+  in the SPICELIB comparison. Almost every query needs data from a different
+  part of the file.
+- **Sequential epochs:** 100000 epochs one minute apart (69 days). Successive
+  queries use the same records.
+
+Each operation also sums its results, and the sums of the two programs
+agree (to 10 significant digits or better: the two libraries convert epochs
+and compose rotations in different orders). Each time is the fastest of 7
+runs, on the machine of the SPICELIB comparison.
+
+The two libraries do not take quite the same inputs:
+
+- **Text kernels.** ANISE does not read text kernels. The text PCK and the
+  FK are converted to ANISE's formats first (PCA and EPA data sets), which is
+  timed separately. ANISE's converter keeps only bodies with a GM, and
+  pck00011.tpc has none: the program supplies DE440's GMs of Mars, its
+  barycenter, the Moon and the Earth-Moon barycenter (they do not enter the
+  rotations).
+- **Names.** ANISE takes NAIF IDs. The SPKEZR rows pass names to PEPPER and
+  IDs to ANISE; the SPKGEO rows pass IDs to both.
+- **ECLIPJ2000.** ANISE 0.10.6 knows this frame only from its own planetary
+  constants file. Its side applies SPICE's fixed rotation by the obliquity of
+  J2000 to the J2000 state.
+- **MOON_ME.** In moon_de440_250416.tf, MOON_ME is an alias of
+  MOON_ME_DE440_ME421. ANISE 0.10.6's FK converter maps the alias to the
+  Moon's body ID with an identity rotation, which is wrong, so its side asks
+  for MOON_ME_DE440_ME421 directly.
+
+To repeat it: `pixi run -e anise compare-anise --kernels DIR`
+(`bench/compare_anise.py`). The `anise` environment adds Rust; the default
+environment does not have it.
+
+### Results
+
+Microseconds per operation, and PEPPER's speedup over ANISE (below 1× when
+ANISE is faster):
+
+| Operation | ANISE 0.10.6 (µs) | PEPPER (µs) | PEPPER speedup |
+|---|--:|--:|--:|
+| **Loading** | | | |
+| Loading the kernel set (PEPPER: FURNSH of the 6 kernels; ANISE: the 3 binary kernels and the converted text PCK and FK), per set | 3,976 | 1,805 | 2.2× |
+| Converting the text PCK and the FK to ANISE's formats (ANISE only; once) | 914 | – | – |
+| **States, random epochs** | | | |
+| SPKEZR Moon from Earth, J2000, no correction | 0.349 | 9.56 | 0.037× |
+| SPKGEO Moon from Earth, by code | 0.369 | 9.56 | 0.039× |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S | 0.77 | 9.4 | 0.082× |
+| SPKPOS Sun from Earth, J2000, CN+S | 1.14 | 9.41 | 0.12× |
+| **States, sequential epochs** | | | |
+| SPKEZR Moon from Earth, J2000, no correction | 0.333 | 0.335 | 0.99× |
+| SPKGEO Moon from Earth, by code | 0.36 | 0.293 | 1.2× |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S | 0.754 | 1.34 | 0.56× |
+| SPKPOS Sun from Earth, J2000, CN+S | 1.14 | 0.831 | 1.4× |
+| **Frames, random epochs** | | | |
+| PXFORM J2000 to ITRF93 (binary PCK) | 0.462 | 3.69 | 0.13× |
+| SXFORM J2000 to ITRF93 | 0.457 | 3.69 | 0.12× |
+| PXFORM J2000 to IAU_MARS (text PCK) | 9.6 | 0.575 | 17× |
+| PXFORM MOON_ME to J2000 (FK + binary PCK) | 0.6 | 1.71 | 0.35× |
+| **Frames, sequential epochs** | | | |
+| PXFORM J2000 to ITRF93 (binary PCK) | 0.423 | 0.265 | 1.6× |
+| SXFORM J2000 to ITRF93 | 0.424 | 0.294 | 1.4× |
+| PXFORM J2000 to IAU_MARS (text PCK) | 9.25 | 0.506 | 18× |
+| PXFORM MOON_ME to J2000 (FK + binary PCK) | 0.597 | 0.589 | 1.0× |
+
+### Where the differences come from
+
+- **Reading records (random epochs).** ANISE reads each binary kernel whole
+  into memory when it loads it. PEPPER, like SPICELIB, reads the file record
+  by record and keeps recent records in a buffer. A query whose record is not
+  in the buffer reads it from the file. At random epochs nearly every query
+  does that, and the read costs about 9 µs of the 9.6. SPICELIB -O3 takes
+  10.2 µs for the same query. At sequential epochs, the records are in the
+  buffer, and the same query takes 0.3 µs in both libraries. Keeping binary
+  kernels in memory is listed as an open item in `limits.md`
+  (Inefficiencies). It would cost memory equal to the size of the kernels.
+- **The computation itself (sequential epochs).** With the data at hand, the
+  two libraries are close. PEPPER is faster for geometric states, CN+S and
+  ITRF93, and slower for the LT+S correction (1.34 against 0.75 µs).
+- **Frames from text PCKs.** ANISE evaluates IAU_MARS in about 9.5 µs, and
+  PEPPER in about 0.5 µs: PEPPER is 17–18 times faster.
+- **Loading.** PEPPER loads the kernel set in half the time, because ANISE
+  copies whole files into memory. ANISE also cannot read text kernels: they
+  must be converted to its own formats first.
 
 ## Compatibility
 
