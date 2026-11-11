@@ -2,7 +2,6 @@
 
       SUBROUTINE F_ZZDSKBUX ( OK )
       use pepper_inc_dla
-      use pepper_inc_dsk
       use pepper_inc_dsk02
       use pepper_inc_dskdsc
 
@@ -21,6 +20,12 @@
 ! $ Declarations
 
       IMPLICIT NONE
+!
+!     PEPPER: the size of this test's surface lists (SPICELIB's MAXSRF of
+!     dsk.inc; the library's surface lists have no limit).
+!
+      INTEGER               MAXSRF
+      PARAMETER           ( MAXSRF = 100 )
 
 
       LOGICAL               OK

@@ -1,7 +1,6 @@
 !$Procedure      F_LIMBPT ( LIMBPT family tests )
 
       SUBROUTINE F_LIMBPT ( OK )
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       use pepper_inc_zzdsk
       use pepper_inc_zzabcorr

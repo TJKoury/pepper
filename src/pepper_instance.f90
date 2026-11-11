@@ -12819,7 +12819,6 @@ module pepper_instance
       !>
       !> The function always returns the value .FALSE.
       module logical function zzdsksbd ( ctx, bodyid )
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: bodyid  !! ID code of target body.
@@ -12832,7 +12831,6 @@ module pepper_instance
       !> The function returns .TRUE. if and only if the specified segment
       !> matches the body ID set via [[zzdsksbd]].
       module logical function zzdskbdc ( ctx, handle, dladsc, dskdsc )
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
@@ -12846,7 +12844,6 @@ module pepper_instance
       !>
       !> The function returns .FALSE. for all segments.
       module logical function zzdsknot ( ctx, handle, dladsc, dskdsc )
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
@@ -12860,7 +12857,6 @@ module pepper_instance
       !>
       !> The function always returns the value .FALSE.
       module logical function zzdsksit ( ctx, bodyid, nsurf, srflst, et )
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: nsurf  !! Surface ID count.
@@ -12876,7 +12872,6 @@ module pepper_instance
       !> The function returns .TRUE. if and only if the specified segment
       !> matches the body ID set via [[zzdsksit]].
       module logical function zzdskcit ( ctx, handle, dladsc, dskdsc )
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
@@ -12890,7 +12885,6 @@ module pepper_instance
       !>
       !> The function always returns the value .FALSE.
       module logical function zzdskusc ( ctx, bodyid, et, cor1, cor2 )
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: bodyid  !! ID code of target body.
@@ -12906,7 +12900,6 @@ module pepper_instance
       !> The function returns .TRUE. if and only if the specified segment
       !> matches the body ID set via [[zzdskusc]].
       module logical function zzdskumc ( ctx, handle, dladsc, dskdsc )
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
@@ -12920,7 +12913,6 @@ module pepper_instance
       !>
       !> The function always returns the value .FALSE.
       module logical function zzdskmsc ( ctx, bodyid, surfid, framid, corsys, corpar, et, cor1, cor2 )
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: surfid  !! ID code of target surface.
@@ -12940,7 +12932,6 @@ module pepper_instance
       !> The function returns .TRUE. if and only if the specified segment
       !> matches the body ID set via [[zzdskmsc]].
       module logical function zzdskmmc ( ctx, handle, dladsc, dskdsc )
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
@@ -12954,7 +12945,6 @@ module pepper_instance
       !>
       !> The function always returns the value .FALSE.
       module logical function zzdsksrc ( ctx, surfid, bodyid, dclass, et, framid, pos )
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: surfid  !! ID code of target surface.
@@ -12972,7 +12962,6 @@ module pepper_instance
       !> The function returns .TRUE. if and only if the specified segment
       !> matches the body ID set via [[zzdsksrc]].
       module logical function zzdskmrc ( ctx, handle, dladsc, dskdsc )
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
@@ -13691,7 +13680,6 @@ module pepper_instance
       module subroutine zzdsksph ( ctx, bodyid, nsurf, srflst, minrad, maxrad )
       use pepper_inc_errhnd
       use pepper_inc_dla
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14571,7 +14559,6 @@ module pepper_instance
       !> DCSIZE     P   Required size of DC array.
       !> ICSIZE     P   Required size of IC array.
       module subroutine dskxsi ( ctx, pri, target, nsurf, srflst, et, fixref, vertex, raydir, maxd, maxi, xpt, handle, dladsc, dskdsc, dc, ic, found )
-      use pepper_inc_dsk
       use pepper_inc_dsktol
       use pepper_inc_dsksrc
       use pepper_inc_srftrn
@@ -14618,7 +14605,6 @@ module pepper_instance
       !> Find the illumination angles (phase, incidence, and
       !> emission) at a specified surface point of a target body.
       module subroutine illumg ( ctx, method, target, ilusrc, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn )
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -14644,7 +14630,6 @@ module pepper_instance
       !>
       !> PTMEMM     P   Default point-surface membership margin.
       module subroutine srfnrm ( ctx, method, target, et, fixref, npts, srfpts, normls )
-      use pepper_inc_dsk
       use pepper_inc_dsktol
       use pepper_inc_gf
       use pepper_inc_zzctr
@@ -14663,7 +14648,6 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzsuelin ( ctx, trgcde )
-      use pepper_inc_dsk
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: trgcde  !! Target body ID code.
       end subroutine zzsuelin
@@ -14674,7 +14658,6 @@ module pepper_instance
       !>
       !> MAXSRF     P   Maximum size of surface ID list.
       module subroutine zzsudski ( ctx, trgcde, nsurf, srflst, fixfid )
-      use pepper_inc_dsk
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: trgcde  !! Target body ID code.
          integer(ip), intent(in) :: nsurf  !! Number of surface IDs in surface list.
@@ -14686,7 +14669,6 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzraysfx ( ctx, vertex, raydir, et, spoint, found )
-      use pepper_inc_dsk
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: et  !! Evaluation epoch, seconds past J2000 TDB.
          real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
@@ -14699,7 +14681,6 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzmaxrad ( ctx, maxrad )
-      use pepper_inc_dsk
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(out) :: maxrad  !! Radius of outer bounding sphere for target body.
       end subroutine zzmaxrad
@@ -14708,7 +14689,6 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzminrad ( ctx, minrad )
-      use pepper_inc_dsk
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(out) :: minrad  !! Radius of inner bounding sphere for target body.
       end subroutine zzminrad
@@ -14717,7 +14697,6 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       module subroutine zzraynp ( ctx, vertex, raydir, et, pnear, dist )
-      use pepper_inc_dsk
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: et  !! Evaluation epoch, seconds past J2000 TDB.
          real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
@@ -14732,7 +14711,6 @@ module pepper_instance
       !> the observer's position and whether the surface point is
       !> illuminated.
       module subroutine illumf ( ctx, method, target, ilusrc, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn, visibl, lit )
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -14776,7 +14754,6 @@ module pepper_instance
       !> Map array of planetocentric longitude/latitude coordinate pairs
       !> to surface points on a specified target body.
       module subroutine latsrf ( ctx, method, target, et, fixref, npts, lonlat, srfpts )
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
@@ -14795,7 +14772,6 @@ module pepper_instance
       !> a specified epoch, optionally corrected for light time and
       !> stellar aberration.
       module subroutine sincpt ( ctx, method, target, et, fixref, abcorr, obsrvr, dref, dvec, spoint, trgepc, srfvec, found )
-      use pepper_inc_dsk
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -14820,7 +14796,6 @@ module pepper_instance
       !> a target body at a specified epoch, optionally corrected for
       !> light time and stellar aberration.
       module subroutine subpnt ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec )
-      use pepper_inc_dsk
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -14842,7 +14817,6 @@ module pepper_instance
       !> a target body at a specified epoch, optionally corrected for
       !> light time and stellar aberration.
       module subroutine subslr ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec )
-      use pepper_inc_dsk
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -14928,7 +14902,6 @@ module pepper_instance
       !> The caller specifies half-planes bounded by the observer-target
       !> center vector in which to search for limb points.
       module subroutine limbpt ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, tangts )
-      use pepper_inc_dsk
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -14958,7 +14931,6 @@ module pepper_instance
       !> half-planes, bounded by the illumination source center-target
       !> center vector, in which to search for terminator points.
       module subroutine termpt ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, trmvcs )
-      use pepper_inc_dsk
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -14992,7 +14964,6 @@ module pepper_instance
       !> The errors are those of [[limbpt]], without SPICE(OUTOFROOM) and the
       !> checks of MAXN; NCUTS must be positive.
       module subroutine limb_points ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, tangts )
-      use pepper_inc_dsk
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -15023,7 +14994,6 @@ module pepper_instance
       !> The errors are those of [[termpt]], without SPICE(OUTOFROOM) and the
       !> checks of MAXN; NCUTS must not be negative.
       module subroutine terminator_points ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, trmvcs )
-      use pepper_inc_dsk
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -15052,7 +15022,6 @@ module pepper_instance
       !> SPICELIB's LIMBPT with outputs that grow). The outputs hold NOUT
       !> points.
       module subroutine limb_points_body ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, tangts, nout )
-      use pepper_inc_dsk
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -15081,7 +15050,6 @@ module pepper_instance
       !> body of SPICELIB's TERMPT with outputs that grow). The outputs hold
       !> NOUT points.
       module subroutine terminator_points_body ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, trmvcs, nout )
-      use pepper_inc_dsk
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -15263,7 +15231,6 @@ module pepper_instance
       !> Perform initialization functions for occultation state
       !> determination.
       module subroutine zzgfocin ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, obsrvr, abcorr )
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzdsk
@@ -15282,7 +15249,6 @@ module pepper_instance
 
       !> See if the object is currently occulted.
       module subroutine zzgfocst ( ctx, time, ocstat )
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzdsk
@@ -15598,7 +15564,6 @@ module pepper_instance
       module subroutine occult ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, et, ocltid )
       use pepper_inc_gf
       use pepper_inc_occult
-      use pepper_inc_dsk
       use pepper_inc_zzdsk
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: targ1  !! Name or ID of first target.

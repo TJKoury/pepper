@@ -1,7 +1,6 @@
 !$Procedure      F_ILUMIN ( ILUMIN family tests )
 
       SUBROUTINE F_ILUMIN ( OK )
-      use pepper_inc_dsk
       use pepper_inc_zzdsk
       use pepper_inc_zzabcorr
 

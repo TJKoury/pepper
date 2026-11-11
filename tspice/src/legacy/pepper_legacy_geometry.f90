@@ -1301,7 +1301,6 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       integer(ip) :: bodyid  !! ID code of target body.
@@ -1320,7 +1319,6 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       integer(ip) :: handle  !! Handle of DSK containing segment to be checked.
@@ -1341,7 +1339,6 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       integer(ip) :: handle  !! Handle of DSK containing segment to be checked.
@@ -1362,7 +1359,6 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       integer(ip) :: nsurf  !! Surface ID count.
@@ -1384,7 +1380,6 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       integer(ip) :: handle  !! Handle of DSK containing segment to be checked.
@@ -1405,7 +1400,6 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       integer(ip) :: bodyid  !! ID code of target body.
@@ -1427,7 +1421,6 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       integer(ip) :: handle  !! Handle of DSK containing segment to be checked.
@@ -1448,7 +1441,6 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       integer(ip) :: surfid  !! ID code of target surface.
@@ -1474,7 +1466,6 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       integer(ip) :: handle  !! Handle of DSK containing segment to be checked.
@@ -1495,7 +1486,6 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       integer(ip) :: surfid  !! ID code of target surface.
@@ -1519,7 +1509,6 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       integer(ip) :: handle  !! Handle of DSK containing segment to be checked.
@@ -2688,7 +2677,6 @@
       use pepper_kinds, only: ip, wp
       use pepper_inc_errhnd
       use pepper_inc_dla
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
@@ -3966,7 +3954,6 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_dsktol
       use pepper_inc_dsksrc
       use pepper_inc_srftrn
@@ -4029,7 +4016,6 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -4061,7 +4047,6 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_dsktol
       use pepper_inc_gf
       use pepper_inc_zzctr
@@ -4088,7 +4073,6 @@
       use pepper_instance, only: pepper_context, pepper_zzsuelin => zzsuelin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       implicit none
       integer(ip) :: trgcde  !! Target body ID code.
       type(pepper_context), pointer :: ctx
@@ -4105,7 +4089,6 @@
       use pepper_instance, only: pepper_context, pepper_zzsudski => zzsudski
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       implicit none
       integer(ip) :: trgcde  !! Target body ID code.
       integer(ip) :: nsurf  !! Number of surface IDs in surface list.
@@ -4125,7 +4108,6 @@
       use pepper_instance, only: pepper_context, pepper_zzraysfx => zzraysfx
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       implicit none
       real(wp) :: et  !! Evaluation epoch, seconds past J2000 TDB.
       real(wp) :: vertex ( 3 )  !! Ray's vertex.
@@ -4146,7 +4128,6 @@
       use pepper_instance, only: pepper_context, pepper_zzmaxrad => zzmaxrad
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       implicit none
       real(wp) :: maxrad  !! Radius of outer bounding sphere for target body.
       type(pepper_context), pointer :: ctx
@@ -4163,7 +4144,6 @@
       use pepper_instance, only: pepper_context, pepper_zzminrad => zzminrad
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       implicit none
       real(wp) :: minrad  !! Radius of inner bounding sphere for target body.
       type(pepper_context), pointer :: ctx
@@ -4180,7 +4160,6 @@
       use pepper_instance, only: pepper_context, pepper_zzraynp => zzraynp
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       implicit none
       real(wp) :: et  !! Evaluation epoch, seconds past J2000 TDB.
       real(wp) :: vertex ( 3 )  !! Ray's vertex.
@@ -4203,7 +4182,6 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -4265,7 +4243,6 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
@@ -4292,7 +4269,6 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_frmtyp
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -4325,7 +4301,6 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_frmtyp
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -4355,7 +4330,6 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_frmtyp
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -4485,7 +4459,6 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
        use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_frmtyp
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -4523,7 +4496,6 @@
       use pepper_instance, only: pepper_context
       use pepper_legacy_context, only: legacy_context
        use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_frmtyp
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -4583,7 +4555,6 @@
       !> Umbrella of the ZZDSKSEL routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzdsksel ( surfid, nsurf, srflst, bodyid, dclass, corsys, corpar, cor1, cor2, framid, pos, et, handle, dladsc, dskdsc )
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       integer(ip) :: surfid
@@ -4679,7 +4650,6 @@
       !> Umbrella of the ZZSINUTL routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzsinutl ( trgcde, nsurf, srflst, et, fixfid, vertex, raydir, spoint, found, minrad, maxrad, pnear, dist )
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       implicit none
       integer(ip) :: trgcde
       integer(ip) :: nsurf

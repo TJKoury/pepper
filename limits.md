@@ -413,11 +413,15 @@ Each phase is one or more commits, and each ends with `pixi run tspice` at
      12 saved lists are allocatable and grow before their ASSOCIATE
      blocks (to `len(method)/2+1`: a surface takes at least two
      characters); GF's lists are automatic arrays of that size; the
-     MAXSRF checks of ZZDSKSIT and ZZSUDSKI are gone. ZZPRSMET's work
+     MAXSRF checks of ZZDSKSIT and ZZSUDSKI are gone (they stayed by
+     mistake until later: the test only parsed the method string; it now
+     also runs LATSRF with the 150 surfaces, and NAIF's F_ZZDSKSEL and
+     F_ZZSINUTL lose their MAXSRF+1 cases). ZZPRSMET's work
      string and token arrays are sized from the method (SPICELIB: 1000
      characters, cut without an error, and 100 tokens).
    - **Tests:** `test_limits` (3000 surface names, a 60-character name, a
-     150-surface method string of about 1100 characters).
+     150-surface method string of about 1100 characters, parsed and used
+     by LATSRF on a DSK with a segment for each surface).
    - **SCLK type 1** (SC01, per context): the database's buffers and
      clock table grow (an `int_map` of the clocks; SPICELIB: 100 clocks in
      a hash table, emptied when full, and DBUFSZ numbers, about 2.6 MB

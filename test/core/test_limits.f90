@@ -524,6 +524,7 @@ contains
       integer(ip) :: ids(n), bodies(n), i, code, nsurf
       integer(ip), allocatable :: srflst(:)
       logical :: found, pri, ok
+      real(wp) :: xyz(3, 1)
       do i = 1, n
          write (names(i), '(a,i0)') 'TEST LIMITS SURFACE ', i
          ids(i) = 1000 + i
@@ -563,9 +564,47 @@ contains
                     pntdef, trmtyp)
       call check_ok('surfaces: parsing 150 surfaces')
       call check(nsurf == 150 .and. all(srflst(1:150) == ids(1:150)), 'surfaces: a method with 150 surfaces')
+      ! The 150 surfaces through LATSRF (ZZSUDSKI, which limited them to
+      ! MAXSRF, 100): a DSK with one octahedron segment per surface.
+      call write_surface_dsk(ids(1:150))
+      call spice%furnsh(prefix // 'surfaces.bds')
+      method = 'DSK/UNPRIORITIZED/SURFACES = ' // method(len('INTERCEPT/DSK/UNPRIORITIZED/SURFACES = ') + 1:)
+      call ctx%latsrf(method, 'MARS', 0.0_wp, 'IAU_MARS', 1_ip, reshape([0.0_wp, 0.0_wp], [2, 1]), xyz)
+      call check_ok('surfaces: latsrf with 150 surfaces')
+      call check(abs(xyz(1, 1) - 1000.0_wp) < 1.0e-6_wp, 'surfaces: latsrf point on the DSK')
+      call spice%unload(prefix // 'surfaces.bds')
+      call delete_file(prefix // 'surfaces.bds')
       call spice%clpool()
       call check_ok('surfaces')
    end subroutine test_surfaces
+
+   !> Write a DSK for Mars with one segment per surface ID: an octahedron
+   !> of radius 1000 km (the shape of `test_dsk_hits`).
+   subroutine write_surface_dsk(surfaces)
+      integer(ip), intent(in) :: surfaces(:)  !! the surface IDs
+      character(*), parameter :: dsk = prefix // 'surfaces.bds'
+      integer(ip), parameter :: nv = 6, np = 8
+      real(wp), parameter :: pi = acos(-1.0_wp), r = 1000.0_wp
+      real(wp) :: vrtces(3, nv), spaixd(10), corpar(10), mncor3, mxcor3
+      integer(ip) :: plates(3, np), handle, i
+      integer(ip), allocatable :: work(:, :), spaixi(:)
+      vrtces = reshape([r, 0.0_wp, 0.0_wp, -r, 0.0_wp, 0.0_wp, 0.0_wp, r, 0.0_wp, &
+                        0.0_wp, -r, 0.0_wp, 0.0_wp, 0.0_wp, r, 0.0_wp, 0.0_wp, -r], [3, nv])
+      plates = reshape([1, 3, 5, 3, 2, 5, 2, 4, 5, 4, 1, 5, 3, 1, 6, 2, 3, 6, 4, 2, 6, 1, 4, 6], [3, np])
+      allocate (work(2, 10000), spaixi(200000))
+      corpar = 0
+      call ctx%dskmi2(nv, vrtces, np, plates, 1.0_wp, 2_ip, 10000_ip, 10000_ip, 10000_ip, .true., &
+                      200000_ip, work, spaixd, spaixi)
+      call ctx%dskrb2(nv, vrtces, np, plates, 1_ip, corpar, mncor3, mxcor3)
+      call delete_file(dsk)
+      call ctx%dskopn(dsk, dsk, 0_ip, handle)
+      do i = 1, size(surfaces)
+         call ctx%dskw02(handle, 499_ip, surfaces(i), 1_ip, 'IAU_MARS', 1_ip, corpar, -pi, pi, -pi/2, pi/2, &
+                         mncor3, mxcor3, -1.0e9_wp, 1.0e9_wp, nv, vrtces, np, plates, spaixd, spaixi)
+      end do
+      call ctx%dskcls(handle, .true.)
+      call check_ok('surfaces: write the DSK')
+   end subroutine write_surface_dsk
 
    !> Define a type 1 spacecraft clock in the pool: two fields (moduli
    !> 1000000 and 256: 256 ticks per second), TDB, NPART partitions of

@@ -24052,7 +24052,6 @@ contains
       module procedure zzdsksbd
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       real(wp), parameter :: margin = 1.0e-12_wp
@@ -24160,7 +24159,6 @@ contains
       module procedure zzdskbdc
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       real(wp), parameter :: margin = 1.0e-12_wp
@@ -24263,7 +24261,6 @@ contains
       module procedure zzdsknot
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       real(wp), parameter :: margin = 1.0e-12_wp
@@ -24369,7 +24366,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_arrays, only: shelli
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       real(wp), parameter :: margin = 1.0e-12_wp
@@ -24409,16 +24405,10 @@ contains
       savbid = bodyid
       savet  = et
 
-      if ( nsurf > maxsrf ) then
-
-         call ctx%setmsg ( 'Maximum allowed surface ID count is #; ' &
-         //            'input count was #.'                     )
-         call ctx%errint ( '#', maxsrf                              )
-         call ctx%errint ( '#', nsurf                               )
-         call ctx%sigerr ( 'SPICE(VALUEOUTOFRANGE)'                 )
-         return
-
-      end if
+!
+!     PEPPER: any number of surfaces (SPICELIB signaled
+!     SPICE(VALUEOUTOFRANGE) above MAXSRF, 100).
+!
 
       savnsf = nsurf
 
@@ -24507,7 +24497,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_arrays, only: bsrchi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       real(wp), parameter :: margin = 1.0e-12_wp
@@ -24652,7 +24641,6 @@ contains
       module procedure zzdskusc
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       real(wp), parameter :: margin = 1.0e-12_wp
@@ -24769,7 +24757,6 @@ contains
       module procedure zzdskumc
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       real(wp), parameter :: margin = 1.0e-12_wp
@@ -24995,7 +24982,6 @@ contains
       module procedure zzdskmsc
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       real(wp), parameter :: margin = 1.0e-12_wp
@@ -25135,7 +25121,6 @@ contains
       module procedure zzdskmmc
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       real(wp), parameter :: margin = 1.0e-12_wp
@@ -25380,7 +25365,6 @@ contains
       module procedure zzdsksrc
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       real(wp), parameter :: margin = 1.0e-12_wp
@@ -25515,7 +25499,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_math, only: mxv, reclat
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       implicit none
       real(wp), parameter :: margin = 1.0e-12_wp
@@ -46818,7 +46801,6 @@ contains
       use pepper_strings, only: repmc_inplace, repmi_inplace
       use pepper_inc_errhnd
       use pepper_inc_dla
-      use pepper_inc_dsk
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
@@ -76114,7 +76096,6 @@ contains
       !>        Original 26-FEB-2016 (NJB)
       module procedure dskxsi
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_dsktol
       use pepper_inc_dsksrc
       use pepper_inc_srftrn
@@ -78285,7 +78266,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vsep
       use pepper_strings, only: eqstr
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -79423,7 +79403,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vhatip
       use pepper_strings, only: eqstr
-      use pepper_inc_dsk
       use pepper_inc_dsktol
       use pepper_inc_gf
       use pepper_inc_zzctr
@@ -79846,7 +79825,6 @@ contains
       !>-    SPICELIB Version 1.0.0, 01-JUN-2016 (NJB)
       module procedure zzsuelin
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       implicit none
       integer(ip), parameter :: elltrg = 1
       integer(ip), parameter :: dsktrg = 2
@@ -79988,7 +79966,6 @@ contains
       module procedure zzsudski
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       implicit none
       integer(ip), parameter :: elltrg = 1
       integer(ip), parameter :: dsktrg = 2
@@ -80010,15 +79987,16 @@ contains
 
       savtyp = dsktrg
 
-      if (  ( nsurf < 0 ) .or. ( nsurf > maxsrf )  ) then
-
-         call ctx%setmsg ( 'Surface count must be in the range ' &
-         //            '0:# but was #.'                     )
-         call ctx%errint ( '#', maxsrf                          )
+!
+!     PEPPER: any number of surfaces (SPICELIB required at most MAXSRF,
+!     100).
+!
+      if ( nsurf < 0 ) then
+         call ctx%setmsg ( 'Surface count must be non-negative ' &
+         //            'but was #.'                         )
          call ctx%errint ( '#', nsurf                           )
          call ctx%sigerr ( 'SPICE(INVALIDCOUNT)'                )
          return
-
       end if
 
       savnsf = nsurf
@@ -80155,7 +80133,6 @@ contains
       module procedure zzraysfx
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       implicit none
       integer(ip), parameter :: elltrg = 1
       integer(ip), parameter :: dsktrg = 2
@@ -80302,7 +80279,6 @@ contains
       !>-    SPICELIB Version 1.0.0, 01-JUN-2016 (NJB)
       module procedure zzmaxrad
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       implicit none
       logical :: return
       integer(ip), parameter :: elltrg = 1
@@ -80419,7 +80395,6 @@ contains
       !>-    SPICELIB Version 1.0.0, 01-JUN-2016 (NJB)
       module procedure zzminrad
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       implicit none
       logical :: return
       integer(ip), parameter :: elltrg = 1
@@ -80552,7 +80527,6 @@ contains
       !>-    SPICELIB Version 1.0.0, 01-JUN-2016 (NJB)
       module procedure zzraynp
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       implicit none
       integer(ip), parameter :: elltrg = 1
       integer(ip), parameter :: dsktrg = 2
@@ -81700,7 +81674,6 @@ contains
       use pepper_constants, only: halfpi
       use pepper_math, only: vhatip, vsep
       use pepper_strings, only: eqstr
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -83969,7 +83942,6 @@ contains
       use pepper_constants, only: dpr
       use pepper_math, only: latrec, vdot
       use pepper_strings, only: eqstr
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
@@ -85998,7 +85970,6 @@ contains
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
-      use pepper_inc_dsk
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -87847,7 +87818,6 @@ contains
       use pepper_constants, only: clight
       use pepper_math, only: mtxv, mxv, vdist, vnorm
       use pepper_strings, only: eqstr
-      use pepper_inc_dsk
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -89778,7 +89748,6 @@ contains
       use pepper_constants, only: clight
       use pepper_math, only: mxv, vdist
       use pepper_strings, only: eqstr
-      use pepper_inc_dsk
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -93697,7 +93666,6 @@ contains
       use pepper_constants, only: clight
       use pepper_math, only: el2cgv, mtxv, mxv, ucrss, vcrss, vdot, vnorm, vrotv
       use pepper_strings, only: eqstr, ljucrs
-      use pepper_inc_dsk
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -96850,7 +96818,6 @@ contains
       use pepper_constants, only: clight
       use pepper_math, only: mtxv, mxv, vcrss, vhat, vnorm, vrotv
       use pepper_strings, only: eqstr, ljucrs
-      use pepper_inc_dsk
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_gf
       use pepper_inc_zzabcorr

@@ -240,7 +240,6 @@
       use pepper_instance, only: pepper_context, pepper_zzgfocin => zzgfocin
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzdsk
@@ -267,7 +266,6 @@
       use pepper_instance, only: pepper_context, pepper_zzgfocst => zzgfocst
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzdsk
@@ -845,7 +843,6 @@
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_occult
-      use pepper_inc_dsk
       use pepper_inc_zzdsk
       implicit none
       character(*) :: targ1  !! Name or ID of first target.
@@ -2371,7 +2368,6 @@
       !> Umbrella of the ZZGFOCU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
       subroutine zzgfocu ( occtyp, front, fshape, fframe, back, bshape, bframe, obsrvr, abcorr, time, ocstat )
       use pepper_kinds, only: ip, wp
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzdsk

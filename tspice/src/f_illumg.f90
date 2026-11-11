@@ -1,7 +1,6 @@
 !$Procedure      F_ILLUMG ( ILLUMG family tests )
 
       SUBROUTINE F_ILLUMG ( OK )
-      use pepper_inc_dsk
       use pepper_inc_zzdsk
       use pepper_inc_zzabcorr
 

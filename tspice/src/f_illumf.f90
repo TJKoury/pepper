@@ -2,7 +2,6 @@
 
       SUBROUTINE F_ILLUMF ( OK )
       use pepper_inc_dla
-      use pepper_inc_dsk
       use pepper_inc_zzdsk
       use pepper_inc_zzabcorr
 

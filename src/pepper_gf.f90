@@ -6605,7 +6605,6 @@ contains
       module procedure zzgfocin
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr, suffix, ucase_inplace
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzdsk
@@ -7276,7 +7275,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
       use pepper_math, only: vnorm, vsep
-      use pepper_inc_dsk
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzdsk
@@ -17356,7 +17354,6 @@ contains
       use pepper_strings, only: ucase_inplace
       use pepper_inc_gf
       use pepper_inc_occult
-      use pepper_inc_dsk
       use pepper_inc_zzdsk
       implicit none
 

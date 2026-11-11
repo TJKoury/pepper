@@ -1,7 +1,6 @@
 !$Procedure F_ZZSINUTL ( ZZSINUTL tests )
 
       SUBROUTINE F_ZZSINUTL ( OK )
-      use pepper_inc_dsk
 
 ! $ Abstract
 !
@@ -18,6 +17,12 @@
 ! $ Declarations
 
       IMPLICIT NONE
+!
+!     PEPPER: the size of this test's surface lists (SPICELIB's MAXSRF of
+!     dsk.inc; the library's surface lists have no limit).
+!
+      INTEGER               MAXSRF
+      PARAMETER           ( MAXSRF = 100 )
 
 
 
@@ -500,14 +505,8 @@
 !
 ! --- Case: ------------------------------------------------------
 !
-      CALL TCASE ( 'ZZSUDSKI: surface count too large.' )
-
-      NSURF = MAXSRF + 1
-
-      CALL ZZSUDSKI ( BODYID, NSURF, SRFLST, FIXFID )
-
-      CALL CHCKXC ( .TRUE., 'SPICE(INVALIDCOUNT)', OK )
-
+!     PEPPER: no case for a surface count above MAXSRF: ZZSUDSKI takes
+!     any number of surfaces (SPICELIB signaled SPICE(INVALIDCOUNT)).
 !
 ! --- Case: ------------------------------------------------------
 !
