@@ -1,5 +1,71 @@
-!> The parameters of SPICELIB's include file zzsgp4.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> Parameter assignments for SGP4 algorithm as expressed by Vallado [2].
+!>
+!>## Brief I/O
+!>
+!>     None.
+!>
+!>## Detailed Input
+!>
+!>     None.
+!>
+!>## Detailed Output
+!>
+!>     None.
+!>
+!>## Parameters
+!>
+!>     None.
+!>
+!>## Exceptions
+!>
+!>     None.
+!>
+!>## Files
+!>
+!>     None.
+!>
+!>## Particulars
+!>
+!>     None.
+!>
+!>## Examples
+!>
+!>     J2    = GEOPHS(K_J2)
+!>     J3    = GEOPHS(K_J3)
+!>     J4    = GEOPHS(K_J4)
+!>     ER    = GEOPHS(K_ER)
+!>     XKE   = GEOPHS(K_KE)
+!>
+!>     TUMIN = 1.D0/XKE
+!>     J3OJ2 = J3/J2
+!>
+!>## Restrictions
+!>
+!>     None.
+!>
+!>## Literature References
+!>
+!>   [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
+!>       Propagation of the NORAD Element Sets." Spacetrack Report #3.
+!>       U.S. Air Force: Aerospace Defense Command.
+!>
+!>   [2] Vallado, David, Crawford, Paul, Hujsak, Richard, and Kelso, T.S.
+!>       2006. Revisiting Spacetrack Report #3. Paper AIAA 2006-6753
+!>       presented at the AIAA/AAS Astrodynamics Specialist Conference,
+!>       August 21-24, 2006. Keystone, CO.
+!>
+!>## Author and Institution
+!>
+!>     E. D. Wright    (JPL)
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 1.0.0, MAY-27-2020 (EDW)
+!>
+!>        Updated descriptions of GEOPHS constants to be consistent
+!>        with what's used in other routines.
+!>
+!>-    SPICELIB Version 1.0.0 22-JUL-2014 (EDW)
 module pepper_inc_zzsgp4
 
    use pepper_kinds, only: ip
@@ -7,80 +73,6 @@ module pepper_inc_zzsgp4
    implicit none
 
    public
-
-!
-! $ Abstract
-!
-!      Parameter assignments for SGP4 algorithm as expressed
-!      by Vallado [2].
-!
-! $ Brief_I/O
-!
-!     None.
-!
-! $ Detailed_Input
-!
-!     None.
-!
-! $ Detailed_Output
-!
-!     None.
-!
-! $ Parameters
-!
-!     None.
-!
-! $ Exceptions
-!
-!     None.
-!
-! $ Files
-!
-!     None.
-!
-! $ Particulars
-!
-!     None.
-!
-! $ Examples
-!
-!     J2    = GEOPHS(K_J2)
-!     J3    = GEOPHS(K_J3)
-!     J4    = GEOPHS(K_J4)
-!     ER    = GEOPHS(K_ER)
-!     XKE   = GEOPHS(K_KE)
-!
-!     TUMIN = 1.D0/XKE
-!     J3OJ2 = J3/J2
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Literature_References
-!
-!   [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
-!       Propagation of the NORAD Element Sets." Spacetrack Report #3.
-!       U.S. Air Force: Aerospace Defense Command.
-!
-!   [2] Vallado, David, Crawford, Paul, Hujsak, Richard, and Kelso, T.S.
-!       2006. Revisiting Spacetrack Report #3. Paper AIAA 2006-6753
-!       presented at the AIAA/AAS Astrodynamics Specialist Conference,
-!       August 21-24, 2006. Keystone, CO.
-!
-! $ Author_and_Institution
-!
-!     E. D. Wright    (JPL)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, MAY-27-2020 (EDW)
-!
-!        Updated descriptions of GEOPHS constants to be consistent
-!        with what's used in other routines.
-!
-!-    SPICELIB Version 1.0.0 22-JUL-2014 (EDW)
-!
 
 !
 !      WGS gravitational constants IDs.

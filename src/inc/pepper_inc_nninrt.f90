@@ -1,5 +1,4 @@
-!> The parameters of SPICELIB's include file nninrt.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> This file contains the number of non-inertial reference frames that are currently built into the SPICE toolkit software.
 module pepper_inc_nninrt
 
    use pepper_kinds, only: ip
@@ -8,13 +7,6 @@ module pepper_inc_nninrt
 
    public
 
-! $ Abstract
-!
-!     This file contains the number of non-inertial reference
-!     frames that are currently built into the SPICE toolkit
-!     software.
-!
-!
    integer(ip), parameter :: nninrt = 124
 
 ! $ Brief_I/O

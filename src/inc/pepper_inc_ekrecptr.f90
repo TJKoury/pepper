@@ -1,5 +1,52 @@
-!> The parameters of SPICELIB's include file ekrecptr.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> EK Record Pointer Parameters.
+!>
+!>     This file declares parameters used in EK record pointers.
+!>     Each segment references data in a given record via two levels
+!>     of indirection:  a record number points to a record pointer,
+!>     which is a structured array of metadata and data pointers.
+!>
+!>     Record pointers always occupy contiguous ranges of integer
+!>     addresses.
+!>
+!>     The parameter declarations in this file depend on the assumption
+!>     that integer pages contain 256 DAS integer words and that the
+!>     maximum number of columns in a segment is 100.  Record pointers
+!>     are stored in integer data pages, so they must fit within the
+!>     usable data area afforded by these pages.  The size of the usable
+!>     data area is given by the parameter IPSIZE which is declared in
+!>     ekdatpag.inc.  The assumed value of IPSIZE is 254.
+!>
+!>     The first element of each record pointer is a status indicator.
+!>     The meanings of status indicators depend on whether the parent EK
+!>     is shadowed or not.  For shadowed EKs, allowed status values and
+!>     their meanings are:
+!>
+!>## Version
+!>
+!>        ekrecptr.inc Version 2  18-JUL-1995 (NJB)
+!>
+!>        OLD       The record has not been modified since
+!>                  the EK containing the record was opened.
+!>
+!>        UPDATE    The record is an update of a previously existing
+!>                  record.  The original record is now on the
+!>                  modified record list.
+!>
+!>        NEW       The record has been added since the EK containing the
+!>                  record was opened.  The record is not an update
+!>                  of a previously existing record.
+!>
+!>        DELOLD    This status applies only to a backup record.
+!>                  DELOLD status indicates that the record corresponds
+!>                  to a deleted OLD record in the source segment.
+!>
+!>        DELNEW    This status applies only to a backup record.
+!>                  DELNEW status indicates that the record corresponds
+!>                  to a deleted NEW record in the source segment.
+!>
+!>        DELUPD    This status applies only to a backup record.
+!>                  DELUPD status indicates that the record corresponds
+!>                  to a deleted UPDATEd record in the source segment.
 module pepper_inc_ekrecptr
 
    use pepper_kinds, only: ip
@@ -8,56 +55,6 @@ module pepper_inc_ekrecptr
 
    public
 
-!     Include Section:  EK Record Pointer Parameters
-!
-!        ekrecptr.inc Version 2  18-JUL-1995 (NJB)
-!
-!
-!     This file declares parameters used in EK record pointers.
-!     Each segment references data in a given record via two levels
-!     of indirection:  a record number points to a record pointer,
-!     which is a structured array of metadata and data pointers.
-!
-!     Record pointers always occupy contiguous ranges of integer
-!     addresses.
-!
-!     The parameter declarations in this file depend on the assumption
-!     that integer pages contain 256 DAS integer words and that the
-!     maximum number of columns in a segment is 100.  Record pointers
-!     are stored in integer data pages, so they must fit within the
-!     usable data area afforded by these pages.  The size of the usable
-!     data area is given by the parameter IPSIZE which is declared in
-!     ekdatpag.inc.  The assumed value of IPSIZE is 254.
-!
-!
-!     The first element of each record pointer is a status indicator.
-!     The meanings of status indicators depend on whether the parent EK
-!     is shadowed or not.  For shadowed EKs, allowed status values and
-!     their meanings are:
-!
-!        OLD       The record has not been modified since
-!                  the EK containing the record was opened.
-!
-!        UPDATE    The record is an update of a previously existing
-!                  record.  The original record is now on the
-!                  modified record list.
-!
-!        NEW       The record has been added since the EK containing the
-!                  record was opened.  The record is not an update
-!                  of a previously existing record.
-!
-!        DELOLD    This status applies only to a backup record.
-!                  DELOLD status indicates that the record corresponds
-!                  to a deleted OLD record in the source segment.
-!
-!        DELNEW    This status applies only to a backup record.
-!                  DELNEW status indicates that the record corresponds
-!                  to a deleted NEW record in the source segment.
-!
-!        DELUPD    This status applies only to a backup record.
-!                  DELUPD status indicates that the record corresponds
-!                  to a deleted UPDATEd record in the source segment.
-!
 !     In EKs that are not shadowed, all records have status OLD.
 !
 !
@@ -123,9 +120,5 @@ module pepper_inc_ekrecptr
    integer(ip), parameter :: null = uninit - 1
 
    integer(ip), parameter :: noback = null - 1
-
-!
-!     End Include Section:  EK Record Pointer Parameters
-!
 
 end module pepper_inc_ekrecptr

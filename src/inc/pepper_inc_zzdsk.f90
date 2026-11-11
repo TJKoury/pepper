@@ -1,5 +1,32 @@
-!> The parameters of SPICELIB's include file zzdsk.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> Private parameters of the DSK subsystem.
+!>
+!>## Version
+!>
+!>     Version 4.0.0 13-NOV-2015 (NJB)
+!>
+!>        Changed parameter LBTLEN to CVTLEN.
+!>        Added parameter LMBCRV.
+!>
+!>     Version 3.0.0 05-NOV-2015 (NJB)
+!>
+!>        Added parameters
+!>
+!>           CTRCOR
+!>           ELLCOR
+!>           GUIDED
+!>           LBTLEN
+!>           PNMBRL
+!>           TANGNT
+!>           TMTLEN
+!>           UMBRAL
+!>
+!>     Version 2.0.0 04-MAR-2015 (NJB)
+!>
+!>        Removed declaration of parameter SHPLEN.
+!>        This name is already in use in the include
+!>        file gf.inc.
+!>
+!>     Version 1.0.0 26-JAN-2015 (NJB)
 module pepper_inc_zzdsk
 
    use pepper_kinds, only: ip
@@ -8,38 +35,6 @@ module pepper_inc_zzdsk
 
    public
 
-!
-!     File: zzdsk.inc
-!
-!
-!     Version 4.0.0 13-NOV-2015 (NJB)
-!
-!        Changed parameter LBTLEN to CVTLEN.
-!        Added parameter LMBCRV.
-!
-!     Version 3.0.0 05-NOV-2015 (NJB)
-!
-!        Added parameters
-!
-!           CTRCOR
-!           ELLCOR
-!           GUIDED
-!           LBTLEN
-!           PNMBRL
-!           TANGNT
-!           TMTLEN
-!           UMBRAL
-!
-!     Version 2.0.0 04-MAR-2015 (NJB)
-!
-!        Removed declaration of parameter SHPLEN.
-!        This name is already in use in the include
-!        file gf.inc.
-!
-!     Version 1.0.0 26-JAN-2015 (NJB)
-!
-
-!
 !     Parameters supporting METHOD string parsing:
 !
    integer(ip), parameter :: dskshp = 2
@@ -93,9 +88,5 @@ module pepper_inc_zzdsk
    integer(ip), parameter :: ctrcor = 1
 
    integer(ip), parameter :: ellcor = 2
-
-!
-!     End of include file zzdsk.inc
-!
 
 end module pepper_inc_zzdsk

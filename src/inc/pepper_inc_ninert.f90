@@ -1,5 +1,4 @@
-!> The parameters of SPICELIB's include file ninert.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> This file contains the number of inertial reference frames that are currently known by the SPICE toolkit software.
 module pepper_inc_ninert
 
    use pepper_kinds, only: ip
@@ -8,12 +7,6 @@ module pepper_inc_ninert
 
    public
 
-! $ Abstract
-!
-!     This file contains the number of inertial reference
-!     frames that are currently known by the SPICE toolkit
-!     software.
-!
    integer(ip), parameter :: ninert = 21
 
 ! $ Brief_I/O

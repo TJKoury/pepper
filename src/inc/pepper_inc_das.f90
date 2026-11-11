@@ -1,5 +1,21 @@
-!> The parameters of SPICELIB's include file das.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> This file contains public, global parameter declarations for the SPICELIB Direct Access Segregated (DAS) subsystem.
+!>
+!>## Restrictions
+!>
+!>     None.
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman       (JPL)
+!>     J. Diaz del Rio    (ODC Space)
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 1.1.0, 07-APR-2020 (JDR)
+!>
+!>        Added CHARDT, DPDT and INTDT parameters.
+!>
+!>-    SPICELIB Version 1.0.0, 10-FEB-2017 (NJB)
 module pepper_inc_das
 
    use pepper_kinds, only: ip
@@ -7,29 +23,6 @@ module pepper_inc_das
    implicit none
 
    public
-
-! $ Abstract
-!
-!     This file contains public, global parameter declarations
-!     for the SPICELIB Direct Access Segregated (DAS) subsystem.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman       (JPL)
-!     J. Diaz del Rio    (ODC Space)
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.0, 07-APR-2020 (JDR)
-!
-!        Added CHARDT, DPDT and INTDT parameters.
-!
-!-    SPICELIB Version 1.0.0, 10-FEB-2017 (NJB)
-!
 
 !
 !     Parameter declarations follow.
@@ -82,9 +75,5 @@ module pepper_inc_das
    integer(ip), parameter :: dpdt = 2
 
    integer(ip), parameter :: intdt = 3
-
-!
-!     End of include file das.inc
-!
 
 end module pepper_inc_das

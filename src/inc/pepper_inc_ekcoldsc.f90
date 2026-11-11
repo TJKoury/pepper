@@ -1,5 +1,11 @@
-!> The parameters of SPICELIB's include file ekcoldsc.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> EK Column Descriptor Parameters.
+!>
+!>     Note:  The column descriptor size parameter CDSCSZ  is
+!>     declared separately in the include section CDSIZE$INC.FOR.
+!>
+!>## Version
+!>
+!>        ekcoldsc.inc Version 6    23-AUG-1995 (NJB)
 module pepper_inc_ekcoldsc
 
    use pepper_kinds, only: ip
@@ -8,14 +14,6 @@ module pepper_inc_ekcoldsc
 
    public
 
-!     Include Section:  EK Column Descriptor Parameters
-!
-!        ekcoldsc.inc Version 6    23-AUG-1995 (NJB)
-!
-!
-!     Note:  The column descriptor size parameter CDSCSZ  is
-!     declared separately in the include section CDSIZE$INC.FOR.
-!
 !     Offset of column descriptors, relative to start of segment
 !     integer address range.  This number, when added to the last
 !     integer address preceding the segment, yields the DAS integer
@@ -106,10 +104,6 @@ module pepper_inc_ekcoldsc
 !
 !     The last position in the column descriptor is reserved.  No
 !     parameter is defined to point to this location.
-!
-
-!
-!     End Include Section:  EK Column Descriptor Parameters
 !
 
 end module pepper_inc_ekcoldsc

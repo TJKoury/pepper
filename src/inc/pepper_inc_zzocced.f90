@@ -1,5 +1,20 @@
-!> The parameters of SPICELIB's include file zzocced.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> Declare ZZOCCED return code parameters, comparison strings and other parameters.
+!>
+!>## Restrictions
+!>
+!>     None.
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman      (JPL)
+!>
+!>## Literature References
+!>
+!>     None.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 1.0.0, 01-SEP-2005 (NJB)
 module pepper_inc_zzocced
 
    use pepper_kinds, only: ip
@@ -7,28 +22,6 @@ module pepper_inc_zzocced
    implicit none
 
    public
-
-! $ Abstract
-!
-!     Declare ZZOCCED return code parameters, comparison strings
-!     and other parameters.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman      (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 01-SEP-2005 (NJB)
-!
 
 !     The function returns an integer code indicating the geometric
 !     relationship of the three bodies.
@@ -76,9 +69,5 @@ module pepper_inc_zzocced
 !                              first.
 !
    integer(ip), parameter :: total2 = 3
-
-!
-!     End include file zzocced.inc
-!
 
 end module pepper_inc_zzocced

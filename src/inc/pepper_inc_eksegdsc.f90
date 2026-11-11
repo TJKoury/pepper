@@ -1,5 +1,12 @@
-!> The parameters of SPICELIB's include file eksegdsc.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> EK Segment Descriptor Parameters.
+!>
+!>     All `base addresses' referred to below are the addresses
+!>     *preceding* the item the base applies to.  This convention
+!>     enables simplied address calculations in many cases.
+!>
+!>## Version
+!>
+!>        eksegdsc.inc  Version 8  06-NOV-1995 (NJB)
 module pepper_inc_eksegdsc
 
    use pepper_kinds, only: ip
@@ -8,15 +15,6 @@ module pepper_inc_eksegdsc
 
    public
 
-!     Include Section:  EK Segment Descriptor Parameters
-!
-!        eksegdsc.inc  Version 8  06-NOV-1995 (NJB)
-!
-!
-!     All `base addresses' referred to below are the addresses
-!     *preceding* the item the base applies to.  This convention
-!     enables simplied address calculations in many cases.
-!
 !     Size of segment descriptor.  Note:  the include file ekcoldsc.inc
 !     must be updated if this parameter is changed.  The parameter
 !     CDOFF in that file should be kept equal to SDSCSZ.
@@ -132,10 +130,6 @@ module pepper_inc_eksegdsc
 !
 !     The last descriptor element is reserved for future use.  No
 !     parameter is defined to point to this location.
-!
-
-!
-!     End Include Section:  EK Segment Descriptor Parameters
 !
 
 end module pepper_inc_eksegdsc

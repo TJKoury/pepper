@@ -1,5 +1,38 @@
-!> The parameters of SPICELIB's include file zzdyn.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> The parameters defined below are used by the SPICELIB dynamic frame subsystem.
+!>
+!> SPICE private file intended solely for the support of SPICE routines.  Users should not include this file directly due to the volatile nature of this file
+!>
+!>## Parameters
+!>
+!>     This file declares parameters required by the dynamic
+!>     frame routines of the SPICELIB frame subsystem.
+!>
+!>## Restrictions
+!>
+!>     The parameter BDNMLN is this routine must be kept
+!>     consistent with the parameter MAXL defined in
+!>
+!>        zzbodtrn.inc
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman    (JPL)
+!>
+!>## Literature References
+!>
+!>     None.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 2.0.0, 22-SEP-2020 (NJB)
+!>
+!>        Updated to support the product frame family.
+!>
+!>-    SPICELIB Version 1.1.0, 12-JAN-2005 (NJB)
+!>
+!>        Parameters KWX, KWY, KWZ renamed to KVX, KVY, KVZ.
+!>
+!>-    SPICELIB Version 1.0.0, 22-DEC-2004 (NJB)
 module pepper_inc_zzdyn
 
    use pepper_kinds, only: ip, wp
@@ -7,51 +40,6 @@ module pepper_inc_zzdyn
    implicit none
 
    public
-
-! $ Abstract
-!
-!     Include file zzdyn.inc
-!
-!     SPICE private file intended solely for the support of SPICE
-!     routines.  Users should not include this file directly due
-!     to the volatile nature of this file
-!
-!     The parameters defined below are used by the SPICELIB dynamic
-!     frame subsystem.
-!
-! $ Parameters
-!
-!     This file declares parameters required by the dynamic
-!     frame routines of the SPICELIB frame subsystem.
-!
-! $ Restrictions
-!
-!     The parameter BDNMLN is this routine must be kept
-!     consistent with the parameter MAXL defined in
-!
-!        zzbodtrn.inc
-!
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0, 22-SEP-2020 (NJB)
-!
-!        Updated to support the product frame family.
-!
-!-    SPICELIB Version 1.1.0, 12-JAN-2005 (NJB)
-!
-!        Parameters KWX, KWY, KWZ renamed to KVX, KVY, KVZ.
-!
-!-    SPICELIB Version 1.0.0, 22-DEC-2004 (NJB)
-!
 
 !
 !     String length parameters
@@ -476,9 +464,5 @@ module pepper_inc_zzdyn
 !     Token indicating degrees:
 !
    character(*), parameter :: kvdegr = 'DEGREES'
-
-!
-!     End of include file zzdyn.inc
-!
 
 end module pepper_inc_zzdyn

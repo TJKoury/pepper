@@ -1,5 +1,8 @@
-!> The parameters of SPICELIB's include file ekjrs.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> EK Join Row Set Parameters.
+!>
+!>## Version
+!>
+!>        ekjrs.inc  Version 1    07-FEB-1995 (NJB)
 module pepper_inc_ekjrs
 
    use pepper_kinds, only: ip
@@ -8,11 +11,6 @@ module pepper_inc_ekjrs
 
    public
 
-!     Include Section:  EK Join Row Set Parameters
-!
-!        ekjrs.inc  Version 1    07-FEB-1995 (NJB)
-!
-!
 !     Maximum number of join row sets in a join row set union:
 !
    integer(ip), parameter :: mxjrs = 200
@@ -87,9 +85,6 @@ module pepper_inc_ekjrs
 !     Base address of first segment vector
 !
    integer(ip), parameter :: jsvbas = 4
-!
-!
-!     End Include Section:  EK Join Row Set Parameters
 !
 
 end module pepper_inc_ekjrs

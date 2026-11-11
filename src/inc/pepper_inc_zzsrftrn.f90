@@ -1,5 +1,24 @@
-!> The parameters of SPICELIB's include file zzsrftrn.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> Declare private surface name/ID mapping parameters.
+!>
+!> SPICE private include file intended solely for the support of SPICE routines. User software should not include this file due to the volatile nature of this file.
+!>
+!>## Restrictions
+!>
+!>     None.
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman      (JPL)
+!>
+!>## Literature References
+!>
+!>     None.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 1.0.0, 04-FEB-2017 (NJB)
+!>
+!>        Original version 03-DEC-2015 (NJB)
 module pepper_inc_zzsrftrn
 
    use pepper_kinds, only: ip
@@ -7,33 +26,6 @@ module pepper_inc_zzsrftrn
    implicit none
 
    public
-
-! $ Abstract
-!
-!     SPICE private include file intended solely for the support of
-!     SPICE routines. User software should not include this file
-!     due to the volatile nature of this file.
-!
-!     Declare private surface name/ID mapping parameters.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman      (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 04-FEB-2017 (NJB)
-!
-!        Original version 03-DEC-2015 (NJB)
-!
 
 !
 !     Size of the lists and hashes storing the POOL-defined name/ID

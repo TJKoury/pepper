@@ -1,5 +1,57 @@
-!> The parameters of SPICELIB's include file ekpage.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> EK Das Paging Parameters.
+!>
+!>     The EK DAS paging system makes use of the integer portion
+!>     of an EK file's DAS address space to store the few numbers
+!>     required to describe the system's state.  The allocation
+!>     of DAS integer addresses is shown below.
+!>
+!>## Version
+!>
+!>        ekpage.inc  Version 4    25-AUG-1995 (NJB)
+!>
+!>                       DAS integer array
+!>
+!>        +--------------------------------------------+
+!>        |            EK architecture code            |  Address = 1
+!>        +--------------------------------------------+
+!>        |      Character page size (in DAS words)    |
+!>        +--------------------------------------------+
+!>        |        Character page base address         |
+!>        +--------------------------------------------+
+!>        |      Number of character pages in file     |
+!>        +--------------------------------------------+
+!>        |   Number of character pages on free list   |
+!>        +--------------------------------------------+
+!>        |      Character free list head pointer      |  Address = 6
+!>        +--------------------------------------------+
+!>        |                                            |  Addresses =
+!>        |           Metadata for d.p. pages          |    7--11
+!>        |                                            |
+!>        +--------------------------------------------+
+!>        |                                            |  Addresses =
+!>        |         Metadata for integer pages         |    12--16
+!>        |                                            |
+!>        +--------------------------------------------+
+!>                              .
+!>                              .
+!>                              .
+!>        +--------------------------------------------+
+!>        |                                            |  End Address =
+!>        |                Unused space                |  integer page
+!>        |                                            |  end
+!>        +--------------------------------------------+
+!>        |                                            |  Start Address =
+!>        |             First integer page             |  integer page
+!>        |                                            |  base
+!>        +--------------------------------------------+
+!>                              .
+!>                              .
+!>                              .
+!>        +--------------------------------------------+
+!>        |                                            |
+!>        |              Last integer page             |
+!>        |                                            |
+!>        +--------------------------------------------+
 module pepper_inc_ekpage
 
    use pepper_kinds, only: ip
@@ -8,62 +60,6 @@ module pepper_inc_ekpage
 
    public
 
-!     Include Section:  EK Das Paging Parameters
-!
-!        ekpage.inc  Version 4    25-AUG-1995 (NJB)
-!
-!
-!
-!     The EK DAS paging system makes use of the integer portion
-!     of an EK file's DAS address space to store the few numbers
-!     required to describe the system's state.  The allocation
-!     of DAS integer addresses is shown below.
-!
-!
-!                       DAS integer array
-!
-!        +--------------------------------------------+
-!        |            EK architecture code            |  Address = 1
-!        +--------------------------------------------+
-!        |      Character page size (in DAS words)    |
-!        +--------------------------------------------+
-!        |        Character page base address         |
-!        +--------------------------------------------+
-!        |      Number of character pages in file     |
-!        +--------------------------------------------+
-!        |   Number of character pages on free list   |
-!        +--------------------------------------------+
-!        |      Character free list head pointer      |  Address = 6
-!        +--------------------------------------------+
-!        |                                            |  Addresses =
-!        |           Metadata for d.p. pages          |    7--11
-!        |                                            |
-!        +--------------------------------------------+
-!        |                                            |  Addresses =
-!        |         Metadata for integer pages         |    12--16
-!        |                                            |
-!        +--------------------------------------------+
-!                              .
-!                              .
-!                              .
-!        +--------------------------------------------+
-!        |                                            |  End Address =
-!        |                Unused space                |  integer page
-!        |                                            |  end
-!        +--------------------------------------------+
-!        |                                            |  Start Address =
-!        |             First integer page             |  integer page
-!        |                                            |  base
-!        +--------------------------------------------+
-!                              .
-!                              .
-!                              .
-!        +--------------------------------------------+
-!        |                                            |
-!        |              Last integer page             |
-!        |                                            |
-!        +--------------------------------------------+
-!
 !     The following parameters indicate positions of elements in the
 !     paging system metadata array:
 !
@@ -136,9 +132,5 @@ module pepper_inc_ekpage
    integer(ip), parameter :: pgbasd = 0
 
    integer(ip), parameter :: pgbasi = 256
-
-!
-!     End Include Section:  EK Das Paging Parameters
-!
 
 end module pepper_inc_ekpage

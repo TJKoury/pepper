@@ -1,5 +1,48 @@
-!> The parameters of SPICELIB's include file ekdatpag.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> EK Data Page Parameters.
+!>
+!>     These parameters apply to EK files using architecture 4.
+!>     These files use a paged DAS file as their underlying file
+!>     structure.
+!>
+!>     In paged DAS EK files, data pages are structured:  they contain
+!>     metadata as well as data.  The metadata is located in the last
+!>     few addresses of each page, so as to interfere as little as
+!>     possible with calculation of data addresses.
+!>
+!>     Each data page belongs to exactly one segment.  Some bookkeeping
+!>     information, such as record pointers, is also stored in data
+!>     pages.
+!>
+!>     Each page contains a forward pointer that allows rapid lookup
+!>     of data items that span multiple pages.  Each page also keeps
+!>     track of the current number of links from its parent segment
+!>     to the page.  Link counts enable pages to `know' when they
+!>     are no longer in use by a segment; unused pages are deallocated
+!>     and returned to the free list.
+!>
+!>     The parameters in this include file depend on the parameters
+!>     declared in the include file ekpage.inc.  If those parameters
+!>     change, this file must be updated.  The specified parameter
+!>     declarations we need from that file are:
+!>
+!>     Character pages use an encoding mechanism to represent integer
+!>     metadata.  Each integer is encoded in five consecutive
+!>     characters.
+!>
+!>     Character data page parameters:
+!>
+!>## Version
+!>
+!>        ekfilpar.inc  Version 1  03-APR-1995 (NJB)
+!>
+!>        INTEGER               PGSIZC
+!>        PARAMETER           ( PGSIZC = 1024 )
+!>
+!>        INTEGER               PGSIZD
+!>        PARAMETER           ( PGSIZD = 128 )
+!>
+!>        INTEGER               PGSIZI
+!>        PARAMETER           ( PGSIZI = 256 )
 module pepper_inc_ekdatpag
 
    use pepper_kinds, only: ip
@@ -8,54 +51,6 @@ module pepper_inc_ekdatpag
 
    public
 
-!     Include Section:  EK Data Page Parameters
-!
-!        ekfilpar.inc  Version 1  03-APR-1995 (NJB)
-!
-!     These parameters apply to EK files using architecture 4.
-!     These files use a paged DAS file as their underlying file
-!     structure.
-!
-!     In paged DAS EK files, data pages are structured:  they contain
-!     metadata as well as data.  The metadata is located in the last
-!     few addresses of each page, so as to interfere as little as
-!     possible with calculation of data addresses.
-!
-!     Each data page belongs to exactly one segment.  Some bookkeeping
-!     information, such as record pointers, is also stored in data
-!     pages.
-!
-!     Each page contains a forward pointer that allows rapid lookup
-!     of data items that span multiple pages.  Each page also keeps
-!     track of the current number of links from its parent segment
-!     to the page.  Link counts enable pages to `know' when they
-!     are no longer in use by a segment; unused pages are deallocated
-!     and returned to the free list.
-!
-!     The parameters in this include file depend on the parameters
-!     declared in the include file ekpage.inc.  If those parameters
-!     change, this file must be updated.  The specified parameter
-!     declarations we need from that file are:
-!
-!        INTEGER               PGSIZC
-!        PARAMETER           ( PGSIZC = 1024 )
-!
-!        INTEGER               PGSIZD
-!        PARAMETER           ( PGSIZD = 128 )
-!
-!        INTEGER               PGSIZI
-!        PARAMETER           ( PGSIZI = 256 )
-!
-!
-!
-!     Character pages use an encoding mechanism to represent integer
-!     metadata.  Each integer is encoded in five consecutive
-!     characters.
-!
-!
-!     Character data page parameters:
-!
-!
 !     Size of encoded integer:
 !
    integer(ip), parameter :: encsiz = 5
@@ -108,9 +103,5 @@ module pepper_inc_ekdatpag
 !     Location of integer link count:
 !
    integer(ip), parameter :: ilcidx = ifpidx + 1
-
-!
-!     End Include Section:  EK Data Page Parameters
-!
 
 end module pepper_inc_ekdatpag

@@ -1,5 +1,21 @@
-!> The parameters of SPICELIB's include file ekqlimit.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> EK Query Limit Parameters.
+!>
+!>     These limits apply to character string queries input to the
+!>     EK scanner.  This limits are part of the EK system's user
+!>     interface:  the values should be advertised in the EK required
+!>     reading document.
+!>
+!>## Version
+!>
+!>        ekqlimit.inc  Version 3    16-NOV-1995 (NJB)
+!>
+!>           Parameter MAXCON increased to 1000.
+!>
+!>        ekqlimit.inc  Version 2    01-AUG-1995 (NJB)
+!>
+!>           Updated to support SELECT clause.
+!>
+!>        ekqlimit.inc  Version 1    07-FEB-1995 (NJB)
 module pepper_inc_ekqlimit
 
    use pepper_kinds, only: ip
@@ -8,26 +24,6 @@ module pepper_inc_ekqlimit
 
    public
 
-!     Include Section:  EK Query Limit Parameters
-!
-!        ekqlimit.inc  Version 3    16-NOV-1995 (NJB)
-!
-!           Parameter MAXCON increased to 1000.
-!
-!        ekqlimit.inc  Version 2    01-AUG-1995 (NJB)
-!
-!           Updated to support SELECT clause.
-!
-!
-!        ekqlimit.inc  Version 1    07-FEB-1995 (NJB)
-!
-!
-!     These limits apply to character string queries input to the
-!     EK scanner.  This limits are part of the EK system's user
-!     interface:  the values should be advertised in the EK required
-!     reading document.
-!
-!
 !     Maximum length of an input query:  MAXQRY.  This value is
 !     currently set to twenty-five 80-character lines.
 !
@@ -119,9 +115,5 @@ module pepper_inc_ekqlimit
 !     characters of strings; they compare whole strings.
 !
    integer(ip), parameter :: maxstr = 1024
-
-!
-!     End Include Section:  EK Query Limit Parameters
-!
 
 end module pepper_inc_ekqlimit

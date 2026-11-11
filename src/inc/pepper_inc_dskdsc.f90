@@ -1,5 +1,76 @@
-!> The parameters of SPICELIB's include file dskdsc.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> This include file declares parameters for DSK segment descriptors.
+!>
+!>     DSK segment descriptors are implemented as an array of d.p.
+!>     numbers.  Note that each integer descriptor datum occupies one
+!>     d.p. value.
+!>
+!>     Segment descriptor parameters
+!>
+!>     Each segment descriptor occupies a contiguous
+!>     range of DAS d.p. addresses.
+!>
+!>     Parameters defining offsets for segment descriptor elements
+!>     follow.
+!>
+!>## Version
+!>
+!>-       SPICELIB Version 1.0.0 08-FEB-2017 (NJB)
+!>
+!>           Updated version info.
+!>
+!>           22-JAN-2016 (NJB)
+!>
+!>              Added parameter for data class 2. Changed name of data
+!>              class 1 parameter. Corrected data class descriptions.
+!>
+!>           13-MAY-2010 (NJB)
+!>
+!>              Descriptor now contains two ID codes, one for the
+!>              surface, one for the associated ephemeris object. This
+!>              supports association of multiple surfaces with one
+!>              ephemeris object without creating file management
+!>              issues.
+!>
+!>              Room was added for coordinate system definition
+!>              parameters.
+!>
+!>               Flag arrays and model ID/component entries were deleted.
+!>
+!>            11-SEP-2008 (NJB)
+!>
+!>        The DSK segment descriptor layout is:
+!>
+!>           +---------------------+
+!>           | Surface ID code     |
+!>           +---------------------+
+!>           | Center ID code      |
+!>           +---------------------+
+!>           | Data class code     |
+!>           +---------------------+
+!>           | Data type           |
+!>           +---------------------+
+!>           | Ref frame code      |
+!>           +---------------------+
+!>           | Coord sys code      |
+!>           +---------------------+
+!>           | Coord sys parameters|  {10 elements}
+!>           +---------------------+
+!>           | Min coord 1         |
+!>           +---------------------+
+!>           | Max coord 1         |
+!>           +---------------------+
+!>           | Min coord 2         |
+!>           +---------------------+
+!>           | Max coord 2         |
+!>           +---------------------+
+!>           | Min coord 3         |
+!>           +---------------------+
+!>           | Max coord 3         |
+!>           +---------------------+
+!>           | Start time          |
+!>           +---------------------+
+!>           | Stop time           |
+!>           +---------------------+
 module pepper_inc_dskdsc
 
    use pepper_kinds, only: ip
@@ -8,86 +79,6 @@ module pepper_inc_dskdsc
 
    public
 
-!
-!     Include file dskdsc.inc
-!
-!     This include file declares parameters for DSK segment descriptors.
-!
-!-       SPICELIB Version 1.0.0 08-FEB-2017 (NJB)
-!
-!           Updated version info.
-!
-!           22-JAN-2016 (NJB)
-!
-!              Added parameter for data class 2. Changed name of data
-!              class 1 parameter. Corrected data class descriptions.
-!
-!           13-MAY-2010 (NJB)
-!
-!              Descriptor now contains two ID codes, one for the
-!              surface, one for the associated ephemeris object. This
-!              supports association of multiple surfaces with one
-!              ephemeris object without creating file management
-!              issues.
-!
-!              Room was added for coordinate system definition
-!              parameters.
-!
-!               Flag arrays and model ID/component entries were deleted.
-!
-!            11-SEP-2008 (NJB)
-!
-!
-!     DSK segment descriptors are implemented as an array of d.p.
-!     numbers.  Note that each integer descriptor datum occupies one
-!     d.p. value.
-!
-!
-!
-!
-!     Segment descriptor parameters
-!
-!     Each segment descriptor occupies a contiguous
-!     range of DAS d.p. addresses.
-!
-!        The DSK segment descriptor layout is:
-!
-!           +---------------------+
-!           | Surface ID code     |
-!           +---------------------+
-!           | Center ID code      |
-!           +---------------------+
-!           | Data class code     |
-!           +---------------------+
-!           | Data type           |
-!           +---------------------+
-!           | Ref frame code      |
-!           +---------------------+
-!           | Coord sys code      |
-!           +---------------------+
-!           | Coord sys parameters|  {10 elements}
-!           +---------------------+
-!           | Min coord 1         |
-!           +---------------------+
-!           | Max coord 1         |
-!           +---------------------+
-!           | Min coord 2         |
-!           +---------------------+
-!           | Max coord 2         |
-!           +---------------------+
-!           | Min coord 3         |
-!           +---------------------+
-!           | Max coord 3         |
-!           +---------------------+
-!           | Start time          |
-!           +---------------------+
-!           | Stop time           |
-!           +---------------------+
-!
-!     Parameters defining offsets for segment descriptor elements
-!     follow.
-!
-!
 !     Surface ID code:
 !
    integer(ip), parameter :: srfidx = 1
@@ -221,9 +212,5 @@ module pepper_inc_dskdsc
 !
 !
    integer(ip), parameter :: pdtsys = 4
-
-!
-!     End of include file dskdsc.inc
-!
 
 end module pepper_inc_dskdsc

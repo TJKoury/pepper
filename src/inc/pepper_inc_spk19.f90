@@ -1,5 +1,25 @@
-!> The parameters of SPICELIB's include file spk19.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> Declare parameters specific to SPK type 19.
+!>
+!>## Restrictions
+!>
+!>     None.
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman      (JPL)
+!>     B.V. Semenov      (JPL)
+!>
+!>## Literature References
+!>
+!>     None.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 2.0.0, 11-MAY-2015 (NJB)
+!>
+!>        Updated to support subtype 2.
+!>
+!>-    SPICELIB Version 1.0.0, 07-MAR-2014 (NJB) (BVS)
 module pepper_inc_spk19
 
    use pepper_kinds, only: ip
@@ -7,32 +27,6 @@ module pepper_inc_spk19
    implicit none
 
    public
-
-! $ Abstract
-!
-!     Declare parameters specific to SPK type 19.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman      (JPL)
-!     B.V. Semenov      (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0, 11-MAY-2015 (NJB)
-!
-!        Updated to support subtype 2.
-!
-!-    SPICELIB Version 1.0.0, 07-MAR-2014 (NJB) (BVS)
-!
 
 !
 !     Maximum polynomial degree supported by the current
@@ -108,9 +102,5 @@ module pepper_inc_spk19
 !        - MAXDEG+1 time tags
 !
    integer(ip), parameter :: maxrsz = 2 + (maxdeg+1)*(s19ps1+1)
-
-!
-!     End of include file spk19.inc.
-!
 
 end module pepper_inc_spk19

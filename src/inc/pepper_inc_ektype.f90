@@ -1,5 +1,16 @@
-!> The parameters of SPICELIB's include file ektype.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> EK Data Types.
+!>
+!>     Within the EK system, data types of EK column contents are
+!>     represented by integer codes.  The codes and their meanings
+!>     are listed below.
+!>
+!>     Integer codes are also used within the DAS system to indicate
+!>     data types; the EK system makes no assumptions about compatibility
+!>     between the codes used here and those used in the DAS system.
+!>
+!>## Version
+!>
+!>        ektype.inc Version 1  27-DEC-1994 (NJB)
 module pepper_inc_ektype
 
    use pepper_kinds, only: ip
@@ -8,20 +19,6 @@ module pepper_inc_ektype
 
    public
 
-!     Include Section:  EK Data Types
-!
-!        ektype.inc Version 1  27-DEC-1994 (NJB)
-!
-!
-!     Within the EK system, data types of EK column contents are
-!     represented by integer codes.  The codes and their meanings
-!     are listed below.
-!
-!     Integer codes are also used within the DAS system to indicate
-!     data types; the EK system makes no assumptions about compatibility
-!     between the codes used here and those used in the DAS system.
-!
-!
 !     Character type:
 !
    integer(ip), parameter :: chr = 1
@@ -47,9 +44,5 @@ module pepper_inc_ektype
 !     are identified as a type distinct from double precision numbers.
 !
    integer(ip), parameter :: time = 4
-
-!
-!     End Include Section:  EK Data Types
-!
 
 end module pepper_inc_ektype

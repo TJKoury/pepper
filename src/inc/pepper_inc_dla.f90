@@ -1,5 +1,25 @@
-!> The parameters of SPICELIB's include file dla.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> This include file declares parameters for DLA format version zero.
+!>
+!>## Version
+!>
+!>        Version 3.0.1 17-OCT-2016 (NJB)
+!>
+!>           Corrected comment: VERIDX is now described as a DAS
+!>           integer address rather than a d.p. address.
+!>
+!>        Version 3.0.0 20-JUN-2006 (NJB)
+!>
+!>           Changed name of parameter DSCSIZ to DLADSZ.
+!>
+!>        Version 2.0.0 09-FEB-2005 (NJB)
+!>
+!>           Changed descriptor layout to make backward pointer
+!>           first element.  Updated DLA format version code to 1.
+!>
+!>           Added parameters for format version and number of bytes per
+!>           DAS comment record.
+!>
+!>        Version 1.0.0 28-JAN-2004 (NJB)
 module pepper_inc_dla
 
    use pepper_kinds, only: ip
@@ -8,33 +28,6 @@ module pepper_inc_dla
 
    public
 
-!
-!     Include file dla.inc
-!
-!     This include file declares parameters for DLA format
-!     version zero.
-!
-!        Version 3.0.1 17-OCT-2016 (NJB)
-!
-!           Corrected comment: VERIDX is now described as a DAS
-!           integer address rather than a d.p. address.
-!
-!        Version 3.0.0 20-JUN-2006 (NJB)
-!
-!           Changed name of parameter DSCSIZ to DLADSZ.
-!
-!        Version 2.0.0 09-FEB-2005 (NJB)
-!
-!           Changed descriptor layout to make backward pointer
-!           first element.  Updated DLA format version code to 1.
-!
-!           Added parameters for format version and number of bytes per
-!           DAS comment record.
-!
-!        Version 1.0.0 28-JAN-2004 (NJB)
-!
-
-!
 !     DAS integer address of DLA version code.
 !
    integer(ip), parameter :: veridx = 1
@@ -147,9 +140,5 @@ module pepper_inc_dla
 !     Characters per DAS comment record.
 !
    integer(ip), parameter :: nchrec = 1024
-
-!
-!     End of include file dla.inc
-!
 
 end module pepper_inc_dla

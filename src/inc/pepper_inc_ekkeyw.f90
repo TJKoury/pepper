@@ -1,5 +1,10 @@
-!> The parameters of SPICELIB's include file ekkeyw.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> EK Keyword Code Parameters.
+!>
+!>     The EK query language keywords and codes are:
+!>
+!>## Version
+!>
+!>        ekkeyw.inc  Version 4    24-JAN-1995 (NJB)
 module pepper_inc_ekkeyw
 
    use pepper_kinds, only: ip
@@ -8,14 +13,6 @@ module pepper_inc_ekkeyw
 
    public
 
-!     Include Section:  EK Keyword Code Parameters
-!
-!        ekkeyw.inc  Version 4    24-JAN-1995 (NJB)
-!
-!
-!
-!     The EK query language keywords and codes are:
-!
 !        ALL
 !        AND
 !        ASC
@@ -108,9 +105,5 @@ module pepper_inc_ekkeyw
    integer(ip), parameter :: kwsum = kwsel + 1
 
    integer(ip), parameter :: kwwher = kwsum + 1
-
-!
-!     End Include Section:  EK Keyword Code Parameters
-!
 
 end module pepper_inc_ekkeyw

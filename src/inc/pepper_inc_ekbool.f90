@@ -1,5 +1,12 @@
-!> The parameters of SPICELIB's include file ekbool.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> EK Boolean Enumerated Type.
+!>
+!>     Within the EK system, boolean values sometimes must be
+!>     represented by integer or character codes.  The codes and their
+!>     meanings are listed below.
+!>
+!>## Version
+!>
+!>        ekbool.inc Version 1   21-DEC-1994 (NJB)
 module pepper_inc_ekbool
 
    use pepper_kinds, only: ip
@@ -8,16 +15,6 @@ module pepper_inc_ekbool
 
    public
 
-!     Include Section:  EK Boolean Enumerated Type
-!
-!
-!        ekbool.inc Version 1   21-DEC-1994 (NJB)
-!
-!
-!     Within the EK system, boolean values sometimes must be
-!     represented by integer or character codes.  The codes and their
-!     meanings are listed below.
-!
 !     Integer code indicating `true':
 !
    integer(ip), parameter :: itrue = 1
@@ -36,9 +33,5 @@ module pepper_inc_ekbool
 !     Character code indicating `false':
 !
    character(*), parameter :: cfalse = 'F'
-
-!
-!     End Include Section:  EK Boolean Enumerated Type
-!
 
 end module pepper_inc_ekbool

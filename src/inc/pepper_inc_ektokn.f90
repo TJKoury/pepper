@@ -1,5 +1,14 @@
-!> The parameters of SPICELIB's include file ektokn.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> EK Token Code Parameters.
+!>
+!>     The EK query language tokens and codes are:
+!>
+!>## Version
+!>
+!>        ektokn.inc  Version 2    25-JAN-1995 (NJB)
+!>
+!>           Updated to distinguish between special characters.
+!>
+!>        ektokn.inc  Version 1    05-DEC-1994 (NJB)
 module pepper_inc_ektokn
 
    use pepper_kinds, only: ip
@@ -8,18 +17,6 @@ module pepper_inc_ektokn
 
    public
 
-!     Include Section:  EK Token Code Parameters
-!
-!        ektokn.inc  Version 2    25-JAN-1995 (NJB)
-!
-!           Updated to distinguish between special characters.
-!
-!
-!        ektokn.inc  Version 1    05-DEC-1994 (NJB)
-!
-!
-!     The EK query language tokens and codes are:
-!
 !        <keyword>
 !        <identifier>
 !        <integer>
@@ -53,9 +50,5 @@ module pepper_inc_ektokn
    integer(ip), parameter :: tkstar = tkdot + 1
 
    integer(ip), parameter :: tkeoq = tkstar + 1
-
-!
-!     End Include Section:  EK Token Code Parameters
-!
 
 end module pepper_inc_ektokn

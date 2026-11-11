@@ -1,5 +1,43 @@
-!> The parameters of SPICELIB's include file dsktol.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> This file contains declarations of tolerance and margin values used by the DSK subsystem.
+!>
+!>     It is recommended that the default values defined in this file be
+!>     changed only by expert SPICE users.
+!>
+!>     The values declared in this file are accessible at run time
+!>     through the routines
+!>
+!>        DSKGTL  {DSK, get tolerance value}
+!>        DSKSTL  {DSK, set tolerance value}
+!>
+!>     These are entry points of the routine DSKTOL.
+!>
+!>     Parameter declarations
+!>     ======================
+!>
+!>     DSK type 2 plate expansion factor
+!>     ---------------------------------
+!>
+!>     The factor XFRACT is used to slightly expand plates read from DSK
+!>     type 2 segments in order to perform ray-plate intercept
+!>     computations.
+!>
+!>     This expansion is performed to prevent rays from passing through
+!>     a target object without any intersection being detected. Such
+!>     "false miss" conditions can occur due to round-off errors.
+!>
+!>     Plate expansion is done by computing the difference vectors
+!>     between a plate's vertices and the plate's centroid, scaling
+!>     those differences by (1 + XFRACT), then producing new vertices by
+!>     adding the scaled differences to the centroid. This process
+!>     doesn't affect the stored DSK data.
+!>
+!>     Plate expansion is also performed when surface points are mapped
+!>     to plates on which they lie, as is done for illumination angle
+!>     computations.
+!>
+!>## Version
+!>
+!>        Version 1.0.0 27-FEB-2016 (NJB)
 module pepper_inc_dsktol
 
    use pepper_kinds, only: ip, wp
@@ -8,53 +46,6 @@ module pepper_inc_dsktol
 
    public
 
-!
-!     File: dsktol.inc
-!
-!
-!     This file contains declarations of tolerance and margin values
-!     used by the DSK subsystem.
-!
-!     It is recommended that the default values defined in this file be
-!     changed only by expert SPICE users.
-!
-!     The values declared in this file are accessible at run time
-!     through the routines
-!
-!        DSKGTL  {DSK, get tolerance value}
-!        DSKSTL  {DSK, set tolerance value}
-!
-!     These are entry points of the routine DSKTOL.
-!
-!        Version 1.0.0 27-FEB-2016 (NJB)
-!
-!
-!
-!
-!     Parameter declarations
-!     ======================
-!
-!     DSK type 2 plate expansion factor
-!     ---------------------------------
-!
-!     The factor XFRACT is used to slightly expand plates read from DSK
-!     type 2 segments in order to perform ray-plate intercept
-!     computations.
-!
-!     This expansion is performed to prevent rays from passing through
-!     a target object without any intersection being detected. Such
-!     "false miss" conditions can occur due to round-off errors.
-!
-!     Plate expansion is done by computing the difference vectors
-!     between a plate's vertices and the plate's centroid, scaling
-!     those differences by (1 + XFRACT), then producing new vertices by
-!     adding the scaled differences to the centroid. This process
-!     doesn't affect the stored DSK data.
-!
-!     Plate expansion is also performed when surface points are mapped
-!     to plates on which they lie, as is done for illumination angle
-!     computations.
-!
 !     This parameter is user-adjustable.
 !
    real(wp), parameter :: xfract = 1.0e-10_wp
@@ -193,9 +184,5 @@ module pepper_inc_dsktol
 !     The keyword for retrieving this parameter is
 !
    integer(ip), parameter :: keylal = keyamg + 1
-
-!
-!     End of include file dsktol.inc
-!
 
 end module pepper_inc_dsktol

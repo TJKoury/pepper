@@ -1,5 +1,144 @@
-!> The parameters of SPICELIB's include file zzddhman.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> Parameter declarations for the DAF/DAS handle manager.
+!>
+!>## Particulars
+!>
+!>     This include file contains parameters defining limits and
+!>     integer codes that are utilized in the DAF/DAS handle manager
+!>     routines.
+!>
+!>## Restrictions
+!>
+!>     None.
+!>
+!>## Author and Institution
+!>
+!>     F.S. Turner       (JPL)
+!>
+!>## Literature References
+!>
+!>     None.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 2.6.0, 28-NOV-2021 (BVS)
+!>
+!>        Updated for MAC-OSX-M1-64BIT-CLANG_C.
+!>
+!>-    SPICELIB Version 2.5.0, 10-MAR-2014 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-64BIT-INTEL.
+!>
+!>-    SPICELIB Version 2.4.0, 10-MAR-2014 (BVS)
+!>
+!>        Updated for PC-LINUX-64BIT-IFORT.
+!>
+!>-    SPICELIB Version 2.3.0, 10-MAR-2014 (BVS)
+!>
+!>        Updated for PC-CYGWIN-GFORTRAN.
+!>
+!>-    SPICELIB Version 2.2.0, 10-MAR-2014 (BVS)
+!>
+!>        Updated for PC-CYGWIN-64BIT-GFORTRAN.
+!>
+!>-    SPICELIB Version 2.1.0, 10-MAR-2014 (BVS)
+!>
+!>        Updated for PC-CYGWIN-64BIT-GCC_C.
+!>
+!>-    SPICELIB Version 2.0.0, 12-APR-2012 (BVS)
+!>
+!>        Increased FTSIZE (from 1000 to 5000).
+!>
+!>-    SPICELIB Version 1.20.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-INTEL.
+!>
+!>-    SPICELIB Version 1.19.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-INTEL-CC_C.
+!>
+!>-    SPICELIB Version 1.18.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
+!>
+!>-    SPICELIB Version 1.17.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
+!>
+!>-    SPICELIB Version 1.16.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for PC-WINDOWS-64BIT-IFORT.
+!>
+!>-    SPICELIB Version 1.15.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for PC-LINUX-64BIT-GFORTRAN.
+!>
+!>-    SPICELIB Version 1.14.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for PC-64BIT-MS_C.
+!>
+!>-    SPICELIB Version 1.13.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for MAC-OSX-64BIT-INTEL_C.
+!>
+!>-    SPICELIB Version 1.12.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for MAC-OSX-64BIT-IFORT.
+!>
+!>-    SPICELIB Version 1.11.0, 13-MAY-2010 (BVS)
+!>
+!>        Updated for MAC-OSX-64BIT-GFORTRAN.
+!>
+!>-    SPICELIB Version 1.10.0, 18-MAR-2009 (BVS)
+!>
+!>        Updated for PC-LINUX-GFORTRAN.
+!>
+!>-    SPICELIB Version 1.9.0, 18-MAR-2009 (BVS)
+!>
+!>        Updated for MAC-OSX-GFORTRAN.
+!>
+!>-    SPICELIB Version 1.8.0, 19-FEB-2008 (BVS)
+!>
+!>        Updated for PC-LINUX-IFORT.
+!>
+!>-    SPICELIB Version 1.7.0, 14-NOV-2006 (BVS)
+!>
+!>        Updated for PC-LINUX-64BIT-GCC_C.
+!>
+!>-    SPICELIB Version 1.6.0, 14-NOV-2006 (BVS)
+!>
+!>        Updated for MAC-OSX-INTEL_C.
+!>
+!>-    SPICELIB Version 1.5.0, 14-NOV-2006 (BVS)
+!>
+!>        Updated for MAC-OSX-IFORT.
+!>
+!>-    SPICELIB Version 1.4.0, 14-NOV-2006 (BVS)
+!>
+!>        Updated for PC-WINDOWS-IFORT.
+!>
+!>-    SPICELIB Version 1.3.0, 26-OCT-2005 (BVS)
+!>
+!>        Updated for SUN-SOLARIS-64BIT-GCC_C.
+!>
+!>-    SPICELIB Version 1.2.0, 03-JAN-2005 (BVS)
+!>
+!>        Updated for PC-CYGWIN_C.
+!>
+!>-    SPICELIB Version 1.1.0, 03-JAN-2005 (BVS)
+!>
+!>        Updated for PC-CYGWIN.
+!>
+!>-    SPICELIB Version 1.0.1, 17-JUL-2002
+!>
+!>        Added MAC-OSX environments.
+!>
+!>-    SPICELIB Version 1.0.0, 07-NOV-2001
+!>
+!>
+!>     Unit and file table size parameters.
+!>
+!>     FTSIZE     is the maximum number of files (DAS and DAF) that a
+!>                user may have open simultaneously.
 module pepper_inc_zzddhman
 
    use pepper_kinds, only: ip
@@ -8,151 +147,6 @@ module pepper_inc_zzddhman
 
    public
 
-!
-! $ Abstract
-!
-!     Parameter declarations for the DAF/DAS handle manager.
-!
-! $ Particulars
-!
-!     This include file contains parameters defining limits and
-!     integer codes that are utilized in the DAF/DAS handle manager
-!     routines.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     F.S. Turner       (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 2.6.0, 28-NOV-2021 (BVS)
-!
-!        Updated for MAC-OSX-M1-64BIT-CLANG_C.
-!
-!-    SPICELIB Version 2.5.0, 10-MAR-2014 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-INTEL.
-!
-!-    SPICELIB Version 2.4.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-IFORT.
-!
-!-    SPICELIB Version 2.3.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-GFORTRAN.
-!
-!-    SPICELIB Version 2.2.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 2.1.0, 10-MAR-2014 (BVS)
-!
-!        Updated for PC-CYGWIN-64BIT-GCC_C.
-!
-!-    SPICELIB Version 2.0.0, 12-APR-2012 (BVS)
-!
-!        Increased FTSIZE (from 1000 to 5000).
-!
-!-    SPICELIB Version 1.20.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL.
-!
-!-    SPICELIB Version 1.19.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-CC_C.
-!
-!-    SPICELIB Version 1.18.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-INTEL-64BIT-CC_C.
-!
-!-    SPICELIB Version 1.17.0, 13-MAY-2010 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-NATIVE_C.
-!
-!-    SPICELIB Version 1.16.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-WINDOWS-64BIT-IFORT.
-!
-!-    SPICELIB Version 1.15.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 1.14.0, 13-MAY-2010 (BVS)
-!
-!        Updated for PC-64BIT-MS_C.
-!
-!-    SPICELIB Version 1.13.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-INTEL_C.
-!
-!-    SPICELIB Version 1.12.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-IFORT.
-!
-!-    SPICELIB Version 1.11.0, 13-MAY-2010 (BVS)
-!
-!        Updated for MAC-OSX-64BIT-GFORTRAN.
-!
-!-    SPICELIB Version 1.10.0, 18-MAR-2009 (BVS)
-!
-!        Updated for PC-LINUX-GFORTRAN.
-!
-!-    SPICELIB Version 1.9.0, 18-MAR-2009 (BVS)
-!
-!        Updated for MAC-OSX-GFORTRAN.
-!
-!-    SPICELIB Version 1.8.0, 19-FEB-2008 (BVS)
-!
-!        Updated for PC-LINUX-IFORT.
-!
-!-    SPICELIB Version 1.7.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-LINUX-64BIT-GCC_C.
-!
-!-    SPICELIB Version 1.6.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-INTEL_C.
-!
-!-    SPICELIB Version 1.5.0, 14-NOV-2006 (BVS)
-!
-!        Updated for MAC-OSX-IFORT.
-!
-!-    SPICELIB Version 1.4.0, 14-NOV-2006 (BVS)
-!
-!        Updated for PC-WINDOWS-IFORT.
-!
-!-    SPICELIB Version 1.3.0, 26-OCT-2005 (BVS)
-!
-!        Updated for SUN-SOLARIS-64BIT-GCC_C.
-!
-!-    SPICELIB Version 1.2.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN_C.
-!
-!-    SPICELIB Version 1.1.0, 03-JAN-2005 (BVS)
-!
-!        Updated for PC-CYGWIN.
-!
-!-    SPICELIB Version 1.0.1, 17-JUL-2002
-!
-!        Added MAC-OSX environments.
-!
-!-    SPICELIB Version 1.0.0, 07-NOV-2001
-!
-!
-!     Unit and file table size parameters.
-!
-!     FTSIZE     is the maximum number of files (DAS and DAF) that a
-!                user may have open simultaneously.
-!
    integer(ip), parameter :: ftsize = 5000
 
 !

@@ -1,5 +1,8 @@
-!> The parameters of SPICELIB's include file oscltx.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> This file declares public parameters related to the SPICELIB routine OSCLTX.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 1.0.0, 25-JAN-2017 (NJB)
 module pepper_inc_oscltx
 
    use pepper_kinds, only: ip
@@ -7,20 +10,6 @@ module pepper_inc_oscltx
    implicit none
 
    public
-
-!
-!     Include file oscltx.inc
-!
-
-! $ Abstract
-!
-!     This file declares public parameters related to
-!     the SPICELIB routine OSCLTX.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 25-JAN-2017 (NJB)
-!
 
 !
 !     Size of the OSCLTX output argument array ELTS.
@@ -34,9 +23,5 @@ module pepper_inc_oscltx
 !
 
    integer(ip), parameter :: oscxsz = 20
-
-!
-!     End of include file oscltx.inc
-!
 
 end module pepper_inc_oscltx

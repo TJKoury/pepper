@@ -1,5 +1,30 @@
-!> The parameters of SPICELIB's include file ekquery.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> EK Encoded Query Internal Parameters.
+!>
+!>     An encoded EK query is an abstract data type implemented
+!>     as an integer cell, along with a double precision cell and
+!>     a character string.  The d.p. cell and string contain numeric
+!>     and string values from the query string represented by the
+!>     encoded query.
+!>
+!>     The parameters in this file are intended for use only by the
+!>     EK encoded query access routines.  Callers of EK routines should
+!>     not use these parameters.
+!>
+!>     The following parameters are indices of specified elements
+!>     in the integer portion of the encoded query.
+!>
+!>## Version
+!>
+!>        ekquery.inc  Version 3    16-NOV-1995 (NJB)
+!>
+!>           Updated to reflect increased value of MAXCON in
+!>           ekqlimit.inc.
+!>
+!>        ekquery.inc  Version 2    03-AUG-1995 (NJB)
+!>
+!>           Updated to support representation of the SELECT clause.
+!>
+!>        ekquery.inc  Version 1    12-JAN-1995 (NJB)
 module pepper_inc_ekquery
 
    use pepper_kinds, only: ip
@@ -8,34 +33,6 @@ module pepper_inc_ekquery
 
    public
 
-!     Include Section:  EK Encoded Query Internal Parameters
-!
-!        ekquery.inc  Version 3    16-NOV-1995 (NJB)
-!
-!           Updated to reflect increased value of MAXCON in
-!           ekqlimit.inc.
-!
-!        ekquery.inc  Version 2    03-AUG-1995 (NJB)
-!
-!           Updated to support representation of the SELECT clause.
-!
-!
-!        ekquery.inc  Version 1    12-JAN-1995 (NJB)
-!
-!
-!     An encoded EK query is an abstract data type implemented
-!     as an integer cell, along with a double precision cell and
-!     a character string.  The d.p. cell and string contain numeric
-!     and string values from the query string represented by the
-!     encoded query.
-!
-!     The parameters in this file are intended for use only by the
-!     EK encoded query access routines.  Callers of EK routines should
-!     not use these parameters.
-!
-!     The following parameters are indices of specified elements
-!     in the integer portion of the encoded query.
-!
 !     Encoded query architecture type:
 !
    integer(ip), parameter :: eqarch = 2
@@ -422,9 +419,5 @@ module pepper_inc_ekquery
       + 1000 &
       + 10 * eqodsz &
       + 50 * eqsdsz
-
-!
-!     End Include Section:  EK Encoded Query Internal Parameters
-!
 
 end module pepper_inc_ekquery

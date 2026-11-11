@@ -1,5 +1,41 @@
-!> The parameters of SPICELIB's include file gf.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> This file contains public, global parameter declarations for the SPICELIB Geometry Finder (GF) subsystem.
+!>
+!>## Restrictions
+!>
+!>     None.
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman      (JPL)
+!>     L.E. Elson        (JPL)
+!>     E.D. Wright       (JPL)
+!>
+!>## Literature References
+!>
+!>     None.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 2.0.0  29-NOV-2016 (NJB)
+!>
+!>        Upgraded to support surfaces represented by DSKs.
+!>
+!>        Bug fix: removed declaration of NVRMAX parameter.
+!>
+!>-    SPICELIB Version 1.3.0, 01-OCT-2011 (NJB)
+!>
+!>       Added NWILUM parameter.
+!>
+!>-    SPICELIB Version 1.2.0, 14-SEP-2010 (EDW)
+!>
+!>       Added NWPA parameter.
+!>
+!>-    SPICELIB Version 1.1.0, 08-SEP-2009 (EDW)
+!>
+!>       Added NWRR parameter.
+!>       Added NWUDS parameter.
+!>
+!>-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (EDW)
 module pepper_inc_gf
 
    use pepper_kinds, only: ip, wp
@@ -7,49 +43,6 @@ module pepper_inc_gf
    implicit none
 
    public
-
-! $ Abstract
-!
-!     This file contains public, global parameter declarations
-!     for the SPICELIB Geometry Finder (GF) subsystem.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman      (JPL)
-!     L.E. Elson        (JPL)
-!     E.D. Wright       (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.0  29-NOV-2016 (NJB)
-!
-!        Upgraded to support surfaces represented by DSKs.
-!
-!        Bug fix: removed declaration of NVRMAX parameter.
-!
-!-    SPICELIB Version 1.3.0, 01-OCT-2011 (NJB)
-!
-!       Added NWILUM parameter.
-!
-!-    SPICELIB Version 1.2.0, 14-SEP-2010 (EDW)
-!
-!       Added NWPA parameter.
-!
-!-    SPICELIB Version 1.1.0, 08-SEP-2009 (EDW)
-!
-!       Added NWRR parameter.
-!       Added NWUDS parameter.
-!
-!-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (EDW)
-!
 
 !
 !     Root finding parameters:

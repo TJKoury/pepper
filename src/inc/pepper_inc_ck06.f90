@@ -1,5 +1,21 @@
-!> The parameters of SPICELIB's include file ck06.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> Declare parameters specific to CK type 06.
+!>
+!>## Restrictions
+!>
+!>     None.
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman      (JPL)
+!>     B.V. Semenov      (JPL)
+!>
+!>## Literature References
+!>
+!>     None.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 1.0.0, 10-MAR-2014 (NJB) (BVS)
 module pepper_inc_ck06
 
    use pepper_kinds, only: ip
@@ -7,28 +23,6 @@ module pepper_inc_ck06
    implicit none
 
    public
-
-! $ Abstract
-!
-!     Declare parameters specific to CK type 06.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman      (JPL)
-!     B.V. Semenov      (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 10-MAR-2014 (NJB) (BVS)
-!
 
 !
 !     Maximum polynomial degree supported by the current

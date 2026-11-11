@@ -1,5 +1,14 @@
-!> The parameters of SPICELIB's include file ekattdsc.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> EK Column Attribute Descriptor Parameters.
+!>
+!>     This include file declares parameters used in EK column
+!>     attribute descriptors.  Column attribute descriptors are
+!>     a simplified version of column descriptors:  attribute
+!>     descriptors describe attributes of a column but do not contain
+!>     addresses or pointers.
+!>
+!>## Version
+!>
+!>        ekattdsc.inc Version 1    23-AUG-1995 (NJB)
 module pepper_inc_ekattdsc
 
    use pepper_kinds, only: ip
@@ -8,18 +17,6 @@ module pepper_inc_ekattdsc
 
    public
 
-!     Include Section:  EK Column Attribute Descriptor Parameters
-!
-!        ekattdsc.inc Version 1    23-AUG-1995 (NJB)
-!
-!
-!     This include file declares parameters used in EK column
-!     attribute descriptors.  Column attribute descriptors are
-!     a simplified version of column descriptors:  attribute
-!     descriptors describe attributes of a column but do not contain
-!     addresses or pointers.
-!
-!
 !     Size of column attribute descriptor
 !
    integer(ip), parameter :: adscsz = 6
@@ -69,9 +66,5 @@ module pepper_inc_ekattdsc
 !     ITRUE if nulls are permitted and IFALSE otherwise.
 !
    integer(ip), parameter :: attnfl = attidx + 1
-
-!
-!     End Include Section:  EK Column Attribute Descriptor Parameters
-!
 
 end module pepper_inc_ekattdsc

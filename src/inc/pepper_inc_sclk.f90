@@ -1,5 +1,35 @@
-!> The parameters of SPICELIB's include file sclk.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> The parameters below define sizes and limits used by the SCLK system.
+!>
+!> SPICE private file intended solely for the support of SPICE routines.  Users should not include this file directly due to the volatile nature of this file
+!>
+!>## Parameters
+!>
+!>     See the declaration section below.
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman    (JPL)
+!>
+!>## Literature References
+!>
+!>     None.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 2.0.1, 20-OCT-2020 (NJB)
+!>
+!>        Increased MXCOEF to 100000.
+!>
+!>        Updated comments with reminder to keep constants declared
+!>        in the include file zzsc01.inc synced with constants in
+!>        this file.
+!>
+!>-    SPICELIB Version 2.0.0, 24-MAY-2010 (NJB)
+!>
+!>        Increased value of maximum coefficient record count
+!>        parameter MXCOEF from 10K to 50K.
+!>
+!>-    SPICELIB Version 1.0.0, 11-FEB-2008 (NJB)
 module pepper_inc_sclk
 
    use pepper_kinds, only: ip
@@ -7,47 +37,6 @@ module pepper_inc_sclk
    implicit none
 
    public
-
-! $ Abstract
-!
-!     Include file sclk.inc
-!
-!     SPICE private file intended solely for the support of SPICE
-!     routines.  Users should not include this file directly due
-!     to the volatile nature of this file
-!
-!     The parameters below define sizes and limits used by
-!     the SCLK system.
-!
-! $ Parameters
-!
-!     See the declaration section below.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman    (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 2.0.1, 20-OCT-2020 (NJB)
-!
-!        Increased MXCOEF to 100000.
-!
-!        Updated comments with reminder to keep constants declared
-!        in the include file zzsc01.inc synced with constants in
-!        this file.
-!
-!-    SPICELIB Version 2.0.0, 24-MAY-2010 (NJB)
-!
-!        Increased value of maximum coefficient record count
-!        parameter MXCOEF from 10K to 50K.
-!
-!-    SPICELIB Version 1.0.0, 11-FEB-2008 (NJB)
-!
 
 !
 !        NOTE: many of the declarations present here are duplicated
@@ -106,9 +95,5 @@ module pepper_inc_sclk
 !     Maximum number of supported parallel time systems:
 !
    integer(ip), parameter :: mxtsys = 2
-
-!
-!     End of include file sclk.inc
-!
 
 end module pepper_inc_sclk

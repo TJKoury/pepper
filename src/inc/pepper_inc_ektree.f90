@@ -1,5 +1,79 @@
-!> The parameters of SPICELIB's include file ektree.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> EK Tree Parameters.
+!>
+!>     The parameters in this file define the tree structure
+!>     used by the EK system.  This structure is a variant of the
+!>     B*-tree structure described in Knuth's book, that is
+!>
+!>     The trees used in the EK system differ from generic B*-trees
+!>     primarily in the way keys are treated.  Rather than storing
+!>     unique primary key values in each node, EK trees store integer
+!>     counts that represent the ordinal position of each data value,
+!>     counting from the lowest indexed element in the subtree whose
+!>     root is the node in question.  Thus the keys are unique within
+!>     a node but not across multiple nodes:  in fact the Nth key in
+!>     every leaf node is N.  The absolute ordinal position of a data
+!>     item is defined recursively as the sum of the key of the data item
+!>     and the absolute ordinal position of the data item in the parent
+!>     node that immediately precedes all elements of the node in
+!>     question.  This data structure allows EK trees to support lookup
+!>     of data items based on their ordinal position in a data set.  The
+!>     two prime applications of this capability in the EK system are:
+!>
+!>     The following parameters give the maximum number of children
+!>     allowed in the root and child nodes.  During insertions, the
+!>     number of children may overflow by 1.
+!>
+!>## Version
+!>
+!>        ektree.inc  Version 3    22-OCT-1995 (NJB)
+!>
+!>         Knuth, Donald E.  "The Art of Computer Programming,
+!>         Volume 3/Sorting and Searching" 1973, pp 471-479.
+!>
+!>        1) Using trees to index the records in a table, allowing
+!>           the Nth record to be located efficiently.
+!>
+!>        2) Using trees to implement order vectors that can be
+!>           maintained when insertions and deletions are done.
+!>
+!>                           Root node
+!>
+!>        +--------------------------------------------+
+!>        |              Tree version code             |
+!>        +--------------------------------------------+
+!>        |           Number of nodes in tree          |
+!>        +--------------------------------------------+
+!>        |            Number of keys in tree          |
+!>        +--------------------------------------------+
+!>        |                Depth of tree               |
+!>        +--------------------------------------------+
+!>        |            Number of keys in root          |
+!>        +--------------------------------------------+
+!>        |              Space for n keys,             |
+!>        |                                            |
+!>        |        n = 2 * INT( ( 2*m - 2 )/3 )        |
+!>        |                                            |
+!>        |  where m is the max number of children per |
+!>        |          node in the child nodes           |
+!>        +--------------------------------------------+
+!>        |        Space for n+1 child pointers,       |
+!>        |         where n is as defined above.       |
+!>        +--------------------------------------------+
+!>        |          Space for n data pointers,        |
+!>        |         where n is as defined above.       |
+!>        +--------------------------------------------+
+!>
+!>                           Child node
+!>
+!>        +--------------------------------------------+
+!>        |        Number of keys present in node      |
+!>        +--------------------------------------------+
+!>        |              Space for m-1 keys            |
+!>        +--------------------------------------------+
+!>        |         Space for m child pointers         |
+!>        +--------------------------------------------+
+!>        |         Space for m-1 data pointers        |
+!>        +--------------------------------------------+
 module pepper_inc_ektree
 
    use pepper_kinds, only: ip
@@ -8,89 +82,6 @@ module pepper_inc_ektree
 
    public
 
-!     Include Section:  EK Tree Parameters
-!
-!        ektree.inc  Version 3    22-OCT-1995 (NJB)
-!
-!
-!     The parameters in this file define the tree structure
-!     used by the EK system.  This structure is a variant of the
-!     B*-tree structure described in Knuth's book, that is
-!
-!         Knuth, Donald E.  "The Art of Computer Programming,
-!         Volume 3/Sorting and Searching" 1973, pp 471-479.
-!
-!     The trees used in the EK system differ from generic B*-trees
-!     primarily in the way keys are treated.  Rather than storing
-!     unique primary key values in each node, EK trees store integer
-!     counts that represent the ordinal position of each data value,
-!     counting from the lowest indexed element in the subtree whose
-!     root is the node in question.  Thus the keys are unique within
-!     a node but not across multiple nodes:  in fact the Nth key in
-!     every leaf node is N.  The absolute ordinal position of a data
-!     item is defined recursively as the sum of the key of the data item
-!     and the absolute ordinal position of the data item in the parent
-!     node that immediately precedes all elements of the node in
-!     question.  This data structure allows EK trees to support lookup
-!     of data items based on their ordinal position in a data set.  The
-!     two prime applications of this capability in the EK system are:
-!
-!        1) Using trees to index the records in a table, allowing
-!           the Nth record to be located efficiently.
-!
-!        2) Using trees to implement order vectors that can be
-!           maintained when insertions and deletions are done.
-!
-!
-!
-!                           Root node
-!
-!        +--------------------------------------------+
-!        |              Tree version code             |
-!        +--------------------------------------------+
-!        |           Number of nodes in tree          |
-!        +--------------------------------------------+
-!        |            Number of keys in tree          |
-!        +--------------------------------------------+
-!        |                Depth of tree               |
-!        +--------------------------------------------+
-!        |            Number of keys in root          |
-!        +--------------------------------------------+
-!        |              Space for n keys,             |
-!        |                                            |
-!        |        n = 2 * INT( ( 2*m - 2 )/3 )        |
-!        |                                            |
-!        |  where m is the max number of children per |
-!        |          node in the child nodes           |
-!        +--------------------------------------------+
-!        |        Space for n+1 child pointers,       |
-!        |         where n is as defined above.       |
-!        +--------------------------------------------+
-!        |          Space for n data pointers,        |
-!        |         where n is as defined above.       |
-!        +--------------------------------------------+
-!
-!
-!                           Child node
-!
-!        +--------------------------------------------+
-!        |        Number of keys present in node      |
-!        +--------------------------------------------+
-!        |              Space for m-1 keys            |
-!        +--------------------------------------------+
-!        |         Space for m child pointers         |
-!        +--------------------------------------------+
-!        |         Space for m-1 data pointers        |
-!        +--------------------------------------------+
-!
-!
-!
-!
-!     The following parameters give the maximum number of children
-!     allowed in the root and child nodes.  During insertions, the
-!     number of children may overflow by 1.
-!
-!
 !     Maximum number of children allowed in a child node:
 !
    integer(ip), parameter :: mxkidc = 63
@@ -232,9 +223,5 @@ module pepper_inc_ektree
 !     tree of depth 6.
 !
    integer(ip), parameter :: trmxdp = 10
-
-!
-!     End Include Section:  EK Tree Parameters
-!
 
 end module pepper_inc_ektree

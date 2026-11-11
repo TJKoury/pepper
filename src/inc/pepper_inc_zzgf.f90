@@ -1,5 +1,23 @@
-!> The parameters of SPICELIB's include file zzgf.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> This file contains private, global parameter declarations for the SPICELIB Geometry Finder (GF) subsystem.
+!>
+!> SPICE private include file intended solely for the support of SPICE routines. Users should not include this routine in their source code due to the volatile nature of this file.
+!>
+!>## Restrictions
+!>
+!>     None.
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman      (JPL)
+!>     E.D. Wright       (JPL)
+!>
+!>## Literature References
+!>
+!>     None.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 1.0.0, 17-FEB-2009 (NJB) (EDW)
 module pepper_inc_zzgf
 
    use pepper_kinds, only: ip
@@ -7,33 +25,6 @@ module pepper_inc_zzgf
    implicit none
 
    public
-
-! $ Abstract
-!
-!     SPICE private include file intended solely for the support of
-!     SPICE routines. Users should not include this routine in their
-!     source code due to the volatile nature of this file.
-!
-!     This file contains private, global parameter declarations
-!     for the SPICELIB Geometry Finder (GF) subsystem.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman      (JPL)
-!     E.D. Wright       (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 17-FEB-2009 (NJB) (EDW)
-!
 
 !
 !     The set of supported coordinate systems

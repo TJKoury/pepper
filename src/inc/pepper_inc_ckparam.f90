@@ -1,5 +1,36 @@
-!> The parameters of SPICELIB's include file ckparam.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> Declarations of the CK data type specific and general CK low level routine parameters.
+!>
+!>## Restrictions
+!>
+!>     1) If new CK types are added, the size of the record passed
+!>        between CKRxx and CKExx must be registered as separate
+!>        parameter. If this size will be greater than current value
+!>        of the CKMRSZ parameter (which specifies the maximum record
+!>        size for the record buffer used inside CKPFS) then it should
+!>        be assigned to CKMRSZ as a new value.
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman      (JPL)
+!>     B.V. Semenov      (JPL)
+!>
+!>## Literature References
+!>
+!>     CK Required Reading.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 3.0.0, 27-JAN-2014 (NJB)
+!>
+!>        Updated to support CK type 6. Maximum degree for
+!>        type 5 was updated to be consistent with the
+!>        maximum degree for type 6.
+!>
+!>-    SPICELIB Version 2.0.0, 19-AUG-2002 (NJB)
+!>
+!>        Updated to support CK type 5.
+!>
+!>-    SPICELIB Version 1.0.0, 05-APR-1999 (BVS)
 module pepper_inc_ckparam
 
    use pepper_kinds, only: ip, wp
@@ -7,44 +38,6 @@ module pepper_inc_ckparam
    implicit none
 
    public
-
-! $ Abstract
-!
-!     Declarations of the CK data type specific and general CK low
-!     level routine parameters.
-!
-! $ Restrictions
-!
-!     1) If new CK types are added, the size of the record passed
-!        between CKRxx and CKExx must be registered as separate
-!        parameter. If this size will be greater than current value
-!        of the CKMRSZ parameter (which specifies the maximum record
-!        size for the record buffer used inside CKPFS) then it should
-!        be assigned to CKMRSZ as a new value.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman      (JPL)
-!     B.V. Semenov      (JPL)
-!
-! $ Literature_References
-!
-!     CK Required Reading.
-!
-! $ Version
-!
-!-    SPICELIB Version 3.0.0, 27-JAN-2014 (NJB)
-!
-!        Updated to support CK type 6. Maximum degree for
-!        type 5 was updated to be consistent with the
-!        maximum degree for type 6.
-!
-!-    SPICELIB Version 2.0.0, 19-AUG-2002 (NJB)
-!
-!        Updated to support CK type 5.
-!
-!-    SPICELIB Version 1.0.0, 05-APR-1999 (BVS)
-!
 
 !
 !     Number of quaternion components and number of quaternion and

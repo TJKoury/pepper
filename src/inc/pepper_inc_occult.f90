@@ -1,5 +1,21 @@
-!> The parameters of SPICELIB's include file occult.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> This file contains public, global parameter declarations for the SPICELIB occultation routines.
+!>
+!>## Restrictions
+!>
+!>     None.
+!>
+!>## Author and Institution
+!>
+!>     S.C. Krening      (JPL)
+!>     N.J. Bachman      (JPL)
+!>
+!>## Literature References
+!>
+!>     None.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 1.0.0, 24-JAN-2012 (SCK) (NJB)
 module pepper_inc_occult
 
    use pepper_kinds, only: ip
@@ -7,29 +23,6 @@ module pepper_inc_occult
    implicit none
 
    public
-
-! $ Abstract
-!
-!     This file contains public, global parameter declarations
-!     for the SPICELIB occultation routines.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     S.C. Krening      (JPL)
-!     N.J. Bachman      (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 24-JAN-2012 (SCK) (NJB)
-!
 
 !
 !     The following integer codes indicate the geometric relationship
@@ -94,9 +87,5 @@ module pepper_inc_occult
    integer(ip), parameter :: annlr2 = 2
 
    integer(ip), parameter :: total2 = 3
-
-!
-!     End include file occult.inc
-!
 
 end module pepper_inc_occult

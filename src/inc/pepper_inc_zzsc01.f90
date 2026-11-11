@@ -1,5 +1,18 @@
-!> The parameters of SPICELIB's include file zzsc01.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> Include file for SPICE-private declarations of SC01.
+!>
+!>     SPICE private file intended solely for the support of SPICE
+!>     routines. Users should not include this file directly due
+!>     to the volatile nature of this file.
+!>
+!>    Parameters copied from sclk.inc:
+!>
+!>## Version
+!>
+!>-    Version 1.0.0, 11-NOV-2020
+!>
+!>        NOTE: these declarations are duplicated in the include file
+!>        sclk.inc. Those declarations must be kept in sync with
+!>        these ones.
 module pepper_inc_zzsc01
 
    use pepper_kinds, only: ip
@@ -8,26 +21,6 @@ module pepper_inc_zzsc01
 
    public
 
-!
-!     Include file zzsclk01.inc
-!
-!     SPICE private file intended solely for the support of SPICE
-!     routines. Users should not include this file directly due
-!     to the volatile nature of this file.
-!
-!     Include file for SPICE-private declarations of SC01.
-!
-!-    Version 1.0.0, 11-NOV-2020
-!
-
-!
-!    Parameters copied from sclk.inc:
-!
-!        NOTE: these declarations are duplicated in the include file
-!        sclk.inc. Those declarations must be kept in sync with
-!        these ones.
-!
-!
 !     Number of supported SCLK field delimiters:
 !
    integer(ip), parameter :: ndelim = 5
@@ -165,9 +158,5 @@ module pepper_inc_zzsc01
 !     The add-only hash pool for frame IDs is singly linked.
 !
    integer(ip), parameter :: cplsiz = mxnclk - lbsngl + 1
-
-!
-!     End include file zzsc01.inc
-!
 
 end module pepper_inc_zzsc01

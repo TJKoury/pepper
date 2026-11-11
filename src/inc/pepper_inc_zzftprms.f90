@@ -1,5 +1,16 @@
-!> The parameters of SPICELIB's include file zzftprms.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> Private FTP Validation String Parameters.
+!>
+!>     This include file centralizes the definition of string sizes
+!>     and other parameters that are necessary to properly implement
+!>     the FTP error detection scheme for binary kernels.
+!>
+!>     Before making any alterations to the contents of this file,
+!>     refer to the header of ZZFTPSTR for a detailed discussion of
+!>     the FTP validation string.
+!>
+!>## Version
+!>
+!>        zzftprms.inc Version 1    01-MAR-1999 (FST)
 module pepper_inc_zzftprms
 
    use pepper_kinds, only: ip
@@ -8,18 +19,6 @@ module pepper_inc_zzftprms
 
    public
 
-!     Include Section:  Private FTP Validation String Parameters
-!
-!        zzftprms.inc Version 1    01-MAR-1999 (FST)
-!
-!     This include file centralizes the definition of string sizes
-!     and other parameters that are necessary to properly implement
-!     the FTP error detection scheme for binary kernels.
-!
-!     Before making any alterations to the contents of this file,
-!     refer to the header of ZZFTPSTR for a detailed discussion of
-!     the FTP validation string.
-!
 !     Size of FTP Test String Component:
 !
    integer(ip), parameter :: sizstr = 16
@@ -54,9 +53,5 @@ module pepper_inc_zzftprms
 !     Number of character clusters present in the validation string.
 !
    integer(ip), parameter :: numtst = 6
-
-!
-!     End Include Section:  Private FTP Validation String Parameters
-!
 
 end module pepper_inc_zzftprms

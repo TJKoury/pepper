@@ -1,5 +1,20 @@
-!> The parameters of SPICELIB's include file spk02.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> Declare parameters specific to SPK type 2.
+!>
+!>## Restrictions
+!>
+!>     None.
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman      (JPL)
+!>
+!>## Literature References
+!>
+!>     None.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 1.0.0, 30-DEC-2013 (NJB)
 module pepper_inc_spk02
 
    use pepper_kinds, only: ip, wp
@@ -7,27 +22,6 @@ module pepper_inc_spk02
    implicit none
 
    public
-
-! $ Abstract
-!
-!     Declare parameters specific to SPK type 2.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman      (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 30-DEC-2013 (NJB)
-!
 
 !     MAXDEG         is the maximum allowed degree of the input
 !                    Chebyshev expansions. If the value of MAXDEG is
@@ -71,9 +65,5 @@ module pepper_inc_spk02
 !     of the segment coverage interval:
 !
    real(wp), parameter :: tolscl = 1.0e-13_wp
-
-!
-!     End of include file spk02.inc.
-!
 
 end module pepper_inc_spk02

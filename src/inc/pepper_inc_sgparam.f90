@@ -1,5 +1,113 @@
-!> The parameters of SPICELIB's include file sgparam.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> Parameter declarations for the generic segments subroutines.
+!>
+!>## Particulars
+!>
+!>     This include file contains the parameters used by the generic
+!>     segments subroutines, SGxxxx. A generic segment is a
+!>     generalization of a DAF array which places a particular structure
+!>     on the data contained in the array, as described below.
+!>
+!>     This file defines the mnemonics that are used for the index types
+!>     allowed in generic segments as well as mnemonics for the meta data
+!>     items which are used to describe a generic segment.
+!>
+!>     A DAF generic segment contains several logical data partitions:
+!>
+!>        1) A partition for constant values to be associated with each
+!>           data packet in the segment.
+!>
+!>        2) A partition for the data packets.
+!>
+!>        3) A partition for reference values.
+!>
+!>        4) A partition for a packet directory, if the segment contains
+!>           variable sized packets.
+!>
+!>        5) A partition for a reference value directory.
+!>
+!>        6) A reserved partition that is not currently used. This
+!>           partition is only for the use of the NAIF group at the Jet
+!>           Propulsion Laboratory (JPL).
+!>
+!>        7) A partition for the meta data which describes the locations
+!>           and sizes of other partitions as well as providing some
+!>           additional descriptive information about the generic
+!>           segment.
+!>
+!>                 +============================+
+!>                 |         Constants          |
+!>                 +============================+
+!>                 |          Packet 1          |
+!>                 |----------------------------|
+!>                 |          Packet 2          |
+!>                 |----------------------------|
+!>                 |              .             |
+!>                 |              .             |
+!>                 |              .             |
+!>                 |----------------------------|
+!>                 |          Packet N          |
+!>                 +============================+
+!>                 |      Reference Values      |
+!>                 +============================+
+!>                 |      Packet Directory      |
+!>                 +============================+
+!>                 |    Reference  Directory    |
+!>                 +============================+
+!>                 |       Reserved  Area       |
+!>                 +============================+
+!>                 |     Segment Meta Data      |
+!>                 +----------------------------+
+!>
+!>     Only the placement of the meta data at the end of a generic
+!>     segment is required. The other data partitions may occur in any
+!>     order in the generic segment because the meta data will contain
+!>     pointers to their appropriate locations within the generic
+!>     segment.
+!>
+!>     The meta data for a generic segment should only be obtained
+!>     through use of the subroutine SGMETA. The meta data should not be
+!>     written through any mechanism other than the ending of a generic
+!>     segment begun by SGBWFS or SGBWVS using SGWES.
+!>
+!>## Restrictions
+!>
+!>     1) If new reference index types are added, the new type(s) should
+!>        be defined to be the consecutive integer(s) after the last
+!>        defined reference index type used. In this way a value for
+!>        the maximum allowed index type may be maintained. This value
+!>        must also be updated if new reference index types are added.
+!>
+!>     2) If new meta data items are needed, mnemonics for them must be
+!>        added to the end of the current list of mnemonics and before
+!>        the NMETA mnemonic. In this way compatibility with files having
+!>        a different, but smaller, number of meta data items may be
+!>        maintained. See the description and example below.
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman      (JPL)
+!>     K.R. Gehringer    (JPL)
+!>     W.L. Taber        (JPL)
+!>     F.S. Turner       (JPL)
+!>
+!>## Literature References
+!>
+!>     Generic Segments Required Reading.
+!>     DAF Required Reading.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 1.1.1, 28-JAN-2004 (NJB)
+!>
+!>        Header update: equations for comptutations of packet indices
+!>        for the cases of index types 0 and 1 were corrected.
+!>
+!>-    SPICELIB Version 1.1.0, 25-09-98 (FST)
+!>
+!>        Added parameter MNMETA, the minimum number of meta data items
+!>        that must be present in a generic DAF segment.
+!>
+!>-    SPICELIB Version 1.0.0, 04-03-95 (KRG) (WLT)
 module pepper_inc_sgparam
 
    use pepper_kinds, only: ip
@@ -7,121 +115,6 @@ module pepper_inc_sgparam
    implicit none
 
    public
-
-!
-! $ Abstract
-!
-!     Parameter declarations for the generic segments subroutines.
-!
-! $ Particulars
-!
-!     This include file contains the parameters used by the generic
-!     segments subroutines, SGxxxx. A generic segment is a
-!     generalization of a DAF array which places a particular structure
-!     on the data contained in the array, as described below.
-!
-!     This file defines the mnemonics that are used for the index types
-!     allowed in generic segments as well as mnemonics for the meta data
-!     items which are used to describe a generic segment.
-!
-!     A DAF generic segment contains several logical data partitions:
-!
-!        1) A partition for constant values to be associated with each
-!           data packet in the segment.
-!
-!        2) A partition for the data packets.
-!
-!        3) A partition for reference values.
-!
-!        4) A partition for a packet directory, if the segment contains
-!           variable sized packets.
-!
-!        5) A partition for a reference value directory.
-!
-!        6) A reserved partition that is not currently used. This
-!           partition is only for the use of the NAIF group at the Jet
-!           Propulsion Laboratory (JPL).
-!
-!        7) A partition for the meta data which describes the locations
-!           and sizes of other partitions as well as providing some
-!           additional descriptive information about the generic
-!           segment.
-!
-!                 +============================+
-!                 |         Constants          |
-!                 +============================+
-!                 |          Packet 1          |
-!                 |----------------------------|
-!                 |          Packet 2          |
-!                 |----------------------------|
-!                 |              .             |
-!                 |              .             |
-!                 |              .             |
-!                 |----------------------------|
-!                 |          Packet N          |
-!                 +============================+
-!                 |      Reference Values      |
-!                 +============================+
-!                 |      Packet Directory      |
-!                 +============================+
-!                 |    Reference  Directory    |
-!                 +============================+
-!                 |       Reserved  Area       |
-!                 +============================+
-!                 |     Segment Meta Data      |
-!                 +----------------------------+
-!
-!     Only the placement of the meta data at the end of a generic
-!     segment is required. The other data partitions may occur in any
-!     order in the generic segment because the meta data will contain
-!     pointers to their appropriate locations within the generic
-!     segment.
-!
-!     The meta data for a generic segment should only be obtained
-!     through use of the subroutine SGMETA. The meta data should not be
-!     written through any mechanism other than the ending of a generic
-!     segment begun by SGBWFS or SGBWVS using SGWES.
-!
-! $ Restrictions
-!
-!     1) If new reference index types are added, the new type(s) should
-!        be defined to be the consecutive integer(s) after the last
-!        defined reference index type used. In this way a value for
-!        the maximum allowed index type may be maintained. This value
-!        must also be updated if new reference index types are added.
-!
-!     2) If new meta data items are needed, mnemonics for them must be
-!        added to the end of the current list of mnemonics and before
-!        the NMETA mnemonic. In this way compatibility with files having
-!        a different, but smaller, number of meta data items may be
-!        maintained. See the description and example below.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman      (JPL)
-!     K.R. Gehringer    (JPL)
-!     W.L. Taber        (JPL)
-!     F.S. Turner       (JPL)
-!
-! $ Literature_References
-!
-!     Generic Segments Required Reading.
-!     DAF Required Reading.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.1.1, 28-JAN-2004 (NJB)
-!
-!        Header update: equations for comptutations of packet indices
-!        for the cases of index types 0 and 1 were corrected.
-!
-!-    SPICELIB Version 1.1.0, 25-09-98 (FST)
-!
-!        Added parameter MNMETA, the minimum number of meta data items
-!        that must be present in a generic DAF segment.
-!
-!-    SPICELIB Version 1.0.0, 04-03-95 (KRG) (WLT)
-!
 
 !
 !     Mnemonics for the type of reference value index.

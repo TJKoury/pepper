@@ -1,5 +1,20 @@
-!> The parameters of SPICELIB's include file ck05.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> Declare parameters specific to CK type 05.
+!>
+!>## Restrictions
+!>
+!>     None.
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman      (JPL)
+!>
+!>## Literature References
+!>
+!>     None.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 1.0.0, 20-AUG-2002 (NJB)
 module pepper_inc_ck05
 
    use pepper_kinds, only: ip
@@ -7,27 +22,6 @@ module pepper_inc_ck05
    implicit none
 
    public
-
-! $ Abstract
-!
-!     Declare parameters specific to CK type 05.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman      (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 20-AUG-2002 (NJB)
-!
 
 !
 !     CK type 5 subtype codes:

@@ -1,5 +1,59 @@
-!> The parameters of SPICELIB's include file dsk02.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> This include file declares parameters for DSK data type 2 (plate model).
+!>
+!>     Each type 2 DSK segment has integer, d.p., and character
+!>     components.  The segment layout in DAS address space is as
+!>     follows:
+!>
+!>## Version
+!>
+!>-       SPICELIB Version 1.0.0 08-FEB-2017 (NJB)
+!>
+!>          Updated version info.
+!>
+!>           22-JAN-2016 (NJB)
+!>
+!>              Now includes spatial index parameters.
+!>
+!>           26-MAR-2015 (NJB)
+!>
+!>              Updated to increase MAXVRT to 16000002. MAXNPV
+!>              has been changed to (3/2)*MAXPLT. Set MAXVOX
+!>              to 100000000.
+!>
+!>           13-MAY-2010 (NJB)
+!>
+!>              Updated to reflect new no-record design.
+!>
+!>           04-MAY-2010 (NJB)
+!>
+!>              Updated for new type 2 segment design. Now uses
+!>              a local parameter to represent DSK descriptor
+!>              size (NB).
+!>
+!>           13-SEP-2008 (NJB)
+!>
+!>              Updated to remove albedo information.
+!>              Updated to use parameter for DSK descriptor size.
+!>
+!>           27-DEC-2006 (NJB)
+!>
+!>              Updated to remove minimum and maximum radius information
+!>              from segment layout.  These bounds are now included
+!>              in the segment descriptor.
+!>
+!>           26-OCT-2006 (NJB)
+!>
+!>              Updated to remove normal, center, longest side, albedo,
+!>              and area keyword parameters.
+!>
+!>           04-AUG-2006 (NJB)
+!>
+!>              Updated to support coarse voxel grid.  Area data
+!>              have now been removed.
+!>
+!>           10-JUL-2006 (NJB)
+!>
+!>        Integer layout:
 module pepper_inc_dsk02
 
    use pepper_kinds, only: ip
@@ -8,67 +62,6 @@ module pepper_inc_dsk02
 
    public
 
-!
-!     Include file dsk02.inc
-!
-!     This include file declares parameters for DSK data type 2
-!     (plate model).
-!
-!-       SPICELIB Version 1.0.0 08-FEB-2017 (NJB)
-!
-!          Updated version info.
-!
-!           22-JAN-2016 (NJB)
-!
-!              Now includes spatial index parameters.
-!
-!           26-MAR-2015 (NJB)
-!
-!              Updated to increase MAXVRT to 16000002. MAXNPV
-!              has been changed to (3/2)*MAXPLT. Set MAXVOX
-!              to 100000000.
-!
-!           13-MAY-2010 (NJB)
-!
-!              Updated to reflect new no-record design.
-!
-!           04-MAY-2010 (NJB)
-!
-!              Updated for new type 2 segment design. Now uses
-!              a local parameter to represent DSK descriptor
-!              size (NB).
-!
-!           13-SEP-2008 (NJB)
-!
-!              Updated to remove albedo information.
-!              Updated to use parameter for DSK descriptor size.
-!
-!           27-DEC-2006 (NJB)
-!
-!              Updated to remove minimum and maximum radius information
-!              from segment layout.  These bounds are now included
-!              in the segment descriptor.
-!
-!           26-OCT-2006 (NJB)
-!
-!              Updated to remove normal, center, longest side, albedo,
-!              and area keyword parameters.
-!
-!           04-AUG-2006 (NJB)
-!
-!              Updated to support coarse voxel grid.  Area data
-!              have now been removed.
-!
-!           10-JUL-2006 (NJB)
-!
-!
-!     Each type 2 DSK segment has integer, d.p., and character
-!     components.  The segment layout in DAS address space is as
-!     follows:
-!
-!
-!        Integer layout:
-!
 !           +-----------------+
 !           | NV              |  (# of vertices)
 !           +-----------------+
@@ -365,9 +358,5 @@ module pepper_inc_dsk02
    integer(ip), parameter :: spaisz = ixifix + maxvxp &
       + mxnvls + maxvrt &
       + maxnpv
-
-!
-!     End of include file dsk02.inc
-!
 
 end module pepper_inc_dsk02

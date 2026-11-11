@@ -1,5 +1,20 @@
-!> The parameters of SPICELIB's include file spk18.inc (an include
-!> file until PEPPER; tools/inc_to_modules.py). Its comments follow.
+!> Declare parameters specific to SPK type 18.
+!>
+!>## Restrictions
+!>
+!>     None.
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman      (JPL)
+!>
+!>## Literature References
+!>
+!>     None.
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 1.0.0, 18-AUG-2002 (NJB)
 module pepper_inc_spk18
 
    use pepper_kinds, only: ip
@@ -7,27 +22,6 @@ module pepper_inc_spk18
    implicit none
 
    public
-
-! $ Abstract
-!
-!     Declare parameters specific to SPK type 18.
-!
-! $ Restrictions
-!
-!     None.
-!
-! $ Author_and_Institution
-!
-!     N.J. Bachman      (JPL)
-!
-! $ Literature_References
-!
-!     None.
-!
-! $ Version
-!
-!-    SPICELIB Version 1.0.0, 18-AUG-2002 (NJB)
-!
 
 !
 !     SPK type 18 subtype codes:
@@ -51,9 +45,5 @@ module pepper_inc_spk18
    integer(ip), parameter :: s18ps0 = 12
 
    integer(ip), parameter :: s18ps1 = 6
-
-!
-!     End of include file spk18.inc.
-!
 
 end module pepper_inc_spk18
