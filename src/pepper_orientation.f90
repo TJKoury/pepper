@@ -11,39 +11,39 @@ submodule (pepper_instance) pepper_orientation
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SC       is a NAIF ID code for a spacecraft, whose
       !>              spacecraft clock `type' is desired.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the spacecraft clock type associated with
       !>     the spacecraft specified by SC.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the kernel variable that assigns a SCLK type to the
       !>         spacecraft specified by SC is not found in the kernel pool, an
       !>         error is signaled by a routine in the call tree of this
       !>         routine. SCTYPE returns the value 0 in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The raison d'etre of this routine is that it consolidates the code
       !>     that maps spacecraft ID's to clock types. While any routine may
       !>     call SCTYPE, it is unlikely that there will be a need for
       !>     non-SPICELIB routines to call this routine directly.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Find the SCLK type for Galileo.
       !>
@@ -83,17 +83,17 @@ contains
       !>
       !>                      PRINT *, 'Mars Observer clock type is ', TYPE
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that an SCLK kernel appropriate to the
       !>         spacecraft specified by SC has been loaded into the kernel
       !>         pool.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -102,7 +102,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.0, 12-AUG-2021 (NJB) (JDR)
       !>
@@ -164,7 +164,7 @@ contains
       return
       end procedure sctype
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     REF      is the NAIF name for an inertial reference frame.
       !>              Acceptable names include:
@@ -223,7 +223,7 @@ contains
       !>              from the observer to the body at the epoch of
       !>              observation.)
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TSIPM    is a 6x6 transformation matrix. It is used to
       !>              transform states from inertial coordinates to body
@@ -270,11 +270,11 @@ contains
       !>              The SPICELIB routine INVSTM is available for producing
       !>              this inverse.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If data required to define the body-fixed frame associated
       !>         with BODY are not found in the binary PCK system or the kernel
@@ -326,11 +326,11 @@ contains
       !>         body is present but has a value outside the range 1:3,
       !>         the error SPICE(DEGREEOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Note: NAIF recommends the use of SPKEZR with the appropriate
       !>     frames kernels when possible over TISBOD.
@@ -440,7 +440,7 @@ contains
       !>                          d      '-----
       !>                                    i
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -696,17 +696,17 @@ contains
       !>        Angular velocity using XF2RAV (km/s):
       !>             0.000014001     0.000011995     0.000162744
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel pool must be loaded with the appropriate
       !>         coefficients (from a text or binary PCK file) prior to calling
       !>         this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -714,7 +714,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.5.1, 16-DEC-2021 (NJB) (JDR)
       !>
@@ -812,7 +812,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 05-NOV-1990 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 4.5.0, 26-JUL-2016 (BVS)
       !>
@@ -1708,13 +1708,13 @@ contains
       end associate
       end procedure tisbod
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FRCODE   is the unique frame class ID of the TK frame for which
       !>              data is being requested. For TK frames the frame class
       !>              ID is always equal to the frame ID.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ROT      is a position rotation matrix that converts positions
       !>              relative to the TK frame given by its frame class ID,
@@ -1740,14 +1740,14 @@ contains
       !>              constructed, FOUND will be returned with the value .TRUE.
       !>              Otherwise it will be returned with the value .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     BUFSIZ   is the number of rotation, frame class ID pairs that can
       !>              have their instance data buffered for the sake of
       !>              improving run-time performance. This value MUST be
       !>              positive and should probably be at least 10.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If some kernel variable associated with this frame is not
       !>         present in the kernel pool, or does not have the proper type
@@ -1779,12 +1779,12 @@ contains
       !>         SPICE(COMPETINGFRAMESPEC) is signaled. FOUND will be set to
       !>         .FALSE.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of the loaded text kernels to determine
       !>     the rotation from a constant offset TK frame to its base frame.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used to construct the rotation from some frame
       !>     that is a constant rotation offset from some other reference
@@ -1796,7 +1796,7 @@ contains
       !>     directly retrieve the rotation from an fixed offset TK frame to
       !>     its base frame.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1915,15 +1915,15 @@ contains
       !>           Latitude  (deg):    148.9819650021110
       !>           Longitude (deg):    -35.3984778756552
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -1931,7 +1931,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     F.S. Turner        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.3.0, 20-AUG-2021 (JDR) (BVS) (NJB)
       !>
@@ -2666,7 +2666,7 @@ contains
       end associate
       end procedure tkfram
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -2680,7 +2680,7 @@ contains
       !>     If the kernel variable is not present, or if the variable
       !>     is not a frame name or a numeric value, signal an error.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FRNAME         is the name of the reference frame with which
       !>                    the requested variable is associated.  This frame
@@ -2716,7 +2716,7 @@ contains
       !>
       !>                       - a reference frame name
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IDCODE         is the frame ID code associated with the value of
       !>                    the requested kernel variable. This frame may be
@@ -2747,11 +2747,11 @@ contains
       !>                    kernel variable is not integral, it will be
       !>                    rounded to the closest integer.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If neither the frame-ID-based or frame-name-based form of the
       !>        requested kernel variable name matches a kernel variable
@@ -2783,14 +2783,14 @@ contains
       !>        integer representable on the host platform, an error will
       !>        be signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     1) Kernel variables fetched by this routine are normally
       !>        introduced into the kernel pool by loading one or more
       !>        frame kernels.  See the Frames Required Reading for
       !>        details.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine centralizes logic for kernel variable lookups that
       !>     must be performed by the SPICELIB frame subsystem. Part of the
@@ -2817,7 +2817,7 @@ contains
       !>     attributes, can be simultaneously present in the kernel pool.
       !>     Intentional use of this kernel pool feature is discouraged.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) See ZZDYNFRM.
       !>
@@ -2825,7 +2825,7 @@ contains
       !>        frames associated with velocity vectors or constant vectors
       !>        serving to define two-vector dynamic frames.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a SPICE private routine; the routine is subject
       !>        to change without notice.  User applications should not
@@ -2837,15 +2837,15 @@ contains
       !>        form" of the requested name.  This problem can be prevented
       !>        by sensible frame kernel design.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
       !>
@@ -3012,7 +3012,7 @@ contains
       return
       end procedure zzdynfid
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -3023,7 +3023,7 @@ contains
       !>     caller if the name is the same as the saved name and the POOL
       !>     state did not change.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     USRCTR      is the value of the POOL state counter tracked by
       !>                 (saved in) the caller (user) routine specifically for
@@ -3043,7 +3043,7 @@ contains
       !>                 allowed values see description of the FRNAME argument
       !>                 in NAMFRM.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     USRCTR      is the current POOL state counter.
       !>
@@ -3063,23 +3063,23 @@ contains
       !>                 mapped to an ID, FRCODE is returned as 0. On the
       !>                 output FRCODE always equals SAVCDE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     CTRSIZ      is the dimension of the counter array used by
       !>                 various SPICE subsystems to uniquely identify
       !>                 changes in their states. This parameter is
       !>                 defined in the private include file 'zzctr.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) Errors may be signaled by routines in the call tree of this
       !>        routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine translates a string containing a frame name to an
       !>     integer code but bypasses calling NAMFRM to do the translation
@@ -3096,7 +3096,7 @@ contains
       !>     mush use must have its own set of saved POOL state counter and
       !>     name/ID variables for each of the two frames.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This example shows how a routine that needs to do frame name-ID
       !>     conversion for two distinct frames (FRA and FRB) can do it using
@@ -3173,19 +3173,19 @@ contains
       !>           END IF
       !>           ...
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 23-SEP-2013 (BVS)
       module procedure zznamfrm
@@ -3263,7 +3263,7 @@ contains
 
       end procedure zznamfrm
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -3272,7 +3272,7 @@ contains
       !>     Create an informative long error message for cases where the
       !>     frame system signals a SPICE(NOFRAMECONNECT) error.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET             Epoch of frame transformation, expressed as
       !>                    seconds past J2000 TDB.
@@ -3289,7 +3289,7 @@ contains
       !>                    this frame is the last node that could be
       !>                    reached from the frame designated by FRAME2.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ERRMSG         Long error message specifying computable
       !>                    frame paths, indications of missing SCLK
@@ -3343,24 +3343,24 @@ contains
       !>                          endpoint CK frame has associated SCLK
       !>                          data.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If a call to FRINFO or NAMFRM signals an error, this routine
       !>        will not be able to create a long error message. The
       !>        caller will not be able to diagnose the frame connection
       !>        failure, since an error condition will already exist.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     1) Each input frame ID argument will be mapped, if possible,
       !>        to a frame name. Any input frame ID that's not built in
       !>        must
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine centralizes creation of a long error message for
       !>     frame connection failures. This routine should be called
@@ -3373,7 +3373,7 @@ contains
       !>        ZZREFCH0
       !>        ZZREFCH1
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Below are some examples of messages created by this routine.
       !>
@@ -3455,22 +3455,22 @@ contains
       !>         can use CKBRIEF with the -dump option to display coverage
       !>         intervals of a CK file.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a private routine. SPICE user applications should not
       !>        call this routine.
       !>
       !>     2) See exception (1) above.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 09-SEP-2013 (NJB)
       !>
@@ -3800,7 +3800,7 @@ contains
       return
       end procedure zznofcon
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -3809,7 +3809,7 @@ contains
       !>     Fetch kernel variables for a specified switch frame. Data
       !>     for the new frame are added to the switch frame database.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FRAMID      is the integer ID code for a switch reference frame
       !>                 for which kernel pool data are to be fetched.
@@ -3887,7 +3887,7 @@ contains
       !>                 intervals. For a given switch frame, all bases have
       !>                 associated time intervals or none do.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HDFRAM      is the input collision list head node array, updated
       !>                 if necessary to reflect the addition of a node for
@@ -3949,7 +3949,7 @@ contains
       !>                 of information associated with the switch frame
       !>                 designated by the input frame ID.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBSNGL      is the lower bound of a singly linked list pool
       !>                 managed by the integer hash subsystem.
@@ -3957,7 +3957,7 @@ contains
       !>     See the include file zzswtchf.inc for SPICE-private parameters
       !>     defining sizes of buffers used by the switch frame subsystem.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input frame ID maps to a frame specification for which
       !>         the ID doesn't match, the error SPICE(BADFRAMESPEC) is
@@ -3998,7 +3998,7 @@ contains
       !>     8) If an error occurs during time conversion, the error
       !>        is signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -4027,7 +4027,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine obtains switch frame specifications from the kernel
       !>     pool and adds them to the switch frame database.
@@ -4044,11 +4044,11 @@ contains
       !>     Complete error checking of the new switch frame specification is
       !>     performed on each call.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None. See usage in ZZSWFXFM.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine is SPICE-private. User applications must not
       !>         call it.
@@ -4060,16 +4060,16 @@ contains
       !>         is rather slow, applications using switch frames should
       !>         avoid high-frequency kernel pool updates.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     B.V. Semenov   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 15-DEC-2021 (NJB) (BVS)
       module procedure zzswffet
@@ -4842,13 +4842,13 @@ contains
       return
       end procedure zzswffet
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET         time expressed in terms of TDB seconds past epoch J2000
       !>                for which to to calculate the J2000 frame to TEME frame
       !>                transformation operator.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     J2TM       the 6x6 operator that transforms cartesian states from
       !>                the J2000 to TEME reference frame.
@@ -4856,43 +4856,43 @@ contains
       !>     TM2J       the 6x6 operator that transforms cartesian states from
       !>                the TEME to J2000 reference frame.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     TETE    True equator true equinox
       !>     MEME    Mean equator mean equinox
       !>     TEME    True equator mean equinox
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     S.C. Krening   (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 10-OCT-2021 (EDW)
       !>
@@ -4947,7 +4947,7 @@ contains
       return
       end procedure zzteme
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SC       is a NAIF integer code for a spacecraft whose
       !>              encoded SCLK value at the epoch specified by ET is
@@ -4956,7 +4956,7 @@ contains
       !>     ET       is an epoch, specified as ephemeris seconds past
       !>              J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SCLKDP   is an encoded spacecraft clock value. SCLKDP is
       !>              an encoded representation of the total number
@@ -4968,11 +4968,11 @@ contains
       !>              SCLKDP may be non-integral:  SCLKDP is NOT
       !>              rounded to the nearest whole tick.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an SCLK kernel has not been loaded, does not contain all of
       !>         the required data, or contains invalid data, an error is
@@ -5005,11 +5005,11 @@ contains
       !>         SC, an error is signaled by a routine in the call tree of this
       !>         routine. The output argument SCLKDP will not be modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine outputs continuous encoded SCLK values; unlike the
       !>     routine SCE2T, the values output by this routine need not be
@@ -5032,7 +5032,7 @@ contains
       !>     See the SCLK Required Reading for a list of the entire set of
       !>     SCLK conversion routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Convert ET directly to an encoded SCLK value; use both of
       !>         these time values to look up both C-kernel (pointing) and
@@ -5104,7 +5104,7 @@ contains
       !>                     CALL UTC2ET ( UTC,  ET          )
       !>                     CALL SCE2C  ( -32,  ET,  SCLKDP )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  An SCLK kernel appropriate to the spacecraft clock identified
       !>         by SC must be loaded at the time this routine is called.
@@ -5113,17 +5113,17 @@ contains
       !>         directly to barycentric dynamical time, a leapseconds kernel
       !>         must be loaded at the time this routine is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-APR-2021 (JDR)
       !>
@@ -5167,7 +5167,7 @@ contains
       return
       end procedure sce2c
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is a target epoch, specified as ephemeris seconds past
       !>              J2000, at which a state vector is to be computed.
@@ -5205,13 +5205,13 @@ contains
       !>              first time. And if ET is greater than the last time
       !>              then, epochs 1 and 2 are set equal to this last time.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state produced by evaluating RECORD at ET.
       !>              Units are km and km/sec relative to the J2000
       !>              reference frame.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NGEO     is the number of geophysical constants for SGP4 SPK
       !>              records.
@@ -5224,17 +5224,17 @@ contains
       !>              algorithm as defined in Vallado [4]; value defined in
       !>              zzsgp4.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If a problem occurs when evaluating the two-line elements, an
       !>         error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine interpolates a state from the two reference sets
       !>     of two-line element sets contained in RECORD.
@@ -5248,7 +5248,7 @@ contains
       !>     Where it is known in advance that the HANDLE, DESCR pair points
       !>     to a type 10 data segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SPKEnn routines are almost always used in conjunction with
       !>     the corresponding SPKRnn routines, which read the records from
@@ -5286,11 +5286,11 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  F. Hoots and R. Roehrich, "Spacetrack Report #3: Models for
       !>          Propagation of the NORAD Element Sets," U.S. Air Force
@@ -5310,14 +5310,14 @@ contains
       !>          AIAA/AAS Astrodynamics Specialist Conference, Keystone, CO.,
       !>          August 21-24, 2006.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.0, 10-OCT-2021 (JDR) (EDW)
       !>
@@ -5499,7 +5499,7 @@ contains
       return
       end procedure spke10
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     REF      is the NAIF name for an inertial reference frame.
       !>              Acceptable names include:
@@ -5558,7 +5558,7 @@ contains
       !>              from the observer to the body at the epoch of
       !>              observation.)
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TIPM     is a 3x3 coordinate transformation matrix. It is
       !>              used to transform positions from inertial
@@ -5577,11 +5577,11 @@ contains
       !>              towards the same side of the invariable plane of
       !>              the solar system as does earth's north pole.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the kernel pool does not contain all of the data required
       !>         for computing the transformation matrix, TIPM, the error
@@ -5593,11 +5593,11 @@ contains
       !>     3)  If the specified body code, BODY, is not recognized, an error
       !>         is signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     TIPBOD takes PCK information as input, either in the
       !>     form of a binary or text PCK file. High precision
@@ -5666,7 +5666,7 @@ contains
       !>     These angles ---typically nodal rates--- vary in number and
       !>     definition from one planetary system to the next.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5779,17 +5779,17 @@ contains
       !>           CALL SPKPOS ( 'TITAN',  ET, 'IAU_SATURN', 'NONE',
       !>          .              'SATURN', POS, LT                   )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel pool must be loaded with the appropriate
       !>         coefficients (from a text or binary PCK file) prior to
       !>         calling this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -5798,7 +5798,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.0, 06-JUL-2021 (JDR)
       !>
@@ -5847,7 +5847,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 05-AUG-1991 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 05-JAN-2005 (NJB)
       !>
@@ -5885,7 +5885,7 @@ contains
       return
       end procedure tipbod
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INST     is the unique frame class ID (CK ID) of the CK frame for
       !>              which data is being requested.
@@ -5894,7 +5894,7 @@ contains
       !>              ET should be given in seconds past the epoch of J2000
       !>              TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ROTATE   is a position rotation matrix that converts positions
       !>              relative to the CK frame given by its frame class ID,
@@ -5917,11 +5917,11 @@ contains
       !>     FOUND    is .TRUE. if a record was found to satisfy the pointing
       !>              request. FOUND will be .FALSE. otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If no CK files were loaded prior to calling this routine, an
       !>         error is signaled by a routine in the call tree of this
@@ -5935,7 +5935,7 @@ contains
       !>         time, using SCLK data associated with INST, an error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     CKFROT searches through loaded CK files to locate a segment that
       !>     can satisfy the request for position rotation data for the CK
@@ -5945,7 +5945,7 @@ contains
       !>     input ET time to the encoded SCLK time with which the orientation
       !>     data stored inside that CK is tagged.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     CKFROT searches through loaded CK files to satisfy a pointing
       !>     request. Last-loaded files are searched first, and individual
@@ -5962,7 +5962,7 @@ contains
       !>     used to convert the input ET time to the encoded SCLK time used
       !>     to look up pointing data in loaded CK files.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6130,24 +6130,24 @@ contains
       !>           0.0001244121   0.0008314866   0.0003028634
       !>        Reference frame ID:    1
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  A CK file must be loaded prior to calling this routine.
       !>
       !>     2)  LSK and SCLK files needed for time conversions must be loaded
       !>         prior to calling this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 13-DEC-2021 (JDR) (BVS) (NJB)
       !>
@@ -6296,7 +6296,7 @@ contains
       return
       end procedure ckfrot
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INST     is the unique frame class ID (CK ID) of the CK frame for
       !>              which data is being requested.
@@ -6305,7 +6305,7 @@ contains
       !>              desired. ET should be given in seconds past the epoch of
       !>              J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XFORM    is a state transformation matrix that converts states
       !>              relative to the CK frame given by its frame class ID,
@@ -6331,11 +6331,11 @@ contains
       !>     FOUND    is .TRUE. if a record was found to satisfy the pointing
       !>              request. FOUND will be .FALSE. otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If no CK files were loaded prior to calling this routine, an
       !>         error is signaled by a routine in the call tree of this
@@ -6349,7 +6349,7 @@ contains
       !>         time, using SCLK data associated with INST, an error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     CKFXFM searches through loaded CK files to locate a segment that
       !>     can satisfy the request for state transformation data for the CK
@@ -6359,7 +6359,7 @@ contains
       !>     input ET time to the encoded SCLK time with which the orientation
       !>     data stored inside that CK is tagged.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     CKFXFM searches through loaded CK files to satisfy a pointing
       !>     request. Last-loaded files are searched first, and individual
@@ -6376,7 +6376,7 @@ contains
       !>     used to convert the input ET time to the encoded SCLK time used
       !>     to look up pointing data in loaded CK files.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6495,25 +6495,25 @@ contains
       !>
       !>        Angular rate of change (rad/s):  0.0008907319999591
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  A CK file must be loaded prior to calling this routine.
       !>
       !>     2)  LSK and SCLK files needed for time conversions must be loaded
       !>         prior to calling this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.3.0, 13-DEC-2021 (JDR) (BVS) (NJB)
       !>
@@ -6550,7 +6550,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 03-OCT-1994 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.1.0, 09-MAR-1999 (NJB)
       !>
@@ -6697,7 +6697,7 @@ contains
       return
       end procedure ckfxfm
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle assigned to a SPK file, and the
@@ -6708,7 +6708,7 @@ contains
       !>     ET       is the epoch (ephemeris time) at which the state
       !>              is to be computed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     REF      is the id-code of the reference frame to
       !>              which the vectors returned by the routine belong.
@@ -6725,23 +6725,23 @@ contains
       !>     CENTER   is the integer ID code of the center of motion for
       !>              the state.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXREC   is the maximum length of a record returned by any of
       !>              data type-specific routines SPKRnn, which are called
       !>              by SPKPVN (see $Particulars).
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment type is not supported by the current
       !>         version of SPKPVN, the error SPICE(SPKTYPENOTSUPP)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPKPVN is the most basic of the SPK readers, the reader upon
       !>     which SPKPV and SPKGEO, etc. are built. It should not normally
@@ -6808,7 +6808,7 @@ contains
       !>                     20                   159
       !>                     21                   112
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following code fragment, an entire SPK file is searched
       !>     for segments containing a particular epoch. For each one found,
@@ -6841,21 +6841,21 @@ contains
       !>
       !>        END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.0.1, 27-AUG-2021 (JDR)
       !>
@@ -7039,7 +7039,7 @@ contains
       return
       end procedure spkpvn
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -7047,7 +7047,7 @@ contains
       !>
       !>     Return switch frame state or position transformation matrix.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INFRM       is the frame ID code of switch frame for which
       !>                 the transformation to a base frame at time ET is
@@ -7062,7 +7062,7 @@ contains
       !>                 to 3, a 3x3 position transformation matrix is
       !>                 returned.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XFORM       is a matrix that transforms vectors of dimension NDIM
       !>                 from the switch frame designated by INFRM to the
@@ -7149,12 +7149,12 @@ contains
       !>                 transformation was found at time ET. XFORM and OUTFRM
       !>                 are valid if and only if FOUND is .TRUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file zzswtchf.inc for SPICE-private parameters
       !>     defining sizes of buffers used by the switch frame subsystem.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If NDIM is a value other than 6 or 3, the error
       !>         SPICE(BADDIMENSION) will be signaled.
@@ -7176,7 +7176,7 @@ contains
       !>         the error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -7206,7 +7206,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The switch frame subsystem does not participate in fake
       !>     recursion, hence there are no shadow routines corresponding to
@@ -7225,11 +7225,11 @@ contains
       !>     For dynamic and switch base frames, no orientation is computed.
       !>     Instead, the identity matrix is returned.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None. See the routines FRMGET and ROTGET for examples of usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine is SPICE-private. User applications must not
       !>         call it.
@@ -7241,16 +7241,16 @@ contains
       !>         is rather slow, applications using switch frames should
       !>         avoid high-frequency kernel pool updates.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     B.V. Semenov   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 15-DEC-2021 (NJB) (BVS)
       module procedure zzswfxfm

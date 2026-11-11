@@ -11,7 +11,7 @@ submodule (pepper_instance) pepper_ck_api
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CKFNM    is the name of a C-kernel.
       !>
@@ -23,7 +23,7 @@ contains
       !>              If IDS contains no data on input, its size and
       !>              cardinality still must be initialized.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IDS      is a SPICE set data structure which contains the union
       !>              of its contents upon input with the set of ID codes of
@@ -36,11 +36,11 @@ contains
       !>              See the $Examples section below for a complete example
       !>              program showing how to retrieve the ID codes from IDS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file has transfer format, the error
       !>         SPICE(INVALIDFORMAT) is signaled.
@@ -59,17 +59,17 @@ contains
       !>         the indicated CK file, an error is signaled by a routine in
       !>         the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine reads a C-kernel.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides an API via which applications can determine
       !>     the set of objects for which there are pointing data in a
       !>     specified CK file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -273,21 +273,21 @@ contains
       !>
       !>         =======================================
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If an error occurs while this routine is updating the set
       !>         IDS, the set may be corrupted.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-OCT-2021 (JDR) (NJB)
       !>
@@ -437,7 +437,7 @@ contains
       return
       end procedure ckobj
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INST     is the NAIF integer ID for the instrument, spacecraft, or
       !>              other structure for which pointing is requested. For
@@ -485,7 +485,7 @@ contains
       !>              Consult the SPICE document "Frames" for a discussion
       !>              of supported reference frames.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CMAT     is a rotation matrix that transforms the components of a
       !>              vector expressed in the reference frame specified by REF
@@ -527,11 +527,11 @@ contains
       !>     FOUND    is .TRUE. if a record was found to satisfy the pointing
       !>              request. FOUND will be .FALSE. otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If a C-kernel file has not been loaded using FURNSH prior to
       !>         a call to this routine, an error is signaled by a routine in
@@ -543,14 +543,14 @@ contains
       !>         signaled by a routine in the call tree of this routine and
       !>         FOUND is set to .FALSE.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     CKGP searches through files loaded by FURNSH to locate a
       !>     segment that can satisfy the request for pointing for instrument
       !>     INST at time SCLKDP. You must load a C-kernel file using FURNSH
       !>     prior to calling this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     How the tolerance argument is used
       !>     ==================================
@@ -831,7 +831,7 @@ contains
       !>                                           |
       !>                                     "Best" answer
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -998,15 +998,15 @@ contains
       !>            CASSINI SCLK time: 1/1465644351.071
       !>            CASSINI ISS boresight:  0.9376657  0.3444504  0.0462266
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -1017,7 +1017,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.4.1, 26-MAY-2021 (JDR)
       !>
@@ -1103,7 +1103,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 5.2.0, 25-AUG-2005 (NJB)
       !>
@@ -1352,7 +1352,7 @@ contains
       end associate
       end procedure ckgp
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INST     is the NAIF integer ID for the instrument, spacecraft,
       !>              or other structure for which pointing and angular
@@ -1407,7 +1407,7 @@ contains
       !>              Consult the SPICE document "Frames" for a discussion
       !>              of supported reference frames.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CMAT     is a rotation matrix that transforms the components of
       !>              a vector expressed in the reference frame specified by
@@ -1458,11 +1458,11 @@ contains
       !>     FOUND    is .TRUE. if a record was found to satisfy the pointing
       !>              request. FOUND will be .FALSE. otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If a C-kernel file has not been loaded using FURNSH prior to
       !>         a call to this routine, an error is signaled by a routine in
@@ -1474,14 +1474,14 @@ contains
       !>         signaled by a routine in the call tree of this routine and
       !>         FOUND is set to .FALSE.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     CKGPAV searches through files loaded by FURNSH to locate a
       !>     segment that can satisfy the request for pointing and angular
       !>     velocity for instrument INST at time SCLKDP. You must load a
       !>     C-kernel file using FURNSH prior to calling this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     How the tolerance argument is used
       !>     ==================================
@@ -1765,7 +1765,7 @@ contains
       !>                                           |
       !>                                     "Best" answer
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1950,17 +1950,17 @@ contains
       !>            CASSINI ISS boresight  :  0.9376657  0.3444504  0.0462266
       !>            Angular velocity vector:  0.0000000  0.0000000  0.0000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Only loaded C-kernel segments containing both pointing and
       !>         angular velocity data will be searched by this reader.
       !>         Segments containing only pointing data will be skipped over.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -1971,7 +1971,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.3.1, 02-JUL-2021 (JDR)
       !>
@@ -2074,7 +2074,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 5.3.0, 23-SEP-2013 (BVS)
       !>
@@ -2471,7 +2471,7 @@ contains
       end associate
       end procedure ckgpav
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -2479,7 +2479,7 @@ contains
       !>
       !>     Determine the "window" of coverage of a type 01 C-kernel segment.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of some DAF that is open for reading.
       !>
@@ -2522,7 +2522,7 @@ contains
       !>     SCHEDL     is a schedule (window) of intervals, to which the
       !>                intervals of coverage for this segment will be added.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SCHEDL     the input schedule updated to include the intervals
       !>                of coverage for this segment. Since type 01 segments,
@@ -2530,16 +2530,16 @@ contains
       !>                associated with a pointing instance is treated as a
       !>                singleton interval.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine reads the contents of the file associated with
       !>     HANDLE to locate coverage intervals.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) The error SPICE(BADCK1SEGMENT) is signaled if the derived
       !>        segment length from ARRBEG and ARREND does not match
@@ -2558,32 +2558,32 @@ contains
       !>     5) If a time conversion error occurs, the error will be
       !>         diagnosed by a routine in the call tree of this routine.
       !>C
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine that determines the intervals of
       !>     coverage for a type 01 C-kernel segment. Since type 01 segments,
       !>     don't have interpolation intervals, each epoch associated with a
       !>     pointing instance is treated as a singleton interval.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber      (JPL)
       !>     N.J. Bachman    (JPL)
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SUPPORT Version 1.0.0, 03-JAN-2005 (WLT)(NJB)(BVS)
       !>
@@ -2778,7 +2778,7 @@ contains
       return
       end procedure zzckcv01
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -2786,7 +2786,7 @@ contains
       !>
       !>     Determine the "window" of coverage of a type 02 C-kernel segment.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of some DAF that is open for reading.
       !>
@@ -2829,21 +2829,21 @@ contains
       !>     SCHEDL     is a schedule (window) of intervals, to which the
       !>                intervals of coverage for this segment will be added.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SCHEDL     the input schedule updated to include the intervals
       !>                of coverage for this segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine reads the contents of the file associated with
       !>     HANDLE to locate coverage intervals.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) Routines in the call tree of this routine may signal errors
       !>        if insufficient room in SCHEDL exists or other error
@@ -2858,31 +2858,31 @@ contains
       !>     4) If a time conversion error occurs, the error will be
       !>        diagnosed by a routine in the call tree of this routine
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine that determines the intervals
       !>     of coverage for a type 02 C-kernel segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     W.L. Taber      (JPL)
       !>     F.S. Turner     (JPL)
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 03-JAN-2005 (NJB) (FST) (WLT) (BVS)
       module procedure zzckcv02
@@ -3019,7 +3019,7 @@ contains
       return
       end procedure zzckcv02
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -3027,7 +3027,7 @@ contains
       !>
       !>     Determine the "window" of coverage of a type 03 C-kernel segment.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of some DAF that is open for reading.
       !>
@@ -3070,21 +3070,21 @@ contains
       !>     SCHEDL     is a schedule (window) of intervals, to which the
       !>                intervals of coverage for this segment will be added.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SCHEDL     the input schedule updated to include the intervals
       !>                of coverage for this segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine reads the contents of the file associated with
       !>     HANDLE to locate coverage intervals.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) The error SPICE(BADCK3SEGMENT) is signaled if the derived
       !>        segment length from ARRBEG and ARREND does not match
@@ -3103,30 +3103,30 @@ contains
       !>     5) If a time conversion error occurs, the error will be
       !>         diagnosed by a routine in the call tree of this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine that determines the intervals
       !>     of coverage for a type 03 C-kernel segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See CKBRIEF's main driver.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     W.L. Taber      (JPL)
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 03-JAN-2005 (NJB) (FST) (WLT)
       module procedure zzckcv03
@@ -3408,7 +3408,7 @@ contains
       return
       end procedure zzckcv03
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -3416,7 +3416,7 @@ contains
       !>
       !>     Determine the "window" of coverage of a type 04 C-kernel segment.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of some DAF that is open for reading.
       !>
@@ -3459,22 +3459,22 @@ contains
       !>     SCHEDL     is a schedule (window) of intervals, to which the
       !>                intervals of coverage for this segment will be added.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SCHEDL     the input schedule updated to include the intervals
       !>                of coverage for this segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     CK4RSZ     is the maximum length of a CK4 record (with angular
       !>                velocity). Defined in the include file 'ckparam.inc'.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine reads the contents of the file associated with
       !>     HANDLE to locate coverage intervals.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) Routines in the call tree of this routine may signal errors
       !>        if insufficient room in SCHEDL exists or other error
@@ -3489,29 +3489,29 @@ contains
       !>     4) If a time conversion error occurs, the error will be
       !>        diagnosed by a routine in the call tree of this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine that determines the intervals
       !>     of coverage for a type 04 C-kernel segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See CKCOV.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 30-DEC-2004 (NJB) (FST)
       module procedure zzckcv04
@@ -3654,7 +3654,7 @@ contains
       return
       end procedure zzckcv04
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -3662,7 +3662,7 @@ contains
       !>
       !>     Determine the "window" of coverage of a type 05 C-kernel segment.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of some DAF that is open for reading.
       !>
@@ -3722,7 +3722,7 @@ contains
       !>     SCHEDL     is a schedule (window) of intervals, to which the
       !>                intervals of coverage for this segment will be added.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SCHEDL     the input schedule updated to include the intervals
       !>                of coverage for this segment.  The schedule has
@@ -3736,18 +3736,18 @@ contains
       !>                The elements of SCHEDL are given in the time system
       !>                indicated by TIMSYS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     Several parameters associated with the type 05 C-kernel
       !>     are utilized to compute the packet size of each subtype.
       !>     See the include file 'ck05.inc' for details.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine reads the contents of the file associated with
       !>     HANDLE to locate coverage intervals.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The error SPICE(NOTSUPPORTED) is signaled if the subtype of
       !>         the CK type 05 segment is not recognized.
@@ -3765,30 +3765,30 @@ contains
       !>     5)  If a time conversion error occurs, the error will be
       !>         diagnosed by a routine in the call tree of this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine that determines the intervals
       !>     of coverage for a type 05 C-kernel segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See CKCOV.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     W.L. Taber      (JPL)
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 07-JAN-2005 (NJB) (FST) (WLT)
       module procedure zzckcv05
@@ -4073,7 +4073,7 @@ contains
       return
       end procedure zzckcv05
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.Users should not call this routine directly due
@@ -4081,7 +4081,7 @@ contains
       !>
       !>     Determine the "window" of coverage of a type 06 C-kernel segment.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of some DAF that is open for reading.
       !>
@@ -4142,7 +4142,7 @@ contains
       !>     SCHEDL     is a schedule (window) of intervals, to which the
       !>                intervals of coverage for this segment will be added.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SCHEDL     the input schedule updated to include the intervals
       !>                of coverage for this segment. The schedule has
@@ -4156,13 +4156,13 @@ contains
       !>                The elements of SCHEDL are given in the time system
       !>                indicated by TIMSYS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     Several parameters associated with the type 06 C-kernel
       !>     are utilized to compute the packet size of each subtype.
       !>     See the include file 'ck06.inc' for details.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The error SPICE(NOTSUPPORTED) is signaled if the subtype of
       !>         the CK type 06 segment is not recognized.
@@ -4180,36 +4180,36 @@ contains
       !>     5)  If a time conversion error occurs, the error will be
       !>         diagnosed by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine reads the contents of the file associated with
       !>     HANDLE to locate coverage intervals.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine that determines the intervals
       !>     of coverage for a type 06 C-kernel segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See CKCOV.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     B.V. Semenov    (JPL)
       !>     W.L. Taber      (JPL)
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-FEB-2014 (NJB) (BVS) (FST) (WLT)
       module procedure zzckcv06
@@ -4448,7 +4448,7 @@ contains
       return
       end procedure zzckcv06
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CKFNM    is the name of a C-kernel.
       !>
@@ -4526,7 +4526,7 @@ contains
       !>              If COVER contains no data on input, its size and
       !>              cardinality still must be initialized.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     COVER    is a SPICE window data structure which represents the
       !>              merged coverage for IDCODE. When the coverage level is
@@ -4558,11 +4558,11 @@ contains
       !>              See the $Examples section below for a complete example
       !>              program showing how to retrieve the endpoints from COVER.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file has transfer format, the error
       !>         SPICE(INVALIDFORMAT) is signaled.
@@ -4604,7 +4604,7 @@ contains
       !>         indicate the version of the SPICE Toolkit being used is
       !>         outdated and a new version is required.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine reads a C-kernel.
       !>
@@ -4626,13 +4626,13 @@ contains
       !>     to be used for conversion between SCLK and TDB. Normally this
       !>     variable is provided in a text kernel loaded via FURNSH.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides an API via which applications can determine
       !>     the coverage a specified CK file provides for a specified
       !>     object.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5024,24 +5024,24 @@ contains
       !>         Start:    2008 FEB 21 00:01:07.771186 (TDB)
       !>         Stop:     2008 FEB 26 00:01:04.752306 (TDB)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  When this routine is used to accumulate coverage for IDCODE
       !>         provided by multiple CK files, the inputs NEEDAV, LEVEL, TOL,
       !>         and TIMSYS  must have the same values for all files in order
       !>         for the result to be meaningful.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 08-OCT-2021 (JDR)
       !>

@@ -12,35 +12,35 @@ submodule (pepper_instance) pepper_bodies
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BLTCOD   The array of NPERM elements listing the body ID codes.
       !>
       !>     BLTNAM   The array of NPERM elements listing the body names
       !>              corresponding to the ID entry in BLTCOD
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NPERM    The length of both BLTCOD, BLTNAM
       !>              (read from zzbodtrn.inc).
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Each ith entry of BLTCOD maps to the ith entry of BLTNAM.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Simple to use, a call the ZZIDMAP returns the arrays defining the
       !>     name/ID mappings.
@@ -52,19 +52,19 @@ contains
       !>
       !>        CALL ZZIDMAP( ID, NAME )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     E.D. Wright, 10-DEC-2021 (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.10, 10-DEC-2021 (EDW) (JDR) (BVS)
       !>
@@ -2675,7 +2675,7 @@ contains
       return
       end procedure zzidmap
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -2683,7 +2683,7 @@ contains
       !>
       !>     This function returns the hash value corresponding to an integer.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N           is an integer number.
       !>
@@ -2693,7 +2693,7 @@ contains
       !>                 number. If it is not, the function signals an error
       !>                 and returns 0.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the hash value of N as computed using M
       !>     as the hash function divisor.
@@ -2701,43 +2701,43 @@ contains
       !>     This function is sign-insensitive, i.e. it computes the same
       !>     hash value for A as is it does for -A.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the input divisor value is not in the allowed range, the
       !>        error 'SPICE(INVALIDDIVISOR)' will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes the hash value of an integer number using
       !>     the user specified hash divisor value.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber      (JPL)
       !>     E.D. Wright     (JPL)
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 02-AUG-2013 (BVS)
       module procedure zzhashi
@@ -3116,7 +3116,7 @@ contains
 !
 !     Standard SPICE error handling.
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -3124,7 +3124,7 @@ contains
       !>
       !>     Initialize an add-only character hash.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HASHSZ      is the hash size. For efficiency reasons it must be a
       !>                 prime number in the range from 1 to INTMAX/68 - 1.
@@ -3133,7 +3133,7 @@ contains
       !>     COLLST      are the head node pointer list and the node collision
       !>                 list components of an add-only character hash.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HEDLST
       !>     COLLST      are the head node pointer list and the node collision
@@ -3143,41 +3143,41 @@ contains
       !>                 node pointer list COLLST set to HASHSZ and 1
       !>                 correspondingly.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL      is the lower bound of the collision list array.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If HASHSZ is less than 1 or greater than the value that is
       !>        guaranteed not to result in eventual integer overflow in
       !>        ZZHASH2, the error will be signaled by ZZHASH2.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-OCT-2020 (BVS)
       !>
@@ -3233,7 +3233,7 @@ contains
       return
       end procedure zzhscini
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -3242,7 +3242,7 @@ contains
       !>     Find or add, if not present, an item to an add-only character
       !>     hash.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HEDLST
       !>     COLLST
@@ -3251,7 +3251,7 @@ contains
       !>
       !>     ITEM        is an item to find and, if needed, add to the hash.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HEDLST
       !>     COLLST
@@ -3264,39 +3264,39 @@ contains
       !>
       !>     NEW         is a flag indicting if item was added to the hash.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL      is the lower bound of the collision list array.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the hash is full, the error SPICE(HASHISFULL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
       module procedure zzhscadd
@@ -3455,7 +3455,7 @@ contains
       return
       end procedure zzhscadd
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -3463,7 +3463,7 @@ contains
       !>
       !>     Find an item in an add-only character hash.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HEDLST
       !>     COLLST
@@ -3472,45 +3472,45 @@ contains
       !>
       !>     ITEM        is an item to find in the hash.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ITEMAT      is the index of the item in the node collision and
       !>                 item lists. If item is not in the hash, ITEMAT is set
       !>                 to 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL      is the lower bound of the collision list array.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
       module procedure zzhscchk
@@ -3572,7 +3572,7 @@ contains
       return
       end procedure zzhscchk
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -3580,49 +3580,49 @@ contains
       !>
       !>     Get room available in an add-only character hash.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     COLLST      is the add-only character hash node collision
       !>                 list.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     AVAIL       is the room (number of vacant slots) available in
       !>                 the hash.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL      is the lower bound of the collision list array.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
       module procedure zzhscavl
@@ -3644,7 +3644,7 @@ contains
       return
       end procedure zzhscavl
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -3652,7 +3652,7 @@ contains
       !>
       !>     Get information about an add-only character hash.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HEDLST
       !>     COLLST
@@ -3668,44 +3668,44 @@ contains
       !>                    'UNUSED ITEM COUNT'
       !>                    'LONGEST LIST SIZE'
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     AVAIL       is the value of the parameter of interest.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL      is the lower bound of the collision list array.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the input ITEM is not recognized, the error
       !>        SPICE(ITEMNOTRECOGNIZED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
       module procedure zzhscinf
@@ -4148,7 +4148,7 @@ contains
 !
 !     Standard SPICE error handling.
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -4156,7 +4156,7 @@ contains
       !>
       !>     Initialize an add-only integer hash.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HASHSZ      is the hash size. For efficiency reasons it must be a
       !>                 positive prime number.
@@ -4165,7 +4165,7 @@ contains
       !>     COLLST      are the head node pointer list and the node collision
       !>                 list components of an add-only integer hash.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HEDLST
       !>     COLLST      are the head node pointer list and the node collision
@@ -4175,40 +4175,40 @@ contains
       !>                 node pointer list COLLST set to HASHSZ and 1
       !>                 correspondingly.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL      is the lower bound of the collision list array.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If HASHSZ is less than 1, the error SPICE(INVALIDCOUNT) is
       !>        signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the header of the umbrella routine ZZHSI.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of the umbrella routine ZZHSI.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See the header of the umbrella routine ZZHSI.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 07-OCT-2020 (JDR) (BVS) (NJB)
       !>
@@ -4255,7 +4255,7 @@ contains
       return
       end procedure zzhsiini
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -4264,7 +4264,7 @@ contains
       !>     Find or add, if not present, an item to an add-only integer
       !>     hash.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HEDLST
       !>     COLLST
@@ -4273,7 +4273,7 @@ contains
       !>
       !>     ITEM        is an item to find and, if needed, add to the hash.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HEDLST
       !>     COLLST
@@ -4286,11 +4286,11 @@ contains
       !>
       !>     NEW         is a flag indicting if item was added to the hash.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL      is the lower bound of the collision list array.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the hash is full, the error SPICE(HASHISFULL) is signaled.
       !>
@@ -4298,31 +4298,31 @@ contains
       !>        list is less than 1, the error SPICE(UNINITIALIZEDHASH) is
       !>        signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the header of the umbrella routine ZZHSI.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of the umbrella routine ZZHSI.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See the header of the umbrella routine ZZHSI.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
       module procedure zzhsiadd
@@ -4488,7 +4488,7 @@ contains
       return
       end procedure zzhsiadd
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -4496,7 +4496,7 @@ contains
       !>
       !>     Find an item in an add-only integer hash.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HEDLST
       !>     COLLST
@@ -4505,47 +4505,47 @@ contains
       !>
       !>     ITEM        is an item to find in the hash.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ITEMAT      is the index of the item in the node collision and
       !>                 item lists. If item is not in the hash, ITEMAT is set
       !>                 to 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL      is the lower bound of the collision list array.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the hash size saved in the control area of the collision
       !>        list is less than 1, the error SPICE(UNINITIALIZEDHASH) is
       !>        signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the header of the umbrella routine ZZHSI.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of the umbrella routine ZZHSI.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See the header of the umbrella routine ZZHSI.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-OCT-2021 (BVS)
       !>
@@ -4619,7 +4619,7 @@ contains
       return
       end procedure zzhsichk
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -4627,49 +4627,49 @@ contains
       !>
       !>     Get room available in an add-only integer hash.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     COLLST      is the add-only integer hash node collision
       !>                 list.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     AVAIL       is the room (number of vacant slots) available in
       !>                 the hash.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL      is the lower bound of the collision list array.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the header of the umbrella routine ZZHSI.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of the umbrella routine ZZHSI.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See the header of the umbrella routine ZZHSI.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
       module procedure zzhsiavl
@@ -4689,7 +4689,7 @@ contains
       return
       end procedure zzhsiavl
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -4697,7 +4697,7 @@ contains
       !>
       !>     Get information about an add-only integer hash.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HEDLST
       !>     COLLST
@@ -4713,44 +4713,44 @@ contains
       !>                    'UNUSED ITEM COUNT'
       !>                    'LONGEST LIST SIZE'
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     AVAIL       is the value of the parameter of interest.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL      is the lower bound of the collision list array.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the input ITEM is not recognized, the error
       !>        SPICE(ITEMNOTRECOGNIZED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See the header of the umbrella routine ZZHSC.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
       module procedure zzhsiinf
@@ -4839,7 +4839,7 @@ contains
       return
       end procedure zzhsiinf
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -4849,7 +4849,7 @@ contains
       !>     access to body-name mapping arrays. This routine should be called
       !>     by ZZBODTRN and ZZBODKER only.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAMES     is the array of body names. This array is parallel to
       !>               NORNAM and CODES.
@@ -4868,7 +4868,7 @@ contains
       !>
       !>     MAXVAL    is the output hash size.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     All output arrays must be declared with the dimension MAXVAL.
       !>     MAXVAL must be greater than or equal to NVALS.
@@ -4899,14 +4899,14 @@ contains
       !>               given ID the index corresponding to the same ID in the
       !>               NAMES, NORNAM, and CODES arrays.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL    is the lower bound of the hashes' collision list array.
       !>
       !>     MAXL      is the maximum length of a body name. Defined in the
       !>               include file 'zzbodtrn.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the input number of bodies NVALS is not less than or equal
       !>        to the size of the output hash, the error 'SPICE(BUG1)' will be
@@ -4918,11 +4918,11 @@ contains
       !>     3) If registering an name in the output name-based hash fails,
       !>        the error 'SPICE(BUG3)' will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine used for initializing the hashes
       !>     facilitating efficient body name-ID translation in ZZBODTRN.
@@ -4942,11 +4942,11 @@ contains
       !>     all IDs with the lower priority in cases when a single normalized
       !>     name maps to more than one ID.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the routine ZZBODTRN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This routine is intended only for use by ZZBODTRN and
       !>        ZZBODKER.
@@ -4959,11 +4959,11 @@ contains
       !>        the first and the mapping with the highest priority being
       !>        the last.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov       (JPL)
       !>     M.J. Spencer       (JPL)
@@ -4971,7 +4971,7 @@ contains
       !>     F.S. Turner        (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.0.0, 16-SEP-2013 (BVS)
       !>
@@ -5100,7 +5100,7 @@ contains
       return
       end procedure zzbodini
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -5521,7 +5521,7 @@ contains
 !
 !     Standard SPICE error handling.
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -5529,12 +5529,12 @@ contains
       !>
       !>     Retrieve a copy of the built-in body name-code mapping lists.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ROOM       is the maximum number of entries that NAMES, NORNAM,
       !>                and CODES may receive.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NAMES      the array of built-in names.  This array is parallel
       !>                to NORNAM and CODES.
@@ -5550,43 +5550,43 @@ contains
       !>     NVALS      the number of items returned in NAMES, NORNAM,
       !>                and CODES.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NPERM      the number of permanent, or built-in, body name-code
       !>                mappings.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) SPICE(BUG) is signaled if ROOM is less than NPERM, the
       !>        amount of space required to store the entire list of
       !>        body names and codes.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine simply copies it's local buffered version of the
       !>     built-in name-code mappings to the output arguments.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZBODTRN for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 17-MAR-2003 (EDW)
       !>
@@ -5664,7 +5664,7 @@ contains
       end associate
       end procedure zzbodget
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DEVICE         identifies the device to receive the
       !>                    body/ID mapping list. WRLINE performs the
@@ -5682,28 +5682,28 @@ contains
       !>                    sort on the name string. 'BOTH' outputs both
       !>                    ordered lists.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The entry point outputs ordered lists of the name/ID mappings
       !>     defined in ZZBODTRN.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1. Write both sorted lists to screen.
       !>
@@ -5746,20 +5746,20 @@ contains
       !>
       !>     ..                                   ..
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner    (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.2, 01-OCT-2021 (NJB)
       !>
@@ -6566,7 +6566,7 @@ contains
 !
 !     Standard SPICELIB error handling.
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -6574,7 +6574,7 @@ contains
       !>
       !>     Translate a body name to the corresponding SPICE integer code.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME       is an arbitrary name of a body which could be
       !>                a planet, satellite, barycenter, spacecraft,
@@ -6598,7 +6598,7 @@ contains
       !>                When ignoring trailing blanks, NAME must have fewer
       !>                than MAXL characters.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CODE       is the NAIF or user defined integer code for the
       !>                named body.
@@ -6606,21 +6606,21 @@ contains
       !>     FOUND      return as true if NAME has a translation.
       !>                Otherwise, FOUND returns as false.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXL       is the maximum length of a body name.  Defined in
       !>                the include file 'zzbodtrn.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Errors may be signaled by routines in the call tree of this
       !>     routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     ZZBODN2C is one of three related entry points,
       !>
@@ -6637,19 +6637,19 @@ contains
       !>     any of the entry points.  Additional name/code pairs may
       !>     be defined via ZZBODDEF.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the Examples section of the ZZBODTRN umbrella header.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     J.E. McLean    (JPL)
@@ -6659,7 +6659,7 @@ contains
       !>     F.S. Turner    (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
       !>
@@ -6915,7 +6915,7 @@ contains
 !> PEPPER: the name of a body from its ID code, of any length (the body of
 !> ZZBODC2N, which copies the name into its fixed-length argument).
       !>
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -6924,13 +6924,13 @@ contains
       !>     Translate the integer code of a body into a common name for
       !>     that body.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CODE       is an integer code for a body ---
       !>                a planet, satellite, barycenter, spacecraft,
       !>                asteroid, comet, or other ephemeris object.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NAME       is the common name of the body identified by CODE.
       !>                If CODE has more than one translation, then the
@@ -6942,21 +6942,21 @@ contains
       !>     FOUND      returns as true if NAME has a translation.
       !>                Otherwise, FOUND returns as false.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXL       is the maximum length of a body name.  Defined in
       !>                the include file 'zzbodtrn.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Errors may be signaled by routines in the call tree of this
       !>     routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     ZZBODC2N is one of three related entry points,
       !>
@@ -6977,19 +6977,19 @@ contains
       !>     ZZBODC2N call returns the name last assigned to that code - a
       !>     LIFO situation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See Examples section of ZZBODTRN umbrella header.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     J.E. McLean    (JPL)
@@ -6999,7 +6999,7 @@ contains
       !>     F.S. Turner    (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
       !>
@@ -7287,7 +7287,7 @@ contains
       !> Add a name/code pair to this context's table of defined names (the
       !> code of SPICELIB's ZZBODDEF; zzboddef also records it in the instance).
       !>
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -7296,7 +7296,7 @@ contains
       !>     Define a body name/code pair for later translation by
       !>     ZZBODN2C or ZZBODC2N.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME       is an arbitrary name of a body which could be
       !>                a planet, satellite, barycenter, spacecraft,
@@ -7336,11 +7336,11 @@ contains
       !>                body 5, 'JUPITER BARYCENTER', you could define the
       !>                abbreviation 'JB' to mean 5.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     The following relevant parameters are defined in zzbodtrn.inc:
       !>
@@ -7349,7 +7349,7 @@ contains
       !>     MAXP        is the maximum number of additional names that may
       !>                 be added via the ZZBODDEF interface.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the maximum number of definitions is exceeded, a the
       !>        error SPICE(TOOMANYPAIRS) is signaled.
@@ -7360,11 +7360,11 @@ contains
       !>     3) Routines in the call tree of this routine may signal
       !>        errors.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     ZZBODDEF is one of three related entry points,
       !>
@@ -7409,19 +7409,19 @@ contains
       !>     in DATA statements in the umbrella routine ZZBODTRN for easy
       !>     reference.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the Examples section of the ZZBODTRN umbrella header.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J.E. McLean    (JPL)
       !>     B.V. Semenov   (JPL)
@@ -7429,7 +7429,7 @@ contains
       !>     F.S. Turner    (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
       !>
@@ -7687,7 +7687,7 @@ contains
       end associate
       end subroutine zzboddef_apply
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -7696,27 +7696,27 @@ contains
       !>     This routine executes the kernel pool read instructions
       !>     if necessary.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NONE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NONE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NONE.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     NONE.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     NONE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point provides a mechanism to allow a caller
       !>     to force the examination of the kernel pool variables that
@@ -7726,26 +7726,26 @@ contains
       !>     diagnostics are not provided until a name-code conversion
       !>     is attempted.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZLDKER for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     B.V. Semenov   (JPL)
       !>     F.S. Turner    (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
       !>
@@ -7885,7 +7885,7 @@ contains
       !> Reset this context's table of defined names to the built-in names
       !> (the code of SPICELIB's ZZBODRST).
       !>
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -7894,51 +7894,51 @@ contains
       !>     This routine resets the built-in body list, removing any
       !>     assignments or alterations made by the ZZBODDEF entry point.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) Routines in the call tree of this routine may signal errors.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     ZZBODRST resets the built-in body name-code mapping list.  This
       !>     list may only be modified by ZZBODDEF.  Further, any assignments
       !>     made through the kernel pool mechanism remain unaltered as a
       !>     result of invoking this routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov    (JPL)
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
       !>
@@ -8049,7 +8049,7 @@ contains
       end associate
       end subroutine zzbodrst_apply
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -8058,12 +8058,12 @@ contains
       !>     Check and update the ZZBODTRN state counter tracked by a caller
       !>     (user) routine.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     USRCTR      is the value of the ZZBODTRN state counter tracked by
       !>                 (saved in) the caller (user) routine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     USRCTR      is the current ZZBODTRN state counter.
       !>
@@ -8073,22 +8073,22 @@ contains
       !>                 updated (UPDATE = .TRUE.) or if it was the same
       !>                 (UPDATE = .FALSE.).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     CTRSIZ      is the dimension of the counter array used by
       !>                 various SPICE subsystems to uniquely identify
       !>                 changes in their states. This parameter is
       !>                 defined in the private include file 'zzctr.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) Routines in the call tree of this routine may signal errors.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is not part of the SPICELIB API. This routine may be
       !>     removed in a later version of the SPICE Toolkit, or its interface
@@ -8114,7 +8114,7 @@ contains
       !>     changed and if so updates the internally buffered POOL-based
       !>     name-ID mappings.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The routines that need to be aware of and act on the ZZBODTRN
       !>     state change initialize a local ZZBODTRN counter array using
@@ -8169,19 +8169,19 @@ contains
       !>
       !>              END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a private routine. See $Particulars above.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
       !>
@@ -8250,7 +8250,7 @@ contains
       end associate
       end procedure zzbctrck
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of a body or object, such as a planet,
       !>              satellite, comet, asteroid, barycenter, DSN station,
@@ -8274,7 +8274,7 @@ contains
       !>              However, 'JUPITERBARYCENTER' is not equivalent to
       !>              the names above.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CODE     is the SPICE or user-defined integer ID code for the
       !>              named body.
@@ -8282,13 +8282,13 @@ contains
       !>     FOUND    is .TRUE. if NAME has a translation. Otherwise, FOUND
       !>              is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXL     is the maximum allowable length of a body name. The
       !>              current value of this parameter is 36. See the SPICELIB
       !>              include file zzbodtrn.inc for details.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is any problem with the body name-ID mapping kernel
       !>         variables present in the kernel pool, an error is signaled by
@@ -8300,7 +8300,7 @@ contains
       !>         Therefore, two body names that differ only after that maximum
       !>         length are considered equal.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Body-name mappings may be defined at run time by loading text
       !>     kernels containing kernel variable assignments of the form
@@ -8310,7 +8310,7 @@ contains
       !>
       !>     See naif_ids.req for details.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     BODN2C is one of five related subroutines,
       !>
@@ -8345,7 +8345,7 @@ contains
       !>     into SPICE, and for details concerning adding new name/code
       !>     associations at run time by loading text kernels.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  In the following code fragment, BODVCD returns the radii
       !>         of Jupiter. BODVCD requires the SPICE integer ID code for
@@ -8384,15 +8384,15 @@ contains
       !>            -77         'GALILEO ORBITER'           Yes
       !>             11          -                          No
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  See exception <2>.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -8402,7 +8402,7 @@ contains
       !>     F.S. Turner        (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -8475,13 +8475,13 @@ contains
 
       end procedure bodn2c
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CODE     is an integer code for a body ---
       !>              a planet, satellite, barycenter, spacecraft,
       !>              asteroid, comet, or other ephemeris object.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NAME     is a common name of the body identified by CODE.
       !>              If CODE has more than one translation, then the
@@ -8494,7 +8494,7 @@ contains
       !>     FOUND    is .TRUE. if CODE has a translation. Otherwise, FOUND
       !>              is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXL     is the maximum allowable length of a body name.
       !>              This amount of storage space should be declared
@@ -8502,13 +8502,13 @@ contains
       !>              The current value of this parameter is 36. See
       !>              the SPICELIB include file zzbodtrn.inc for details.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is any problem with the body name-ID mapping kernel
       !>         variables present in the kernel pool, an error is signaled by
       !>         a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Body-name mappings may be defined at run time by loading text
       !>     kernels containing kernel variable assignments of the form
@@ -8518,7 +8518,7 @@ contains
       !>
       !>     See naif_ids.req for details.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     BODS2N is one of five related subroutines,
       !>
@@ -8548,7 +8548,7 @@ contains
       !>     into SPICE, and for details concerning adding new name/code
       !>     associations at run time by loading text kernels.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1. Suppose you ran the utility program SPACIT to summarize
       !>         an SPK ephemeris file and the following data was output
@@ -8609,15 +8609,15 @@ contains
       !>             11          -                          No
       !>             -1          -                          No
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
@@ -8626,7 +8626,7 @@ contains
       !>     F.S. Turner        (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -8683,7 +8683,7 @@ contains
 
       end procedure bodc2n
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is a string containing the name or ID code of a
       !>              body or object, such as a planet, satellite, comet,
@@ -8721,7 +8721,7 @@ contains
       !>              be a built-in NAIF ID code, nor need it be associated
       !>              with a name via run-time registration.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CODE     is, if NAME contains the name of a body or object,
       !>              the corresponding NAIF or user-defined integer ID
@@ -8737,13 +8737,13 @@ contains
       !>              as defined by the SPICELIB routines INTMAX and INTMIN.
       !>              Otherwise, FOUND is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXL     is the maximum allowable length of a body name. The
       !>              current value of this parameter is 36. See the SPICELIB
       !>              include file zzbodtrn.inc for details.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is any problem with the body name-ID mapping kernel
       !>         variables present in the kernel pool, an error is signaled by
@@ -8755,7 +8755,7 @@ contains
       !>         Therefore, two body names that differ only after that maximum
       !>         length are considered equal.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Body-name mappings may be defined at run time by loading text
       !>     kernels containing kernel variable assignments of the form
@@ -8765,7 +8765,7 @@ contains
       !>
       !>     See naif_ids.req for details.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     BODS2C is one of five related subroutines,
       !>
@@ -8795,7 +8795,7 @@ contains
       !>     into SPICE, and for details concerning adding new name/code
       !>     associations at run time by loading text kernels.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  In the following code fragment, BODEUL returns the Euler
       !>         angles representing the orientation of Jupiter relative to
@@ -8843,15 +8843,15 @@ contains
       !>             11          -                          No
       !>     1000000000          -                          No
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  See exception <2>.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -8861,7 +8861,7 @@ contains
       !>     F.S. Turner        (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 07-AUG-2020 (JDR)
       !>
@@ -8937,13 +8937,13 @@ contains
       return
       end procedure bods2c
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CODE     is the integer code for a body: planet, satellite,
       !>              barycenter, spacecraft, asteroid, comet, or
       !>              other ephemeris object.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NAME     is the string name of the body identified by CODE
       !>              if a mapping between CODE and a body name exists
@@ -8958,19 +8958,19 @@ contains
       !>              name, NAME returns the string representation
       !>              of CODE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXL     is the maximum allowable length of a body name. The
       !>              current value of this parameter is 36. See the SPICELIB
       !>              include file zzbodtrn.inc for details.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is any problem with the body name-ID mapping kernel
       !>         variables present in the kernel pool, an error is signaled by
       !>         a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Body-name mappings may be defined at run time by loading text
       !>     kernels containing kernel variable assignments of the form
@@ -8980,7 +8980,7 @@ contains
       !>
       !>     See naif_ids.req for details.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     BODC2S is one of five related subroutines,
       !>
@@ -9010,7 +9010,7 @@ contains
       !>     into SPICE, and for details concerning adding new name/code
       !>     associations at run time by loading text kernels.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -9078,21 +9078,21 @@ contains
       !>        Note that the codes 11 and 6000001 did not map to a name so the
       !>        call returns as NAME the string expression of the codes.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 07-JUL-2021 (JDR)
       !>
@@ -9149,7 +9149,7 @@ contains
 
       end procedure bodc2s
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is an arbitrary name of a body which could be
       !>              a planet, satellite, barycenter, spacecraft,
@@ -9186,11 +9186,11 @@ contains
       !>
       !>     CODE     is the integer ID code for assignment to body NAME.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXL     is the maximum allowed length of a body NAME.
       !>              Names exceeding this length will be truncated
@@ -9198,7 +9198,7 @@ contains
       !>              of this parameter may be found in the include
       !>              file 'zzbodtrn.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If improper inputs are supplied, or if there is insufficient
       !>         room to store the requested addition, an error is signaled by
@@ -9214,11 +9214,11 @@ contains
       !>         assignments. See the $Particulars section of this document
       !>         for more information.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     BODDEF is one of five related subroutines,
       !>
@@ -9280,7 +9280,7 @@ contains
       !>     results in the state 'spud' maps to 23, 23 maps to 'spud',
       !>     and 22 maps to nothing (FOUND in BODC2N returns .FALSE.).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     You may associate a new name for a previously defined code:
       !>
@@ -9308,15 +9308,15 @@ contains
       !>               5    'JB'                     Yes
       !>        20103456    'Asteroid Frank'         Yes
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
@@ -9324,7 +9324,7 @@ contains
       !>     F.S. Turner        (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 13-AUG-2021 (JDR)
       !>
@@ -9392,7 +9392,7 @@ contains
 
       end procedure boddef
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the ID code of the body for which the item is
       !>              requested.
@@ -9403,24 +9403,24 @@ contains
       !>                    'BODY599_RADII'
       !>                    'BODY4_POLE_RA'
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if ITEM is in the kernel pool, and
       !>     .FALSE. if it is not.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     BODVCD, which returns values from the kernel pool, causes an
       !>     error to be signaled whenever the specified item is not found.
@@ -9428,7 +9428,7 @@ contains
       !>     program may attempt to recover, by providing default values,
       !>     prompting for replacements, and so on.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following example, default values are substituted for
       !>     bodies for which axes are not found.
@@ -9439,15 +9439,15 @@ contains
       !>           CALL VPACK ( 100.D0, 100.D0, 100.D0, RADII )
       !>        END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -9455,7 +9455,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 12-AUG-2021 (JDR)
       !>
@@ -9538,7 +9538,7 @@ contains
       return
       end procedure bodfnd
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -9549,7 +9549,7 @@ contains
       !>     provided by the caller if the name is the same as the saved name
       !>     and the ZZBODTRN state did not change.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     USRCTR      is the value of the ZZBODTRN state counter tracked by
       !>                 (saved in) the caller (user) routine specifically for
@@ -9577,7 +9577,7 @@ contains
       !>                 allowed values see description of the NAME argument
       !>                 in BODS2C.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     USRCTR      is the current ZZBODTRN state counter.
       !>
@@ -9606,23 +9606,23 @@ contains
       !>                 represents an integer. Otherwise, FOUND is .FALSE.
       !>                 On the output FOUND always equals SAVFND.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     CTRSIZ      is the dimension of the counter array used by
       !>                 various SPICE subsystems to uniquely identify
       !>                 changes in their states. This parameter is
       !>                 defined in the private include file 'zzctr.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) Errors may be signaled by routines in the call tree of this
       !>        routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine translates a string containing a body name or ID code
       !>     to an integer code but bypasses calling BODS2C to do the
@@ -9641,7 +9641,7 @@ contains
       !>     ZZBODTRN state counter and name/ID/found flag variables for each
       !>     of the two bodies .
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This example shows how a routine that needs to do body name-ID
       !>     conversion for two distinct bodies can do it using ZZBODS2C.
@@ -9723,19 +9723,19 @@ contains
       !>           END IF
       !>           ...
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 21-SEP-2013 (BVS)
       module procedure zzbods2c
@@ -9806,7 +9806,7 @@ contains
 
       end procedure zzbods2c
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -9818,7 +9818,7 @@ contains
       !>     state has changed; otherwise, bypass kernel pool lookup and
       !>     return input values.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the NAIF integer ID code for a body of interest.
       !>                For example, if the body is the earth, the code is
@@ -9860,7 +9860,7 @@ contains
       !>     VALUES     is, on input, the set of values associated with the
       !>                kernel variable designated by BODYID and ITEM.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VARCTR     is, on output, a counter used to represent the current
       !>                kernel pool state.
@@ -9871,11 +9871,11 @@ contains
       !>     VALUES     is, on output, the set of values associated with the
       !>                kernel variable designated by BODYID and ITEM.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the requested kernel variable is not found in the kernel
       !>         pool, the error SPICE(KERNELVARNOTFOUND) is signaled.
@@ -9900,11 +9900,11 @@ contains
       !>     5)  If a lookup of the requested variable fails, the argument
       !>         N is set to zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to enable efficient use of BODVCD. This
       !>     routine calls BODVCD only if the requested kernel variable values
@@ -9931,7 +9931,7 @@ contains
       !>     boolean "found flag" with the value .FALSE., again the routine
       !>     GDPOOL should be used.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  The call below can be used to fetch initial values of the
       !>         radii for the earth (body 399).
@@ -10028,22 +10028,22 @@ contains
       !>        containing data for all planets and satellites has
       !>        been loaded.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     B.V. Semenov    (JPL)
       !>     W.L. Taber      (JPL)
       !>     I.M. Underwood  (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 20-OCT-2015 (NJB) (BVS) (WLT) (IMU)
       module procedure zzbodvcd
@@ -10081,7 +10081,7 @@ contains
       return
       end procedure zzbodvcd
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Deprecated: This routine has been superseded by BODVCD and
       !>     BODVRD. This routine is supported for purposes of backward
@@ -10090,7 +10090,7 @@ contains
       !>     Return the values of some item for any body in the
       !>     kernel pool.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the ID code of the body for which ITEM is
       !>              requested.
@@ -10101,30 +10101,30 @@ contains
       !>                 'BODY599_RADII'
       !>                 'BODY401_POLE_RA'
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DIM      is the number of values associated with the variable.
       !>
       !>     VALUES   are the values associated with the variable.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the requested item is not found, the error
       !>         SPICE(KERNELVARNOTFOUND) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -10200,15 +10200,15 @@ contains
       !>
       !>        399 RADII:   6378.140   6378.140   6356.750
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -10218,7 +10218,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.6, 17-JUN-2021 (JDR)
       !>
@@ -10289,7 +10289,7 @@ contains
       return
       end procedure bodvar
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID   is the NAIF integer ID code for a body of interest.
       !>              For example, if the body is the earth, the code is
@@ -10317,7 +10317,7 @@ contains
       !>              that is too small to hold all of the values associated
       !>              with the requested kernel variable.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DIM      is the number of values returned; this is always the
       !>              number of values associated with the requested kernel
@@ -10328,11 +10328,11 @@ contains
       !>              of the values associated with the kernel variable, the
       !>              returned values of DIM and VALUES are undefined.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the requested kernel variable is not found in the kernel
       !>         pool, the error SPICE(KERNELVARNOTFOUND) is signaled.
@@ -10354,11 +10354,11 @@ contains
       !>         dimension of VALUES, then this routine may overwrite
       !>         memory. The results are unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine simplifies looking up PCK kernel variables by
       !>     constructing names of requested kernel variables and by
@@ -10380,7 +10380,7 @@ contains
       !>     boolean "found flag" with the value .FALSE., again the routine
       !>     GDPOOL should be used.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -10491,15 +10491,15 @@ contains
       !>        containing data for all planets and satellites has
       !>        been loaded.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -10507,7 +10507,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 07-SEP-2021 (JDR)
       !>
@@ -10602,7 +10602,7 @@ contains
       return
       end procedure bodvcd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYNM   is the name of the body for which ITEM is requested.
       !>              BODYNM is case-insensitive, and leading and trailing
@@ -10634,7 +10634,7 @@ contains
       !>              that is too small to hold all of the values associated
       !>              with the requested kernel variable.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DIM      is the number of values returned; this is always the
       !>              number of values associated with the requested kernel
@@ -10645,11 +10645,11 @@ contains
       !>              of the values associated with the kernel variable, the
       !>              returned values of DIM and VALUES are undefined.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input body name cannot be translated to an ID code,
       !>         and if the name is not a string representation of an integer
@@ -10676,11 +10676,11 @@ contains
       !>         dimension of VALUES, then this routine may overwrite
       !>         memory. The results are unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine simplifies looking up PCK kernel variables by
       !>     constructing names of requested kernel variables and by
@@ -10702,7 +10702,7 @@ contains
       !>     boolean "found flag" with the value .FALSE., again the routine
       !>     GDPOOL should be used.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -10838,15 +10838,15 @@ contains
       !>        containing data for all planets and satellites has
       !>        been loaded.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -10854,7 +10854,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.1, 27-AUG-2021 (JDR)
       !>
@@ -10875,7 +10875,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 23-FEB-2004 (NJB) (BVS) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 22-JUL-2004 (NJB)
       !>

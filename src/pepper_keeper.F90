@@ -11,12 +11,12 @@ submodule (pepper_instance) pepper_keeper
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N        is any integer (less than 10**12 in absolute value).
       !>              If N is less than 0, -N must be a legitimate number.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STRING   is the English cardinal equivalent of N. STRING will
       !>              contain only upper case letters.
@@ -30,11 +30,11 @@ contains
       !>                 'SEVEN HUNDRED SEVENTY-SEVEN THOUSAND '      //
       !>                 'SEVEN HUNDRED SEVENTY-SEVEN'
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -42,11 +42,11 @@ contains
       !>         it will be truncated on the right, leaving only the most
       !>         significant portion of the number.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used primarily for constructing error messages.
       !>     For example, an overflow message might look like the following:
@@ -62,7 +62,7 @@ contains
       !>
       !>        '$ 2471.00'
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     N           STRING
       !>     ------      ------------------------------------------
@@ -76,7 +76,7 @@ contains
       !>      99         NINETY-NINE
       !>      82131      EIGHTY-TWO THOUSAND ONE HUNDRED THIRTY-ONE
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that N will always be less than
       !>         a trillion (10**12) in absolute value.
@@ -87,16 +87,16 @@ contains
       !>     3)  This routine assumes that an integer as large as 10**9
       !>         (one billion) is representable on the host machine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -257,7 +257,7 @@ contains
       return
       end procedure inttxt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N        is an integer (less than 10**12 in absolute value).
       !>              Moreover, if N is less than zero, -N must be a
@@ -266,12 +266,12 @@ contains
       !>              In the context of this routine N represents the
       !>              ranking of some item within a group.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STRING   is the English ordinal equivalent of N. STRING will
       !>              contain only upper case letters.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXORD   is one more than the length of the longest ordinal
       !>              string that can be produced by a call to this routine:
@@ -289,7 +289,7 @@ contains
       !>              of sufficient length to allow the construction of
       !>              any ordinal string.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -297,11 +297,11 @@ contains
       !>         it will be truncated on the right, leaving only the most
       !>         significant portion of the ordinal.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is used primarily for generating error messages. For example,
       !>     if the third letter or token in a string is in error, it might
@@ -309,7 +309,7 @@ contains
       !>
       !>        'The third token of 31-JAN-198$ is not a valid year.'
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     N           STRING
       !>     ------      -------------------------------------------
@@ -323,21 +323,21 @@ contains
       !>      99         NINETY-NINTH
       !>      82131      EIGHTY-TWO THOUSAND ONE HUNDRED THIRTY-FIRST
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Whatever restrictions apply to INTTXT apply to this routine
       !>         as well.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -439,7 +439,7 @@ contains
       return
       end procedure intord
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
       !>
@@ -464,7 +464,7 @@ contains
       !>
       !>                 C, c     Capitalized    One hundred fifty-third
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the string obtained by substituting the text
       !>              representation of the ordinal number VALUE for the first
@@ -472,7 +472,7 @@ contains
       !>
       !>              OUT and IN must be identical or disjoint.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXLON   is the maximum expected length of any ordinal text.
       !>              147 characters are sufficient to hold the text
@@ -486,7 +486,7 @@ contains
       !>
       !>                 - 777 777 777 777
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If OUT does not have sufficient length to accommodate the
       !>         result of the substitution, the result will be truncated on
@@ -498,11 +498,11 @@ contains
       !>     3)  If the value of RTCASE is not recognized, the error
       !>         SPICE(INVALIDCASE) is signaled. OUT is not changed.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is one of a family of related routines for inserting values
       !>     into strings. They are typically to construct messages that
@@ -533,7 +533,7 @@ contains
       !>        REPMCT   ( Replace marker with cardinal text          )
       !>        REPMOT   ( Replace marker with ordinal text           )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -618,7 +618,7 @@ contains
       !>            Input : Name:  YY.  Rank:  XX.
       !>            Output: Name:  Moriarty.  Rank:  Fifth.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  VALUE must be in the range accepted by the SPICELIB routine
       !>         INTORD. This range is currently
@@ -627,11 +627,11 @@ contains
       !>
       !>         Note that the endpoints of the interval are excluded.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -639,7 +639,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 06-JUL-2021 (JDR)
       !>
@@ -765,7 +765,7 @@ contains
       return
       end procedure repmot
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is the name of a kernel pool variable for which
       !>              the caller wants to retrieve a full (potentially
@@ -784,7 +784,7 @@ contains
       !>              If CONTIN is blank, all of the components of ITEM
       !>              will be retrieved as a single string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STRING   is the full string starting at the FIDX element of the
       !>              kernel pool variable specified by ITEM.
@@ -810,11 +810,11 @@ contains
       !>     FOUND    is a logical variable indicating success of the
       !>              request to retrieve the string.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the variable specified by ITEM is not present in the
       !>         kernel pool or is present but is not character valued, STRING
@@ -853,11 +853,11 @@ contains
       !>         from the point of view of SEPOOL if CONTIN is set to the
       !>         blank character.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>      The SPICE Kernel Pool provides a very convenient interface
       !>      for supplying both numeric and textual data to user application
@@ -919,7 +919,7 @@ contains
       !>         CALL SEPOOL ( 'LONG_STRINGS', FIDX, '//',
       !>        .                              STRING(2), SIZE, LIDX, FOUND )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Example 1. Retrieving file names.
       !>
@@ -1009,21 +1009,21 @@ contains
       !>
       !>      resulted in several words being run together as shown below.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
       !>
@@ -1155,7 +1155,7 @@ contains
       return
       end procedure sepool
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is the name of a kernel pool variable for which
       !>              the caller wants to retrieve a full (potentially
@@ -1175,7 +1175,7 @@ contains
       !>              If CONTIN is blank, all of the components of ITEM will be
       !>              retrieved as a single string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NTHSTR   is the NTH full string associated with the kernel pool
       !>              variable specified by ITEM.
@@ -1199,11 +1199,11 @@ contains
       !>              Nth string exists, FOUND will be set to .TRUE.;
       !>              otherwise FOUND will be set to .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the variable specified by ITEM is not present in the
       !>         kernel pool or is present but is not character valued,
@@ -1242,11 +1242,11 @@ contains
       !>         from the point of view of STPOOL if CONTIN is set to the
       !>         blank character.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The SPICE Kernel Pool provides a very convenient interface
       !>     for supplying both numeric and textual data to user application
@@ -1304,7 +1304,7 @@ contains
       !>        CALL STPOOL ( 'LONG_STRINGS', 1, '//', STRGNA, SIZE, FOUND )
       !>        CALL STPOOL ( 'LONG_STRINGS', 2, '//', STRGNB, SIZE, FOUND )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Example 1. Retrieving file names.
       !>
@@ -1396,20 +1396,20 @@ contains
       !>
       !>     resulted in several words being run together as shown below.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -1556,7 +1556,7 @@ contains
       return
       end procedure stpool
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is the item for which a version string is to be returned.
       !>              ITEM may be 'TOOLKIT', entry point names, or program
@@ -1567,33 +1567,33 @@ contains
       !>
       !>              Any other ITEM will return 'No version found.'
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VERSTR   is the latest version string for the specified ITEM.
       !>
       !>              If ITEM is not one of the items having a version, the
       !>              value 'No version found.' will be returned.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the ITEM whose version string is requested is not
       !>         recognized, the string 'No version found.' is returned.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you want to find out the recent Toolkit configuration
       !>     version number. Using the code fragment below:
@@ -1607,15 +1607,15 @@ contains
       !>
       !>        'N0035'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
@@ -1624,7 +1624,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     F.S. Turner        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.16.0, 31-DEC-2021 (WLT)
       !>
@@ -1790,7 +1790,7 @@ contains
       return
       end procedure tkvrsn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FILE       the name of the ASCII file to scan for a line
       !>                terminator
@@ -1805,7 +1805,7 @@ contains
       !>                if it was not the case. If set to .FALSE., instructs
       !>                the routine to bypass the check.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TERMIN     the terminator ID extracted from FILE. The possible
       !>                values:
@@ -1816,11 +1816,11 @@ contains
       !>                '?'     - unable to determine, possibly
       !>                          due to an error event
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) A SPICE(STRINGTOOSHORT) error signals if LINE has length less
       !>        than 3.
@@ -1832,17 +1832,17 @@ contains
       !>        and abort of the run was requested by causes this routine to
       !>        signal the error SPICE(INCOMPATIBLEEOL).
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The function scans a string read from a text file to determine
       !>     the native platform of the file. The functions response is
       !>     unpredictable if it scans a binary file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     To return EOL terminator for a given file:
       !>
@@ -1872,7 +1872,7 @@ contains
       !>     If the EOL terminator was not native, the call will generate
       !>     SPICE(INCOMPATIBLEEOL) error.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) The terminator detection is not performed if the read from
       !>        the file fails because the file is smaller than the allocated
@@ -1882,16 +1882,16 @@ contains
       !>        first text line in the file exceeds the length of the LINE
       !>        work space.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     E.D. Wright      (JPL)
       !>     B.V. Semenov     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.26.0, 28-NOV-2021 (BVS)
       !>
@@ -2280,7 +2280,7 @@ contains
       return
       end procedure zzascii
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of the file in question. This may be any
       !>              unambiguous file name valid on the user's computer, for
@@ -2292,16 +2292,16 @@ contains
       !>
       !>              Environment or shell variables may not be used.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value .TRUE. if the file exists, .FALSE.
       !>     otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the filename is blank, the error SPICE(BLANKFILENAME) is
       !>         signaled.
@@ -2309,16 +2309,16 @@ contains
       !>     2)  If an I/O error occurs while checking the existence of the
       !>         indicated file, the error SPICE(INQUIREFAILED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Use the Fortran INQUIRE statement to determine the existence
       !>     of FNAME.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -2381,15 +2381,15 @@ contains
       !>         Cannot find the file exists_ex1.txt
       !>         The file exists_ex1.pgm exists.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -2398,7 +2398,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.3.0, 17-JUN-2021 (JDR)
       !>
@@ -2446,7 +2446,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 29-DEC-1988 (HAN)
       !>
@@ -2512,7 +2512,7 @@ contains
       return
       end procedure exists
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -2521,7 +2521,7 @@ contains
       !>     Determine the architecture and type of a file and load
       !>     the file into the appropriate SPICE subsystem
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FILE       is the name of a file that is anticipated to
       !>                be a SPICE kernel.
@@ -2532,7 +2532,7 @@ contains
       !>                first octothorpe ('#') will be replaced by the name of
       !>                the file. The second by a descriptive message.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     FILTYP     is the type of the kernel as determined by the
       !>                SPICE file record of the file or by various
@@ -2555,11 +2555,11 @@ contains
       !>                file.  If the FILTYP of the file is 'TEXT', HANDLE
       !>                will be set to zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the specified file does not exist, the error
       !>        SPICE(NOSUCHFILE) will be signaled.
@@ -2587,37 +2587,37 @@ contains
       !>     7) All other problems associated with the loading of FILE
       !>        are diagnosed by the routines called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is intended as a supporting routine for the
       !>     SPICE routine FURNSH.  It handles the task of loading
       !>     an arbitrary kernel without the caller having to specify
       !>     the type of the kernel.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.  (After all it's a private routine)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     W.L. Taber      (JPL)
       !>     E.D. Wright     (JPL)
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 17-OCT-2021 (BVS)
       !>
@@ -3405,7 +3405,7 @@ contains
 !     The number of files loaded through this interfaces is kept in the
 !     integer LOADED.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FILE     is a SPICE kernel file. The file may be either binary
       !>              or text. If the file is a binary SPICE kernel it will
@@ -3483,12 +3483,12 @@ contains
       !>               KERNELS_TO_LOAD, PATH_SYMBOLS and PATH_VALUES are
       !>               removed from the kernel pool.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. The routine loads various SPICE kernels for use by your
       !>     application.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     FILSIZ   is the maximum file name length that can be accommodated
       !>              by the kernel pool.
@@ -3525,7 +3525,7 @@ contains
       !>              normally will degrade as the number of loaded kernels
       !>              increases.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If a problem is encountered while trying to load FILE, an
       !>         error is signaled by a routine in the call tree of this
@@ -3573,14 +3573,14 @@ contains
       !>         error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The input FILE is examined and loaded into the appropriate SPICE
       !>     subsystem. If the file is a meta-kernel, any kernels specified
       !>     by the KERNELS_TO_LOAD keyword (and if present, the PATH_SYMBOLS
       !>     and PATH_VALUES keywords) are loaded as well.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a uniform interface to the SPICE kernel
       !>     loading systems. It allows you to easily assemble a list of
@@ -3588,7 +3588,7 @@ contains
       !>     without modifying the source code of programs that make use of
       !>     these kernels.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3841,7 +3841,7 @@ contains
       !>        The total number of kernels after final FURNSH:  6
       !>        The total number of kernels after KCLEAR      :  0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     PEPPER: a line of a text kernel or meta-kernel may have at most
       !>     132 characters (NAIF's text kernel rule). A longer line is cut to
@@ -3875,11 +3875,11 @@ contains
       !>         operations mentioned above. A simple workaround when this
       !>         is needed is to specify kernels using absolute paths.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -3888,7 +3888,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.1, 08-AUG-2021 (JDR)
       !>
@@ -4339,7 +4339,7 @@ contains
          end subroutine get_file_name
       end procedure furnsh
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     KIND     is a list of types of kernels to count when computing
       !>              loaded kernels. KIND should consist of a list of words of
@@ -4374,16 +4374,16 @@ contains
       !>              See the $Examples section for illustrations of the
       !>              use of KIND.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     COUNT    is the number of kernels loaded through FURNSH that
       !>              belong to the list specified by KIND.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If a word on the list specified by KIND is not recognized,
       !>         it is ignored.
@@ -4391,16 +4391,16 @@ contains
       !>     2)  If KIND is blank, or none of the words in KIND is on the
       !>         list specified above, COUNT will be returned as zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     KTOTAL allows you to easily determine the number of kernels
       !>     loaded via the interface FURNSH that are of a type of interest.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4533,22 +4533,22 @@ contains
       !>        The total number of binary kernels            :  2
       !>        The total number of kernels after KCLEAR      :  0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.1, 25-OCT-2021 (JDR) (NJB)
       !>
@@ -4694,7 +4694,7 @@ contains
       end associate
       end procedure ktotal
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     WHICH    is the number of the kernel to fetch (matching the type
       !>              specified by KIND) from the list of kernels that have
@@ -4739,7 +4739,7 @@ contains
       !>
       !>              See the routine KTOTAL for examples of the use of KIND.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     FILE     is the name of the file having index WHICH in the
       !>              sequence of files of type KIND that is currently loaded
@@ -4766,11 +4766,11 @@ contains
       !>              of WHICH and KIND exists. If there is no such file,
       !>              FOUND will be set to .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -4782,17 +4782,17 @@ contains
       !>         too short to contain the corresponding output string, the
       !>         string is truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows you to determine which kernels have been
       !>     loaded via FURNSH and to obtain information sufficient to directly
       !>     query those files.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4932,22 +4932,22 @@ contains
       !>
       !>         No kernel found with index:            5
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.1.0, 08-AUG-2021 (JDR) (NJB)
       !>
@@ -5137,12 +5137,12 @@ contains
       end associate
       end procedure kdata
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FILE     is the name of a kernel file for which KEEPER
       !>              information is desired.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     FILTYP   is the type of the kernel specified by FILE.  FILE
       !>              will be blank if FILE is not on the list of loaded
@@ -5163,11 +5163,11 @@ contains
       !>              loaded kernels. If there is no such file, FOUND will
       !>              be set to .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -5180,16 +5180,16 @@ contains
       !>         short to contain the corresponding output string, the string
       !>         is truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point allows you to request information directly
       !>     for a specific SPICE kernel.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5347,22 +5347,22 @@ contains
       !>         pck00008.tpc                     is a text kernel.
       !>         naif0009.tls                     is a text kernel.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.1.0, 08-AUG-2021 (JDR)
       !>
@@ -5472,30 +5472,30 @@ contains
       end associate
       end procedure kinfo
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None. This routine operates by side effects. See $Particulars
       !>     below.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs when setting a kernel pool watch or
       !>         checking watched variables, the error is signaled by a routine
       !>         in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See $Particulars.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point allows you re-initialize the KEEPER system with
       !>     a single call.
@@ -5521,7 +5521,7 @@ contains
       !>     KEEPER system to its initial state, preventing unintentional
       !>     interaction between scripts via KEEPER's state.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5610,24 +5610,24 @@ contains
       !>        The total number of kernels after FURNSH:  4
       !>        The total number of kernels after KCLEAR:  0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Calling this routine will wipe out any kernel pool data
       !>         inserted via the SPICELIB API routines to put data into the
       !>         kernel pool (PCPOOL, PDPOOL and PIPOOL).
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.1, 08-AUG-2021 (JDR)
       !>
@@ -5776,7 +5776,7 @@ contains
       end associate
       end procedure kclear
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FILE     is the name of a file to unload. This file
       !>              should be one loaded through the interface FURNSH.
@@ -5787,26 +5787,26 @@ contains
       !>              the files loaded as a result of loading the meta-text
       !>              kernel will be unloaded.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the specified kernel is not on the list of loaded kernels
       !>         no action is taken.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The call
       !>
@@ -5964,7 +5964,7 @@ contains
       !>     kernel does not delete watchers. Watchers can be deleted by
       !>     calling the POOL entry point DWPOOL.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6165,23 +6165,23 @@ contains
       !>
       !>        The total number of kernels after final UNLOAD:  1
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  See the note regarding the unloading of Text and meta-text
       !>         Kernels.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.1, 08-AUG-2021 (JDR)
       !>

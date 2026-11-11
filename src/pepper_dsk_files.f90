@@ -12,7 +12,7 @@ submodule (pepper_instance) pepper_dsk_files
 
 contains
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -28,7 +28,7 @@ contains
       !>     can be satisfied for some value of N.  Moreover, if such
       !>     an N exists (there can be only one) it returns that value.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SIZE       Constant terms in the equation given in the abstract.
       !>     PSIZE
@@ -37,7 +37,7 @@ contains
       !>     OFFSET     Constant term in the equation above.  It should be
       !>                1 or 0.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OK         is TRUE if an integer solution for N exists.  Otherwise
       !>                it is returned FALSE.
@@ -46,21 +46,21 @@ contains
       !>                if such a solution exists.  Otherwise it is returned
       !>                with the value zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If SIZE, PSIZE, or DSIZE is less than 1, OK is set to FALSE
       !>         N is set to zero and no attempt is made at finding a
       !>         solution.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines whether or not the integer arithmetic
       !>     equation
@@ -84,23 +84,23 @@ contains
       !>        DSIZE  = 100
       !>        OFFSET = 1
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber      (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 02-DEC-1999 (WLT)
       module procedure zzsizeok
@@ -184,7 +184,7 @@ contains
       return
       end procedure zzsizeok
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -193,50 +193,50 @@ contains
       !>     This routine determines whether or not a DAF file attached to
       !>     the supplied handle is an SPK, CK or unknown file.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of a DAF file open for read.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CKSPK      is a string containing one of the following 3 values
       !>                'SPK', 'CK' or '?'
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine examines the first segment of a DAF that is
       !>     a candidate for being an SPK or CK and returns a diagnosis
       !>     of the type of the file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber      (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
       !>
@@ -527,12 +527,12 @@ contains
 
       end procedure zzckspk
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FILE     is the name of a SPICE kernel file whose architecture
       !>              and type are desired.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARCH     is the file architecture of the SPICE kernel file
       !>              specified by FILE. If the architecture cannot be
@@ -565,7 +565,7 @@ contains
       !>
       !>              This variable may be at most 4 characters long.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     RECL     is the record length of a binary kernel file. Each
       !>              record must be large enough to hold 128 double
@@ -576,7 +576,7 @@ contains
       !>              where two longwords equal one double precision
       !>              number.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the filename specified is blank, the error
       !>         SPICE(BLANKFILENAME) is signaled.
@@ -608,19 +608,19 @@ contains
       !>         kernels may result in an indeterminate KERTYP if the SPK or
       !>         CK files have invalid first segments.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The SPICE kernel file specified by FILE is opened and then
       !>     closed by this routine to determine its file architecture and
       !>     type. Filenames of open files should not be passed to this
       !>     routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This subroutine is a support utility routine that determines the
       !>     architecture and type of a SPICE kernel file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -816,17 +816,17 @@ contains
       !>           Architecture: DAS
       !>           Kernel type : DSK
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  In order to properly determine the type of DAF based binary
       !>         kernels, the routine requires that their first segments and
       !>         the meta data necessary to address them are valid.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -837,7 +837,7 @@ contains
       !>     F.S. Turner        (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.1.0, 28-NOV-2021 (BVS)
       !>
@@ -1059,7 +1059,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 24-JUL-1993 (WLT) (HAN) (KRG)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 4.0.0, 22-AUG-2001 (WLT) (FST) (EDW)
       !>
@@ -1519,7 +1519,7 @@ contains
 
       end procedure getfat
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is the length of the semi-axis of the ellipsoid that is
       !>              parallel to the X-axis of the body-fixed reference frame.
@@ -1535,31 +1535,31 @@ contains
       !>              of the ellipsoid are aligned with the X, Y, and Z-axes of
       !>              the reference frame.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NORMAL   is the unit vector pointing away from the ellipsoid and
       !>              normal to the ellipsoid at POINT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of the axes are non-positive, the error
       !>         SPICE(BADAXISLENGTH) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes the outward pointing unit normal vector to
       !>     the ellipsoid having semi-axes of length A, B, and C from the
       !>     point POINT.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     A typical use of SURFNM would be to find the angle of incidence
       !>     of the light from the sun at a point on the surface of an
@@ -1576,23 +1576,23 @@ contains
       !>
       !>        INCIDN = VSEP ( V,          NRML )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  It is assumed that the input POINT is indeed on the ellipsoid.
       !>         No checking for this is done.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.0, 26-OCT-2021 (JDR)
       !>
@@ -1715,7 +1715,7 @@ contains
       return
       end procedure surfnm
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     POSITN   is a 3-vector giving the position of a point with respect
       !>              to the center of an ellipsoid. The vector is expressed
@@ -1732,7 +1732,7 @@ contains
       !>     C        is the length of the semi-axis of the ellipsoid that is
       !>              parallel to the z-axis of the body-fixed reference frame.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NPOINT   is the nearest point on the ellipsoid to POSITN.
       !>              NPOINT is a 3-vector expressed in the body-fixed
@@ -1743,11 +1743,11 @@ contains
       !>              and have magnitude equal to the distance between
       !>              NPOINT and POSITN.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of the axis lengths A, B or C are non-positive, the
       !>         error SPICE(BADAXISLENGTH) is signaled.
@@ -1778,11 +1778,11 @@ contains
       !>         1.E25, the results may have poor precision. No error checks
       !>         are done to identify this problem.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Many applications of this routine are more easily performed
       !>     using the higher-level SPICELIB routine SUBPNT. This routine
@@ -1792,7 +1792,7 @@ contains
       !>     ellipsoid nearest to an arbitrary location, P, relative to that
       !>     ellipsoid.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Example 1.
       !>
@@ -1874,15 +1874,15 @@ contains
       !>
       !>     The Gaussian coordinates are LONG, LAT, and ALT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See $Exceptions section.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -1890,7 +1890,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 26-OCT-2021 (NJB) (JDR) (EDW)
       !>
@@ -1957,7 +1957,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 27-NOV-1990 (NJB)
       !>
@@ -3689,7 +3689,7 @@ contains
       return
       end procedure nearpt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RECTAN   are the rectangular coordinates of a point. RECTAN
       !>              must be in the same units as RE.
@@ -3703,7 +3703,7 @@ contains
       !>     F        is the flattening coefficient = (RE-RP) / RE, where RP is
       !>              the polar radius of the spheroid.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LON      is the geodetic longitude of the input point. This is the
       !>              angle between the prime meridian and the meridian
@@ -3727,11 +3727,11 @@ contains
       !>              The units associated with ALT are those associated with
       !>              the inputs RECTAN and RE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the equatorial radius is non-positive, the error
       !>         SPICE(VALUEOUTOFRANGE) is signaled.
@@ -3743,11 +3743,11 @@ contains
       !>         point on the ellipsoid to RECTAN may not be unique, so
       !>         latitude may not be well-defined.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given the body-fixed rectangular coordinates of a point, and the
       !>     constants describing the reference spheroid,  this routine
@@ -3759,7 +3759,7 @@ contains
       !>     this coordinate system may not be a right-handed coordinate
       !>     system.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3958,16 +3958,16 @@ contains
       !>              0.000   6378.206   6378.206   90.000   45.137   2652.768
       !>           6378.206   6378.206   6378.206   45.000   35.370   4676.389
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  R. Bate, D. Mueller, and J. White, "Fundamentals of
       !>          Astrodynamics," Dover Publications Inc., 1971.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -3975,7 +3975,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 01-OCT-2021 (JDR) (NJB)
       !>
@@ -4012,7 +4012,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 3.0.1, 9-JUN-1989 (HAN)
       !>
@@ -4098,7 +4098,7 @@ contains
       return
       end procedure recgeo
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -4107,7 +4107,7 @@ contains
       !>     Generate a data structure that represents the mapping from
       !>     vertices to the plates containing them.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NV         Number of vertices.
       !>
@@ -4132,7 +4132,7 @@ contains
       !>     CELLS      workspace array used to construct the vertex-plate
       !>                mapping.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CELLS      Workspace array used to construct the vertex-plate
       !>                mapping.
@@ -4154,13 +4154,13 @@ contains
       !>
       !>                The size of this array must be at least MAXLST.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See parameter declarations in
       !>
       !>        dsk02.inc
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input plate count NP is non-positive, the
       !>         error SPICE(BADPLATECOUNT) is signaled.
@@ -4180,11 +4180,11 @@ contains
       !>
       !>         the error SPICE(PLATELISTTOOSMALL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports the DSK type 2 spatial index
       !>     routines
@@ -4192,24 +4192,24 @@ contains
       !>        DSKMI2
       !>        DSKSI2
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in DSKMI2.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     J.A. Bytof      (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-NOV-2020 (NJB)
       !>
@@ -4371,7 +4371,7 @@ contains
       return
       end procedure zzvrtplt
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -4380,7 +4380,7 @@ contains
       !>     Map voxel coordinates to coarse voxel coordinates and offset
       !>     relative to coarse voxel. Offset coordinates are 1-based.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VIXYZ      is an array containing integer Cartesian coordinates
       !>                of a voxel in the fine voxel grid. Coordinates are
@@ -4393,7 +4393,7 @@ contains
       !>                of the coarse voxel edge length to the fine voxel
       !>                edge length.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CGXYZ      is an array containing integer Cartesian coordinates
       !>                of the coarse voxel that contains the fine voxel
@@ -4407,11 +4407,11 @@ contains
       !>                relative to the coarse voxel that contains it. The
       !>                offset is 1-based.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If any input fine voxel grid dimension is non-positive,
       !>        the error SPICE(VALUEOUTOFRANGE) is signaled.
@@ -4419,33 +4419,33 @@ contains
       !>     2) If the coarse voxel scale is non-positive, the error
       !>        SPICE(VALUEOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine encapsulates a frequently used type 2 DSK address
       !>     calculation. The output offset CGOF1D is useful for locating
       !>     a fine voxel's pointer into the voxel-plate list.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in the routine ZZMKSPIN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 23-AUG-2016 (NJB)
       !>
@@ -4534,7 +4534,7 @@ contains
 
       end procedure zzvoxcvo
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -4543,7 +4543,7 @@ contains
       !>     Given a voxel's grid coordinates and the voxel grid
       !>     dimensions, return the voxel's 1-dimensional index.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VIXYZ      An integer 3-vector storing the voxel grid coordinates
       !>                for the point of interest.
@@ -4551,45 +4551,45 @@ contains
       !>     NVOX       An array of three positive integers defining a voxel
       !>                grid's extents in the X, Y, and Z directions.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value of the voxel index.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZMKSPIN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     J.A. Bytof      (JPL)
       !>     E.D. Wright     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
       !>
@@ -4638,7 +4638,7 @@ contains
       return
       end procedure zzvox2id
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -4648,7 +4648,7 @@ contains
       !>     associated with a specified A-value. Store the B-values of these
       !>     cells in an array.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     AVAL       is an index associated with a pool entry. AVAL
       !>                is the index of the Ith value of a finite set "A."
@@ -4684,7 +4684,7 @@ contains
       !>
       !>     MAXB       is the size of the output B-value list.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NB         is the number of nodes in the list associated with
       !>                AVAL.
@@ -4694,11 +4694,11 @@ contains
       !>                each node in the list associated with AVAL; the list
       !>                may contain duplicates.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the array index AVAL is less than 1 or exceeds the
       !>         declared size of the PNTR array, the error
@@ -4717,11 +4717,11 @@ contains
       !>         the output list array, the error SPICE(BARRAYTOOSMALL) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The AB list routines support manipulation of a data structure that
       !>     represents a one-to-many mapping from a set A to a set B. Each
@@ -4753,24 +4753,24 @@ contains
       !>     for creation of both voxel-plate association data structures and
       !>     of vertex-plate association data structures.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in the routine ZZUNTNGL.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     J.A. Bytof      (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 23-AUG-2016 (NJB)
       !>
@@ -4894,7 +4894,7 @@ contains
       return
       end procedure zztrvlnk
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NPTR       is the size of the input pointer array INPTR.
       !>
@@ -4924,7 +4924,7 @@ contains
       !>     PNTRS      is an array of pointers from A values to
       !>                linked lists of "B" entries in the CELLS array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PNTRS      is an array of pointers that map "A" values to
       !>                their associated "B" values in the array OUTLST.
@@ -4941,22 +4941,22 @@ contains
       !>                "A" value starts with a count and is followed by
       !>                the values themselves.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The routine signals the error SPICE(BARRAYTOOSMALL) if the
       !>         entire set of B-value lists from the input cell array,
       !>         including the counts for each list, array cannot be stored in
       !>         the OUTLST array.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The AB list routines support manipulation of a data structure that
       !>     represents a one-to-many mapping from a set A to a set B. Each
@@ -4988,24 +4988,24 @@ contains
       !>     for creation of both voxel-plate association data structures and
       !>     of vertex-plate association data structures.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZMKSPIN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     J.A. Bytof      (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 23-AUG-2016 (NJB)
       !>
@@ -5164,7 +5164,7 @@ contains
       return
       end procedure zzuntngl
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -5172,7 +5172,7 @@ contains
       !>
       !>     Initialize an AB cell linked-list structure.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MAXP       is the length of the pointer array PNTRS.
       !>
@@ -5191,7 +5191,7 @@ contains
       !>
       !>                normally contain pointers.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NCELL      is the number of cells in use; this argument is
       !>                initialized to zero. This is done as a convenience
@@ -5206,13 +5206,13 @@ contains
       !>                element contains -1, and so that each value
       !>                element contains 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the DSK type 2 include file
       !>
       !>        dsk02.inc
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the pointer array size MAXP is non-positive, the
       !>         error SPICE(VALUEOUTOFRANGE) is signaled.
@@ -5220,35 +5220,35 @@ contains
       !>     2)  If the cell array size MAXC is non-positive, the
       !>         error SPICE(VALUEOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports creation of DSK type 2 segments.
       !>     It is used for creation of both voxel-plate association
       !>     data structures and of vertex-plate association data
       !>     structures.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZMKSPIN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     J.A. Bytof      (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
       !>
@@ -5316,7 +5316,7 @@ contains
       return
       end procedure zzinilnk
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -5325,7 +5325,7 @@ contains
       !>     This subroutine returns the 1-based voxel coordinates of the
       !>     voxel that contains a given point.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VOXSIZ     is a double precision scalar value giving the size of
       !>                each cubical voxel in model units.
@@ -5339,7 +5339,7 @@ contains
       !>     XYZ        is a double precision 3-vector containing the location
       !>                of the point in question in model units.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     INBOX      is a logical scalar indicating whether or not the
       !>                point XYZ lies within the extent of the voxel grid.
@@ -5349,20 +5349,20 @@ contains
       !>
       !>                VOXCOR is valid only if INBOX is .TRUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If VOXSIZ is less than or equal to zero, the error
       !>         SPICE(NONPOSITIVEVALUE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is not a general coordinate conversion routine. This routine
       !>     returns valid voxel coordinates only for voxels inside the voxel
@@ -5374,7 +5374,7 @@ contains
       !>
       !>     Points outside of the grid are not mapped to voxel coordinates.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>   C
       !>   C     Some position in model coordinates, i.e. the body fixed
@@ -5394,21 +5394,21 @@ contains
       !>   C
       !>         CALL ZZGETVOX ( VOXSIZ, VOXORI, NVOX, POS, INBOX, VOXCOR )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     J.A. Bytof      (JPL)
       !>     E.D. Wright     (JPL
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
       !>
@@ -5529,7 +5529,7 @@ contains
       return
       end procedure zzgetvox
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -5538,7 +5538,7 @@ contains
       !>     Add a new AB cell to an AB cell pool and update the A-value
       !>     pointer array.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     AVAL       is an index associated with a new pool entry. AVAL
       !>                is the index of the Ith value of a finite set "A."
@@ -5563,7 +5563,7 @@ contains
       !>
       !>     CELLS      Cell array, updated on output.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PNTRS      is the input pointer array, modified to reflect the
       !>                addition of a new cell entry. The element
@@ -5588,11 +5588,11 @@ contains
       !>                associated with AVAL, or is null (-1) if the list was
       !>                previously empty.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the array index AVAL exceeds the size MAXA of the
       !>         A-value pointer array, the error SPICE(AVALOUTOFRANGE) is
@@ -5605,11 +5605,11 @@ contains
       !>     2)  If the required cell count exceeds the size CELLSZ of the
       !>         cell array, the error SPICE(CELLARRAYTOOSMALL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The AB list routines support manipulation of a data structure that
       !>     represents a one-to-many mapping from a set A to a set B. Each
@@ -5641,25 +5641,25 @@ contains
       !>     for creation of both voxel-plate association data structures and
       !>     of vertex-plate association data structures.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZMKSPIN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     J.A. Bytof      (JPL)
       !>     E.D. Wright     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    MKDSK Version 2.1.0, 15-JAN-2016 (NJB)
       !>
@@ -5733,7 +5733,7 @@ contains
       return
       end procedure zzaddlnk
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -5741,7 +5741,7 @@ contains
       !>
       !>     Create voxel grid data structure and voxel-plate mapping.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NP         Total number of plates in model.
       !>
@@ -5775,7 +5775,7 @@ contains
       !>     CELLS      workspace array used to construct the voxel-plate
       !>                mapping.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CELLS      workspace array used to construct the voxel-plate
       !>                mapping.
@@ -5814,11 +5814,11 @@ contains
       !>                coarse voxel points to a list of pointers for each of
       !>                the fine voxels it contains.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file dsk02.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If NP is less than 1 or greater than MAXPLT, the error
       !>         SPICE(VALUEOUTOFRANGE) is signaled.
@@ -5849,35 +5849,35 @@ contains
       !>         will be signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports creation of spatial indexes for DSK type 2
       !>     segments. This routine determines the fine and coarse voxel
       !>     grid dimensions and parameters. It also builds the voxel-plate
       !>     association data structures.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in DSKMI2.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman  (JPL)
       !>     J.A. Bytof    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 17-FEB-2017 (NJB)
       !>
@@ -5936,7 +5936,7 @@ contains
       !>
       !>           Original version.
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>        20-MAR-2015 (NJB)
       !>
@@ -6492,7 +6492,7 @@ contains
       return
       end procedure zzmkspin
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of a new DLA file to be created. The file
       !>              will be left opened for write access.
@@ -6531,17 +6531,17 @@ contains
       !>              reduce the likelihood of having to expand the
       !>              comment area later.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the file handle associated with the file. This handle
       !>              is used to identify the file in subsequent calls to other
       !>              DLA routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input filename is blank, an error is signaled by a
       !>         routine in the call tree of this routine. No file will be
@@ -6575,11 +6575,11 @@ contains
       !>         NCOMCH, is negative, the error SPICE(BADRECORDCOUNT) is
       !>         signaled. No file will be created.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument FNAME.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DLA files are built using the DAS low-level format; DLA files are
       !>     a specialized type of DAS file in which data are organized as a
@@ -6598,7 +6598,7 @@ contains
       !>     where the characters following the slash are supplied by the
       !>     caller of this routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6820,20 +6820,20 @@ contains
       !>        Note that after run completion, a new DLA file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 14-SEP-2021 (JDR) (NJB)
       !>
@@ -6916,7 +6916,7 @@ contains
       return
       end procedure dlaopn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the DLA file to
       !>              be updated. This handle is used to identify the file
@@ -6927,16 +6927,16 @@ contains
       !>              is left open, since normally data will be written to
       !>              the file following a call to this routine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See the $Particulars and $Examples header sections for
       !>     a description of the actions performed by this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle does not refer to a DAS file that is
       !>         open for write access, an error is signaled by a routine
@@ -6946,11 +6946,11 @@ contains
       !>         the error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See description of input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DLA files are built using the DAS low-level format; DLA files are
       !>     a specialized type of DAS file in which data are organized as a
@@ -6995,7 +6995,7 @@ contains
       !>
       !>        Call DASCLS to segregate and close the DLA file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -7217,20 +7217,20 @@ contains
       !>        Note that after run completion, a new DLA file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 14-JUN-2021 (JDR)
       !>
@@ -7366,7 +7366,7 @@ contains
       return
       end procedure dlabns
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the DLA file to
       !>              be updated. This handle is used to identify the file
@@ -7377,16 +7377,16 @@ contains
       !>              is left open, since data may be written to the file
       !>              following a call to this routine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See the $Particulars and $Examples header sections for
       !>     a description of the actions performed by this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle does not refer to a DAS file that is
       !>         open for write access, an error is signaled by a routine
@@ -7396,11 +7396,11 @@ contains
       !>         the error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See description of input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DLA files are built using the DAS low-level format; DLA files are
       !>     a specialized type of DAS file in which data are organized as a
@@ -7445,7 +7445,7 @@ contains
       !>
       !>        Call DASCLS to segregate and close the DLA file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -7667,20 +7667,20 @@ contains
       !>        Note that after run completion, a new DLA file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 14-JUN-2021 (JDR)
       !>
@@ -7752,13 +7752,13 @@ contains
       return
       end procedure dlaens
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the file to be
       !>              searched. This handle is used to identify the file in
       !>              subsequent calls to other DLA or DAS routines.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DLADSC   is the descriptor of the first DLA segment in the
       !>              file associated with HANDLE.
@@ -7791,11 +7791,11 @@ contains
       !>              contains at least one segment; otherwise FOUND is
       !>              .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -7804,11 +7804,11 @@ contains
       !>         is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See description of input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DLA files are built using the DAS low-level format; DLA files are
       !>     a specialized type of DAS file in which data are organized as a
@@ -7822,7 +7822,7 @@ contains
       !>     access to the first descriptor in the file, which this routine
       !>     provides.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -7945,20 +7945,20 @@ contains
       !>         Integer base address             =           11
       !>         Integer component size           =     29692614
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 02-JUL-2021 (JDR)
       !>
@@ -8025,13 +8025,13 @@ contains
       return
       end procedure dlabfs
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the file to be
       !>              searched. This handle is used to identify the file in
       !>              subsequent calls to other DLA or DAS routines.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DLADSC   is the descriptor of the last DLA segment in the
       !>              file associated with HANDLE.
@@ -8064,11 +8064,11 @@ contains
       !>              contains at least one segment; otherwise FOUND is
       !>              .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is
       !>         signaled by a routine in the call tree of this routine.
@@ -8079,11 +8079,11 @@ contains
       !>     3)  If the input descriptor is invalid, this routine will
       !>         fail in an unpredictable manner.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See description of input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DLA files are built using the DAS low-level format; DLA files are
       !>     a specialized type of DAS file in which data are organized as a
@@ -8097,7 +8097,7 @@ contains
       !>     access to the last descriptor in the file, which this routine
       !>     provides.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -8236,20 +8236,20 @@ contains
       !>         Integer base address             =           11
       !>         Integer component size           =     29692614
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -8303,7 +8303,7 @@ contains
       return
       end procedure dlabbs
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the file to be
       !>              searched. This handle is used to identify the file in
@@ -8333,7 +8333,7 @@ contains
       !>                 | CHR COMP SIZE | Size of character segment component
       !>                 +---------------+
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NXTDSC   is the descriptor of the next DLA segment following
       !>              the segment associated with the input argument DLADSC.
@@ -8345,11 +8345,11 @@ contains
       !>              was found. FOUND has the value .TRUE. if the segment
       !>              was found; otherwise FOUND is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -8361,11 +8361,11 @@ contains
       !>     3)  If the input descriptor is invalid, this routine will
       !>         fail in an unpredictable manner.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See description of input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DLA files are built using the DAS low-level format; DLA files are
       !>     a specialized type of DAS file in which data are organized as a
@@ -8379,7 +8379,7 @@ contains
       !>     of DLABFS is simply to return the descriptor of the first
       !>     segment in the file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) Open a DLA file for read access, traverse the segment
       !>        list from front to back, and display segment address
@@ -8497,20 +8497,20 @@ contains
       !>         Integer base address             =           11
       !>         Integer component size           =     29692614
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 02-JUL-2021 (JDR)
       !>
@@ -8573,7 +8573,7 @@ contains
       return
       end procedure dlafns
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the file to be
       !>              searched. This handle is used to identify the file in
@@ -8603,7 +8603,7 @@ contains
       !>                 | CHR COMP SIZE | Size of character segment component
       !>                 +---------------+
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PRVDSC   is the descriptor of the DLA segment preceding the
       !>              segment associated with the input argument DLADSC.
@@ -8615,11 +8615,11 @@ contains
       !>              segment was found. FOUND has the value .TRUE. if the
       !>              segment was found; otherwise FOUND is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is
       !>         signaled by a routine in the call tree of this routine.
@@ -8627,11 +8627,11 @@ contains
       !>     2)  If a failure occurs while reading the DLA file, an error
       !>         is signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See description of input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DLA files are built using the DAS low-level format; DLA files are
       !>     a specialized type of DAS file in which data are organized as a
@@ -8645,7 +8645,7 @@ contains
       !>     DLABBS is simply to return the descriptor of the last segment in
       !>     the file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -8784,20 +8784,20 @@ contains
       !>         Integer base address             =           11
       !>         Integer component size           =     29692614
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -8850,7 +8850,7 @@ contains
       return
       end procedure dlafps
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HAN1     is the integer handle associated with a DLA file.
       !>              The file is open for read access.
@@ -8864,27 +8864,27 @@ contains
       !>     DSC2     is the DLA descriptor of a segment in the file
       !>              associated with HAN2.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if and only if the DLA segments
       !>     match. The segments are considered to match if and only if the
       !>     input handles match and all elements of the DLA descriptors
       !>     match.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of the inputs are invalid, this routine will
       !>         fail in an unspecified manner.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See description of input arguments HAN1 and HAN2.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DLA files are built using the DAS low-level format; DLA files are
       !>     a specialized type of DAS file in which data are organized as a
@@ -8897,7 +8897,7 @@ contains
       !>     they've previously examined. This may allow such routines
       !>     to avoid buffering information redundantly.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  A typical use of this routine is to enable a subroutine
       !>         to determine whether a DLA segment identified by a
@@ -8958,20 +8958,20 @@ contains
       !>
       !>                   END
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine relies on uniqueness of DAS file handles.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 22-JUL-2020 (JDR)
       !>
@@ -9011,7 +9011,7 @@ contains
       return
       end procedure dlassg
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of a new DSK file to be created. The
       !>              file will be left opened for write access.
@@ -9027,17 +9027,17 @@ contains
       !>              may reduce the likelihood of having to expand the
       !>              comment area later.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the file handle associated with the file. This
       !>              handle is used to identify the file in subsequent
       !>              calls to other DSK routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input filename is blank, an error is signaled by a
       !>         routine in the call tree of this routine. No file will be
@@ -9069,11 +9069,11 @@ contains
       !>         negative, an error is signaled by a routine in the call
       !>         tree of this routine. No file will be created.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument FNAME.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DSK files are built using the DLA low-level format and
       !>     the DAS architecture; DLA files are a specialized type of DAS
@@ -9092,7 +9092,7 @@ contains
       !>     where the characters following the slash are supplied by the
       !>     caller of this routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Create a new DSK file, using an internal file name that
       !>         attempts to serve as an unique identifier. No room for
@@ -9104,20 +9104,20 @@ contains
       !>
       !>            CALL DSKOPN ( FNAME, IFNAME, NCOMCH, HANDLE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 02-JUL-2021 (JDR)
       !>
@@ -9148,7 +9148,7 @@ contains
       return
       end procedure dskopn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the DAS file handle associated with the file.
       !>              The file may be open for read or write access.
@@ -9162,24 +9162,24 @@ contains
       !>              See the DAS Required Reading das.req for a
       !>              discussion of segregation of DAS files.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. This routine operates by side effects.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs when the file is closed, the error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a DSK-level interface for closing DSK files.
       !>
@@ -9187,7 +9187,7 @@ contains
       !>     without segregation, this interface is slightly simpler than that
       !>     available at the DAS level.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) Close a new DSK file using DAS segregation. HANDLE
       !>        is the DAS file handle of the DSK.
@@ -9211,22 +9211,22 @@ contains
       !>
       !>           CALL DSKCLS ( HANDLE, .TRUE. )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine should not be called by user applications
       !>         that have loaded a DSK file via FURNSH. Such applications
       !>         should call the KEEPER entry points UNLOAD or KCLEAR instead.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-OCT-2021 (JDR) (NJB)
       !>
@@ -9401,17 +9401,17 @@ contains
 !     the order defined by the keywords declared
 !     in dsktol.inc.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     KEYWRD   is an integer code specifying the parameter to
       !>              retrieve. See the include file dsktol.inc for
       !>              a description of the possible keywords.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DPVAL    is the value of the parameter specified by KEYWRD.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file
       !>
@@ -9421,16 +9421,16 @@ contains
       !>     accessed by this routine, and of the keyword parameters used to
       !>     refer to them.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input keyword is not recognized, the error
       !>         SPICE(INDEXOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The routines in this package serve to centralize numeric
       !>     tolerance and margin values used by the DSK subsystem.
@@ -9451,7 +9451,7 @@ contains
       !>     that any change to the tolerance values made at run
       !>     time be performed only by expert SPICE users.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -9486,20 +9486,20 @@ contains
       !>
       !>         Plate expansion fraction =    1.0000000000000000E-010
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
       !>
@@ -9536,7 +9536,7 @@ contains
       end associate
       end procedure dskgtl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     KEYWRD   is an integer code specifying the parameter to
       !>              set. See the include file dsktol.inc for
@@ -9549,13 +9549,13 @@ contains
       !>              <<< Use extreme caution. This routine performs no
       !>              checks on DPVAL. >>>
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     This routine operates by side effects.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file
       !>
@@ -9565,7 +9565,7 @@ contains
       !>     accessed by this routine, and of the keyword parameters used to
       !>     refer to them.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input keyword is not recognized, the error
       !>         SPICE(INDEXOUTOFRANGE) is signaled.
@@ -9573,11 +9573,11 @@ contains
       !>     2)  If an attempt is made to modify a fixed parameter,
       !>         the error SPICE(IMMUTABLEVALUE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The routines in this package serve to centralize numeric
       !>     tolerance and margin values used by the DSK subsystem.
@@ -9598,7 +9598,7 @@ contains
       !>     that any change to the tolerance values made at run
       !>     time be performed only by expert SPICE users.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -9647,7 +9647,7 @@ contains
       !>         Default plate expansion fraction =    1.0000000000000000E-010
       !>         New plate expansion fraction     =    1.0000000000000000E-008
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The default settings used by the DSK subsystem should
       !>         be overridden only by expert SPICE users.
@@ -9655,16 +9655,16 @@ contains
       !>     2)  This routine does not check the  validity of new parameter
       !>         values supplied by the calling application.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
       !>
@@ -9716,7 +9716,7 @@ contains
       end associate
       end procedure dskstl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file that is open for
       !>              read access.
@@ -9724,12 +9724,12 @@ contains
       !>     DLADSC   is the DLA segment descriptor corresponding to
       !>              a DSK segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DSKDSC   is the DSK segment descriptor of the segment
       !>              designated by the input handle and DLA descriptor.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file
       !>
@@ -9745,7 +9745,7 @@ contains
       !>     for declarations of DSK descriptor sizes and documentation of the
       !>     contents of DSK descriptors.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the size of the double precision component of the
       !>         segment is smaller than that of a DSK descriptor, the
@@ -9762,18 +9762,18 @@ contains
       !>     4)  If any DAS read error is detected, the error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a convenience routine intended for use by low-level
       !>     routines that read DSK segments. This routine may also be called
       !>     by user applications that must access DSK files at the segment
       !>     level.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -10198,21 +10198,21 @@ contains
       !>            Latitude  (deg):      -90.000000000000    90.000000000000
       !>            Altitude   (km):       -3.728668683604     1.372015791081
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  See Exception #3.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR) (BVS)
       !>
@@ -10272,7 +10272,7 @@ contains
       return
       end procedure dskgd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
       !>              segment from which data are to be fetched.
@@ -10280,7 +10280,7 @@ contains
       !>     DLADSC   is the DLA descriptor associated with the segment
       !>              from which data are to be fetched.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NV       is the number of vertices in model.
       !>
@@ -10315,7 +10315,7 @@ contains
       !>
       !>     VOXNPL   is the voxel-plate correspondence list size.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file
       !>
@@ -10337,7 +10337,7 @@ contains
       !>
       !>     for declarations of DSK data type 2 (plate model) parameters.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -10350,11 +10350,11 @@ contains
       !>         routines in the call tree of this routine, but there are no
       !>         guarantees.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports computations involving bookkeeping
       !>     information stored in DSK type 2 segments. User applications
@@ -10366,7 +10366,7 @@ contains
       !>     segments. Each segment's data belong to contiguous components of
       !>     character, double precision, and integer type.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -10490,22 +10490,22 @@ contains
       !>        Voxel edge length (km):             1.04248E-01
       !>        Number of voxels:                   11914500
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The caller must verify that the segment associated with
       !>         the input DLA descriptor is a DSK type 2 segment.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 02-JUL-2021 (JDR) (BVS)
       !>
@@ -10588,7 +10588,7 @@ contains
       return
       end procedure dskb02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
       !>              segment from which data are to be fetched.
@@ -10639,7 +10639,7 @@ contains
       !>              that has too little room to fetch an item in
       !>              one call.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     N        is the number of elements fetched to the output
       !>              array VALUES. N is normally in the range
@@ -10657,7 +10657,7 @@ contains
       !>              If an error occurs on the call, VALUES is
       !>              undefined.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file
       !>
@@ -10679,7 +10679,7 @@ contains
       !>
       !>     for declarations of DSK data type 2 (plate model) parameters.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -10705,11 +10705,11 @@ contains
       !>         item to be fetched, the error SPICE(INDEXOUTOFRANGE) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Most SPICE applications will not need to call this routine. The
       !>     routines DSKV02, DSKP02, and DSKZ02 provide a higher-level
@@ -10727,7 +10727,7 @@ contains
       !>     components of the segment, and these suffice for the purpose of
       !>     fetching data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -10905,7 +10905,7 @@ contains
       !>        Note that only the vertex information for first 5 plates is
       !>        provided.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine uses discovery check-in to boost
       !>         execution speed. However, this routine is in
@@ -10915,17 +10915,17 @@ contains
       !>         routines, this routine's name will be missing
       !>         from the traceback message.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 13-AUG-2021 (JDR) (BVS)
       !>
@@ -11126,7 +11126,7 @@ contains
       end associate
       end procedure dskd02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
       !>              segment from which data are to be fetched.
@@ -11237,7 +11237,7 @@ contains
       !>              has units of integers: for example, the room
       !>              required to fetch one plate is 3.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     N        is the number of elements fetched to the output
       !>              array VALUES. N is normally in the range
@@ -11255,7 +11255,7 @@ contains
       !>              If an error occurs on the call, VALUES is
       !>              undefined.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file
       !>
@@ -11277,7 +11277,7 @@ contains
       !>
       !>     for declarations of DSK data type 2 (plate model) parameters.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -11303,11 +11303,11 @@ contains
       !>         item to be fetched, the error SPICE(INDEXOUTOFRANGE) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Most SPICE applications will not need to call this routine. The
       !>     routines DSKV02, DSKP02, and DSKZ02 provide a higher-level
@@ -11325,7 +11325,7 @@ contains
       !>     components of the segment, and these suffice for the purpose of
       !>     fetching data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -11503,7 +11503,7 @@ contains
       !>        Note that only the vertex information for first 5 plates is
       !>        provided.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine uses discovery check-in to boost
       !>         execution speed. However, this routine is in
@@ -11513,17 +11513,17 @@ contains
       !>         routines, this routine's name will be missing
       !>         from the traceback message.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 02-JUL-2021 (JDR) (BVS)
       !>
@@ -11846,7 +11846,7 @@ contains
       end associate
       end procedure dski02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
       !>              segment from which data are to be fetched.
@@ -11857,7 +11857,7 @@ contains
       !>     PLID     is the plate ID. Plate IDs range from 1 to NP
       !>              (the number of plates).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NORMAL   is the normal vector associated with the plate
       !>              designated by PLID. The direction of NORMAL is
@@ -11882,7 +11882,7 @@ contains
       !>
       !>              If an error occurs on the call, NORMAL is undefined.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file
       !>
@@ -11904,7 +11904,7 @@ contains
       !>
       !>     for declarations of DSK data type 2 (plate model) parameters.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -11924,15 +11924,15 @@ contains
       !>         plate's edges. The plate model is assumed to be geometrically
       !>         valid.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -12112,21 +12112,21 @@ contains
       !>        Note that only the vertex information for first 5 plates is
       !>        provided.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See $Exceptions section.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR) (BVS)
       !>
@@ -12234,7 +12234,7 @@ contains
       return
       end procedure dskn02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
       !>              segment from which data are to be fetched.
@@ -12252,7 +12252,7 @@ contains
       !>              PLATES array: the output array must be large enough
       !>              to hold at least 3*ROOM integer values.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     N        is the number of plates fetched to the output
       !>              array PLATES. N is normally in the range
@@ -12287,7 +12287,7 @@ contains
       !>              If an error occurs on the call, PLATES is
       !>              undefined.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file
       !>
@@ -12309,7 +12309,7 @@ contains
       !>
       !>     for declarations of DSK data type 2 (plate model) parameters.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -12328,17 +12328,17 @@ contains
       !>     5)  If START is less than 1 or greater than the number of plates
       !>         in the segment, the error SPICE(INDEXOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine enables SPICE-based user applications to rapidly
       !>     fetch the plate data from a specified type 2 DSK segment. Using
       !>     a large output array generally improves efficiency.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -12517,21 +12517,21 @@ contains
       !>        Note that only the vertex information for first 5 plates is
       !>        provided.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR) (BVS)
       !>
@@ -12623,7 +12623,7 @@ contains
       return
       end procedure dskp02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
       !>              segment from which data are to be fetched.
@@ -12642,7 +12642,7 @@ contains
       !>              large enough to hold at least 3*ROOM double
       !>              precision values.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     N        is the number of vertices fetched to the output
       !>              array VRTCES. N is normally in the range
@@ -12684,7 +12684,7 @@ contains
       !>              If an error occurs on the call, VRTCES is
       !>              undefined.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file
       !>
@@ -12706,7 +12706,7 @@ contains
       !>
       !>     for declarations of DSK data type 2 (plate model) parameters.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -12726,17 +12726,17 @@ contains
       !>         vertices in the segment, the error SPICE(INDEXOUTOFRANGE) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine enables SPICE-based user applications to rapidly
       !>     fetch the vertex data from a specified type 2 DSK segment. Using
       !>     a large output array generally improves efficiency.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -12915,21 +12915,21 @@ contains
       !>        Note that only the vertex information for first 5 plates is
       !>        provided.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR) (BVS)
       !>
@@ -13023,7 +13023,7 @@ contains
       return
       end procedure dskv02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
       !>              segment from which data are to be fetched.
@@ -13031,7 +13031,7 @@ contains
       !>     DLADSC   is the DLA descriptor associated with the segment
       !>              from which data are to be fetched.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NV       is the number of vertices belonging to
       !>              the specified plate model.
@@ -13039,7 +13039,7 @@ contains
       !>     NP       is the number of plates belonging to the
       !>              specified plate model.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file
       !>
@@ -13061,7 +13061,7 @@ contains
       !>
       !>     for declarations of DSK data type 2 (plate model) parameters.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -13074,11 +13074,11 @@ contains
       !>         routines in the call tree of this routine, but there are no
       !>         guarantees.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine enables SPICE-based user applications to
       !>     conveniently fetch the plate and vertex counts of a type 2 DSK
@@ -13088,7 +13088,7 @@ contains
       !>     for an interface that returns all type 2 DSK segment
       !>     bookkeeping data in a single call.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -13264,21 +13264,21 @@ contains
       !>            Vertex 3:  -0.67676800E+01  0.62370100E+01  0.60301900E+01
       !>            Normal:    -0.58366405E+00  0.32306020E+00  0.74496200E+00
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR) (BVS)
       !>
@@ -13307,7 +13307,7 @@ contains
       return
       end procedure dskz02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NV       is the number of vertices belonging to the input
       !>              set of plates.
@@ -13429,7 +13429,7 @@ contains
       !>
       !>              See the description of WORKSZ above.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORK     is the workspace array, modified by the operations
       !>              performed by this routine.
@@ -13441,7 +13441,7 @@ contains
       !>              SPAIXD must be declared with size at least IXDFIX.
       !>              SPAIXI must be declared with size at least SPXISZ.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     IXDFIX   is the size of the double precision component of
       !>              the spatial index.
@@ -13469,7 +13469,7 @@ contains
       !>     for declarations of DSK descriptor sizes and documentation of the
       !>     contents of DSK descriptors.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the fine voxel scale is non-positive, the error
       !>         SPICE(BADFINEVOXELSCALE) is signaled.
@@ -13516,11 +13516,11 @@ contains
       !>         structures contained in the spatial index, an error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Users planning to create DSK files should consider whether the
       !>     SPICE DSK creation utility MKDSK may be suitable for their needs.
@@ -13604,7 +13604,7 @@ contains
       !>
       !>        In general, FS should not smaller than 1.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -13930,21 +13930,21 @@ contains
       !>        Note that after run completion, a new DSK exists in the output
       !>        directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-JUN-2021 (JDR) (BVS)
       !>
@@ -14207,7 +14207,7 @@ contains
       return
       end procedure dskmi2
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NV       is the number of vertices belonging to the input
       !>              set of plates.
@@ -14245,7 +14245,7 @@ contains
       !>
       !>                    CORPAR(2) = ( RE - RP ) / RE
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MNCOR3   is a lower bound on the range of the third coordinate
       !>              of the system identified by CORSYS and CORPAR, taken
@@ -14262,12 +14262,12 @@ contains
       !>              coordinate of the system identified by CORSYS and
       !>              CORPAR, taken over all plates.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file dskdsc.inc for declarations of the public DSK
       !>     type 2 parameters used by this routine.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input coordinate system is not recognized, the
       !>         error SPICE(NOTSUPPORTED) is signaled.
@@ -14276,11 +14276,11 @@ contains
       !>         fails, an error is signaled by a routine in the call
       !>         tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Users planning to create DSK files should consider whether the
       !>     SPICE DSK creation utility MKDSK may be suitable for their needs.
@@ -14289,7 +14289,7 @@ contains
       !>     by computing bounds on the range of the third coordinates of
       !>     the input plate set.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -14615,7 +14615,7 @@ contains
       !>        Note that after run completion, a new DSK exists in the output
       !>        directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  For planetodetic coordinates, the computation of the lower
       !>         altitude bound requires that the surface at altitude MNCOR3 be
@@ -14623,16 +14623,16 @@ contains
       !>         be false if a plate is very large compared to the overall
       !>         shape model.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR)
       !>
@@ -14777,7 +14777,7 @@ contains
       return
       end procedure dskrb2
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DSKFNM   is the name of a DSK file. This file will be opened for
       !>              read access by this routine.
@@ -14791,7 +14791,7 @@ contains
       !>              If BODIDS contains no data on input, its size and
       !>              cardinality still must be initialized.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BODIDS   is a SPICE set data structure that contains the union
       !>              of its contents upon input with the set of body ID codes
@@ -14805,11 +14805,11 @@ contains
       !>              program showing how to retrieve the body and surface ID
       !>              codes from a DSK file.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file has transfer format, the error
       !>         SPICE(INVALIDFORMAT) is signaled.
@@ -14828,17 +14828,17 @@ contains
       !>         the indicated DSK file, the error SPICE(CELLTOOSMALL) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument DSKFNM above.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides an API via which applications can determine
       !>     the set of objects for which there are topographic data in a
       !>     specified DSK file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -14927,21 +14927,21 @@ contains
       !>         Body ID:              401
       !>            Surface ID:          401
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If an error occurs while this routine is updating the set
       !>         BODIDS, the set may be corrupted.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-OCT-2021 (JDR) (NJB)
       !>
@@ -15097,7 +15097,7 @@ contains
       return
       end procedure dskobj
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DSKFNM   is the name of a DSK file. This file will be opened for
       !>              read access by this routine.
@@ -15115,7 +15115,7 @@ contains
       !>              If SRFIDS contains no data on input, its size and
       !>              cardinality still must be initialized.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SRFIDS   is a SPICE set data structure that contains the union
       !>              of its contents upon input with the set of ID codes of
@@ -15131,11 +15131,11 @@ contains
       !>              program showing how to retrieve body and surface ID codes
       !>              from a DSK file.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file has transfer format, the error
       !>         SPICE(INVALIDFORMAT) is signaled.
@@ -15154,17 +15154,17 @@ contains
       !>         by the indicated DSK file, the error SPICE(CELLTOOSMALL) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument DSKFNM above.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides an API via which applications can determine
       !>     the set of surfaces associated with a given body in a specified
       !>     DSK file. This routine is normally used together with DSKOBJ.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -15252,21 +15252,21 @@ contains
       !>         Body ID:              401
       !>            Surface ID:          401
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If an error occurs while this routine is updating the set
       !>         SRFIDS, the set may be corrupted.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-OCT-2021 (JDR) (NJB)
       !>

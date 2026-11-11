@@ -26,38 +26,38 @@ contains
       !> The function returns .TRUE. if all of the values in the array
       !> LOGCLS are true.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LOGCLS   is an array of logicals.
       !>
       !>     N        is the number of elements in the array LOGCLS
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns true if the value of every entry of LOGCLS
       !>     is .TRUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If N is less than 1, the function returns a value of .TRUE.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function examines each element of LOGCLS until
       !>     a .FALSE. value is found or until all values have been
       !>     examined.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you needed to confirm that each a character set
       !>     WORDS contained all of the words in the phrase
@@ -74,20 +74,20 @@ contains
       !>
       !>           OK       = ALLTRU ( FOUND,   5     )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -137,7 +137,7 @@ contains
       !> The function returns the index of the first matching array element
       !> or zero if the value is not found.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE    is the key value to be found in the array. Trailing
       !>              blanks in this key are not significant: string matches
@@ -156,7 +156,7 @@ contains
       !>              sequence). The contents of ORDER are a permutation of
       !>              the sequence of integers ranging from 1 to NDIM.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the specified value in the input
       !>     array. Indices range from 1 to NDIM.
@@ -168,29 +168,29 @@ contains
       !>     specified value, the returned index may point to any of the
       !>     occurrences.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the value of the function is zero. This is not
       !>         considered an error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A binary search is performed on the input array, whose order is
       !>     given by an associated order vector. If an element of the array is
       !>     found to match the input value, the index of that element is
       !>     returned. If no matching element is found, zero is returned.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -282,24 +282,24 @@ contains
       !>            ARRAY(3) = 'EINSTEIN'
       !>            ARRAY(5) = 'GALILEO'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  ORDER is assumed to give the order of the elements of ARRAY in
       !>         increasing order according to the ASCII collating sequence. If
       !>         this condition is not met, the results of BSCHOC are
       !>         unpredictable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 17-JUN-2021 (JDR)
       !>
@@ -370,7 +370,7 @@ contains
       !> The function returns the index of the first matching array element
       !> or zero if the value is not found.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE    is the value to be found in the input array.
       !>
@@ -383,7 +383,7 @@ contains
       !>              permutation of the sequence of integers ranging from 1 to
       !>              NDIM.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the specified value in the input
       !>     array. Indices range from 1 to NDIM.
@@ -395,28 +395,28 @@ contains
       !>     specified value, the returned index may point to any of the
       !>     occurrences.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the value of the function is zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A binary search is performed on the input array, whose order is
       !>     given by an associated order vector. If an element of the array is
       !>     found to match the input value, the index of that element is
       !>     returned. If no matching element is found, zero is returned.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY and ORDER contain the following elements:
       !>
@@ -442,23 +442,23 @@ contains
       !>           ARRAY(2) =     1
       !>           ARRAY(4) = 10000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  ORDER is assumed to give the order of the elements of ARRAY
       !>         in increasing order. If this condition is not met, the results
       !>         of BSCHOI are unpredictable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 09-APR-2021 (JDR)
       !>
@@ -524,7 +524,7 @@ contains
       !> The function returns the index of the first matching array element
       !> or zero if the value is not found.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE    is the key value to be found in the array. Trailing
       !>              blanks in this key are not significant: string matches
@@ -539,7 +539,7 @@ contains
       !>              significant. The elements in ARRAY are assumed to
       !>              sorted according to the ASCII collating sequence.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the specified value in the input
       !>     array. Indices range from 1 to NDIM.
@@ -551,29 +551,29 @@ contains
       !>     specified value, the returned index may point to any of the
       !>     occurrences.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the value of the function is zero. This is not
       !>         considered an error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A binary search is performed on the input array. If an element of
       !>     the array is found to match the input value, the index of that
       !>     element is returned. If no matching element is found, zero is
       !>     returned.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following elements:
       !>
@@ -591,23 +591,23 @@ contains
       !>           BSRCHC ( 'Galileo',  5, ARRAY )    = 0
       !>           BSRCHC ( 'BETHE',    5, ARRAY )    = 0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  ARRAY is assumed to be sorted in increasing order according to
       !>         the ASCII collating sequence. If this condition is not met,
       !>         the results of BSRCHC are unpredictable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -681,7 +681,7 @@ contains
       !> The function returns the index of VALUE in ARRAY, or zero if not
       !> found.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE    is the double precision value to be found in the input
       !>              array.
@@ -692,7 +692,7 @@ contains
       !>              elements in ARRAY are assumed to sorted in increasing
       !>              order.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the specified value in the input
       !>     array. Indices range from 1 to NDIM.
@@ -704,28 +704,28 @@ contains
       !>     specified value, the returned index may point to any of the
       !>     occurrences.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the value of the function is zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A binary search is performed on the input array. If an element of
       !>     the array is found to match the input value, the index of that
       !>     element is returned. If no matching element is found, zero is
       !>     returned.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following elements:
       !>
@@ -740,22 +740,22 @@ contains
       !>           BSRCHD (  22.491D0, 4, ARRAY )    = 3
       !>           BSRCHD ( 751.D0,    4, ARRAY )    = 0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  ARRAY is assumed to be sorted in increasing order. If this
       !>         condition is not met, the results of BSRCHD are unpredictable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -829,7 +829,7 @@ contains
       !> The function returns the index of VALUE in ARRAY, or zero if not
       !> found.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE    is the value to be found in the input array.
       !>
@@ -838,7 +838,7 @@ contains
       !>     ARRAY    is the integer array to be searched. The elements in
       !>              ARRAY are assumed to sorted in increasing order.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the specified value in the input
       !>     array. Indices range from 1 to NDIM.
@@ -850,28 +850,28 @@ contains
       !>     specified value, the returned index may point to any of the
       !>     occurrences.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the value of the function is zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A binary search is performed on the input array. If an element of
       !>     the array is found to match the input value, the index of that
       !>     element is returned. If no matching element is found, zero is
       !>     returned.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following elements:
       !>
@@ -886,22 +886,22 @@ contains
       !>           BSRCHI (  22, 4, ARRAY )    = 3
       !>           BSRCHI ( 751, 4, ARRAY )    = 0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  ARRAY is assumed to be sorted in increasing order. If this
       !>         condition is not met, the results of BSRCHI are unpredictable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -973,12 +973,12 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array assignment instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NDIM     is the number of elements in ARRAY which are to be set to
       !>              blank.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    is the array of strings with each of its NDIM elements
       !>              set to a blank string. If NDIM is smaller than the
@@ -986,25 +986,25 @@ contains
       !>              elements of ARRAY are set to blank; all other elements
       !>              remain unchanged.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the array is not modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1079,22 +1079,22 @@ contains
       !>        Position #3: Element #3
       !>        Position #4: Element #4
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 19-MAY-2021 (JDR) (NJB)
       !>
@@ -1124,35 +1124,35 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array assignment instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NDIM     is the number of elements in ARRAY which are to be
       !>              set to zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    is the double precision array which is to be filled
       !>              with zeros.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the array is not modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1209,20 +1209,20 @@ contains
       !>        Contents of ARRAY after CLEARD:
       !>           0.0   0.0   0.0   0.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 29-MAY-2021 (JDR)
       !>
@@ -1248,35 +1248,35 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array assignment instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NDIM     is the number of elements in ARRAY which are to be
       !>              set to zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    is the integer array which is to be filled with
       !>              zeros.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the array is not modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1332,21 +1332,21 @@ contains
       !>        Contents of ARRAY after CLEARI:
       !>           0   0   0   0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 19-MAY-2021 (JDR)
       !>
@@ -1377,37 +1377,37 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array assignment instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE    is the value to be assigned to the array elements
       !>              1 through NDIM.
       !>
       !>     NDIM     is the number of elements in the array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    is a character string array whose elements are to be
       !>              set to VALUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the array is not modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let  VALUE = '*'
       !>          NDIM  =  4
@@ -1419,21 +1419,21 @@ contains
       !>          ARRAY (3) = '*'
       !>          ARRAY (4) = '*'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -1463,37 +1463,37 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array assignment instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE    is the value to be assigned to the array elements
       !>              1 through NDIM.
       !>
       !>     NDIM     is the number of elements in the array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    is a double precision array whose elements are to be
       !>              set to VALUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the array is not modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1546,21 +1546,21 @@ contains
       !>           Index: 3; value: 1.0
       !>           Index: 4; value: 1.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 19-FEB-2021 (JDR)
       !>
@@ -1592,37 +1592,37 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array assignment instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE    is the value to be assigned to the array elements
       !>              1 through NDIM.
       !>
       !>     NDIM     is the number of elements in the array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    is a integer array whose elements are to be set
       !>              to VALUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the array is not modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1673,21 +1673,21 @@ contains
       !>           Index: 3; value: 11
       !>           Index: 4; value: 11
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 19-FEB-2021 (JDR)
       !>
@@ -1719,7 +1719,7 @@ contains
       !> The function returns .TRUE. if the array contains the integers
       !> 1 through N, otherwise it returns .FALSE.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is an array of integers. Often this will be an array
       !>              that is a candidate order vector to be passed to
@@ -1727,32 +1727,32 @@ contains
       !>
       !>     N        is the number of elements in ARRAY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if the array contains the integers
       !>     1 through N. Otherwise it returns .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If N < 1, the function returns .FALSE.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function provides a simple means of determining whether
       !>     or not an array of N integers contains exactly the integers
       !>     1 through N.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) Suppose you wished to reorder an array of strings based upon
       !>        a ranking array supplied by a user. If the ranking array
@@ -1800,22 +1800,22 @@ contains
       !>              ARRAY(I) = ARRAY(I) + K - 1
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-JUL-2021 (JDR)
       !>
@@ -1965,7 +1965,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (FINDLOC instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE    is the key value to be found in the array. Trailing
       !>              blanks in this key are not significant: string matches
@@ -1978,30 +1978,30 @@ contains
       !>     ARRAY    is the character array to be searched. Trailing
       !>              blanks in the strings in this array are not significant.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the first matching array
       !>     element in ARRAY. If VALUE is not found, ISRCHC is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the function value is zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following table shows the value of ISRCHC given the contents
       !>     of ARRAY and VALUE:
@@ -2012,21 +2012,21 @@ contains
       !>     '1', '0', '4', '2'       '2'        4
       !>     '1', '0', '4', '2'       '3'        0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-AUG-2021 (JDR)
       !>
@@ -2059,7 +2059,7 @@ contains
       !> The function returns the index of the first matching array
       !> element or zero if the value is not found.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE    is the key value to be found in the array.
       !>
@@ -2067,30 +2067,30 @@ contains
       !>
       !>     ARRAY    is the double precision array to be searched.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the first matching array
       !>     element in ARRAY. If VALUE is not found, ISRCHD is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the function value is zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following table shows the value of ISRCHD given the contents
       !>     of ARRAY and VALUE:
@@ -2101,7 +2101,7 @@ contains
       !>     1.0D0, 0.0D0, 4.0D0, 2.0D0      2.OD0     4
       !>     1.0D0, 0.0D0, 4.0D0, 2.0D0      3.0D0     0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  CAUTION must be exercised when comparing floating point
       !>         numbers for equality. If the numbers in ARRAY or the number in
@@ -2110,17 +2110,17 @@ contains
       !>         NOT hold (even if the two numbers are very close) unless the
       !>         numbers are the result of exactly the same computations.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-JUL-2021 (JDR)
       !>
@@ -2168,7 +2168,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (FINDLOC instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE    is the key value to be found in the array.
       !>
@@ -2176,30 +2176,30 @@ contains
       !>
       !>     ARRAY    is the integer array to be searched.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the first matching array
       !>     element in ARRAY. If VALUE is not found, ISRCHI is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the function value is zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following table shows the value of ISRCHI given the contents
       !>     of ARRAY and VALUE:
@@ -2210,21 +2210,21 @@ contains
       !>     1, 0, 4, 2       2        4
       !>     1, 0, 4, 2       3        0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-JUL-2021 (JDR)
       !>
@@ -2255,7 +2255,7 @@ contains
       !> The function returns the index of the element of ARRAY
       !> whose value is closest to X.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is the value to be compared with the elements of ARRAY.
       !>
@@ -2267,7 +2267,7 @@ contains
       !>
       !>              for all I < J.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LSTCLD   is the index of the element of the non-decreasing
       !>              sequence: {ARRAY(I) : 1 <= I <= N} that is closest
@@ -2286,28 +2286,28 @@ contains
       !>              LSTCLD = I for some I in the range 1 to N, unless N is
       !>              less than or equal to zero, in which case LSTCLD is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the value of N is non-positive, LSTCLD returns the value
       !>         zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     LSTCLD uses a binary search algorithm to locate the value closest
       !>     to X in the non-decreasing sequence of double precision numbers
       !>     represented by the elements of ARRAY.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose ARRAY contains the following double precision elements:
       !>
@@ -2329,22 +2329,22 @@ contains
       !>         100.0             10                        100
       !>         100.1             10                        100
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If the sequence is not non-decreasing, the routine will run
       !>         to completion but the index found will not mean anything.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     R.E. Thurman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -2359,7 +2359,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 30-AUG-1990 (MJS)
       !>
@@ -2471,7 +2471,7 @@ contains
       !> The function returns the index of the element of ARRAY
       !> whose value is closest to X.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is the value to be compared with the elements of ARRAY.
       !>
@@ -2483,7 +2483,7 @@ contains
       !>
       !>              for all I < J.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LSTCLI   is the index of the element of the non-decreasing
       !>              sequence: {ARRAY(I) : 1 <= I <= N} that is closest to
@@ -2502,28 +2502,28 @@ contains
       !>              LSTCLI = I for some I in the range 1 to N, unless N is
       !>              less than or equal to zero, in which case LSTCLI is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the value of N is non-positive, LSTCLI returns the value
       !>         zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     LSTCLI uses a binary search algorithm to locate the value closest
       !>     to X in the non-decreasing sequence of integers represented by
       !>     the elements of ARRAY.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose ARRAY contains the following integer elements:
       !>
@@ -2546,22 +2546,22 @@ contains
       !>           60               9                         40
       !>          110              10                        100
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If the sequence is not non-decreasing, the routine will run
       !>         to completion but the index found will not mean anything.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     R.E. Thurman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -2674,7 +2674,7 @@ contains
       !> The function returns the index of the last element of ARRAY that
       !> is lexically less than or equal to STRING.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is a string acting as an upper bound: the element of
       !>              ARRAY that is lexically the greatest element less than or
@@ -2688,7 +2688,7 @@ contains
       !>              The strings in ARRAY must be sorted in non-decreasing
       !>              order. The elements of ARRAY need not be distinct.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the highest-indexed element in
       !>     the input array that is lexically less than or equal to STRING.
@@ -2701,11 +2701,11 @@ contains
       !>     routine returns the value 0. If N is less than or equal to zero,
       !>     the routine returns the value 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -2715,11 +2715,11 @@ contains
       !>     2)  If the input array is not sorted in non-decreasing order, the
       !>         output of this routine is undefined. No error is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine uses a binary search algorithm and so requires
       !>     at most on the order of
@@ -2734,7 +2734,7 @@ contains
       !>     by this function and check to see if the result is within the
       !>     array bounds given by N.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have a long list of words, sorted alphabetically
       !>     and entirely in upper case. Furthermore suppose you wished to
@@ -2789,23 +2789,23 @@ contains
       !>     For more ideas regarding the use of this routine see LSTLEI
       !>     and LSTLTI.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If the sequence of character strings in the input array ARRAY
       !>         is not non-decreasing, the program will run to completion but
       !>         the index found will not mean anything.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -2899,7 +2899,7 @@ contains
       !> The function returns the index of the last element of ARRAY that
       !> is less than or equal to X.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is a double precision value acting as an upper bound: the
       !>              element of ARRAY that is the greatest element less than
@@ -2911,7 +2911,7 @@ contains
       !>              non-decreasing sequence. The elements of array need not
       !>              be distinct.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the highest-indexed element in
       !>     the input array that is less than or equal to X. The routine
@@ -2923,11 +2923,11 @@ contains
       !>     the value 0. If N is less than or equal to zero, the routine
       !>     returns the value 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -2937,11 +2937,11 @@ contains
       !>     2)  If the input array is not sorted in non-decreasing order, the
       !>         output of this routine is undefined. No error is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine uses a binary search algorithm and so requires
       !>     at most on the order of
@@ -2956,7 +2956,7 @@ contains
       !>     function and check to see if the result is within the array bounds
       !>     given by N.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     If ARRAY(I) = -1 + 4*I/3 (real arithmetic implied here)
       !>
@@ -2988,23 +2988,23 @@ contains
       !>           8.00        6
       !>          15.10       10
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If the sequence of double precision numbers in the input array
       !>         ARRAY is not non-decreasing, the program will run to
       !>         completion but the index found will not mean anything.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -3098,7 +3098,7 @@ contains
       !> The function returns the index of the last element of ARRAY that
       !> is less than or equal to X.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is an integer value acting as an upper bound: the element
       !>              of ARRAY that is the greatest element less than or equal
@@ -3109,7 +3109,7 @@ contains
       !>     ARRAY    is an array of integers that forms a non-decreasing
       !>              sequence. The elements of array need not be distinct.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the highest-indexed element in
       !>     the input array that is less than or equal to X. The routine
@@ -3121,11 +3121,11 @@ contains
       !>     the value 0. If N is less than or equal to zero, the routine
       !>     returns the value 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -3135,11 +3135,11 @@ contains
       !>     2)  If the input array is not sorted in non-decreasing order, the
       !>         output of this routine is undefined. No error is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine uses a binary search algorithm and so requires
       !>     at most on the order of
@@ -3154,7 +3154,7 @@ contains
       !>     function and check to see if the result is within the array bounds
       !>     given by N.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have an reasonably large ordered array of
       !>     integers, into which you want to insert a few more without
@@ -3258,23 +3258,23 @@ contains
       !>     For more ideas regarding the use of this routine, see LSTLEC
       !>     and LSTLTC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If the sequence of integer numbers in the input array ARRAY is
       !>         not non-decreasing, the program will run to completion but the
       !>         index found will not mean anything.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -3368,7 +3368,7 @@ contains
       !> The function returns the index of the last element of ARRAY that
       !> is lexically less than STRING.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is a string acting as an upper bound: the element of
       !>              ARRAY that is lexically the greatest element less than
@@ -3382,7 +3382,7 @@ contains
       !>              The strings in ARRAY must be sorted in non-decreasing
       !>              order. The elements of ARRAY need not be distinct.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the highest-indexed element in
       !>     the input array that is lexically less than STRING. The routine
@@ -3394,11 +3394,11 @@ contains
       !>     STRING, the routine returns the value 0. If N is less than or
       !>     equal to zero, the routine returns the value 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -3408,11 +3408,11 @@ contains
       !>     2)  If the input array is not sorted in non-decreasing order, the
       !>         output of this routine is undefined. No error is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine uses a binary search algorithm and so requires
       !>     at most on the order of
@@ -3427,7 +3427,7 @@ contains
       !>     result returned by this function and check to see if the result is
       !>     within the array bounds given by N.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have a long list of words, sorted alphabetically
       !>     and entirely in upper case. Furthermore suppose you wished to
@@ -3482,23 +3482,23 @@ contains
       !>     For more ideas regarding the use of this routine see LSTLEI
       !>     and LSTLTI.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If the sequence of character strings in the input array ARRAY
       !>         is not non-decreasing, the program will run to completion but
       !>         the index found will not mean anything.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -3591,7 +3591,7 @@ contains
        !> The function returns the index of the last element of ARRAY that
        !> is less than X.
        !>
-       !> ## Detailed Input
+       !>## Detailed Input
        !>
        !>     X        is a double precision value acting as an upper bound: the
        !>              element of ARRAY that is the greatest element less than X
@@ -3603,7 +3603,7 @@ contains
        !>              non-decreasing sequence. The elements of array need not
        !>              be distinct.
        !>
-       !> ## Detailed Output
+       !>## Detailed Output
        !>
        !>     The function returns the index of the highest-indexed element in
        !>     the input array that is less than X. The routine assumes the array
@@ -3615,11 +3615,11 @@ contains
        !>     routine returns the value 0. If N is less than or equal to zero,
        !>     the routine returns the value 0.
        !>
-       !> ## Parameters
+       !>## Parameters
        !>
        !>     None.
        !>
-       !> ## Exceptions
+       !>## Exceptions
        !>
        !>     Error free.
        !>
@@ -3629,11 +3629,11 @@ contains
        !>     2)  If the input array is not sorted in non-decreasing order, the
        !>         output of this routine is undefined. No error is signaled.
        !>
-       !> ## Files
+       !>## Files
        !>
        !>     None.
        !>
-       !> ## Particulars
+       !>## Particulars
        !>
        !>     This routine uses a binary search algorithm and so requires
        !>     at most on the order of
@@ -3648,7 +3648,7 @@ contains
        !>     this function and check to see if the result is within the array
        !>     bounds given by N.
        !>
-       !> ## Examples
+       !>## Examples
        !>
        !>     If ARRAY(I) = -1 + 4*I/3 (real arithmetic implied here)
        !>
@@ -3684,23 +3684,23 @@ contains
        !>           8.00        6
        !>          15.10       10
        !>
-       !> ## Restrictions
+       !>## Restrictions
        !>
        !>     1)  If the sequence of double precision numbers in the input array
        !>         ARRAY is not non-decreasing, the program will run to
        !>         completion but the index found will not mean anything.
        !>
-       !> ## Literature References
+       !>## Literature References
        !>
        !>     None.
        !>
-       !> ## Author and Institution
+       !>## Author and Institution
        !>
        !>     N.J. Bachman       (JPL)
        !>     J. Diaz del Rio    (ODC Space)
        !>     W.L. Taber         (JPL)
        !>
-       !> ## Version
+       !>## Version
        !>
        !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
        !>
@@ -3793,7 +3793,7 @@ contains
       !> The function returns the index of the last element of ARRAY that
       !> is less than X.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is an integer value acting as an upper bound: the element
       !>              of ARRAY that is the greatest element less than X is to
@@ -3804,7 +3804,7 @@ contains
       !>     ARRAY    is an array of integers that forms a non-decreasing
       !>              sequence. The elements of array need not be distinct.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the highest-indexed element in
       !>     the input array that is less than X. The routine assumes the array
@@ -3816,11 +3816,11 @@ contains
       !>     routine returns the value 0. If N is less than or equal to zero,
       !>     the routine returns the value 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -3830,11 +3830,11 @@ contains
       !>     2)  If the input array is not sorted in non-decreasing order, the
       !>         output of this routine is undefined. No error is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine uses a binary search algorithm and so requires
       !>     at most on the order of
@@ -3849,7 +3849,7 @@ contains
       !>     this function and check to see if the result is within the array
       !>     bounds given by N.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have an reasonably large ordered array of
       !>     integers, into which you want to insert a few more without
@@ -3953,23 +3953,23 @@ contains
       !>     For more ideas regarding the use of this routine, see LSTLTC
       !>     and LSTLTC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If the sequence of integer numbers in the input array ARRAY is
       !>         not non-decreasing, the program will run to completion but the
       !>         index found will not mean anything.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -4058,13 +4058,13 @@ contains
 
       !> Locate the maximum element of a character array.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is an arbitrary array.
       !>
       !>     NDIM     is the number of elements in ARRAY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MAXVAL   is the value in array that is greater than or equal
       !>              to all other values in the array. If the array
@@ -4077,11 +4077,11 @@ contains
       !>     LOC      is the location of the maximum element. That is,
       !>              MAXVAL contains element ARRAY(LOC).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -4092,15 +4092,15 @@ contains
       !>         entire element, the element is truncated. (The original value
       !>         can be accessed via LOC.)
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let array A contain the following elements.
       !>
@@ -4117,21 +4117,21 @@ contains
       !>
       !>     the values of MAXVAL and LOC are 'Pauli' and 4 respectively.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-APR-2021 (JDR)
       !>
@@ -4180,13 +4180,13 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (MAXVAL and MAXLOC instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is an arbitrary array.
       !>
       !>     NDIM     is the number of elements in ARRAY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MAXVAL   is the value in array that is greater than or equal
       !>              to all other values in the array. If the array
@@ -4199,26 +4199,26 @@ contains
       !>     LOC      is the location of the maximum element. That is,
       !>              MAXVAL contains element ARRAY(LOC).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the array is empty (NDIM is less than one), LOC is zero,
       !>         and MAXVAL is not changed.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let array A contain the following elements.
       !>
@@ -4235,21 +4235,21 @@ contains
       !>
       !>     the values of MAXVAL and LOC are 64.D0 and 4 respectively.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-APR-2021 (JDR)
       !>
@@ -4286,13 +4286,13 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (MAXVAL and MAXLOC instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is an arbitrary array.
       !>
       !>     NDIM     is the number of elements in ARRAY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MAXVAL   is the value in array that is greater than or equal
       !>              to all other values in the array. If the array
@@ -4305,26 +4305,26 @@ contains
       !>     LOC      is the location of the maximum element. That is,
       !>              MAXVAL contains element ARRAY(LOC).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the array is empty (NDIM is less than one), LOC is zero,
       !>         and MAXVAL is not changed.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let array A contain the following elements.
       !>
@@ -4341,21 +4341,21 @@ contains
       !>
       !>     the values of MAXVAL and LOC are 64 and 4 respectively.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-APR-2021 (JDR)
       !>
@@ -4389,13 +4389,13 @@ contains
 
       !> Locate the minimum element of a character array.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is an arbitrary array.
       !>
       !>     NDIM     is the number of elements in ARRAY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MINVAL   is the value in array that is less than or equal
       !>              to all other values in the array. If the array
@@ -4408,11 +4408,11 @@ contains
       !>     LOC      is the location of the minimum element. That is,
       !>              MINVAL contains element ARRAY(LOC).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -4423,15 +4423,15 @@ contains
       !>         entire element, the element is truncated. (The original value
       !>         can be accessed via LOC.)
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let array A contain the following elements.
       !>
@@ -4448,21 +4448,21 @@ contains
       !>
       !>     the values of MINVAL and LOC are 'Bardeen' and 5 respectively.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-APR-2021 (JDR)
       !>
@@ -4511,13 +4511,13 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (MINVAL and MINLOC instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is an arbitrary array.
       !>
       !>     NDIM     is the number of elements in ARRAY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MINVAL   is the value in array that is less than or equal
       !>              to all other values in the array. If the array
@@ -4527,26 +4527,26 @@ contains
       !>     LOC      is the location of the minimum element. That is,
       !>              MINVAL contains element ARRAY(LOC).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the array is empty (NDIM is less than one), LOC is zero,
       !>         and MINVAL is not changed.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let array A contain the following elements.
       !>
@@ -4563,21 +4563,21 @@ contains
       !>
       !>     the values of MINVAL and LOC are 2.D0 and 5 respectively.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-APR-2021 (JDR)
       !>
@@ -4614,13 +4614,13 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (MINVAL and MINLOC instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is an arbitrary array.
       !>
       !>     NDIM     is the number of elements in ARRAY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MINVAL   is the value in array that is less than or equal
       !>              to all other values in the array. If the array
@@ -4630,26 +4630,26 @@ contains
       !>     LOC      is the location of the minimum element. That is,
       !>              MINVAL contains element ARRAY(LOC).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the array is empty (NDIM is less than one), LOC is zero,
       !>         and MINVAL is not changed.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let array A contain the following elements.
       !>
@@ -4666,21 +4666,21 @@ contains
       !>
       !>     the values of MINVAL and LOC are 2 and 5 respectively.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-APR-2021 (JDR)
       !>
@@ -4718,29 +4718,29 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array assignment instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRFRM   is an array from which to copy items.
       !>
       !>     NDIM     is the number of items to copy.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRTO    is the array to which items should be copied.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is simply shorthand for the following 3 lines of
       !>     code.
@@ -4749,7 +4749,7 @@ contains
       !>                ARRTO(I) = ARRFRM(I)
       !>             END DO
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Often one needs to make a temporary copy of an array so that
       !>     it can be manipulated without altering the original array.
@@ -4773,21 +4773,21 @@ contains
       !>          CALL MOVEC ( A, 19, TEMPA )
       !>          CALL MOVEC ( B, 38, TEMPB )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -4802,7 +4802,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 1.0.1, 4-FEB-1989 (WLT)
       !>
@@ -4825,32 +4825,32 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array assignment instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRFRM   is an array from which to copy items.
       !>
       !>     NDIM     is the number of items to copy. i.e. the dimension of
       !>              ARRFRM and ARRTO.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRTO    is the array to which items should be copied.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 1, the output array is returned unchanged.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is simply shorthand for the following 3 lines of
       !>     code.
@@ -4859,7 +4859,7 @@ contains
       !>           ARRTO(I) = ARRFRM(I)
       !>        END DO
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Often one needs to make a temporary copy of an array so that
       !>     it can be manipulated without altering the original array.
@@ -4883,15 +4883,15 @@ contains
       !>        CALL MOVED ( A, 19, TEMPA )
       !>        CALL MOVED ( B, 38, TEMPB )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -4900,7 +4900,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.17.0, 04-JUL-2021 (JDR)
       !>
@@ -5042,29 +5042,29 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array assignment instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRFRM   is an array from which to copy items.
       !>
       !>     NDIM     is the number of items to copy.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRTO    is the array to which items should be copied.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is simply shorthand for the following 3 lines of
       !>     code.
@@ -5073,7 +5073,7 @@ contains
       !>                ARRTO(I) = ARRFRM(I)
       !>             END DO
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Often one needs to make a temporary copy of an array so that
       !>     it can be manipulated without altering the original array.
@@ -5097,21 +5097,21 @@ contains
       !>          CALL MOVEI ( A, 19, TEMPA )
       !>          CALL MOVEI ( B, 38, TEMPB )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -5126,7 +5126,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 1.0.1, 4-FEB-1989 (WLT)
       !>
@@ -5147,37 +5147,37 @@ contains
       !>
       !> The function returns .TRUE. if no entry has a value of .TRUE.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LOGCLS   is an array of logicals.
       !>
       !>     N        is the number of elements in the array LOGCLS
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns true if no entry of LOGCLS is .TRUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If N is less than 1, the function returns a value of .TRUE.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function examines each element of LOGCLS until
       !>     a .TRUE. value is found or until all values have been
       !>     examined.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you needed to confirm that no entry of a character set
       !>     WORDS was one of the words in the phrase
@@ -5194,20 +5194,20 @@ contains
       !>
       !>           OK       = NOTRU  ( FOUND,   5     )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -5252,13 +5252,13 @@ contains
 
       !> Determine the order of elements in an array of character strings.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is the input array.
       !>
       !>     NDIM     is the number of elements in the input array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IORDER   is the order vector for the input array.
       !>              IORDER(1) is the index of the smallest element
@@ -5266,19 +5266,19 @@ contains
       !>              smallest; and so on. Strings are ordered according
       !>              to the ASCII collating sequence.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     ORDERC finds the index of the smallest element of the input
       !>     array. This becomes the first element of the order vector.
@@ -5288,7 +5288,7 @@ contains
       !>     the REORD routines to sort sets of related arrays, as shown
       !>     in the example below.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5388,21 +5388,21 @@ contains
       !>        URANUS     5794559.128      799    T
       !>        VENUS       324858.599      299    F
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-JUL-2021 (JDR)
       !>
@@ -5472,35 +5472,35 @@ contains
 
       !> Determine the order of elements in a double precision array.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is the input array.
       !>
       !>     NDIM     is the number of elements in the input array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IORDER   is the order vector for the input array.
       !>              IORDER(1) is the index of the smallest element
       !>              of ARRAY; IORDER(2) is the index of the next
       !>              smallest; and so on.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  A negative input dimension causes this routine to leave the
       !>         output order vector unchanged.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     ORDERD finds the index of the smallest element of the input
       !>     array. This becomes the first element of the order vector.
@@ -5510,7 +5510,7 @@ contains
       !>     the REORD routines to sort sets of related arrays, as shown
       !>     in the example below.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following example, the ORDER and REORD routines are
       !>     used to sort four related arrays (containing the names,
@@ -5528,22 +5528,22 @@ contains
       !>                  CALL REORDI ( IORDER, N, CODES )
       !>                  CALL REORDR ( IORDER, N, VMAGS )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-JUL-2021 (JDR)
       !>
@@ -5616,35 +5616,35 @@ contains
 
       !> Determine the order of elements in an integer array.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is the input array.
       !>
       !>     NDIM     is the number of elements in the input array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IORDER   is the order vector for the input array.
       !>              IORDER(1) is the index of the smallest element
       !>              of ARRAY; IORDER(2) is the index of the next
       !>              smallest; and so on.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  A negative input dimension causes this routine to leave the
       !>         output order vector unchanged.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     ORDERI finds the index of the smallest element of the input
       !>     array. This becomes the first element of the order vector.
@@ -5654,7 +5654,7 @@ contains
       !>     the REORD routines to sort sets of related arrays, as shown
       !>     in the example below.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following example, the ORDER and REORD routines are
       !>     used to sort four related arrays (containing the names,
@@ -5672,22 +5672,22 @@ contains
       !>              CALL REORDI ( IORDER, N, CODES  )
       !>              CALL REORDR ( IORDER, N, VMAGS  )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-JUL-2021 (JDR)
       !>
@@ -5762,13 +5762,13 @@ contains
       !>
       !> The function returns the product of the elements of ARRAY.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is the input array.
       !>
       !>     N        is the number of elements in the array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the product of the elements of the input
       !>     array. That is,
@@ -5777,25 +5777,25 @@ contains
       !>
       !>     If N is zero or negative, PRODAD is one.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The value of the function is initially set to one. The elements
       !>     of the array are then multiplied. If the number of elements is
       !>     zero or negative, PRODAD is one.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following elements.
       !>
@@ -5814,21 +5814,21 @@ contains
       !>           PRODAD ( ARRAY,    5 )       = 129600.D0
       !>           PRODAD ( ARRAY(3), 3 )       =   5400.D0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  PRODAD does not check for overflow.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 07-APR-2021 (JDR)
       !>
@@ -5876,13 +5876,13 @@ contains
       !>
       !> The function returns the product of the elements of ARRAY.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is the input array.
       !>
       !>     N        is the number of elements in the array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the product of the elements of the input
       !>     array. That is,
@@ -5891,25 +5891,25 @@ contains
       !>
       !>     If N is zero or negative, PRODAI is one.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The value of the function is initially set to one. The elements
       !>     of the array are then multiplied. If the number of elements is
       !>     zero or negative, PRODAI is one.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following elements.
       !>
@@ -5928,22 +5928,22 @@ contains
       !>           PRODAI ( ARRAY,    5 )       = 129600
       !>           PRODAI ( ARRAY(3), 3 )       =   5400
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  PRODAI does not check for overflow. (For integers, this can
       !>         occur relatively quickly.)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -5990,7 +5990,7 @@ contains
       !> Reorder the elements of an array of character strings according to
       !> a given order vector.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IORDER   is the order vector to be used to re-order the input
       !>              array. The first element of IORDER is the index of
@@ -6007,27 +6007,27 @@ contains
       !>     ARRAY    on input, is an array containing some number of
       !>              elements in unspecified order.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output, is the same array, with the elements
       !>              re-ordered as specified by IORDER.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 2, this routine executes a no-op. This case is
       !>         not an error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     REORDC uses a cyclical algorithm to re-order the elements of
       !>     the array in place. After re-ordering, element IORDER(1) of
@@ -6039,7 +6039,7 @@ contains
       !>     a related array by one of the ORDER routines, as shown in
       !>     the example below.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6139,21 +6139,21 @@ contains
       !>        URANUS     5794559.128      799    T
       !>        VENUS       324858.599      299    F
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 27-AUG-2021 (JDR)
       !>
@@ -6277,7 +6277,7 @@ contains
       !> Reorder the elements of a double precision array according to a
       !> given order vector.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IORDER   is the order vector to be used to re-order the input
       !>              array. The first element of IORDER is the index of
@@ -6294,27 +6294,27 @@ contains
       !>     ARRAY    on input, is an array containing some number of
       !>              elements in unspecified order.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output, is the same array, with the elements
       !>              re-ordered as specified by IORDER.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 2, this routine executes a no-op. This case is
       !>         not an error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     REORDD uses a cyclical algorithm to re-order the elements of
       !>     the array in place. After re-ordering, element IORDER(1) of
@@ -6326,7 +6326,7 @@ contains
       !>     a related array by one of the ORDER routines, as shown in
       !>     the example below.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6426,21 +6426,21 @@ contains
       !>        URANUS     5794559.128      799    T
       !>        VENUS       324858.599      299    F
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 27-AUG-2021 (JDR)
       !>
@@ -6548,7 +6548,7 @@ contains
       !> Reorder the elements of an integer array according to a given
       !> order vector.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IORDER   is the order vector to be used to re-order the input
       !>              array. The first element of IORDER is the index of
@@ -6565,27 +6565,27 @@ contains
       !>     ARRAY    on input, is an array containing some number of
       !>              elements in unspecified order.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output, is the same array, with the elements
       !>              re-ordered as specified by IORDER.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 2, this routine executes a no-op. This case is
       !>         not an error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     REORDI uses a cyclical algorithm to re-order the elements of
       !>     the array in place. After re-ordering, element IORDER(1) of
@@ -6597,7 +6597,7 @@ contains
       !>     a related array by one of the ORDER routines, as shown in
       !>     the example below.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6697,21 +6697,21 @@ contains
       !>        URANUS     5794559.128      799    T
       !>        VENUS       324858.599      299    F
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 27-AUG-2021 (JDR)
       !>
@@ -6819,7 +6819,7 @@ contains
       !> Reorder the elements of a logical array according to a given order
       !> vector.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IORDER   is the order vector to be used to re-order the input
       !>              array. The first element of IORDER is the index of
@@ -6836,27 +6836,27 @@ contains
       !>     ARRAY    on input, is an array containing some number of
       !>              logicals in unspecified order.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output, is the same array, with the logicals
       !>              re-ordered as specified by IORDER.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 2, this routine executes a no-op. This case is
       !>         not an error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     REORDL uses a cyclical algorithm to re-order the elements of
       !>     the array in place. After re-ordering, element IORDER(1) of
@@ -6868,7 +6868,7 @@ contains
       !>     a related array by one of the ORDER routines, as shown in
       !>     the example below.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6968,21 +6968,21 @@ contains
       !>        URANUS     5794559.128      799    T
       !>        VENUS       324858.599      299    F
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 27-AUG-2021 (JDR)
       !>
@@ -7084,7 +7084,7 @@ contains
 
       !> Remove duplicate elements from a character array.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NELT     on input is the number of elements in the input
       !>              array.
@@ -7092,7 +7092,7 @@ contains
       !>     ARRAY    on input contains zero or more elements, from which
       !>              all duplicate elements are to be removed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NELT     on output is the number of elements in the output
       !>              array.
@@ -7102,23 +7102,23 @@ contains
       !>              arrays are sorted according to the ASCII collating
       !>              sequence).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let the arrays C and I contain the following elements.
       !>
@@ -7145,21 +7145,21 @@ contains
       !>           C(4) = 'Titania'        I(4) =  13
       !>           C(5) = 'Umbriel'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUN-2021 (JDR)
       !>
@@ -7218,7 +7218,7 @@ contains
 
       !> Remove duplicate elements from a double precision array.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NELT     on input is the number of elements in the input
       !>              array.
@@ -7226,7 +7226,7 @@ contains
       !>     ARRAY    on input contains zero or more elements, from which
       !>              all duplicate elements are to be removed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NELT     on output is the number of elements in the output
       !>              array.
@@ -7236,23 +7236,23 @@ contains
       !>              arrays are sorted according to the ASCII collating
       !>              sequence).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let the arrays C and I contain the following elements.
       !>
@@ -7279,21 +7279,21 @@ contains
       !>           C(4) = 'Titania'        I(4) =  13
       !>           C(5) = 'Umbriel'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -7352,7 +7352,7 @@ contains
 
       !> Remove duplicate elements from an integer array.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NELT     on input is the number of elements in the input
       !>              array.
@@ -7360,7 +7360,7 @@ contains
       !>     ARRAY    on input contains zero or more elements, from which
       !>              all duplicate elements are to be removed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NELT     on output is the number of elements in the output
       !>              array.
@@ -7370,23 +7370,23 @@ contains
       !>              arrays are sorted according to the ASCII collating
       !>              sequence).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let the arrays C and I contain the following elements.
       !>
@@ -7413,21 +7413,21 @@ contains
       !>           C(4) = 'Titania'        I(4) =  13
       !>           C(5) = 'Umbriel'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -7491,7 +7491,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (ALL instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A1,
       !>     A2       are two integer arrays to be compared.  A1 and
@@ -7499,23 +7499,23 @@ contains
       !>
       !>     NDIM     is the common dimension of A1 and A2.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function takes the value .TRUE. if and only if A1 equals A2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function can be thought of as a macro. It replaces the
       !>     loop
@@ -7533,27 +7533,27 @@ contains
       !>
       !>        END DO
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Test two integer arrays A1 and A2 for equality, where both
       !>         arrays have declared length 10:
       !>
       !>            SAME  =  SAMEAI ( A1, A2, 10 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -7579,37 +7579,37 @@ contains
       !> Sort an array of character strings according to the ASCII
       !> collating sequence using the Shell Sort algorithm.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NDIM     is the number of elements in the array to be sorted.
       !>
       !>     ARRAY    on input, is the array to be sorted.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output, contains the same elements, sorted
       !>              according to the ASCII collating sequence.
       !>              The actual sorting is done in place in ARRAY.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 2, this routine does not modify the array.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The Shell Sort Algorithm is well known.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -7693,21 +7693,21 @@ contains
       !>            Galileo
       !>            NEWTON
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -7769,37 +7769,37 @@ contains
 
       !> Sort a double precision array using the Shell Sort algorithm.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NDIM     is the number of elements in the array to be sorted.
       !>
       !>     ARRAY    on input, is the array to be sorted.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output, contains the same elements, sorted
       !>              in increasing order. The actual sorting is done
       !>              in place in ARRAY.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 2, this routine does not modify the array.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The Shell Sort Algorithm is well known.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following elements:
       !>
@@ -7820,21 +7820,21 @@ contains
       !>           66.D0
       !>           99.D0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 02-JUN-2021 (JDR)
       !>
@@ -7896,37 +7896,37 @@ contains
 
       !> Sort an integer array using the Shell Sort algorithm.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NDIM     is the number of elements in the array to be sorted.
       !>
       !>     ARRAY    on input, is the array to be sorted.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output, contains the same elements, sorted
       !>              in increasing order. The actual sorting is done
       !>              in place in ARRAY.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NDIM < 2, this routine does not modify the array.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The Shell Sort Algorithm is well known.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following elements:
       !>
@@ -7947,21 +7947,21 @@ contains
       !>           66
       !>           99
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 02-JUN-2021 (JDR)
       !>
@@ -8030,38 +8030,38 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (ALL instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LOGCLS   is an array of logicals.
       !>
       !>     N        is the number of elements in the array LOGCLS
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns true if the value of some entry of LOGCLS
       !>     is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If N is less than 1, the function returns a value of .FALSE.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function examines each element of LOGCLS until
       !>     a .FALSE. value is found or until all values have been
       !>     examined.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you need to confirm that a character set
       !>     WORDS does not contain at least one of the words in the phrase
@@ -8078,20 +8078,20 @@ contains
       !>
       !>           OK       = SOMFLS ( FOUND,   5     )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -8124,38 +8124,38 @@ contains
       !> The function returns .TRUE. if some of the values in the array
       !> LOGCLS are .TRUE.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LOGCLS   is an array of logicals.
       !>
       !>     N        is the number of elements in the array LOGCLS
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns true if the value of some entry of LOGCLS
       !>     is .TRUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If N is less than 1, the function returns a value of .FALSE.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function examines each element of LOGCLS until
       !>     a .TRUE. value is found or until all values have been
       !>     examined.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you needed to confirm that a character set
       !>     WORDS contained at least one of the words in the phrase
@@ -8172,20 +8172,20 @@ contains
       !>
       !>           OK       = SOMTRU ( FOUND,   5     )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -8231,13 +8231,13 @@ contains
       !>
       !> The function returns the sum of the elements of ARRAY.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is the input double precision array.
       !>
       !>     N        is the number of elements in the array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the sum of the elements of the input array.
       !>     That is,
@@ -8246,25 +8246,25 @@ contains
       !>
       !>     If N is zero or negative, SUMAD is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The value of the function is initially set to zero. The elements
       !>     of the array are then added. If the number of elements is zero or
       !>     negative, SUMAD is zero.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following elements.
       !>
@@ -8283,21 +8283,21 @@ contains
       !>           SUMAD ( ARRAY,    5 )       = 110.D0
       !>           SUMAD ( ARRAY(3), 3 )       =  97.D0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  SUMAD does not check for overflow.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 09-APR-2021 (JDR)
       !>
@@ -8348,13 +8348,13 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (SUM instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is the input integer array.
       !>
       !>     N        is the number of elements in the array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the sum of the elements of the input array.
       !>     That is,
@@ -8363,25 +8363,25 @@ contains
       !>
       !>     If N is zero or negative, SUMAI is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The value of the function is initially set to zero. The elements
       !>     of the array are then added. If the number of elements is zero or
       !>     negative, SUMAI is zero.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following elements.
       !>
@@ -8400,21 +8400,21 @@ contains
       !>           SUMAI ( ARRAY,    5 )       = 110
       !>           SUMAI ( ARRAY(3), 3 )       =  97
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  SUMAI does not check for overflow.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 09-APR-2021 (JDR)
       !>
@@ -8443,31 +8443,31 @@ contains
 
       !> Swap the contents of two character strings.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B        are two character strings, the contents of which
       !>              are to be swapped (exchanged).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     A,
       !>     B        are the same two character strings, after their
       !>              contents have been exchanged.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is just shorthand notation for the code fragment
       !>
@@ -8479,7 +8479,7 @@ contains
       !>     no intermediate string (TEMP) is needed. This means that the
       !>     strings may be of any length.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>           A = 11.D0
@@ -8490,21 +8490,21 @@ contains
       !>           A = 22.D0
       !>           B = 11.D0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 18-MAR-2021 (JDR)
       !>
@@ -8566,31 +8566,31 @@ contains
 
       !> Swap the contents of two double precision variables.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B        are two variables, the contents of which are to
       !>              be swapped (exchanged).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     A,
       !>     B        are the same two variables, after their contents
       !>              have been exchanged.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is just shorthand notation for the code fragment
       !>
@@ -8598,7 +8598,7 @@ contains
       !>           A    = B
       !>           B    = TEMP
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>           A = 11.D0
@@ -8609,21 +8609,21 @@ contains
       !>           A = 22.D0
       !>           B = 11.D0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 02-JUN-2021 (JDR)
       !>
@@ -8658,31 +8658,31 @@ contains
 
       !> Swap the contents of two integer variables.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B        are two variables, the contents of which are to
       !>              be swapped (exchanged).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     A,
       !>     B        are the same two variables, after their contents
       !>              have been exchanged.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is just shorthand notation for the code fragment
       !>
@@ -8690,7 +8690,7 @@ contains
       !>           A    = B
       !>           B    = TEMP
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>           A = 11
@@ -8701,21 +8701,21 @@ contains
       !>           A = 22
       !>           B = 11
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 02-JUN-2021 (JDR)
       !>
@@ -8752,27 +8752,27 @@ contains
       !>
       !> The function returns the first character of the string.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is any character string
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the first character of the string
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine so that formal arguments to a routine
       !>     that are never used can be given the appearance of being used
@@ -8781,7 +8781,7 @@ contains
       !>     unused. Similarly, variables declared for future use can be left
       !>     in place so that they don't need to be commented out
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that a routine takes as an argument a
       !>     fortran structure implemented as a set of parallel arrays.
@@ -8812,21 +8812,21 @@ contains
       !>        END IF
       !>        RETURN
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If you use this routine, it would be a very good idea to
       !>         write down why you are using it in the calling routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 16-AUG-2021 (JDR)
       !>
@@ -8849,27 +8849,27 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (the value itself instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DP       is any double precision number
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the input d.p.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine so that formal arguments to a routine
       !>     that are never used can be given the appearance of being used
@@ -8878,7 +8878,7 @@ contains
       !>     unused. Similarly, variables declared for future use can be left
       !>     in place so that they don't need to be commented out
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that a routine takes as an argument a
       !>     fortran structure implemented as a set of parallel arrays.
@@ -8909,21 +8909,21 @@ contains
       !>        END IF
       !>        RETURN
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If you use this routine, it would be a very good idea to
       !>         write down why you are using it in the calling routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 16-AUG-2021 (JDR)
       !>
@@ -8943,27 +8943,27 @@ contains
       !>
       !> The function returns the value of INT.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INT      is any integer
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the input integer
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine so that formal arguments to a routine
       !>     that are never used can be given the appearance of being used
@@ -8972,7 +8972,7 @@ contains
       !>     unused. Similarly, variables declared for future use can be left
       !>     in place so that they don't need to be commented out
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that a routine takes as an argument a
       !>     fortran structure implemented as a set of parallel arrays.
@@ -9003,21 +9003,21 @@ contains
       !>        END IF
       !>        RETURN
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If you use this routine, it would be a very good idea to
       !>         write down why you are using it in the calling routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 16-AUG-2021 (JDR)
       !>
@@ -9041,27 +9041,27 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (the value itself instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LOG      is any logical
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the input logical
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine so that formal arguments to a routine
       !>     that are never used can be given the appearance of being used
@@ -9070,7 +9070,7 @@ contains
       !>     unused. Similarly, variables declared for future use can be left
       !>     in place so that they don't need to be commented out
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that a routine takes as an argument a
       !>     fortran structure implemented as a set of parallel arrays.
@@ -9101,21 +9101,21 @@ contains
       !>        END IF
       !>        RETURN
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If you use this routine, it would be a very good idea to
       !>         write down why you are using it in the calling routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 16-AUG-2021 (JDR)
       !>

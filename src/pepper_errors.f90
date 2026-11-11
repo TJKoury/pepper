@@ -16,7 +16,7 @@ contains
 
        !> Return the explanation of a short error message.
        !>
-       !> ## Detailed Input
+       !>## Detailed Input
        !>
        !>     MSG      is a "short" error message.
        !>              MSG indicates the type of error that has occurred.
@@ -24,7 +24,7 @@ contains
        !>              The exact format that MSG must follow is
        !>              described in the required reading file, error.req.
        !>
-       !> ## Detailed Output
+       !>## Detailed Output
        !>
        !>     EXPL     is a character string containing an one-line
        !>              explanation of the short error message, MSG.
@@ -32,11 +32,11 @@ contains
        !>              If there is no explanatory text corresponding
        !>              to the input string, MSG, EXPL is blank.
        !>
-       !> ## Parameters
+       !>## Parameters
        !>
        !>     None.
        !>
-       !> ## Exceptions
+       !>## Exceptions
        !>
        !>     1)  This routine does not detect any errors.
        !>
@@ -45,15 +45,15 @@ contains
        !>         not participate in the trace scheme, even though it has
        !>         external references.
        !>
-       !> ## Files
+       !>## Files
        !>
        !>     None.
        !>
-       !> ## Particulars
+       !>## Particulars
        !>
        !>     None.
        !>
-       !> ## Examples
+       !>## Examples
        !>
        !>     C
        !>     C     We want to find the explanation corresponding to
@@ -66,22 +66,22 @@ contains
        !>
        !>     'Invalid Radius--Equatorial or Polar Radius is Zero'
        !>
-       !> ## Restrictions
+       !>## Restrictions
        !>
        !>     None.
        !>
-       !> ## Literature References
+       !>## Literature References
        !>
        !>     None.
        !>
-       !> ## Author and Institution
+       !>## Author and Institution
        !>
        !>     N.J. Bachman       (JPL)
        !>     J. Diaz del Rio    (ODC Space)
        !>     B.V. Semenov       (JPL)
        !>     W.L. Taber         (JPL)
        !>
-       !> ## Version
+       !>## Version
        !>
        !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
        !>
@@ -100,7 +100,7 @@ contains
        !>
        !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (NJB)
        !>
-       !> ## Revisions
+       !>## Revisions
        !>
        !>-    Beta Version 1.1.0, 27-OCT-1988 (NJB)
        !>

@@ -18,7 +18,7 @@ submodule (pepper_instance) pepper_dynamic
 
 contains
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -27,7 +27,7 @@ contains
       !>     For a specified dynamic frame, find the transformation
       !>     that maps states from the dynamic frame to its base frame.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INFRAM      is the frame ID code for a dynamic reference frame.
       !>                 Note that this interface differs from that of TKFRAM,
@@ -43,7 +43,7 @@ contains
       !>     ET          is an epoch in ephemeris seconds past J2000 for which
       !>                 the caller requests a state transformation matrix.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XFORM       is a 6x6 matrix that transforms states relative to
       !>                 INFRAM to states relative to BASFRM.
@@ -58,11 +58,11 @@ contains
       !>
       !>                    CALL MXVG ( XFORM, STATE, 6, 6, OSTATE )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See include file zzdyn.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If a dynamic frame evaluation requires unavailable kernel
       !>         data, the error will be diagnosed by routines in the call
@@ -158,7 +158,7 @@ contains
       !>         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
       !>         a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     1) SPK files containing data for each observer and target
       !>        are required to support two-vector frames.  Note that
@@ -184,7 +184,7 @@ contains
       !>        a PCK file giving orientation and providing a triaxial shape
       !>        model for the target body is required.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Currently only parameterized dynamic frames are supported by
       !>     this routine.
@@ -239,11 +239,11 @@ contains
       !>           Array of "from" frames
       !>           Array of "to" frames
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See FRMGET.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a SPICE private routine; the routine is subject
       !>        to change without notice.  User applications should not
@@ -265,15 +265,15 @@ contains
       !>        derivative of the state transformation.  Such derivatives may
       !>        have low accuracy.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 09-OCT-2021 (NJB) (EDW)
       !>
@@ -332,7 +332,7 @@ contains
       ctx%ndynamic = ctx%ndynamic - 1
       end procedure zzdynfrm
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -341,7 +341,7 @@ contains
       !>     For a specified dynamic frame, find the rotation that maps
       !>     positions from the dynamic frame to its base frame.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INFRAM      is the frame ID code for a dynamic reference frame.
       !>                 Note that this interface differs from that of TKFRAM,
@@ -357,7 +357,7 @@ contains
       !>     ET          is an epoch in ephemeris seconds past J2000 for which
       !>                 the caller requests a rotation matrix.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ROTATE      is a 3x3 rotation matrix that transforms positions
       !>                 relative to INFRAM to positions relative to BASFRM.
@@ -372,11 +372,11 @@ contains
       !>
       !>                    CALL MXV ( ROTATE, INPOS, OUTPOS )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See include file zzdyn.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If a dynamic frame evaluation requires unavailable kernel
       !>         data, the error will be diagnosed by routines in the
@@ -468,7 +468,7 @@ contains
       !>         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
       !>         a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     1) SPK files containing data for each observer and target
       !>        are required to support two-vector frames.  Note that
@@ -494,7 +494,7 @@ contains
       !>        a PCK file giving orientation and providing a triaxial shape
       !>        model for the target body is required.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Currently only parameterized dynamic frames are supported by
       !>     this routine.
@@ -549,11 +549,11 @@ contains
       !>           Array of "from" frames
       !>           Array of "to" frames
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ROTGET.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a SPICE private routine; the routine is subject
       !>        to change without notice.  User applications should not
@@ -567,15 +567,15 @@ contains
       !>     3) Two-vector frame definitions can suffer extreme loss of
       !>         precision due to near-singular geometry.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 09-OCT-2021 (NJB) (EDW)
       !>

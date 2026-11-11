@@ -11,27 +11,27 @@ submodule (pepper_instance) pepper_gf
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value .FALSE. in all cases.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine serves as a stub for interrupt function input
       !>     arguments in GF mid-level search routines such as
@@ -85,7 +85,7 @@ contains
       !>     the CSPICE analog of this routine, is fully functional on all
       !>     platforms on which CSPICE is supported.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This example shows how to call a mid-level GF search API that
       !>     requires an input interrupt detection function.
@@ -137,22 +137,22 @@ contains
       !>
       !>             ...
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a stub routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     L.S. Elson         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 17-AUG-2021 (JDR)
       !>
@@ -171,31 +171,31 @@ contains
       return
       end procedure gfbail
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE    is the scalar double precision value to use as the GF
       !>              subsystem convergence tolerance. This value will override
       !>              the default tolerance, CNVTOL, defined in gf.inc. Units
       !>              are TDB seconds.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If VALUE is not strictly greater-than-zero, the error
       !>         SPICE(INVALIDTOLERANCE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The high level GF routines (see gf.req for a listing) use a
       !>     default value for the convergence tolerance, CNVTOL, defined in
@@ -203,7 +203,7 @@ contains
       !>     convergence tolerance. GFSTOL programmatically changes the
       !>     tolerance used by those routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -397,20 +397,20 @@ contains
       !>            Start time:   14 A.D. SEP 27 05:02:02.8250
       !>            Stop time:    14 A.D. SEP 27 09:33:31.6995
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 06-JUL-2021 (JDR)
       !>
@@ -464,7 +464,7 @@ contains
 
       end procedure gfstol
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -472,7 +472,7 @@ contains
       !>
       !>     Return the value of a specified coordinate of a vector.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VECDEF     Every coordinate computed by this routine is a
       !>                function of an underlying vector. VECDEF is a short
@@ -648,7 +648,7 @@ contains
       !>                Case, leading and trailing blanks ARE significant
       !>                in the string CRDNAM.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUE     is the specified coordinate, evaluated at the epoch ET.
       !>               Coordinates having dimensions of length have units of
@@ -668,11 +668,11 @@ contains
       !>                  - the velocity of the surface intercept is not
       !>                    computable
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the vector definition VECDEF is not recognized,
       !>         the error SPICE(NOTSUPPORTED) is signaled.
@@ -722,7 +722,7 @@ contains
       !>         not available, the error will be diagnosed by routines in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine doesn't directly participate in SPICE kernel loading
       !>     or unloading.  However, a variety of SPICE kernels must be loaded
@@ -747,31 +747,31 @@ contains
       !>
       !>     See the Files section of GFEVNT's header for further information.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used by the GF coordinate utility routines in
       !>     order to solve for time windows on which specified mathematical
       !>     conditions involving coordinates are satisfied.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZGFCOU.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The interface and functionality of this set of routines may
       !>         change without notice.  These routines should be called only
       !>         by SPICELIB routines.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0 12-MAY-2009 (NJB)
       !>
@@ -999,7 +999,7 @@ contains
       end associate
       end procedure zzgfcoq
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -1008,7 +1008,7 @@ contains
       !>     Return the signs of a Cartesian velocity vector's coordinates
       !>     when the velocity is transformed to a given coordinate system.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STATE          is any Cartesian state vector. The order of the
       !>                    components matches those used by the SPK system.
@@ -1033,7 +1033,7 @@ contains
       !>                    +1 indicates positive East; a value of -1 indicates
       !>                    positive West.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CDSIGN         is an array of three integers indicating signs of
       !>                    the derivatives with respect to time of each
@@ -1057,11 +1057,11 @@ contains
       !>                    Geodetic        Longitude, Latitude, Altitude
       !>                    Planetographic  Longitude, Latitude, Altitude
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the input argument SENSE has a value other than -1 or 1,
       !>        and the coordinate system is planetographic, the error
@@ -1076,11 +1076,11 @@ contains
       !>        routines in the call tree of this routine. For other
       !>        coordinate systems, these arguments are ignored.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In order to conduct searches involving constraints on the
       !>     coordinates of a position vector, the GF system requires the
@@ -1202,23 +1202,23 @@ contains
       !>                                            -1 if velocity Z-component
       !>                                               is negative            }
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1] ANSI Fortran 77 Standard, p. 15-23.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 15-APR-2014 (NJB)
       !>
@@ -1637,7 +1637,7 @@ contains
       return
       end procedure zzgfcprx
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -1646,7 +1646,7 @@ contains
       !>     Return the distance between two ephemeris objects, optionally
       !>     corrected for light time and stellar aberration.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARGID      is the NAIF ID code for a target body. The target and
       !>                 observer define a position vector that points from
@@ -1662,7 +1662,7 @@ contains
       !>                 one-way light time and stellar aberration. Any
       !>                 aberration correction accepted by SPKEZR may be used.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DIST        is the norm (magnitude) of the specified Cartesian
       !>                 3-vector representing the position of the target body
@@ -1674,17 +1674,17 @@ contains
       !>
       !>                 Units are km.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If an error occurs while reading an SPK or other kernel file,
       !>        the error  will be diagnosed by a routine in the call tree
       !>        of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -1705,25 +1705,25 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine centralizes distance computations performed by
       !>     entry points in the GF distance utility package ZZGFDIU.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the entry point ZZGFDIGQ in ZZGFDIU.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a SPICELIB private routine; it should not be called by
       !>     user applications.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     L.S. Elson     (JPL)
@@ -1731,7 +1731,7 @@ contains
       !>     I.M. Underwood (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
       module procedure zzgfdiq
@@ -1759,7 +1759,7 @@ contains
       return
       end procedure zzgfdiq
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -1768,7 +1768,7 @@ contains
       !>     Display a character string at a position at the first column on
       !>     the previous line on the screen.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NLEAD          is the number of blank lines to write before
       !>                    writing the output text string.
@@ -1785,16 +1785,16 @@ contains
       !>     NTRAIL         is the number of blank lines to write after
       !>                    writing the output text string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. This program has no output arguments but writes to the
       !>     standard output stream.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If an error occurs when this routine attempts to
       !>        write its output, the message SPICE(WRITEERROR)
@@ -1805,11 +1805,11 @@ contains
       !>        lines will be written, respectively. This case is not
       !>        considered an error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports the default GF progress report display.
       !>     Output is written to the standard output stream; normally this
@@ -1819,28 +1819,28 @@ contains
       !>     up and to the first column, so a subsequent call will overwrite
       !>     output from the current call.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See calls made to this routine by the entry points of
       !>     ZZGFRPWK.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This routine relies on platform support for ANSI cursor control
       !>     character sequences.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman     (JPL)
       !>     L.S. Elson       (JPL)
       !>     I.M. Underwood   (JPL)
       !>     E.D. Wright      (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.17.0, 28-NOV-2021 (BVS)
       !>
@@ -2167,7 +2167,7 @@ contains
 !
 !     This routine should never be called directly.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INST       indicates the name of the instrument, such as a
       !>                spacecraft-mounted framing camera, the field of view
@@ -2344,15 +2344,15 @@ contains
       !>                Case and leading or trailing blanks are not
       !>                significant in the string OBSRVR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the observer's name cannot be mapped to an ID code, the
       !>         error SPICE(IDCODENOTFOUND) is signaled.
@@ -2442,20 +2442,20 @@ contains
       !>         SPICE(FOVTOOWIDE) will be signaled or the error will be
       !>         diagnosed by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the header of the umbrella routine ZZGFFVU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point initializes the parameters needed by the
       !>     occultation state determination entry point ZZGFFVST.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See implementation of GFFOVE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) The reference frame associated with INST must be
       !>        centered at the observer or must be inertial. No check is done
@@ -2464,18 +2464,18 @@ contains
       !>     2) This is a SPICELIB private routine; it should not be called by
       !>        user applications.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     L.S. Elson     (JPL)
       !>     W.L. Taber     (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB version 1.3.0, 25-AUG-2021 (EDW)
       !>
@@ -2508,7 +2508,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB) (LSE) (WLT) (EDW)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.2.0, 29-OCT-2020 (NJB)
       !>
@@ -3317,12 +3317,12 @@ contains
       end associate
       end procedure zzgffvin
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TIME       is the epoch of interest in TDB seconds past the
       !>                J2000 epoch.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VISTAT     is a logical flag indicating the state of visibility.
       !>                If the target is in the instrument FOV at epoch TIME,
@@ -3330,11 +3330,11 @@ contains
       !>                last call to ZZGFFVIN, VISTAT is returned with the
       !>                value .TRUE.; otherwise VISTAT is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If any SPK lookup fails, the error will be diagnosed by
       !>        routines in the call tree of this routine.
@@ -3365,37 +3365,37 @@ contains
       !>         equal to zero, the error SPICE(BADAXISLENGTH) is signaled by
       !>         a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the Files header section of the umbrella routine ZZGFFVU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines the visibility state of the
       !>     configuration specified by the last call to ZZGFFVIN and the
       !>     input time value.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the umbrella routine ZZGFFVU.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a SPICELIB private routine; it should not be called by
       !>     user applications.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     L.S. Elson     (JPL)
       !>     W.L. Taber     (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB) (LSE) (WLT) (EDW)
       !>
@@ -4006,7 +4006,7 @@ contains
 !
 !     This routine should never be called directly.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
       !>              the computation method to be used. Parameters
@@ -4100,15 +4100,15 @@ contains
       !>
       !>              The components of SPOINT have units of km.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If name of the target, observer, or illumination source
       !>         cannot be translated to a NAIF ID code, the error
@@ -4140,35 +4140,35 @@ contains
       !>     8)  If the input argument METHOD is not recognized, the error
       !>         SPICE(INVALIDMETHOD) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the header of the umbrella routine ZZGFILU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine must be called once before each GF search for
       !>     illumination angle events.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See GFEVNT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a SPICELIB private routine; it should not be called by
       !>         user applications.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 30-MAY-2021 (NJB) (JDR)
       !>
@@ -4451,7 +4451,7 @@ contains
       end associate
       end procedure zzgfilin
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UDFUNC   is a placeholder subroutine argument. This argument is
       !>              provided for compatibility with ZZGFSOLVX. It is not
@@ -4461,7 +4461,7 @@ contains
       !>              which to determine whether or not the illumination
       !>              angle between the observer and target is decreasing.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DECRES   is a logical flag that indicates whether the
       !>              observer-target illumination angle is decreasing at
@@ -4473,47 +4473,47 @@ contains
       !>              DECRES is .TRUE. if and only if the observer-target
       !>              illumination angle is decreasing at ET.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the state of the target relative to the observer at ET can
       !>         not be found due to an SPK lookup failure, an error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the header of the umbrella routine ZZGFILU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used by ZZGFRELX, and indirectly by GFILUM, to
       !>     determine the time intervals, within the confinement window, on
       !>     which the observer-target illumination angle is monotone
       !>     increasing or monotone decreasing.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See GFILUM, GFEVNT, ZZGFRELX.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a SPICELIB private routine; it should not be called by
       !>         user applications.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 29-MAY-2021 (JDR)
       !>
@@ -4608,12 +4608,12 @@ contains
       end associate
       end subroutine zzgfildc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the time, expressed as seconds past J2000 TDB, at
       !>              which the illumination angle is to be computed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ANGLE    is the illumination angle as seen by the observer at
       !>              time ET. The observer, target, and aberration
@@ -4623,47 +4623,47 @@ contains
       !>
       !>              Units are radians.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the position of the target relative to the observer at ET
       !>         can not be found due to an SPK lookup failure, an error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the header of the umbrella routine ZZGFILU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines the apparent illumination angle as seen
       !>     from the observer at time ET. This functionality supports GFREL's
       !>     comparisons of relative extrema in order to determine absolute
       !>     extrema.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See GFREL.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a SPICELIB private routine; it should not be called by
       !>         user applications.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 29-MAY-2021 (JDR)
       !>
@@ -4928,7 +4928,7 @@ contains
 !
 !     This routine should never be called directly.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     OCCTYP   indicates the type of occultation that is to be found.
       !>              The full set of possible values of OCCTYP may be used
@@ -5122,15 +5122,15 @@ contains
       !>              Case and blanks are not significant in the string
       !>              ABCORR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If name of either target or the observer cannot be translated
       !>         to a NAIF ID code, the error SPICE(IDCODENOTFOUND) is
@@ -5188,29 +5188,29 @@ contains
       !>         zero, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the header of the umbrella routine ZZGFOCU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point initializes the parameters needed by the
       !>     occultation state determination entry point ZZGFOCST.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See implementation of GFOCCE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a SPICELIB private routine; it should not be called by
       !>         user applications.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -5218,7 +5218,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 07-SEP-2021 (EDW) (JDR)
       !>
@@ -5825,12 +5825,12 @@ contains
       end associate
       end procedure zzgfocin
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TIME     is the epoch of interest in TDB seconds past the
       !>              J2000 epoch.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OCSTAT   is a logical flag indicating the state of
       !>              occultation. If the configuration initialized by
@@ -5838,11 +5838,11 @@ contains
       !>              returned with the value .TRUE. Otherwise it is
       !>              returned with the value .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any SPK lookup fails, an error is signaled by a routine in
       !>         the call tree of this routine.
@@ -5865,30 +5865,30 @@ contains
       !>         one point target, the error SPICE(INVALIDSHAPECOMBO)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the $Files header section of the umbrella routine ZZGFOCU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines the occultation state of the
       !>     configuration specified by the last call to ZZGFOCIN and the
       !>     input time value.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the umbrella routine ZZGFOCU.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a SPICELIB private routine; it should not be called by
       !>         user applications.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -5896,7 +5896,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
       !>
@@ -6431,7 +6431,7 @@ contains
       end associate
       end procedure zzgfocst
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -6440,7 +6440,7 @@ contains
       !>     Compute the apparent phase angle for a target, observer,
       !>     illuminator set of ephemeris objects.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       the time in ephemeris seconds past J2000 TDB at which
       !>              to compute the phase angle.
@@ -6483,46 +6483,46 @@ contains
       !>              The ABCORR string lacks sensitivity to case, leading
       !>              and trailing blanks.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUE      is the optionally light-time corrected phase angle
       !>                between TARG and ILLMN as observed from OBS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine calculates the phase angle using the location of the
       !>     bodies (if point objects) or the center of the bodies (if finite
       !>     bodies).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB version 1.0.0 23-JUN-2010 (EDW)
       module procedure zzgfpaq
@@ -6618,7 +6618,7 @@ contains
 
       end procedure zzgfpaq
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -6626,49 +6626,49 @@ contains
       !>
       !>     Set reference value in the GF sub-system.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     REFVAL     the double precision scalar value to set as the
       !>                reference value for a geometry finder search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>    None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>    None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>    None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>    None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>    This routine wraps a put call to ZZHOLDD for the GF_REF
       !>    value.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>    None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>    None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>    None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>    E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-   SPICELIB Version 1.1.0, 06-AUG-2010 (EDW)
       !>
@@ -6693,7 +6693,7 @@ contains
 
       end procedure zzgfref
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -6701,7 +6701,7 @@ contains
       !>
       !>     Compute the apparent range rate between two ephemeris objects.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the time in ephemeris seconds past J2000 TDB at
       !>              which the range rate is to be measured.
@@ -6758,46 +6758,46 @@ contains
       !>              The ABCORR string lacks sensitivity to case, leading
       !>              and trailing blanks.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUE    is the optionally light-time corrected range
       !>              rate of TARG observed from OBS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines the apparent range rate of a target,
       !>     TARG, as seen from an observer, OBS, at epoch ET.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber     (JPL)
       !>     L.S. Elson     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB version 1.0.1 08-JUL-2010 (EDW)
       !>
@@ -6848,7 +6848,7 @@ contains
 
       end procedure zzgfrrq
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -6861,7 +6861,7 @@ contains
       !>     Sister routine to ZZGFSOLVX. Copy any edits to ZZGFSOLV or
       !>     ZZGFSOLVX to the sister routine.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     The first three inputs to this routine are names of
       !>     subroutines that this routine will call.  These routines
@@ -7049,7 +7049,7 @@ contains
       !>                on entry and must be large enough to hold all of the
       !>                intervals found by the search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RESULT     is a SPICE window containing the intersection of the
       !>                results of the search and the contents of RESULT
@@ -7059,11 +7059,11 @@ contains
       !>                output window stored in RESULT represent times when
       !>                the state function UDCOND returns the value .TRUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL     is the SPICELIB cell lower bound.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If TOL is negative, the error SPICE(VALUEOUTOFRANGE)
       !>         will signal.
@@ -7079,7 +7079,7 @@ contains
       !>        within MXLOOP iterations, the error SPICE(NOCONVERG)
       !>        will signal.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes states using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -7087,7 +7087,7 @@ contains
       !>     and KERNEL Required Reading for further information on loading
       !>     (and unloading) kernels.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine implements a strategy for searching for geometric
       !>     state events important for planning solar system observations.
@@ -7101,22 +7101,22 @@ contains
       !>     The routines that do the decision making, can be modified
       !>     and made smarter as time permits.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>      See GFOCCE and ZZGFREL.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>      It is important that the user understand how the routines
       !>      UDCOND, UDSTEP and UDREFN are to be used and that the
       !>      calling sequences match precisely with the descriptions given
       !>      here.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     W.L. Taber     (JPL)
@@ -7124,7 +7124,7 @@ contains
       !>     L. S. Elson    (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0,  31-JAN-2017 (NJB) (EDW)
       !>
@@ -7637,7 +7637,7 @@ contains
       return
       end subroutine zzgfsolv
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -7650,7 +7650,7 @@ contains
       !>     Sister routine to ZZGFSOLV. Copy any edits to ZZGFSOLV or
       !>     ZZGFSOLVX to the sister routine.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UDFUNS     the routine that returns the value of the scalar
       !>                quantity of interest at time ET. The calling sequence
@@ -7850,7 +7850,7 @@ contains
       !>                on entry and must be large enough to hold all of the
       !>                intervals found by the search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RESULT     is a SPICE window containing the intersection of the
       !>                results of the search and the contents of RESULT
@@ -7860,11 +7860,11 @@ contains
       !>                output window stored in RESULT represent times when
       !>                the state function UDFUNB returns the value .TRUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL     is the SPICELIB cell lower bound.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If TOL is non-positive, the error SPICE(VALUEOUTOFRANGE)
       !>         will signal.
@@ -7876,7 +7876,7 @@ contains
       !>         within MXLOOP iterations, the error SPICE(NOCONVERG)
       !>         will signal.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes states using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -7884,7 +7884,7 @@ contains
       !>     and KERNEL Required Reading for further information on loading
       !>     (and unloading) kernels.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine implements a strategy for searching for geometric
       !>     state events important for planning solar system observations.
@@ -7898,22 +7898,22 @@ contains
       !>     The routines that do the decision making, can be modified
       !>     and made smarter as time permits.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>      See GFUDS and ZZGFRELX.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>      It is important that the user understand how the routines
       !>      UDFUNB, UDSTEP and UDREFN are to be used and that the
       !>      calling sequences match precisely with the descriptions given
       !>      here.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     W.L. Taber     (JPL)
@@ -7921,7 +7921,7 @@ contains
       !>     L.S. Elson     (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0,  31-JAN-2017 (NJB) (EDW)
       !>
@@ -8434,7 +8434,7 @@ contains
       return
       end subroutine zzgfsolvx
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -8442,7 +8442,7 @@ contains
       !>
       !>     Compute the angular separation between the limbs of two objects.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the time in ephemeris seconds past J2000 TDB at
       !>              which the separation is to be measured.
@@ -8515,17 +8515,17 @@ contains
       !>                 orientation of the frame is evaluated at an epoch
       !>                 dependent on the selected aberration correction.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUE   is the light-time (and stellar aberration corrected
       !>             if this feature is enabled) separation of the two
       !>             objects TARG1 and TARG2 as observed from OBS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) SPICE(BADRADIUS) signals if either R1 or R2 have a negative
       !>        value.
@@ -8534,11 +8534,11 @@ contains
       !>        look-ups are not loaded, routines called by this routine
       !>        will signal the error SPICE(SPKINSUFFDATA).
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines the apparent separation between the limbs
       !>     of two objects as observed from a third.  The value reported is
@@ -8547,24 +8547,24 @@ contains
       !>     correction will also be applied to the apparent positions of the
       !>     centers of the two objects.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber     (JPL)
       !>     L.S. Elson     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 28-JUN-2012 (EDW)
       !>
@@ -8889,7 +8889,7 @@ contains
 !
 !     Never directly call this routine.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     OF       the string array naming the bodies whose angular
       !>              separation is of interest.
@@ -8963,15 +8963,15 @@ contains
       !>                 The ABCORR string lacks sensitivity to case, leading
       !>                 and trailing blanks.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the object name for target 1, OF(1), is not a recognized
       !>         name, the error SPICE(IDCODENOTFOUND) is signaled.
@@ -9014,33 +9014,33 @@ contains
       !>         is not centered on target body 2, the error
       !>         SPICE(INVALIDFRAME) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 31-MAY-2021 (JDR)
       !>
@@ -9355,31 +9355,31 @@ contains
       end associate
       end procedure zzgfspin
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       time in seconds past J2000 at which one wishes to
       !>              determine whether or not the angular separation of the
       !>              two bodies is decreasing.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DECRES   is .TRUE. if the angular separation between the objects
       !>              is decreasing. Otherwise it is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the observer is inside one of the objects, the object will
       !>         be regarded as having a 90 degree apparent radius.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A function f(x) is strictly decreasing at x0 if and only if there
       !>     exists some delta > 0 such that for all dx satisfying
@@ -9398,25 +9398,25 @@ contains
       !>     differentiable in a neighborhood of x0; it can have jump
       !>     discontinuities in any neighborhood of x0 and even at x0.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 30-MAY-2021 (JDR)
       !>
@@ -9528,54 +9528,54 @@ contains
       end associate
       end subroutine zzgfspdc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       time in ephemeris seconds past J2000 when the
       !>              angular separation between the two bodies is
       !>              to be computed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SEP      is the angular separation between SVBOD1 and SVBOD2 as
       !>              seen from SVOBS at time ET.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines the apparent angular separation between
       !>     the limbs of bodies SVBOD1 and SVBOD2 as seen from SVOBS at
       !>     time ET.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     L.S. Elson         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.0.0, 30-MAY-2021 (EDW) (JDR)
       !>
@@ -9636,11 +9636,11 @@ contains
       end associate
       end procedure zzgfspgq
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XABCR    initialized via ZZGFSPIN.
       !>
@@ -9664,40 +9664,40 @@ contains
       !>
       !>     XSHP2    initialized via ZZGFSPIN.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 30-MAY-2021 (EDW) (JDR)
       !>
@@ -9761,7 +9761,7 @@ contains
       end associate
       end procedure zzgfspx
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -9770,7 +9770,7 @@ contains
       !>     Return the state of a ray-target surface intercept point used to
       !>     define coordinates referenced in a GF search.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD      is a short string providing parameters defining
       !>                 the computation method to be used. Any value
@@ -9873,7 +9873,7 @@ contains
       !>     RADII      is an array containing three radii defining
       !>                a reference ellipsoid for the target body.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE     is the state of the surface intercept point at ET.
       !>               The first three components of STATE contain the
@@ -9897,11 +9897,11 @@ contains
       !>                  - the velocity of the surface intercept
       !>                    is computable
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the aberration correction ABCORR is not recognized,
       !>         the error will be diagnosed by routines in the call tree
@@ -9934,7 +9934,7 @@ contains
       !>         error will be diagnosed by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -9965,7 +9965,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine isolates the computation of the surface intercept
       !>     state (that is, the surface intercept point and its derivative
@@ -9978,11 +9978,11 @@ contains
       !>     the GF coordinate utilities to determine the signs of the
       !>     derivatives with respect to time of coordinates of interest.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZGFCOST.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine is restricted to use with ellipsoidal target
       !>         shape models.
@@ -10000,15 +10000,15 @@ contains
       !>         change without notice. These routines should be called only
       !>         by SPICELIB routines.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.2.0 09-OCT-2021 (NJB)
       !>
@@ -10586,7 +10586,7 @@ contains
       end associate
       end procedure zzgfssin
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -10595,7 +10595,7 @@ contains
       !>     Return the state of a sub-observer point used to define
       !>     coordinates referenced in a GF search.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD      is a short string providing parameters defining
       !>                 the computation method to be used. Any value
@@ -10655,7 +10655,7 @@ contains
       !>     RADII      is an array containing three radii defining
       !>                a reference ellipsoid for the target body.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE     is the state of the sub-observer point at ET.
       !>               The first three components of STATE contain the
@@ -10667,11 +10667,11 @@ contains
       !>
       !>               Units are km and km/s.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the aberration correction ABCORR is not recognized,
       !>         the error will be diagnosed by routines in the call tree
@@ -10696,7 +10696,7 @@ contains
       !>     6)  If the input method is not recognized, the error
       !>         SPICE(NOTSUPPORTED) will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -10727,7 +10727,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine isolates the computation of the sub-observer state
       !>     (that is, the sub-observer point and its derivative with respect
@@ -10740,11 +10740,11 @@ contains
       !>     the GF coordinate utilities to determine the signs of the
       !>     derivatives with respect to time of coordinates of interest.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZGFCOST.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine is restricted to use with ellipsoidal target
       !>         shape models.
@@ -10762,15 +10762,15 @@ contains
       !>         change without notice. These routines should be called only
       !>         by SPICELIB routines.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0 09-OCT-2021 (NJB)
       !>
@@ -11323,7 +11323,7 @@ contains
       end associate
       end procedure zzgfssob
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -11332,7 +11332,7 @@ contains
       !>     This routine determines if the value of the scalar quantity
       !>     function is less than a previously defined reference value.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UDFUNC     the routine that returns the value of the scalar
       !>                quantity of interest at time ET. The calling sequence
@@ -11354,7 +11354,7 @@ contains
       !>                expressed as seconds past J2000 TDB at which to
       !>                determine the value of UDFUNC.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ISLESS     a scalar boolean indicating if the value of UDFUNC at
       !>                ET is less than REFVAL (true) or not (false).
@@ -11363,43 +11363,43 @@ contains
       !>
       !>                   ISLESS = UDFUNC( ET )  <  REFVAL
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>    None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) ZZHOLDD will signal the error SPICE(ZZHOLDNOPUT) if this
       !>        routine is called prior to storing a reference value
       !>        using a ZZHOLDD "PUT" operation.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>    None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A ZZHOLDD "PUT" stored the reference value used in the logical
       !>     operation. A ZZHOLDD "GET" retrieves the value.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>    See GFUDS.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>    None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>    None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>    N.J. Bachman   (JPL)
       !>    E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-   SPICELIB Version 1.1.0, 06-AUG-2010 (EDW)
       !>
@@ -11465,7 +11465,7 @@ contains
 
       end subroutine zzgfudlt
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -11474,7 +11474,7 @@ contains
       !>     Determine those intervals of the first window that are
       !>     properly contained in an interval of the second.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     WNDW1      is an initialized SPICELIB window
       !>
@@ -11501,33 +11501,33 @@ contains
       !>                only for the purpose of determining the amount
       !>                of space declared for use in WNDW3.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WNDW3    is a window consisting those of intervals in WNDW1
       !>              that are wholly contained in some interval of WNDW2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL     is the SPICELIB cell lower bound.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the window WNDW3 does not have sufficient space to
       !>        contain the sifting of WNDW1 through WNDW2 the error
       !>        'SPICE(OUTOFROOM)' is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows the user to specify two closed subsets of the
       !>     real line and to find the intervals of one that are contained
       !>     within the intervals of another. The subsets of the real line
       !>     are assumed to be made up of disjoint unions of closed intervals.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that WNDW1 and WNDW2 are described by the tables below.
       !>
@@ -11544,21 +11544,21 @@ contains
       !>                12.3    12.8
       !>                21.4    21.7
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     The set WNDW3 must not overwrite WNDW1 or WNDW2.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     W.L. Taber      (JPL)
       !>     L.S. Elson      (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 08-DEC-2010 (EDW)
       !>
@@ -11773,7 +11773,7 @@ contains
       return
       end procedure zzgfwsts
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INST     indicates the name of an instrument, such as a
       !>              spacecraft-mounted framing camera. The field of view
@@ -11853,13 +11853,13 @@ contains
       !>     ET       is the observation time in seconds past the J2000
       !>              epoch.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VISIBL   is .TRUE. if the ray is "visible", or in the
       !>              field-of-view, of INST at the time ET. Otherwise,
       !>              VISIBL is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXVRT   is the maximum number of vertices that may be used
       !>              to define the boundary of the specified instrument's
@@ -11894,7 +11894,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF system.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the observer's name cannot be mapped to a NAIF ID code, the
       !>         error SPICE(IDCODENOTFOUND) is signaled.
@@ -11933,7 +11933,7 @@ contains
       !>         the error is signaled by a routine in the call tree
       !>         of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPICE kernels must be loaded by the calling program
       !>     before this routine is called.
@@ -11973,14 +11973,14 @@ contains
       !>     Kernel data are normally loaded via FURNSH once per program run,
       !>     NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     To treat the target as an ephemeris object rather than a ray, use
       !>     the higher-level SPICELIB routine FOVTRG. FOVTRG may be used to
       !>     determine if ephemeris objects such as Saturn are visible in an
       !>     instrument's FOV at a given time.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -12126,21 +12126,21 @@ contains
       !>         Epsilon CMa was visible from the Cassini UVIS instrument at
       !>         2008-FEB-23 21:33:00.34 (TDB)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     S.C. Krening       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-JUL-2021 (JDR)
       !>
@@ -12180,7 +12180,7 @@ contains
       return
       end procedure fovray
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INST     indicates the name of an instrument, such as a
       !>              spacecraft-mounted framing camera. The field of view
@@ -12301,13 +12301,13 @@ contains
       !>     ET       is the observation time in seconds past the J2000
       !>              epoch.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VISIBL   is .TRUE. if TARGET is fully or partially in the
       !>              field-of-view of INST at the time ET. Otherwise,
       !>              VISIBL is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXVRT   is the maximum number of vertices that may be used
       !>              to define the boundary of the specified instrument's
@@ -12338,7 +12338,7 @@ contains
       !>
       !>              MARGIN is currently set to 1.D-12.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the name of either the target or observer cannot be
       !>         translated to a NAIF ID code, an error is signaled by
@@ -12401,7 +12401,7 @@ contains
       !>         the error is signaled by a routine in the call tree
       !>         of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPICE kernels must be loaded by the calling program
       !>     before this routine is called.
@@ -12450,7 +12450,7 @@ contains
       !>     Kernel data are normally loaded via FURNSH once per program run,
       !>     NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     To treat the target as a ray rather than as an ephemeris object,
       !>     use the higher-level SPICELIB routine FOVRAY. FOVRAY may be used
@@ -12458,7 +12458,7 @@ contains
       !>     in an instrument's FOV at a given time, as long as the direction
       !>     from the observer to the target can be modeled as a ray.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -12660,23 +12660,23 @@ contains
       !>        is very small and was probably obscured by other objects or
       !>        shadow.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The reference frame associated with INST must be centered at
       !>         the observer or must be inertial. No check is done to ensure
       !>         this.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     S.C. Krening       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 13-AUG-2021 (JDR)
       !>
@@ -12729,7 +12729,7 @@ contains
       end associate
       end procedure fovtrg
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INST     is a string indicates the name of an instrument, such as
       !>              a spacecraft-mounted framing camera, the field of view
@@ -13119,7 +13119,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFFOVE conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RESULT   is a SPICE window representing the set of time
       !>              intervals, within the confinement period, when image
@@ -13133,7 +13133,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the lower bound for SPICE cell arrays.
       !>
@@ -13144,7 +13144,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF system.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -13252,7 +13252,7 @@ contains
       !>     21) If operation of this routine is interrupted, the output result
       !>         window will be invalid.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPICE ernels must be loaded by the calling program
       !>     before this routine is called.
@@ -13314,7 +13314,7 @@ contains
       !>     Kernel data are normally loaded once per program run, NOT every
       !>     time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines a set of one or more time intervals
       !>     within the confinement window when a specified ray or any portion
@@ -13408,7 +13408,7 @@ contains
       !>     the program CASCADE in the GF Example Programs chapter of the GF
       !>     Required Reading, gf.req.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -14027,23 +14027,23 @@ contains
       !>          ---------------------------     ---------------------------
       !>          2004-JUN-11 06:30:00.000000     2004-JUN-11 12:00:00.000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel files to be used by GFFOVE must be loaded (normally
       !>         via the SPICELIB routine FURNSH) before GFFOVE is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     L.S. Elson         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 06-AUG-2021 (JDR)
       !>
@@ -14225,7 +14225,7 @@ contains
       return
       end subroutine gffove
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     OCCTYP   indicates the type of occultation that is to be found.
       !>              Supported values and corresponding definitions are:
@@ -14636,7 +14636,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFOCCE conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RESULT   is a SPICE window representing the set of time intervals,
       !>              within the confinement period, when the specified
@@ -14649,11 +14649,11 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the SPICE cell lower bound.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -14761,7 +14761,7 @@ contains
       !>     21) If operation of this routine is interrupted, the output result
       !>         window will be invalid.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPICE kernels must be loaded by the calling program
       !>     before this routine is called.
@@ -14825,7 +14825,7 @@ contains
       !>     Kernel data are normally loaded once per program run, NOT every
       !>     time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides the SPICE GF system's most flexible
       !>     interface for searching for occultation events.
@@ -15034,7 +15034,7 @@ contains
       !>              'DSK/UNPRIORITIZED/SURFACES = '
       !>           // '"Mars MEGDR 64 PIXEL/DEG", 499003'
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -15258,7 +15258,7 @@ contains
       !>        was trapped. By default, the program would have terminated
       !>        before this message could be written.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If the caller passes in the default, constant step
       !>         size routine, GFSTEP, the caller must set the step
@@ -15267,11 +15267,11 @@ contains
       !>
       !>            CALL GFSSTP ( STEP )
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -15280,7 +15280,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 27-AUG-2021 (JDR)
       !>
@@ -15490,7 +15490,7 @@ contains
       return
       end subroutine gfocce
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Determine the occultation condition (not occulted, partially
       !>     occulted, etc.) of one target relative to another target as seen
@@ -15499,7 +15499,7 @@ contains
       !>     The surfaces of the target bodies may be represented by triaxial
       !>     ellipsoids, points, or by topographic data provided by DSK files.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG1    is the name of the first target body. Both object
       !>              names and NAIF IDs are accepted. For example, both
@@ -15628,7 +15628,7 @@ contains
       !>     ET       is the observation time in seconds past the J2000
       !>              epoch.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OCLTID   is an integer occultation code indicating the geometric
       !>              relationship of the three bodies.
@@ -15685,11 +15685,11 @@ contains
       !>                  TOTAL2      3      Total occultation of second
       !>                                     target by first.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the target or observer body names input by the user are
       !>         not recognized, an error is signaled by a routine in
@@ -15737,7 +15737,7 @@ contains
       !>         invalid, an error is signaled by a routine in the call tree
       !>         of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPICE kernels must be loaded by the calling program
       !>     before this routine is called.
@@ -15801,7 +15801,7 @@ contains
       !>     Kernel data are normally loaded once per program run, NOT every
       !>     time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports the target shape combinations
       !>
@@ -15932,7 +15932,7 @@ contains
       !>              'DSK/UNPRIORITIZED/SURFACES = '
       !>           // '"Mars MEGDR 64 PIXEL/DEG", 499003'
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -16169,21 +16169,21 @@ contains
       !>        2015-FEB-27 18:21 MRO  not occulted by      MARS wrt DSS-13
       !>        2015-FEB-27 18:38 MARS transited by         MRO  wrt DSS-13
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     S.C. Krening       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 26-OCT-2021 (JDR)
       !>
@@ -16522,7 +16522,7 @@ contains
       return
       end procedure occult
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the time in ephemeris seconds past J2000 TDB at which
       !>              to compute the phase angle.
@@ -16580,18 +16580,18 @@ contains
       !>                            Newtonian light time and stellar
       !>                            aberration corrections.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the optionally light-time corrected phase
       !>     angle between TARGET and ILLMN as observed from OBSRVR.
       !>
       !>     The range of the phase angle is [0, pi].
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the body name to SPICE ID look-up fails for any of the
       !>         TARGET, ILLMN, or OBSRVR names, the error
@@ -16603,7 +16603,7 @@ contains
       !>     3)  If the TARGET, ILLMN, and OBSRVR are not unique, the error
       !>         SPICE(BODIESNOTDISTINCT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>   Appropriate kernels must be loaded by the calling program before
       !>   this routine is called.
@@ -16629,7 +16629,7 @@ contains
       !>      kernel is required. If dynamic frames are used, additional
       !>      SPK, PCK, CK, or SCLK kernels may be required.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the phase angle using the location of the
       !>     bodies (if point objects) or the center of the bodies (if finite
@@ -16655,7 +16655,7 @@ contains
       !>
       !>        PHASE = PI - SEP
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -16931,21 +16931,21 @@ contains
       !>          Start time = 2007-JAN-19 04:27:54.600       3.074603891
       !>          Stop time  = 2007-JAN-19 04:27:54.600       3.074603891
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 31-AUG-2021 (JDR) (EDW)
       !>
@@ -17118,7 +17118,7 @@ contains
       end associate
       end procedure phaseq
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -17127,7 +17127,7 @@ contains
       !>     Return a state vector used to define coordinates referenced in a
       !>     GF search.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VECDEF     States computed by this routine consist of a an
       !>                underlying vector and the vector's velocity. VECDEF is
@@ -17276,7 +17276,7 @@ contains
       !>                is POSDEF; in this case the caller may set the
       !>                elements of RADII to zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE      is the specified state vector, evaluated at the epoch
       !>                ET. The position component of STATE is the vector
@@ -17295,11 +17295,11 @@ contains
       !>
       !>                - the surface intercept velocity is not computable
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the vector definition VECDEF is not recognized,
       !>         the error SPICE(NOTSUPPORTED) is signaled.
@@ -17344,7 +17344,7 @@ contains
       !>         the error will be diagnosed by routines in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine doesn't directly participate in SPICE kernel loading
       !>     or unloading.  However, a variety of SPICE kernels must be loaded
@@ -17363,7 +17363,7 @@ contains
       !>
       !>     See the Files section of GFEVNT's header for further information.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used by the GF coordinate utility routines in
       !>     order to solve for time windows on which specified mathematical
@@ -17378,25 +17378,25 @@ contains
       !>     window" must be found before any search involving a constraint
       !>     on a coordinate of a surface intercept point can be performed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZGFCOU.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The interface and functionality of this set of routines may
       !>         change without notice.  These routines should be called only
       !>         by SPICELIB routines.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
       module procedure zzgfcost
@@ -17581,7 +17581,7 @@ contains
 !
 !     This routine should never be called directly.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARGET     is the name of a target body. Optionally, you may
       !>                supply the integer ID code for the object as
@@ -17613,15 +17613,15 @@ contains
       !>                Case and leading or trailing blanks are not
       !>                significant in the string OBSRVR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If name of the target or the observer cannot be translated
       !>         to a NAIF ID code, the error SPICE(IDCODENOTFOUND) is
@@ -17634,29 +17634,29 @@ contains
       !>         will be diagnosed by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the header of the umbrella routine ZZGFDIU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine must be called once before each GF search for
       !>     distance events.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See GFEVNT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a SPICELIB private routine; it should not be called by
       !>     user applications.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     L.S. Elson     (JPL)
@@ -17664,7 +17664,7 @@ contains
       !>     I.M. Underwood (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB version 2.0.0 18-FEB-2011 (EDW)
       !>
@@ -17754,13 +17754,13 @@ contains
       end associate
       end procedure zzgfdiin
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET         is the time, expressed as seconds past J2000 TDB, at
       !>                which to determine whether or not the distance between
       !>                the observer and target is decreasing.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DECRES     is a logical flag that indicates whether the
       !>                observer-target distance is decreasing at ET. The
@@ -17771,22 +17771,22 @@ contains
       !>                DECRES is .TRUE. if and only if the observer-target
       !>                distance is decreasing at ET.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the state of the target relative to the observer
       !>        at ET can not be found due to an SPK lookup failure,
       !>        the error will be diagnosed by routines in the call
       !>        tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the header of the umbrella routine ZZGFDIU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A function f(x) is strictly decreasing at x0 if and only if there
       !>     exists some delta > 0 such that for all dx satisfying
@@ -17805,20 +17805,20 @@ contains
       !>     differentiable in a neighborhood of x0; it can have jump
       !>     discontinuities in any neighborhood of x0 and even at x0.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See GFREL.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a SPICELIB private routine; it should not be called by
       !>     user applications.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     L.S. Elson     (JPL)
@@ -17826,7 +17826,7 @@ contains
       !>     I.M. Underwood (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB version 2.0.0 18-FEB-2011 (EDW)
       !>
@@ -17871,13 +17871,13 @@ contains
       end associate
       end subroutine zzgfdidc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET         is the time, expressed as seconds past J2000 TDB, at
       !>                which the distance between the observer and target is
       !>                to be computed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DIST       is the distance between the observer and target as
       !>                seen by the observer at time ET. The observer, target,
@@ -17887,42 +17887,42 @@ contains
       !>
       !>                Units are km.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the position of the target relative to the observer
       !>        at ET can not be found due to an SPK lookup failure,
       !>        the error will be diagnosed by routines in the call
       !>        tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the header of the umbrella routine ZZGFDIU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines the apparent distance between the target
       !>     and observer as seen from the observer at time ET. This
       !>     functionality supports GFREL's comparisons of relative extrema in
       !>     order to determine absolute extrema.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See GFREL.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a SPICELIB private routine; it should not be called by
       !>     user applications.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     L.S. Elson     (JPL)
@@ -17930,7 +17930,7 @@ contains
       !>     I.M. Underwood (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
       module procedure zzgfdigq
@@ -18110,7 +18110,7 @@ contains
 !
 !     Saved Variables
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARGET   the string name of a target body.  Optionally, you may
       !>              supply the integer ID code for the object as an
@@ -18171,15 +18171,15 @@ contains
       !>              Case and leading or trailing blanks are not significant
       !>              in the string OBSRVR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) SPICE(IDCODENOTFOUND) signals if the object name for the
       !>        target, TARGET, is not a recognized name.
@@ -18196,32 +18196,32 @@ contains
       !>     5) SPICE(INVALIDOPTION) signals for any transmit mode aberration
       !>        correction.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB version 1.0.0 19-OCT-2010 (EDW)(NJB)
       module procedure zzgfpain
@@ -18347,30 +18347,30 @@ contains
       end associate
       end procedure zzgfpain
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET         the time in ephemeris seconds past J2000 TDB at which
       !>                to determine whether the phase angle between SVTARG
       !>                and SVILLMN as seen from SVOBS is decreasing.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DECRES     is .TRUE. if the phase angle is decreasing at ET.
       !>                Otherwise it is .FALSE..
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A function f(x) is strictly decreasing at x0 if and only if there
       !>     exists some delta > 0 such that for all dx satisfying
@@ -18389,24 +18389,24 @@ contains
       !>     differentiable in a neighborhood of x0; it can have jump
       !>     discontinuities in any neighborhood of x0 and even at x0.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB version 1.0.0 10-JAN-2012 (EDW)
       module subroutine zzgfpadc ( ctx, udfunc, et, decres )
@@ -18525,50 +18525,50 @@ contains
       end associate
       end subroutine zzgfpadc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET         the time in ephemeris seconds past J2000 TDB at which
       !>                to compute the phase angle.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RVL        the phase angle between SVTARG and SVILLMN as seen
       !>                from SVOBS at time ET.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB version 1.0.0 19-OCT-2010 (EDW)
       module procedure zzgfpagq
@@ -18596,11 +18596,11 @@ contains
       end associate
       end procedure zzgfpagq
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XTARG    SPICE ID value for the target body initialized
       !>              via ZZGFPAIN.
@@ -18617,40 +18617,40 @@ contains
       !>     XABLK    Aberration correction attribute block as initialized
       !>              by ABCORR.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB version 1.0.0 16-SEP-2012 (EDW)
       module procedure zzgfpax
@@ -18686,7 +18686,7 @@ contains
       end associate
       end procedure zzgfpax
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -18700,7 +18700,7 @@ contains
       !>     Sister routine to ZZGFRELX. Copy any edits to ZZGFREL or ZZGFRELX
       !>     to the sister routine.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UDSTEP     the routine that computes a time step in an attempt to
       !>                find a transition of the state of the specified
@@ -18991,7 +18991,7 @@ contains
       !>                confinement window, on which the specified condition
       !>                is met.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RESULT     is a SPICE window containing the time intervals within
       !>                the confinement window, over which the specified
@@ -19000,14 +19000,14 @@ contains
       !>                RESULT is emptied before new values are assigned to
       !>                it.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL     is the SPICELIB cell lower bound.
       !>
       !>     NWREQ      is the required number of workspace windows; the
       !>                input argument NW must not be less than NWREQ.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  A negative value for ADJUST causes the routine to signal
       !>         the error SPICE(VALUEOUTOFRANGE). A non-zero value for ADJUST
@@ -19034,11 +19034,11 @@ contains
       !>         window has size less than 2, the error SPICE(WINDOWTOOSMALL)
       !>         will be signaled by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines time intervals when the value of some
       !>     geometric quantity related to one or more objects and an observer
@@ -19051,20 +19051,20 @@ contains
       !>     than" to a tolerance of TOL. This means that the end points of
       !>     these intervals are within TOL of being equal to the value.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See GFEVNT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     The kernel files to be used by ZZGFREL must be loaded (normally
       !>     via the SPICELIB routine FURNSH) before ZZGFREL is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     L.S. Elson     (JPL)
@@ -19072,7 +19072,7 @@ contains
       !>     I.M. Underwood (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1  21-DEC-2009 (EDW)
       !>
@@ -19728,7 +19728,7 @@ contains
       end associate
       end subroutine zzgfrel
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -19742,7 +19742,7 @@ contains
       !>     Sister routine to ZZGFREL. Copy any edits to ZZGFREL or ZZGFRELX
       !>     to the sister routine.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UDSTEP     the routine that computes a time step in an attempt to
       !>                find a transition of the scalar quantity. In the
@@ -20021,7 +20021,7 @@ contains
       !>                confinement window, on which the specified condition
       !>                is met.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RESULT     is a SPICE window containing the time intervals within
       !>                the confinement window, over which the specified
@@ -20030,14 +20030,14 @@ contains
       !>                RESULT is emptied before new values are assigned to
       !>                it.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL     is the SPICELIB cell lower bound.
       !>
       !>     NWREQ      is the required number of workspace windows; the
       !>                input argument NW must not be less than NWREQ.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  A negative value for ADJUST causes the routine to signal
       !>         the error SPICE(VALUEOUTOFRANGE). A non-zero value for ADJUST
@@ -20064,11 +20064,11 @@ contains
       !>         window has size less than 2, the error SPICE(WINDOWTOOSMALL)
       !>         will be signaled by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines time intervals when the value of some
       !>     scalar quantity related to one or more objects and an observer
@@ -20081,20 +20081,20 @@ contains
       !>     than" to a tolerance of TOL. This means that the end points of
       !>     these intervals are within TOL of being equal to the value.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See GFEVNT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     The kernel files to be used by ZZGFRELX must be loaded (normally
       !>     via the SPICELIB routine FURNSH) before ZZGFRELX is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     L.S. Elson     (JPL)
@@ -20102,7 +20102,7 @@ contains
       !>     I.M. Underwood (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0  03-OCT-2021 (NJB)
       !>
@@ -20933,7 +20933,7 @@ contains
 !
 !     Initial values
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TOTAL      is a measure of the total amount of work to be done
       !>                by the routine(s) that will be using this facility.
@@ -20990,47 +20990,47 @@ contains
       !>      END       is the second part of the output message that will be
       !>                constructed and sent to the output device (see above).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>      None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>      None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Standard SPICE error handling.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point is used to initialize parameters that will
       !>     be used by ZZGFWKIN.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See the header for this module
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     L.S. Elson     (JPL)
       !>     W.L. Taber     (JPL)
       !>     I.M. Underwood (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0 05-NOV-2021 (NJB)
       !>
@@ -21138,28 +21138,28 @@ contains
       end associate
       end procedure zzgftswk
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INCR       is some amount of work that has been completed since
       !>                the last call to ZZGFWKIN.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>      None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>      None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Standard SPICE error handling.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point is used to report work that has been done since
       !>     initialization was performed using ZZGFTSWK or since the last
@@ -21167,26 +21167,26 @@ contains
       !>     together with samples of the system clock to report how much of
       !>     the total job has been completed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See the header for this module
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     L.S. Elson     (JPL)
       !>     W.L. Taber     (JPL)
       !>     I.M. Underwood (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
       module procedure zzgfwkin
@@ -21266,7 +21266,7 @@ contains
       end associate
       end procedure zzgfwkin
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     WAIT       is the minimum duration between reports in seconds. If
       !>                WAIT = 5 then a work progress report will be sent to
@@ -21318,15 +21318,15 @@ contains
       !>     END        is the second part of the output message that will be
       !>                constructed and sent to the output device (see above).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -21335,11 +21335,11 @@ contains
       !>     2) If WAIT is less than 0.D0, the value 0.D0 is stored.
       !>        If WAIT is greater than 3600, the value 3600 is stored.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point exists to modify the reporting frequency set
       !>     up by an initial call to ZZGFTSWK.  In this way one can override
@@ -21350,26 +21350,26 @@ contains
       !>     It exists primarily as a back door to existing code
       !>     that calls ZZGFTSWK in a rigid way.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     See the header for this module.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     W.L. Taber     (JPL)
       !>     I.M. Underwood (JPL)
       !>     L.S. Elson     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0 21-FEB-2021 (NJB)
       !>
@@ -21403,28 +21403,28 @@ contains
       end associate
       end procedure zzgfwkad
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UNIT           Logical unit of a text file open for write access.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The file designated by UNIT should be a text file opened by the
       !>     calling application.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine can be called before ZZGFTSWK to set the output
       !>     logical unit to that of a text file.
@@ -21439,23 +21439,23 @@ contains
       !>     This routine enables TSPICE to send the output report to
       !>     a specified file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB)
       module procedure zzgfwkun
@@ -21486,11 +21486,11 @@ contains
       end associate
       end procedure zzgfwkun
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     UNIT,
       !>     TOTAL,
@@ -21502,19 +21502,19 @@ contains
       !>                    variables passed in via calls to ZZGFTSWK,
       !>                    ZZGFWKIN, or ZZGFWKAD.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point exists to support testing of the higher-level
       !>     GF progress reporting routines
@@ -21526,23 +21526,23 @@ contains
       !>     This routine enables TSPICE to determine the values passed
       !>     in to entry points of this package by those routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0 21-FEB-2021 (NJB)
       !>
@@ -21769,7 +21769,7 @@ contains
 !
 !     Saved Variables
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARGET   the string name of a target body.  Optionally, you may
       !>              supply the integer ID code for the object as an
@@ -21840,15 +21840,15 @@ contains
       !>
       !>                DT may be negative but must be non-zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) SPICE(IDCODENOTFOUND) signals if the object name for the
       !>        target, TARGET, is not a recognized name.
@@ -21861,33 +21861,33 @@ contains
       !>
       !>     4) SPICE(INVALIDVALUE) signals for the delta, DT, equal to zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber     (JPL)
       !>     I.M. Underwood (JPL)
       !>     L.S. Elson     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB version 2.0.0 18-SEP-2012 (EDW)
       !>
@@ -22008,30 +22008,30 @@ contains
       end associate
       end procedure zzgfrrin
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET         time in seconds past J2000 at which to calculate
       !>                whether the range rate of the observer-target vector
       !>                is decreasing.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DECRES     is true if the range rate between the objects
       !>                is decreasing, false otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A function f(x) is strictly decreasing at x0 if and only if there
       !>     exists some delta > 0 such that for all dx satisfying
@@ -22050,25 +22050,25 @@ contains
       !>     differentiable in a neighborhood of x0; it can have jump
       !>     discontinuities in any neighborhood of x0 and even at x0.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber     (JPL)
       !>     I.M. Underwood (JPL)
       !>     L.S. Elson     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB version 2.0.0 18-FEB-2011 (EDW)
       !>
@@ -22157,51 +22157,51 @@ contains
       end associate
       end subroutine zzgfrrdc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET         time in ephemeris seconds past J2000 when the range
       !>                rate between the two bodies is to be computed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RVL        is the range rate of SVTARG as seen from SVOBS at
       !>                time ET.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber     (JPL)
       !>     I.M. Underwood (JPL)
       !>     L.S. Elson     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB version 1.0.0 09-JUN-2009 (LSE)(EDW)
       module procedure zzgfrrgq
@@ -22228,11 +22228,11 @@ contains
       end associate
       end procedure zzgfrrgq
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XTARG    SPICE ID value for the target body initialized
       !>              via ZZGFRRIN.
@@ -22245,40 +22245,40 @@ contains
       !>
       !>     XDT      Saved value for DT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB version 1.0.0 16-SEP-2012 (EDW)
       module procedure zzgfrrx
@@ -22309,7 +22309,7 @@ contains
       end associate
       end procedure zzgfrrx
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -22319,7 +22319,7 @@ contains
       !>     function returns true. Report progress and handle interrupts
       !>     if so commanded.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UDFUNS     the routine that returns the value of the scalar
       !>                quantity of interest at time ET. The calling sequence
@@ -22566,7 +22566,7 @@ contains
       !>                CNFINE must be initialized by the caller via the
       !>                SPICELIB routine SSIZED.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RESULT     is a SPICE window representing the set of time
       !>                intervals, within the confinement period, when the
@@ -22579,16 +22579,16 @@ contains
       !>                will be discarded before GFUDB conducts its
       !>                search.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL     is the SPICELIB cell lower bound.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  SPICE(INVALIDTOLERANCE) will signal if the convergence
       !>         tolerance value is non-positive.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -22610,7 +22610,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides the SPICE GF system's most flexible
       !>     interface for searching for boolean events based on a user
@@ -22712,26 +22712,26 @@ contains
       !>     slow search of interest must be performed. See the "CASCADE"
       !>     example program in gf.req for a demonstration.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>    Refer to GFUDB.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) Any kernel files required by this routine must be loaded
       !>        (normally via the SPICELIB routine FURNSH) before this routine
       !>        is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>    None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>    N.J. Bachman   (JPL)
       !>    E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-   SPICELIB Version 1.0.0  17-OCT-2013 (EDW)
       !>
@@ -22862,7 +22862,7 @@ contains
       return
       end subroutine zzgfudb
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Determine time intervals when an observer sees one target body
       !>     occulted by, or in transit across, another.
@@ -22870,7 +22870,7 @@ contains
       !>     The surfaces of the target bodies may be represented by triaxial
       !>     ellipsoids or by topographic data provided by DSK files.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     OCCTYP   indicates the type of occultation that is to be found.
       !>              Note that transits are considered to be a type of
@@ -23107,7 +23107,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFOCLT conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RESULT   is a SPICE window representing the set of time intervals,
       !>              within the confinement window, when the specified
@@ -23120,7 +23120,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the lower bound for SPICE cell arrays.
       !>
@@ -23139,7 +23139,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF system.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -23246,7 +23246,7 @@ contains
       !>         invalid, an error is signaled by a routine in the call tree
       !>         of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPICE kernels must be loaded by the calling program
       !>     before this routine is called.
@@ -23309,7 +23309,7 @@ contains
       !>     Kernel data are normally loaded once per program run, NOT every
       !>     time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a simpler, but less flexible, interface
       !>     than does the SPICELIB routine GFOCCE for conducting searches for
@@ -23528,7 +23528,7 @@ contains
       !>
       !>          'DSK/UNPRIORITIZED/SURFACES = "Mars MEGDR 64 PIXEL/DEG", 3'
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -24432,23 +24432,23 @@ contains
       !>               Start time: 2015 FEB 28 11:56:34.634642 (TDB)
       !>               Stop time:  2015 FEB 28 12:00:00.000000 (TDB)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel files to be used by GFOCLT must be loaded (normally
       !>         via the SPICELIB routine FURNSH) before GFOCLT is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     L.S. Elson         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 25-NOV-2021 (JDR) (NJB)
       !>
@@ -24572,7 +24572,7 @@ contains
       return
       end procedure gfoclt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INST     indicates the name of an instrument, such as a
       !>              spacecraft-mounted framing camera, the field of view
@@ -24692,7 +24692,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFRFOV conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RESULT   is a SPICE window representing the set of time intervals,
       !>              within the confinement period, when the input ray is
@@ -24707,7 +24707,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the lower bound for SPICE cell arrays.
       !>
@@ -24755,7 +24755,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF system.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -24829,7 +24829,7 @@ contains
       !>         visibility condition is met, an error is signaled
       !>         by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPICE kernels must be loaded by the calling program
       !>     before this routine is called.
@@ -24873,7 +24873,7 @@ contains
       !>     Kernel data are normally loaded once per program run, NOT every
       !>     time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines a set of one or more time intervals when
       !>     the specified ray in contained within the field of view of a
@@ -24970,7 +24970,7 @@ contains
       !>     the program CASCADE in the GF Example Programs chapter of the GF
       !>     Required Reading, gf.req.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -25305,23 +25305,23 @@ contains
       !>        Note that the star is visible throughout the confinement
       !>        window.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel files to be used by GFRFOV must be loaded (normally
       !>         via the SPICELIB routine FURNSH) before GFRFOV is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     L.S. Elson         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 06-AUG-2021 (JDR)
       !>
@@ -25863,7 +25863,7 @@ contains
 !
 !     Local variables
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     WINDOW   is the name of a constraint window. This is the window
       !>              associated with some root finding activity. It is
@@ -25899,11 +25899,11 @@ contains
       !>
       !>                 'done.'
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the SPICE cell lower bound.
       !>
@@ -25912,7 +25912,7 @@ contains
       !>              report message prefix and suffix. See the INCLUDE file
       !>              zzgf.inc for details.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If BEGMSS has length greater than MXBEGM characters, or if
       !>         ENDMSS has length greater than MXENDM characters, the error
@@ -25921,30 +25921,30 @@ contains
       !>     2)  If either BEGMSS or ENDMSS contains non-printing characters,
       !>         the error SPICE(NOTPRINTABLECHARS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point initializes the GF progress reporting system. It
       !>     is called by the GF root finding utilities once at the start of
       !>     each search pass. See the $Particulars section of the main
       !>     subroutine header for further details of its function.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See $Examples in GFRPRT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -25953,7 +25953,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 27-AUG-2021 (JDR)
       !>
@@ -26092,7 +26092,7 @@ contains
       end associate
       end procedure gfrepi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IVBEG,
       !>     IVEND    are the bounds of an interval that is contained in some
@@ -26128,16 +26128,16 @@ contains
       !>              inclusive. The input values of TIME for a given interval
       !>              need not form an increasing sequence.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. This routine does perform console I/O when progress
       !>     reporting is enabled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If IVBEG and IVEND are in decreasing order, the error
       !>         SPICE(BADENDPOINTS) is signaled.
@@ -26149,11 +26149,11 @@ contains
       !>         error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point is used to indicate the current progress of a
       !>     search. Using information recorded through the initialization
@@ -26161,22 +26161,22 @@ contains
       !>     determines how much work has been completed and whether or not to
       !>     report it on the users screen.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See $Examples in GFRPRT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine has no way of enforcing that the input values of
       !>         IVBEG and IVEND are compatible with the input window passed to
       !>         GFREPI. Callers of this routine are responsible for ensuring
       !>         that this requirement is obeyed.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -26185,7 +26185,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 27-AUG-2021 (JDR)
       !>
@@ -26294,47 +26294,47 @@ contains
       end associate
       end procedure gfrepu
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. This routine does perform console I/O when progress
       !>     reporting is enabled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an I/O error results from writing to standard output, the
       !>         error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point "finishes" a progress report, i.e. updates the
       !>     report to indicate the underlying task is 100% complete.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See $Examples in GFRPRT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -26342,7 +26342,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 07-APR-2021 (JDR)
       !>
@@ -26423,7 +26423,7 @@ contains
       end associate
       end procedure gfrepf
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INST     indicates the name of an instrument, such as a
       !>              spacecraft-mounted framing camera, the field of view
@@ -26594,7 +26594,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFTFOV conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RESULT   is a SPICE window representing the set of time intervals,
       !>              within the confinement period, when the target body is
@@ -26609,7 +26609,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the lower bound for SPICE cell arrays.
       !>
@@ -26657,7 +26657,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF system.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -26754,7 +26754,7 @@ contains
       !>         visibility condition is met, an error is signaled
       !>         by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPICE kernels must be loaded by the calling program
       !>     before this routine is called.
@@ -26812,7 +26812,7 @@ contains
       !>     Kernel data are normally loaded once per program run, NOT every
       !>     time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines a set of one or more time intervals
       !>     within the confinement window when any portion of a specified
@@ -26917,7 +26917,7 @@ contains
       !>     the program CASCADE in the GF Example Programs chapter of the GF
       !>     Required Reading, gf.req.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -27145,7 +27145,7 @@ contains
       !>          2004-JUN-11 10:36:56.283772     2004-JUN-11 11:09:04.397165
       !>          2004-JUN-11 11:23:56.020645     2004-JUN-11 11:56:04.733535
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The reference frame associated with INST must be
       !>         centered at the observer or must be inertial. No check is done
@@ -27154,18 +27154,18 @@ contains
       !>     2)  The kernel files to be used by GFTFOV must be loaded (normally
       !>         via the SPICELIB routine FURNSH) before GFTFOV is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     L.S. Elson         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 06-AUG-2021 (JDR)
       !>
@@ -27266,7 +27266,7 @@ contains
       end associate
       end procedure gftfov
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UDFUNS   is the routine that returns the value of the scalar
       !>              quantity of interest at time ET. The calling sequence for
@@ -27358,7 +27358,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFUDB conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RESULT   is a SPICE window containing the time intervals within
       !>              the confinement window, during which the specified
@@ -27371,7 +27371,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the integer value defining the lower bound for
       !>              SPICE Cell arrays (a SPICE window is a kind of cell).
@@ -27391,7 +27391,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF system.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -27430,7 +27430,7 @@ contains
       !>         available, an error is signaled by a routine in the call tree
       !>         of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -27456,7 +27456,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines a set of one or more time intervals
       !>     within the confinement window when the boolean function
@@ -27584,7 +27584,7 @@ contains
       !>     be taken into account when the need for data availability is
       !>     analyzed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -28095,23 +28095,23 @@ contains
       !>        Note that the default convergence tolerance for the GF system
       !>        has value 10^-6 seconds.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Any kernel files required by this routine must be loaded
       !>         (normally via the SPICELIB routine FURNSH) before this routine
       !>         is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 21-OCT-2021 (JDR) (NJB)
       !>
@@ -28213,7 +28213,7 @@ contains
       return
       end subroutine gfudb
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UDFUNS   is the routine that returns the value of the scalar
       !>              quantity of interest at time ET. The calling sequence for
@@ -28400,7 +28400,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFUDS conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORK     is an array used to store workspace windows.
       !>
@@ -28430,7 +28430,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the integer value defining the lower bound for
       !>              SPICE Cell arrays (a SPICE window is a kind of cell).
@@ -28453,7 +28453,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF system.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -28514,7 +28514,7 @@ contains
       !>         available, an error is signaled by a routine in the call tree
       !>         of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -28540,7 +28540,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines a set of one or more time intervals
       !>     within the confinement window when the scalar function
@@ -28721,7 +28721,7 @@ contains
       !>     corrections are used, round-off error should be taken into
       !>     account when the need for data availability is analyzed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -29087,23 +29087,23 @@ contains
       !>        Start time, drdt = 2007-MAR-25 17:26:56.150       1.428141707
       !>        Stop time,  drdt = 2007-MAR-25 17:26:56.150       1.428141707
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Any kernel files required by this routine must be loaded
       !>         (normally via the SPICELIB routine FURNSH) before this routine
       !>         is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 21-OCT-2021 (JDR) (NJB)
       !>
@@ -29497,7 +29497,7 @@ contains
 !
 !     This routine should never be called.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VECDEF   every coordinate computed by this routine is a
       !>              function of an underlying vector. VECDEF is a short
@@ -29663,16 +29663,16 @@ contains
       !>              Case, leading and trailing blanks are not significant
       !>              in the string CRDNAM.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. This routine operates by side effects. See $Particulars
       !>     for a description of the action of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either the observer or target names cannot be mapped
       !>         to ID codes, the error SPICE(IDCODENOTFOUND) is signaled.
@@ -29746,12 +29746,12 @@ contains
       !>         zero, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the discussion in the $Files section of the header of the
       !>     umbrella subroutine ZZGFCOU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine's main purpose is to support GFEVNT. Many of
       !>     the geometric quantities supported by GFEVNT are simply
@@ -29761,11 +29761,11 @@ contains
       !>     support solving problems involving constraints on
       !>     longitude or right ascension. See ZZGFLONG for usage examples.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See GFEVNT and ZZGFLONG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The interface and functionality of this set of routines may
       !>         change without notice. These routines should be called only
@@ -29787,17 +29787,17 @@ contains
       !>            - The set of supported coordinate systems must be kept in
       !>              sync with the set supported by zzgf.inc.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.0, 11-SEP-2021 (EDW) (JDR)
       !>
@@ -30276,21 +30276,21 @@ contains
       end associate
       end procedure zzgfcoin
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
       !>              past J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CRDVAL   is the coordinate defined by the previous call to
       !>              ZZGFCOIN, evaluated at the epoch ET.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the coordinate cannot be computed at ET, the
       !>         error SPICE(NOTCOMPUTABLE) is signaled.
@@ -30299,19 +30299,19 @@ contains
       !>         defined by ZZGFCOIN, the error is signaled by a routine
       !>         in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the $Files header section of the umbrella routine ZZGFCOU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZGFLONG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The interface and functionality of this set of routines may
       !>         change without notice. These routines should be called only
@@ -30320,16 +30320,16 @@ contains
       !>     2)  ZZGFCOIN must be called prior to use of any of the other
       !>         entry points.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 11-SEP-2021 (JDR)
       !>
@@ -30404,12 +30404,12 @@ contains
       end associate
       end procedure zzgfcog
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
       !>              past J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DECRES   is a logical flag indicating whether
       !>              the coordinate defined by the previous call to
@@ -30420,11 +30420,11 @@ contains
       !>              In cases where the coordinate is undefined
       !>              at ET, DECRES is set to .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In cases where the any intermediate quantity required by
       !>         this routine is undefined, DECRES is set to .FALSE. This
@@ -30440,11 +30440,11 @@ contains
       !>         the error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the $Files header section of the umbrella routine ZZGFCOU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A function f(x) is strictly decreasing at x0 if and only if there
       !>     exists some delta > 0 such that for all dx satisfying
@@ -30463,11 +30463,11 @@ contains
       !>     differentiable in a neighborhood of x0; it can have jump
       !>     discontinuities in any neighborhood of x0 and even at x0.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZGFLONG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The interface and functionality of this set of routines may
       !>         change without notice. These routines should be called only
@@ -30476,17 +30476,17 @@ contains
       !>     2)  ZZGFCOIN must be called prior to use of any of the other
       !>         entry points.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
       !>
@@ -30596,12 +30596,12 @@ contains
       end associate
       end subroutine zzgfcodc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
       !>              past J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CRDFND   is a logical flag indicating whether the state of
       !>              the coordinate defined by the previous call to
@@ -30609,21 +30609,21 @@ contains
       !>              .TRUE. if the coordinate is computable and .FALSE.
       !>              otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while this routine attempts to compute the
       !>         coordinate defined by ZZGFCOIN, the error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the $Files header section of the umbrella routine ZZGFCOU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used by the GF system to compute a time window
       !>     over which a specified coordinate state is computable.
@@ -30635,11 +30635,11 @@ contains
       !>
       !>     -  the velocity of the intercept is not computable
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZGFCSLV.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The interface and functionality of this set of routines may
       !>         change without notice. These routines should be called only
@@ -30648,17 +30648,17 @@ contains
       !>     2)  ZZGFCOIN must be called prior to use of any of the other
       !>         entry points.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
       !>
@@ -30734,40 +30734,40 @@ contains
       end associate
       end subroutine zzgfcoex
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
       !>              past J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CRDVAL   is the cosine of the coordinate defined by the
       !>              previous call to ZZGFCOIN, evaluated at the epoch
       !>              ET.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while this routine computes the coordinate
       !>         defined by ZZGFCOIN, the error is signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the $Files header section of the umbrella routine ZZGFCOU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZGFLONG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The interface and functionality of this set of routines may
       !>         change without notice. These routines should be called only
@@ -30776,16 +30776,16 @@ contains
       !>     2)  ZZGFCOIN must be called prior to use of any of the other
       !>         entry points.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 11-SEP-2021 (JDR)
       !>
@@ -30862,40 +30862,40 @@ contains
       end associate
       end procedure zzgfcocg
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
       !>              past J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CRDVAL   is the sine of the coordinate defined by the
       !>              previous call to ZZGFCOIN, evaluated at the epoch
       !>              ET.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while this routine computes the coordinate
       !>         defined by ZZGFCOIN, the error is signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the $Files header section of the umbrella routine ZZGFCOU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZGFLONG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The interface and functionality of this set of routines may
       !>         change without notice. These routines should be called only
@@ -30904,16 +30904,16 @@ contains
       !>     2)  ZZGFCOIN must be called prior to use of any of the other
       !>         entry points.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 11-SEP-2021 (JDR)
       !>
@@ -30990,12 +30990,12 @@ contains
       end associate
       end procedure zzgfcosg
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
       !>              past J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DECRES   is a logical flag indicating whether the cosine of
       !>              the coordinate defined by the previous call to
@@ -31006,11 +31006,11 @@ contains
       !>              In cases where the coordinate is undefined
       !>              at ET, DECRES is set to .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In cases where the any intermediate quantity required by
       !>         this routine is undefined, DECRES is set to .FALSE. This
@@ -31026,11 +31026,11 @@ contains
       !>         the error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the $Files header section of the umbrella routine ZZGFCOU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A function f(x) is strictly decreasing at x0 if and only if there
       !>     exists some delta > 0 such that for all dx satisfying
@@ -31049,11 +31049,11 @@ contains
       !>     differentiable in a neighborhood of x0; it can have jump
       !>     discontinuities in any neighborhood of x0 and even at x0.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZGFLONG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The interface and functionality of this set of routines may
       !>         change without notice. These routines should be called only
@@ -31062,17 +31062,17 @@ contains
       !>     2)  ZZGFCOIN must be called prior to use of any of the other
       !>         entry points.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
       !>
@@ -31241,12 +31241,12 @@ contains
       end associate
       end subroutine zzgfcocd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
       !>              past J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DECRES   is a logical flag indicating whether the sine
       !>              of the coordinate defined by the previous call to
@@ -31254,11 +31254,11 @@ contains
       !>              DECRES is .FALSE. if the sine of the coordinate is
       !>              decreasing and .TRUE. otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In cases where the any intermediate quantity required by
       !>         this routine is undefined, DECRES is set to .FALSE. This
@@ -31274,11 +31274,11 @@ contains
       !>         the error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the $Files header section of the umbrella routine ZZGFCOU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A function f(x) is strictly decreasing at x0 if and only if there
       !>     exists some delta > 0 such that for all dx satisfying
@@ -31297,11 +31297,11 @@ contains
       !>     differentiable in a neighborhood of x0; it can have jump
       !>     discontinuities in any neighborhood of x0 and even at x0.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZGFLONG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The interface and functionality of this set of routines may
       !>         change without notice. These routines should be called only
@@ -31310,17 +31310,17 @@ contains
       !>     2)  ZZGFCOIN must be called prior to use of any of the other
       !>         entry points.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 11-SEP-2021 (JDR)
       !>
@@ -31488,7 +31488,7 @@ contains
       end associate
       end subroutine zzgfcosd
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -31498,7 +31498,7 @@ contains
       !>     or right ascension of a specified vector satisfies a specified
       !>     mathematical condition.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VECDEF     Every coordinate computed by this routine is a
       !>                function of an underlying vector. VECDEF is a short
@@ -31964,7 +31964,7 @@ contains
       !>                RESULT must be initialized by the caller via the
       !>                SPICELIB routine SSIZED.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORK       has undefined contents on output, with the exception
       !>                of the windows occupying the range
@@ -32006,11 +32006,11 @@ contains
       !>                contraction value is dependent on the user's
       !>                requirements and the specific problem to be solved.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL     is the SPICELIB cell lower bound.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the external step size routine UDGSTP must return step sizes
@@ -32100,7 +32100,7 @@ contains
       !>         result in a time when the longitude value is - PI, due to
       !>         roundoff error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine doesn't directly participate in SPICE kernel loading
       !>     or unloading.  However, a variety of SPICE kernels must be loaded
@@ -32124,7 +32124,7 @@ contains
       !>
       !>     See the Files section of GFEVNT's header for further information.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Since this is a private SPICELIB routine, the header comments
       !>     make many references to the routine's implementation.  This
@@ -32157,11 +32157,11 @@ contains
       !>     confinement window that is more easily computed, say one
       !>     involving latitude constraints, can be very helpful.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in GFEVNT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The interface and functionality of this routine may change
       !>         without notice.  This routine should be called only by
@@ -32184,16 +32184,16 @@ contains
       !>         need to re-initialize the coordinate quantity utility package
       !>         after calling this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     E.D. Wright    (JPL)
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.1 03-OCT-2021 (NJB)
       !>
@@ -34107,7 +34107,7 @@ contains
       end associate
       end subroutine zzgflong
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VECDEF     Every coordinate computed by this routine is a
       !>                function of an underlying vector. VECDEF is a short
@@ -34533,7 +34533,7 @@ contains
       !>                RESULT must be initialized by the caller via the
       !>                SPICELIB routine SSIZED.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORK       has undefined contents on output.
       !>
@@ -34548,7 +34548,7 @@ contains
       !>                respect to time are computable. See the description of
       !>                CNFINE above for details.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL     is the lower bound for SPICELIB cells.
       !>
@@ -34560,7 +34560,7 @@ contains
       !>                time derivative are computable by CNTRCT+TOL. Units
       !>                are TDB seconds.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the workspace window count NW is less than NWMAX, the
       !>         error SPICE(TOOFEWWINDOWS) is signaled.
@@ -34658,12 +34658,12 @@ contains
       !>     21) If RELATE is not a supported relational operator
       !>         specification, the error SPICE(NOTRECOGNIZED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the discussion in the Files section of the header of the
       !>     umbrella subroutine ZZGFCOU.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine handles coordinate search set-up and execution
       !>     activities for GFEVNT.
@@ -34674,11 +34674,11 @@ contains
       !>     is contracted by CNTRCT seconds; this contracted window is then
       !>     used as the confinement window for the search.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See GFEVNT and ZZGFLONG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The interface and functionality of this set of routines may
       !>         change without notice.  These routines should be called only
@@ -34700,16 +34700,16 @@ contains
       !>            - The set of supported coordinate systems must be kept in
       !>              sync with the set supported by zzgf.inc.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 03-OCT-2021 (NJB)
       !>
@@ -35060,7 +35060,7 @@ contains
       end associate
       end subroutine zzgfcslv
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UDSTEP   is the name of the user specified routine that computes a
       !>              time step in an attempt to find a transition of the state
@@ -35797,7 +35797,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFEVNT conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORK     is an array used to store workspace windows.
       !>
@@ -35827,7 +35827,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the SPICE cell lower bound.
       !>
@@ -35843,7 +35843,7 @@ contains
       !>              SPICE_GF_CNVTOL, the transition time is considered
       !>              to have been found.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  There are varying requirements on how distinct the three
       !>         objects, QCPARS, must be. If the requirements are not met, an,
@@ -35912,7 +35912,7 @@ contains
       !>     13) If operation of this routine is interrupted, the output result
       !>         window will be invalid.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPK and PCK kernels must be loaded by the
       !>     calling program before this routine is called.
@@ -35942,7 +35942,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides the SPICE GF subsystem's general interface
       !>     to determines time intervals when the value of some
@@ -36087,7 +36087,7 @@ contains
       !>     aberration corrections are used, round-off error should be taken
       !>     into account when the need for data availability is analyzed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -36422,7 +36422,7 @@ contains
       !>        was trapped. By default, the program would have terminated
       !>        before this message could be written.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel files to be used by GFEVNT must be loaded (normally
       !>         via the SPICELIB routine FURNSH) before GFEVNT is called.
@@ -36433,18 +36433,18 @@ contains
       !>
       !>            CALL GFSSTP ( STEP )
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 27-OCT-2021 (JDR) (BVS) (NJB)
       !>
@@ -37171,7 +37171,7 @@ contains
       end associate
       end subroutine gfevnt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may supply
       !>              the integer ID code for the object as an integer string.
@@ -37393,7 +37393,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFDIST conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORK     is an array used to store workspace windows.
       !>
@@ -37430,7 +37430,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the lower bound for SPICE Cell arrays.
       !>
@@ -37455,7 +37455,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF system.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -37519,7 +37519,7 @@ contains
       !>         distance condition is met, an error is signaled
       !>         by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -37546,7 +37546,7 @@ contains
       !>     Kernel data are normally loaded once per program run, NOT every
       !>     time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines a set of one or more time intervals
       !>     within the confinement window when the distance between the
@@ -37703,7 +37703,7 @@ contains
       !>     aberration corrections are used, round-off error should be taken
       !>     into account when the need for data availability is analyzed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -38244,23 +38244,23 @@ contains
       !>          Start time, distance = 2007-MAR-06 15:56:00.957  405753.45213
       !>          Stop time,  distance = 2007-MAR-07 15:00:38.674  405753.45213
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel files to be used by this routine must be loaded
       !>         (normally via the SPICELIB routine FURNSH) before this routine
       !>         is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 27-OCT-2021 (JDR) (NJB)
       !>
@@ -38425,7 +38425,7 @@ contains
       return
       end procedure gfdist
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining the
       !>              computation method to be used. Parameters include, but
@@ -38653,7 +38653,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFILUM conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORK     is an array used to store workspace windows.
       !>
@@ -38690,7 +38690,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the lower bound for SPICE Cell arrays.
       !>
@@ -38719,7 +38719,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF subsystem.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -38804,7 +38804,7 @@ contains
       !>         available, an error is signaled by a routine in the call tree
       !>         of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -38842,7 +38842,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines a set of one or more time intervals
       !>     within the confinement window when the specified illumination
@@ -39119,7 +39119,7 @@ contains
       !>     aberration corrections are used, round-off error should be taken
       !>     into account when the need for data availability is analyzed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -39503,7 +39503,7 @@ contains
       !>        Start: 2006 NOV 30 01:38:07.309 UTC   55.28054784   19.99999983
       !>        Stop:  2006 NOV 30 01:39:03.296 UTC   55.49418925   19.99999999
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel files to be used by this routine must be loaded
       !>         (normally using the SPICELIB routine FURNSH) before this
@@ -39513,18 +39513,18 @@ contains
       !>         illumination angle utility package. Callers may
       !>         need to re-initialize the package after calling this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 27-OCT-2021 (JDR) (NJB)
       !>
@@ -39717,7 +39717,7 @@ contains
       return
       end procedure gfilum
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may supply
       !>              a string containing the integer ID code for the object.
@@ -39931,7 +39931,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFPA conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORK     is an array used to store workspace windows.
       !>
@@ -39968,7 +39968,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the integer value defining the lower bound for
       !>              SPICE Cell arrays (a SPICE window is a kind of cell).
@@ -39991,7 +39991,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF system.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -40065,7 +40065,7 @@ contains
       !>         error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPK and PCK kernels must be loaded by the calling
       !>     program before this routine is called.
@@ -40090,7 +40090,7 @@ contains
       !>     Kernel data are normally loaded once per program run, NOT every
       !>     time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>                        ILLMN      OBS
       !>        ILLMN as seen      *       /
@@ -40268,7 +40268,7 @@ contains
       !>     aberration corrections are used, round-off error should be taken
       !>     into account when the need for data availability is analyzed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -40555,23 +40555,23 @@ contains
       !>        Start time = 2007-JAN-19 04:27:54.600       3.074603891
       !>        Stop time  = 2007-JAN-19 04:27:54.600       3.074603891
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel files to be used by this routine must be loaded
       !>         (normally using the SPICELIB routine FURNSH) before this
       !>         routine is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 27-OCT-2021 (JDR) (NJB)
       !>
@@ -40727,7 +40727,7 @@ contains
 
       end procedure gfpa
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may supply
       !>              the integer ID code for the object as an integer string.
@@ -41018,7 +41018,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFPOSC conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORK     is an array used to store workspace windows.
       !>
@@ -41055,7 +41055,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the integer value defining the lower bound for
       !>              SPICE Cell arrays (a SPICE window is a kind of cell).
@@ -41078,7 +41078,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF system.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -41144,7 +41144,7 @@ contains
       !>         radii, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPK and PCK kernels must be loaded by the calling
       !>     program before this routine is called.
@@ -41173,7 +41173,7 @@ contains
       !>     Such kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a simpler, but less flexible interface
       !>     than does the routine GFEVNT for conducting searches for
@@ -41357,7 +41357,7 @@ contains
       !>     one millisecond contraction will in most cases eliminate
       !>     numerical round-off caused branch crossings.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -42392,7 +42392,7 @@ contains
       !>         From : 2007-MAR-25 01:12:38.550572 (TDB)
       !>         To   : 2007-MAR-25 01:23:53.909469 (TDB)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel files to be used by this routine must be loaded
       !>         (normally using the SPICELIB routine FURNSH) before this
@@ -42402,17 +42402,17 @@ contains
       !>         coordinate quantity utility package. Callers may
       !>         need to re-initialize the package after calling this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 03-NOV-2021 (JDR) (NJB)
       !>
@@ -42613,7 +42613,7 @@ contains
 
       end procedure gfposc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may supply
       !>              the integer ID code for the object as an integer string.
@@ -42840,7 +42840,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFRR conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORK     is an array used to store workspace windows.
       !>
@@ -42877,7 +42877,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the integer value defining the lower bound for
       !>              SPICE Cell arrays (a SPICE window is a kind of cell).
@@ -42900,7 +42900,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF system.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -42968,7 +42968,7 @@ contains
       !>         available, an error is signaled by a routine in the call tree
       !>         of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPK and PCK kernels must be loaded by the calling
       !>     program before this routine is called.
@@ -42993,7 +42993,7 @@ contains
       !>     Kernel data are normally loaded once per program run, NOT every
       !>     time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines if the caller-specified constraint
       !>     condition on the geometric event (range rate) is satisfied for
@@ -43157,7 +43157,7 @@ contains
       !>     aberration corrections are used, round-off error should be taken
       !>     into account when the need for data availability is analyzed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -43438,7 +43438,7 @@ contains
       !>        Start time, drdt = 2007-MAR-25 17:26:56.148       1.428141706
       !>        Stop time,  drdt = 2007-MAR-25 17:26:56.148       1.428141706
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel files to be used by this routine must be loaded
       !>         (normally using the SPICELIB routine FURNSH) before this
@@ -43449,17 +43449,17 @@ contains
       !>         need to re-initialize the range rate quantity utility
       !>         package after calling this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 27-OCT-2021 (JDR) (NJB)
       !>
@@ -43626,7 +43626,7 @@ contains
 
       end procedure gfrr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG1    is the string naming the first body of interest. You can
       !>              also supply the integer ID code for the object as an
@@ -43888,7 +43888,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFSEP conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORK     is an array used to store workspace windows.
       !>
@@ -43925,7 +43925,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the integer value defining the lower bound for
       !>              SPICE Cell arrays (a SPICE window is a kind of cell).
@@ -43948,7 +43948,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF system.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -44022,7 +44022,7 @@ contains
       !>         available, an error is signaled by a routine in the call tree
       !>         of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPK and PCK kernels must be loaded by the
       !>     calling program before this routine is called.
@@ -44056,7 +44056,7 @@ contains
       !>     Such kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a simpler, but less flexible interface
       !>     than does the routine GFEVNT for conducting searches for
@@ -44237,7 +44237,7 @@ contains
       !>     The angular separation of two targets as seen from an observer
       !>     where one of those targets is the sun is known as elongation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -44526,7 +44526,7 @@ contains
       !>         Beginning TDB 2007-JUN-30 14:15:26.576292 (TDB)
       !>         Ending TDB    2007-JUN-30 14:15:26.576292 (TDB)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel files to be used by this routine must be loaded
       !>         (normally using the SPICELIB routine FURNSH) before this
@@ -44546,17 +44546,17 @@ contains
       !>         Use RELATE values of 'ABSMIN' or 'LOCMIN' to detect such an
       !>         event(s).
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 27-OCT-2021 (JDR) (NJB)
       !>
@@ -44743,7 +44743,7 @@ contains
       return
       end procedure gfsep
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARGET   is the string name of a target body. Optionally, you may
       !>              supply the integer ID code for the object as an
@@ -45080,7 +45080,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFSNTC conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORK     is an array used to store workspace windows.
       !>
@@ -45117,7 +45117,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the integer value defining the lower bound for
       !>              SPICE Cell arrays (a SPICE window is a kind of cell).
@@ -45143,7 +45143,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF system.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -45209,7 +45209,7 @@ contains
       !>         radii, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPK and PCK kernels must be loaded by the calling
       !>     program before this routine is called.
@@ -45243,7 +45243,7 @@ contains
       !>     Such kernel data are normally loaded once per program run, NOT
       !>     every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a simpler, but less flexible interface
       !>     than does the routine GFEVNT for conducting searches for
@@ -45419,7 +45419,7 @@ contains
       !>     contraction will in most cases eliminate numerical round-off
       !>     caused branch crossings.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -46019,7 +46019,7 @@ contains
       !>         Beginning TDB 2007-AUG-09 06:22:55.351256 (TDB)
       !>         Ending TDB    2007-AUG-09 06:26:54.327565 (TDB)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel files to be used by this routine must be loaded
       !>         (normally using the SPICELIB routine FURNSH) before this
@@ -46029,17 +46029,17 @@ contains
       !>         coordinate quantity utility package. Callers may
       !>         need to re-initialize the package after calling this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 27-OCT-2021 (JDR) (NJB)
       !>
@@ -46229,7 +46229,7 @@ contains
 
       end procedure gfsntc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARGET   is the string name of a target body. Optionally, you may
       !>              supply the integer ID code for the object as an
@@ -46555,7 +46555,7 @@ contains
       !>              If RESULT is non-empty on input, its contents will be
       !>              discarded before GFSUBC conducts its search.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORK     is an array used to store workspace windows.
       !>
@@ -46592,7 +46592,7 @@ contains
       !>              search criteria, RESULT will be returned with a
       !>              cardinality of zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the integer value defining the lower bound for
       !>              SPICE Cell arrays (a SPICE window is a kind of cell).
@@ -46615,7 +46615,7 @@ contains
       !>     See INCLUDE file gf.inc for declarations and descriptions of
       !>     parameters used throughout the GF system.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In order for this routine to produce correct results,
       !>         the step size must be appropriate for the problem at hand.
@@ -46681,7 +46681,7 @@ contains
       !>         radii, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPK and PCK kernels must be loaded by the calling
       !>     program before this routine is called.
@@ -46710,7 +46710,7 @@ contains
       !>     Such kernel data are normally loaded once per program run, NOT
       !>     every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a simpler, but less flexible interface
       !>     than does the routine GFEVNT for conducting searches for
@@ -46894,7 +46894,7 @@ contains
       !>     contraction will in most cases eliminate numerical round-off
       !>     caused branch crossings.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -47252,7 +47252,7 @@ contains
       !>        From : 2007-AUG-08 06:21:58.050893    16.12767782   86.00000000
       !>        To   : 2007-AUG-08 06:25:58.028786    16.12689748   85.00000417
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel files to be used by this routine must be loaded
       !>         (normally using the SPICELIB routine FURNSH) before this
@@ -47262,17 +47262,17 @@ contains
       !>         coordinate quantity utility package. Callers may
       !>         need to re-initialize the package after calling this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 27-OCT-2021 (JDR) (NJB)
       !>

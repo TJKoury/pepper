@@ -24,7 +24,7 @@ contains
       !> Remove from a character string all characters which fall
       !> between specified starting and ending characters, inclusive.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INSTR    is a character string from which all characters
       !>              between ASCIIB and ASCIIE, inclusive, are to be
@@ -40,7 +40,7 @@ contains
       !>              ASCIIE is itself removed from the string, if
       !>              it occurs.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUTSTR   is the input string after all the character
       !>              between ASCIIB and ASCIIE, inclusive, have
@@ -51,19 +51,19 @@ contains
       !>
       !>              OUTSTR may overwrite INSTR.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     ASTRIP checks each character
       !>     in INSTR to determine if it falls between the characters ASCIIB
@@ -71,7 +71,7 @@ contains
       !>     (and the string is shortened). Remaining characters are copied
       !>     to the output string.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples illustrate the use of ASTRIP.
       !>
@@ -103,24 +103,24 @@ contains
       !>           ASCIIE = CHAR ( 31 )
       !>           CALL ASTRIP ( STRING, ASCIIB, ASCIIE, STRING )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If ASCIIB and ASCIIE are not properly ordered (that is,
       !>         if ICHAR(ASCIIB) is not less than or equal to ICHAR(ASCIIE))
       !>         then ASTRIP will not function as described. (In fact, it will
       !>         copy the input string to the output string without change.)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -215,29 +215,29 @@ contains
       !> The function returns .TRUE. if the string represents a decimal
       !> number. Otherwise, it returns .FALSE.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is any string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     If the input string contains a decimal number (as defined
       !>     in $Particulars below), the function returns .TRUE. Otherwise,
       !>     the functions returns .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A decimal number may be constructed by concatenating
       !>     the following components in the order shown.
@@ -251,7 +251,7 @@ contains
       !>
       !>        4) An unsigned integer, or the null string.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Four classes of numbers recognized by the various BE functions.
       !>
@@ -303,20 +303,20 @@ contains
       !>        FIVE               No textual numbers
       !>        CXIV               No roman numerals
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 24-NOV-2021 (JDR)
       !>
@@ -448,29 +448,29 @@ contains
       !> The function returns .TRUE. if the string represents an integer.
       !> Otherwise, it returns .FALSE.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is any string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     If the input string contains an integer (as defined in
       !>     $Particulars below), the function returns .TRUE. Otherwise,
       !>     the function returns .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     An integer may be either of the following:
       !>
@@ -479,7 +479,7 @@ contains
       !>        2) A sign ('+' or '-') followed by an unsigned
       !>           integer.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Four classes of numbers recognized by the various BE functions.
       !>
@@ -531,20 +531,20 @@ contains
       !>        FIVE               No textual numbers
       !>        CXIV               No roman numerals
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 24-NOV-2021 (JDR)
       !>
@@ -632,29 +632,29 @@ contains
       !> The function returns .TRUE. if the string is a number.
       !> Otherwise, it returns .FALSE.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is any string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     If the input string contains a number (as defined in
       !>     $Particulars below) the function returns .TRUE. Otherwise,
       !>     the function returns .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A number may be either of the following:
       !>
@@ -664,7 +664,7 @@ contains
       !>           ('E', 'e', 'D', or 'd') and an integer (as defined
       !>           by function BEINT).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Four classes of numbers recognized by the various BE functions.
       !>
@@ -716,20 +716,20 @@ contains
       !>        FIVE               No textual numbers
       !>        CXIV               No roman numerals
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 24-NOV-2021 (JDR)
       !>
@@ -791,35 +791,35 @@ contains
       !> The function returns .TRUE. if the string represents an unsigned
       !> integer. Otherwise, it returns .FALSE.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is any string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     If STRING contains a single word made entirely from the
       !>     characters '0' through '9', then the function returns .TRUE.
       !>     Otherwise, it returns .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     By definition an unsigned integer is a word made exclusively
       !>     from the characters '0', '1', '2', '3', '4', '5', '6', '7', '8',
       !>     and '9'.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Four classes of numbers recognized by the various BE functions.
       !>
@@ -871,20 +871,20 @@ contains
       !>        FIVE               No textual numbers
       !>        CXIV               No roman numerals
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 24-NOV-2021 (JDR)
       !>
@@ -962,7 +962,7 @@ contains
       !> more than N consecutive occurrences of a specified
       !> character.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DELIM    is the delimiter to be compressed out of the string.
       !>              This may be any ASCII character.
@@ -973,7 +973,7 @@ contains
       !>
       !>     INPUT    is the input string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUTPUT   is the output string. This is the input string
       !>              with all occurrences of more than N consecutive
@@ -984,11 +984,11 @@ contains
       !>
       !>              OUTPUT may overwrite INPUT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -996,18 +996,18 @@ contains
       !>         of compressing the input string, the result is truncated on
       !>         the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Occurrences of more than N consecutive delimiters are removed
       !>     from the input string as it is copied to the output string.
       !>     If the output string is not large enough to hold the compressed
       !>     string, it is truncated on the right.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let DELIM = '.', and N = 2. Then
       !>
@@ -1019,21 +1019,21 @@ contains
       !>
       !>        ' DISK:[USER.  SUB  ]'     becomes   'DISK:[USER.SUB]'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 09-JUL-2021 (JDR)
       !>
@@ -1129,7 +1129,7 @@ contains
       !> The function returns the index of the first character of STR
       !> at or following index START that is in the collection CHARS.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STR      is any character string.
       !>
@@ -1139,18 +1139,18 @@ contains
       !>     START    is the position in STR to begin looking for one of
       !>              the characters in CHARS.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the first character of STR
       !>     (at or following index START) that is one of the characters in
       !>     the string CHARS. If none of the characters is found, the
       !>     function returns zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -1160,11 +1160,11 @@ contains
       !>     2)  If START is greater than the length of the string, CPOS
       !>         returns zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     CPOS is case sensitive.
       !>
@@ -1175,7 +1175,7 @@ contains
       !>     these functions are equivalent to the True BASIC intrinsic
       !>     functions with the same names.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let STRING = 'BOB, JOHN, TED, AND MARTIN....'
       !>                   123456789012345678901234567890
@@ -1219,22 +1219,22 @@ contains
       !>
       !>           CPOS( STRING, ', .',   22 ) = 27
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 02-JUL-2021 (JDR)
       !>
@@ -1299,7 +1299,7 @@ contains
       !> The function returns the index of the last character of STR
       !> at or before index START that is in the collection CHARS.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STR      is any character string.
       !>
@@ -1309,18 +1309,18 @@ contains
       !>     START    is the position in STR to begin looking for one of the
       !>              characters in CHARS.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the last character of STR (at
       !>     or before index START) that is one of the characters in the
       !>     string CHARS. If none of the characters is found, the function
       !>     returns zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -1329,11 +1329,11 @@ contains
       !>     2)  If START is greater than LEN(STRING), the search begins
       !>         at the last character of the string.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     CPOSR is case sensitive.
       !>
@@ -1344,7 +1344,7 @@ contains
       !>     these functions are equivalent to the True BASIC intrinsic
       !>     functions with the same name.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let STRING = 'BOB, JOHN, TED, AND MARTIN    '
       !>                   123456789012345678901234567890
@@ -1398,22 +1398,22 @@ contains
       !>
       !>           CPOSR( STRING, 'NJOH',  23 ) =  18
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -1475,31 +1475,31 @@ contains
       !>
       !> The function returns .TRUE. if A and B are equivalent.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B        are arbitrary character strings.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if A and B are equivalent: that is,
       !>     if A and B contain  the same characters in the same order,
       !>     when blanks are ignored and uppercase and lowercase characters
       !>     are considered equal.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is provided for those cases in which two strings
       !>     must be compared, and in which allowances are to be made for
@@ -1529,7 +1529,7 @@ contains
       !>           comparing strings received as subprogram arguments
       !>           against strings stored internally within the subprogram.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1651,22 +1651,22 @@ contains
       !>         STR2 :   S t E v E
       !>         EQSTR: equivalent.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 06-JUL-2021 (JDR)
       !>
@@ -1693,7 +1693,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.2.0, 03-AUG-1994 (NJB)
       !>
@@ -1896,7 +1896,7 @@ contains
       !> The function returns the index of the first array entry equivalent
       !> to VALUE, or zero if none is found.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE    is an arbitrary character string.
       !>
@@ -1905,7 +1905,7 @@ contains
       !>
       !>     ARRAY    is the array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the first element of the input
       !>     array equivalent to the input value, or zero if the array contains
@@ -1915,25 +1915,25 @@ contains
       !>     the same order, when blanks are ignored and uppercase and
       !>     lowercase characters are considered equal.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     ESRCHC is identical to ISRCHC, except that it looks for the first
       !>     equivalent string (as defined by EQSTR) instead of the first
       !>     identical one.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following elements:
       !>
@@ -1951,22 +1951,22 @@ contains
       !>        ESRCHC ( 'W e n t',    6, ARRAY )  =  4
       !>        ESRCHC ( 'mall',       6, ARRAY )  =  0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  ESRCHC assumes that the function EQSTR does not participate
       !>         in normal SPICELIB error handling.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -2010,7 +2010,7 @@ contains
       !> Find the beginning and end of the first word starting at
       !> or after a specified character.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is a character string that potentially consists of
       !>              words of text.
@@ -2018,7 +2018,7 @@ contains
       !>     START    is the index of a letter within the string from which
       !>              to start looking for the next word.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     B        is the index of the first letter of the word substring
       !>              of STRING that begins at or after position START. If
@@ -2028,25 +2028,25 @@ contains
       !>              of STRING that begins at or after position START. If
       !>              there are no such substrings J is returned as 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given a character string and location of a character within that
       !>     string, this routine finds the first full word of the string
       !>     that starts on or after the specified location.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1         2         3         4         5
       !>              12345678901234567890123456789012345678901234567890
@@ -2068,20 +2068,20 @@ contains
       !>     49       0      0
       !>     111      0      0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 12-AUG-2021 (JDR)
       !>
@@ -2101,7 +2101,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     SPICELIB Version 2.0.0, 15-OCT-1993 (WLT)
       !>
@@ -2203,36 +2203,36 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (VERIFY instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is the input character string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index if the first non-blank character in
       !>     the input string. If there are no non-blank characters in the
       !>     string, FRSTNB is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the string is blank, return zero. Otherwise, step through
       !>     the string one character at a time until something other than
       !>     a blank is found. Return the index of that something within
       !>     the string.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples illustrate the use of FRSTNB.
       !>
@@ -2241,22 +2241,22 @@ contains
       !>           FRSTNB ( '   AN EXAMPLE' )   = 4
       !>           FRSTNB ( '             ' )   = 0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 08-APR-2021 (JDR)
       !>
@@ -2294,11 +2294,11 @@ contains
       !> The function returns the index of first non-printable character in
       !> STRING.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is the input character string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the first non-printable
       !>     character in the input string. Characters having integer codes
@@ -2307,19 +2307,19 @@ contains
       !>     the input string contains no non-printable characters, FRSTNP is
       !>     zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine may be used to assist in validating strings that
       !>     are intended to be free of non-printable characters.
@@ -2329,7 +2329,7 @@ contains
       !>     tests of strings for invalid characters. Note that the routine
       !>     FRSTPC and LASTPC treat blanks as non-printable.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -2379,21 +2379,21 @@ contains
       !>
       !>        First non-printable character found at index 3
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 07-APR-2021 (JDR)
       !>
@@ -2441,11 +2441,11 @@ contains
       !> The function returns the index of the first non-blank printable
       !> character in STRING.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is the input character string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the first printable character in
       !>     the input string.
@@ -2454,24 +2454,24 @@ contains
       !>     Blanks are not considered printable characters. If the input
       !>     string contains no printable characters, FRSTPC is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This works exactly like FRSTNB, except that it skips non-printable
       !>     characters (ASCII control characters) as well as blanks.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The program
       !>
@@ -2503,21 +2503,21 @@ contains
       !>        Non-blank from 2 to 9.
       !>        Printable from 4 to 6.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 17-JUN-2021 (JDR)
       !>
@@ -2567,7 +2567,7 @@ contains
       !> the beginning of the first word following the keyword to the
       !> beginning of the first subsequent recognized terminator of a list.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     KEYWD    is a word used to mark the start of text of interest.
       !>
@@ -2579,7 +2579,7 @@ contains
       !>     WORDSQ   is a character string made up of words, that may contain
       !>              the keyword in KEYWD.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORDSQ   is the input string stripped of all words from the
       !>              beginning of the keyword KEYWD to the end of the last
@@ -2593,19 +2593,19 @@ contains
       !>              following KEYWD up to the beginning of any of the words
       !>              in TERM or the end of the string.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Definitions:
       !>
@@ -2633,7 +2633,7 @@ contains
       !>     the portion of the string from the keyword to the last non-blank
       !>     character of the string will be removed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Example 1.
       !>     ----------
@@ -2685,24 +2685,24 @@ contains
       !>               FOUND   .FALSE.
       !>               SUBSTR  ' '
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  It is the user's responsibility to make sure there is adequate
       !>         room in SUBSTR to contain the substring.
       !>
       !>     2)  SUBSTR cannot overwrite WORDSQ.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 17-JUN-2021 (JDR)
       !>
@@ -2718,7 +2718,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 1.1.0, 28-FEB-1989 (WLT)
       !>
@@ -2853,36 +2853,36 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (LEN_TRIM instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is the input character string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the last non-blank character in
       !>     the input string. If there are no non-blank characters in the
       !>     string, LASTNB is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the string is blank, return zero. Otherwise, step through
       !>     the string one character at a time until something other than
       !>     a blank is found. Return the index of that something within
       !>     the string.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples illustrate the use of LASTNB.
       !>
@@ -2891,22 +2891,22 @@ contains
       !>           LASTNB ( 'AN EXAMPLE        ' )   = 10
       !>           LASTNB ( '                  ' )   = 0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 08-APR-2021 (JDR)
       !>
@@ -2948,11 +2948,11 @@ contains
       !> The function returns the index of the last non-blank printable
       !> character in STRING.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is the input character string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the last printable character in
       !>     the input string.
@@ -2961,24 +2961,24 @@ contains
       !>     Blanks are not considered printable characters. If the input
       !>     string contains no printable characters, LASTPC is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This works exactly like LASTNB, except that it skips non-printable
       !>     characters (ASCII control characters) as well as blanks.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The program
       !>
@@ -3010,21 +3010,21 @@ contains
       !>        Non-blank from 2 to 9.
       !>        Printable from 4 to 6.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -3072,7 +3072,7 @@ contains
 
       !> Build a list of items delimited by a character.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEMS    are the items to be combined to make the output
       !>              list. Leading and trailing blanks are ignored.
@@ -3084,31 +3084,31 @@ contains
       !>              output list. DELIM may contain any number of
       !>              characters, including blanks.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LIST     is the output list, containing the N elements of
       !>              ITEMS delimited by DELIM. If LIST is not long enough
       !>              to contain the output list, it is truncated on the
       !>              right.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The non-blank parts of the elements of the ITEMS array are
       !>     appended to the list, one at a time, separated by DELIM.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples illustrate the operation of LBUILD.
       !>
@@ -3152,21 +3152,21 @@ contains
       !>        Then
       !>              LIST  = 'Bob and Carol and Ted and Alice'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -3252,11 +3252,11 @@ contains
 
       !> Convert the characters in a string to lowercase.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is the input string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the output string. This is the input string
       !>              with all uppercase letters converted to lowercase.
@@ -3264,46 +3264,46 @@ contains
       !>
       !>              OUT may overwrite IN.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the output string length is less than the input string
       !>         length, the result will be truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Convert each uppercase character in IN to lowercase.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     'This is an EXAMPLE'     becomes  'this is an example'
       !>     '12345 +-=? > * $ &'              '12345 +-=? > * $ &'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 04-AUG-2021 (JDR)
       !>
@@ -3372,7 +3372,7 @@ contains
 
       !> Left-justify, uppercase, and space-compress a character string.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N        is the maximum number of consecutive occurrences
       !>              of space that will be allowed to remain in the
@@ -3380,7 +3380,7 @@ contains
       !>
       !>     INPUT    is the input string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUTPUT   is the output string. This is the input string that
       !>              left-justified and with all occurrences of more than
@@ -3391,19 +3391,19 @@ contains
       !>
       !>              OUTPUT may overwrite INPUT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The string is left-justified and uppercased. Occurrences of more
       !>     than N consecutive spaces are removed from the input string as it
@@ -3411,26 +3411,26 @@ contains
       !>     enough to hold the compressed string, it is truncated on the
       !>     right.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let N = 1. Then
       !>
       !>         ' Abc  DE F  ',           becomes    'ABC DE F',
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -3553,35 +3553,35 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (ADJUSTL instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INPUT    is the input character string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUTPUT   is the output character string, left justified.
       !>
       !>              OUTPUT may overwrite INPUT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Leading blanks are removed from the input character string.
       !>     If the output string is not large enough to hold the left
       !>     justified string, it is truncated on the right.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples illustrate the use of LJUST.
       !>
@@ -3590,22 +3590,22 @@ contains
       !>            '   AN EXAMPLE  '             'AN EXAMPLE'
       !>            '               '             ' '
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 27-AUG-2021 (JDR)
       !>
@@ -3643,7 +3643,7 @@ contains
 
       !> Parse a list of items delimited by a single character.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LIST     is a list of items delimited by the single character
       !>              DELIM. Consecutive delimiters, and delimiters at the
@@ -3662,7 +3662,7 @@ contains
       !>              overflow from a list containing more items than
       !>              expected.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     N        is the number of items in the list. N may be
       !>              any number between one and NMAX. N is always the
@@ -3672,26 +3672,26 @@ contains
       !>              in the list too long to fit into an element of ITEMS
       !>              is truncated on the right.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the string length of ITEMS is too short to accommodate
       !>         an item, the item will be truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3862,15 +3862,15 @@ contains
       !>              Item  3: 'carol'
       !>              Item  4: ' '
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -3878,7 +3878,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 06-JUL-2021 (JDR)
       !>
@@ -3901,7 +3901,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2005 (NJB)
       !>
@@ -4072,7 +4072,7 @@ contains
 
       !> Parse a list of items separated by multiple delimiters.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LIST     is a list of items delimited by any one of the
       !>              characters in the string DELIMS. Consecutive
@@ -4096,7 +4096,7 @@ contains
       !>              overflow from a list containing more items than
       !>              expected.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     N        is the number of items in the list. N may be
       !>              any number between one and NMAX. N is always the
@@ -4106,26 +4106,26 @@ contains
       !>              in the list to long to fit into an element of ITEMS
       !>              is truncated on the right.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the string length of ITEMS is too short to accommodate
       !>         an item, the item will be truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4266,22 +4266,22 @@ contains
       !>        Item  5: '15'
       !>        Item  6: '12.184'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 13-AUG-2021 (JDR)
       !>
@@ -4300,7 +4300,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2005 (NJB)
       !>
@@ -4519,12 +4519,12 @@ contains
       !> The function returns the maximum of 1 and the location of the
       !> first non-blank character in STRING.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is a string to be trimmed: the location of the
       !>              first non-blank character is desired.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the maximum of 1 and the location of the
       !>     first non-blank character in STRING.
@@ -4532,19 +4532,19 @@ contains
       !>     In particular, when STRING is blank, the function returns the
       !>     value 1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     When writing a character string to a file, we may wish to omit
       !>     leading blanks. We'd like to use FRSTNB as a lower substring
@@ -4560,7 +4560,7 @@ contains
       !>     This routine has a counterpart, RTRIM, which finds the maximum of
       !>     1 and the position of the last non-blank character of a string.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Write the non-blank portion of each element of a character
       !>         cell to file SPUD.DAT:
@@ -4574,21 +4574,21 @@ contains
       !>
       !>         When CELL(I) is blank, the string ' ' will be written.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -4617,7 +4617,7 @@ contains
 
       !> Scan (lex) a quoted string.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is a character string that may contain a `string
       !>              token' starting at the character position
@@ -4658,7 +4658,7 @@ contains
       !>              routine does *not* attempt to locate the first
       !>              quoted string following the position FIRST.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LAST     is the last character position such that the
       !>              substring STRING(FIRST:LAST) is a quoted string
@@ -4671,11 +4671,11 @@ contains
       !>              If a string token is not found, the returned value
       !>              of NCHAR is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -4691,11 +4691,11 @@ contains
       !>     3)  If the input argument QCHAR is blank, the returned value of
       !>         LAST is FIRST-1, and the returned value of NCHAR is zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Quote characters may be ANY non-blank character. For example, the
       !>     ampersand
@@ -4735,7 +4735,7 @@ contains
       !>
       !>        "
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  The table below illustrates the action of this routine.
       !>
@@ -4750,20 +4750,20 @@ contains
       !>         ' '                           '       1       3      3
       !>         ''                            '       1       2      2
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -4907,7 +4907,7 @@ contains
       !> The function returns .TRUE. if STRING matches TEMPL and otherwise
       !> returns .FALSE.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is the input character string to be tested for a match
       !>              against the input template. Leading and trailing blanks
@@ -4925,26 +4925,26 @@ contains
       !>              The wild character token represents exactly one
       !>              character.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. when the input string matches the
       !>     input template, and .FALSE. otherwise. The string and template
       !>     match whenever the template can expand (through replacement of its
       !>     wild cards) to become the input string.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     MATCHW ignores leading and trailing blanks in both the string
       !>     and the template. All of the following are equivalent (they
@@ -4959,7 +4959,7 @@ contains
       !>     lowercase characters, and vice versa. Wild characters match
       !>     characters of both cases.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>
@@ -4981,15 +4981,15 @@ contains
       !>                         '*bcd*z*'                  F
       !>                         ' *BCD*Z*  '             T
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -4997,7 +4997,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.0, 06-JUL-2021 (JDR)
       !>
@@ -5033,7 +5033,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 06-OCT-1988 (WLT)
       !>
@@ -5366,34 +5366,34 @@ contains
       !>
       !> The function returns the non-blank length of STRING.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is the input character string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the non-blank length of STRING. This is the
       !>     same as the index of the last non-blank character in the left
       !>     justified string. If STRING is blank, NBLEN is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Locate the first and last non-blank characters in the string.
       !>     Subtract to get the non-blank length.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples illustrate the use of NBLEN.
       !>
@@ -5402,21 +5402,21 @@ contains
       !>           NBLEN ( '   AN EXAMPLE  ' )   = 10
       !>           NBLEN ( '               ' )   = 0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -5457,32 +5457,32 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (MAXVAL and LEN_TRIM instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is the input array.
       !>
       !>     NELT     is the number of elements in the input array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the rightmost non-blank
       !>     character in the entire array. This is equivalent to the maximum
       !>     value of LASTNB for the array, but somewhat more efficient to
       !>     compute. If NELT is not greater than zero, NBWID is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Find the last non-blank character in the first element of the
       !>     array. Search the rest of the elements, starting at the end of
@@ -5494,7 +5494,7 @@ contains
       !>     NBWID is just the length of the individual elements of the array,
       !>     and the search is terminated immediately.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following strings.
       !>
@@ -5513,21 +5513,21 @@ contains
       !>     the value returned is 47, and the search is terminated after the
       !>     second element.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -5561,7 +5561,7 @@ contains
       !> The function returns the index of the first character of STR
       !> at or following index START that is not in the collection CHARS.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STR      is any character string.
       !>
@@ -5571,18 +5571,18 @@ contains
       !>     START    is the position in STR to begin looking for
       !>              characters not in CHARS.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the first character of STR (at
       !>     or following index START) that is not one of the characters in the
       !>     string CHARS. If no such character is found, the function returns
       !>     zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -5592,11 +5592,11 @@ contains
       !>     2)  If START is greater than the length of the string, NCPOS
       !>         returns zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     NCPOS is case sensitive.
       !>
@@ -5607,7 +5607,7 @@ contains
       !>     these functions are equivalent to the True BASIC intrinsic
       !>     functions with the same names.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let STRING = 'BOB, JOHN, TED, AND MARTIN    '
       !>                   123456789012345678901234567890
@@ -5644,22 +5644,22 @@ contains
       !>           NCPOS( STRING, 'JOHN', 7 ) = 10
       !>           NCPOS( STRING, 'OHJN', 7 ) = 10
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-JUL-2021 (JDR)
       !>
@@ -5722,7 +5722,7 @@ contains
       !> The function returns the index of the last character of STR
       !> at or before index START that is not in the collection CHARS.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STR      is any character string.
       !>
@@ -5732,18 +5732,18 @@ contains
       !>     START    is the position in STR to begin looking for
       !>              characters not in CHARS.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the last character of STR (at
       !>     or before index START) that is not one of the characters in the
       !>     string CHARS. No such character is found, the function returns
       !>     zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -5752,11 +5752,11 @@ contains
       !>     2)  If START is greater than LEN(STRING), the search begins
       !>         at the last character of the string.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     NCPOSR is case sensitive.
       !>
@@ -5767,7 +5767,7 @@ contains
       !>     these functions are equivalent to the True BASIC intrinsic
       !>     functions with the same names.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let STRING = 'BOB, JOHN, TED, AND MARTIN    '
       !>                   123456789012345678901234567890
@@ -5804,22 +5804,22 @@ contains
       !>           NCPOSR( STRING, 'JOHN', 7 ) =  5
       !>           NCPOSR( STRING, 'OHJN', 7 ) =  5
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -5878,13 +5878,13 @@ contains
       !> Return the next word in a given character string, and
       !> left justify the rest of the string.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is the input string to be parsed. Each word of this
       !>              string is a maximal sequence of consecutive non-blank
       !>              characters.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NEXT     is the first word in STRING. It is called the "next" word
       !>              because NEXTWD is typically called repeatedly to find the
@@ -5901,22 +5901,22 @@ contains
       !>
       !>              REST may overwrite STRING.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the declared lengths of NEXT and REST are not large enough
       !>         to hold the output strings, they are truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     NEXTWD is used primarily for parsing input commands consisting
       !>     of one or more words, where a word is defined to be any sequence
@@ -5933,7 +5933,7 @@ contains
       !>     piece is whatever is left after the first word is removed. The
       !>     second piece is left justified, to simplify later calls to NEXTWD.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6001,15 +6001,15 @@ contains
       !>        to     come.
       !>        come.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -6017,7 +6017,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 19-MAY-2021 (JDR) (NJB)
       !>
@@ -6141,7 +6141,7 @@ contains
       !> Return the Nth word in a character string, and its location
       !> in the string.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is the input string to be parsed. Each word of this
       !>              string is a maximal sequence of consecutive non-blank
@@ -6150,7 +6150,7 @@ contains
       !>     NTH      is the index of the word to be returned. (One for the
       !>              first word, two for the second, and so on.)
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORD     is the NTH word in STRING. If STRING is blank, or NTH is
       !>              non-positive or too large, WORD is blank.
@@ -6161,11 +6161,11 @@ contains
       !>              at STRING(LOC:LOC)). If STRING is blank, or NTH is
       !>              non-positive or too large, LOC is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -6173,11 +6173,11 @@ contains
       !>         the NTH word in STRING, the word will be truncated on the
       !>         right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     NTHWD, like NEXTWD, is useful primarily for parsing input commands
       !>     consisting of one or more words, where a word is defined to be a
@@ -6195,7 +6195,7 @@ contains
       !>     update an output string consisting of the remaining, unparsed
       !>     string.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6263,15 +6263,15 @@ contains
       !>        Word # 10  is <come.>, starting at position 45
       !>        Word # 11  is < >, starting at position  0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -6279,7 +6279,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 26-OCT-2021 (NJB) (JDR)
       !>
@@ -6427,7 +6427,7 @@ contains
 
       !> Parse a quoted string token.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is a character string containing a `quoted string
       !>              token'. Quoted string tokens are sequences of
@@ -6468,7 +6468,7 @@ contains
       !>              are common choices, but any non-blank character is
       !>              accepted. Case *is* significant in QCHAR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUE    is the string resulting from parsing STRING.
       !>              VALUE is obtained from STRING by removing the
@@ -6502,11 +6502,11 @@ contains
       !>              error in STRING was detected. If STRING is
       !>              correctly formed, PTR is returned as 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -6529,11 +6529,11 @@ contains
       !>         side, a parse error will be indicated. The contents of VALUE
       !>          and LENGTH are undefined in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Quote characters may be ANY non-blank character. For example, the
       !>     ampersand
@@ -6565,7 +6565,7 @@ contains
       !>     quoted string tokens, and this routine converts the tokens to
       !>     string values.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  The table below illustrates the action of this routine.
       !>
@@ -6577,21 +6577,21 @@ contains
       !>     " "                  "       <single blank>  1            .FALSE.
       !>     ''                   '       <undefined>     <undefined>  .TRUE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 03-OCT-2021 (JDR)
       !>
@@ -6799,13 +6799,13 @@ contains
       !> The function returns the index of the rightmost printable
       !> character in the entire array of strings ARRAY.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is the input array.
       !>
       !>     NELT     is the number of elements in the input array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the rightmost printable
       !>     character in the entire array. This is equivalent to the maximum
@@ -6816,19 +6816,19 @@ contains
       !>     Blanks are not considered printable. Thus, for character arrays
       !>     padded with blanks, PCWID is equivalent to NBWID.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Find the last printable character in the first element of the
       !>     array. Search the rest of the elements, starting at the end of
@@ -6840,7 +6840,7 @@ contains
       !>     PCWID is just the length of the individual elements of the array,
       !>     and the search is discontinued immediately.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following strings,
       !>
@@ -6860,21 +6860,21 @@ contains
       !>     the value returned is 47, and the search is terminated after the
       !>     second element.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -6954,7 +6954,7 @@ contains
       !>
       !> The function returns the index of SUBSTR in STR following START
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STR      is any character string.
       !>
@@ -6963,18 +6963,18 @@ contains
       !>
       !>     START    is the position in STR to begin looking for SUBSTR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the beginning of the first
       !>     substring of STR that begins on or after index START and is equal
       !>     to SUBSTR. If the substring cannot be found after START, the
       !>     function is returns 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -6984,11 +6984,11 @@ contains
       !>     2)  If START is greater than the length of the string, POS
       !>         returns zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     POS is case sensitive.
       !>
@@ -6999,7 +6999,7 @@ contains
       !>     these functions are equivalent to the .TRUE. BASIC intrinsic
       !>     functions with the same names.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let STRING = 'AN ANT AND AN ELEPHANT        '
       !>                   123456789012345678901234567890
@@ -7030,22 +7030,22 @@ contains
       !>            POS ( STRING, ' AN ',  1 ) = 11
       !>            POS ( STRING, ' AN  ', 1 ) =  0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-JUL-2021 (JDR)
       !>
@@ -7120,7 +7120,7 @@ contains
       !>
       !> The function returns the index of SUBSTR in STR preceding START
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STR      is any character string.
       !>
@@ -7129,18 +7129,18 @@ contains
       !>
       !>     START    is the position in STR to begin looking for SUBSTR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the index of the beginning of the last
       !>     substring of STR that begins on or before index START and is
       !>     equal to SUBSTR. If the substring cannot be found starting at or
       !>     before START, the function is returns 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -7149,11 +7149,11 @@ contains
       !>     2)  If START is greater than LEN(STRING), the search begins
       !>         at the last character of the string.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     POSR is case sensitive.
       !>
@@ -7164,7 +7164,7 @@ contains
       !>     these functions are equivalent to the .TRUE. BASIC intrinsic
       !>     functions with the same name.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let STRING = 'AN ANT AND AN ELEPHANT        '
       !>                   123456789012345678901234567890
@@ -7196,15 +7196,15 @@ contains
       !>           POSR ( STRING, ' AN ',  10 ) =   0
       !>           POSR ( STRING, ' AN  ', 31 ) =   0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
@@ -7212,7 +7212,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -7288,7 +7288,7 @@ contains
 
       !> Add a prefix to a character string.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     PREF     is the prefix to be added to the string. Trailing
       !>              blanks are ignored. (A blank prefix is interpreted
@@ -7304,7 +7304,7 @@ contains
       !>     STRING   on input is the suffix to which the prefix is to
       !>              be added. Leading blanks are significant.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STRING   on output is the is the prefixed string. If STRING
       !>              is not large enough to contain the output string,
@@ -7312,27 +7312,27 @@ contains
       !>
       !>              STRING may NOT overwrite PREF.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If SPACES is negative it is treated as zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The suffix is shifted to the right to make room for the prefix
       !>     and required spaces, which are then added to the front of the
       !>     string. (The shift operation handles any necessary truncation.)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples illustrate the use of PREFIX.
       !>
@@ -7349,21 +7349,21 @@ contains
       !>           '        '   'def    '             1    ' def   '
       !>           ' abc    '   '       '             0    ' abc   '
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  PREF and STRING must be distinct.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 18-MAR-2021 (JDR)
       !>
@@ -7378,7 +7378,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 1.1.0, 28-FEB-1989 (WLT)
       !>
@@ -7442,7 +7442,7 @@ contains
       !> Enclose (quote) the non-blank part of a character string
       !> between delimiting symbols.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is the input string to be quoted.
       !>
@@ -7453,7 +7453,7 @@ contains
       !>              characters (left and right parentheses, brackets,
       !>              or braces), or two totally unrelated characters.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the output string. This is the non-blank part
       !>              of the input string delimited by LEFT and RIGHT.
@@ -7466,19 +7466,19 @@ contains
       !>
       !>              OUT may overwrite IN.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The first character of the output string is the left delimiter,
       !>     LEFT. This is followed immediately by the non-blank part of the
@@ -7488,7 +7488,7 @@ contains
       !>     If the input string is blank (has no non-blank characters),
       !>     a single quoted blank is returned.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>           IN    = '    This string has leading and trailing blanks  '
@@ -7500,21 +7500,21 @@ contains
       !>
       !>     Or, let IN = '         '. Then OUT = '( )'.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -7556,7 +7556,7 @@ contains
       !> Replace all occurrences of a single character with a second
       !> character.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INSTR    is the input character string, possibly containing
       !>              one or more occurrences of the character OLD.
@@ -7567,7 +7567,7 @@ contains
       !>     NEW      is the character which is to replace each occurrence
       !>              of the character OLD in the output string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUTSTR   is the output string. This is the input string
       !>              with every occurrence of the character OLD replaced
@@ -7575,26 +7575,26 @@ contains
       !>
       !>              OUTSTR may overwrite INSTR.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Copy the contents of the input string to the output string
       !>     a character at a time, replacing each occurrence of OLD with NEW.
       !>     If the output string is not long enough to contain the input
       !>     string, it is truncated on the right.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>           INSTR  = 'Woodsy is the Anti-Pollution Owl.'
@@ -7610,21 +7610,21 @@ contains
       !>     (such as tab stops, line feeds, and nulls) with regular ASCII
       !>     characters (such as blanks).
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  REPLCH is sensitive to case, as shown in the examples above.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -7671,7 +7671,7 @@ contains
 
       !> Replace the Nth word in a string with a new word.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INSTR    is the input character string, possibly containing
       !>              one or more words, where a word is any string of
@@ -7688,7 +7688,7 @@ contains
       !>              are ignored. If the replacement word is blank,
       !>              the original word is simply removed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUTSTR   is the output string. This is the input string
       !>              with the N'th word replaced by the word NEW.
@@ -7697,27 +7697,27 @@ contains
       !>
       !>              OUTSTR may overwrite INSTR.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NEW is blank, then the Nth word is replaced by a single
       !>         space.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The effect of this routine is to remove the old word with
       !>     REMSUB, and insert the replacement word with INSSUB.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>           INSTR  = '  Woodsy is the Anti-Pollution  Owl.'
@@ -7746,15 +7746,15 @@ contains
       !>
       !>           OUTSTR = '  Woodsy is Anti-Pollution  Owl.'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -7762,7 +7762,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -7919,7 +7919,7 @@ contains
 
       !> Replace a marker with a character string.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
       !>
@@ -7940,7 +7940,7 @@ contains
       !>              However, if VALUE is blank, a single blank is substituted
       !>              for the first occurrence of MARKER.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the string obtained by substituting VALUE (leading and
       !>              trailing blanks excepted) for the first occurrence of
@@ -7948,11 +7948,11 @@ contains
       !>
       !>              OUT and IN must be identical or disjoint.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -7966,11 +7966,11 @@ contains
       !>     3)  If VALUE is blank, a single blank is substituted for the
       !>         first occurrence of MARKER.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is one of a family of related routines for inserting values
       !>     into strings. They are typically to construct messages that
@@ -8001,7 +8001,7 @@ contains
       !>        REPMCT   ( Replace marker with cardinal text          )
       !>        REPMOT   ( Replace marker with ordinal text           )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -8069,15 +8069,15 @@ contains
       !>            Input : The token XX was not recognized. Was it XX?
       !>            Output: The token FND was not recognized. Was it XX?
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -8085,7 +8085,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 21-AUG-2020 (JDR)
       !>
@@ -8179,11 +8179,11 @@ contains
 
       !> Right justify a character string.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INPUT    is the input character string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUTPUT   is the output character string, right justified.
       !>              If INPUT is too large to fit into OUTPUT, it is
@@ -8191,24 +8191,24 @@ contains
       !>
       !>              OUTPUT may overwrite INPUT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Any trailing blanks in the input string are removed, and
       !>     the remaining string is copied to the output string.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples should illustrate the use of RJUST.
       !>
@@ -8217,21 +8217,21 @@ contains
       !>        '   AN EXAMPLE  '            '     AN EXAMPLE'
       !>        '               '            '               '
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -8246,7 +8246,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 1.1.0, 11-DEC-1989 (IMU)
       !>
@@ -8323,12 +8323,12 @@ contains
       !> The function returns the maximum of 1 and the location of the
       !> last non-blank character in STRING.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is a string to be trimmed: the location of the
       !>              last non-blank character is desired.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the maximum of 1 and the location of the
       !>     last non-blank character in STRING.
@@ -8336,19 +8336,19 @@ contains
       !>     In particular, when STRING is blank, the function returns the
       !>     value 1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     When writing a character string to a file, we usually are content
       !>     to omit the trailing blanks. We'd like to use LASTNB as an upper
@@ -8364,7 +8364,7 @@ contains
       !>     This routine has a counterpart, LTRIM, which finds the maximum of
       !>     1 and the position of the first non-blank character of a string.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Write the non-blank portion of each element of a character
       !>         cell to file SPUD.DAT:
@@ -8378,21 +8378,21 @@ contains
       !>
       !>         When CELL(I) is blank, the string ' ' will be written.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -8426,7 +8426,7 @@ contains
       !> The function returns .TRUE. if the two characters are the
       !> same.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STR1     is a character string
       !>
@@ -8436,7 +8436,7 @@ contains
       !>
       !>     L2       is the location (index) of a character in STR2
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if the characters STR1(L1:L1) and
       !>     STR2(L2:L2) are the same.
@@ -8444,29 +8444,29 @@ contains
       !>     If the characters are different or L1 or L2 is out of range the
       !>     function returns .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If either L1 or L2 is out of range the function returns
       !>         .FALSE.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility function for determining whether or not
       !>     two characters in different strings are the same. This
       !>     function is intended for situation in which you need to
       !>     search two strings for a match (or mismatch).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Often you need to scan through two string comparing character
       !>     by character until a mismatch occurs. The usual way to code
@@ -8519,20 +8519,20 @@ contains
       !>     The boundary checks are automatically performed and out
       !>     of range errors are avoided.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
       !>
@@ -8566,7 +8566,7 @@ contains
       !>
       !> The function returns .TRUE. if the substrings are identical
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STR1     is a character string
       !>
@@ -8578,7 +8578,7 @@ contains
       !>     B2       are integers giving the beginning and ending of a
       !>     E2       substring in STR2
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if the two substrings STR(B1:E1) and
       !>     STR(B2:E2) have the same length and the same characters.
@@ -8586,11 +8586,11 @@ contains
       !>     If any of the indices B1, E1, B2, E2 are out of range or out
       !>     of order the function returns .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -8598,17 +8598,17 @@ contains
       !>         ending substring index is before a beginning substring
       !>         index, the function returns false.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is a macro for comparing two substrings of
       !>     strings and handles all of the bounds checking to avoid
       !>     out of range errors with string indices.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose a string contains a number of occurrences of some
       !>     particular substring in sequence and that you need to locate
@@ -8683,20 +8683,20 @@ contains
       !>
       !>     END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
       !>
@@ -8735,7 +8735,7 @@ contains
       !> Reject those tokens descriptors whose identities are among those
       !> of a specific collection.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IDS      is a list of the identity codes that we will want to
       !>              reject.
@@ -8753,7 +8753,7 @@ contains
       !>     END      holds the ending indices of each token being
       !>              considered.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NTOKNS   is the number of tokens remaining after the rejection
       !>              process has been completed.
@@ -8764,25 +8764,25 @@ contains
       !>
       !>     END      holds the ending indices of each token remaining.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine serves as a macro for the rejection process that
       !>     is typically performed to remove tokens whose ID's fall into
       !>     some set.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you wished to scan a string to locate the beginning and
       !>      endings of words together with punctuation, but that you did not
@@ -8820,20 +8820,20 @@ contains
       !>
       !>      CALL SCANRJ ( IDS, N, NTOKNS, IDENT,  BEG,    END )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 02-JUN-2021 (JDR)
       !>
@@ -8882,7 +8882,7 @@ contains
       !> Characters moved past the beginning of the input string are
       !> lost. Vacant spaces are filled with a specified character.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is the input character string.
       !>
@@ -8893,26 +8893,26 @@ contains
       !>     FILLC    is the character with which spaces left vacant by
       !>              the shift are to be filled.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the output string. This is the input string,
       !>              shifted N times, filled with FILLC.
       !>
       !>              OUT may overwrite IN.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     As a string is shifted left or right, the leftmost or
       !>     rightmost characters of the string disappear (as if pushed
@@ -8923,7 +8923,7 @@ contains
       !>     the spaces vacated by those characters are filled with a
       !>     replacement character.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     If FILLC = ' '
       !>
@@ -8960,15 +8960,15 @@ contains
       !>        SHORT = 'cde'
       !>        LONG  = 'cde ..     '
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     M.J. Spencer       (JPL)
@@ -8976,7 +8976,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 12-AUG-2021 (JDR)
       !>
@@ -9068,7 +9068,7 @@ contains
       !> Characters moved past the end of the input string are
       !> lost. Vacant spaces are filled with a specified character.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is the input character string.
       !>
@@ -9079,26 +9079,26 @@ contains
       !>     FILLC    is the character with which spaces left vacant by
       !>              the shift are to be filled.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the output string. This is the input string,
       !>              shifted N times, filled with FILLC.
       !>
       !>              OUT may overwrite IN.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     As a string is shifted left or right, the leftmost or
       !>     rightmost characters of the string disappear (as if pushed
@@ -9109,7 +9109,7 @@ contains
       !>     the spaces vacated by those characters are filled with a
       !>     replacement character.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     If FILLC = ' '
       !>
@@ -9146,15 +9146,15 @@ contains
       !>        SHORT = 'cde'
       !>        LONG  = 'cde ..     '
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     M.J. Spencer       (JPL)
@@ -9162,7 +9162,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 12-AUG-2021 (JDR)
       !>
@@ -9251,11 +9251,11 @@ contains
 
       !> Retain only the significant digits in a numeric string.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is a numeric string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the same numeric string with insignificant
       !>              zeros and spaces removed. The special case '.000...'
@@ -9263,22 +9263,22 @@ contains
       !>              output string is too long, it is truncated on the
       !>              right.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If IN is a non-numeric string, the contents of OUT are
       !>         unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     There are only two interesting cases:
       !>
@@ -9295,7 +9295,7 @@ contains
       !>     Finally, remove all leading spaces, and all occurrences of more
       !>     than one consecutive space within the string.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples illustrate the use of SIGDGT.
       !>
@@ -9307,15 +9307,15 @@ contains
       !>     '   123    45     6'                    '123 45 6'
       !>     '  .000000000'                          '0'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -9323,7 +9323,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -9338,7 +9338,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN) (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 1.3.0, 21-MAR-1989 (WLT)
       !>
@@ -9552,7 +9552,7 @@ contains
 
       !> Add a suffix to a character string.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SUFF     is the suffix to be added to the string.
       !>              Leading blanks are significant. (A blank
@@ -9569,7 +9569,7 @@ contains
       !>              to be added. Leading blanks are significant.
       !>              Trailing blanks are ignored.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STRING   on output is the suffixed string. If STRING
       !>              is not large enough to contain the output string,
@@ -9577,24 +9577,24 @@ contains
       !>
       !>              STRING may NOT overwrite SUFF.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The suffix is added to the right of the last non-blank character
       !>     of the prefix. (Any necessary truncation is done automatically.)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples illustrate the use of SUFFIX.
       !>
@@ -9612,21 +9612,21 @@ contains
       !>           ' abc    '   '       '             0    ' abc   '
       !>           ' abc    '   '       '             1    '  abc  '
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  SUFF and STRING must be distinct.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 18-MAR-2021 (JDR)
       !>
@@ -9674,11 +9674,11 @@ contains
 
       !> Convert the characters in a string to uppercase.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is the input string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the output string. This is the input string
       !>              with all lowercase letters converted to uppercase.
@@ -9686,46 +9686,46 @@ contains
       !>
       !>              OUT may overwrite IN.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the output string length is less than the input string
       !>         length, the result will be truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Convert each lowercase character in IN to uppercase.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     'This is an example'   becomes   'THIS IS AN EXAMPLE'
       !>     '12345 +-=? > * $ &'             '12345 +-=? > * $ &'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 05-AUG-2021 (JDR)
       !>
@@ -9796,38 +9796,38 @@ contains
       !> The function returns the number of words in the input string
       !> STRING.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is the input string to be parsed. It contains some number
       !>              of words, where a word is any string of consecutive
       !>              non-blank characters delimited by a blank or by either
       !>              end of the string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the number of words in the input character
       !>     string STRING.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     WDCNT, like NTHWD and NEXTWD, is useful primarily for parsing
       !>     input commands consisting of one or more words, where a word is
       !>     defined to be any sequence of consecutive non-blank characters
       !>     delimited by either a blank or by either end of the string.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples illustrate the use of WDCNT.
       !>
@@ -9836,22 +9836,22 @@ contains
       !>           WDCNT ( 'good,men.to_come' )   = 1
       !>           WDCNT ( ' '                )   = 0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 08-APR-2021 (JDR)
       !>
@@ -9980,7 +9980,7 @@ contains
       !>
       !> The function returns the location of WORD within STRING.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is a string of characters, potentially containing the
       !>              word.
@@ -9993,25 +9993,25 @@ contains
       !>              Leading and trailing blanks are not significant in
       !>              WORD.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the location of WORD within STRING, providing
       !>     the index of the first letter of WORD within the input STRING. If
       !>     WORD does not exist or WORD is blank, the function returns zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A word within a string is a substring beginning and ending with a
       !>     non-blank characters that is delimited by blanks on each end. (A
@@ -10021,7 +10021,7 @@ contains
       !>     Given a word, this routine returns the index of the first letter
       !>     of the first word of STRING that matches the word.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     STRING:
       !>                      1         2         3         4
@@ -10034,20 +10034,20 @@ contains
       !>     'IN THE'                                                  18
       !>     'THE PO'                                                  0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-OCT-2021 (JDR)
       !>
@@ -10192,7 +10192,7 @@ contains
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -10201,7 +10201,7 @@ contains
       !>     Insert a substring into a character string at a specified
       !>     location.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN          is an input character string, into which a substring
       !>                 is to be inserted.
@@ -10213,7 +10213,7 @@ contains
       !>                 substring is to be inserted. To append to the
       !>                 string, set LOC equal to LEN(IN) + 1.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT         is the output string. This is equivalent to the
       !>                 string that would be created by the concatenation
@@ -10225,11 +10225,11 @@ contains
       !>
       !>                 OUT may overwrite IN.  OUT may NOT overwrite SUB.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error Free.
       !>
@@ -10238,11 +10238,11 @@ contains
       !>     2) If LOC is greater than LEN(IN) + 1, it is treated as if
       !>        it had value LEN(IN) + 1.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Shift the end of the input string, beginning with LOC, to the
       !>     right, leaving space for the substring. Then insert the substring
@@ -10257,7 +10257,7 @@ contains
       !>     This private routine is just a copy of the SPICE routine INSSUB
       !>     with "reasonable" choices made for out of bounds errors.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples illustrate the use of ZZINSSUB.
       !>
@@ -10271,22 +10271,22 @@ contains
       !>        'Apple a day'     'An '     -3    'An Apple a day'
       !>        'An Apple a day'  ' keeps'  16    'An Apple a day keeps'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     H.A. Neilan     (JPL)
       !>     I.M. Underwood  (JPL)
       !>     W.L. Taber      (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -10296,7 +10296,7 @@ contains
       !>
       !>        Adapted from the SPICELIB routine INSSUB to be error free.
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 24-OCT-1994 (NJB)
       !>
@@ -10444,7 +10444,7 @@ contains
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -10452,7 +10452,7 @@ contains
       !>
       !>     Replace the substring (LEFT:RIGHT) with a string of any length.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN         is an arbitrary character string.
       !>
@@ -10473,15 +10473,15 @@ contains
       !>                input string, and STRING is inserted at the
       !>                point of removal.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT        is the resulting string. OUT may overwrite IN.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If RIGHT is one less than LEFT, the substring to
       !>        replace will be the null substring.  In this case,
@@ -10497,11 +10497,11 @@ contains
       !>     5) Whenever the output string is too small to hold the result,
       !>        the result is truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Ideally, replacement could be done with simple concatenation,
       !>
@@ -10514,7 +10514,7 @@ contains
       !>     routine REPSUB with all error handling removed and "reasonable"
       !>     interpretations used for exceptional cases.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     A typical use for this routine might be to replace all
       !>     occurrences of one word in a string with another word.
@@ -10548,21 +10548,21 @@ contains
       !>
       !>        'The defendant, Emelda Marcos, was found innocent.'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     The memory used by STRING and OUT must be disjoint. The memory
       !>     used by IN and OUT must be identical or disjoint.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber     (JPL)
       !>     I.M. Underwood (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 27-APR-1996 (WLT)
       elemental subroutine zzrepsub ( in, left, right, string, out )
@@ -10690,19 +10690,19 @@ contains
 
       !> Convert an integer to an equivalent character string.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NUMBER   is the integer to be converted into a character string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STRING   is the character string representing the integer NUMBER.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -10710,18 +10710,18 @@ contains
       !>         contain the entire character string produced, the output
       !>         character string will be truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine will convert a signed integer into an equivalent
       !>     decimal character string representation. The decimal digits of
       !>     the integer NUMBER are found by repeated applications of
       !>     "modulus" and division operations.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following argument values illustrate the use of INTSTR.
       !>
@@ -10736,17 +10736,17 @@ contains
       !>         -2147483647   '-2147483647'  ( Minimum 32 bit integer + 1 )
       !>         -2147483647   '-2147483648'  ( Minimum 32 bit integer )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that all signed integers will fit into a
       !>         character string with LINLEN or fewer digits. See the
       !>         parameter LINLEN below for the current value.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
@@ -10755,7 +10755,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.2.0, 12-AUG-2021 (JDR)
       !>
@@ -10905,14 +10905,14 @@ contains
       !> Take a double precision number and convert it to
       !> an equivalent character string representation (base 10).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is a double precision number.
       !>
       !>     SIGDIG   is the number of significant digits that are desired
       !>              for the output string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STRING   is a character representation of X to the number of
       !>              significant digits specified by SIGDIG. The number of
@@ -10921,22 +10921,22 @@ contains
       !>              have adequate length, the number returned will be
       !>              truncated on the right.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If SIGDIG is less than one, this routine returns one
       !>         significant digit in the output string.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes an approximate character representation
       !>     of the input string X. The maximum number of significant
@@ -10993,7 +10993,7 @@ contains
       !>     and enter a value of 7.00000001 for the read statement
       !>     the output written will be 0.7000000010000001E+01
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine is intended for use by routines that manipulate
       !>     character strings. For example, it may be desirable for a
@@ -11047,7 +11047,7 @@ contains
       !>              .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The format of the string returned by this routine is used in
       !>         DPSTRF which is in the call tree to DPFMT. Changes to the
@@ -11061,18 +11061,18 @@ contains
       !>         (at least SIGDIG + 6), the numeric string will be truncated to
       !>         the side opposite its justification.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 20-AUG-2021 (JDR)
       !>
@@ -11100,7 +11100,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (HAN) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     SPICELIB Version 1.1.0, 14-OCT-1992 (WLT)
       !>
@@ -11350,32 +11350,32 @@ contains
       !>
       !> The function returns .TRUE. if the characters are equivalent
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B        are two characters that are to be compared to see
       !>              if they are the same letter (although possibly
       !>              having different case such as 'a' and 'A')
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value .TRUE. if the two input characters
       !>     are the same or can be made the same by converting both to
       !>     upper or lower case.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine for comparing two characters to
       !>     see if they are the same when converted to upper case. It
@@ -11391,7 +11391,7 @@ contains
       !>
       !>     in all tests of equivalence for characters.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you want to determine whether or not two strings
       !>     are the same if differences in the case of letters are ignored.
@@ -11432,21 +11432,21 @@ contains
       !>
       !>        END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 26-OCT-2021 (JDR)
       !>
@@ -11510,7 +11510,7 @@ contains
       !>
       !> The function returns .TRUE. if the characters are not equivalent
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B        are two characters that are to be compared to see
@@ -11518,30 +11518,30 @@ contains
       !>              the same value when converted to uppercase are
       !>              considered to be equivalent.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value .FALSE. if the two input characters
       !>     are the same or can be made the same by converting both to
       !>     upper or lower case. Otherwise it returns .TRUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine simply determines the truth value of .NOT. EQCHR.
       !>     See the entry point EQCHR for a discussion of that function.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you want to determine whether or not two strings
       !>     are the same up to differences in case. The following
@@ -11585,21 +11585,21 @@ contains
       !>
       !>        END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 26-OCT-2021 (JDR)
       !>
@@ -11646,7 +11646,7 @@ contains
       !> The function returns .TRUE. if the two characters are the
       !> same up to case.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STR1     is a character string
       !>
@@ -11656,7 +11656,7 @@ contains
       !>
       !>     L2       is the location (index) of a character in STR2
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if the characters STR1(L1:L1) and
       !>     STR2(L2:L2) are the same when the case of the characters is
@@ -11665,29 +11665,29 @@ contains
       !>     If the characters are different or L1 or L2 is out of range the
       !>     function returns .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If either L1 or L2 is out of range the function returns
       !>         .FALSE.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility function for determining whether or not
       !>     two characters in different strings are the same up to case.
       !>     This function is intended for situation in which you need
       !>     to search two strings for a match (or mismatch).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Often you need to scan through two string comparing
       !>     character by character until a case insensitive mismatch
@@ -11740,20 +11740,20 @@ contains
       !>     The boundary checks are automatically performed and out
       !>     of range errors are avoided.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
       !>
@@ -11789,7 +11789,7 @@ contains
       !> The function returns .TRUE. if the substrings are identical
       !> up to case.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STR1     is a character string
       !>
@@ -11801,7 +11801,7 @@ contains
       !>     B2       are integers giving the beginning and ending of a
       !>     E2       substring in STR2
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if the two substrings STR(B1:E1) and
       !>     STR(B2:E2) have the same length and the same characters up to
@@ -11810,11 +11810,11 @@ contains
       !>     If any of the indices B1, E1, B2, E2 are out of range or out
       !>     of order the function returns .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -11822,17 +11822,17 @@ contains
       !>         ending substring index is before a beginning substring
       !>         index, the function returns false.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is a macro for comparing two substrings of
       !>     strings and handles all of the bounds checking to avoid
       !>     out of range errors with string indices.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose a string contains a number of occurrences of some
       !>     particular substring in sequence and that you need to locate
@@ -11907,20 +11907,20 @@ contains
       !>
       !>     END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (JDR)
       !>
@@ -11973,7 +11973,7 @@ contains
       !> The function returns .TRUE. if STRING matches TEMPL and otherwise
       !> returns .FALSE.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is the input character string to be tested for a match
       !>              against the input template. Leading and trailing blanks
@@ -11991,26 +11991,26 @@ contains
       !>              The wild character token represents exactly one
       !>              character.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. when the input string matches the
       !>     input template, and .FALSE. otherwise. The string and template
       !>     match whenever the template can expand (through replacement of its
       !>     wild cards) to become the input string.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     MATCHI ignores leading and trailing blanks in both the string
       !>     and the template. All of the following are equivalent (they
@@ -12025,7 +12025,7 @@ contains
       !>     lowercase characters, and vice versa. Wild characters match
       !>     characters of both cases.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>
@@ -12047,21 +12047,21 @@ contains
       !>                     '*bdc*z*'                  F
       !>                     ' *bcD*Z*  '             T
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.0, 17-JUN-2021 (JDR)
       !>
@@ -12400,7 +12400,7 @@ contains
       !> Parse a character string that represents a number and return
       !> a double precision value.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is a character string that represents a numeric value.
       !>              Commas and spaces may be used in this string for
@@ -12426,7 +12426,7 @@ contains
       !>              ( + OR - ) 3.1415 9265 3589 7932 3846 2600 D0 as
       !>              appropriate.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     X        double precision parsed value of input string. If an
       !>              error is encountered, X is not changed.
@@ -12445,11 +12445,11 @@ contains
       !>              the error occurred. If no error occurs, PTR is
       !>              returned as 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -12457,18 +12457,18 @@ contains
       !>         the string where the error occurred, and ERROR contains a
       !>         descriptive error message.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine parses an input character string that represents a
       !>     number, checks for overflow, unexpected or misplaced
       !>     characters. It returns the double precision number or an error
       !>     message.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let   LINE = 'DELTA_T_A       =   32.184'
       !>
@@ -12481,17 +12481,17 @@ contains
       !>
       !>        CALL NPARSD (  THIRD,  VALUE, ERROR, PTR    )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Due to rounding errors this routine may not be able to parse
       !>         the decimal character string representation of the largest
       !>         and smallest double precision numbers.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -12499,7 +12499,7 @@ contains
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.6.0, 12-AUG-2021 (JDR)
       !>
@@ -13421,7 +13421,7 @@ contains
       !> Parse a character string that represents a number and return
       !> the FORTRAN-truncated integer value.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is a character string that represents a numeric value.
       !>              Commas and spaces may be used in this string for
@@ -13445,7 +13445,7 @@ contains
       !>              '-PI', '-pi', '-Pi', '-pI'
       !>              and returns the value ( + OR - ) 3 as appropriate.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     N        integer parsed value of input string  ( with
       !>              the implied limits on precision).  If an error is
@@ -13467,11 +13467,11 @@ contains
       !>     PNTER    this indicates which character was being used when
       !>              the error occurred. If no error occurred, PNTER is 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -13487,11 +13487,11 @@ contains
       !>         ERROR is returned with a message and PNTER is set to the value
       !>         1, as the entire numeric string is at fault.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Basically, all this routine does is pass the input string to
       !>     NPARSD which does the parsing in double precision. If nothing
@@ -13499,7 +13499,7 @@ contains
       !>     returned value is checked to determine whether or not it will fit
       !>     into a VAX integer. If it doesn't, an error message is returned.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let   LINE = 'DELTA_T_A       =   32'
       !>
@@ -13512,22 +13512,22 @@ contains
       !>
       !>        CALL NPARSI (  THIRD,  VALUE, ERROR, POINTR )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.2.0, 12-AUG-2021 (JDR)
       !>
@@ -13636,7 +13636,7 @@ contains
       !> Scan a string from a specified starting position for the
       !> end of an unsigned integer.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is any character string.
       !>
@@ -13644,7 +13644,7 @@ contains
       !>              for an unsigned integer. It is assumed that the
       !>              unsigned integer begins at FIRST.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LAST     is the last character at or after FIRST such that
       !>              the substring STRING(FIRST:LAST) is an unsigned
@@ -13655,11 +13655,11 @@ contains
       !>              that begins at FIRST and ends at last. If there
       !>              is no such string NCHAR will be given the value 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -13671,16 +13671,16 @@ contains
       !>         LAST will be returned with the value FIRST-1 and NCHAR will be
       !>         returned with the value 0.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows you to scan forward in a string to locate
       !>     an unsigned integer that begins on the input character FIRST.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you believe that a string has the form
       !>
@@ -13714,21 +13714,21 @@ contains
       !>
       !>     END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Assumes ICHAR returns values in the range [-128, 255].
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 04-AUG-2021 (JDR)
       !>

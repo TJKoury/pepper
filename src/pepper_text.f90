@@ -12,7 +12,7 @@ submodule (pepper_instance) pepper_text
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DIR      is the direction in which the characters in the
       !>              string are to be cycled.
@@ -25,25 +25,25 @@ contains
       !>
       !>     INSTR    is the string to be cycled.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUTSTR   is the input string after it has been cycled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the direction flag is not one of the acceptable values
       !>         'r', 'R', 'l', 'L',  the error SPICE(INVALIDDIRECTION) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A string is cycled when its contents are shifted to the left
       !>     or right by one place. A character pushed off one end of the
@@ -56,7 +56,7 @@ contains
       !>     If the output string is not large enough to contain the input
       !>     string, the cycled string is truncated on the right.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     'abcde'   cycled left twice becomes               'cdeab'
       !>     'abcde '  cycled left twice becomes               'cde ab'
@@ -64,7 +64,7 @@ contains
       !>     'Apple '  cycled left six times becomes           'Apple '
       !>     'Apple '  cycled right twenty-four times becomes  'Apple '
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The memory used for the output string must be identical to
       !>         that used for the input string or be disjoint from the input
@@ -80,17 +80,17 @@ contains
       !>
       !>         will produce garbage results.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 12-AUG-2021 (JDR)
       !>
@@ -109,7 +109,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 1.1.0, 6-FEB-1989 (WLT)
       !>
@@ -288,7 +288,7 @@ contains
       return
       end procedure cyclec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
       !>
@@ -305,7 +305,7 @@ contains
       !>              to be represented. SIGDIG must be greater than zero and
       !>              less than 15.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the string obtained by substituting the text
       !>              representation of VALUE for the first occurrence of
@@ -320,7 +320,7 @@ contains
       !>
       !>              OUT and IN must be identical or disjoint.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXLDP   is the maximum expected length of the text representation
       !>              of a double precision number. 23 characters are
@@ -331,7 +331,7 @@ contains
       !>              that its string representation contains no more than
       !>              MAXLDP characters.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -342,11 +342,11 @@ contains
       !>     2)  If MARKER is blank, or if MARKER is not a substring of IN,
       !>         no substitution is performed. (OUT and IN are identical.)
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is one of a family of related routines for inserting values
       !>     into strings. They are typically to construct messages that
@@ -377,7 +377,7 @@ contains
       !>        REPMCT   ( Replace marker with cardinal text          )
       !>        REPMOT   ( Replace marker with ordinal text           )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -467,7 +467,7 @@ contains
       !>        Note that, in Case #3 even though 100 digits of precision were
       !>        requested, only 14 were returned.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The maximum number of significant digits returned is 14.
       !>
@@ -476,11 +476,11 @@ contains
       !>         change, substantial work may be required to bring this routine
       !>         back up to snuff.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -488,7 +488,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 03-OCT-2021 (JDR)
       !>
@@ -585,7 +585,7 @@ contains
       return
       end procedure repmd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
       !>
@@ -598,7 +598,7 @@ contains
       !>
       !>     VALUE    is an arbitrary integer.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the string obtained by substituting the text
       !>              representation of VALUE for the first occurrence of
@@ -606,7 +606,7 @@ contains
       !>
       !>              OUT and IN must be identical or disjoint.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXLI    is the maximum expected length of the text representation
       !>              of an integer. 11 characters are sufficient to hold any
@@ -616,7 +616,7 @@ contains
       !>              its string representation contains no more than MAXLI
       !>              characters.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -627,11 +627,11 @@ contains
       !>     2)  If MARKER is blank, or if MARKER is not a substring of IN,
       !>         no substitution is performed. (OUT and IN are identical.)
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is one of a family of related routines for inserting values
       !>     into strings. They are typically to construct messages that
@@ -662,7 +662,7 @@ contains
       !>        REPMCT   ( Replace marker with cardinal text          )
       !>        REPMOT   ( Replace marker with ordinal text           )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -730,15 +730,15 @@ contains
       !>            Input : Left > Right endpoint. Left: XX; Right: XX
       !>            Output: Left > Right endpoint. Left: 2035; Right: XX
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -746,7 +746,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 21-AUG-2020 (JDR)
       !>
@@ -829,7 +829,7 @@ contains
       return
       end procedure repmi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
       !>
@@ -850,15 +850,15 @@ contains
       !>              input string, and STRING is inserted at the
       !>              point of removal.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the resulting string. OUT may overwrite IN.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If RIGHT is one less than LEFT, the substring to
       !>         replace will be the null substring. In this case,
@@ -876,11 +876,11 @@ contains
       !>     5)  Whenever the output string is too small to hold the result,
       !>         the result is truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Ideally, replacement could be done with simple concatenation,
       !>
@@ -889,7 +889,7 @@ contains
       !>     but the Fortran 77 standard makes this illegal for strings of
       !>     unknown length.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     A typical use for this routine might be to replace all
       !>     occurrences of one word in a string with another word.
@@ -923,22 +923,22 @@ contains
       !>
       !>        'The defendant, Imelda Marcos, was found innocent.'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The memory used by STRING and OUT must be disjoint. The memory
       !>         used by IN and OUT must be identical or disjoint.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -1088,7 +1088,7 @@ contains
       return
       end procedure repsub
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is an input character string, from which a substring
       !>              is to be removed.
@@ -1096,7 +1096,7 @@ contains
       !>     LEFT,
       !>     RIGHT    are the ends of the substring to be removed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the output string. This is equivalent to the
       !>              string that would be created by the concatenation
@@ -1106,20 +1106,20 @@ contains
       !>              If the string is too long to fit into OUT, it is
       !>              truncated on the right.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If LEFT > RIGHT, RIGHT < 1, LEFT < 1, RIGHT > LEN(IN), or
       !>         LEFT > LEN(IN), the error SPICE(INVALIDINDEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Move the characters, beginning with RIGHT, one at a time to the
       !>     positions immediately following LEFT. This has the same effect
@@ -1130,7 +1130,7 @@ contains
       !>     Because this operation is not standard for strings of length (*),
       !>     this routine does not use concatenation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples illustrate the use of REMSUB.
       !>
@@ -1147,22 +1147,22 @@ contains
       !>     Whenever an error has been signaled, the contents of OUT are
       !>     unpredictable.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -1177,7 +1177,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 2.0.0, 05-JAN-1989 (HAN)
       !>
@@ -1272,7 +1272,7 @@ contains
       return
       end procedure remsub
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is an input character string, into which a substring
       !>              is to be inserted.
@@ -1284,7 +1284,7 @@ contains
       !>              is to be inserted. The range of LOC is 1:LEN(IN). To
       !>              append to the string, set LOC equal to LEN(IN)+1.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the output string. This is equivalent to the
       !>              string that would be created by the concatenation
@@ -1296,20 +1296,20 @@ contains
       !>
       !>              OUT may overwrite IN. OUT may NOT overwrite SUB.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If LOC is not in the interval [1, LEN(IN)+1], the error
       !>         SPICE(INVALIDINDEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Shift the end of the input string, beginning with LOC, to the
       !>     right, leaving space for the substring. Then insert the substring
@@ -1321,7 +1321,7 @@ contains
       !>     Because this operation is not standard for strings of length (*),
       !>     this routine does not use concatenation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1384,15 +1384,15 @@ contains
       !>         Input string:  0123456789         .
       !>         Output string: 0123456789      --->
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -1400,7 +1400,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 01-OCT-2021 (JDR) (NJB)
       !>
@@ -1424,7 +1424,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 24-OCT-1994 (NJB)
       !>
@@ -1581,7 +1581,7 @@ contains
       return
       end procedure inssub
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is the input character string.
       !>
@@ -1597,18 +1597,18 @@ contains
       !>     FILLC    is the character with which spaces left vacant by
       !>              the shift are to be filled.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the output string. This is the input string,
       !>              shifted N times, filled with FILLC.
       !>
       !>              OUT may overwrite IN.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  A negative shift in one direction is equal to a positive
       !>         shift in the other.
@@ -1616,16 +1616,16 @@ contains
       !>     2)  If a legal direction ('L', 'l', 'R', 'r') is not supplied,
       !>         the error SPICE(ILLEGSHIFTDIR) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The first NSHIFT characters of the output string are filled
       !>     with the fill character, and the input string is appended.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     If FILLC = ' '
       !>
@@ -1637,23 +1637,23 @@ contains
       !>            '12345 '  shifted right once becomes     '.12345'
       !>            'Apple '  shifted left ten times becomes '......'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  SHIFTC is being maintained for historical reasons only.
       !>         To avoid the overhead imposed by the error handling in this
       !>         routine, use the equivalent routines SHIFTL and SHIFTR.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -1668,7 +1668,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 17-OCT-1988 (IMU)
       !>
@@ -1721,7 +1721,7 @@ contains
       return
       end procedure shiftc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CLASS    is a descriptive string indicating the type of
       !>              object represented by ID. Examples are
@@ -1744,16 +1744,16 @@ contains
       !>                 LASTNB( ID )  <  MAXLEN
       !>                               -
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If ID contains any nonprintable characters, the error
       !>         SPICE(NONPRINTABLECHARS) is signaled.
@@ -1776,11 +1776,11 @@ contains
       !>         ID into the long messages causes overflow, the messages
       !>         will be truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects: it validates an ID string
       !>     and signals an error if the ID has either of the following
@@ -1797,7 +1797,7 @@ contains
       !>
       !>         The <CLASS> <'ID'> is invalid; <reason>
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  If
       !>
@@ -1816,20 +1816,20 @@ contains
       !>
       !>         will be signaled.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 02-JUN-2021 (JDR)
       !>
@@ -1940,7 +1940,7 @@ contains
       return
       end procedure chckid
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UNIT     is a logical unit that has been connected to a
       !>              text file by the calling program. Use the routine
@@ -1966,7 +1966,7 @@ contains
       !>              than the declared length of LINE are truncated
       !>              as they are read.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LINE     on output, is undefined.
       !>
@@ -1974,11 +1974,11 @@ contains
       !>     lines in the text file beginning with BLINE and ending with ELINE.
       !>     Trailing blanks on a line are not included in the count.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while reading from the input file,
       !>         the error SPICE(FILEREADFAILED) is signaled.
@@ -1990,19 +1990,19 @@ contains
       !>         contain both of this lines, the error SPICE(CANNOTFINDGRP)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument UNIT. COUNTC rewinds the text file connected to
       !>     UNIT and then steps through the file. The next read statement
       !>     after calling COUNTC would return the line after ELINE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine counts characters in a group of lines in a text
       !>     file. Using COUNTC, you can determine in advance how much space
       !>     is required to store those characters.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following code fragment opens an existing text file for
       !>     read access and counts the characters that it contains in
@@ -2018,22 +2018,22 @@ contains
       !>
       !>        N = COUNTC ( UNIT, 1, 5, LINE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.E. McLean        (JPL)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 18-MAR-2021 (JDR)
       !>
@@ -2178,7 +2178,7 @@ contains
       return
       end procedure countc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is the hexadecimal string to be converted to an integer.
       !>
@@ -2223,7 +2223,7 @@ contains
       !>             appear between the sign character and the first
       !>             hexadecimal digit.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NUMBER   is the integer value to be returned. The value of this
       !>              variable is not changed if an error occurs while parsing
@@ -2240,11 +2240,11 @@ contains
       !>              hexadecimal character string STRING, blank otherwise.
       !>              The error message will be left justified.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -2271,11 +2271,11 @@ contains
       !>         the entire error message, the error message will be
       !>         truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine will convert a signed hexadecimal character string
       !>     representation of an integer into its equivalent integer. This
@@ -2294,7 +2294,7 @@ contains
       !>           HX2INT -- Convert a signed hexadecimal character string
       !>                     into an integer.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     All of the values shown are for a two's complement 32 bit
       !>     representation for signed integers.
@@ -2347,20 +2347,20 @@ contains
       !>          ERROR  = .TRUE.
       !>          ERRMSG = 'ERROR: Integer too small to be represented.'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 20-AUG-2021 (JDR)
       !>
@@ -2379,7 +2379,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 22-OCT-1992 (KRG)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     SPICELIB Version 1.1.0, 10-MAR-1994 (KRG)
       !>
@@ -2692,7 +2692,7 @@ contains
       return
       end procedure hx2int
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ID       is an integer array that serves as an identifier
       !>              for some object. For example it might be a SPICE
@@ -2739,7 +2739,7 @@ contains
       !>              not alter its value except by calling this routine
       !>              to do so.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     AT       on output AT points to the location in LIST
       !>              of ID.
@@ -2750,11 +2750,11 @@ contains
       !>              PRESNT is returned with the value .TRUE. Otherwise
       !>              it is returned with the value .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of AT is less than zero or greater than
       !>         the declared size of POOL (except immediately after
@@ -2765,11 +2765,11 @@ contains
       !>         level routine, a diagnosis of the problem will be
       !>         made by a routine called by this one.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine serves as a utility for managing the bookkeeping
       !>     needed when using a local buffering scheme which removes
@@ -2782,7 +2782,7 @@ contains
       !>     The example below illustrates the intended use of this
       !>     routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Consider the following programming situation.
       !>
@@ -2898,21 +2898,21 @@ contains
       !>
       !>        CALL LNKINI ( PSIZE, POOL )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 26-OCT-2021 (JDR)
       !>
@@ -3150,7 +3150,7 @@ contains
 
       end procedure locati
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UNIT     is a logical unit that has been connected to a
       !>              text file by the calling program. Use the routine
@@ -3180,7 +3180,7 @@ contains
       !>              than the declared length of LINE are truncated
       !>              as they are read.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LINE     on output, is undefined.
       !>
@@ -3198,11 +3198,11 @@ contains
       !>              the file pointer will be positioned on the line
       !>              after ELINE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If FOUND is .FALSE., the values of BLINE and ELINE are not
       !>         changed.
@@ -3216,18 +3216,18 @@ contains
       !>         it will not match the input value for that marker, so
       !>         FOUND will be .FALSE.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument UNIT.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine locates delimited groups of lines in a text file.
       !>     This allows files to be partitioned into sub-files; it also
       !>     allows related inputs to be grouped together in a relatively
       !>     free-format way.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) Let FILE.TXT be a text file that contains the following lines.
       !>        (The lines are numbered for reference, but these numbers do
@@ -3480,21 +3480,21 @@ contains
       !>     While this isn't an incredibly efficient way to process
       !>     large files, it can be effective for smaller files.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.E. McLean        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>

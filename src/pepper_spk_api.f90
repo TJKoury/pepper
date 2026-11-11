@@ -11,7 +11,7 @@ submodule (pepper_instance) pepper_spk_api
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF file opened for reading
       !>              that contains the segment described by DESCR.
@@ -28,18 +28,18 @@ contains
       !>              constants section of the DAF generic segment associated
       !>              with HANDLE and DESCR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUES   is the array of reference values obtained from the
       !>              reference section of the DAF generic segment
       !>              associated with HANDLE and DESCR.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     This subroutine makes use of parameters defined in the file
       !>     'sgparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If FIRST is less than 1 or LAST is greater than the number of
       !>         reference values, the error SPICE(REQUESTOUTOFBOUNDS) is
@@ -53,16 +53,16 @@ contains
       !>         of this error is that an upgrade to your version of the SPICE
       !>         toolkit is needed.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of HANDLE above.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows you to easily fetch values from the reference
       !>     section of a generic segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have located a DAF generic segment. The code
       !>     fragment below shows how to fetch the I'th reference value from
@@ -76,23 +76,23 @@ contains
       !>
       !>        CALL SGFREF ( HANDLE, DESCR, I, I, REFVAL )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The segment described by DESCR MUST be a generic segment,
       !>         otherwise the results of this routine are not predictable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.1, 26-OCT-2021 (JDR)
       !>
@@ -1434,7 +1434,7 @@ contains
 !
 !     Standard SPICE error handling.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF file opened with write access.
       !>              This is the handle of the file in which a generic segment
@@ -1483,16 +1483,16 @@ contains
       !>              or the include file 'sgparam.inc' for more details
       !>              about the index types that are available.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     This subroutine makes use of parameters defined in the file
       !>     'sgparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If this routine is called more than once for a particular file
       !>         and segment, the error SPICE(CALLEDOUTOFORDER) is signaled.
@@ -1517,16 +1517,16 @@ contains
       !>     7)  If the file table is full, the error SPICE(FILETABLEFULL) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See HANDLE in the $Detailed_Input section.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Begin writing a generic segment for fixed size data packets to
       !>     the DAF file associated with HANDLE.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the $Examples section in the header for the main subroutine.
       !>     It contains examples which demonstrate the use of the entry points
@@ -1535,21 +1535,21 @@ contains
       !>     together in the proper manner. Rather than repeating the examples
       !>     for each entry point they are provided in a single location.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-JUN-2021 (JDR)
       !>
@@ -1827,7 +1827,7 @@ contains
       end associate
       end procedure sgbwfs
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF file opened with write access.
       !>              This is the handle of the file in which a generic segment
@@ -1872,16 +1872,16 @@ contains
       !>              or the include file 'sgparam.inc' for more details
       !>              about the index types that are available.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     This subroutine makes use of parameters defined in the file
       !>     'sgparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If this routine is called more than once for a particular file
       !>         and segment, the error SPICE(CALLEDOUTOFORDER) is signaled.
@@ -1903,16 +1903,16 @@ contains
       !>     6)  If the file table is full, the error SPICE(FILETABLEFULL) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See HANDLE in the $Detailed_Input section.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Begin writing a generic segment for variable size data packets to
       !>     the DAF file associated with HANDLE.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the $Examples section in the header for the main subroutine.
       !>     It contains examples which demonstrate the use of the entry points
@@ -1921,21 +1921,21 @@ contains
       !>     together in the proper manner. Rather than repeating the examples
       !>     for each entry point they are provided in a single location.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-JUN-2021 (JDR)
       !>
@@ -2202,7 +2202,7 @@ contains
       end associate
       end procedure sgbwvs
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF file opened with write access.
       !>              This is the handle of a file in which a generic segment
@@ -2285,16 +2285,16 @@ contains
       !>              call. This preserves the ordering of the reference
       !>              values for the entire segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     This subroutine makes use of parameters defined in the file
       !>     'sgparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there are no generic segments with fixed packet sizes
       !>         currently being written, the error SPICE(CALLEDOUTOFORDER) is
@@ -2337,17 +2337,17 @@ contains
       !>         is not integral, i.e., DINT(REFDAT(2)) .NE. REFDAT(2), the
       !>         error SPICE(REFVALNOTINTEGER) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See HANDLE in the $Detailed_Input section.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine will write one or more fixed size data packets to a
       !>     generic segment in the DAF file associated with HANDLE. The
       !>     generic segment must have been started by a call to SGBWFS.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the $Examples section in the header for the main subroutine.
       !>     It contains examples which demonstrate the use of the entry points
@@ -2356,21 +2356,21 @@ contains
       !>     together in the proper manner. Rather than repeating the examples
       !>     for each entry point they are provided in a single location.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-JUN-2021 (JDR)
       !>
@@ -2669,7 +2669,7 @@ contains
       end associate
       end procedure sgwfpk
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF file opened with write access.
       !>              This is the handle of a file in which a generic segment
@@ -2765,16 +2765,16 @@ contains
       !>              call. This preserves the ordering of the reference
       !>              values for the entire segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     This subroutine makes use of parameters defined in the file
       !>     'sgparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there are no generic segments with variable packet sizes
       !>         currently being written, the error SPICE(CALLEDOUTOFORDER)
@@ -2821,17 +2821,17 @@ contains
       !>         is not integral, i.e., DINT(REFDAT(2)) .NE. REFDAT(2), the
       !>         error SPICE(REFVALNOTINTEGER) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See HANDLE in the $Detailed_Input section.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine will write one or more variable size data packets to
       !>     a generic segment in the DAF file associated with HANDLE. The
       !>     generic segment must have been started by a call to SGBWVS.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the $Examples section in the header for the main subroutine.
       !>     It contains examples which demonstrate the use of the entry points
@@ -2840,22 +2840,22 @@ contains
       !>     together in the proper manner. Rather than repeating the examples
       !>     for each entry point they are provided in a single location.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 27-OCT-2021 (JDR) (NJB)
       !>
@@ -3204,22 +3204,22 @@ contains
       end associate
       end procedure sgwvpk
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF file opened with write access.
       !>              This is the handle of the file which contains the generic
       !>              segment that we wish to end.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     This subroutine makes use of parameters defined in the file
       !>     'sgparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there are no generic segments currently being written, the
       !>         error SPICE(CALLEDOUTOFORDER) is signaled.
@@ -3228,17 +3228,17 @@ contains
       !>         associated with HANDLE, the error SPICE(SEGMENTNOTFOUND) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See HANDLE in the $Detailed_Input section.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine will end the generic segment started by a call to
       !>     either SGBWFS or SGBWVS that is currently being written to the DAF
       !>     file associated with HANDLE.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the $Examples section in the header for the main subroutine.
       !>     It contains examples which demonstrate the use of the entry points
@@ -3247,22 +3247,22 @@ contains
       !>     together in the proper manner. Rather than repeating the examples
       !>     for each entry point they are provided in a single location.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 03-JUN-2021 (JDR)
       !>
@@ -3741,7 +3741,7 @@ contains
       end associate
       end procedure sgwes
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SPKFNM   is the name of an SPK file.
       !>
@@ -3757,7 +3757,7 @@ contains
       !>              If COVER contains no data on input, its size and
       !>              cardinality still must be initialized.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     COVER    is a SPICE window data structure which represents the
       !>              merged coverage for IDCODE. This is the set of time
@@ -3774,11 +3774,11 @@ contains
       !>              See the $Examples section below for a complete example
       !>              program showing how to retrieve the endpoints from COVER.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file has transfer format, the error
       !>         SPICE(INVALIDFORMAT) is signaled.
@@ -3798,17 +3798,17 @@ contains
       !>         coverage window for IDCODE, an error is signaled by a routine
       !>         in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine reads an SPK file.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides an API via which applications can determine
       !>     the coverage a specified SPK file provides for a specified
       !>     ephemeris object.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4209,21 +4209,21 @@ contains
       !>         Start:    1549 DEC 31 00:00:00.000 (TDB)
       !>         Stop:     2650 JAN 25 00:00:00.000 (TDB)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If an error occurs while this routine is updating the window
       !>         COVER, the window may be corrupted.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-OCT-2021 (JDR) (NJB)
       !>
@@ -4380,7 +4380,7 @@ contains
       return
       end procedure spkcov
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG     is the standard NAIF ID code for a target body.
       !>
@@ -4394,7 +4394,7 @@ contains
       !>
       !>     OBS      is the standard NAIF ID code for an observing body.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is a 6-dimensional vector that contains the geometric
       !>              position and velocity of the target body, relative to the
@@ -4408,21 +4408,21 @@ contains
       !>              observing body to the geometric position of the
       !>              target body at the specified epoch.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If insufficient ephemeris data has been loaded to compute
       !>         the necessary states, the error SPICE(SPKINSUFFDATA) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See $Restrictions.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPKGEO computes the geometric state, T(t), of the target
       !>     body and the geometric state, O(t), of the observing body
@@ -4467,7 +4467,7 @@ contains
       !>     stellar aberration corrections. The geometric states
       !>     returned by SPKEZ and SPKGEO are the same.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4606,16 +4606,16 @@ contains
       !>
       !>        Light time (s) between observer and target:  269.70264776317532
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The ephemeris files to be used by SPKGEO must be loaded
       !>         by FURNSH or SPKLEF before SPKGEO is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -4624,7 +4624,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.0, 09-OCT-2021 (JDR) (NJB)
       !>
@@ -5357,7 +5357,7 @@ contains
       end associate
       end procedure spkgeo
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG     is the standard NAIF ID code for a target body.
       !>
@@ -5371,7 +5371,7 @@ contains
       !>
       !>     OBS      is the standard NAIF ID code for an observing body.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     POS      is a 3-dimensional vector that contains the position of
       !>              the target body, relative to the observing body. This
@@ -5382,21 +5382,21 @@ contains
       !>              to the geometric position of the target body at the
       !>              specified epoch.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If insufficient ephemeris data has been loaded to compute
       !>         the necessary positions, the error SPICE(SPKINSUFFDATA) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See $Restrictions.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPKGPS computes the geometric position, T(t), of the target
       !>     body and the geometric position, O(t), of the observing body
@@ -5439,7 +5439,7 @@ contains
       !>     SPKGPS is similar to SPKGEO but returns geometric positions
       !>     only.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following code example computes the geometric
       !>     position of the moon with respect to the earth and
@@ -5498,23 +5498,23 @@ contains
       !>
       !>            END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The ephemeris files to be used by SPKGPS must be loaded
       !>         by SPKLEF before SPKGPS is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 09-OCT-2021 (JDR) (NJB)
       !>
@@ -6212,7 +6212,7 @@ contains
       end associate
       end procedure spkgps
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SPKFNM   is the name of an SPK file.
       !>
@@ -6224,7 +6224,7 @@ contains
       !>              If IDS contains no data on input, its size and
       !>              cardinality still must be initialized.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IDS      is a SPICE set data structure which contains the union
       !>              of its contents upon input with the set of ID codes of
@@ -6237,11 +6237,11 @@ contains
       !>              See the $Examples section below for a complete example
       !>              program showing how to retrieve the ID codes from IDS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file has transfer format, the error
       !>         SPICE(INVALIDFORMAT) is signaled.
@@ -6260,17 +6260,17 @@ contains
       !>         the indicated SPK file, an error is signaled by a routine in
       !>         the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides an API via which applications can determine
       !>     the set of objects for which there are ephemeris data in a
       !>     specified SPK file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6488,21 +6488,21 @@ contains
       !>
       !>         ========================================
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If an error occurs while this routine is updating the set
       !>         IDS, the set may be corrupted.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-OCT-2021 (JDR) (NJB)
       !>
@@ -6658,7 +6658,7 @@ contains
       return
       end procedure spkobj
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the NAIF ID code for the body of the segment.
       !>
@@ -6675,16 +6675,16 @@ contains
       !>     LAST     is the last epoch for which the segment will have
       !>              ephemeris data.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DESCR    is a valid SPK segment descriptor to use
       !>              when creating a DAF segment for this body.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of BODY is 0, the error SPICE(BARYCENTEREPHEM) is
       !>         signaled.
@@ -6705,17 +6705,17 @@ contains
       !>         arise from uninitialized values or improperly ordered calling
       !>         arguments.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine for validating and creating
       !>     the descriptor for an SPK segment. It is intended for
       !>     use only by routines that create SPK segments.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you wish to create an SPK segment of type X
       !>     and that you are writing a routine to handle the details
@@ -6730,21 +6730,21 @@ contains
       !>     CALL SPKPDS ( BODY,   CENTER, FRAME, TYPE, FIRST, LAST, DESCR )
       !>     CALL DAFBNA ( HANDLE, DESCR,  SEGID )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 05-JUL-2021 (JDR)
       !>
@@ -6876,7 +6876,7 @@ contains
 
       end procedure spkpds
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     BADDR,
@@ -6890,15 +6890,15 @@ contains
       !>     END      are the initial and final epochs (ephemeris time)
       !>              of the subset.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while reading data from the source SPK
       !>         file, the error is signaled by a routine in the call tree of
@@ -6908,28 +6908,28 @@ contains
       !>         the error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact structure of a segment of data type 1 is detailed in
       !>     the SPK Required Reading file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
@@ -6937,7 +6937,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 14-APR-2021 (JDR)
       !>
@@ -7069,7 +7069,7 @@ contains
       return
       end procedure spks01
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     BADDR,
@@ -7083,16 +7083,16 @@ contains
       !>     END      are the initial and final epochs (ephemeris time)
       !>              of the subset to be extracted.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. This routine writes data to the SPK file currently
       !>     open for write access.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while reading data from the source SPK
       !>         file, the error is signaled by a routine in the call tree of
@@ -7102,28 +7102,28 @@ contains
       !>         the error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact structure of a segment of data type 2 is detailed in
       !>     the SPK Required Reading file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -7132,7 +7132,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.2, 14-APR-2021 (JDR)
       !>
@@ -7250,7 +7250,7 @@ contains
       return
       end procedure spks02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     BADDR,
@@ -7264,15 +7264,15 @@ contains
       !>     END      are the initial and final epochs (ephemeris time)
       !>              of the subset to be extracted.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while reading data from the source SPK
       !>         file, the error is signaled by a routine in the call tree of
@@ -7282,11 +7282,11 @@ contains
       !>         the error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact structure of a segment of data type 3 (Chebyshev
       !>     polynomials, position and velocity) is detailed in the SPK
@@ -7295,19 +7295,19 @@ contains
       !>     On not so close inspection, it will be noted that SPKS03 is
       !>     identical to SPKS02.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -7316,7 +7316,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.2, 14-APR-2021 (JDR)
       !>
@@ -7434,7 +7434,7 @@ contains
       return
       end procedure spks03
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     BADDR,
@@ -7458,19 +7458,19 @@ contains
       !>              in the source segment that is greater than or equal
       !>              to END.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     See $Files section.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Data is extracted from the file connected to the input
       !>     handle, and written to the current DAF open for writing.
@@ -7479,7 +7479,7 @@ contains
       !>     prior to calling this routine. The segment must be ended
       !>     external to this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is intended solely for use as a utility by the
       !>     routine SPKSUB.
@@ -7490,7 +7490,7 @@ contains
       !>     The exact structure of a segment of data type 05 is described
       !>     in the section on type 05 in the SPK Required Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine is intended only for use as a utility by SPKSUB.
       !>     To use this routine successfully, you must:
@@ -7511,15 +7511,15 @@ contains
       !>     examples of that routine illustrate more fully the process
       !>     described above.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
@@ -7527,7 +7527,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 03-JUN-2021 (JDR)
       !>
@@ -7642,7 +7642,7 @@ contains
       return
       end procedure spks05
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     BADDR,
@@ -7666,15 +7666,15 @@ contains
       !>              in the source segment that is greater than or equal
       !>              to END.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     See $Files section.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine relies on the caller to ensure that the
       !>         interval [BEGIN, END] is contained in the coverage
@@ -7682,7 +7682,7 @@ contains
       !>
       !>     2)  If BEGIN > END, no data is written to the target file.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Data is extracted from the file connected to the input
       !>     handle, and written to the current DAF open for writing.
@@ -7691,7 +7691,7 @@ contains
       !>     prior to calling this routine. The segment must be ended
       !>     external to this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is intended solely for use as a utility by the
       !>     routine SPKSUB.
@@ -7702,7 +7702,7 @@ contains
       !>     The exact structure of a segment of data type 08 is described
       !>     in the section on type 08 in the SPK Required Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine is intended only for use as a utility by SPKSUB.
       !>     To use this routine successfully, you must:
@@ -7723,15 +7723,15 @@ contains
       !>     examples of that routine illustrate more fully the process
       !>     described above.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -7740,7 +7740,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.1, 03-JUN-2021 (JDR)
       !>
@@ -7871,7 +7871,7 @@ contains
       return
       end procedure spks08
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     BADDR,
@@ -7895,15 +7895,15 @@ contains
       !>              in the source segment that is greater than or equal
       !>              to END.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     See $Files section.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine relies on the caller to ensure that the
       !>         interval [BEGIN, END] is contained in the coverage
@@ -7911,7 +7911,7 @@ contains
       !>
       !>     2)  If BEGIN > END, no data is written to the target file.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Data is extracted from the file connected to the input
       !>     handle, and written to the current DAF open for writing.
@@ -7920,7 +7920,7 @@ contains
       !>     prior to calling this routine. The segment must be ended
       !>     external to this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is intended solely for use as a utility by the
       !>     routine SPKSUB.
@@ -7931,7 +7931,7 @@ contains
       !>     The exact structure of a segment of data type 09 is described
       !>     in the section on type 09 in the SPK Required Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine is intended only for use as a utility by SPKSUB.
       !>     To use this routine successfully, you must:
@@ -7952,15 +7952,15 @@ contains
       !>     examples of that routine illustrate more fully the process
       !>     described above.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -7969,7 +7969,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.1, 03-JUN-2021 (JDR)
       !>
@@ -8123,7 +8123,7 @@ contains
       return
       end procedure spks09
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     BADDR,
@@ -8137,15 +8137,15 @@ contains
       !>     END      are the initial and final epochs (ephemeris time)
       !>              of the subset.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     See $Files section.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine relies on the caller to ensure that the
       !>         interval [BEGIN, END] is contained in the coverage
@@ -8153,7 +8153,7 @@ contains
       !>
       !>     2)  If BEGIN > END, no data is written to the target file.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Data is extracted from the file connected to the input
       !>     handle, and written to the current DAF open for writing.
@@ -8162,7 +8162,7 @@ contains
       !>     prior to calling this routine. The segment must be ended
       !>     external to this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is intended solely for use as a utility by the
       !>     routine SPKSUB. It transfers a subset of a type 15 SPK data
@@ -8171,7 +8171,7 @@ contains
       !>     The exact structure of a segment of data type 15 is described
       !>     in the section on type 15 in the SPK Required Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine is intended only for use as a utility by SPKSUB.
       !>     To use this routine successfully, you must:
@@ -8192,21 +8192,21 @@ contains
       !>     examples of that routine illustrate more fully the process
       !>     described above.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 03-JUN-2021 (JDR)
       !>
@@ -8250,7 +8250,7 @@ contains
       return
       end procedure spks15
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     BADDR,
@@ -8264,15 +8264,15 @@ contains
       !>     END      are the initial and final epochs (ephemeris time)
       !>              of the subset.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     See $Files section.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine relies on the caller to ensure that the
       !>         interval [BEGIN, END] is contained in the coverage
@@ -8280,7 +8280,7 @@ contains
       !>
       !>     2)  If BEGIN > END, no data is written to the target file.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Data is extracted from the file connected to the input
       !>     handle, and written to the current DAF open for writing.
@@ -8289,7 +8289,7 @@ contains
       !>     prior to calling this routine. The segment must be ended
       !>     external to this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is intended solely for use as a utility by the
       !>     routine SPKSUB. It transfers a subset of a type 17 SPK data
@@ -8298,7 +8298,7 @@ contains
       !>     The exact structure of a segment of data type 17 is described
       !>     in the section on type 17 in the SPK Required Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine is intended only for use as a utility by SPKSUB.
       !>     To use this routine successfully, you must:
@@ -8319,21 +8319,21 @@ contains
       !>     examples of that routine illustrate more fully the process
       !>     described above.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 03-JUN-2021 (JDR)
       !>
@@ -8377,7 +8377,7 @@ contains
       return
       end procedure spks17
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     BADDR,
@@ -8401,15 +8401,15 @@ contains
       !>              in the source segment that is greater than or equal
       !>              to END.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     See $Files section.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine relies on the caller to ensure that the
       !>         interval [BEGIN, END] is contained in the coverage
@@ -8420,7 +8420,7 @@ contains
       !>     3)  If an unexpected SPK type 18 subtype is found in the input
       !>         segment, the error SPICE(INVALIDVALUE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Data are extracted from the file connected to the input
       !>     handle, and written to the current DAF open for writing.
@@ -8429,7 +8429,7 @@ contains
       !>     prior to calling this routine. The segment must be ended
       !>     external to this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is intended solely for use as a utility by the
       !>     routine SPKSUB.
@@ -8440,7 +8440,7 @@ contains
       !>     The exact structure of a segment of data type 18 is described
       !>     in the section on type 18 in the SPK Required Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine is intended only for use as a utility by SPKSUB.
       !>     To use this routine successfully, you must:
@@ -8461,22 +8461,22 @@ contains
       !>     examples of that routine illustrate more fully the process
       !>     described above.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 03-JUN-2021 (JDR)
       !>
@@ -8490,7 +8490,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 16-AUG-2002 (NJB) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 22-DEC-2012 (NJB)
       !>
@@ -8673,7 +8673,7 @@ contains
       return
       end procedure spks18
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     BADDR,
@@ -8701,15 +8701,15 @@ contains
       !>              in the source segment that is greater than or equal
       !>              to END.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Files section.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine relies on the caller to ensure that the
       !>         interval [BEGIN, END] is contained in the coverage
@@ -8723,7 +8723,7 @@ contains
       !>     4)  The input segment must have valid structure; this
       !>         routine may fail in unpredictable ways if not.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Data are extracted from the file connected to the input
       !>     handle, and written to the current DAF open for writing.
@@ -8732,7 +8732,7 @@ contains
       !>     prior to calling this routine. The segment must be ended
       !>     external to this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is intended solely for use as a utility by the
       !>     routine SPKSUB.
@@ -8743,7 +8743,7 @@ contains
       !>     The exact structure of a segment of data type 19 is described
       !>     in the section on type 19 in the SPK Required Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine is intended only for use as a utility by SPKSUB.
       !>     To use this routine successfully, you must:
@@ -8764,17 +8764,17 @@ contains
       !>     examples of that routine illustrate more fully the process
       !>     described above.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine relies on the input segment being correct;
       !>         very limited error checking is performed on the input
       !>         data.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -8783,7 +8783,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 03-JUN-2021 (JDR)
       !>
@@ -10282,7 +10282,7 @@ contains
       end associate
       end procedure spks19
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     BADDR,
@@ -10296,16 +10296,16 @@ contains
       !>     END      are the initial and final epochs (ephemeris time)
       !>              of the subset to be extracted.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. This routine writes data to the SPK file currently
       !>     open for write access.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while reading data from the source SPK
       !>         file, the error is signaled by a routine in the call tree of
@@ -10315,34 +10315,34 @@ contains
       !>         the error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact structure of a segment of data type 20 is detailed in
       !>     the SPK Required Reading file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     R.E. Thurman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 14-APR-2021 (JDR)
       !>
@@ -10470,7 +10470,7 @@ contains
       return
       end procedure spks20
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     BADDR,
@@ -10484,15 +10484,15 @@ contains
       !>     END      are the initial and final epochs (ephemeris time)
       !>              of the subset to be extracted.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while reading data from the source SPK
       !>         file, the error is signaled by a routine in the call tree of
@@ -10502,28 +10502,28 @@ contains
       !>         the error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact structure of a segment of data type 21 is detailed in
       !>     the SPK Required Reading file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -10532,7 +10532,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-OCT-2021 (JDR) (BVS)
       !>
@@ -10673,11 +10673,11 @@ contains
       return
       end procedure spks21
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DESCR    is an SPK segment descriptor.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BODY     is the NAIF ID code for the body of the segment.
       !>
@@ -10700,11 +10700,11 @@ contains
       !>     EADDRS   is the last address of the data associated with
       !>              this descriptor.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -10712,18 +10712,18 @@ contains
       !>         the output times to contain bit patterns that don't represent
       !>         normal double precision values. This error is not diagnosed.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine extracts the contents of an SPK segment
       !>     descriptor into the components needed for reading and
       !>     evaluating the data stored in the segment. It serves
       !>     as a macro for expanding the SPK segment descriptor.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you wished to summarize a particular SPK segment
       !>     and that you have the descriptor for that segment in hand.
@@ -10747,22 +10747,22 @@ contains
       !>        WRITE (*,*) 'Segment Start : ', FSTCAL
       !>        WRITE (*,*) 'Segment Stop  : ', LSTCAL
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 02-OCT-2021 (JDR) (NJB)
       !>
@@ -10815,7 +10815,7 @@ contains
 
       end procedure spkuds
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     XMIT           is a logical flag indicating the sense of
       !>                    radiation transmission associated with
@@ -10844,7 +10844,7 @@ contains
       !>
       !>                    where R(t) is a time-dependent rotation matrix.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CORXFM         is the input matrix XFORM after correction for the
       !>                    rate of change of light time indicated by DLT. Let
@@ -10871,19 +10871,19 @@ contains
       !>                    light-time corrected epoch. See the Particulars
       !>                    section for details.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine designed to simplify transformation of
       !>     state vectors between an inertial and a body-fixed reference
@@ -10933,7 +10933,7 @@ contains
       !>     The factor on the right is the scale factor S shown in the
       !>     Detailed Output section above.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) Express the velocity of Mars as seen from Earth in
       !>        the IAU_MARS reference frame, where the frame orientation is
@@ -11124,19 +11124,19 @@ contains
       !>            0.0000000000000000E+00
       !>            0.0000000000000000E+00
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-MAY-2008 (NJB)
       module procedure zzcorsxf
@@ -11270,7 +11270,7 @@ contains
 !
 !     This routine should never be called.
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -11279,7 +11279,7 @@ contains
       !>     Compute target state relative to its center of motion at
       !>     a specified time, in a specified reference frame.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET          is the ephemeris time, expressed as seconds past
       !>                 J2000 TDB, at which to evaluate the constant-velocity
@@ -11291,7 +11291,7 @@ contains
       !>                 Case and leading and trailing blanks in REF are not
       !>                 significant.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CENTER      is the NAIF ID code of the center of motion
       !>                 associated with the output state vector.
@@ -11315,11 +11315,11 @@ contains
       !>                 input REF. This frame's orientation is evaluated at
       !>                 the epoch ET.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If REF is not recognized, the error will be diagnosed by
       !>         routines in the call tree of this routine.
@@ -11332,7 +11332,7 @@ contains
       !>         will be diagnosed by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -11361,7 +11361,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the state vector stored by the entry point
       !>
@@ -11369,24 +11369,24 @@ contains
       !>
       !>     after transforming the state to the reference frame REF.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in CVOSTA, CVTSTA.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This routine can compute states based only on the most
       !>        recently stored state vector.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 11-JAN-2012 (NJB)
       module procedure zzcvxsta
@@ -11433,7 +11433,7 @@ contains
       end associate
       end procedure zzcvxsta
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -11442,7 +11442,7 @@ contains
       !>     Save an object's state and the center, time, and frame associated
       !>     with the state.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STATE       is a state vector. The contents of STATE are
       !>                 compatible with output states returned by SPKEZR.
@@ -11461,47 +11461,47 @@ contains
       !>                 frame designated by REF must be recognized by the
       !>                 SPICE system.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. This routine operates by side effects.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine stores its inputs so that they can be
       !>     used for linear extrapolation by the entry point
       !>
       !>        ZZCVXSTA
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in CVOSTA, CVTSTA.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This routine can store data for only one
       !>        constant-velocity ephemeris.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 11-JAN-2012 (NJB)
       module procedure zzcvssta
@@ -11534,7 +11534,7 @@ contains
       end associate
       end procedure zzcvssta
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
       !>              opened for writing.
@@ -11562,7 +11562,7 @@ contains
       !>              Chebyshev coefficient set. The epochs must form a
       !>              strictly increasing sequence.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. The ephemeris data is stored in a segment in the SPK file
       !>     associated with HANDLE.
@@ -11570,20 +11570,20 @@ contains
       !>     See the $Particulars section for details about the structure of a
       !>     type 14 SPK segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of coefficient sets and epochs is not positive,
       !>         the error SPICE(INVALIDARGUMENT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine adds data to a type 14 SPK segment that is associated
       !>     with HANDLE. The segment must have been started by a call to the
@@ -11641,7 +11641,7 @@ contains
       !>           |  CHBDEG+1 coefficients for the Z velocity    |
       !>           ------------------------------------------------
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -11933,24 +11933,24 @@ contains
       !>        screen. After run completion, a new SPK type 14 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The type 14 SPK segment to which we are adding data must have
       !>         been started by the routine SPK14B, the routine which begins a
       !>         type 14 SPK segment.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 27-AUG-2021 (JDR) (NJB)
       !>
@@ -12007,7 +12007,7 @@ contains
 
       end procedure spk14a
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
       !>              opened for writing.
@@ -12034,7 +12034,7 @@ contains
       !>              represent the ephemeris information stored in the
       !>              segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. The input data is used to create the segment summary for the
       !>     segment being started in the SPK file associated with HANDLE.
@@ -12042,12 +12042,12 @@ contains
       !>     See the $Particulars section for details about the structure of a
       !>     type 14 SPK segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     This subroutine makes use of parameters defined in the file
       !>     'sgparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the degree of the Chebyshev Polynomial to be used for this
       !>         segment is negative, the error SPICE(INVALIDARGUMENT) is
@@ -12060,11 +12060,11 @@ contains
       !>     3)  If a file access error occurs, the error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See HANDLE in the $Detailed_Input section.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine begins writing a type 14 SPK segment to the open SPK
       !>     file that is associated with HANDLE. The file must have been
@@ -12122,7 +12122,7 @@ contains
       !>           |  CHBDEG+1 coefficients for the Z velocity    |
       !>           ------------------------------------------------
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -12267,7 +12267,7 @@ contains
       !>        screen. After run completion, a new SPK type 14 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The SPK file must be open with write access.
       !>
@@ -12276,17 +12276,17 @@ contains
       !>         segment must be ended before another segment may be started in
       !>         the file.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.3, 27-AUG-2021 (JDR)
       !>
@@ -12388,13 +12388,13 @@ contains
 
       end procedure spk14b
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
       !>              opened for writing, and to which a type 14 segment is
       !>              being written.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. The type 14 segment in the SPK file associated with HANDLE
       !>     will be ended, making the addition of the data to the file
@@ -12403,11 +12403,11 @@ contains
       !>     See the $Particulars section for details about the structure of a
       !>     type 14 SPK segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there are no segments currently being written to the file
       !>         associated with HANDLE, an error is signaled by a routine in
@@ -12416,11 +12416,11 @@ contains
       !>     2)  If any file access error occurs, the error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine ends a type 14 SPK segment which is being written to
       !>     the SPK file associated with HANDLE. Ending the SPK segment is a
@@ -12479,7 +12479,7 @@ contains
       !>           |   CHBDEG+1 coefficients for the Z velocity   |
       !>           ------------------------------------------------
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -12624,22 +12624,22 @@ contains
       !>        screen. After run completion, a new SPK type 14 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The type 14 SPK segment being closed must have been started by
       !>         the routine SPK14B, the routine which begins a type 14 SPK
       !>         segment.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 27-AUG-2021 (JDR)
       !>
@@ -12675,7 +12675,7 @@ contains
 
       end procedure spk14e
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG     is the NAIF ID code for a target body. The target
       !>              and observer define a position vector which points
@@ -12804,7 +12804,7 @@ contains
       !>              Case and blanks are not significant in the string
       !>              ABCORR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PTARG    is a Cartesian 3-vector representing the position of
       !>              the target body relative to the specified observer.
@@ -12827,11 +12827,11 @@ contains
       !>              light time between the observer and the light time
       !>              corrected target location.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of ABCORR is not recognized, the error
       !>         SPICE(SPKINVALIDOPTION) is signaled.
@@ -12844,7 +12844,7 @@ contains
       !>         barycenter cannot be computed, an error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes positions using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -12862,7 +12862,7 @@ contains
       !>     such kernels must already be loaded at the time this routine is
       !>     called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In space science or engineering applications one frequently
       !>     wishes to know where to point a remote sensing instrument, such
@@ -13129,7 +13129,7 @@ contains
       !>     Neither special nor general relativistic effects are accounted
       !>     for in the aberration corrections performed by this routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following code fragment, SPKSSB and SPKAPO are used
       !>     to display the position of Io (body 501) as seen from the
@@ -13159,7 +13159,7 @@ contains
       !>
       !>        END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The ephemeris files to be used by SPKAPO must be loaded
       !>         (normally by the SPICELIB kernel loader FURNSH) before
@@ -13174,11 +13174,11 @@ contains
       !>         of the aberration corrections may be enhanced to improve
       !>         accuracy.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -13186,7 +13186,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.3.1, 28-APR-2021 (JDR)
       !>
@@ -13420,7 +13420,7 @@ contains
       end associate
       end procedure spkapo
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG     is the NAIF ID code for a target body. The target
       !>              and observer define a state vector whose position
@@ -13523,7 +13523,7 @@ contains
       !>
       !>              Units are always km and km/sec.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STARG    is a Cartesian state vector representing the position
       !>              and velocity of the target body relative to the
@@ -13562,11 +13562,11 @@ contains
       !>              If the observer and target are at the same position,
       !>              then DLT is set to zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  For the convenience of the caller, the input aberration
       !>         correction flag can call for stellar aberration correction via
@@ -13593,7 +13593,7 @@ contains
       !>     6)  If a division by zero error would occur in the computation
       !>         of DLT, the error SPICE(DIVIDEBYZERO) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes states using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -13611,7 +13611,7 @@ contains
       !>     such kernels must already be loaded at the time this routine is
       !>     called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports higher-level SPK API routines that can
       !>     perform both light time and stellar aberration corrections.
@@ -13621,7 +13621,7 @@ contains
       !>     See the header of the routine SPKEZR for a detailed discussion
       !>     of aberration corrections.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -13809,7 +13809,7 @@ contains
       !>         One-way light time (s):     1.3438080956889309
       !>         Light time rate:            1.0067340347415892E-007
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The routine SPKGEO should be used instead of this routine
       !>         to compute geometric states. SPKGEO introduces less
@@ -13825,16 +13825,16 @@ contains
       !>         routine requires that the output state be relative to an
       !>         inertial reference frame.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 05-JUL-2021 (JDR)
       !>
@@ -14166,7 +14166,7 @@ contains
       end associate
       end procedure spkltc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SRCHAN   is the handle of the SPK file containing the source
       !>              segment.
@@ -14181,23 +14181,23 @@ contains
       !>
       !>     DSTSID   is the segment identifier for the destination segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See arguments SRCHAN, DSTHAN.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This subroutine copies a subset of the data form one SPK segment
       !>     to another.
@@ -14205,26 +14205,26 @@ contains
       !>     The exact structure of a segment of SPK type 10 is detailed in
       !>     the SPK Required Reading. Please see this document for details.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  We assume that the source descriptor actually describes a
       !>         segment in the source SPK file containing the time coverage
       !>         that is desired for the subsetting operation.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-JUN-2021 (JDR)
       !>
@@ -14372,7 +14372,7 @@ contains
 
       end procedure spks10
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     BADDR,
@@ -14391,15 +14391,15 @@ contains
       !>              ensure that the segment yields an ephemeris identical
       !>              to that given by the source segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     See $Files section.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine relies on the caller to ensure that the
       !>         interval [BEGIN, END] is contained in the coverage
@@ -14407,7 +14407,7 @@ contains
       !>
       !>     2)  If BEGIN > END, no data is written to the target file.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Data is extracted from the file connected to the input
       !>     handle, and written to the current DAF open for writing.
@@ -14416,7 +14416,7 @@ contains
       !>     prior to calling this routine. The segment must be ended
       !>     external to this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is intended solely for use as a utility by the
       !>     routine SPKSUB.
@@ -14427,7 +14427,7 @@ contains
       !>     The exact structure of a segment of data type 12 is described
       !>     in the section on type 12 in the SPK Required Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine is intended only for use as a utility by SPKSUB.
       !>     To use this routine successfully, you must:
@@ -14448,20 +14448,20 @@ contains
       !>     examples of that routine illustrate more fully the process
       !>     described above.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-JUN-2021 (JDR)
       !>
@@ -14485,7 +14485,7 @@ contains
       return
       end procedure spks12
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     BADDR,
@@ -14504,15 +14504,15 @@ contains
       !>              ensure that the segment yields an ephemeris identical
       !>              to that given by the source segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     See $Files section.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine relies on the caller to ensure that the
       !>         interval [BEGIN, END] is contained in the coverage
@@ -14520,7 +14520,7 @@ contains
       !>
       !>     2)  If BEGIN > END, no data is written to the target file.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Data is extracted from the file connected to the input
       !>     handle, and written to the current DAF open for writing.
@@ -14529,7 +14529,7 @@ contains
       !>     prior to calling this routine. The segment must be ended
       !>     external to this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is intended solely for use as a utility by the
       !>     routine SPKSUB.
@@ -14540,7 +14540,7 @@ contains
       !>     The exact structure of a segment of data type 13 is described
       !>     in the section on type 13 in the SPK Required Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine is intended only for use as a utility by SPKSUB.
       !>     To use this routine successfully, you must:
@@ -14561,20 +14561,20 @@ contains
       !>     examples of that routine illustrate more fully the process
       !>     described above.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-JUN-2021 (JDR)
       !>
@@ -14598,7 +14598,7 @@ contains
       return
       end procedure spks13
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG     is the standard NAIF ID code for a target body.
       !>
@@ -14610,7 +14610,7 @@ contains
       !>              frame supported by the SPICELIB frame system, including
       !>              dynamic and other non-inertial frames.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STARG    is a Cartesian state vector representing the position and
       !>              velocity of the target body, relative to the solar system
@@ -14618,21 +14618,21 @@ contains
       !>              specified reference frame. Units are always km and
       !>              km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If sufficient information has not been "loaded" via the
       !>         routine FURNSH, SPKLEF or the PCK kernel loaders, an error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See $Restrictions.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In order to compute the state of one body relative to another,
       !>     the states of the two bodies must be known relative to a third
@@ -14645,7 +14645,7 @@ contains
       !>     files as necessary, using files that have been loaded by
       !>     previous calls to FURNSH or SPKLEF (load ephemeris file).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following code fragment, SPKSSB is used to display
       !>     the distance from Earth (Body 399) to Mars (body 499) at
@@ -14668,16 +14668,16 @@ contains
       !>           EPOCH = EPOCH + DELTA
       !>        END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The ephemeris files to be used by SPKSSB must be loaded
       !>         by FURNSH or SPKLEF before SPKSSB is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -14686,7 +14686,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.4, 13-APR-2021 (JDR)
       !>
@@ -14723,7 +14723,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 19-SEP-1995 (WLT)
       !>
@@ -14749,7 +14749,7 @@ contains
       return
       end procedure spkssb
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Deprecated: This routine has been superseded by the SPICELIB
       !>     routine SPKAPS. This routine is supported for purposes of
@@ -14759,7 +14759,7 @@ contains
       !>     relative to an observer, optionally corrected for light time and
       !>     stellar aberration.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG     is the NAIF ID code for a target body. The target
       !>              and observer define a state vector whose position
@@ -14889,7 +14889,7 @@ contains
       !>              Case and blanks are not significant in the string
       !>              ABCORR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STARG    is a Cartesian state vector representing the position
       !>              and velocity of the target body relative to the
@@ -14921,11 +14921,11 @@ contains
       !>              between the observer and the light time corrected
       !>              target location.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of ABCORR is not recognized, the error
       !>         SPICE(SPKINVALIDOPTION) is signaled.
@@ -14938,7 +14938,7 @@ contains
       !>         barycenter cannot be computed, an error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes states using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -14956,7 +14956,7 @@ contains
       !>     such kernels must already be loaded at the time this routine is
       !>     called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In space science or engineering applications one frequently
       !>     wishes to know where to point a remote sensing instrument, such
@@ -15247,7 +15247,7 @@ contains
       !>     Neither special nor general relativistic effects are accounted
       !>     for in the aberration corrections performed by this routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following code fragment, SPKSSB and SPKAPP are used
       !>     to display the position of Io (body 501) as seen from the
@@ -15277,7 +15277,7 @@ contains
       !>
       !>        END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel files to be used by SPKAPP must be loaded
       !>         (normally by the SPICELIB kernel loader FURNSH) before
@@ -15292,11 +15292,11 @@ contains
       !>         of the aberration corrections may be enhanced to improve
       !>         accuracy.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -15307,7 +15307,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.1, 26-OCT-2021 (JDR)
       !>
@@ -15378,7 +15378,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 22-MAY-1995 (WLT)
       !>
@@ -15612,7 +15612,7 @@ contains
       end associate
       end procedure spkapp
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Return the state (position and velocity) of a target body
       !>     relative to an observer specified by its state and
@@ -15626,7 +15626,7 @@ contains
       !>     SPICE users normally should call the high-level API routines
       !>     SPKEZR or SPKEZ rather than this routine.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG     is the NAIF ID code for a target body. The target
       !>              and observer define a state vector whose position
@@ -15767,7 +15767,7 @@ contains
       !>              caller need not provide a valid input value in this
       !>              case.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STARG    is a Cartesian state vector representing the position
       !>              and velocity of the target body relative to the
@@ -15807,11 +15807,11 @@ contains
       !>              If the observer and target are at the same position,
       !>              then DLT is set to zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of ABCORR is not recognized, an error is signaled
       !>         by a routine in the call tree of this routine.
@@ -15836,7 +15836,7 @@ contains
       !>         for example, when the observer is Mars and the target
       !>         is the Mars barycenter.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes states using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -15854,7 +15854,7 @@ contains
       !>     kernels must already be loaded at the time this routine is
       !>     called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports higher-level SPK API routines that can
       !>     perform both light time and stellar aberration corrections.
@@ -15882,7 +15882,7 @@ contains
       !>     See the header of the routine SPKEZR for a detailed discussion
       !>     of aberration corrections.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -16088,7 +16088,7 @@ contains
       !>         One-way light time (s):     1.3438080956559786
       !>         Light time rate:            1.0067340363005083E-007
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine should not be used to compute geometric states.
       !>         Instead, use SPKEZR, SPKEZ, or SPKGEO. SPKGEO, which is called
@@ -16104,16 +16104,16 @@ contains
       !>         routine requires that the output state be relative to an
       !>         inertial reference frame.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 26-OCT-2021 (JDR) (NJB)
       !>
@@ -16249,7 +16249,7 @@ contains
       end associate
       end procedure spkaps
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG     is the NAIF ID code for a target body. The target
       !>              and observer define a position vector which points
@@ -16376,7 +16376,7 @@ contains
       !>
       !>     OBS      is the NAIF ID code for the observing body.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PTARG    is a Cartesian 3-vector representing the position of
       !>              the target body relative to the specified observer.
@@ -16410,11 +16410,11 @@ contains
       !>              light time between the observer and the light time
       !>              corrected target location.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If name of target or observer cannot be translated to its
       !>         NAIF ID code, the error SPICE(IDCODENOTFOUND) is signaled.
@@ -16434,7 +16434,7 @@ contains
       !>         cannot be determined, the error SPICE(UNKNOWNFRAME2) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes positions using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -16451,7 +16451,7 @@ contains
       !>     files or frame kernels. Any such kernels must already be loaded
       !>     at the time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is part of the user interface to the SPICE ephemeris
       !>     system. It allows you to retrieve position information for any
@@ -16815,7 +16815,7 @@ contains
       !>     corrections we suggest you consult the astronomical almanac (page
       !>     B36) for a discussion of how to carry out these corrections.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Load a planetary ephemeris SPK, then look up a series of
       !>         geometric positions of the moon relative to the earth,
@@ -16899,15 +16899,15 @@ contains
       !>
       !>               END
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -16916,7 +16916,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.2.1, 13-APR-2021 (JDR)
       !>
@@ -16965,7 +16965,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 3.1.0, 06-JAN-2005 (NJB)
       !>
@@ -17164,7 +17164,7 @@ contains
       end associate
       end procedure spkezp
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SRCHAN   is the handle of the SPK file containing the source
       !>              segment.
@@ -17179,24 +17179,24 @@ contains
       !>
       !>     DSTSID   is the segment identifier for the destination segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the length of the SPK record that is to be moved is larger
       !>         than MAXREC, the error SPICE(SPKRECTOOLARGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See arguments SRCHAN, DSTHAN.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This subroutine copies a subset of the data form one SPK segment
       !>     to another.
@@ -17204,26 +17204,26 @@ contains
       !>     The exact structure of a segment of SPK type 14 is detailed in
       !>     the SPK Required Reading. Please see this document for details.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  We assume that the source descriptor actually describes a
       !>         segment in the source SPK file containing the time coverage
       !>         that is desired for the subsetting operation.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-JUN-2021 (JDR)
       !>
@@ -17365,7 +17365,7 @@ contains
 
       end procedure spks14
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -17377,7 +17377,7 @@ contains
       !>     subroutine provides the state of the target relative to its
       !>     center of motion.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TRGSUB      is the name of an external subroutine that returns
       !>                 the geometric state of the target body relative to a
@@ -17500,7 +17500,7 @@ contains
       !>
       !>                 Units are always km and km/sec.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STARG       is a Cartesian state vector representing the position
       !>                 and velocity of the target body relative to the
@@ -17539,11 +17539,11 @@ contains
       !>                 If the observer and target are at the same position,
       !>                 then DLT is set to zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) For the convenience of the caller, the input aberration
       !>        correction flag can call for stellar aberration correction via
@@ -17577,7 +17577,7 @@ contains
       !>     8) If a division by zero error would occur in the computation
       !>        of DLT, the error SPICE(DIVIDEBYZERO) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes states using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -17595,7 +17595,7 @@ contains
       !>     such kernels must already be loaded at the time this routine is
       !>     called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports higher-level routines that can
       !>     perform both light time and stellar aberration corrections
@@ -17604,11 +17604,11 @@ contains
       !>     routine can be used for objects having fixed positions
       !>     on the surfaces of planets.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZSPKFAP.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This routine must not be called by routines of the SPICE
       !>        frame subsystem. It must not be called by any portion of
@@ -17628,15 +17628,15 @@ contains
       !>         routine requires that the output state be relative to an
       !>         inertial reference frame.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-JUL-2014 (NJB)
       !>
@@ -17646,7 +17646,7 @@ contains
       !>
       !>     Last update was 22-FEB-2012 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>     None.
       !>
@@ -17986,7 +17986,7 @@ contains
       end associate
       end subroutine zzspkflt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG     is the NAIF ID code for a target body. The target
       !>              and observer define a state vector whose position
@@ -18105,7 +18105,7 @@ contains
       !>              position component points from the observer to the
       !>              target.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STARG    is a Cartesian state vector representing the position
       !>              and velocity of the target body relative to the
@@ -18144,11 +18144,11 @@ contains
       !>              If the observer and target are at the same position,
       !>              then DLT is set to zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of ABCORR is not recognized, an error is signaled
       !>         by a routine in the call tree of this routine.
@@ -18166,7 +18166,7 @@ contains
       !>         for example, when the observer is Mars and the target
       !>         is the Mars barycenter.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes states using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -18184,7 +18184,7 @@ contains
       !>     such kernels must already be loaded at the time this routine is
       !>     called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports higher-level SPK API routines that can
       !>     perform both light time and stellar aberration corrections.
@@ -18194,7 +18194,7 @@ contains
       !>     See the header of the routine SPKEZR for a detailed discussion
       !>     of aberration corrections.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -18375,7 +18375,7 @@ contains
       !>         One-way light time (s):     1.3438080956559786
       !>         Light time rate:            1.0067340363005083E-007
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The kernel files to be used by SPKACS must be loaded
       !>         (normally by the SPICELIB kernel loader FURNSH) before
@@ -18385,16 +18385,16 @@ contains
       !>         routine requires that the output state be relative to an
       !>         inertial reference frame.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 23-AUG-2021 (JDR) (NJB)
       !>
@@ -18532,7 +18532,7 @@ contains
       end associate
       end procedure spkacs
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG     is the name of a target body. Optionally, you may
       !>              supply the integer ID code for the object as an
@@ -18668,7 +18668,7 @@ contains
       !>              legitimate strings to supply to indicate the
       !>              observer is Earth.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PTARG    is a Cartesian 3-vector representing the position of
       !>              the target body relative to the specified observer.
@@ -18702,11 +18702,11 @@ contains
       !>              light time between the observer and the light time
       !>              corrected target location.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If name of target or observer cannot be translated to its
       !>         NAIF ID code, the error SPICE(IDCODENOTFOUND) is signaled.
@@ -18722,7 +18722,7 @@ contains
       !>         the error  is signaled by a routine in the call tree
       !>         of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes positions using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -18739,7 +18739,7 @@ contains
       !>     PCK files or frame kernels. Any such kernels must already be
       !>     loaded at the time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is part of the user interface to the SPICE ephemeris
       !>     system. It allows you to retrieve position information for any
@@ -18754,7 +18754,7 @@ contains
       !>     abcorr.req for detailed information describing the nature and
       !>     calculation of the applied corrections.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -18869,15 +18869,15 @@ contains
       !>         J2000 y-position (km):     -273814.30975274299
       !>         J2000 z-position (km):     -79329.406046598189
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -18886,7 +18886,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.2.0, 01-OCT-2021 (JDR) (NJB)
       !>
@@ -19022,7 +19022,7 @@ contains
       end associate
       end procedure spkpos
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR,
@@ -19040,15 +19040,15 @@ contains
       !>              segment is to be written. The file must be open for write
       !>              access. NEWH and HANDLE may refer to the same file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     See $Files section.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the condition
       !>
@@ -19061,13 +19061,13 @@ contains
       !>     2)  If the segment type is not supported by the current version of
       !>         SPKSUB, the error SPICE(SPKTYPENOTSUPP) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new segment, which contains a subset of the data in the
       !>     segment specified by DESCR and HANDLE, is written to the SPK
       !>     file attached to NEWH.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Sometimes, the segments in official source files---planetary
       !>     Developmental Ephemeris (DE) files, archival spacecraft
@@ -19086,7 +19086,7 @@ contains
       !>     2)  The beginning and ending segment addresses (IC(5) and IC(6))
       !>         are changed to reflect the location of the new segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following code fragment, the descriptor for each segment
       !>     in a source SPK file is examined. For each segment that covers a
@@ -19112,7 +19112,7 @@ contains
       !>           CALL DAFFNA ( FOUND )
       !>        END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  There is no way for SPKSUB to verify that the descriptor and
       !>         identifier are the original ones for the segment. Changing
@@ -19120,11 +19120,11 @@ contains
       !>         evaluated incorrectly; changing the identifier can destroy
       !>         the path from the data back to its original source.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -19135,7 +19135,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 9.1.0, 14-APR-2021 (JDR)
       !>
@@ -19345,7 +19345,7 @@ contains
       return
       end procedure spksub
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -19357,7 +19357,7 @@ contains
       !>     frame. An input subroutine provides the state of the observer
       !>     relative to its center of motion.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG        is the NAIF ID code for a target body. The target
       !>                 and observer define a state vector whose position
@@ -19495,7 +19495,7 @@ contains
       !>                 having a position component that points from the
       !>                 observer to the target.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STARG       is a Cartesian state vector representing the position
       !>                 and velocity of the target body relative to the
@@ -19534,11 +19534,11 @@ contains
       !>                 If the observer and target are at the same position,
       !>                 then DLT is set to zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the value of ABCORR is not recognized, the error
       !>        is diagnosed by a routine in the call tree of this
@@ -19557,7 +19557,7 @@ contains
       !>        for example, when the observer is Mars and the target
       !>        is the Mars barycenter.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes states using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -19575,7 +19575,7 @@ contains
       !>     such kernels must already be loaded at the time this routine is
       !>     called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports higher-level SPK API routines that can
       !>     perform both light time and stellar aberration corrections.
@@ -19585,11 +19585,11 @@ contains
       !>     See the header of the routine SPKEZR for a detailed discussion
       !>     of aberration corrections.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This routine must not be called by routines of the SPICE
       !>        frame subsystem. It must not be called by any portion of
@@ -19610,15 +19610,15 @@ contains
       !>        routine requires that the output state be relative to an
       !>        inertial reference frame.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-JUL-2014 (NJB)
       !>
@@ -19630,7 +19630,7 @@ contains
       !>
       !>        Previous update was Version 1.0.0, 22-FEB-2012
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>     None.
       !>
@@ -19786,7 +19786,7 @@ contains
       end associate
       end subroutine zzspkfao
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -19800,7 +19800,7 @@ contains
       !>     input subroutine provides the state of the target relative to its
       !>     center of motion.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TRGSUB      is the name of an external subroutine that returns
       !>                 the geometric state of the target body relative to a
@@ -19960,7 +19960,7 @@ contains
       !>                 caller need not provide a valid input value in this
       !>                 case.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STARG       is a Cartesian state vector representing the position
       !>                 and velocity of the target body relative to the
@@ -20000,11 +20000,11 @@ contains
       !>                 If the observer and target are at the same position,
       !>                 then DLT is set to zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the value of ABCORR is not recognized, the error
       !>        is diagnosed by a routine in the call tree of this
@@ -20023,7 +20023,7 @@ contains
       !>        for example, when the observer is Mars and the target
       !>        is the Mars barycenter.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes states using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -20041,7 +20041,7 @@ contains
       !>     kernels must already be loaded at the time this routine is
       !>     called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports higher-level routines that can
       !>     perform both light time and stellar aberration corrections
@@ -20050,11 +20050,11 @@ contains
       !>     routine can be used for objects having fixed positions
       !>     on the surfaces of planets.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This routine must not be called by routines of the SPICE
       !>        frame subsystem. It must not be called by any portion of
@@ -20079,15 +20079,15 @@ contains
       !>         routine requires that the output state be relative to an
       !>         inertial reference frame.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-JUL-2014 (NJB)
       !>
@@ -20097,7 +20097,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 09-JAN-2011 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>     None.
       !>
@@ -20234,7 +20234,7 @@ contains
       end associate
       end subroutine zzspkfap
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG     is the NAIF ID code for a target body. The target
       !>              and observer define a state vector whose position
@@ -20361,7 +20361,7 @@ contains
       !>
       !>     OBS      is the NAIF ID code for an observing body.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STARG    is a Cartesian state vector representing the position
       !>              and velocity of the target body relative to the
@@ -20401,11 +20401,11 @@ contains
       !>              between the observer and the light time corrected
       !>              target location.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the reference frame REF is not a recognized reference
       !>         frame, the error SPICE(UNKNOWNFRAME) is signaled.
@@ -20422,7 +20422,7 @@ contains
       !>         cannot be determined, the error SPICE(UNKNOWNFRAME2) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes states using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -20439,7 +20439,7 @@ contains
       !>     files or frame kernels. Any such kernels must already be loaded
       !>     at the time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is part of the user interface to the SPICE ephemeris
       !>     system. It allows you to retrieve state information for any
@@ -20832,7 +20832,7 @@ contains
       !>     corrections we suggest you consult the astronomical almanac (page
       !>     B36) for a discussion of how to carry out these corrections.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Load a planetary ephemeris SPK; then look up a series of
       !>         geometric states of the moon relative to the earth,
@@ -20919,15 +20919,15 @@ contains
       !>
       !>               END
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -20940,7 +20940,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.1.1, 16-AUG-2021 (JDR)
       !>
@@ -21038,7 +21038,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 5.0.0, 27-DEC-2007 (NJB)
       !>
@@ -21434,7 +21434,7 @@ contains
       end associate
       end procedure spkez
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -21446,7 +21446,7 @@ contains
       !>     frame. An input subroutine provides the state of the target
       !>     relative to its center of motion.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TRGSUB      is the name of an external subroutine that returns
       !>                 the geometric state of the target body relative to a
@@ -21584,7 +21584,7 @@ contains
       !>                 position component points from the observer to the
       !>                 target.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STARG       is a Cartesian state vector representing the position
       !>                 and velocity of the target body relative to the
@@ -21623,11 +21623,11 @@ contains
       !>                 If the observer and target are at the same position,
       !>                 then DLT is set to zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the value of ABCORR is not recognized, the error
       !>        is diagnosed by a routine in the call tree of this
@@ -21646,7 +21646,7 @@ contains
       !>        for example, when the observer is Mars and the target
       !>        is the Mars barycenter.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes states using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -21664,7 +21664,7 @@ contains
       !>     such kernels must already be loaded at the time this routine is
       !>     called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports higher-level SPK API routines that can
       !>     perform both light time and stellar aberration corrections.
@@ -21674,11 +21674,11 @@ contains
       !>     See the header of the routine SPKEZR for a detailed discussion
       !>     of aberration corrections.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZSPKFZT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This routine must not be called by routines of the SPICE
       !>        frame subsystem. It must not be called by any portion of
@@ -21699,15 +21699,15 @@ contains
       !>        routine requires that the output state be relative to an
       !>        inertial reference frame.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-JUL-2014 (NJB)
       !>
@@ -21717,7 +21717,7 @@ contains
       !>
       !>     Last update was 09-JAN-2012 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>     None.
       !>
@@ -21862,7 +21862,7 @@ contains
       end associate
       end subroutine zzspkfat
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -21874,7 +21874,7 @@ contains
       !>     subroutine provides the state of the observer relative to its
       !>     center of motion.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG        is the NAIF ID code for a target body. The target and
       !>                 observer define a state vector having a position
@@ -22024,7 +22024,7 @@ contains
       !>                 having a position component that points from the
       !>                 observer to the target.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STARG       is a Cartesian state vector representing the position
       !>                 and velocity of the target body relative to the
@@ -22064,11 +22064,11 @@ contains
       !>                 between the observer and the light time corrected
       !>                 target location.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the reference frame REF is not a recognized reference
       !>        frame the error 'SPICE(UNKNOWNFRAME)' is signaled.
@@ -22085,7 +22085,7 @@ contains
       !>        the error will be diagnosed by a routine in the call tree
       !>        of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes states using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -22102,7 +22102,7 @@ contains
       !>     files or frame kernels. Any such kernels must already be loaded
       !>     at the time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is part of the user interface to the SPICE ephemeris
       !>     system. It allows you to retrieve state information for any
@@ -22496,11 +22496,11 @@ contains
       !>     we suggest you consult the astronomical almanac (page B36) for a
       !>     discussion of how to carry out these corrections.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in CVOSTA.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This routine must not be called by routines of the SPICE
       !>        frame or SPK subsystems.
@@ -22513,18 +22513,18 @@ contains
       !>           ZZSPKFAT
       !>           ZZSPKFLT
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton      (JPL)
       !>     W.L. Taber      (JPL)
       !>     N.J. Bachman    (JPL)
       !>     I.M. Underwood  (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-JUL-2014 (NJB)
       !>
@@ -22534,7 +22534,7 @@ contains
       !>
       !>     Last update was 22-FEB-2012 (CHA) (NJB) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>     None.
       !>
@@ -22794,7 +22794,7 @@ contains
       end associate
       end subroutine zzspkfzo
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may
       !>              supply the ID code of the object as an integer
@@ -23015,7 +23015,7 @@ contains
       !>              Case and leading and trailing blanks are not
       !>              significant in the string OBSREF.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is a Cartesian state vector representing the position
       !>              and velocity of the target relative to the specified
@@ -23051,11 +23051,11 @@ contains
       !>              between the observer and the light time corrected
       !>              target location.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either the name of the center of motion or the target
       !>         cannot be translated to its NAIF ID code, the error
@@ -23082,7 +23082,7 @@ contains
       !>         error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -23117,7 +23117,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes observer-target states for observers whose
       !>     trajectories are not provided by SPK files.
@@ -23213,7 +23213,7 @@ contains
       !>        SPKCVO {SPK, Constant velocity observer}
       !>        SPKCVT {SPK, Constant velocity target}
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -24040,24 +24040,24 @@ contains
       !>         Central meridian
       !>         longitude (deg):           -1.85409037
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine may not be suitable for work with stars or other
       !>         objects having large distances from the observer, due to loss
       !>         of precision in position vectors.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     S.C. Krening       (JPL)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 25-MAY-2021 (JDR)
       !>
@@ -24370,7 +24370,7 @@ contains
       end associate
       end procedure spkcvo
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG     is the name of a target body. Optionally, you may
       !>              supply the integer ID code for the object as
@@ -24507,7 +24507,7 @@ contains
       !>              legitimate strings to supply to indicate the
       !>              observer is Earth.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STARG    is a Cartesian state vector representing the position
       !>              and velocity of the target body relative to the
@@ -24547,11 +24547,11 @@ contains
       !>              between the observer and the light time corrected
       !>              target location.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If name of target or observer cannot be translated to its
       !>         NAIF ID code, the error SPICE(IDCODENOTFOUND) is signaled.
@@ -24567,7 +24567,7 @@ contains
       !>         the error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes states using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -24584,7 +24584,7 @@ contains
       !>     files or frame kernels. Any such kernels must already be loaded
       !>     at the time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is part of the user interface to the SPICE ephemeris
       !>     system. It allows you to retrieve state information for any
@@ -24599,7 +24599,7 @@ contains
       !>     abcorr.req for detailed information describing the nature and
       !>     calculation of the applied corrections.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -24733,15 +24733,15 @@ contains
       !>                   35.380861           28.653402           12.861524
       !>         Light time (secs)  :    983.97882466162321
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -24750,7 +24750,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.2.0, 01-OCT-2021 (JDR) (NJB)
       !>
@@ -24916,7 +24916,7 @@ contains
       end associate
       end procedure spkezr
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -24928,7 +24928,7 @@ contains
       !>     subroutine provides the state of the target relative to its
       !>     center of motion.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TRGSUB      is the name of an external subroutine that returns
       !>                 the geometric state of the target body relative to a
@@ -25077,7 +25077,7 @@ contains
       !>
       !>     OBS         is the NAIF ID code for an observing body.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STARG       is a Cartesian state vector representing the position
       !>                 and velocity of the target body relative to the
@@ -25117,11 +25117,11 @@ contains
       !>                 between the observer and the light time corrected
       !>                 target location.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the reference frame REF is not a recognized reference
       !>        frame the error 'SPICE(UNKNOWNFRAME)' is signaled.
@@ -25138,7 +25138,7 @@ contains
       !>        the error will be diagnosed by a routine in the call tree
       !>        of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes states using SPK files that have been
       !>     loaded into the SPICE system, normally via the kernel loading
@@ -25155,7 +25155,7 @@ contains
       !>     files or frame kernels. Any such kernels must already be loaded
       !>     at the time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is part of the user interface to the SPICE ephemeris
       !>     system. It allows you to retrieve state information for any
@@ -25548,11 +25548,11 @@ contains
       !>     corrections we suggest you consult the astronomical almanac (page
       !>     B36) for a discussion of how to carry out these corrections.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This routine must not be called by routines of the SPICE
       !>        frame or SPK subsystems.
@@ -25566,18 +25566,18 @@ contains
       !>           ZZSPKFLT
       !>C
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton      (JPL)
       !>     W.L. Taber      (JPL)
       !>     N.J. Bachman    (JPL)
       !>     I.M. Underwood  (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-JUL-2014 (CHA) (NJB) (WLT) (IMU)
       !>
@@ -25587,7 +25587,7 @@ contains
       !>
       !>     Last update was 22-FEB-2012 (CHA) (NJB) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>     None.
       !>
@@ -25836,7 +25836,7 @@ contains
       end associate
       end subroutine zzspkfzt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may
       !>              supply the ID code of the object as an integer
@@ -26037,7 +26037,7 @@ contains
       !>              Case and leading and trailing blanks are not
       !>              significant in the string OBSREF.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is a Cartesian state vector representing the position
       !>              and velocity of the target relative to the specified
@@ -26073,11 +26073,11 @@ contains
       !>              between the observer and the light time corrected
       !>              target location.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either the name of the center of motion or the target
       !>         cannot be translated to its NAIF ID code, an error is signaled
@@ -26105,7 +26105,7 @@ contains
       !>         error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -26140,7 +26140,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes observer-target states for observers whose
       !>     trajectories are not provided by SPK files.
@@ -26236,7 +26236,7 @@ contains
       !>        SPKCVO {SPK, Constant velocity observer}
       !>        SPKCVT {SPK, Constant velocity target}
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -27044,24 +27044,24 @@ contains
       !>         Central meridian
       !>         longitude (deg):           -1.85409037
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine may not be suitable for work with stars or other
       !>         objects having large distances from the observer, due to loss
       !>         of precision in position vectors.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     S.C. Krening       (JPL)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 05-JUL-2021 (JDR)
       !>
@@ -27107,7 +27107,7 @@ contains
       return
       end procedure spkcpo
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TRGSTA   is the geometric state of a target moving at constant
       !>              velocity relative to its center of motion TRGCTR,
@@ -27330,7 +27330,7 @@ contains
       !>              Case and leading and trailing blanks are not
       !>              significant in the string OBSRVR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is a Cartesian state vector representing the position
       !>              and velocity of the target relative to the specified
@@ -27366,11 +27366,11 @@ contains
       !>              between the observer and the light time corrected
       !>              target location.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either the name of the center of motion or the observer
       !>         cannot be translated to its NAIF ID code, the error
@@ -27397,7 +27397,7 @@ contains
       !>         error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -27432,7 +27432,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes observer-target states for targets whose
       !>     trajectories are not provided by SPK files.
@@ -27523,7 +27523,7 @@ contains
       !>        SPKCVO {SPK, Constant velocity observer}
       !>        SPKCVT {SPK, Constant velocity target}
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -28054,24 +28054,24 @@ contains
       !>         Light time (s):           0.00129748
       !>         Target range from SINCPT (km):                    388.97573572
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine may not be suitable for work with stars or other
       !>         objects having large distances from the observer, due to loss
       !>         of precision in position vectors.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     S.C. Krening       (JPL)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 05-JUL-2021 (JDR)
       !>
@@ -28381,7 +28381,7 @@ contains
       end associate
       end procedure spkcvt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TRGPOS   is the fixed (constant) geometric position of a
       !>              target relative to its "center of motion" TRGCTR,
@@ -28583,7 +28583,7 @@ contains
       !>              Case and leading and trailing blanks are not
       !>              significant in the string OBSRVR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is a Cartesian state vector representing the position
       !>              and velocity of the target relative to the specified
@@ -28619,11 +28619,11 @@ contains
       !>              between the observer and the light time corrected
       !>              target location.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either the name of the center of motion or the observer
       !>         cannot be translated to its NAIF ID code, an error is signaled
@@ -28652,7 +28652,7 @@ contains
       !>         error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -28687,7 +28687,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes observer-target states for targets whose
       !>     trajectories are not provided by SPK files.
@@ -28778,7 +28778,7 @@ contains
       !>        SPKCVO {SPK, Constant velocity observer}
       !>        SPKCVT {SPK, Constant velocity target}
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -29279,24 +29279,24 @@ contains
       !>         Light time (s):           0.00129748
       !>         Target range from SINCPT (km):                    388.97573572
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine may not be suitable for work with stars or other
       !>         objects having large distances from the observer, due to loss
       !>         of precision in position vectors.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     S.C. Krening       (JPL)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 25-MAY-2021 (JDR)
       !>

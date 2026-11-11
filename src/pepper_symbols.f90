@@ -11,7 +11,7 @@ submodule (pepper_instance) pepper_symbols
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol to be deleted from the symbol
       !>              table.
@@ -27,7 +27,7 @@ contains
       !>              On input, the table may or may not contain the symbol
       !>              NAME.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -37,23 +37,23 @@ contains
       !>              NAME or its associated values. If NAME is not a symbol,
       !>              the components of the symbol table remain unchanged.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following example the subroutine SYDELC is used to delete
       !>     the symbol "BOHR" and its values from the symbol table.
@@ -78,22 +78,22 @@ contains
       !>                        BROWNIAN MOTION
       !>        FERMI     -->   NUCLEAR FISSION
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -162,7 +162,7 @@ contains
       return
       end procedure sydelc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol to be deleted from the symbol
       !>              table.
@@ -178,7 +178,7 @@ contains
       !>              On input, the table may or may not contain the symbol
       !>              NAME.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -188,23 +188,23 @@ contains
       !>              NAME or its associated values. If NAME is not a symbol,
       !>              the components of the symbol table remain unchanged.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following example the subroutine SYDELD is used to delete
       !>     the symbol "MEAN_ANOM" and its values from the symbol table.
@@ -228,22 +228,22 @@ contains
       !>        K         -->    1.657D-3
       !>        ORBIT_ECC -->    1.671D-2
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -312,7 +312,7 @@ contains
       return
       end procedure sydeld
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol to be deleted from the symbol
       !>              table.
@@ -328,7 +328,7 @@ contains
       !>              On input, the table may or may not contain the symbol
       !>              NAME.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -338,23 +338,23 @@ contains
       !>              NAME or its associated values. If NAME is not a symbol,
       !>              the components of the symbol table remain unchanged.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following example the subroutine SYDELI is used to delete
       !>     the symbol "pens" and its values from the symbol table.
@@ -379,22 +379,22 @@ contains
       !>        erasers -->   6
       !>        pencils -->  12
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -463,7 +463,7 @@ contains
       return
       end procedure sydeli
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose dimension is to be
       !>              returned. If the symbol is not in the symbol table, the
@@ -475,30 +475,30 @@ contains
       !>     TABVAL   are the components of a character symbol table. The table
       !>              may or may not contain the symbol NAME.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the dimension of the symbol NAME. The
       !>     dimension of a symbol is the number of values associated with
       !>     that symbol. If NAME is not in the symbol table, the function
       !>     returns the value zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -524,22 +524,22 @@ contains
       !>     | MILLIKAN     |       0       |
       !>     --------------------------------
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 07-APR-2021 (JDR)
       !>
@@ -604,7 +604,7 @@ contains
       return
       end procedure sydimc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose dimension is to be
       !>              returned. If the symbol is not in the symbol table, the
@@ -616,30 +616,30 @@ contains
       !>     TABVAL   are the components of a double precision symbol table.
       !>              The table may or may not contain the symbol NAME.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the dimension of the symbol NAME. The
       !>     dimension of a symbol is the number of values associated with that
       !>     symbol. If NAME is not in the symbol table, the function returns
       !>     the value zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -667,22 +667,22 @@ contains
       !>     Note that the dimension of "BODY10_AXES" is zero. This is due to
       !>     the fact that "BODY10_AXES" is not in the symbol table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 07-APR-2021 (JDR)
       !>
@@ -747,7 +747,7 @@ contains
       return
       end procedure sydimd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose dimension is to be
       !>              returned. If the symbol is not in the symbol table, the
@@ -759,30 +759,30 @@ contains
       !>     TABVAL   are the components of an integer symbol table. The table
       !>              may or may not contain the symbol NAME.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the dimension of the symbol NAME. The
       !>     dimension of a symbol is the number of values associated with that
       !>     symbol. If NAME is not in the symbol table, the function returns
       !>     the value zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -815,22 +815,22 @@ contains
       !>     Note that the dimension of "tablets" is zero. This is due to the
       !>     fact that "tablets" is not in the symbol table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 07-APR-2021 (JDR)
       !>
@@ -895,7 +895,7 @@ contains
       return
       end procedure sydimi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol to be duplicated.
       !>
@@ -911,7 +911,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of a character symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -920,11 +920,11 @@ contains
       !>              On output, the symbol table contains a new symbol COPY
       !>              whose components are the same as the components of NAME.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the symbol NAME is not in the symbol table, the error
       !>         SPICE(NOSUCHSYMBOL) is signaled.
@@ -938,11 +938,11 @@ contains
       !>     4)  If duplication of the symbol causes an overflow in the
       !>         value table, the error SPICE(VALUETABLEFULL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the symbol NAME is not in the symbol table, no duplicate symbol
       !>     can be made.
@@ -950,7 +950,7 @@ contains
       !>     If the symbol COPY is already in the symbol table, its components
       !>     are replaced by the components of NAME.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -980,22 +980,22 @@ contains
       !>     produces the error SPICE(NOSUCHSYMBOL) because the symbol
       !>     "STRASSMAN" is not in the symbol table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -1164,7 +1164,7 @@ contains
       return
       end procedure sydupc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol to be duplicated.
       !>
@@ -1180,7 +1180,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of a double precision symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -1190,11 +1190,11 @@ contains
       !>              whose components are the same as the components of
       !>              NAME.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the symbol NAME is not in the symbol table, the error
       !>         SPICE(NOSUCHSYMBOL) is signaled.
@@ -1208,11 +1208,11 @@ contains
       !>     4)  If duplication of the symbol causes an overflow in the
       !>         value table, the error SPICE(VALUETABLEFULL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the symbol NAME is not in the symbol table, no duplicate symbol
       !>     can be made.
@@ -1220,7 +1220,7 @@ contains
       !>     If the symbol COPY is already in the symbol table, its components
       !>     are replaced by the components of NAME.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -1250,22 +1250,22 @@ contains
       !>     produces the error SPICE(NOSUCHSYMBOL) because the symbol "M0" is
       !>     not in the symbol table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -1434,7 +1434,7 @@ contains
       return
       end procedure sydupd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol to be duplicated.
       !>
@@ -1450,7 +1450,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of an integer symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -1459,11 +1459,11 @@ contains
       !>              On output, the symbol table contains a new symbol COPY
       !>              whose components are the same as the components of NAME.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the symbol NAME is not in the symbol table, the error
       !>         SPICE(NOSUCHSYMBOL) is signaled.
@@ -1477,11 +1477,11 @@ contains
       !>     4)  If duplication of the symbol causes an overflow in the
       !>         value table, the error SPICE(VALUETABLEFULL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the symbol NAME is not in the symbol table, no duplicate symbol
       !>     can be made.
@@ -1489,7 +1489,7 @@ contains
       !>     If the symbol COPY is already in the symbol table, its components
       !>     are replaced by the components of NAME.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -1521,22 +1521,22 @@ contains
       !>     produces the error SPICE(NOSUCHSYMBOL) because the symbol
       !>     "desks" is not in the symbol table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -1705,7 +1705,7 @@ contains
       return
       end procedure sydupi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NTH      is the index of the symbol to be fetched. If the NTH
       !>              symbol does not exist, FOUND is .FALSE.
@@ -1717,33 +1717,33 @@ contains
       !>              table. The symbol table is not modified by this
       !>              subroutine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NAME     is the name of the NTH symbol in the symbol table.
       !>
       !>     FOUND    is .TRUE. if the NTH symbol is in the symbol table.
       !>              If the NTH symbol is not in the table, FOUND is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is an issue while reading the components of a
       !>         character symbol table, an error is signaled by a routine in
       !>         the call tree of this routine. This normally indicates that
       !>         the character symbol table is corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -1769,15 +1769,15 @@ contains
       !>                     .FALSE.
       !>                     .FALSE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -1785,7 +1785,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
       !>
@@ -1801,7 +1801,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 1.1.0, 17-FEB-1989 (NJB)
       !>
@@ -1845,7 +1845,7 @@ contains
       return
       end procedure syfetc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NTH      is the index of the symbol to be fetched. If the NTH
       !>              symbol does not exist, FOUND is .FALSE.
@@ -1856,33 +1856,33 @@ contains
       !>              The NTH symbol may or may not be in the symbol table.
       !>              The symbol table is not modified by this subroutine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NAME     is the name of the NTH symbol in the symbol table.
       !>
       !>     FOUND    is .TRUE. if the NTH symbol is in the symbol table.
       !>              If the NTH symbol is not in the table, FOUND is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is an issue while reading the components of a double
       !>         precision symbol table, an error is signaled by a routine in
       !>         the call tree of this routine. This normally indicates that
       !>         the double precision symbol table is corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -1908,15 +1908,15 @@ contains
       !>                     .FALSE.
       !>                     .FALSE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -1924,7 +1924,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
       !>
@@ -1940,7 +1940,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 1.1.0, 17-FEB-1989 (NJB)
       !>
@@ -1984,7 +1984,7 @@ contains
       return
       end procedure syfetd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NTH      is the index of the symbol to be fetched. If the NTH
       !>              symbol does not exist, FOUND is .FALSE.
@@ -1996,33 +1996,33 @@ contains
       !>              table. The symbol table is not modified by this
       !>              subroutine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NAME     is the name of the NTH symbol in the symbol table.
       !>
       !>     FOUND    is .TRUE. if the NTH symbol is in the symbol table.
       !>              If the NTH symbol is not in the table, FOUND is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is an issue while reading the components of a
       !>         integer symbol table, an error is signaled by a routine in
       !>         the call tree of this routine. This normally indicates that
       !>         the integer symbol table is corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -2049,15 +2049,15 @@ contains
       !>                     .FALSE.
       !>                     .FALSE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -2065,7 +2065,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
       !>
@@ -2081,7 +2081,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 1.1.0, 17-FEB-1989 (NJB)
       !>
@@ -2125,7 +2125,7 @@ contains
       return
       end procedure syfeti
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose components are to be
       !>              returned. If NAME is not in the symbol table, FOUND is
@@ -2138,7 +2138,7 @@ contains
       !>              table. The symbol table is not modified by this
       !>              subroutine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     N        is the dimension of the symbol NAME. The dimension is
       !>              the number of values associated with the given symbol.
@@ -2154,26 +2154,26 @@ contains
       !>     FOUND    is .TRUE. if NAME is in the symbol table. If NAME is not
       !>              in the table, FOUND is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is an issue while reading the components of a
       !>         character symbol table, an error is signaled by a routine in
       !>         the call tree of this routine. This normally indicates that
       !>         the character symbol table is corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -2206,18 +2206,18 @@ contains
       !>         MILLIKAN                                         .FALSE.
       !>         BORN         1        HYDROGEN ATOM               .TRUE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This subroutine does not check to see if the output array
       !>         VALUES is large enough to hold all of the values associated
       !>         with the symbol NAME. The caller must provide the required
       !>         space.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -2225,7 +2225,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
       !>
@@ -2301,7 +2301,7 @@ contains
       return
       end procedure sygetc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose components are to be
       !>              returned. If NAME is not in the symbol table, FOUND is
@@ -2314,7 +2314,7 @@ contains
       !>              table. The symbol table is not modified by this
       !>              subroutine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     N        is the dimension of the symbol NAME. The dimension is
       !>              the number of values associated with the given symbol.
@@ -2330,26 +2330,26 @@ contains
       !>     FOUND    is .TRUE. if NAME is in the symbol table.
       !>              If NAME is not in the table, FOUND is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is an issue while reading the components of a double
       !>         precision symbol table, an error is signaled by a routine in
       !>         the call tree of this routine. This normally indicates that
       !>         the double precision symbol table is corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -2385,18 +2385,18 @@ contains
       !>                                    0.0D0
       !>         BODY4_PRIME                                         .FALSE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This subroutine does not check to see if the output array
       !>         VALUES is large enough to hold all of the values associated
       !>         with the symbol NAME. The caller must provide the required
       !>         space.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -2404,7 +2404,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
       !>
@@ -2480,7 +2480,7 @@ contains
       return
       end procedure sygetd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose components are to be
       !>              returned. If NAME is not in the symbol table, FOUND is
@@ -2493,7 +2493,7 @@ contains
       !>              table. The symbol table is not modified by this
       !>              subroutine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     N        is the dimension of the symbol NAME. The dimension is
       !>              the number of values associated with the given symbol.
@@ -2509,26 +2509,26 @@ contains
       !>     FOUND    is .TRUE. if NAME is in the symbol table.
       !>              If NAME is not in the table, FOUND is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is an issue while reading the components of a
       !>         integer symbol table, an error is signaled by a routine in
       !>         the call tree of this routine. This normally indicates that
       !>         the integer symbol table is corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -2564,18 +2564,18 @@ contains
       !>                               24
       !>         desks                        .FALSE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This subroutine does not check to see if the output array
       !>         VALUES is large enough to hold all of the values associated
       !>         with the symbol NAME. The caller must provide the required
       !>         space.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -2583,7 +2583,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
       !>
@@ -2659,7 +2659,7 @@ contains
       return
       end procedure sygeti
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose Nth associated value
       !>              is to be returned. If NAME is not in the symbol table,
@@ -2675,7 +2675,7 @@ contains
       !>     TABVAL   are the components of a character symbol table.
       !>              The symbol table is not modified by this subroutine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUES   is the NTH value associated with the symbol NAME.
       !>
@@ -2683,22 +2683,22 @@ contains
       !>              value associated with NAME exists. Otherwise FOUND
       !>              is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is an issue while reading the components of a
       !>         character symbol table, an error is signaled by a routine in
       !>         the call tree of this routine. This normally indicates that
       !>         the character symbol table is corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Two conditions will cause the value of FOUND to be .FALSE.:
       !>
@@ -2707,7 +2707,7 @@ contains
       !>     2)  NTH is out of range ( NTH < 1 or NTH is greater than the
       !>         dimension of the symbol ).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -2737,22 +2737,22 @@ contains
       !>         BORN           2                                 .FALSE.
       !>         MAXWELL        5                                 .FALSE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
       !>
@@ -2824,7 +2824,7 @@ contains
       return
       end procedure synthc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose Nth component is to be
       !>              returned. If NAME is not in the symbol table, FOUND is
@@ -2840,29 +2840,29 @@ contains
       !>     TABVAL   are the components of a double precision symbol table.
       !>              The symbol table is not modified by this subroutine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUES   is the NTH component of the symbol NAME.
       !>
       !>     FOUND    is .TRUE. if NAME is in the symbol table and the NTH
       !>              component of NAME exists. Otherwise FOUND is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is an issue while reading the components of a double
       !>         precision symbol table, an error is signaled by a routine in
       !>         the call tree of this routine. This normally indicates that
       !>         the double precision symbol table is corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Two conditions will cause the value of FOUND to be .FALSE.:
       !>
@@ -2871,7 +2871,7 @@ contains
       !>     2)  NTH is out of range ( NTH < 1 or NTH is greater than the
       !>         dimension of the symbol ).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -2904,22 +2904,22 @@ contains
       !>         BODY4_PRIME      1                             .FALSE.
       !>         ORBIT_ECC       -5                             .FALSE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
       !>
@@ -2991,7 +2991,7 @@ contains
       return
       end procedure synthd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose Nth component is to be
       !>              returned. If NAME is not in the symbol table, FOUND is
@@ -3007,29 +3007,29 @@ contains
       !>     TABVAL   are the components of an integer symbol table.
       !>              The symbol table is not modified by this subroutine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUES   is the NTH component of the symbol NAME.
       !>
       !>     FOUND    is .TRUE. if NAME is in the symbol table and the NTH
       !>              component of NAME exists. Otherwise FOUND is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is an issue while reading the components of a
       !>         integer symbol table, an error is signaled by a routine in
       !>         the call tree of this routine. This normally indicates that
       !>         the integer symbol table is corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Two conditions will cause the value of FOUND to be .FALSE.:
       !>
@@ -3038,7 +3038,7 @@ contains
       !>     2)  NTH is out of range ( NTH < 1 or NTH is greater than the
       !>         dimension of the symbol ).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -3070,22 +3070,22 @@ contains
       !>         pencils                             .FALSE.
       !>         chairs                              .FALSE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -3157,7 +3157,7 @@ contains
       return
       end procedure synthi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose components are to be
       !>              ordered.
@@ -3166,7 +3166,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of a character symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -3176,24 +3176,24 @@ contains
       !>              according to ASCII collating sequence. If NAME is not in
       !>              the symbol table, the symbol table is not modified.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the symbol NAME is not in the symbol table, the symbol table
       !>     is not modified.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -3222,22 +3222,22 @@ contains
       !>     will not modify the symbol table because the symbol "MAXWELL" is
       !>     not in the symbol table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -3294,7 +3294,7 @@ contains
       return
       end procedure syordc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose components are to be
       !>              ordered.
@@ -3303,7 +3303,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of a double precision symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -3313,24 +3313,24 @@ contains
       !>              increasing order. If NAME is not in the symbol table, the
       !>              symbol table is not modified.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the symbol NAME is not in the symbol table, the symbol table
       !>     is not modified.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -3365,22 +3365,22 @@ contains
       !>     will not modify the symbol table because the symbol "BODY4_PRIME"
       !>     is not in the symbol table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -3437,7 +3437,7 @@ contains
       return
       end procedure syordd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose components are to be
       !>              ordered.
@@ -3446,7 +3446,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of an integer symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -3456,24 +3456,24 @@ contains
       !>              increasing order. If NAME is not in the symbol table, the
       !>              symbol table is not modified.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the symbol NAME is not in the symbol table, the symbol table
       !>     is not modified.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -3510,22 +3510,22 @@ contains
       !>     will not modify the symbol table because the symbol "desks" is
       !>     not in the symbol table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -3582,7 +3582,7 @@ contains
       return
       end procedure syordi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated value is to
       !>              be popped.
@@ -3591,7 +3591,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of a character symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -3610,25 +3610,25 @@ contains
       !>     FOUND    is .TRUE. if NAME is in the symbol table, otherwise it is
       !>              .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If there are no remaining values associated with the symbol
       !>     after VALUE has been popped, the symbol is removed from the
       !>     symbol table.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -3667,22 +3667,22 @@ contains
       !>      because "FERMI" had only one value associated with it, it was
       !>      removed from the symbol table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -3773,7 +3773,7 @@ contains
       return
       end procedure sypopc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated value is to
       !>              be popped.
@@ -3782,7 +3782,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of a double precision symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -3801,25 +3801,25 @@ contains
       !>     FOUND    is .TRUE. if NAME is in the symbol table, otherwise
       !>              it is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If there are no remaining values associated with the symbol
       !>     after VALUE has been popped, the symbol is removed from the
       !>     symbol table.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -3866,22 +3866,22 @@ contains
       !>      "K" had only one value associated with it, it was removed
       !>      from the symbol table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -3972,7 +3972,7 @@ contains
       return
       end procedure sypopd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated value is to
       !>              be popped.
@@ -3981,7 +3981,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of an integer symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -4000,25 +4000,25 @@ contains
       !>     FOUND    is .TRUE. if NAME is in the symbol table, otherwise it is
       !>              .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If there are no remaining values associated with the symbol
       !>     after VALUE has been popped, the symbol is removed from the
       !>     symbol table.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -4061,15 +4061,15 @@ contains
       !>      "erasers" had only one value associated with it, it was removed
       !>      from the symbol table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     L.S. Elson         (JPL)
@@ -4077,7 +4077,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -4170,7 +4170,7 @@ contains
       return
       end procedure sypopi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated values are
       !>              to be set.
@@ -4189,7 +4189,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of a character symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -4201,11 +4201,11 @@ contains
       !>              symbol is created, provided there is room in the symbol
       !>              table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the addition of a new symbol causes an overflow in the
       !>         name table, the error SPICE(NAMETABLEFULL) is signaled.
@@ -4218,11 +4218,11 @@ contains
       !>
       !>     4)  If N < 1, the error SPICE(INVALIDARGUMENT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This subroutine is like SYSETC, but SYPUTC allows **several**
       !>     values to be associated with a symbol.
@@ -4232,7 +4232,7 @@ contains
       !>     If NAME is not in the symbol table, a new symbol is created,
       !>     provided there is room in the symbol table.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -4277,22 +4277,22 @@ contains
       !>     Note that the previous values associated with PAULI have been
       !>     replaced by the values in VALUES.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -4429,7 +4429,7 @@ contains
       return
       end procedure syputc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated values are
       !>              to be set.
@@ -4449,7 +4449,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of a double precision symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -4461,11 +4461,11 @@ contains
       !>              symbol table, a new symbol is created, provided
       !>              there is room in the symbol table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the addition of a new symbol causes an overflow in the
       !>         name table, the error SPICE(NAMETABLEFULL) is signaled.
@@ -4478,11 +4478,11 @@ contains
       !>
       !>     4)  If N < 1, the error SPICE(INVALIDARGUMENT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This subroutine is like SYSETC, but SYPUTC allows **several**
       !>     values to be associated with a symbol.
@@ -4492,7 +4492,7 @@ contains
       !>     If NAME is not in the symbol table, a new symbol is created,
       !>     provided there is room in the symbol table.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -4547,15 +4547,15 @@ contains
       !>     Note that the previous values associated with "K" have been
       !>     replaced by the values in VALUES.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -4563,7 +4563,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -4706,7 +4706,7 @@ contains
       return
       end procedure syputd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated values are to
       !>              be set.
@@ -4725,7 +4725,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of an integer symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -4737,11 +4737,11 @@ contains
       !>              symbol is created, provided there is room in the symbol
       !>              table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the addition of a new symbol causes an overflow in the
       !>         name table, the error SPICE(NAMETABLEFULL) is signaled.
@@ -4754,11 +4754,11 @@ contains
       !>
       !>     4)  If N < 1, the error SPICE(INVALIDARGUMENT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This subroutine is like SYSETC, but SYPUTC allows **several**
       !>     values to be associated with a symbol.
@@ -4768,7 +4768,7 @@ contains
       !>     If NAME is not in the symbol table, a new symbol is created,
       !>     provided there is room in the symbol table.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -4822,15 +4822,15 @@ contains
       !>     Note that the previous values associated with "pens" have been
       !>     replaced by the values in VALUES.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -4838,7 +4838,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -4976,7 +4976,7 @@ contains
       return
       end procedure syputi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose subset of associated
       !>              values to be returned. If NAME is not in the symbol
@@ -4995,7 +4995,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are components of the character symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUES   is a subset of the values associated with the
       !>              symbol NAME. If the subset specified by BEGIN and
@@ -5008,22 +5008,22 @@ contains
       !>              END > the dimension of NAME, or NAME is not
       !>              in the symbol table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is an issue while reading the components of a
       !>         character symbol table, an error is signaled by a routine in
       !>         the call tree of this routine. This normally indicates that
       !>         the character symbol table is corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     FOUND will be false if the bounds of the subset specified by
       !>     BEGIN and END are out of range. Values of BEGIN and END that
@@ -5031,7 +5031,7 @@ contains
       !>     END < 1, or END > the dimension of NAME. FOUND is also false
       !>     if the symbol NAME is not in the symbol table.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -5080,17 +5080,17 @@ contains
       !>     -  In the 6th example, END is greater than the dimension of the
       !>        symbol 'BOHR'.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This subroutine does not check to see if the output array
       !>         VALUES is large enough to hold the selected set of values.
       !>         The caller must provide the required space.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -5098,7 +5098,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
       !>
@@ -5184,7 +5184,7 @@ contains
       return
       end procedure syselc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose subset of associated
       !>              values to be returned. If NAME is not in the symbol
@@ -5203,7 +5203,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are components of the double precision symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUES   is a subset of the values associated with the
       !>              symbol NAME. If the subset specified by BEGIN and
@@ -5216,22 +5216,22 @@ contains
       !>              END > the dimension of NAME, or NAME is not
       !>              in the symbol table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is an issue while reading the components of a double
       !>         precision symbol table, an error is signaled by a routine in
       !>         the call tree of this routine. This normally indicates that
       !>         the double precision symbol table is corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     FOUND will be false if the bounds of the subset specified by
       !>     BEGIN and END are out of range. Values of BEGIN and END which
@@ -5239,7 +5239,7 @@ contains
       !>     END < 1, or END > the dimension of NAME. FOUND is also false
       !>     if the symbol NAME is not in the symbol table.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -5287,17 +5287,17 @@ contains
       !>     -  In the 6th example, END is greater than the dimension of the
       !>        symbol 'K'.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This subroutine does not check to see if the output array
       !>         VALUES is large enough to hold the selected set of values.
       !>         The caller must provide the required space.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -5305,7 +5305,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
       !>
@@ -5391,7 +5391,7 @@ contains
       return
       end procedure syseld
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose subset of associated
       !>              values to be returned. If NAME is not in the symbol
@@ -5410,7 +5410,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are components of the integer symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUES   is a subset of the values associated with the
       !>              symbol NAME. If the subset specified by BEGIN and
@@ -5423,22 +5423,22 @@ contains
       !>              END > the dimension of NAME, or NAME is not
       !>              in the symbol table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is an issue while reading the components of a
       !>         integer symbol table, an error is signaled by a routine in
       !>         the call tree of this routine. This normally indicates that
       !>         the integer symbol table is corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     FOUND will be false if the bounds of the subset specified by
       !>     BEGIN and END are out of range. Values of BEGIN and END which
@@ -5446,7 +5446,7 @@ contains
       !>     END < 1, or END > the dimension of NAME. FOUND is also false
       !>     if the symbol NAME is not in the symbol table.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -5497,17 +5497,17 @@ contains
       !>     -  In the 6th example, END is greater than the dimension of the
       !>        symbol 'pens'.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This subroutine does not check to see if the output array
       !>         VALUES is large enough to hold the selected set of values.
       !>         The caller must provide the required space.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -5515,7 +5515,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
       !>
@@ -5601,7 +5601,7 @@ contains
       return
       end procedure syseli
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated value is to
       !>              be set.
@@ -5617,7 +5617,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of a character symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -5628,11 +5628,11 @@ contains
       !>              NAME is not in the symbol table, a new symbol is created,
       !>              provided there is room in the symbol table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the addition of a new symbol causes an overflow in the
       !>         name table, the error SPICE(NAMETABLEFULL) is signaled.
@@ -5643,18 +5643,18 @@ contains
       !>     3)  If the addition of a new symbol causes an overflow in the
       !>         value table, the error SPICE(VALUETABLEFULL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If NAME has values associated with it, they are removed, and VALUE
       !>     becomes the only value associated with NAME. If NAME is not in the
       !>     symbol table, a new symbol is created, provided there is room in
       !>     the symbol table.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -5701,22 +5701,22 @@ contains
       !>      A new symbol is created only if there is room in the symbol
       !>      table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 17-JUN-2021 (JDR)
       !>
@@ -5830,7 +5830,7 @@ contains
       return
       end procedure sysetc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated value is to
       !>              be set.
@@ -5846,7 +5846,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of a double precision symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -5857,11 +5857,11 @@ contains
       !>              NAME is not in the symbol table, a new symbol is created,
       !>              provided there is room in the symbol table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the addition of a new symbol causes an overflow in the
       !>         name table, the error SPICE(NAMETABLEFULL) is signaled.
@@ -5872,18 +5872,18 @@ contains
       !>     3)  If the addition of a new symbol causes an overflow in the
       !>         value table, the error SPICE(VALUETABLEFULL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If NAME has values associated with it, they are removed, and VALUE
       !>     becomes the only value associated with NAME. If NAME is not in the
       !>     symbol table, a new symbol is created, provided there is room in
       !>     the symbol table.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -5926,22 +5926,22 @@ contains
       !>     A new symbol is created only if there is room in the symbol
       !>     table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 17-JUN-2021 (JDR)
       !>
@@ -6055,7 +6055,7 @@ contains
       return
       end procedure sysetd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated value is to
       !>              be set.
@@ -6071,7 +6071,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of an integer symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -6082,11 +6082,11 @@ contains
       !>              NAME is not in the symbol table, a new symbol is created,
       !>              provided there is room in the symbol table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the addition of a new symbol causes an overflow in the
       !>         name table, the error SPICE(NAMETABLEFULL) is signaled.
@@ -6097,18 +6097,18 @@ contains
       !>     3)  If the addition of a new symbol causes an overflow in the
       !>         value table, the error SPICE(VALUETABLEFULL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If NAME has values associated with it, they are removed, and VALUE
       !>     becomes the only value associated with NAME. If NAME is not in the
       !>     symbol table, a new symbol is created, provided there is room in
       !>     the symbol table.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -6153,22 +6153,22 @@ contains
       !>     A new symbol is created only if there is room in the symbol
       !>     table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 17-JUN-2021 (JDR)
       !>
@@ -6282,7 +6282,7 @@ contains
       return
       end procedure syseti
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated values are to
       !>              be transposed.
@@ -6297,7 +6297,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are components of the character symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -6307,11 +6307,11 @@ contains
       !>              tables are not modified. Otherwise, the values that IDX1
       !>              and IDX2 refer to are transposed in the value table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If IDX1 < 1, IDX2 < 1, IDX1 > the dimension of NAME, or
       !>         IDX2 > the dimension of NAME, the error SPICE(INVALIDINDEX)
@@ -6320,15 +6320,15 @@ contains
       !>     2)  If NAME is not in the symbol table, the symbol tables are not
       !>         modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -6360,15 +6360,15 @@ contains
       !>
       !>     causes the error SPICE(INVALIDINDEX) to be signaled.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -6376,7 +6376,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 08-APR-2021 (JDR)
       !>
@@ -6398,7 +6398,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 09-SEP-2005 (NJB)
       !>
@@ -6479,7 +6479,7 @@ contains
       return
       end procedure sytrnc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated values are
       !>              to be transposed. If NAME is not in the symbol table,
@@ -6499,7 +6499,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are components of the double precision symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -6509,11 +6509,11 @@ contains
       !>              tables are not modified. Otherwise, the values that IDX1
       !>              and IDX2 refer to are transposed in the value table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If IDX1 < 1, IDX2 < 1, IDX1 > the dimension of NAME, or
       !>         IDX2 > the dimension of NAME, the error SPICE(INVALIDINDEX)
@@ -6522,15 +6522,15 @@ contains
       !>     2)  If NAME is not in the symbol table, the symbol tables are not
       !>         modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -6563,15 +6563,15 @@ contains
       !>
       !>     causes the error SPICE(INVALIDINDEX) to be signaled.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -6579,7 +6579,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 08-APR-2021 (JDR)
       !>
@@ -6601,7 +6601,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 09-SEP-2005 (NJB)
       !>
@@ -6683,7 +6683,7 @@ contains
       return
       end procedure sytrnd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated values are
       !>              to be transposed. If NAME is not in the symbol table,
@@ -6699,7 +6699,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are components of the integer symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -6709,11 +6709,11 @@ contains
       !>              tables are not modified. Otherwise, the values that IDX1
       !>              and IDX2 refer to are transposed in the value table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If IDX1 < 1, IDX2 < 1, IDX1 > the dimension of NAME, or
       !>         IDX2 > the dimension of NAME, the error SPICE(INVALIDINDEX)
@@ -6722,15 +6722,15 @@ contains
       !>     2)  If NAME is not in the symbol table, the symbol tables are not
       !>         modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -6765,15 +6765,15 @@ contains
       !>
       !>     causes the error SPICE(INVALIDINDEX) to be signaled.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -6781,7 +6781,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 08-APR-2021 (JDR)
       !>
@@ -6803,7 +6803,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 09-SEP-2005 (NJB)
       !>
@@ -6884,7 +6884,7 @@ contains
       return
       end procedure sytrni
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol onto which the value is to
       !>              be enqueued. If NAME is not in the symbol table, a new
@@ -6900,7 +6900,7 @@ contains
       !>              The symbol NAME may or may not be in the symbol
       !>              table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -6911,26 +6911,26 @@ contains
       !>              NAME. The pointer table is updated to reflect the change
       !>              in the dimension of the symbol.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the addition of the new value to the symbol table causes an
       !>         overflow in the value table, the error SPICE(VALUETABLEFULL)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the symbol NAME is not in the symbol table, a new symbol is
       !>     created which has the value VALUE.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -6971,22 +6971,22 @@ contains
       !>
       !>      Note that a new symbol "HAHN" was created by the last call.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -7070,7 +7070,7 @@ contains
       return
       end procedure syenqc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol onto which the value is to
       !>              be enqueued. If NAME is not in the symbol table, a new
@@ -7086,7 +7086,7 @@ contains
       !>              The symbol NAME may or may not be in the symbol
       !>              table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -7097,26 +7097,26 @@ contains
       !>              NAME. The pointer table is updated to reflect the change
       !>              in the dimension of the symbol.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the addition of the new value to the symbol table causes an
       !>         overflow in the value table, the error SPICE(VALUETABLEFULL)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the symbol NAME is not in the symbol table, a new symbol is
       !>     created which has the value VALUE.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -7162,22 +7162,22 @@ contains
       !>                                1.99096871D-7
       !>         ORBIT_ECC       -->    1.671D-2
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -7261,7 +7261,7 @@ contains
       return
       end procedure syenqd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol onto which the value is to
       !>              be enqueued. If NAME is not in the symbol table, a new
@@ -7277,7 +7277,7 @@ contains
       !>              The symbol NAME may or may not be in the symbol
       !>              table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -7288,26 +7288,26 @@ contains
       !>              NAME. The pointer table is updated to reflect the change
       !>              in the dimension of the symbol.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the addition of the new value to the symbol table causes an
       !>         overflow in the value table, the error SPICE(VALUETABLEFULL)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the symbol NAME is not in the symbol table, a new symbol is
       !>     created which has the value VALUE.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -7349,22 +7349,22 @@ contains
       !>
       !>     Notice that the symbol "desks" was created by the last call.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -7448,7 +7448,7 @@ contains
       return
       end procedure syenqi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol onto which the value is to
       !>              be pushed.
@@ -7460,7 +7460,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of a character symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -7471,26 +7471,26 @@ contains
       !>              NAME is not originally in the symbol table, a new symbol
       !>              is created.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the addition of the new value to the symbol table causes an
       !>         overflow in the value table, the error SPICE(VALUETABLEFULL)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the symbol NAME is not in the symbol table, a new symbol
       !>     is created.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -7533,22 +7533,22 @@ contains
       !>
       !>     Note that a new symbol "MILLIKAN" was created by the last call.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -7632,7 +7632,7 @@ contains
       return
       end procedure sypshc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol onto which the value is to
       !>              be pushed.
@@ -7644,7 +7644,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of a double precision symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -7655,26 +7655,26 @@ contains
       !>              NAME is not originally in the symbol table, a new symbol
       !>              is created.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the addition of the new value to the symbol table causes an
       !>         overflow in the value table, the error SPICE(VALUETABLEFULL)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the symbol NAME is not in the symbol table, a new symbol
       !>     is created.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -7721,22 +7721,22 @@ contains
       !>
       !>     Note that a new symbol "BODY4_GM" was created by the last call.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -7820,7 +7820,7 @@ contains
       return
       end procedure sypshd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol onto which the value is to
       !>              be pushed.
@@ -7832,7 +7832,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are the components of an integer symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -7843,26 +7843,26 @@ contains
       !>              NAME is not originally in the symbol table, a new symbol
       !>              is created.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the addition of the new value to the symbol table causes an
       !>         overflow in the value table, the error SPICE(VALUETABLEFULL)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the symbol NAME is not in the symbol table, a new symbol
       !>     is created.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -7906,22 +7906,22 @@ contains
       !>
       !>     Note that a new symbol "desks" was created by the last call.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -8005,7 +8005,7 @@ contains
       return
       end procedure sypshi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     OLD      is the name of the symbol to be renamed. If OLD is
       !>              not in the symbol table, the tables are not modified.
@@ -8018,7 +8018,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are components of the character symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -8027,24 +8027,24 @@ contains
       !>              associated with NEW. If OLD is not in the symbol
       !>              table, the symbol tables are not modified.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the symbol OLD is not in the symbol table, the error
       !>         SPICE(NOSUCHSYMBOL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -8099,22 +8099,22 @@ contains
       !>     the error SPICE(NOSUCHSYMBOL) because the symbol "FERMI" does
       !>     not exist in the symbol table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-JUN-2021 (JDR)
       !>
@@ -8130,7 +8130,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 28-DEC-1989 (HAN)
       !>
@@ -8221,7 +8221,7 @@ contains
       return
       end procedure syrenc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     OLD      is the name of the symbol to be renamed. If OLD is
       !>              not in the symbol table, the tables are not modified.
@@ -8234,7 +8234,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are components of the double precision symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -8243,24 +8243,24 @@ contains
       !>              associated with NEW. If OLD is not in the symbol
       !>              table, the symbol tables are not modified.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the symbol OLD is not in the symbol table, the error
       !>         SPICE(NOSUCHSYMBOL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -8319,22 +8319,22 @@ contains
       !>     the error SPICE(NOSUCHSYMBOL) because the symbol "K" does not
       !>     exist in the symbol table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-JUN-2021 (JDR)
       !>
@@ -8350,7 +8350,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 1.1.0, 17-FEB-1989 (NJB)
       !>
@@ -8435,7 +8435,7 @@ contains
       return
       end procedure syrend
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     OLD      is the name of the symbol to be renamed. If OLD is
       !>              not in the symbol table, the tables are not modified.
@@ -8448,7 +8448,7 @@ contains
       !>     TABPTR,
       !>     TABVAL   are components of the integer symbol table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -8457,24 +8457,24 @@ contains
       !>              associated with NEW. If OLD is not in the symbol
       !>              table, the symbol tables are not modified.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the symbol OLD is not in the symbol table, the error
       !>         SPICE(NOSUCHSYMBOL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The contents of the symbol table are:
       !>
@@ -8527,22 +8527,22 @@ contains
       !>     does signal the error SPICE(NOSUCHSYMBOL) because the symbol
       !>     "chairs" does not exist in the symbol table.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-JUN-2021 (JDR)
       !>
@@ -8558,7 +8558,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 2.0.0, 28-DEC-1989 (HAN)
       !>

@@ -616,24 +616,24 @@ contains
 !
 !     Nobody has any business calling SPKBSR directly.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is a string containing the name of the file to be loaded.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is an integer handle assigned to the file upon loading.
       !>              Almost every other SPK routine will subsequently use this
       !>              number to refer to the file.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     FTSIZE   is the maximum number of SPK files that may
       !>              be loaded simultaneously under any circumstances.
       !>              FTSIZE is currently set to match the maximum number
       !>              of DAF files that may be loaded simultaneously.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an attempt is made to open more DAF files than is specified
       !>         by the parameter FTSIZE in DAFAH, an error is signaled by a
@@ -646,30 +646,30 @@ contains
       !>         situation to arise: the DAF system will trap the error before
       !>         this routine has the chance.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A file specified by FNAME, to be loaded. The file is assigned a
       !>     handle by SPKLEF, which will be used by most other routines to
       !>     refer to it.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If there is room for a new file in the file table, SPKLEF creates
       !>     an entry for it and loads the file for reading using DAFOPR.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See $Examples in SPKBSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -678,7 +678,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     R.E. Thurman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.2, 17-JUN-2021 (JDR)
       !>
@@ -734,7 +734,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (RET)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 4.0.0, 28-DEC-2001 (NJB)
       !>
@@ -837,28 +837,28 @@ contains
       return
       end procedure spklef
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle assigned to the file upon loading.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  Unloading a file that has not been loaded is a no-op.
       !>         No error is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The file referred to by HANDLE is unloaded.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A file is removed from consideration by the readers by a call to
       !>     SPKUEF.
@@ -870,19 +870,19 @@ contains
       !>     If the file specified by HANDLE is not currently loaded in the
       !>     SPK system, no action is taken.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See $Examples in SPKBSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -891,7 +891,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     R.E. Thurman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.1.2, 17-JUN-2021 (JDR)
       !>
@@ -951,7 +951,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (RET)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 4.1.0, 08-SEP-2005 (NJB)
       !>
@@ -1022,14 +1022,14 @@ contains
       return
       end procedure spkuef
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the NAIF integer code of an ephemeris object,
       !>              typically a solar system body.
       !>
       !>     ET       is a time, in seconds past the epoch J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the handle of the SPK file containing a located
       !>              segment.
@@ -1041,11 +1041,11 @@ contains
       !>     FOUND    is a logical flag indicating whether a requested segment
       !>              was found or not.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an attempt is made to call SPKSFS when there aren't any
       !>         files loaded, the error SPICE(NOLOADEDFILES) is signaled.
@@ -1058,22 +1058,22 @@ contains
       !>         double precision records are NOT treated as SPICE errors
       !>         and are not signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     All SPK files loaded by FURNSH or SPKLEF are potential search
       !>     targets for SPKSFS.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine finds the highest-priority segment, in any loaded
       !>     SPK file, such that the segment provides data for the specified
       !>     body and epoch.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See $Examples in SPKBSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If Fortran I/O errors occur while searching a loaded SPK
       !>         file, the internal state of this suite of routines may
@@ -1081,11 +1081,11 @@ contains
       !>         by unloading the pertinent SPK files and then re-loading
       !>         them.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -1093,7 +1093,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     R.E. Thurman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.3.0, 13-OCT-2021 (JDR) (NJB)
       !>
@@ -1192,7 +1192,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (RET)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 4.2.0, 01-MAR-2011 (NJB)
       !>
@@ -2030,24 +2030,24 @@ contains
 !
 !     Nobody has any business calling PCKBSR directly.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the character name of the file to be loaded.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the integer handle assigned to the file upon loading.
       !>              Other PCK routines will subsequently use this number to
       !>              refer to the file.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     FTSIZE   is the maximum number of PCK files that may be loaded
       !>              simultaneously under any circumstances. FTSIZE is
       !>              currently set to match the maximum number of DAF files
       !>              that may be loaded simultaneously.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an attempt is made to open more DAF files than is
       !>         specified by the parameter FTSIZE in DAF system, an error
@@ -2065,39 +2065,39 @@ contains
       !>         system. See the DAF Required Reading daf.req or individual DAF
       !>         routines for details.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A file specified by FNAME, to be loaded. The file is assigned a
       !>     handle by PCKLOF, which will be used by other routines to refer
       !>     to it.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If there is room for a new file in the file table, PCKLOF creates
       !>     an entry for it, and opens the file for reading.
       !>
       !>     Also, if the file table is empty, PCKLOF initializes it.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See $Examples in PCKBSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.2, 26-OCT-2021 (JDR)
       !>
@@ -2156,29 +2156,29 @@ contains
       return
       end procedure pcklof
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle assigned to the PCK file upon
       !>              loading.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  Unloading a file that has not been loaded is a no-op.
       !>         No error is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The file referred to by HANDLE is unloaded.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A PCK file is removed from consideration during a search by the
       !>     readers by a call to PCKUOF.
@@ -2190,26 +2190,26 @@ contains
       !>     If the file specified by HANDLE is not currently loaded in the
       !>     PCK system, no action is taken.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See $Examples in PCKBSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.1.3, 09-JUL-2020 (JDR)
       !>
@@ -2252,14 +2252,14 @@ contains
       return
       end procedure pckuof
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the NAIF integer code of an ephemeris object,
       !>              typically a solar system body.
       !>
       !>     ET       is a time, in seconds past the epoch J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the handle of the binary PCK file containing a
       !>              located segment.
@@ -2271,31 +2271,31 @@ contains
       !>     FOUND    is a logical flag indicating whether a requested segment
       !>              was found or not.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an attempt is made to call PCKSFS when there aren't any
       !>         files loaded, the error SPICE(NOLOADEDFILES) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     All files loaded by PCKLOF are potential search targets for
       !>     PCKSFS.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine finds the highest-priority segment, in any loaded
       !>     PCK file, such that the segment provides data for the specified
       !>     body and epoch.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See $Examples in PCKBSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If Fortran I/O errors occur while searching a loaded PCK
       !>         file, the internal state of this suite of routines may
@@ -2303,18 +2303,18 @@ contains
       !>         by unloading the pertinent PCK files and then re-loading
       !>         them.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.3.0, 13-OCT-2021 (JDR) (NJB)
       !>
@@ -3271,24 +3271,24 @@ contains
 !
 !     Nobody has any business calling CKBSR directly.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of a C-kernel file to be loaded.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is an integer handle assigned to the file upon loading.
       !>              Almost every other CK routine will subsequently use
       !>              this number to refer to the file.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     FTSIZE   is the maximum number of CK files that may
       !>              be loaded simultaneously under any circumstances.
       !>              FTSIZE is currently set to match the maximum number
       !>              of DAF files that may be loaded simultaneously.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an attempt is made to load more DAF files than is
       !>         specified by the parameter FTSIZE in DAF system, an error
@@ -3309,13 +3309,13 @@ contains
       !>         it will become the "last-loaded" file. The readers
       !>         search the last-loaded file first.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The C-kernel file specified by FNAME is loaded. The file is
       !>     assigned an integer handle by CKLPF. Other CK routines will refer
       !>     to this file by its handle.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Before a file can be read by the C-kernel readers, it must be
       !>     loaded by CKLPF, which among other things load the file into
@@ -3338,19 +3338,19 @@ contains
       !>     in which they were loaded. That is, last-loaded files are
       !>     searched first.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See $Examples in CKBSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -3359,7 +3359,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.2, 25-OCT-2021 (JDR)
       !>
@@ -3421,7 +3421,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 4.1.0, 20-NOV-2001 (NJB)
       !>
@@ -3515,47 +3515,47 @@ contains
       return
       end procedure cklpf
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle assigned to the CK file upon
       !>              loading.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  Unloading a file that has not been loaded is a no-op.
       !>         No error is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The file referred to by HANDLE is unloaded.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Unloading a file with CKUPF removes that file from consideration
       !>     by the CK readers. In doing so, it frees up space for another
       !>     file to be loaded.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See $Examples in CKBSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -3564,7 +3564,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.3.2, 16-JUL-2020 (JDR)
       !>
@@ -3616,7 +3616,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 4.3.0, 24-FEB-2011 (NJB)
       !>
@@ -3691,7 +3691,7 @@ contains
       return
       end procedure ckupf
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INST     is the NAIF ID of an instrument.
       !>
@@ -3707,25 +3707,25 @@ contains
       !>              velocity data will be checked. If .FALSE., segments
       !>              containing just pointing data will also be considered.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If no files have been loaded, the error SPICE(NOLOADEDFILES)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     All files loaded by CKLPF are potential search targets for
       !>     CKSNS.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     CKBSS sets up a search for segments by CKSNS. It records the
       !>     instrument and time to be searched for, and whether to require
@@ -3749,19 +3749,19 @@ contains
       !>        3) If angular velocity data is required, as indicated by
       !>           NEEDAV, the segment contains angular velocity data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See $Examples in CKBSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -3769,7 +3769,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.1.2, 13-JAN-2021 (JDR)
       !>
@@ -3807,7 +3807,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 4.1.0, 20-NOV-2001 (NJB)
       !>
@@ -3870,11 +3870,11 @@ contains
          end subroutine no_ck_files
       end procedure ckbss
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is an integer handle of the file containing the
       !>              segment matching the instrument and time
@@ -3889,11 +3889,11 @@ contains
       !>              otherwise. If FOUND is .FALSE., the values of the
       !>              other arguments are meaningless.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If CKSNS is called without CKBSS ever having been called,
       !>         the error SPICE(CALLCKBSSFIRST) is signaled.
@@ -3902,12 +3902,12 @@ contains
       !>         FOUND is set to .FALSE., but the values of HANDLE, DESCR,
       !>         and SEGID will be meaningless.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     All files loaded by CKLPF are potential search targets for
       !>     CKSNS. The files are all referred to by their integer handles.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     CKSNS is used to locate segments based on the search criteria
       !>     established by the most recent call to CKBSS. When a segment
@@ -3944,11 +3944,11 @@ contains
       !>     CKSNS also buffers segment descriptors and identifiers, to
       !>     attempt to minimize file reads.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See $Examples in CKBSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This subroutine assumes that a search has been initiated by
       !>         a call to CKBSS.
@@ -3957,11 +3957,11 @@ contains
       !>         be started via a call to CKBSS before this routine may
       !>         be called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -3970,7 +3970,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.6.0, 13-OCT-2021 (JDR) (NJB)
       !>
@@ -4057,7 +4057,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 4.5.0, 24-FEB-2011 (NJB)
       !>
@@ -4220,36 +4220,36 @@ contains
       end associate
       end procedure cksns
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     FOUND    is returned with the value .TRUE. if at least one
       !>              C-kernel is currently loaded. Otherwise it returns
       !>              the value .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point allows the user to query the set of "loaded"
       !>     C-kernels to make sure that at least one C-kernel has been loaded.
       !>     This allows you to avoid making a search of an empty set of
       !>     loaded kernels which forces a SPICELIB error to be signaled.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4303,22 +4303,22 @@ contains
       !>         No CK has been loaded.
       !>         Calling CK readers will result in an error.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.0.4, 16-JUL-2020 (JDR)
       !>
@@ -4624,24 +4624,24 @@ contains
 !
 !     Nobody has any business calling ZZDSKBSR directly.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME      is the name of a DSK file to be loaded.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE     is an integer handle assigned to the file upon loading.
       !>                Almost every other DSK routine will subsequently use
       !>                this number to refer to the file.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     FTSIZE     is the maximum number of DSK files that may
       !>                be loaded simultaneously under any circumstances.
       !>                FTSIZE is currently set to match the maximum number
       !>                of DAS files that may be loaded simultaneously.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If an attempt is made to open more DAS files than is specified
       !>        by the parameter FTSIZE in DASAH, an error is signaled by a
@@ -4661,13 +4661,13 @@ contains
       !>        it will become the "last-loaded" file.  The readers
       !>        search the last-loaded file first.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The DSK file specified by FNAME is loaded. The file is assigned
       !>     an integer handle by ZZDSKLSF. Other DSK routines will refer to
       !>     this file by its handle.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See Particulars above, in ZZDSKBSR.
       !>
@@ -4678,25 +4678,25 @@ contains
       !>     in which they were loaded.  That is, last-loaded files are
       !>     searched first.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the Example above, in ZZDSKBSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     R.E. Thurman   (JPL)
       !>     I.M. Underwood (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
       !>
@@ -4716,7 +4716,7 @@ contains
       !>
       !>       02-APR-2010 (NJB) (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>     None.
       !>
@@ -4763,28 +4763,28 @@ contains
       return
       end procedure zzdsklsf
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     Integer handle assigned to the file upon loading.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) Unloading a file that has not been loaded is a no-op.
       !>        No error is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The file referred to by HANDLE is unloaded.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See Particulars section above, in ZZDSKBSR.
       !>
@@ -4792,25 +4792,25 @@ contains
       !>     consideration by the DSK readers. In doing so, it frees up space
       !>     for another file to be loaded.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the Example above, in ZZDSKBSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     R.E. Thurman   (JPL)
       !>     I.M. Underwood (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
       !>
@@ -4831,7 +4831,7 @@ contains
       !>
       !>        02-APR-2010 (NJB) (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>     None.
       module procedure zzdskusf
@@ -4854,30 +4854,30 @@ contains
       return
       end procedure zzdskusf
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the integer ID code of the body for which a search
       !>                is to be performed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If no files have been loaded, the error
       !>         SPICE(NOLOADEDDSKFILES) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     All files loaded by ZZDSKLSF are potential search targets for
       !>     ZZDSKSNS.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     ZZDSKBSS sets up a search for segments by ZZDSKSNS. It records
       !>     the body for which the search is to be conducted.
@@ -4885,25 +4885,25 @@ contains
       !>     ZZDSKBSS determines the first task that ZZDSKSNS will have to
       !>     perform if it is called to get an applicable segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See Examples in ZZDSKBSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     R.E. Thurman   (JPL)
       !>     I.M. Underwood (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 23-NOV-2020 (NJB) (BVS)
       !>
@@ -4930,7 +4930,7 @@ contains
       !>
       !>        02-APR-2010 (NJB) (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>     None.
       !>
@@ -4961,11 +4961,11 @@ contains
       return
       end procedure zzdskbss
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CMPFUN
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DLADSC
       !>
@@ -4979,11 +4979,11 @@ contains
       !>                otherwise.  If FOUND is false, the values of the
       !>                other arguments are meaningless.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If ZZDSKSNS is called without ZZDSKBSS ever having been
       !>        called, the error 'SPICE(CALLZZDSKBSSFIRST)' is signaled.
@@ -4992,12 +4992,12 @@ contains
       !>        FOUND is set to false, but the values of HANDLE, DESCR,
       !>        and SEGID will be meaningless.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     All files loaded by ZZDSKLSF are potential search targets for
       !>     ZZDSKSNS. The files are all referred to by their integer handles.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     ZZDSKSNS is used to locate segments based on the search criteria
       !>     established by the most recent call to ZZDSKBSS.  When a segment
@@ -5034,11 +5034,11 @@ contains
       !>     ZZDSKSNS also buffers segment descriptors and identifiers, to
       !>     attempt to minimize file reads.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See Examples in ZZDSKBSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This subroutine assumes that a search has been initiated by
       !>        a call to ZZDSKBSS.
@@ -5047,17 +5047,17 @@ contains
       !>        be started via a call to ZZDSKBSS before this routine may
       !>        be called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     R.E. Thurman   (JPL)
       !>     I.M. Underwood (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-OCT-2021 (NJB)
       !>
@@ -5090,7 +5090,7 @@ contains
       !>
       !>        02-APR-2010 (NJB) (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>     None.
       !>
@@ -5155,13 +5155,13 @@ contains
       return
       end subroutine zzdsksns
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     USRCTR    is, on input, the value of a counter maintained by
       !>               a calling routine. This counter is to be compared to
       !>               a local counter.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     USRCTR    is, on output, the value of the local DSK load/unload
       !>               counter.
@@ -5172,24 +5172,24 @@ contains
       !>               unload call has been made since the local counter last
       !>               had the value provided in USRCTR on input.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See zzctr.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine will fail if the total count of DSK load and
       !>         unload operations exceeds the maximum accommodated by a
       !>         two-integer counter. The maximum count is about 4e19,
       !>         presuming a two-integer counter.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine does not access DSK files, but all DSK file
       !>     load and unload operations affect the local counter used
       !>     by this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This set of routines maintains a local counter that indicates
       !>     the kernel load status. When a call is made to ZZDSKLSF or
@@ -5210,33 +5210,33 @@ contains
       !>     whether locally buffered information about DSK segments remains
       !>     up to date.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZDSKBBL.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This routine assumes the number of DSK load and unload operations
       !>     does not exceed the maximum value of a two-integer counter.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     B.V. Semenov   (JPL)
       !>     R.E. Thurman   (JPL)
       !>     I.M. Underwood (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 08-FEB-2017 (NJB)
       !>
       !>        Updated version info.
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>     None.
       module procedure zzdskchk

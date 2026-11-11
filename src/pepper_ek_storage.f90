@@ -11,21 +11,21 @@ submodule (pepper_instance) pepper_ek_storage
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an EK to be closed. Note
       !>              that EKs open for writing must be closed by this
       !>              routine in order to be valid.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the indicated file is not recognized, no error is
       !>         signaled.
@@ -34,12 +34,12 @@ contains
       !>         file, the error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading ek.req for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine should be used to close open EK files. EK files
       !>     open for writing *must* be closed by this routine in order to be
@@ -51,7 +51,7 @@ contains
       !>     become confused if an EK is closed this way---so we recommend
       !>     closing EK files with EKCLS exclusively.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -313,20 +313,20 @@ contains
       !>
       !>        After run completion, a new EK exists in the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -357,11 +357,11 @@ contains
       return
       end procedure ekcls
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an EK open for writing.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ISSHAD   is a logical flag that is returned .TRUE. if and
       !>              only if the EK file designated by HANDLE is
@@ -370,45 +370,45 @@ contains
       !>              In this stub version of the routine, ISSHAD is
       !>              always returned .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  It is not an error to supply an input handle that does not
       !>         belong to an EK that is open for write access.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is a utility that allows a program to test the
       !>     shadowing status of a specified EK file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the $Examples section of the umbrella routine EKSHAD.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a stub routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -428,7 +428,7 @@ contains
       return
       end procedure ekshdw
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -437,7 +437,7 @@ contains
       !>     Look up the column descriptor for a column of a given name
       !>     in a specified segment.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle for the file containing the
       !>                    column of interest.  The EK may be open for read
@@ -449,50 +449,50 @@ contains
       !>     COLUMN         is the name of the column whose descriptor is
       !>                    desired.  Case and white space are not significant.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     COLDSC         is the descriptor of the column belonging to the
       !>                    specified file and segment and having name COLUMN.
       !>                    See the include file ekcoldsc.inc for details
       !>                    regarding the structure of EK column descriptors.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input column name does not match any column in the
       !>         designated segment, the error SPICE(BUG) is signaled.  It
       !>         is the caller's responsibility to call this routine with
       !>         valid input arguments.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine exists for the sole purpose of centralizing code
       !>     used to perform column descriptor look-ups.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the EKACEx routines.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
       !>
@@ -577,7 +577,7 @@ contains
 
       end procedure zzekcdsc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
       !>                    access.
@@ -585,15 +585,15 @@ contains
       !>     COLDSC         is the column descriptor of a column whose name is
       !>                    desired.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     COLNAM         is the name of the specified column.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -602,34 +602,34 @@ contains
       !>         the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine centralizes the coded needed to look up the
       !>     name of a specified column.  This is a frequently
       !>     performed function.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKDELR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
       !>
@@ -651,7 +651,7 @@ contains
 
       end procedure zzekcnam
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -660,7 +660,7 @@ contains
       !>     Get an encoded integer at a specified address from a character
       !>     data page.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is the handle of an EK file open for read or
       !>                    write access.
@@ -671,17 +671,17 @@ contains
       !>                    where the parameter ENCSIZ is defined in the
       !>                    include file ekdatpag.inc.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IVAL           is an integer value obtained by decoding an
       !>                    encoded integer read from the specified
       !>                    location.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -698,33 +698,33 @@ contains
       !>         does not represent an encoded integer, the error wll be
       !>         diagnosed by routines called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine should be used for all EK applications reading
       !>     integer values that have been encoded as characters.  This
       !>     routine expects the encoding to have been done by ZZEKSEI.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKRD03.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
       !>
@@ -754,24 +754,24 @@ contains
       return
       end procedure zzekgei
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
       !>                    access.
       !>
       !>     RECPTR         is a pointer to the record whose status is desired.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATUS         is the status word of the specified record.  See
       !>                    the include file ekrecptr.inc for values and
       !>                    meanings.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -779,32 +779,32 @@ contains
       !>     2)  If an I/O error occurs while reading the indicated file, the
       !>         error will be diagnosed by routines called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine hides details of status word access.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKCOMM.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
       !>
@@ -826,7 +826,7 @@ contains
       return
       end procedure zzekgrs
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CVALS          is an array of character string EK column values,
       !>                    some of which may be null, if null values are
@@ -850,7 +850,7 @@ contains
       !>
       !>     NVALS          is the number of elements in the input array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IORDER         is the order vector for the input array.
       !>                    IORDER(1) is the index of the smallest element
@@ -862,11 +862,11 @@ contains
       !>                    input array; values with lower indices are
       !>                    considered to be smaller.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     ZZEKORDC creates an order vector for an array of character
       !>     column values.  Null values are allowed.  The order relation used
@@ -876,7 +876,7 @@ contains
       !>     values, where the smaller index is considered to precede the
       !>     greater.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Sort the following list of values, some of which are null:
       !>
@@ -913,28 +913,28 @@ contains
       !>             IORDER(4)  =  3
       !>             IORDER(5)  =  4
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>      None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>      Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>      None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>      N.J. Bachman    (JPL)
       !>      I.M. Underwood  (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>      None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-     Beta Version 3.0.0, 26-MAY-1995 (NJB)
       !>
@@ -1055,7 +1055,7 @@ contains
       return
       end procedure zzekordc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DVALS          is an array of double precision EK column values,
       !>                    some of which may be null, if null values are
@@ -1079,7 +1079,7 @@ contains
       !>
       !>     NVALS          is the number of elements in the input array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IORDER         is the order vector for the input array.
       !>                    IORDER(1) is the index of the smallest element
@@ -1091,11 +1091,11 @@ contains
       !>                    input array; values with lower indices are
       !>                    considered to be smaller.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     ZZEKORDD creates an order vector for an array of double precision
       !>     column values.  Null values are allowed.  The order relation used
@@ -1105,7 +1105,7 @@ contains
       !>     values, where the smaller index is considered to precede the
       !>     greater.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>      1)  Sort the following list of values, some of which are
       !>          null:
@@ -1143,28 +1143,28 @@ contains
       !>             IORDER(4)  =  3
       !>             IORDER(5)  =  4
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>      None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>      Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>      None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>      N.J. Bachman    (JPL)
       !>      I.M. Underwood  (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>      None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-     Beta Version 3.0.0, 08-SEP-1995 (NJB)
       !>
@@ -1283,7 +1283,7 @@ contains
       return
       end procedure zzekordd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>      IVALS          is an array of integer EK column values,
       !>                     some of which may be null, if null values are
@@ -1307,7 +1307,7 @@ contains
       !>
       !>      NVALS          is the number of elements in the input array.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>      IORDER      is the order vector for the input array.
       !>                  IORDER(1) is the index of the smallest element
@@ -1319,11 +1319,11 @@ contains
       !>                  values with lower indices are considered to be
       !>                  smaller.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     ZZEKORDI creates an order vector for an array of integer
       !>     column values.  Null values are allowed.  The order
@@ -1333,7 +1333,7 @@ contains
       !>     relation of the values, where the smaller index is considered
       !>     to precede the greater.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>      1)  Sort the following list of values, some of which are
       !>          null:
@@ -1374,28 +1374,28 @@ contains
       !>             IORDER(4)  =  3
       !>             IORDER(5)  =  4
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>      None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>      Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>      None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>      N.J. Bachman    (JPL)
       !>      I.M. Underwood  (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>      None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-     Beta Version 3.0.0, 26-MAY-1995 (NJB)
       !>
@@ -1514,7 +1514,7 @@ contains
       return
       end procedure zzekordi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DECL           is a character string containing a column
       !>                    declaration.  Column declarations are strings that
@@ -1592,7 +1592,7 @@ contains
       !>                    within declarations.  White space is optional.
       !>                    Case is not significant.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PARDSC         is an integer array that specifies the attributes
       !>                    of the column.  PARDSC is basically a
@@ -1630,25 +1630,25 @@ contains
       !>                          contain null values and is set to IFALSE
       !>                          otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input declaration does not conform to the specification
       !>         given in $Detailed_Input, the error SPICE(BADCOLUMNDECL) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is a utility that supports EK writing subroutines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Parse a declaration of an indexed column of 80-character
       !>         strings, in which null values are allowed:
@@ -1723,19 +1723,19 @@ contains
       !>           |       0       |  (Reserved)
       !>           +---------------+
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) Currently does not diagnose extraneous keyword assignments.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-SEP-2005 (NJB)
       !>
@@ -2287,7 +2287,7 @@ contains
       end associate
       end procedure zzekpdec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The specified file is to be
       !>                    checked to see whether it is a valid paged EK and
@@ -2300,16 +2300,16 @@ contains
       !>                    Leading and trailing blanks in ACCESS are ignored,
       !>                    and case is not significant.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -2324,12 +2324,12 @@ contains
       !>     4)  If the EK is not open for the specified type of access, the
       !>         error will be diagnosed by routines called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine centralizes a validation check performed by many
       !>     EK routines.  The EK designated by HANDLE is tested to see
@@ -2346,23 +2346,23 @@ contains
       !>
       !>     If the file fails any test, an error is signaled.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKINSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
       !>
@@ -2472,7 +2472,7 @@ contains
       return
       end procedure zzekpgch
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -2480,7 +2480,7 @@ contains
       !>
       !>     Initialize encoded EK query.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ISIZE          is the size of the cell comprising the integer
       !>                    component of the encoded query.
@@ -2500,7 +2500,7 @@ contains
       !>     EQRYD          is a double precision array that is to serve as
       !>                    the numeric portion of an encoded EK query.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EQRYI,
       !>     EQRYD,
@@ -2509,11 +2509,11 @@ contains
       !>                    All counts will be set to zero.  The array
       !>                    EQRYD will be zeroed out.  The character string
       !>                    EQRYC will be blank.
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) ISIZE must be large enough to accommodate a query with the
       !>        maximum number of tables, constraints, and tokens, and
@@ -2528,36 +2528,36 @@ contains
       !>        data that can occur in a query.  If EQRYC is too short, the
       !>        error  SPICE(STRINGTOOSHORT) will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine assumes that encoded EK query architecture version
       !>     1 is to be used with the query to be initialized; this routine
       !>     will not work with any other architecture version.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKPARS.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This routine is private to the EK library.  No routines
       !>        external to the EK library should call this routine.
       !>
       !>     2) Uses EK encoded query architecture version 1.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 02-OCT-2021 (NJB)
       !>
@@ -2641,7 +2641,7 @@ contains
       return
       end procedure zzekqini
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ACTION         is a short string indicating the action taken
       !>                    that necessitated backing up a record from the
@@ -2687,16 +2687,16 @@ contains
       !>     RECNO          is the number of the record containing the column
       !>                    entry to back up.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See the $Particulars section for a description of the
       !>     effect of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -2705,12 +2705,12 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.  The file may be corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects:  it performs record backup
       !>     functions to support EK shadowing.  If the input file is not
@@ -2787,23 +2787,23 @@ contains
       !>     permanent when the file is closed.  Failure to close the file
       !>     properly will leave it in an indeterminate state.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a stub version of the routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 25-OCT-1995 (NJB)
       module procedure zzekrbck
@@ -2827,7 +2827,7 @@ contains
       return
       end procedure zzekrbck
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -2835,7 +2835,7 @@ contains
       !>
       !>     Read scalar integer value from encoded EK query.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     EQRYI          is the integer portion of an encoded EK query.
       !>
@@ -2843,45 +2843,45 @@ contains
       !>                    This item is some element of the integer portion
       !>                    of an encoded query.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUE          is the integer value designated by NAME.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input name is not recognized, the error
       !>         SPICE(INVALIDNAME) is signaled.  The encoded query is not
       !>         modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is the inverse of ZZEKWEQI.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKSRCH.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -3150,29 +3150,29 @@ contains
 !
 !     Standard SPICE error handling.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TOP            is the last address of the EK scratch area stack
       !>                    top.  This is the highest EK scratch area address
       !>                    currently in use.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The EK scratch area stack top ranges from zero to, theoretically,
       !>     the largest integer representable on the host system.
@@ -3180,24 +3180,24 @@ contains
       !>     EK stack is inserted at address TOP+1 and occupies a contiguous
       !>     range of addresses that extends upwards from this address.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of the umbrella routine ZZEKSCA for an example
       !>     of use of this routine.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 2.0.0, 08-SEP-1994 (NJB)
       !>
@@ -3217,7 +3217,7 @@ contains
       end associate
       end procedure zzekstop
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N              is the number of integers in the array IDATA to
       !>                    append to the EK scratch area.  The data is
@@ -3230,15 +3230,15 @@ contains
       !>                    IDATA are appended to the EK scratch area, in
       !>                    order.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If N is non-positive, this routine simply returns.  No error
       !>         is signaled.
@@ -3246,11 +3246,11 @@ contains
       !>     2)  If an I/O error occurs during the data addition, the error
       !>         will be diagnosed by routines called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Let TOP be the EK scratch area stack top prior to a call to this
       !>     routine.  Data that is appended to the EK scratch area by this
@@ -3259,12 +3259,12 @@ contains
       !>
       !>     As a side effect of calling this routine, TOP is set to TOP + N.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of the umbrella routine ZZEKSCA for an example
       !>     of use of this routine.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine must execute quickly.  Therefore, it checks in
       !>         only if it detects an error.  If an error is signaled by a
@@ -3273,15 +3273,15 @@ contains
       !>         of speed, this routine does not test the value of the SPICELIB
       !>         function RETURN upon entry.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -3414,7 +3414,7 @@ contains
       end associate
       end procedure zzekspsh
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N              is the number of integers to pop from the
       !>                    EK scratch area stack.  The data is
@@ -3422,18 +3422,18 @@ contains
       !>                    where T is the stack top prior to the call to
       !>                    ZZEKSPOP.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IDATA          is an integer array containing data read from
       !>                    the EK scratch area.  The first N elements of
       !>                    IDATA assigned the values occupying the top N
       !>                    elements of the EK stack.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If N is non-positive or if N is greater than the number of
       !>         items on the stack, the error SPICE(INVALIDCOUNT) is
@@ -3442,11 +3442,11 @@ contains
       !>     2)  If an I/O error occurs during the data read, the error
       !>         will be diagnosed by routines called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Let TOP be the EK scratch area stack top prior to a call to this
       !>     routine.  Data that is read from the EK scratch area by this
@@ -3455,12 +3455,12 @@ contains
       !>
       !>     As a side effect of calling this routine, TOP is set to TOP - N.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of the umbrella routine ZZEKSCA for an example
       !>     of use of this routine.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine must execute quickly.  Therefore, it checks in
       !>         only if it detects an error.  If an error is signaled by a
@@ -3469,15 +3469,15 @@ contains
       !>         of speed, this routine does not test the value of the SPICELIB
       !>         function RETURN upon entry.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -3583,41 +3583,41 @@ contains
       end associate
       end procedure zzekspop
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N              is the number to subtract from the EK scratch
       !>                    area stack pointer.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If N is non-positive or if N is greater than the number of
       !>         items on the stack, the error SPICE(INVALIDCOUNT) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Let TOP be the EK scratch area stack top prior to a call to this
       !>     routine.  The  effect of calling this routine is that TOP is set
       !>     to TOP - N.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of the umbrella routine ZZEKSCA for an example
       !>     of use of this routine.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine must execute quickly.  Therefore, it checks in
       !>         only if it detects an error.  If an error is signaled by a
@@ -3626,15 +3626,15 @@ contains
       !>         of speed, this routine does not test the value of the SPICELIB
       !>         function RETURN upon entry.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -3688,7 +3688,7 @@ contains
       end associate
       end procedure zzeksdec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BEG,
       !>     END            are the first and last of a range of EK scratch
@@ -3707,15 +3707,15 @@ contains
       !>                    written to the specified range in the EK scratch
       !>                    area, in order.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either of BEG or END are outside of the range 1:TOP,
       !>         where TOP is the EK scratch area stack top, the error
@@ -3727,22 +3727,22 @@ contains
       !>     3)  If an I/O error occurs during the data addition, the error
       !>         will be diagnosed by routines called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Let TOP be the EK scratch area stack top prior to a call to this
       !>     routine.  This routine is used to modify values in the scratch
       !>     area that lie in the address range 1:TOP.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of the umbrella routine ZZEKSCA for an example
       !>     of use of this routine.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine must execute quickly.  Therefore, it checks in
       !>         only if it detects an error.  If an error is signaled by a
@@ -3751,15 +3751,15 @@ contains
       !>         of speed, this routine does not test the value of the SPICELIB
       !>         function RETURN upon entry.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 03-OCT-2021 (NJB)
       !>
@@ -3839,7 +3839,7 @@ contains
       end associate
       end procedure zzeksupd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BEG,
       !>     END            are the first and last of a range of EK scratch
@@ -3852,7 +3852,7 @@ contains
       !>                    where LAST is the last EK scratch area address
       !>                    in use at the time this routine is called.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IDATA          is an integer array containing data read from the
       !>                    range of addresses BEG:END in the EK scratch area.
@@ -3860,11 +3860,11 @@ contains
       !>                    in order using the contents of this address range.
       !>                    IDATA must have dimension at least END-BEG+1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either of BEG or END are outside of the range 1:LAST,
       !>         where LAST is the last address already in use in the EK
@@ -3880,22 +3880,22 @@ contains
       !>         a call to this routine will be unpredictable, except that
       !>         you can safely predict they'll be wrong.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Let LAST be the last address in use in the EK scratch area prior
       !>     to a call to this routine.  This routine is used to read values
       !>     in the scratch area that lie in the address range 1:LAST.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of the umbrella routine ZZEKSCA for an example
       !>     of use of this routine.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine must execute quickly.  Therefore, it checks in
       !>         only if it detects an error.  If an error is signaled by a
@@ -3904,15 +3904,15 @@ contains
       !>         of speed, this routine does not test the value of the SPICELIB
       !>         function RETURN upon entry.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -3988,49 +3988,49 @@ contains
       end associate
       end procedure zzeksrd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine unloads the scratch DAS used by this system.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is intended to enable test software to unload
       !>     the scratch DAS file used by the EK scratch area routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) Many EK routines operate by side effects on the EK scratch
       !>        area, so this routine must be used with caution.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.0, 29-JUL-2003 (NJB)
       !>
@@ -4083,7 +4083,7 @@ contains
       end associate
       end procedure zzekscln
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     QUERY          is character string containing an EK query.  See
       !>                    the header of the subroutine EKFIND for a
@@ -4095,7 +4095,7 @@ contains
       !>     MAXNUM         is the maximum number of tokens representing
       !>                    numeric values that may occur in QUERY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NTOKEN         is the number of tokens found in the input QUERY.
       !>                    This number will be less than or equal to MAXNTK.
@@ -4178,11 +4178,11 @@ contains
       !>                    When SCNERR is returned .FALSE., ERRMSG is set to
       !>                    blank.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include files.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -4202,18 +4202,18 @@ contains
       !>        'Quoted string in positions #:# is empty.'
       !>        'Unexpected token found in query: #'
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine breaks up a valid EK query into an array of
       !>     individual tokens in order to facilitate parsing.
       !>
       !>     Time values and quoted strings are treated as single tokens.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Examples of strings containing lexically valid queries
       !>         are:
@@ -4261,19 +4261,19 @@ contains
       !>            from column1 where
       !>            column1 eq  3c                     {invalid numeric token}
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.0.2, 02-OCT-2021 (NJB)
       !>
@@ -4287,7 +4287,7 @@ contains
       !>
       !>        Complete re-write for architecture 3.
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 3.0.0, 14-NOV-1995 (NJB)
       !>
@@ -4934,7 +4934,7 @@ contains
       end associate
       end procedure zzekscan
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -4943,7 +4943,7 @@ contains
       !>     Set an encoded integer at a specified address from a character
       !>     data page.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is the handle of an EK file open for write access.
       !>
@@ -4955,16 +4955,16 @@ contains
       !>
       !>     IVAL           is an integer value to be written in encoded form.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -4977,11 +4977,11 @@ contains
       !>         initialized, the error wll be diagnosed by routines
       !>         called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine should be used for all EK applications requiring
       !>     storage of encoded integer values as characters.  Use of this
@@ -4990,24 +4990,24 @@ contains
       !>     Encoded integers written by this routine should be read using
       !>     ZZEKGEI.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKAD03.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Portability dictates that the base used for encoding be
       !>         no greater than 128.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
       !>
@@ -5036,7 +5036,7 @@ contains
       return
       end procedure zzeksei
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NCOLS          is the number of columns in a new segment.
       !>
@@ -5044,16 +5044,16 @@ contains
       !>                    descriptor applies to the Ith column in the
       !>                    segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the type of segment that is compatible with
       !>     the input column descriptors.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If NCOLS is non-positive or greater than the maximum allowed
       !>         number MXCLSG, the error SPICE(INVALIDCOUNT) is signaled.
@@ -5061,12 +5061,12 @@ contains
       !>     2)  If the input column descriptors do not contain compatible
       !>         attributes, the error SPICE(BADATTRIBUTES) will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines the appropriate segment type to contain
       !>     a specified set of columns.  Currently, there are two segment
@@ -5077,23 +5077,23 @@ contains
       !>     after the column is created.  Fixed and variable count columns
       !>     may not coexist in the same segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKBSEG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -5168,7 +5168,7 @@ contains
       return
       end procedure zzekstyp
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
       !>                    reading or writing.
@@ -5183,16 +5183,16 @@ contains
       !>     RECPTR         is a pointer to the EK record containing the
       !>                    column entry of interest.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the number of elements in the specified
       !>     column entry.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -5204,33 +5204,33 @@ contains
       !>     3)  If the column index contained in the input column descriptor
       !>         is out of range, the error SPICE(INVALIDINDEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This utility supports the commonly performed function of
       !>     determining the element count of a column entry.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKESIZ.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -5315,7 +5315,7 @@ contains
       return
       end procedure zzeksz04
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
       !>                    reading or writing.
@@ -5330,16 +5330,16 @@ contains
       !>     RECPTR         is a pointer to the EK record containing the
       !>                    column entry of interest.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the number of elements in the specified
       !>     column entry.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -5351,33 +5351,33 @@ contains
       !>     3)  If the column index contained in the input column descriptor
       !>         is out of range, the error SPICE(INVALIDINDEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This utility supports the commonly performed function of
       !>     determining the element count of a column entry.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKESIZ.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -5467,7 +5467,7 @@ contains
       return
       end procedure zzeksz05
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -5475,7 +5475,7 @@ contains
       !>
       !>     Convert time strings from EK query to ephemeris time.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TIMSTR         is a string representing a time value.  The value
       !>                    make be an SCLK string in the form
@@ -5484,7 +5484,7 @@ contains
       !>
       !>                    or may be any string acceptable to ST2ET.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ET             is the ephemeris time equivalent to the input
       !>                    time.
@@ -5498,11 +5498,11 @@ contains
       !>     ERRMSG         is an error message describing an error in the
       !>                    input query, if one was detected.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any sort of time conversion error occurs, the output flag
       !>         ERROR is set, and an error message is returned.
@@ -5512,11 +5512,11 @@ contains
       !>         errors or missing kernel files, for example, should not trip
       !>         SPICELIB error handling.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Strings representing time values are interpreted as follows:
       !>
@@ -5530,11 +5530,11 @@ contains
       !>            that TPARTV can handle.  If TPARTV can't deal with it,
       !>            the string is considered to be invalid.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKTRES.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) A leapseconds kernel must be loaded at the time this routine
       !>        is called.
@@ -5542,15 +5542,15 @@ contains
       !>     2) In order to convert SCLK strings, an appropriate SCLK kernel
       !>        must be loaded at the time this routine is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 12-AUG-2001 (NJB)
       !>
@@ -5567,7 +5567,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-OCT-1995 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 12-AUG-2001 (NJB)
       !>
@@ -5757,7 +5757,7 @@ contains
       return
       end procedure zzektcnv
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TOKID          is a token code identifying the type of token
       !>                    sought.
@@ -5778,7 +5778,7 @@ contains
       !>                    the Ith element of VALUES contains the code
       !>                    specifying which keyword is meant.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LOC            is the index in the input token list at which
       !>                    the desired token was first encountered.  LOC
@@ -5787,40 +5787,40 @@ contains
       !>     FOUND          is a logical flag indicating whether the desired
       !>                    token was found.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility that simplifies parsing of tokenized EK
       !>     queries.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKPARS.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 02-OCT-2021 (NJB)
       !>
@@ -5867,7 +5867,7 @@ contains
       return
       end procedure zzektloc
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -5875,7 +5875,7 @@ contains
       !>
       !>     Write scalar integer value to encoded EK query.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME           is the name of the item whose value is to be set.
       !>                    This item is some element of the integer portion
@@ -5903,48 +5903,48 @@ contains
       !>
       !>     EQRYI          is the integer portion of an encoded EK query.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EQRYI          is the integer portion of an encoded EK query,
       !>                    updated to reflect the requested assignment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input name is not recognized, the error
       !>         SPICE(INVALIDNAME) is signaled.  The encoded query is not
       !>         modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is intended to hide from calling routines the
       !>     specifics of the EK encoded query structure.  See the include
       !>     file ekquery.inc if details of this structure are desired.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKNRES.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) Uses EK encoded query architecture version 2.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -6005,18 +6005,18 @@ contains
       return
       end procedure zzekweqi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of an existing E-kernel file to be
       !>              opened for read access.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the EK file handle of the file designated by
       !>              FNAME. This handle is used to identify the file
       !>              to other EK routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     FTSIZE   is the maximum number of DAS files that a user can
       !>              have open simultaneously. This includes any files used
@@ -6025,7 +6025,7 @@ contains
       !>              See the include file das.inc for the actual value of
       !>              this parameter.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the indicated file cannot be opened, an error is signaled
       !>         by a routine in the call tree of this routine.
@@ -6038,12 +6038,12 @@ contains
       !>         error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading ek.req for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine should be used to open an EK file for read access.
       !>     EKs opened for read access may not be modified.
@@ -6062,7 +6062,7 @@ contains
       !>     loaded via EKLEF, rather than by this routine. See the EK
       !>     Required Reading for further information.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6121,21 +6121,21 @@ contains
       !>
       !>        Number of segments =  2
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No more than FTSIZE DAS files may be opened simultaneously.
       !>         See the include file das.inc for the value of FTSIZE.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -6173,18 +6173,18 @@ contains
       return
       end procedure ekopr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of an existing E-kernel file to be
       !>              opened for write access.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the DAS file handle of the EK designate by
       !>              FNAME. This handle is used to identify the file
       !>              to other EK routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     FTSIZE   is the maximum number of DAS files that a user can
       !>              have open simultaneously. This includes any files used
@@ -6193,7 +6193,7 @@ contains
       !>              See the include file das.inc for the actual value of
       !>              this parameter.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the indicated file cannot be opened, an error is signaled
       !>         by a routine in the call tree of this routine.
@@ -6206,12 +6206,12 @@ contains
       !>         file, the error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading ek.req for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine should be used to open an EK existing file for write
       !>     access.
@@ -6267,7 +6267,7 @@ contains
       !>     FURNSH or EKLEF, rather than by this routine. See the EK Required
       !>     Reading for further information.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6526,21 +6526,21 @@ contains
       !>
       !>        After run completion, a new EK exists in the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No more than FTSIZE DAS files may be opened simultaneously.
       !>         See the include file das.inc for the value of FTSIZE.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -6588,7 +6588,7 @@ contains
       return
       end procedure ekopw
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
       !>                    access.
@@ -6596,7 +6596,7 @@ contains
       !>     RECPTRC        is a pointer to the record whose companion pointer
       !>                    is desired.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PTR            is a pointer to the companion record of the
       !>                    specified input record.  If the input record
@@ -6605,11 +6605,11 @@ contains
       !>                    record is a backup record, the companion record
       !>                    is the corresponding source record.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -6617,33 +6617,33 @@ contains
       !>     2)  If an I/O error occurs while reading the indicated file, the
       !>         error will be diagnosed by routines called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine sets the companion record pointer of a specified EK
       !>     record.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKROLL.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
       !>
@@ -6676,7 +6676,7 @@ contains
       return
       end procedure zzekgrcp
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -6685,7 +6685,7 @@ contains
       !>     Insert a character value into a specified encoded EK query, and
       !>     obtain a descriptor for the stored value.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE          is a character value to be inserted into an
       !>                    encoded query.
@@ -6705,7 +6705,7 @@ contains
       !>
       !>     EQRYC          is the character portion of an encoded EK query.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EQRYI          is the integer portion of an encoded EK query,
       !>                    updated to reflect the addition of a value to the
@@ -6717,11 +6717,11 @@ contains
       !>     DESCR          is a descriptor for the input value.  The
       !>                    descriptor contains EQVDSZ elements.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the INCLUDE files.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input query is uninitialized, the error
       !>         SPICE(NOTINITIALIZED) will be signaled.
@@ -6733,33 +6733,33 @@ contains
       !>         character component, the error SPICE(BUFFERTOOSMALL) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine should always be used to insert character values
       !>     into an encoded query; the insertion should never be done
       !>     directly.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKNRML.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -6847,7 +6847,7 @@ contains
       return
       end procedure zzekinqc
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -6856,7 +6856,7 @@ contains
       !>     Insert a numeric value into a specified encoded EK query, and
       !>     obtain a descriptor for the stored value.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VALUE          is a numeric value to be inserted into an
       !>                    encoded query.
@@ -6874,7 +6874,7 @@ contains
       !>
       !>     EQRYD          is the numeric portion of an encoded EK query.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EQRYI          is the integer portion of an encoded EK query,
       !>                    updated to reflect the addition of a value to the
@@ -6886,11 +6886,11 @@ contains
       !>     DESCR          is a descriptor for the input value.  The
       !>                    descriptor contains EQVDSZ elements.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the INCLUDE files.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input query is uninitialized, the error
       !>         SPICE(NOTINITIALIZED) will be signaled.
@@ -6899,33 +6899,33 @@ contains
       !>         numeric component, the error SPICE(BUFFERTOOSMALL) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine should always be used to insert numeric values
       !>     into an encoded query; the insertion should never be done
       !>     directly.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKNRML.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -6997,7 +6997,7 @@ contains
       return
       end procedure zzekinqn
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -7006,31 +7006,31 @@ contains
       !>     Compress a join row set by eliminating segment vectors for
       !>     which there are no corresponding row vectors.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     JRSBAS         is the base address, in the scratch area, of a
       !>                    join row set to be compressed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If JRSBAS is not the base address of a structurally valid
       !>         join row set, the results of this routine will be
       !>         unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects:  it modifies the join row
       !>     set designated by the input argument JRSBAS.  Every row vector
@@ -7047,23 +7047,23 @@ contains
       !>     mechanism.  Finally, it may be possible to save space in the EK
       !>     scratch area freed by the compression.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKSRCH.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) Relies on the EK scratch area.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 02-OCT-2021 (NJB)
       !>
@@ -7078,7 +7078,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 10-OCT-1995 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 07-AUG-2006 (NJB)
       !>
@@ -7511,7 +7511,7 @@ contains
 !
 !     Saved variables
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -7519,23 +7519,23 @@ contains
       !>
       !>     Initialize an open DAS file for paged access.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a handle of a DAS file open for write access.
       !>                    The file must be empty:  the last address of
       !>                    each type (character, d.p. and integer) must be
       !>                    zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  This routine operates by side effects; see $Particulars
       !>     for a description of the effect of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the DAS file designated by HANDLE is not empty, the error
       !>         SPICE(DASNOTEMPTY) is signaled.
@@ -7544,13 +7544,13 @@ contains
       !>         the DAS file will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This suite of routines provides paged access to DAS files.  Only
       !>     DAS files initialized via a call to ZZEKPGIN may be written or
       !>     read by these routines.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine initializes a DAS file for paged access.
       !>     Initialization consists of:
@@ -7562,23 +7562,23 @@ contains
       !>        - Writing the architecture code to the file.  This code is
       !>          defined in the include file ekarch.inc.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKOPN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) Only `empty' DAS files may be initialized for paged access.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
       !>
@@ -7661,7 +7661,7 @@ contains
       end associate
       end procedure zzekpgin
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -7669,7 +7669,7 @@ contains
       !>
       !>     Allocate a new page of a specified data type.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a handle of a paged EK file.  The file must
       !>                    be open for write access.
@@ -7678,7 +7678,7 @@ contains
       !>                    type may be CHR, DP, or INT.  Values of these
       !>                    parameters are defined in ektype.inc.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     P              is the number of an allocated page.  The returned
       !>                    page is never taken from the free list; it is
@@ -7689,11 +7689,11 @@ contains
       !>                    is the predecessor of the first DAS word of the
       !>                    page.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the DAS file designated by HANDLE is not open for paged
       !>         write access, the error will be diagnosed by routines called
@@ -7706,13 +7706,13 @@ contains
       !>     3)  If the requested data type is not recognized, the error
       !>         SPICE(INVALIDTYPE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This suite of routines provides paged access to DAS files.  Only
       !>     DAS files initialized via a call to ZZEKPGIN may be written or
       !>     read by these routines.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The pages returned by this routine lie on DAS record boundaries.
       !>     Successive requests for pages of the same data type will return
@@ -7722,23 +7722,23 @@ contains
       !>
       !>     Use ZZEKPGAL for normal allocation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKAPS.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
       !>
@@ -7816,7 +7816,7 @@ contains
       end associate
       end procedure zzekpgan
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -7825,7 +7825,7 @@ contains
       !>     Allocate a page of a specified data type.  The page need not
       !>     be new:  free pages are returned if possible.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a handle of a paged EK file.  The file must
       !>                    be open for write access.
@@ -7834,7 +7834,7 @@ contains
       !>                    type may be CHR, DP, or INT.  Values of these
       !>                    parameters are defined in ektype.inc.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     P              is the number of an allocated page.  The returned
       !>                    page is taken from the free list if the free list
@@ -7844,11 +7844,11 @@ contains
       !>                    is the predecessor of the first DAS word of the
       !>                    page.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the DAS file designated by HANDLE is not open for paged
       !>         write access, the error will be diagnosed by routines called
@@ -7861,35 +7861,35 @@ contains
       !>     3)  If the requested data type is not recognized, the error
       !>         SPICE(INVALIDTYPE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This suite of routines provides paged access to DAS files.  Only
       !>     DAS files initialized via a call to ZZEKPGIN may be written or
       !>     read by these routines.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine should be used for page allocation, except for
       !>     applications requiring allocation of contiguous pages.  If
       !>     contiguous pages are required, use ZZEKPGAN.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKAPS.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
       !>
@@ -8109,7 +8109,7 @@ contains
       end associate
       end procedure zzekpgal
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -8117,7 +8117,7 @@ contains
       !>
       !>     Free a specified page.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a handle of a paged EK file.  The file must
       !>                    be open for write access.
@@ -8128,16 +8128,16 @@ contains
       !>
       !>     P              is the number of an allocated page to be freed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>    None.  See $Particulars for a description of the effect of this
       !>    routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the DAS file designated by HANDLE is not open for paged
       !>         write access, the error will be diagnosed by routines called
@@ -8154,35 +8154,35 @@ contains
       !>         allocated page of the specified type, the error
       !>         SPICE(INVALIDINDEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This suite of routines provides paged access to DAS files.  Only
       !>     DAS files initialized via a call to ZZEKPGIN may be written or
       !>     read by these routines.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine should be used for page deallocation.  The input
       !>     page is placed at the head of the free list of the specified
       !>     data type.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKDPS.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
       !>
@@ -8353,7 +8353,7 @@ contains
       return
       end procedure zzekpgfr
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -8361,14 +8361,14 @@ contains
       !>
       !>     Read a specified character page.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a handle of a paged EK file.  The file may
       !>                    be open for read or write access.
       !>
       !>     P              is the number of a character page to read.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PAGEC          is a string containing the contents of the
       !>                    specified page.  PAGEC should be declared with
@@ -8380,11 +8380,11 @@ contains
       !>                    PAGEC is longer than PGSIZC characters, the output
       !>                    will be padded with trailing blanks.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  Any errors detected during reading the DAS file will be
       !>         diagnosed by routines called by this routine.
@@ -8393,33 +8393,33 @@ contains
       !>         allocated character page, the error SPICE(INVALIDINDEX) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This suite of routines provides paged access to DAS files.  Only
       !>     DAS files initialized via a call to ZZEKPGIN may be written or
       !>     read by these routines.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine should be used to read character pages.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKRD03.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
       !>
@@ -8464,7 +8464,7 @@ contains
       return
       end procedure zzekpgrc
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -8472,25 +8472,25 @@ contains
       !>
       !>     Read a specified double precision page.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a handle of a paged EK file.  The file may
       !>                    be open for read or write access.
       !>
       !>     P              is the number of a double precision page to read.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PAGED          is a double precision array containing the contents
       !>                    of the specified page.  PAGED should be declared
       !>                    with dimension PGSIZD.  This parameter is
       !>                    declared in the include file ekpage.inc.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  Any errors detected during reading the DAS file will be
       !>         diagnosed by routines called by this routine.
@@ -8499,33 +8499,33 @@ contains
       !>         allocated double precision page, the error SPICE(INVALIDINDEX)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This suite of routines provides paged access to DAS files.  Only
       !>     DAS files initialized via a call to ZZEKPGIN may be written or
       !>     read by these routines.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine should be used to read double precision pages.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKRD02.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
       !>
@@ -8561,7 +8561,7 @@ contains
       return
       end procedure zzekpgrd
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -8569,25 +8569,25 @@ contains
       !>
       !>     Read a specified integer page.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a handle of a paged EK file.  The file may
       !>                    be open for read or write access.
       !>
       !>     P              is the number of an integer page to read.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PAGEI          is an integer array containing the contents
       !>                    of the specified page.  PAGEI should be declared
       !>                    with dimension PGSIZI.  This parameter is
       !>                    declared in the include file ekpage.inc.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  Any errors detected during reading the DAS file will be
       !>         diagnosed by routines called by this routine.
@@ -8596,33 +8596,33 @@ contains
       !>         allocated double precision page, the error SPICE(INVALIDINDEX)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This suite of routines provides paged access to DAS files.  Only
       !>     DAS files initialized via a call to ZZEKPGIN may be written or
       !>     read by these routines.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine should be used to read integer pages.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKRD01.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
       !>
@@ -8658,7 +8658,7 @@ contains
       return
       end procedure zzekpgri
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -8666,7 +8666,7 @@ contains
       !>
       !>     Write a specified character page.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a handle of a paged EK file.  The file must
       !>                    be open for write access.
@@ -8679,16 +8679,16 @@ contains
       !>                    characters.  This parameter is declared in the
       !>                    include file ekpage.inc.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  Any errors detected during reading or writing the DAS file
       !>         will be diagnosed by routines called by this routine.
@@ -8700,35 +8700,35 @@ contains
       !>     3)  If the input string has length less than PGSIZC characters,
       !>         the error SPICE(STRINGTOOSHORT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This suite of routines provides paged access to DAS files.  Only
       !>     DAS files initialized via a call to ZZEKPGIN may be written or
       !>     read by these routines.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes the input string to the DAS address range
       !>     corresponding to the specified page.  The file must be closed
       !>     properly (via EKCLS) in order to make the change permanent.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKAD03.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
       !>
@@ -8784,7 +8784,7 @@ contains
       return
       end procedure zzekpgwc
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -8792,7 +8792,7 @@ contains
       !>
       !>     Write a specified double precision page.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a handle of a paged EK file.  The file must
       !>                    be open for write access.
@@ -8805,16 +8805,16 @@ contains
       !>                    dimension at PGSIZD.  This parameter is
       !>                    declared in the include file ekpage.inc.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  Any errors detected during reading or writing the DAS file
       !>         will be diagnosed by routines called by this routine.
@@ -8823,35 +8823,35 @@ contains
       !>         allocated d.p. page, the error SPICE(INVALIDINDEX) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This suite of routines provides paged access to DAS files.  Only
       !>     DAS files initialized via a call to ZZEKPGIN may be written or
       !>     read by these routines.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes the input array to the DAS address range
       !>     corresponding to the specified page.  The file must be closed
       !>     properly (via EKCLS) in order to make the change permanent.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKAD02.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
       !>
@@ -8894,7 +8894,7 @@ contains
       return
       end procedure zzekpgwd
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -8902,7 +8902,7 @@ contains
       !>
       !>     Write a specified integer page.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a handle of a paged EK file.  The file must
       !>                    be open for write access.
@@ -8915,16 +8915,16 @@ contains
       !>                    dimension at PGSIZI.  This parameter is
       !>                    declared in the include file ekpage.inc.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  Any errors detected during reading or writing the DAS file
       !>         will be diagnosed by routines called by this routine.
@@ -8933,35 +8933,35 @@ contains
       !>         allocated integer page, the error SPICE(INVALIDINDEX) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This suite of routines provides paged access to DAS files.  Only
       !>     DAS files initialized via a call to ZZEKPGIN may be written or
       !>     read by these routines.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes the input array to the DAS address range
       !>     corresponding to the specified page.  The file must be closed
       !>     properly (via EKCLS) in order to make the change permanent.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKAD01.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
       !>
@@ -9004,7 +9004,7 @@ contains
       return
       end procedure zzekpgwi
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -9012,7 +9012,7 @@ contains
       !>
       !>     Map a page to its base address.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TYPE           is the data type of the page whose base address
       !>                    is requested.  The type may be CHR, DP, or INT.
@@ -9021,51 +9021,51 @@ contains
       !>
       !>     P              is the number of the page of interest.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BASE           is the base DAS address of the page.  This address
       !>                    is the predecessor of the first DAS word of the
       !>                    page.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the requested data type is not recognized, the error
       !>         SPICE(INVALIDTYPE) is signaled.
       !>
       !>     2)  Range checking is not performed on the input page number P.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This suite of routines provides paged access to DAS files.  Only
       !>     DAS files initialized via a call to ZZEKPGIN may be written or
       !>     read by these routines.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides translation from page numbers to DAS
       !>     addresses.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKDELR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
       module procedure zzekpgbs
@@ -9097,7 +9097,7 @@ contains
       return
       end procedure zzekpgbs
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -9106,7 +9106,7 @@ contains
       !>     Map a DAS address to the number of the page containing it.  Also
       !>     return the base address of the page.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TYPE           is the data type of a DAS address to be mapped to
       !>                    a page number.  The type may be CHR, DP, or INT.
@@ -9115,7 +9115,7 @@ contains
       !>
       !>     ADDRSS         is a DAS address to be mapped to a page number.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     P              is the number of the page containing the input
       !>                    address.
@@ -9124,46 +9124,46 @@ contains
       !>                    is the predecessor of the first DAS word of the
       !>                    page.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the requested data type is not recognized, the error
       !>         SPICE(INVALIDTYPE) is signaled.
       !>
       !>     2)  Range checking is not performed on the input address.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This suite of routines provides paged access to DAS files.  Only
       !>     DAS files initialized via a call to ZZEKPGIN may be written or
       !>     read by these routines.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides translation from DAS addresses to page
       !>     numbers.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKAD01.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-OCT-2021 (BVS)
       !>
@@ -9203,7 +9203,7 @@ contains
       return
       end procedure zzekpgpg
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -9211,7 +9211,7 @@ contains
       !>
       !>     Return paging statistics.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a handle of a paged EK file.  The file may
       !>                    be open for read or write access.
@@ -9237,50 +9237,50 @@ contains
       !>                      'N_I_FREE'      Number of pages in integer free
       !>                                      list.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUE          is the value of the requested statistic.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the requested statistic is not recognized, the error
       !>         SPICE(INVALIDOPTION) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This suite of routines provides paged access to DAS files.  Only
       !>     DAS files initialized via a call to ZZEKPGIN may be written or
       !>     read by these routines.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides translation from DAS addresses to page
       !>     numbers.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Find the number of pages on the integer free list of the
       !>         paged EK designated by HANDLE:
       !>
       !>            CALL ZZEKPGST ( HANDLE, 'N_I_FREE', NFREE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
       module procedure zzekpgst
@@ -9332,7 +9332,7 @@ contains
       return
       end procedure zzekpgst
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -9340,7 +9340,7 @@ contains
       !>
       !>     Read conjunction sizes from an encoded EK query.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     EQRYI          is the integer portion of an encoded EK query.
       !>                    The query must have been parsed.
@@ -9348,17 +9348,17 @@ contains
       !>     N              is the index, within the FROM clause of the query,
       !>                    of the table whose name is to be fetched.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SIZE           is the size of the Nth conjunction of
       !>                    constraints in the input encoded query.  The size
       !>                    applies to the constraints after `normalization'.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input query is not initialized, the error will be
       !>         diagnosed by routines called by this routine.  The outputs
@@ -9372,11 +9372,11 @@ contains
       !>         conjunctions in the query, the error SPICE(INVALIDINDEX)
       !>         will be signaled.  The outputs will not be modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The call
       !>
@@ -9388,23 +9388,23 @@ contains
       !>     1 is to be used with the query to be initialized; this routine
       !>     will not work with any other architecture version.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKSRCH.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -9462,7 +9462,7 @@ contains
       return
       end procedure zzekqcnj
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -9471,7 +9471,7 @@ contains
       !>     Return elements of a specified constraint from an encoded EK
       !>     query.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     EQRYI,
       !>     EQRYC,
@@ -9483,7 +9483,7 @@ contains
       !>     N              is the index, within the WHERE clause of the query,
       !>                    of the constraint to be fetched.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CNSTYP         is the constraint type.  Possible values are
       !>
@@ -9550,11 +9550,11 @@ contains
       !>                    indicated by CNSTYP, and if the value's data type
       !>                    is DP or TIME, as indicated by DTYPE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input query is not initialized, the error will be
       !>         diagnosed by routines called by this routine.  The outputs
@@ -9569,11 +9569,11 @@ contains
       !>         will be signaled.  The outputs
       !>         will not be modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The call
       !>
@@ -9581,23 +9581,23 @@ contains
       !>
       !>     may be used to get the constraint count from an encoded query.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKSRCH.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 29-APR-2009 (NJB)
       !>
@@ -9781,7 +9781,7 @@ contains
       return
       end procedure zzekqcon
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -9790,7 +9790,7 @@ contains
       !>     Read a specified order-by table and column name, along with the
       !>     corresponding order sense, from an encoded EK query.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     EQRYI          is the integer portion of an encoded EK query.
       !>                    The query must have been parsed.
@@ -9800,7 +9800,7 @@ contains
       !>     N              is the index, within the ORDER BY clause of the
       !>                    query, of the table whose name is to be fetched.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABLE          is the table name or alias associated with the Nth
       !>                    column in the ORDER BY clause of an the input
@@ -9834,11 +9834,11 @@ contains
       !>                    that the order relation orders columns in the
       !>                    reverse of ascending order.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input query is not initialized, the error will be
       !>         diagnosed by routines called by this routine. The outputs
@@ -9852,11 +9852,11 @@ contains
       !>         columns in the ORDER BY clause, the error SPICE(INVALIDINDEX)
       !>         will be signaled. The outputs will not be modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The call
       !>
@@ -9865,23 +9865,23 @@ contains
       !>     may be used to get the ORDER BY column count from an encoded
       !>     query.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKSRCH.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
       !>
@@ -10044,7 +10044,7 @@ contains
       return
       end procedure zzekqord
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -10053,7 +10053,7 @@ contains
       !>     Read a specified SELECT clause table and column name from an
       !>     encoded EK query.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     EQRYI          is the integer portion of an encoded EK query.
       !>                    The query must have been parsed.
@@ -10063,7 +10063,7 @@ contains
       !>     N              is the index, within the SELECT clause of the
       !>                    query, of the table whose name is to be fetched.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LXBEG,
       !>     LXEND          are, respectively, the begin and end indices in
@@ -10089,11 +10089,11 @@ contains
       !>                    if the query has already had names resolved;
       !>                    otherwise, COLIDX is returned as zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input query is not initialized, the error will be
       !>         diagnosed by routines called by this routine.  The outputs
@@ -10108,11 +10108,11 @@ contains
       !>         will be signaled.  The outputs
       !>         will not be modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The call
       !>
@@ -10121,23 +10121,23 @@ contains
       !>     may be used to get the SELECT column count from an encoded
       !>     query.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKSRCH.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -10325,7 +10325,7 @@ contains
       return
       end procedure zzekqsel
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -10333,7 +10333,7 @@ contains
       !>
       !>     Read table names and aliases from an encoded EK query.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     EQRYI          is the integer portion of an encoded EK query.
       !>                    The query must have been parsed.
@@ -10343,7 +10343,7 @@ contains
       !>     N              is the index, within the FROM clause of the query,
       !>                    of the table whose name is to be fetched.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABLE          is the name of the Nth table in the FROM clause of
       !>                    the input encoded query.
@@ -10351,11 +10351,11 @@ contains
       !>     ALIAS          is the alias of TABLE.  If no alias for TABLE is
       !>                    present, ALIAS is returned blank.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input query is not initialized, the error will be
       !>         diagnosed by routines called by this routine.  The outputs
@@ -10370,11 +10370,11 @@ contains
       !>         will be signaled.  The outputs
       !>         will not be modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The call
       !>
@@ -10382,23 +10382,23 @@ contains
       !>
       !>     may be used to get the FROM table count from an encoded query.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKSRCH.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -10520,7 +10520,7 @@ contains
       return
       end procedure zzekqtab
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
       !>
@@ -10533,7 +10533,7 @@ contains
       !>     RECNO          is the number of the record containing the column
       !>                    entry to be written.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CVLEN          is the length of the returned string value.  This
       !>                    is the declared string length of the column being
@@ -10552,11 +10552,11 @@ contains
       !>     ISNULL         is a logical flag indicating whether the entry is
       !>                    null.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -10573,32 +10573,32 @@ contains
       !>         the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is a utility for reading data from class 9 columns.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKRCEC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 07-FEB-2015 (NJB)
       !>
@@ -10621,7 +10621,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 09-NOV-1995 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 28-JUL-1997 (NJB)
       !>
@@ -10776,7 +10776,7 @@ contains
       return
       end procedure zzekrd09
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -10795,16 +10795,16 @@ contains
       !>                    the companion record is the corresponding source
       !>                    record.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the action of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -10813,34 +10813,34 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine sets the companion record pointer of a specified EK
       !>     record.  As noted in $Detailed_Input, the `pointer' is simply
       !>     the number of the companion record.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKRBCK.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
       !>
@@ -10870,7 +10870,7 @@ contains
       return
       end procedure zzeksrcp
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -10881,16 +10881,16 @@ contains
       !>                    the include file ekrecptr.inc for values and
       !>                    meanings.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the action of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -10899,32 +10899,32 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine sets the status word of a specified EK record.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKCOMM.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
       !>
@@ -10954,7 +10954,7 @@ contains
       return
       end procedure zzeksrs
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
       !>                    reading or writing.
@@ -10969,16 +10969,16 @@ contains
       !>     RECPTR         is a pointer to the EK record containing the
       !>                    column entry of interest.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the number of elements in the specified
       !>     column entry.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -10990,33 +10990,33 @@ contains
       !>     3)  If the column index contained in the input column descriptor
       !>         is out of range, the error SPICE(INVALIDINDEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This utility supports the commonly performed function of
       !>     determining the element count of a column entry.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKESIZ.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -11305,7 +11305,7 @@ contains
 !
 !     Standard SPICE error handling.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NJRS           is the number of join row sets in a join row set
       !>                    for which address calculations will be performed.
@@ -11322,16 +11322,16 @@ contains
       !>                    join row set whose base address is BASES(NJRS) has
       !>                    the highest index of any row vector in the union.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a discussion of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the join row set count is less than 1 or greater than
       !>         MXJRS, the error SPICE(INVALIDCOUNT) is signaled.
@@ -11356,35 +11356,35 @@ contains
       !>         than zero or greater than TOP, the EK scratch area stack top,
       !>         the error SPICE(BADADDRESS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     1)  This routine uses the EK scratch area, which employs a scratch
       !>         DAS file.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine speeds up EK row vectors address calculations by
       !>     centralizing the activities that need be performed only once
       !>     for a series of address  calculations for a given join row set
       !>     union.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the $Examples section of ZZEKVADR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 28-SEP-1994 (NJB) (WLT)
       module procedure zzekvset
@@ -11568,13 +11568,13 @@ contains
       end associate
       end procedure zzekvset
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RWVIDX         is the index of a row vector in a join row set
       !>                    union.  The union is presumed to have been
       !>                    specified by a call to ZZEKVSET.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RWVBAS         is the EK scratch area base address of the row
       !>                    vector specified by RWVIDX.  This address is
@@ -11589,43 +11589,43 @@ contains
       !>                    The segment vector also occupies NTAB consecutive
       !>                    addresses.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input index is less than 1 or greater than
       !>         the highest index in the join row set union being addressed,
       !>         the error SPICE(INVALIDINDEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     1)  This routine uses the EK scratch area, which employs a scratch
       !>         DAS file.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See header of umbrella routine ZZEKVADR.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the $Examples section of ZZEKVADR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  ZZEKVSET must be called before this routine is called for the
       !>         first time.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 06-SEP-2006 (NJB)
       !>
@@ -11699,7 +11699,7 @@ contains
       end associate
       end procedure zzekvcal
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -11709,7 +11709,7 @@ contains
       !>                    number is recognized by the EK paged access
       !>                    routines.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     FWARD          is a forward data pointer.  This is the number
       !>                    of a data page on which the last column entry
@@ -11717,11 +11717,11 @@ contains
       !>
       !>                    FWARD may overwrite P.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -11733,33 +11733,33 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the forward data pointer of the specified EK
       !>     data page.  The value of the pointer is a page number.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKDE03.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
       !>
@@ -11811,7 +11811,7 @@ contains
       return
       end procedure zzekgfwd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -11821,16 +11821,16 @@ contains
       !>                    number is recognized by the EK paged access
       !>                    routines.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NLINKS         is the currently held number of links to the
       !>                    specified data page.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -11842,32 +11842,32 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine centralizes EK data page link count accesses.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKDELR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
       !>
@@ -11919,7 +11919,7 @@ contains
       return
       end procedure zzekglnk
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     QUERY          is an EK query to be parsed.  The tokens of the
       !>                    query have been found already.  See the header
@@ -11963,7 +11963,7 @@ contains
       !>                    These pointers delimit character values
       !>                    associated with literal string tokens.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EQRYI,
       !>     EQRYC,
@@ -11991,11 +11991,11 @@ contains
       !>                    no error occurred, ERROR is .FALSE. and PRSERR
       !>                    is blank.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     No matter how ridiculous the query passed to ZZEKNRML, the
       !>     routine diagnoses errors via the output arguments ERROR and
@@ -12054,11 +12054,11 @@ contains
       !>        WHERE clause ran out of tokens unexpectedly.
       !>        This may be due to an extra left parenthesis.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Here is the grammar for the EK WHERE clause:
       !>
@@ -12122,7 +12122,7 @@ contains
       !>                                    | <d.p. value>
       !>                                    | <integer value>
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  This routine breaks down the constraints of the WHERE clause
       !>
@@ -12143,19 +12143,19 @@ contains
       !>          as
       !>                          ( COL1 NE VAL1 ) AND ( COL3 EQ VAL3 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.0.1, 02-OCT-2021 (NJB)
       !>
@@ -14478,7 +14478,7 @@ contains
          end subroutine more_descriptors
       end procedure zzeknrml
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -14492,16 +14492,16 @@ contains
       !>                    of a data page on which the last column entry
       !>                    on page P is continued.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -14513,33 +14513,33 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine sets the forward data pointer of the specified EK
       !>     data page.  The value of the pointer is a page number.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKAPS.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
       !>
@@ -14587,7 +14587,7 @@ contains
       return
       end procedure zzeksfwd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -14600,16 +14600,16 @@ contains
       !>     NLINKS         is the new number of links to the specified data
       !>                    page.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -14621,12 +14621,12 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine updates the link count of the specified EK data page.
       !>
@@ -14634,23 +14634,23 @@ contains
       !>     there are.  When the link count of a page drops to zero, that
       !>     page is eligible to be freed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKDELR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
       !>
@@ -14698,22 +14698,22 @@ contains
       return
       end procedure zzekslnk
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
       !>     TREE           is the root node number of the tree of interest.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -14724,12 +14724,12 @@ contains
       !>     3)  If the number of keys in the root does not correspond to an
       !>         overflow of exactly 1 key, the error SPICE(BUG) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Insertions into an EK tree start at a leaf node.  If the node
       !>     overflows, the EK system attempts to shuffle keys at the leaf
@@ -14792,23 +14792,23 @@ contains
       !>     The root must be non-empty unless the tree is empty; this
       !>     condition is also met.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKTRIN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -14935,22 +14935,22 @@ contains
       return
       end procedure zzektr13
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
       !>     TREE           is the root node number of the tree of interest.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -14961,12 +14961,12 @@ contains
       !>     3)  If there is not exactly 1 key in the root at the time this
       !>         routine is called, the error SPICE(BUG) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Deletions from an EK tree start at a leaf node.  If the node
       !>     underflows, the EK system attempts to shuffle keys at the leaf
@@ -15056,23 +15056,23 @@ contains
       !>
       !>     Thus the size constraints on the root node are met.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKTRDL.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -15202,52 +15202,52 @@ contains
       return
       end procedure zzektr31
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NODE           is the number of a node in an EK tree.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the DAS integer base address of the
       !>     specified node.  This address is the predecessor of the first
       !>     DAS integer word occupied by the node.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  No error checking is done on the input node number.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is a utility that allows callers to locate a node
       !>     of a tree in the DAS integer address space.  Most commonly, this
       !>     routine is used to locate the root of a tree.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKNSEG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
       !>
@@ -15260,22 +15260,22 @@ contains
       return
       end procedure zzektrbs
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
       !>     TREE           is the root node number of the tree of interest.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -15287,19 +15287,19 @@ contains
       !>     3)  If the input tree is deeper than the maximum allowed depth
       !>         TRMXDP, the error SPICE(INVALIDFORMAT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine cleans up the pages occupied by an EK tree; the pages
       !>     are deallocated by the EK paging system.  Freeing a tree allows
       !>     the pages previous occupied by the tree to be used for other
       !>     purposes.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Return the pages occupied by the tree whose root node number
       !>         is TREE.  Assume HANDLE is a file handle of the EK to which
@@ -15307,11 +15307,11 @@ contains
       !>
       !>            CALL EKTRFR ( HANDLE, TREE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1)  Knuth, Donald E.  "The Art of Computer Programming, Volume
       !>         3/Sorting and Searching" 1973, pp 471-479.
@@ -15319,11 +15319,11 @@ contains
       !>         EK trees are closely related to the B* trees described by
       !>         Knuth.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 09-FEB-2015 (NJB)
       !>
@@ -15341,7 +15341,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 22-OCT-1995 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 14-OCT-1996 (NJB)
       !>
@@ -15525,21 +15525,21 @@ contains
       return
       end procedure zzektrfr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TREE           is the root node number of the tree created by
       !>                    this routine.  The root node number is used by the
       !>                    EK tree routines to identify the tree.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -15548,26 +15548,26 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used to create a new, empty EK tree.  The
       !>     tree has a root node, but no keys are contained in the root.
       !>     The metadata area of the tree is initialized.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKBSEG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1)  Knuth, Donald E.  "The Art of Computer Programming, Volume
       !>         3/Sorting and Searching" 1973, pp 471-479.
@@ -15575,11 +15575,11 @@ contains
       !>         EK trees are closely related to the B* trees described by
       !>         Knuth.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 09-OCT-2021 (NJB)
       !>
@@ -15642,7 +15642,7 @@ contains
       end associate
       end procedure zzektrit
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -15658,7 +15658,7 @@ contains
       !>                    KEY must be in the range 1 : NKEYS, where
       !>                    NKEYS is the number of keys in the tree.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IDX            is the node-relative index of KEY:  this is the
       !>                    ordinal position of KEY relative to other keys
@@ -15678,11 +15678,11 @@ contains
       !>     VALUE          is the integer value associated with the input key.
       !>                    Normally, this value is a data pointer.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -15700,26 +15700,26 @@ contains
       !>     5)  If the key is in range, but the key is not found, the error
       !>         SPICE(BUG) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine obtains the value associated with a key, and also
       !>     returns metadata describing the node containing the key and the
       !>     key's position in the node.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKTRUI.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1)  Knuth, Donald E.  "The Art of Computer Programming, Volume
       !>         3/Sorting and Searching" 1973, pp 471-479.
@@ -15727,11 +15727,11 @@ contains
       !>         EK trees are closely related to the B* trees described by
       !>         Knuth.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 09-FEB-2015 (NJB)
       !>
@@ -16053,7 +16053,7 @@ contains
       end associate
       end procedure zzektrlk
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
       !>                    access.
@@ -16062,7 +16062,7 @@ contains
       !>
       !>     NODE           is the node number of interest.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PARENT         is the number of the parent node of the node
       !>                    containing KEY.  If KEY is in the root, PARENT is
@@ -16113,11 +16113,11 @@ contains
       !>                    containing KEY has no right sibling, and RSIB is
       !>                    set to zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -16133,35 +16133,35 @@ contains
       !>         indicates the presence of a serious bug in the EK software,
       !>         or that the input EK file has been corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports tree operations that involve identifying
       !>     the parent node of a specified node.  In particular, this
       !>     routine supports updating ancestors of a node when an insertion
       !>     or deletion occurs.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKTRUD, ZZEKTRUI.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 09-FEB-2015 (NJB)
       !>
@@ -16380,7 +16380,7 @@ contains
       return
       end procedure zzektrpi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -16408,16 +16408,16 @@ contains
       !>                    LEFT to node RIGHT; negative counts indicate
       !>                    rotation in the reverse direction.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -16437,12 +16437,12 @@ contains
       !>         more than one key in the source node.  If either restriction
       !>         is violated, the error SPICE(BUG) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Insertions into and deletions from EK trees can result in
       !>     overflows or underflows of keys in nodes affected by these
@@ -16478,15 +16478,15 @@ contains
       !>          child pointer of this key becomes the left child pointer of
       !>          the first key of RIGHT.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKTRBN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1)  Knuth, Donald E.  "The Art of Computer Programming, Volume
       !>         3/Sorting and Searching" 1973, pp 471-479.
@@ -16494,11 +16494,11 @@ contains
       !>         EK trees are closely related to the B* trees described by
       !>         Knuth.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -16904,7 +16904,7 @@ contains
       return
       end procedure zzektrrk
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -16913,7 +16913,7 @@ contains
       !>     Weed out redundant, fully qualified row vectors from a join row
       !>     set union.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NJRS           is the number of join row sets in a join row set
       !>                    union to be weeded.
@@ -16926,7 +16926,7 @@ contains
       !>                    segment vectors of the two row vectors are
       !>                    identical as well.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NJRS           is the number of join row sets after redundant
       !>                    rows have been removed.  If any join row sets
@@ -16946,11 +16946,11 @@ contains
       !>     See $Particulars for a more detailed description of the effect of
       !>     this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If JRSBAS is not the base address of a structurally valid
       !>         join row set union, the results of this routine will be
@@ -16960,11 +16960,11 @@ contains
       !>         allowed number of constraint relations MAXCON, the error
       !>         SPICE(INVALIDCOUNT) will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects:  it modifies the join row
       !>     set designated by the input argument JRSBAS.  Every redundant
@@ -16980,11 +16980,11 @@ contains
       !>     The layout of a join row set in the EK scratch area is shown
       !>     in the join row set parameter include file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKSRCH.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) Loading or unloading EK files between name resolution of the
       !>        the input query and passing the query to this routine will
@@ -16993,15 +16993,15 @@ contains
       !>
       !>     2) Assumes redundant row vectors never occur in any join row set.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.1.1,  03-OCT-2021 (NJB)
       !>
@@ -17318,7 +17318,7 @@ contains
       return
       end procedure zzekweed
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of a new E-kernel file to be created.
       !>
@@ -17337,13 +17337,13 @@ contains
       !>
       !>              NCOMCH must be greater than or equal to zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the EK handle of the file designated by FNAME.
       !>              This handle is used to identify the file to other
       !>              EK routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     FTSIZE   is the maximum number of DAS files that a user can
       !>              have open simultaneously. This includes any files used
@@ -17352,7 +17352,7 @@ contains
       !>              See the include file das.inc for the actual value of
       !>              this parameter.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If NCOMCH is less than zero, the error SPICE(INVALIDCOUNT)
       !>         is signaled. No file will be created.
@@ -17368,17 +17368,17 @@ contains
       !>         file, the error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading ek.req for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects: it opens and prepares
       !>     an EK for addition of data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -17555,21 +17555,21 @@ contains
       !>        screen. After run completion, a new EK file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No more than FTSIZE DAS files may be opened simultaneously.
       !>         See the include file das.inc for the value of FTSIZE.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -17652,17 +17652,17 @@ contains
       return
       end procedure ekopn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the EK file handle of the file opened by this
       !>              routine. This handle is used to identify the file
       !>              to other EK routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     FTSIZE   is the maximum number of DAS files that a user can
       !>              have open simultaneously. This includes any files used
@@ -17671,7 +17671,7 @@ contains
       !>              See the include file das.inc for the actual value of
       !>              this parameter.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the indicated file cannot be opened, an error is signaled
       !>         by a routine in the call tree of this routine. The new file
@@ -17681,7 +17681,7 @@ contains
       !>         file, the error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine creates a temporary EK file; the file is deleted
       !>     when the calling program terminates or when the file is closed
@@ -17690,14 +17690,14 @@ contains
       !>     See the EK Required Reading ek.req for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects: it opens and prepares
       !>     an EK for addition of data. "Scratch" files are automatically
       !>     deleted when the calling program terminates normally or when
       !>     closed using the SPICELIB routine EKCLS.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -18025,21 +18025,21 @@ contains
       !>        output directory as scratch files are deleted when they are
       !>        closed or when the calling program terminates.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No more than FTSIZE DAS files may be opened simultaneously.
       !>         See the include file das.inc for the value of FTSIZE.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -18099,7 +18099,7 @@ contains
       return
       end procedure ekops
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK that is open for write
       !>                    access.
@@ -18107,16 +18107,16 @@ contains
       !>     COLDSC         is the column descriptor of the column for
       !>                    which the index is to be created.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -18125,12 +18125,12 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects:  it creates a new, empty
       !>     type 1 index for a specified EK column.  Though this routine
@@ -18147,23 +18147,23 @@ contains
       !>     must populate the index appropriately to reflect the order of
       !>     elements in the associated column.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKBSEG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 06-NOV-1995 (NJB)
       !>
@@ -18197,7 +18197,7 @@ contains
       return
       end procedure zzekcix1
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     QUERY          is a string containing the original input query.
       !>                    QUERY is used only for creating error messages.
@@ -18239,7 +18239,7 @@ contains
       !>                    These pointers delimit character values
       !>                    associated with literal string tokens.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EQRYI,
       !>     EQRYC,
@@ -18267,11 +18267,11 @@ contains
       !>                    no error occurred, ERROR is .FALSE. and PRSERR
       !>                    is blank.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  Most of the exceptions that can occur on a call to
       !>         ZZEKPARS are caused by errors in the input query.  ZZEKPARS
@@ -18321,11 +18321,11 @@ contains
       !>            PRSERR  =  Number of SELECT columns exceeds allowed
       !>            maximum of #.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines whether a query is syntactically correct;
       !>     it transforms correct queries into the EK system's encoded query
@@ -18336,24 +18336,24 @@ contains
       !>     conversion, and semantic checking.  See EKFIND for an example of
       !>     the normal sequence of query processing.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of EKFIND for examples of valid and invalid
       !>     queries.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.1.1, 03-OCT-2021 (NJB)
       !>
@@ -18368,7 +18368,7 @@ contains
       !>
       !>        Complete re-write for architecture 3.
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 4.1.0, 15-OCT-1996 (NJB)
       !>
@@ -19730,7 +19730,7 @@ contains
       return
       end procedure zzekpars
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -19750,16 +19750,16 @@ contains
       !>     PKIDX          is the node-relative index in PARENT of the key
       !>                    that sits between nodes LEFT and RIGHT.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OVERFL         is a logical flag indicating whether the parent
       !>                    node overflowed as a result of the 2-3 split.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -19777,12 +19777,12 @@ contains
       !>         correspond to an overflow of exactly 1 key, the error
       !>         SPICE(BUG) is signalled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Insertions into an EK tree start at a leaf node.  If the node
       !>     overflows, the EK system attempts to shuffle keys at the leaf
@@ -19889,23 +19889,23 @@ contains
       !>     result of a 2-3 split.  This may cause the parent to overflow;
       !>     if it does, the overflow at the parent's level must be resolved.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKTRIN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 16-NOV-1995 (NJB)
       !>
@@ -20299,7 +20299,7 @@ contains
       return
       end procedure zzektr23
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -20328,16 +20328,16 @@ contains
       !>                    immediate predecessor of the first key in the
       !>                    subtree headed by MIDDLE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     UNDRFL         is a logical flag indicating whether the parent
       !>                    node underflowed as a result of the 3-2 merge.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -20355,12 +20355,12 @@ contains
       !>         correspond to an underflow of exactly 1 key, the error
       !>         SPICE(BUG) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Deletions from an EK tree start at a leaf node.  If the node
       !>     underflows, the EK system attempts to shuffle keys at the leaf
@@ -20485,23 +20485,23 @@ contains
       !>     result of a 3-2 merge.  This may cause the parent to underflow;
       !>     if it does, the underflow at the parent's level must be resolved.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKTRDL.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -20950,7 +20950,7 @@ contains
       return
       end procedure zzektr32
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -20967,18 +20967,18 @@ contains
       !>                    KEY must be in the range 1 : NKEYS, where
       !>                    NKEYS is the number of keys in the tree.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PTR            is the integer value associated with the input key.
       !>                    Normally, this value is a data pointer.  However,
       !>                    the EK tree system makes no use of this fact, so
       !>                    PTR need not actually be a pointer.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -20990,26 +20990,26 @@ contains
       !>     3)  If the input key is out of range, the error is diagnosed by
       !>         routines called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine obtains the value associated with a key, without
       !>     returning the metadata supplied by the lower-level lookup routine
       !>     ZZEKTRLK.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKDELR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1)  Knuth, Donald E.  "The Art of Computer Programming, Volume
       !>         3/Sorting and Searching" 1973, pp 471-479.
@@ -21017,11 +21017,11 @@ contains
       !>         EK trees are closely related to the B* trees described by
       !>         Knuth.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 26-OCT-1995 (NJB)
       !>
@@ -21042,7 +21042,7 @@ contains
       return
       end procedure zzektrdp
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
       !>                    access.
@@ -21051,16 +21051,16 @@ contains
       !>
       !>     NODE           is the node number of interest.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the total number of keys in the specified
       !>     node of the EK tree designated by TREE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -21068,34 +21068,34 @@ contains
       !>     2)  If an I/O error occurs while reading the indicated file, the
       !>         error will be diagnosed by routines called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine should be used to determine the current size of a
       !>     node in an EK tree; the tree's metadata should not be accessed
       !>     directly to extract this information.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKTRIN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
       module procedure zzektrnk
@@ -21125,7 +21125,7 @@ contains
       return
       end procedure zzektrnk
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
       !>                    access.
@@ -21136,7 +21136,7 @@ contains
       !>                    are sought.  KEY is expected to be an absolute,
       !>                    not node-relative, key.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LSIB           is the number of the left sibling node of the node
       !>                    containing KEY.  If the node containing KEY has no
@@ -21150,11 +21150,11 @@ contains
       !>
       !>     RKEY           is an absolute key in node RSIB.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -21168,12 +21168,12 @@ contains
       !>     3)  If an I/O error occurs while reading the indicated file, the
       !>         error will be diagnosed by routines called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is a utility intended for use by other routines in
       !>     the EKTRxx set.
@@ -21181,23 +21181,23 @@ contains
       !>     The output keys LKEY and RKEY may be used to find the siblings
       !>     of the sibling nodes LSIB and RSIB.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKTRDL.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
       !>
@@ -21346,23 +21346,23 @@ contains
       return
       end procedure zzektrsb
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
       !>                    access.
       !>
       !>     TREE           is the root node number of the tree of interest.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the total number of keys in the specified
       !>     EK tree.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -21370,34 +21370,34 @@ contains
       !>     2)  If an I/O error occurs while reading the indicated file, the
       !>         error will be diagnosed by routines called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine should be used to determine the current size of an
       !>     EK tree; the tree's metadata should not be accessed directly to
       !>     extract this information.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKNSEG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
       module procedure zzektrsz
@@ -21418,7 +21418,7 @@ contains
       return
       end procedure zzektrsz
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -21436,7 +21436,7 @@ contains
       !>                    NKEYS is the number of keys in the tree prior to
       !>                    the deletion.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TRGKEY         is an absolute key identifying the node from which
       !>                    the deletion occurred.  This node may be different
@@ -21454,11 +21454,11 @@ contains
       !>                    resolved before any other insertions or deletions
       !>                    are performed.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -21470,12 +21470,12 @@ contains
       !>     3)  If the input key is out of range, the error
       !>         SPICE(INVALIDINDEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine deletes a value from an EK tree at the ordinal
       !>     position indicated by KEY.  The deletion is always done from a
@@ -21498,15 +21498,15 @@ contains
       !>     output TRGKEY has no analog in the unbalanced insertion routine
       !>     ZZEKTRUI.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKTRDL.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1)  Knuth, Donald E.  "The Art of Computer Programming, Volume
       !>         3/Sorting and Searching" 1973, pp 471-479.
@@ -21514,11 +21514,11 @@ contains
       !>         EK trees are closely related to the B* trees described by
       !>         Knuth.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 09-FEB-2015 (NJB)
       !>
@@ -21991,7 +21991,7 @@ contains
       return
       end procedure zzektrud
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -22012,7 +22012,7 @@ contains
       !>     VALUE          is an integer value to be inserted into the
       !>                    specified tree at the ordinal position KEY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OVERFL         is a logical flag indicating whether the node
       !>                    at which VALUE was inserted overflowed as a result.
@@ -22024,11 +22024,11 @@ contains
       !>                    resolved before any other insertions or deletions
       !>                    are performed.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -22043,12 +22043,12 @@ contains
       !>     4)  If the attempted insertion causes overflow in the target node
       !>         by more than 1 key, the error SPICE(NODETOOFULL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine inserts a new value into an EK tree at the ordinal
       !>     position indicated by KEY.  The insertion is always done in a
@@ -22063,15 +22063,15 @@ contains
       !>
       !>     The caller must balance the tree when overflow occurs.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKTRIN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1)  Knuth, Donald E.  "The Art of Computer Programming, Volume
       !>         3/Sorting and Searching" 1973, pp 471-479.
@@ -22079,11 +22079,11 @@ contains
       !>         EK trees are closely related to the B* trees described by
       !>         Knuth.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 09-FEB-2015 (NJB)
       !>
@@ -22508,20 +22508,20 @@ contains
       return
       end procedure zzektrui
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file opened for read access.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the number of segments in the EK identified
       !>     by HANDLE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, an error is signaled by a routine in the
       !>         call tree of this routine. EKNSEG will return the value zero.
@@ -22530,17 +22530,17 @@ contains
       !>         is signaled by a routine in the call tree of this routine.
       !>         EKNSEG will return the value zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used to support the function of summarizing an
       !>     EK file. Given the number of segments in the file, a program
       !>     can use EKSSUM in a loop to summarize each of them.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -22597,20 +22597,20 @@ contains
       !>
       !>         Number of segments =            2
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 25-MAY-2021 (JDR)
       !>
@@ -22665,7 +22665,7 @@ contains
       return
       end procedure eknseg
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
       !>                    reading or writing.
@@ -22677,7 +22677,7 @@ contains
       !>                    key is the ordinal position of the record pointer
       !>                    in the index.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECPTR         is the record pointer corresponding to the input
       !>                    key.  This pointer gives the base address of
@@ -22685,11 +22685,11 @@ contains
       !>                    ordinal position KEY within the specified column,
       !>                    where the order is defined by the column's index.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -22701,34 +22701,34 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine finds the record pointer for a record having a
       !>     specified ordinal position in a column, where the order is
       !>     defined by the column's index.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKSRCH.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
       !>
@@ -22784,7 +22784,7 @@ contains
 
       end procedure zzekixlk
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
       !>                    reading or writing.
@@ -22795,18 +22795,18 @@ contains
       !>     N              is the ordinal position of the record in the
       !>                    segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECPTR         is the record pointer corresponding to the input
       !>                    key.  This pointer identifies the record of
       !>                    interest.  The interpretation of RECPTR depends
       !>                    on the type of segment to which the record belongs.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -22818,33 +22818,33 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine finds the record pointer for a record having a
       !>     specified ordinal position in a segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKSRCH.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
       !>
@@ -22888,7 +22888,7 @@ contains
 
       end procedure zzekrplk
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -22902,16 +22902,16 @@ contains
       !>     VALUES         is an array of integer values to be inserted into
       !>                    the tree.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -22927,12 +22927,12 @@ contains
       !>         indicated by SIZE exceeds the maximum depth limit, the error
       !>         SPICE(COUNTTOOLARGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine creates an EK tree and loads the tree with the
       !>     integer values supplied in the array VALUES.  The ordinal
@@ -22946,15 +22946,15 @@ contains
       !>     large enough to hold all of the values to be loaded.  Note that
       !>     a partially full tree cannot be extended using this routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKFFLD.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1)  Knuth, Donald E.  "The Art of Computer Programming, Volume
       !>         3/Sorting and Searching" 1973, pp 471-479.
@@ -22962,11 +22962,11 @@ contains
       !>         EK trees are closely related to the B* trees described by
       !>         Knuth.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 05-FEB-2015 (NJB)
       !>
@@ -23662,7 +23662,7 @@ contains
       return
       end procedure zzektr1s
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -23685,16 +23685,16 @@ contains
       !>                    predecessor of the least key in the subnode headed
       !>                    by RIGHT.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -23714,12 +23714,12 @@ contains
       !>         cannot be satisfied by balancing.  If the sum fails to meet
       !>         this condition, the error SPICE(BUG) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Insertions into and deletions from EK trees can result in
       !>     overflows or underflows of keys in nodes affected by these
@@ -23754,15 +23754,15 @@ contains
       !>          child pointer of this key becomes the left child pointer of
       !>          the first key of RIGHT.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKTRIN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1)  Knuth, Donald E.  "The Art of Computer Programming, Volume
       !>         3/Sorting and Searching" 1973, pp 471-479.
@@ -23770,11 +23770,11 @@ contains
       !>         EK trees are closely related to the B* trees described by
       !>         Knuth.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -23864,7 +23864,7 @@ contains
       return
       end procedure zzektrbn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -23879,16 +23879,16 @@ contains
       !>     N              is the node-relative index of the key of interest.
       !>                    Indices of keys start at 1.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     KEY            is the absolute key located at index N within the
       !>                    node containing NODKEY.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -23901,25 +23901,25 @@ contains
       !>         of keys in the specified tree, the error SPICE(INVALIDINDEX)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows lookup of keys by index.  It is frequently
       !>     used by other EK private routines to find the first key of a node.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKTRIN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1)  Knuth, Donald E.  "The Art of Computer Programming, Volume
       !>         3/Sorting and Searching" 1973, pp 471-479.
@@ -23927,11 +23927,11 @@ contains
       !>         EK trees are closely related to the B* trees described by
       !>         Knuth.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -23993,7 +23993,7 @@ contains
 
       end procedure zzektrki
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
       !>                    access.
@@ -24002,16 +24002,16 @@ contains
       !>
       !>     IVAL           is the value to search for.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the lowest index at which the input value
       !>     is found, or zero if the value is not found.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -24022,35 +24022,35 @@ contains
       !>         the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This searches a tree for a specified value.  It is an approximate
       !>     inverse of ZZEKTRLK.  However, ZZEKTRLK operates in logarithmic
       !>     time (as a function of the tree's size), while this function
       !>     plods along in linear time.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKRP2N.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
       !>
@@ -24081,7 +24081,7 @@ contains
       return
       end procedure zzektrls
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The EK may be open for read
       !>                    or write access.
@@ -24089,7 +24089,7 @@ contains
       !>     SEGNO          is the number of the segment whose integer metadata
       !>                    location is sought.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>    PAGE            is the number of the first page containing integer
       !>                    metadata for the specified segment.  The segment
@@ -24101,11 +24101,11 @@ contains
       !>                    predecessor of the first DAS integer word
       !>                    belonging to this page.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -24117,12 +24117,12 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects:  it deletes a record
       !>     from an EK segment.  Deleting a record implies:
@@ -24145,25 +24145,25 @@ contains
       !>        6) The segment's metadata is updated to reflect the new
       !>           record count.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKINSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 02-OCT-2021 (JDR)
       !>
@@ -24233,7 +24233,7 @@ contains
 
       end procedure zzekmloc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -24251,16 +24251,16 @@ contains
       !>                    NKEYS is the number of keys in the tree prior to
       !>                    the deletion.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -24272,12 +24272,12 @@ contains
       !>     3)  If the input key is out of range, the error is diagnosed by
       !>         routines called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine deletes a value from an EK tree at a specified
       !>     location.  The successor of the value and all higher-indexed
@@ -24347,15 +24347,15 @@ contains
       !>     An EK tree is always balanced after a deletion:  all leaf nodes
       !>     are at the same level.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKDELR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1)  Knuth, Donald E.  "The Art of Computer Programming, Volume
       !>         3/Sorting and Searching" 1973, pp 471-479.
@@ -24363,11 +24363,11 @@ contains
       !>         EK trees are closely related to the B* trees described by
       !>         Knuth.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
       !>
@@ -24800,7 +24800,7 @@ contains
       return
       end procedure zzektrdl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -24821,16 +24821,16 @@ contains
       !>     VALUE          is an integer value to be inserted into the
       !>                    specified tree at the ordinal position KEY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -24842,12 +24842,12 @@ contains
       !>     3)  If the input key is out of range, the error is diagnosed by
       !>         routines called by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine inserts a value into an EK tree at a specified
       !>     location.  If the location is occupied, the value previously at
@@ -24894,15 +24894,15 @@ contains
       !>     An EK tree is always balanced after an insertion:  all leaf nodes
       !>     are at the same level.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKINSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1)  Knuth, Donald E.  "The Art of Computer Programming, Volume
       !>         3/Sorting and Searching" 1973, pp 471-479.
@@ -24910,11 +24910,11 @@ contains
       !>         EK trees are closely related to the B* trees described by
       !>         Knuth.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 01-NOV-1995 (NJB)
       !>
@@ -25167,7 +25167,7 @@ contains
       return
       end procedure zzektrin
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -25180,7 +25180,7 @@ contains
       !>                    number is recognized by the EK paged access
       !>                    routines.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SEGDSC         is the descriptor of the segment from which the
       !>                    specified page was deleted.  If P is the current
@@ -25188,11 +25188,11 @@ contains
       !>                    specifying the last word in use of this data type
       !>                    will be updated on exit from this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -25201,12 +25201,12 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.  The file may be corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects:  it deletes an EK data
       !>     page from a specified segment.  The segment's metadata is updated
@@ -25219,23 +25219,23 @@ contains
       !>     permanent when the file is closed.  Failure to close the file
       !>     properly will leave it in an indeterminate state.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKDELR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 2.0.0, 02-APR-1996 (NJB)
       !>
@@ -25331,7 +25331,7 @@ contains
       return
       end procedure zzekdps
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
       !>                    A `begin segment for fast load' operation must
@@ -25345,7 +25345,7 @@ contains
       !>                    from EKIFLD, the routine called to initiate a
       !>                    fast load.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WORK           is the input work space array, after use.  WORK
       !>                    will generally be modified by this routine.
@@ -25353,11 +25353,11 @@ contains
       !>     See the $Particulars section for a description of the
       !>     effects of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -25370,21 +25370,21 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine completes a type 1 EK segment after the data has been
       !>     written via the fast column loader routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKFFLD.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Only one segment can be created at a time using the fast
       !>         load routines.
@@ -25393,15 +25393,15 @@ contains
       !>         example, it is not valid to issue a query while a fast load
       !>         is in progress.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 11-OCT-2021 (NJB)
       !>
@@ -25628,7 +25628,7 @@ contains
       return
       end procedure zzekff01
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
       !>                    access.
@@ -25637,15 +25637,15 @@ contains
       !>                    desired.  A segment number is simply the ordinal
       !>                    position of the segment in its parent EK.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SEGDSC         is the descriptor of the specified segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -25657,34 +25657,34 @@ contains
       !>         the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine centralizes the coded needed to look up the
       !>     descriptor of a specified segment.  This is a frequently
       !>     performed function.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKACEC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
       !>
@@ -25701,7 +25701,7 @@ contains
       return
       end procedure zzeksdsc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
       !>                    reading or writing.
@@ -25710,7 +25710,7 @@ contains
       !>                    desired.  Segments are numbered from 1 to NSEG,
       !>                    where NSEG is the count of segments in the file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABNAM         is the name of the table to which the segment
       !>                    belongs.
@@ -25776,11 +25776,11 @@ contains
       !>                       4) Element 8 takes the value IFALSE if null
       !>                          values are not allowed in the column.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The output arguments will not be
@@ -25795,11 +25795,11 @@ contains
       !>         diagnosed by routines called by this routine.  The output
       !>         arguments may be modified in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports the function of summarizing a binary
       !>     EK file, allowing NAIF Toolkit users to determine whether it
@@ -25807,7 +25807,7 @@ contains
       !>     address information necessary to retrieve information from the
       !>     segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Dump the table and column names of the segments in an EK.
       !>
@@ -25857,19 +25857,19 @@ contains
       !>
       !>                  END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
       !>
@@ -25882,7 +25882,7 @@ contains
       !>
       !>-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 03-JUL-1996 (NJB)
       !>
@@ -25997,7 +25997,7 @@ contains
       return
       end procedure zzeksinf
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -26006,7 +26006,7 @@ contains
       !>     VALUE          is an integer value to be appended to the
       !>                    specified tree.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     KEY            is an absolute key indicating the insertion
       !>                    location.  In EK trees, absolute keys are just
@@ -26014,11 +26014,11 @@ contains
       !>                    of the tree, with the leftmost element having
       !>                    position 1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -26027,12 +26027,12 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine appends a new value to an EK tree; this action is
       !>     equivalent to inserting the value at position (NKEYS+1), where
@@ -26041,15 +26041,15 @@ contains
       !>     The tree is balanced and satisfies all invariants at the
       !>     completion of the appending.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKBSEG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1)  Knuth, Donald E.  "The Art of Computer Programming, Volume
       !>         3/Sorting and Searching" 1973, pp 471-479.
@@ -26057,11 +26057,11 @@ contains
       !>         EK trees are closely related to the B* trees described by
       !>         Knuth.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 22-SEP-2004 (EDW)
       !>
@@ -26083,7 +26083,7 @@ contains
 
       end procedure zzektrap
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file that is open for writing.
       !>              A "begin segment for fast write" operation must
@@ -26097,18 +26097,18 @@ contains
       !>              from EKIFLD, the routine called to initiate a
       !>              fast write.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     See the $Particulars section for a description of the
       !>     effects of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, an error is signaled by a routine in the
       !>         call tree of this routine.
@@ -26121,12 +26121,12 @@ contains
       !>         file, the error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading ek.req for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine completes an EK segment after the data has been
       !>     written via the fast column writer routines. The segment must
@@ -26142,7 +26142,7 @@ contains
       !>     may be extended by inserting more records and filling in those
       !>     records using the EKACEx routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -26399,7 +26399,7 @@ contains
       !>        screen. After run completion, a new EK file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Only one segment can be created at a time using the fast
       !>         write routines.
@@ -26408,17 +26408,17 @@ contains
       !>         example, it is not valid to issue a query while a fast write
       !>         is in progress.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 24-NOV-2021 (JDR)
       !>
@@ -26486,7 +26486,7 @@ contains
       return
       end procedure ekffld
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is an EK file handle specifying the EK containing
       !>              the segment to be summarized.
@@ -26495,7 +26495,7 @@ contains
       !>              desired. Segments are numbered from 1 to NSEG,
       !>              where NSEG is the count of segments in the file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABNAM   is the name of the table to which the segment
       !>              belongs.
@@ -26554,11 +26554,11 @@ contains
       !>              element of NULLOK applies to the column whose name
       !>              is the Ith element of CNAMES.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, an error is signaled by a routine in the
       !>         call tree of this routine. The output arguments will not be
@@ -26573,11 +26573,11 @@ contains
       !>         by a routine in the call tree of this routine. The output
       !>         arguments may be modified in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports the function of summarizing a binary
       !>     EK file, allowing NAIF Toolkit users to determine whether it
@@ -26585,7 +26585,7 @@ contains
       !>     address information necessary to retrieve information from the
       !>     segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Dump the table and column names of the segments in an EK.
       !>
@@ -26658,20 +26658,20 @@ contains
       !>
       !>                  END
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 02-JUL-2021 (JDR)
       !>
@@ -26687,7 +26687,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 07-JUL-1996 (NJB)
       !>
@@ -26749,7 +26749,7 @@ contains
       return
       end procedure ekssum
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -26762,7 +26762,7 @@ contains
       !>                    allocated are new.   A new page is one that has not
       !>                    been allocated before.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     P              is the number of the first page of the allocated
       !>                    series.  The rest of the pages have numbers
@@ -26775,11 +26775,11 @@ contains
       !>     BASE           is the DAS base address of the first allocated
       !>                    page.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -26788,12 +26788,12 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.  The file may be corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects: it allocates a series of
       !>     new, contiguous EK data pages for a specified segment. The
@@ -26816,23 +26816,23 @@ contains
       !>     permanent when the file is closed.  Failure to close the file
       !>     properly will leave it in an indeterminate state.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZEKWPAI.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
       !>
@@ -26905,7 +26905,7 @@ contains
       return
       end procedure zzekacps
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -26919,7 +26919,7 @@ contains
       !>                    allocated before.  If NEW is .FALSE., a page
       !>                    on the free list may be returned.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     P              is the page number of the allocated page.  This
       !>                    number is recognized by the EK paged access
@@ -26927,11 +26927,11 @@ contains
       !>
       !>     BASE           is the DAS base address of the allocated page.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -26940,12 +26940,12 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.  The file may be corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects:  it allocates an EK data
       !>     page for a specified segment.  The segment's metadata is updated
@@ -26964,24 +26964,24 @@ contains
       !>     permanent when the file is closed.  Failure to close the file
       !>     properly will leave it in an indeterminate state.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKIFLD.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine cannot be used to allocate series of contiguous
       !>         pages!  Use ZZEKACPS if contiguous pages are required.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
       !>
@@ -27049,7 +27049,7 @@ contains
       return
       end procedure zzekaps
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
       !>
@@ -27069,17 +27069,17 @@ contains
       !>                    of CNAMES and the Ith descriptor apply to
       !>                    the Ith column in the segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SEGNO          is the number of the segment created by this
       !>                    routine.  Segment numbers are used as unique
       !>                    identifiers by other EK access routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -27088,12 +27088,12 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects:  it prepares an EK for
       !>     the addition of a new type 1 segment.  Type 1 segments are
@@ -27104,23 +27104,23 @@ contains
       !>
       !>     By way of contrast, type 2 segments have fixed record counts.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKBSEG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-NOV-1995 (NJB)
       !>
@@ -27465,7 +27465,7 @@ contains
       return
       end procedure zzekbs01
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
       !>
@@ -27485,7 +27485,7 @@ contains
       !>                    of CNAMES and the Ith descriptor apply to
       !>                    the Ith column in the segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CDSCRS         are the input column descriptors, with their name
       !>                    base and ordinal position elements filled in.
@@ -27494,11 +27494,11 @@ contains
       !>                    routine.  Segment numbers are used as unique
       !>                    identifiers by other EK access routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -27507,12 +27507,12 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects:  it prepares an EK for
       !>     the addition of a new type 2 segment.  Type 2 segments have
@@ -27526,23 +27526,23 @@ contains
       !>     By way of contrast, type 1 segments support variable record
       !>     counts.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKBSEG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-NOV-1995 (NJB)
       !>
@@ -27867,7 +27867,7 @@ contains
       return
       end procedure zzekbs02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
       !>
@@ -27880,16 +27880,16 @@ contains
       !>     RECPTR         is a pointer to the record containing the column
       !>                    entry to delete.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.  See the $Particulars section for a description of the
       !>     effect of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.  The file will not be modified.
@@ -27898,12 +27898,12 @@ contains
       !>         file, the error will be diagnosed by routines called by this
       !>         routine.  The file may be corrupted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects:  it deletes a column entry
       !>     from an EK segment.  The status of the record containing the entry
@@ -27921,23 +27921,23 @@ contains
       !>     permanent when the file is closed.  Failure to close the file
       !>     properly will leave it in an indeterminate state.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKDELR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 07-FEB-2015 (NJB)
       !>
@@ -28107,7 +28107,7 @@ contains
       return
       end procedure zzekde04
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
       !>                    access.
@@ -28118,16 +28118,16 @@ contains
       !>     RECPTR         is a record pointer.  The number of the record
       !>                    having this pointer is sought.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the number of the record having the
       !>     specified record pointer.  The record should always be found.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is invalid, the error will be diagnosed by routines
       !>         called by this routine.
@@ -28143,35 +28143,35 @@ contains
       !>         that is not known to be valid.  If this error is trapped,
       !>         it is evidence of a bug.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the EK Required Reading for a discussion of the EK file
       !>     format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This searches an EK record tree for the record number
       !>     corresponding to a specified record pointer.  Caution:  this
       !>     routine plods along in linear time.  It is intended primarily
       !>     for use in error handling.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See EKDELR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 09-FEB-2015 (NJB)
       !>

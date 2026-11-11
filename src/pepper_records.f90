@@ -11,7 +11,7 @@ submodule (pepper_instance) pepper_records
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. when angular velocity data is requested.
       !>
@@ -42,7 +42,7 @@ contains
       !>              associated with the quaternion and, optionally, the
       !>              angular velocity vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CMAT     is a rotation matrix that transforms the components of
       !>              of a vector expressed in the reference frame given in
@@ -91,11 +91,11 @@ contains
       !>              returned C-matrix and, optionally, the returned angular
       !>              velocity vector.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  No checking is done to determine whether RECORD is a valid
       !>         record.
@@ -104,11 +104,11 @@ contains
       !>         velocity data. No checking is performed to verify this
       !>         assumption.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a detailed description of the structure of a type 1 pointing
       !>     segment, see the CK Required Reading file.
@@ -120,7 +120,7 @@ contains
       !>     requested. In other words, if NEEDAV is .TRUE., the routine will
       !>     expect the angular velocity component of the record to be present.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     A call to a CKEnn routine is almost always preceded by a call to
       !>     the corresponding CKRnn routine, which gets the logical record
@@ -198,15 +198,15 @@ contains
       !>
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
@@ -216,7 +216,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 12-AUG-2021 (JDR)
       !>
@@ -260,7 +260,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.2.0, 14-NOV-1995 (WLT)
       !>
@@ -332,7 +332,7 @@ contains
       return
       end procedure cke01
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
       !>
@@ -364,7 +364,7 @@ contains
       !>              av2, and av3 are the components of the angular velocity
       !>              vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CMAT     is a rotation matrix that transforms the components
       !>              of a vector expressed in the inertial frame given in
@@ -408,19 +408,19 @@ contains
       !>     CLKOUT   is the encoded SCLK associated with the returned
       !>              C-matrix and angular velocity vector.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  No checking is done to determine whether RECORD is valid.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a detailed description of the structure of a type 2 pointing
       !>     segment, see the CK Required Reading.
@@ -433,7 +433,7 @@ contains
       !>     associated with the time returned by CKR02. It also returns the
       !>     angular velocity vector contained in the pointing record.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     A call to a CKEnn routine is almost always preceded by a call to
       !>     the corresponding CKRnn routine, which gets the logical record
@@ -517,15 +517,15 @@ contains
       !>
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
@@ -533,7 +533,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -648,7 +648,7 @@ contains
       return
       end procedure cke02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
       !>
@@ -706,7 +706,7 @@ contains
       !>              values of that pointing instance are returned in both
       !>              parts of RECORD ( i.e. RECORD(1-9) and RECORD(10-16) ).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CMAT     is a rotation matrix that transforms the components
       !>              of a vector expressed in the inertial frame given in
@@ -751,21 +751,21 @@ contains
       !>     CLKOUT   is the encoded SCLK associated with the returned
       !>              C-matrix and angular velocity vector.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If inputs are invalid or otherwise in appropriate, such that
       !>         the computed matrix is not a rotation matrix, an error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the array RECORD contains pointing instances that bracket the
       !>     request time then CKE03 will linearly interpolate between those
@@ -826,7 +826,7 @@ contains
       !>
       !>                    AV  = ( 1 - W ) * AV1   +   W * AV2
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The CKRnn routines are usually used in tandem with the CKEnn
       !>     routines, which evaluate the record returned by CKRnn to give
@@ -947,22 +947,22 @@ contains
       !>
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No explicit checking is done on the input RECORD.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
       !>     F.S. Turner        (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 12-AUG-2021 (JDR)
       !>
@@ -981,7 +981,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 13-JUN-2002 (FST)
       !>
@@ -1123,7 +1123,7 @@ contains
       return
       end procedure cke03
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
       !>
@@ -1170,7 +1170,7 @@ contains
       !>              |         AV3 Cheby coefficients (optional)       |
       !>              ---------------------------------------------------
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CMAT     is a rotation matrix that transforms the components
       !>              of a vector expressed in the inertial frame given in
@@ -1215,21 +1215,21 @@ contains
       !>     CLKOUT   is the encoded SCLK associated with the returned
       !>              C-matrix and angular velocity vector.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See 'ckparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  No checking is done to determine whether RECORD is valid.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a detailed description of the structure of a type 4 pointing
       !>     segment, see the CK Required Reading file.
@@ -1245,7 +1245,7 @@ contains
       !>     expect the angular velocity component of the record to be
       !>     present.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The CKRnn routines are usually used in tandem with the CKEnn
       !>     routines, which evaluate the record returned by CKRnn to give
@@ -1370,22 +1370,22 @@ contains
       !>
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No checking is done on the input RECORD.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>     Y.K. Zaiko         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.3, 12-AUG-2021 (JDR)
       !>
@@ -1478,7 +1478,7 @@ contains
 
       end procedure cke04
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
       !>
@@ -1515,7 +1515,7 @@ contains
       !>                See the CK Required Reading or the include file
       !>                ck05.inc for details on CK type 5 packet contents.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   has been modified due to its use as a workspace array.
       !>              The contents are undefined.
@@ -1563,11 +1563,11 @@ contains
       !>     CLKOUT   is the encoded SCLK associated with the returned
       !>              C-matrix and angular velocity vector.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input record contains an unrecognized subtype code,
       !>         the error SPICE(NOTSUPPORTED) is signaled.
@@ -1582,17 +1582,17 @@ contains
       !>         error: the closer to the preceding quaternion of the two
       !>         quaternion representations is used for interpolation.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of CK type 5 (MEX/Rosetta Attitude
       !>     file interpolation) CK segments is described in the CK Required
       !>     Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The CKEnn routines are almost always used in conjunction with
       !>     the corresponding CKRnn routines, which read the records from
@@ -1712,7 +1712,7 @@ contains
       !>
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that the input record is valid. Any
       !>         checking of the input data is assumed to have been performed
@@ -1725,16 +1725,16 @@ contains
       !>         minimizes the Euclidean distance between one quaternion and
       !>         the next is the correct sign.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.1, 12-AUG-2021 (JDR)
       !>
@@ -1782,7 +1782,7 @@ contains
       !>
       !>-    SPICELIB Version 1.1.0, 06-SEP-2002 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.3.0, 23-OCT-2005 (NJB)
       !>
@@ -2319,7 +2319,7 @@ contains
       return
       end procedure cke05
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle of the CK file containing the
       !>              segment.
@@ -2339,7 +2339,7 @@ contains
       !>
       !>     NEEDAV   is .TRUE. when angular velocity data is requested.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the pointing record. Contents are as follows:
       !>
@@ -2375,11 +2375,11 @@ contains
       !>              the requested time tolerance on either side of the
       !>              input time.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified handle does not belong to any file that is
       !>         currently known to be open, an error is signaled by a routine
@@ -2396,12 +2396,12 @@ contains
       !>     4)  If there is a need for angular velocity data and the segment
       !>         contains no such data, the error SPICE(NOAVDATA) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The file containing the segment is specified by its handle, and
       !>     should be opened for read, either by CKLPF or DAFOPR.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the CK Required Reading file for a detailed description of
       !>     the structure of a type 1 pointing segment.
@@ -2413,7 +2413,7 @@ contains
       !>     the array RECORD that CKE01 uses to evaluate the pointing at the
       !>     time CLKOUT.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The CKRnn routines are usually used in tandem with the CKEnn
       !>     routines, which evaluate the record returned by CKRnn to give
@@ -2495,16 +2495,16 @@ contains
       !>
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The file containing the segment should be opened for read,
       !>         either by CKLPF or DAFOPR.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -2514,7 +2514,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.2, 12-AUG-2021 (NJB) (JDR)
       !>
@@ -2563,7 +2563,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 30-AUG-1991 (JML)
       !>
@@ -2878,7 +2878,7 @@ contains
       return
       end procedure ckr01
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle of the CK file containing the
       !>              segment.
@@ -2897,7 +2897,7 @@ contains
       !>              then the tolerance is used to determine if pointing
       !>              at one of the interval endpoints should be returned.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the pointing record. Contents are as follows:
       !>
@@ -2925,11 +2925,11 @@ contains
       !>     FOUND    is .TRUE. if a record was found to satisfy the pointing
       !>              request.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified handle does not belong to any file that is
       !>         currently known to be open, an error is signaled by a routine
@@ -2943,12 +2943,12 @@ contains
       !>         third integer component of the segment descriptor,
       !>         the error SPICE(WRONGDATATYPE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The file containing the segment is specified by its handle, and
       !>     should be opened for read, either by CKLPF or DAFOPR.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the CK Required Reading file for a detailed description of
       !>     the structure of a type 2 pointing segment.
@@ -2965,7 +2965,7 @@ contains
       !>     endpoint closest to the request time, provided that endpoint is
       !>     within the tolerance specified by the user.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The CKRnn routines are usually used in tandem with the CKEnn
       !>     routines, which evaluate the record returned by CKRnn to give
@@ -3052,16 +3052,16 @@ contains
       !>
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The file containing the segment should be opened for read,
       !>         either by CKLPF or DAFOPR.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -3069,7 +3069,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.2, 06-JUL-2021 (NJB) (JDR)
       !>
@@ -3511,7 +3511,7 @@ contains
       return
       end procedure ckr02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle of the CK file containing the
       !>              segment.
@@ -3536,7 +3536,7 @@ contains
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the record that CKE03 will evaluate to determine
       !>              the pointing.
@@ -3593,11 +3593,11 @@ contains
       !>              intervals, or when the request time is within the
       !>              tolerance of an interval endpoint.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified handle does not belong to an open DAF file,
       !>         an error is signaled by a routine in the call tree of this
@@ -3614,13 +3614,13 @@ contains
       !>     4)  If angular velocity data was requested but the segment
       !>         contains no such data, the error SPICE(NOAVDATA) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The file containing the segment is specified by its handle and
       !>     should be opened for read or write access, either by CKLPF,
       !>     DAFOPR, or DAFOPW.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the CK Required Reading file for a detailed description of
       !>     the structure of a type 3 pointing segment.
@@ -3639,7 +3639,7 @@ contains
       !>     will evaluate RECORD to give pointing at the time associated
       !>     with the returned pointing instance.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The CKRnn routines are usually used in tandem with the CKEnn
       !>     routines, which evaluate the record returned by CKRnn to give
@@ -3764,7 +3764,7 @@ contains
       !>
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The file containing the segment should be opened for read
       !>         or write access either by CKLPF, DAFOPR, or DAFOPW.
@@ -3772,18 +3772,18 @@ contains
       !>     2)  The record returned by this routine is intended to be
       !>         evaluated by CKE03.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.2, 12-AUG-2021 (NJB) (JDR)
       !>
@@ -4501,7 +4501,7 @@ contains
       end associate
       end procedure ckr03
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for
@@ -4525,7 +4525,7 @@ contains
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is a set of data from the specified segment which,
       !>              when evaluated at epoch SCLKDP, will give the
@@ -4559,11 +4559,11 @@ contains
       !>              The packet size is a function of the subtype code.
       !>              All packets in a record have the same size.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     This routine follows the pattern established in the lower-numbered
       !>     CK data type readers of not explicitly performing error
@@ -4593,16 +4593,16 @@ contains
       !>     7)  If the tolerance is negative, the error SPICE(VALUEOUTOFRANGE)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the CK Required Reading file for a description of the
       !>     structure of a data type 05 segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the CKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -4649,21 +4649,21 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Correctness of inputs must be ensured by the caller of
       !>         this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 06-JUL-2021 (NJB) (JDR)
       !>
@@ -5516,7 +5516,7 @@ contains
       end associate
       end procedure ckr05
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for a CK
@@ -5551,7 +5551,7 @@ contains
       !>              data are not valid; this can be done by setting the
       !>              segment descriptor angular velocity flag to .FALSE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is a set of data from the specified segment which,
       !>              when evaluated at epoch SCLKDP, will give the
@@ -5599,11 +5599,11 @@ contains
       !>              interval extends from its start time to the lesser of
       !>              its stop time and its last time tag.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     This routine roughly follows the pattern established in the
       !>     lower-numbered CK data type readers of not explicitly performing
@@ -5643,16 +5643,16 @@ contains
       !>         velocity data are not present, and if the input flag NEEDAV
       !>         is set to .TRUE., the error SPICE(NOAVDATA) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the CK Required Reading file for a description of the
       !>     structure of a data type 6 segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the CKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -5699,7 +5699,7 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Correctness of the C-kernel read by this routine is
       !>         assumed.
@@ -5707,17 +5707,17 @@ contains
       !>     2)  Correctness of inputs must be ensured by the caller of
       !>         this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 06-JUL-2021 (NJB) (JDR)
       !>
@@ -7049,7 +7049,7 @@ contains
       end associate
       end procedure ckr06
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for
@@ -7058,31 +7058,31 @@ contains
       !>     ET       is a target epoch, for which a data record from
       !>              a specific segment is required.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the record from the specified segment which,
       !>              when evaluated at epoch ET, will give the Euler
       !>              angles (orientation) of some body.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the PCK Required Reading file for a description of the
       !>     structure of a data type 2 (Chebyshev polynomials, Euler
       !>     angles only) segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -7278,21 +7278,21 @@ contains
       !>                 -4.6460429330339309E-010
       !>                 -1.0446918704281774E-010
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.2, 06-JUL-2021 (JDR)
       !>
@@ -7310,7 +7310,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-MAR-1993 (KSZ)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
       !>
@@ -7386,7 +7386,7 @@ contains
       return
       end procedure pckr02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for
@@ -7396,7 +7396,7 @@ contains
       !>              segment is required. ET is expressed as seconds past
       !>              J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the record from the specified segment which, when
       !>              evaluated at epoch ET, will give Euler angles and
@@ -7436,26 +7436,26 @@ contains
       !>              enough to accommodate the largest record that can be
       !>              returned by this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an issue is detected while looking up PCK data, an error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the PCK Required Reading file for a description of the
       !>     structure of a data type 20 (Chebyshev polynomials,
       !>     derivative coefficients only) segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the PCKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -7484,21 +7484,21 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
       !>
@@ -7675,7 +7675,7 @@ contains
       return
       end procedure pckr20
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF opened for reading that
       !>              contains the generic segment described by DESCR.
@@ -7688,18 +7688,18 @@ contains
       !>              meta data. See the file 'sgparam.inc' for details, the
       !>              mnemonics, and their values.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUE    is the value of the meta data item associated with
       !>              the mnemonic MNEMON that is in the generic segment
       !>              specified by HANDLE and DESCR.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     This subroutine makes use of parameters defined in the file
       !>     'sgparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the mnemonic for the meta data item is not valid, the error
       !>         SPICE(UNKNOWNMETAITEM) is signaled.
@@ -7708,11 +7708,11 @@ contains
       !>         of meta data items that exist in the segment is less than
       !>         MNMETA, the error SPICE(INVALIDMETADATA) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of HANDLE above.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is a utility for fetching the meta data associated
       !>     with a DAF generic segment.
@@ -7773,7 +7773,7 @@ contains
       !>     The meta data for the segment should be obtained only through
       !>     use of this routine, SGMETA.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that we would like to know how many constants, data
       !>     packets, and reference values are in the generic segment that we
@@ -7799,16 +7799,16 @@ contains
       !>           WRITE (*, *) 'Number of Data Packets    : ', NPKTS
       !>           WRITE (*, *) 'Number of Reference Values: ', NREFS
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The segment described by DESCR MUST be a generic segment,
       !>         otherwise the results of this routine are not predictable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
@@ -7816,7 +7816,7 @@ contains
       !>     F.S. Turner        (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.1, 20-AUG-2021 (JDR)
       !>
@@ -8128,7 +8128,7 @@ contains
       end associate
       end procedure sgmeta
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is a target epoch, at which a state vector is to
       !>              be computed.
@@ -8138,23 +8138,23 @@ contains
       !>              body, relative to some center, in some inertial
       !>              reference frame.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state. Units are km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of type 1 (difference lines)
       !>     segments are described in the SPK Required Reading file.
@@ -8170,19 +8170,19 @@ contains
       !>     Because the original version was undocumented, only Fred
       !>     knows how this really works.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     F.T. Krogh         (JPL)
@@ -8190,7 +8190,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 14-APR-2021 (JDR)
       !>
@@ -8403,7 +8403,7 @@ contains
       return
       end procedure spke01
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the epoch at which a state vector or Euler angle
       !>              state is to be computed. The epoch is represented as
@@ -8440,18 +8440,18 @@ contains
       !>              returned by this routine. See the INCLUDE file
       !>              spkrec.inc for the correct record length.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XYZDOT   is a 6-vector. In order, the components of XYZDOT are
       !>              X, Y, Z, X', Y', and Z'. Units for state evaluations
       !>              will be km and km/sec. Units for angles will be
       !>              radians and radians/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input record contains an invalid coefficient count,
       !>         the error SPICE(INVALIDCOUNT) is signaled.
@@ -8460,11 +8460,11 @@ contains
       !>         parameters, an error is signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of type 2 (Chebyshev polynomials,
       !>     position only) segments are described in the SPK and PCK Required
@@ -8476,7 +8476,7 @@ contains
       !>     derivative (which it computes internally) at the input epoch,
       !>     thereby arriving at the complete state.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -8508,15 +8508,15 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -8525,7 +8525,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 14-APR-2021 (JDR)
       !>
@@ -8634,7 +8634,7 @@ contains
       return
       end procedure spke02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the epoch at which a state vector or Euler angle
       !>              state is to be computed. The epoch is represented as
@@ -8676,16 +8676,16 @@ contains
       !>              returned by this routine. See the INCLUDE file
       !>              spkrec.inc for the correct record length.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state. In order, X, Y, Z, X', Y', and Z'.
       !>              Units are km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input record contains an invalid coefficient count,
       !>         the error SPICE(INVALIDCOUNT) is signaled.
@@ -8694,11 +8694,11 @@ contains
       !>         parameters, an error is signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of type 3 (Chebyshev polynomials,
       !>     position and velocity) segments are described in the SPK
@@ -8710,7 +8710,7 @@ contains
       !>     calls the routine CHBVAL to evaluate each polynomial, and arrive
       !>     at the complete state.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SPKEnn routines are almost always used in conjunction with
       !>     the corresponding SPKRnn routines, which read the records from
@@ -8748,15 +8748,15 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -8764,7 +8764,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     R.E. Thurman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 14-APR-2021 (JDR)
       !>
@@ -8870,7 +8870,7 @@ contains
       return
       end procedure spke03
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is a target epoch, at which a state vector is to
       !>              be computed.
@@ -8901,7 +8901,7 @@ contains
       !>                 | state n (6 elts.)    |
       !>                 +----------------------+
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state. In order, the elements are
       !>
@@ -8909,27 +8909,27 @@ contains
       !>
       !>              Units are km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The caller of this routine must ensure that the input record
       !>         is appropriate for the supplied ET value. Otherwise,
       !>         arithmetic overflow may result.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of type 8 (equally spaced discrete
       !>     states, interpolated by Lagrange polynomials) segments are
       !>     described in the SPK Required Reading file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SPKEnn routines are almost always used in conjunction with
       !>     the corresponding SPKRnn routines, which read the records from
@@ -8967,20 +8967,20 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 12-AUG-2021 (JDR)
       !>
@@ -8998,7 +8998,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 14-AUG-1993 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 25-AUG-2005 (NJB)
       !>
@@ -9071,7 +9071,7 @@ contains
       return
       end procedure spke08
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is a target epoch, at which a state vector is to
       !>              be computed.
@@ -9100,7 +9100,7 @@ contains
       !>                 | epochs 1--n          |
       !>                 +----------------------+
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the input record, modified by use as a work area.
       !>              On output, RECORD no longer contains useful
@@ -9112,27 +9112,27 @@ contains
       !>
       !>              Units are km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The caller of this routine must ensure that the input record
       !>         is appropriate for the supplied ET value. Otherwise,
       !>         arithmetic overflow may result.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of type 9 (unequally spaced
       !>     discrete states, evaluated by Lagrange interpolation) segments are
       !>     described in the SPK Required Reading file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SPKEnn routines are almost always used in conjunction with
       !>     the corresponding SPKRnn routines, which read the records from
@@ -9170,21 +9170,21 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     R.E. Thurman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 12-AUG-2021 (JDR)
       !>
@@ -9199,7 +9199,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 14-AUG-1993 (NJB) (RET)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 31-AUG-2005 (NJB)
       !>
@@ -9264,7 +9264,7 @@ contains
       return
       end procedure spke09
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired.
       !>
@@ -9293,33 +9293,33 @@ contains
       !>                 | state n (6 elts.)    |
       !>                 +----------------------+
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state vector at epoch ET. Its contents are, in
       !>              order, X, Y, Z, X', Y', and Z'. Units are km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXREC   is the maximum size of SPK record. See the SPICELIB
       !>              routine SPKPVN for details.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while interpolating the SPK data, the
       !>         error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of type 12 (unequally spaced
       !>     discrete states, evaluated by Hermite interpolation) SPK segments
       !>     is described in the SPK Required Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SPKEnn routines are almost always used in conjunction with
       !>     the corresponding SPKRnn routines, which read the records from
@@ -9359,22 +9359,22 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that the input record is valid. Any
       !>         checking of the input data is assumed to have been performed
       !>         when the source SPK file was created.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 14-APR-2021 (JDR)
       !>
@@ -9455,7 +9455,7 @@ contains
       return
       end procedure spke12
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired.
       !>
@@ -9482,33 +9482,33 @@ contains
       !>                 | epochs 1--n          |
       !>                 +----------------------+
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state vector at epoch ET. Its contents are, in
       !>              order, X, Y, Z, X', Y', and Z'. Units are km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXREC   is the maximum size of SPK record. See the SPICELIB
       !>              routine SPKPVN for details.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while interpolating the SPK data, the
       !>         error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of type 13 (unequally spaced
       !>     discrete states, evaluated by Hermite interpolation) SPK segments
       !>     is described in the SPK Required Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SPKEnn routines are almost always used in conjunction with
       !>     the corresponding SPKRnn routines, which read the records from
@@ -9548,22 +9548,22 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that the input record is valid. Any
       !>         checking of the input data is assumed to have been performed
       !>         when the source SPK file was created.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 14-APR-2021 (JDR)
       !>
@@ -9635,7 +9635,7 @@ contains
       return
       end procedure spke13
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired.
       !>
@@ -9644,24 +9644,24 @@ contains
       !>              and velocity) of some body, relative to some center, in
       !>              some inertial reference frame.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state vector at epoch ET. Its contents are, in
       !>              order, X, Y, Z, X', Y', and Z'. Units are km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of a type 14 SPK segment is
       !>     described in the SPK Required Reading.
@@ -9672,7 +9672,7 @@ contains
       !>     vector.  SPKE14 calls the routine CHBVAL to evaluate each
       !>     Chebyshev polynomial, and arrive at the complete state.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SPKEnn routines are almost always used in conjunction with
       !>     the corresponding SPKRnn routines, which read the records from
@@ -9712,20 +9712,20 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 17-JUN-2021 (JDR)
       !>
@@ -9789,7 +9789,7 @@ contains
 
       end procedure spke14
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is a target epoch, specified as ephemeris seconds past
       !>              J2000, at which a state vector is to be computed.
@@ -9847,16 +9847,16 @@ contains
       !>                            the reference frame of the associated
       !>                            SPK segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state produced by evaluating RECIN at ET.
       !>              Units are km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the eccentricity is greater than 0.9, the error
       !>         SPICE(BADECCENTRICITY) is signaled.
@@ -9864,18 +9864,18 @@ contains
       !>     2)  If the semi-major axis is non-positive, the error
       !>         SPICE(BADSEMIAXIS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine performs a cursory examination of the elements
       !>     of a type 17 SPK data record and then passes the equinoctial
       !>     elements contained in that record on to the SPICE routine
       !>     EQNCPV for evaluation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SPKEnn routines are almost always used in conjunction with
       !>     the corresponding SPKRnn routines, which read the records from
@@ -9913,20 +9913,20 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 27-AUG-2021 (JDR)
       !>
@@ -10005,7 +10005,7 @@ contains
       return
       end procedure spke17
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired.
       !>
@@ -10034,31 +10034,31 @@ contains
       !>                 | epochs 1--n          |
       !>                 +----------------------+
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state vector at epoch ET. Its contents are, in
       !>              order, X, Y, Z, X', Y', and Z'. Units are km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXREC   is the maximum size of SPK record. See the SPICELIB
       !>              routine SPKPVN for details.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine assumes that the input record is valid.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of type 18 (MEX/Rosetta Orbit
       !>     file interpolation) SPK segments is described in the SPK
       !>     Required Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SPKEnn routines are almost always used in conjunction with
       !>     the corresponding SPKRnn routines, which read the records from
@@ -10098,22 +10098,22 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that the input record is valid. Any
       !>         checking of the input data is assumed to have been performed
       !>         when the source SPK file was created.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 16-AUG-2021 (JDR)
       !>
@@ -10311,7 +10311,7 @@ contains
       return
       end procedure spke18
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired,
       !>              expressed as seconds past J2000 TDB.
@@ -10348,17 +10348,17 @@ contains
       !>                 | epoch n              |
       !>                 +----------------------+
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state vector at epoch ET. Its contents are, in
       !>              order, X, Y, Z, X', Y', and Z'. Units are km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXREC   is the maximum size of SPK record. See the SPICELIB
       !>              routine SPKPVN for details.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  Most types of errors in the input record cannot be diagnosed
       !>         by this routine. This routine assumes that the input record
@@ -10368,17 +10368,17 @@ contains
       !>         is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of type 19 (ESOC/DDID piecewise
       !>     interpolation) SPK segments is described in the SPK Required
       !>     Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SPKEnn routines are almost always used in conjunction with
       !>     the corresponding SPKRnn routines, which read the records from
@@ -10418,23 +10418,23 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that the input record is valid. Any
       !>         checking of the input data is assumed to have been performed
       !>         when the source SPK file was created.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 12-AUG-2021 (JDR)
       !>
@@ -10672,7 +10672,7 @@ contains
       return
       end procedure spke19
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the epoch at which a state vector or Euler angle
       !>              state is to be computed. The epoch is represented as
@@ -10716,18 +10716,18 @@ contains
       !>              interval midpoint. See PCKE20 for a more detailed
       !>              description of the contents of PCK type 20 records.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XYZDOT   is a 6-vector. In order, the components of XYZDOT are
       !>              X, Y, Z, X', Y', and Z'. Units for state evaluations
       !>              will be km and km/sec. Units for angles will be
       !>              radians and radians/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input record contains an invalid coefficient count,
       !>         the error SPICE(INVALIDCOUNT) is signaled.
@@ -10736,11 +10736,11 @@ contains
       !>         parameters, an error is signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine evaluates both type 20 SPK and PCK records.
       !>
@@ -10755,7 +10755,7 @@ contains
       !>     interval. The position (or orientation) is obtained from the
       !>     indefinite integral of the velocity and the given vector.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -10790,22 +10790,22 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     R.E. Thurman       (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-APR-2021 (JDR)
       !>
@@ -10889,7 +10889,7 @@ contains
       return
       end procedure spke20
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is an epoch at which a state vector is to be
       !>              computed. The epoch is represented as seconds past
@@ -10929,12 +10929,12 @@ contains
       !>                    1          Maximum integration order plus 1
       !>                    3          Integration order array
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state resulting from evaluation of the input
       !>              record at ET. Units are km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXTRM   is the maximum number of terms allowed in
       !>              each component of the difference table
@@ -10942,16 +10942,16 @@ contains
       !>              See the INCLUDE file spk21.inc for the value
       !>              of MAXTRM.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the maximum table size of the input record exceeds
       !>         MAXTRM, the error SPICE(DIFFLINETOOLARGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of type 21 (difference lines)
       !>     segments are described in the SPK Required Reading file.
@@ -10959,19 +10959,19 @@ contains
       !>     SPKE21 is a modified version of SPKE01. The routine has been
       !>     generalized to support variable size difference lines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -10979,7 +10979,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-APR-2021 (JDR)
       !>
@@ -11204,7 +11204,7 @@ contains
       return
       end procedure spke21
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for
@@ -11213,32 +11213,32 @@ contains
       !>     ET       is a target epoch, for which a data record from
       !>              a specific segment is required.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the record from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
       !>              (position and velocity) of some body, relative
       !>              to some center, in some inertial reference frame.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while looking up SPK data, the error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the SPK Required Reading file for a description of the
       !>     structure of a data type 1 segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -11267,15 +11267,15 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
@@ -11283,7 +11283,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 14-APR-2021 (JDR)
       !>
@@ -11422,7 +11422,7 @@ contains
       return
       end procedure spkr01
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for
@@ -11432,7 +11432,7 @@ contains
       !>              specified segment is required. ET is expressed as
       !>              seconds past J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is an array of data from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
@@ -11467,26 +11467,26 @@ contains
       !>              returned by this routine. See the INCLUDE file
       !>              spkrec.inc for the correct record length.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while looking up SPK data, the error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the SPK Required Reading file for a description of the
       !>     structure of a data type 2 (Chebyshev polynomials, position
       !>     only) segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -11515,15 +11515,15 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -11532,7 +11532,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.2, 14-APR-2021 (JDR)
       !>
@@ -11628,7 +11628,7 @@ contains
       return
       end procedure spkr02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for
@@ -11638,7 +11638,7 @@ contains
       !>              specified segment is required. ET is expressed as
       !>              seconds past J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is an array of data from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
@@ -11680,20 +11680,20 @@ contains
       !>              returned by this routine. See the INCLUDE file
       !>              spkrec.inc for the correct record length.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while looking up SPK data, the error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the SPK Required Reading file for a description of the
       !>     structure of a data type 3 (Chebyshev polynomials, position
@@ -11703,7 +11703,7 @@ contains
       !>     of this routine is identical to SPKR02, which reads a type 2
       !>     (Chebyshev polynomials, position only) segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -11732,15 +11732,15 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -11749,7 +11749,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.2, 14-APR-2021 (JDR)
       !>
@@ -11845,7 +11845,7 @@ contains
       return
       end procedure spkr03
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for
@@ -11855,7 +11855,7 @@ contains
       !>              J2000, for which a data record from the segment is
       !>              required.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is a logical record from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
@@ -11885,11 +11885,11 @@ contains
       !>              first time. And if ET is greater than the last time
       !>              then, epochs 1 and 2 are set equal to this last time.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment specified by DESCR is not of data type 05,
       !>         the error SPICE(WRONGSPKTYPE) is signaled.
@@ -11898,11 +11898,11 @@ contains
       !>         the segment. The output RECORD will contain epochs and the
       !>         associated states which satisfy the rules stated above.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine reads the segment specified by DESCR from the SPK
       !>     file attached to HANDLE to locate the two epochs in the segment
@@ -11914,7 +11914,7 @@ contains
       !>     See the section of the SPK Required Reading on data type 05 for
       !>     a description of the structure of a type 05 segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -11948,15 +11948,15 @@ contains
       !>
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
@@ -11964,7 +11964,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 12-AUG-2021 (JDR)
       !>
@@ -12288,7 +12288,7 @@ contains
       return
       end procedure spkr05
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for
@@ -12297,7 +12297,7 @@ contains
       !>     ET       is a target epoch, for which a data record from
       !>              a specific segment is required.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is a set of data from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
@@ -12324,11 +12324,11 @@ contains
       !>                 | state n (6 elts.)    |
       !>                 +----------------------+
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     This routine follows the pattern established in the lower-numbered
       !>     SPK data type readers of not explicitly performing error
@@ -12345,16 +12345,16 @@ contains
       !>         in the segment descriptor, the error SPICE(TIMEOUTOFBOUNDS)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the SPK Required Reading file for a description of the
       !>     structure of a data type 8 segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -12383,22 +12383,22 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Correctness of inputs must be ensured by the caller of
       !>         this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.1, 12-AUG-2021 (JDR)
       !>
@@ -12576,7 +12576,7 @@ contains
       return
       end procedure spkr08
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for
@@ -12585,7 +12585,7 @@ contains
       !>     ET       is a target epoch, for which a data record from
       !>              a specific segment is required.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is a set of data from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
@@ -12610,11 +12610,11 @@ contains
       !>                 | epochs 1--n          |
       !>                 +----------------------+
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     This routine follows the pattern established in the lower-numbered
       !>     SPK data type readers of not explicitly performing error
@@ -12631,16 +12631,16 @@ contains
       !>         in the segment descriptor, the error SPICE(TIMEOUTOFBOUNDS)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the SPK Required Reading file for a description of the
       !>     structure of a data type 9 segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -12669,22 +12669,22 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Correctness of inputs must be ensured by the caller of
       !>         this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.1, 12-AUG-2021 (JDR)
       !>
@@ -13008,7 +13008,7 @@ contains
       return
       end procedure spkr09
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for
@@ -13017,18 +13017,18 @@ contains
       !>     ET       is a target epoch, for which a data record from
       !>              a specific segment is required.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the record from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
       !>              (position and velocity) of some body, relative
       !>              to some center, in some inertial reference frame.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment specified by DESCR is not a type 15 segment,
       !>         the error SPICE(WRONGSPKTYPE) is signaled.
@@ -13037,11 +13037,11 @@ contains
       !>         is not the case, the error SPICE(MALFORMEDSEGMENT) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine reads all of the data from a type 15 SPK segment.
       !>
@@ -13077,7 +13077,7 @@ contains
       !>
       !>     Except for J2, units are radians, km, seconds.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -13106,22 +13106,22 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     S. Schlaifer       (JPL)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 27-AUG-2021 (JDR)
       !>
@@ -13204,7 +13204,7 @@ contains
       return
       end procedure spkr15
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for
@@ -13213,18 +13213,18 @@ contains
       !>     ET       is a target epoch, for which a data record from
       !>              a specific segment is required.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the record from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
       !>              (position and velocity) of some body, relative
       !>              to some center, in some inertial reference frame.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment specified by DESCR is not a type 17 segment,
       !>         the error SPICE(WRONGSPKTYPE) is signaled.
@@ -13233,11 +13233,11 @@ contains
       !>         is not the case, the error SPICE(MALFORMEDSEGMENT) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine reads all of the data from a type 17 SPK segment.
       !>
@@ -13285,7 +13285,7 @@ contains
       !>
       !>     Units are km, radians and radians/second.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -13314,22 +13314,22 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     S. Schlaifer       (JPL)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 27-AUG-2021 (JDR)
       !>
@@ -13414,7 +13414,7 @@ contains
       return
       end procedure spkr17
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for
@@ -13423,7 +13423,7 @@ contains
       !>     ET       is a target epoch, for which a data record from
       !>              a specific segment is required.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is a set of data from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
@@ -13453,11 +13453,11 @@ contains
       !>              The packet size is a function of the subtype code.
       !>              All packets in a record have the same size.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input HANDLE does not designate a loaded SPK file, an
       !>         error is signaled by a routine in the call tree of this
@@ -13483,16 +13483,16 @@ contains
       !>     7)  If the input segment contains fewer than 2 packets, the
       !>         error SPICE(TOOFEWSTATES) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the SPK Required Reading file for a description of the
       !>     structure of a data type 18 segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -13521,21 +13521,21 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Correctness of inputs must be ensured by the caller of
       !>         this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 12-AUG-2021 (JDR)
       !>
@@ -13553,7 +13553,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 04-SEP-2002 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 21-DEC-2012 (NJB)
       !>
@@ -13969,7 +13969,7 @@ contains
       return
       end procedure spkr18
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for an SPK
@@ -13980,7 +13980,7 @@ contains
       !>              segment is required. ET is expressed as seconds past
       !>              J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is an array of data from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
@@ -14012,11 +14012,11 @@ contains
       !>              The packet size is a function of the type 19 subtype.
       !>              All packets in a record have the same size.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the Fortran INCLUDE file spk19.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input HANDLE does not designate a loaded SPK file, an
       !>         error is signaled by a routine in the call tree of this
@@ -14039,11 +14039,11 @@ contains
       !>     6)  If the segment subtype is not recognized, the error
       !>         SPICE(NOTSUPPORTED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPICE user applications normally will have no need to call this
       !>     routine directly. For further information, see the headers of the
@@ -14058,7 +14058,7 @@ contains
       !>     See the SPK Required Reading file for a description of the
       !>     structure of a data type 19 segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -14087,22 +14087,22 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Correctness of inputs must be ensured by the caller of
       !>         this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 12-AUG-2021 (JDR)
       !>
@@ -15122,7 +15122,7 @@ contains
       end associate
       end procedure spkr19
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for an SPK
@@ -15132,7 +15132,7 @@ contains
       !>              segment is required. ET is expressed as seconds past
       !>              J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is an array of data from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
@@ -15174,26 +15174,26 @@ contains
       !>              returned by this routine. See the INCLUDE file
       !>              spkrec.inc for the correct record length.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while looking up SPK data, the error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the SPK Required Reading file for a description of the
       !>     structure of a data type 20 (Chebyshev polynomials, velocity
       !>     only) segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -15222,21 +15222,21 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 14-APR-2021 (JDR)
       !>
@@ -15414,7 +15414,7 @@ contains
       return
       end procedure spkr20
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for
@@ -15424,7 +15424,7 @@ contains
       !>              segment is required. The epoch is represented as
       !>              seconds past J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is a data record which, when evaluated at epoch ET,
       !>              will give the state (position and velocity) of an
@@ -15460,11 +15460,11 @@ contains
       !>                    1          Maximum integration order plus 1
       !>                    3          Integration order array
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the maximum table size of the input record exceeds
       !>         MAXTRM, the error SPICE(DIFFLINETOOLARGE) is signaled.
@@ -15472,16 +15472,16 @@ contains
       !>     2)  If an error occurs while looking up SPK data, the error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the SPK Required Reading file for a description of the
       !>     structure of a data type 21 segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -15510,15 +15510,15 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -15526,7 +15526,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 14-APR-2021 (JDR)
       !>
@@ -15687,12 +15687,12 @@ contains
       return
       end procedure spkr21
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is the argument to use in each of the Stumpff functions
       !>              C_0, C_1, C_2, and C_3.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C0,
       !>     C1,
@@ -15700,7 +15700,7 @@ contains
       !>     C3       are the values of the Stumpff functions C_0(X), C_1(X),
       !>              C_2(X), and C_3(X).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     TRUNC    is the Maclaurin series for C_3 and C_2 respectively are:
       !>
@@ -15757,7 +15757,7 @@ contains
       !>
       !>              END
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input value of X is not in the domain of values
       !>         for which the Stumpff functions can be computed, the error
@@ -15766,11 +15766,11 @@ contains
       !>         The range of valid inputs is from  -[ln(2) + ln(DPMAX)]**2
       !>         to DPMAX.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes the values of the Stumpff functions C_0,
       !>     C_1, C_2, and C_3 at the input X.
@@ -15785,7 +15785,7 @@ contains
       !>
       !>     These series converge for all real values of X.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     For positive X,
       !>
@@ -15849,16 +15849,16 @@ contains
       !>     You should expect all of the differences to be on the order of
       !>     the precision of the machine on which this program is executed.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  J. Danby, "Fundamentals of Celestial Mechanics," 2nd Edition,
       !>          pp.345-347, Willman-Bell, 1989.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -15866,7 +15866,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.29.0, 28-NOV-2021 (BVS)
       !>
@@ -16027,7 +16027,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 17-FEB-1992 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 3.27.0, 08-APR-2014 (NJB) (WLT)
       !>
@@ -16347,7 +16347,7 @@ contains
       end associate
       end procedure stmp03
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -16357,12 +16357,12 @@ contains
       !>     a planetary system.  For other bodies, simply return the
       !>     input ID code.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>      BODY        is the integer ID code of the body for which the
       !>                  barycenter ID code is requested.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the NAIF integer ID code of the barycenter,
       !>     if any, associated with BODY.  If BODY is not the NAIF integer
@@ -16370,11 +16370,11 @@ contains
       !>
       !>     Planetary barycenter codes are the integers 1, ..., 9.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -16395,11 +16395,11 @@ contains
       !>        part of the planned satellite numbering scheme at
       !>        the date this routine was released.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine enables the caller to determine to which
       !>     planetary system, if any, a planet or natural satellite belongs.
@@ -16424,7 +16424,7 @@ contains
       !>
       !>     Codes with X = 5 are provisional.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) Find the planetary system (indicated by a barycenter ID
       !>        code) associated with the ID code 65001 (a provisional code
@@ -16475,21 +16475,21 @@ contains
       !>
       !>        BARY is assigned the value 9511010.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This routine should not be called from routines outside
       !>        of SPICELIB.  The interface and functionality may change
       !>        without notice.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 01-FEB-2004 (NJB)
       module procedure zzbodbry
@@ -16520,7 +16520,7 @@ contains
       return
       end procedure zzbodbry
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -16534,7 +16534,7 @@ contains
       !>     type 4 CK record from a single DP number stored in a physical
       !>     type 4 CK record in a file.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DPCOEF     is a DP number containing NSETS integers packed
       !>                together.
@@ -16543,23 +16543,23 @@ contains
       !>
       !>     PARCOD     is the packing base.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     I          is an array containing unpacked integers.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine unpacks NSETS integers packed in a single double
       !>     precision number using base specified by PARCOD and stored them
@@ -16576,25 +16576,25 @@ contains
       !>        I(1:NSETS) - is an array of integer numbers with values
       !>                     in the range [0:PARCOD-1].
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     Output integer array I must have enough space to hold NSETS
       !>     numbers.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     Y.K. Zaiko     (JPL)
       !>     B.V. Semenov   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
       module procedure zzck4d2i
@@ -16627,7 +16627,7 @@ contains
 
       end procedure zzck4d2i
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     This subroutine provides deep space common items used by both the
       !>     secular and periodics subroutines.
@@ -16635,7 +16635,7 @@ contains
       !>     This routine previously had the name DPPER, but the functions
       !>     inside weren't well organized.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>    EPOCH       Epoch of TLE set as Julian day value.
       !>
@@ -16651,7 +16651,7 @@ contains
       !>
       !>    NP          Mean motion
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>    SINIM       SIN of mean inclination.
       !>
@@ -16815,19 +16815,19 @@ contains
       !>
       !>    ZMOS        Internal SGD4 parameter.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is based on the DSCOM code by David Vallado
       !>     corresponding to "Revisiting Spacetrack Report #3" [4].
@@ -16841,15 +16841,15 @@ contains
       !>
       !>        ENDDO replaced with END DO.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>   [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
       !>       Propagation of the NORAD Element Sets." Spacetrack Report #3.
@@ -16869,12 +16869,12 @@ contains
       !>       AIAA 2006-6753 presented at the AIAA/AAS Astrodynamics
       !>       Specialist Conference, August 21-24, 2006. Keystone, CO.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     David Vallado   (AGI)
       !>     E. D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
       !>
@@ -17134,7 +17134,7 @@ contains
       return
       end procedure zzdscm
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>    COSIM       COS of mean inclination.
       !>
@@ -17226,7 +17226,7 @@ contains
       !>
       !>    NODEM       Mean right ascension of ascending node
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>    ECCM        Mean eccentricity
       !>
@@ -17308,19 +17308,19 @@ contains
       !>
       !>    XNI         Internal SGD4 parameter.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is based on the DSINIT code by David Vallado
       !>     corresponding to "Revisiting Spacetrack Report #3" [4].
@@ -17336,15 +17336,15 @@ contains
       !>
       !>        whichconst    eliminated, function provided by GEOPHS
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>   [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
       !>       Propagation of the NORAD Element Sets." Spacetrack Report #3.
@@ -17364,12 +17364,12 @@ contains
       !>       AIAA 2006-6753 presented at the AIAA/AAS Astrodynamics
       !>       Specialist Conference, August 21-24, 2006. Keystone, CO.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     David Vallado   (AGI)
       !>     E. D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 03-NOV-2014 (EDW)
       !>
@@ -17725,7 +17725,7 @@ contains
       return
       end procedure zzdsin
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     D2201      D coefficients
       !>
@@ -17799,7 +17799,7 @@ contains
       !>
       !>     NODEM      Right ascension of ascending node
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ATIME      Internal SGD4 parameter.
       !>
@@ -17822,19 +17822,19 @@ contains
       !>
       !>     NM         Calculated mean motion.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is based on the DSPACE code by David Vallado
       !>     corresponding to "Revisiting Spacetrack Report #3" [4].
@@ -17848,15 +17848,15 @@ contains
       !>
       !>        ENDDO replaced with END DO.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>   [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
       !>       Propagation of the NORAD Element Sets." Spacetrack Report #3.
@@ -17876,12 +17876,12 @@ contains
       !>       AIAA 2006-6753 presented at the AIAA/AAS Astrodynamics
       !>       Specialist Conference, August 21-24, 2006. Keystone, CO.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     David Vallado   (AGI)
       !>     E. D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
       !>
@@ -18114,7 +18114,7 @@ contains
       return
       end procedure zzdspc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     OPMODE     Flag indicating which technique
       !>                to use to calculate sidereal time.
@@ -18199,7 +18199,7 @@ contains
       !>
       !>     MP         Mean anomaly.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ECCP       Calculated perturbed eccentricity.
       !>
@@ -18212,19 +18212,19 @@ contains
       !>
       !>     MP         Calculated perturbed mean anomaly.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is based on the DPPER code by David Vallado
       !>     corresponding to "Revisiting Spacetrack Report #3" [4].
@@ -18236,15 +18236,15 @@ contains
       !>
       !>        ENDIF replaced with END IF.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>   [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
       !>       Propagation of the NORAD Element Sets." Spacetrack Report #3.
@@ -18264,12 +18264,12 @@ contains
       !>       AIAA 2006-6753 presented at the AIAA/AAS Astrodynamics
       !>       Specialist Conference, August 21-24, 2006. Keystone, CO.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     David Vallado   (AGI)
       !>     E. D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
       !>
@@ -18475,7 +18475,7 @@ contains
       return
       end procedure zzdspr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     GEOPYS         Gephysical constants array.
       !>
@@ -18492,7 +18492,7 @@ contains
       !>
       !>     NO             Mean motion.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NO             Mean motion.
       !>
@@ -18522,21 +18522,21 @@ contains
       !>
       !>     GSTO           GST at time of observation.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) SPICE(UNKNOWNMODE) signals when the value of OPMODE
       !>        does not equal an assigned OPMODE value listed in
       !>        zzsgp4.inc.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is based on the INITL code by David Vallado
       !>     corresponding to "Revisiting Spacetrack Report #3" [4].
@@ -18556,15 +18556,15 @@ contains
       !>
       !>        whichconst    eliminated, function provided by GEOPHS
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>   [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
       !>       Propagation of the NORAD Element Sets." Spacetrack Report #3.
@@ -18584,12 +18584,12 @@ contains
       !>       AIAA 2006-6753 presented at the AIAA/AAS Astrodynamics
       !>       Specialist Conference, August 21-24, 2006. Keystone, CO.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     David Vallado   (AGI)
       !>     E. D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, OCT-09-2014 (EDW)
       !>
@@ -18734,7 +18734,7 @@ contains
       return
       end procedure zzinil
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
       !>
@@ -18771,7 +18771,7 @@ contains
       !>                See the CK Required Reading or the include file
       !>                ck06.inc for details on CK type 6 packet contents.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   has been modified due to its use as a workspace array.
       !>              The contents are undefined.
@@ -18819,11 +18819,11 @@ contains
       !>     CLKOUT   is the encoded SCLK associated with the returned
       !>              C-matrix and angular velocity vector.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input record contains an unrecognized subtype code, an
       !>         error is signaled by a routine in the call tree of this
@@ -18839,17 +18839,17 @@ contains
       !>         error: the closer to the preceding quaternion of the two
       !>         quaternion representations is used for interpolation.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of CK type 6 (MEX/Rosetta Attitude
       !>     file interpolation) CK segments is described in the CK Required
       !>     Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The CKEnn routines are almost always used in conjunction with
       !>     the corresponding CKRnn routines, which read the records from
@@ -18969,7 +18969,7 @@ contains
       !>
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine performs minimal error checking. The input data
       !>         are assumed to have been checked when the source CK file was
@@ -18981,17 +18981,17 @@ contains
       !>         input record's subtype and packet count (which implies an
       !>         interpolating polynomial degree).
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
       !>
@@ -19019,7 +19019,7 @@ contains
       return
       end procedure cke06
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CKID     is the ID code for some object whose attitude
       !>              and possibly angular velocity are stored in
@@ -19032,7 +19032,7 @@ contains
       !>              However, blanks between characters are regarded
       !>              as being significant.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IDCODE   if META is 'SCLK' then the value returned in IDCODE
       !>              is the ID code of the spacecraft clock used for
@@ -19044,11 +19044,11 @@ contains
       !>              ID code of the spacecraft on which the platform indicated
       !>              by CKID is mounted.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the variable META is not recognized to be one of the
       !>         inputs 'SPK' or 'SCLK', the error SPICE(UNKNOWNCKMETA)
@@ -19059,11 +19059,11 @@ contains
       !>         a value of zero is returned for the requested item. Zero
       !>         is never the valid ID of a spacecraft clock.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine for mapping C-kernels to associated
       !>     spacecraft clocks.
@@ -19077,7 +19077,7 @@ contains
       !>
       !>     See the Frames Required Reading section on CK frames.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -19215,22 +19215,22 @@ contains
       !>        Input ET:                141162208.034340
       !>        Attitude found at ET:    141162208.034586
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.1, 07-JUN-2021 (JDR) (NJB)
       !>
@@ -19518,7 +19518,7 @@ contains
       end associate
       end procedure ckmeta
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
       !>              segment. The file should have been opened for read
@@ -19526,16 +19526,16 @@ contains
       !>
       !>     DESCR    is the packed descriptor of a data type 4 segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NREC     is the number of pointing records in the type 4
       !>              segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See 'ckparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment indicated by DESCR is not a type 4 segment,
       !>         the error SPICE(CKWRONGDATATYPE) is signaled.
@@ -19548,12 +19548,12 @@ contains
       !>         file specified by HANDLE, the results of this routine are
       !>         unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The file specified by HANDLE should be open for read or
       !>     write access.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a complete description of the internal structure of a type 4
       !>     segment, see the CK required reading.
@@ -19563,7 +19563,7 @@ contains
       !>     with CKGR04 which returns the Ith pointing record in the
       !>     segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that DATA.BC is a CK file that contains segments of
       !>     data type 4. Then the following code fragment extracts the
@@ -19658,23 +19658,23 @@ contains
       !>
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The binary CK file containing the segment whose descriptor
       !>         was passed to this routine must be opened for read or write
       !>         access by either CKLPF, DAFOPR, or DAFOPW.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     Y.K. Zaiko         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 26-OCT-2021 (JDR)
       !>
@@ -19732,7 +19732,7 @@ contains
 
       end procedure cknr04
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is an epoch, at which the Euler angles are to
       !>              be computed.
@@ -19740,24 +19740,24 @@ contains
       !>     RECORD   is a data record which, when evaluated at epoch ET,
       !>              will give the Euler angles of some body.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EULANG   is the Euler angles and their derivatives at
       !>              time ET.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of type 2 (Chebyshev polynomials,
       !>     position only) segments are described in the PCK Required Reading
@@ -19768,7 +19768,7 @@ contains
       !>     calls the routine SPKE02 for each set to evaluate the polynomial
       !>     AND its first derivative.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The PCKEnn routines are almost always used in conjunction with
       !>        the corresponding PCKRnn routines, which read the records from
@@ -19815,21 +19815,21 @@ contains
       !>     The Euler angles and their derivatives are returned
       !>     in EULANG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 20-AUG-2021 (JDR)
       !>
@@ -19872,7 +19872,7 @@ contains
       return
       end procedure pcke02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is an epoch at which the Euler angles state is to be
       !>              computed. The epoch is represented as seconds past
@@ -19916,7 +19916,7 @@ contains
       !>              enough to accommodate the largest record that can be
       !>              returned by PCKR20.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EULANG   is a 6-vector containing Euler angles and their
       !>              derivatives at time ET. The angles occupy the first
@@ -19966,11 +19966,11 @@ contains
       !>                 ANGLE_2 = pi/2 - DEC  radians
       !>                 ANGLE_3 = W           radians
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input record contains an invalid coefficient count, an
       !>         error is signaled by a routine in the call tree of this
@@ -19980,11 +19980,11 @@ contains
       !>         parameters, an error is signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of type 20 (Chebyshev polynomials,
       !>     position only) segments are described in the PCK Required Reading
@@ -19995,7 +19995,7 @@ contains
       !>     Euler angles phi, delta and psi. PCKE20 calls the routine SPKE20
       !>     for each set to evaluate the polynomial and its first derivative.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The PCKEnn routines are almost always used in conjunction with
       !>        the corresponding PCKRnn routines, which read the records from
@@ -20043,21 +20043,21 @@ contains
       !>        The Euler angles and their derivatives are returned
       !>        in EULANG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -20090,7 +20090,7 @@ contains
       return
       end procedure pcke20
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     GM       is the gravitational constant G times the mass M of the
       !>              central body.
@@ -20104,16 +20104,16 @@ contains
       !>              propagated. (The units of time and distance must be
       !>              the same in GM, PVINIT, and DT).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PVPROP   is the two-body propagation of the initial state
       !>              DT units of time past the epoch of the initial state.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If GM is not positive, the error SPICE(NONPOSITIVEMASS) is
       !>         signaled.
@@ -20137,11 +20137,11 @@ contains
       !>         are much greater but require substantial computation.) The
       !>         "reasonableness" of DT is checked at run-time.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine uses a universal variables formulation for the
       !>     two-body motion of an object in orbit about a central mass. It
@@ -20159,7 +20159,7 @@ contains
       !>     slight variation of the derivation in Danby's book
       !>     "Fundamentals of Celestial Mechanics" [1].
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -20271,24 +20271,24 @@ contains
       !>           R   (km):         -0.00000  -70710678.11865  -70710678.11865
       !>           V (km/s):          0.00000          0.04464         -0.04464
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Users should be sure that GM, PVINIT and DT are all in the
       !>         same system of units ( for example MKS ).
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  J. Danby, "Fundamentals of Celestial Mechanics," 2nd Edition,
       !>          pp 168-180, Willman-Bell, 1988.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.2.0, 26-OCT-2021 (JDR)
       !>
@@ -21152,7 +21152,7 @@ contains
       end associate
       end procedure prop2b
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF opened for reading that
       !>              contains the segment described by DESCR.
@@ -21169,18 +21169,18 @@ contains
       !>              constants section of the generic segment associated
       !>              with HANDLE and DESCR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUES   is the array of constant values obtained from the
       !>              constants section of the generic segment associated
       !>              with HANDLE and DESCR.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     This subroutine makes use of parameters defined in the file
       !>     'sgparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If FIRST is less than 1 or LAST is greater than the number of
       !>         constants, the error SPICE(REQUESTOUTOFBOUNDS) is signaled.
@@ -21188,18 +21188,18 @@ contains
       !>     2)  If LAST is less than FIRST, the error SPICE(REQUESTOUTOFORDER)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of HANDLE above.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows easy access to values from the constants
       !>     partition of a generic segment in a DAF file. Please see the DAF
       !>     Required Reading or the include file 'sgparam.inc' for a more
       !>     detailed description of a generic segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have located a DAF generic segment. The
       !>     fragment of code below shows how to fetch all of the
@@ -21219,23 +21219,23 @@ contains
       !>
       !>        CALL SGFCON ( HANDLE, DESCR, 1, MYNCON, CONSTS )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The segment described by DESCR must be a generic segment,
       !>         otherwise the results of this routine are not predictable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 26-OCT-2021 (JDR)
       !>
@@ -21315,7 +21315,7 @@ contains
 
       end procedure sgfcon
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF opened for reading that
       !>              contains the segment described by DESCR.
@@ -21332,7 +21332,7 @@ contains
       !>              constants section of the DAF segment described
       !>              by DESCR
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUES   is the array of values constructed by concatenating
       !>              requested packets one after the other into
@@ -21357,12 +21357,12 @@ contains
       !>              ENDS(2) gives the index of the last item of
       !>              the second packet fetched, etc.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     This subroutine makes use of parameters defined in the file
       !>     'sgparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If FIRST is less than 1 or LAST is greater than the number of
       !>         packets, the error SPICE(REQUESTOUTOFBOUNDS) is signaled.
@@ -21375,11 +21375,11 @@ contains
       !>         this error is that an upgrade to your version of the SPICE
       !>         toolkit is needed.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of HANDLE above.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine fetches requested packets from a generic
       !>     DAF segment. The two arrays returned have the following
@@ -21391,7 +21391,7 @@ contains
       !>     packets were returned then the I'th packet resides in
       !>     VALUES between index ENDS(I-1) + 1 and ENDS(I).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have located a generic DAF segment (as
       !>     identified by the contents of a segment descriptor).  The
@@ -21416,16 +21416,16 @@ contains
       !>           CALL SGFPKT ( HANDLE, DESCR, 3, 7,  MYPKSZ, ENDS )
       !>        END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The segment described by DESCR must be a generic segment,
       !>         otherwise the results of this routine are not predictable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -21433,7 +21433,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.1, 26-OCT-2021 (JDR)
       !>
@@ -21655,7 +21655,7 @@ contains
 
       end procedure sgfpkt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF open for reading
       !>
@@ -21666,7 +21666,7 @@ contains
       !>     X        is a value for which the associated reference value
       !>              and reference index is requested.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUE    is the reference value associated with the input value
       !>              X.
@@ -21681,12 +21681,12 @@ contains
       !>              found, FOUND will have a value of .TRUE.; otherwise it
       !>              will have a value of .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     This subroutine makes use of parameters defined in the file
       !>     'sgparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the reference directory structure is unrecognized, the
       !>         error SPICE(UNKNOWNREFDIR) is signaled. The most likely cause
@@ -21697,18 +21697,18 @@ contains
       !>         generic segment is too large to be represented as an integer,
       !>         the error SPICE(INDEXTOOLARGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of HANDLE above.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows you to easily find the index and value
       !>     of the reference item that should be associated with a
       !>     value X. Given this information you can then easily retrieve
       !>     the packet that should be associated with X.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have a generic segment that contains the
       !>     following items.
@@ -21735,23 +21735,23 @@ contains
       !>
       !>        CALL SGFPKT ( HANDLE, DESCR, INDX, EPHEM )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The segment described by DESCR MUST be a generic segment,
       !>         otherwise the results of this routine are not predictable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.1, 26-OCT-2021 (JDR)
       !>
@@ -22500,7 +22500,7 @@ contains
 
       end procedure sgfrvi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the open SPK file which contains
       !>              the segment of interest.
@@ -22512,7 +22512,7 @@ contains
       !>              particular record to be obtained from the SPK
       !>              segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the record from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
@@ -22539,20 +22539,20 @@ contains
       !>                 | state n (6 elts.)    |
       !>                 +----------------------+
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while looking up SPK data, the error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This subroutine will read a single record from a type 12 SPK
       !>     segment. The record read will provide the data necessary to
@@ -22562,7 +22562,7 @@ contains
       !>     The exact format and structure of a type 12 SPK segment is
       !>     described in the SPK Required Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in a raw form, taken
       !>     directly from the segment. As such, it will be not be directly
@@ -22591,23 +22591,23 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This subroutine should not be called directly by a casual
       !>         user. It is intended for use by the subroutine SPKPVN, and
       !>         certain tests for error conditions are not performed here, as
       !>         SPKPVN will have already performed them.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 14-APR-2021 (JDR)
       !>
@@ -22635,7 +22635,7 @@ contains
       return
       end procedure spkr12
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the open SPK file which contains
       !>              the segment of interest.
@@ -22647,7 +22647,7 @@ contains
       !>              particular record to be obtained from the SPK
       !>              segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the record from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
@@ -22672,11 +22672,11 @@ contains
       !>                 | epochs 1--n          |
       !>                 +----------------------+
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  It is assumed that the descriptor and handle supplied are
       !>         for a properly constructed type 13 segment. No checks are
@@ -22689,11 +22689,11 @@ contains
       !>     3)  If any other error occurs while looking up SPK data, the error
       !>         is signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This subroutine will read a single record from a type 13 SPK
       !>     segment. The record read will provide the data necessary to
@@ -22703,7 +22703,7 @@ contains
       !>     The exact format and structure of a type 13 SPK segment is
       !>     described in the SPK Required Reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in a raw form, taken
       !>     directly from the segment. As such, it will be not be directly
@@ -22732,23 +22732,23 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This subroutine should not be called directly by a casual
       !>         user. It is intended for use by the subroutine SPKPVN, and
       !>         certain tests for error conditions are not performed here, as
       !>         SPKPVN will have already performed them.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 14-APR-2021 (JDR)
       !>
@@ -22776,7 +22776,7 @@ contains
       return
       end procedure spkr13
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle of the CK file containing the
       !>              segment.
@@ -22801,7 +22801,7 @@ contains
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the record that CKE04 will evaluate to determine
       !>              the pointing and it includes parameters:
@@ -22852,11 +22852,11 @@ contains
       !>              intervals, or when the request time is within the
       !>              tolerance of an interval endpoint.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See 'ckparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified handle does not belong to an open DAF file,
       !>         an error is signaled by a routine in the call tree of this
@@ -22879,11 +22879,11 @@ contains
       !>         contains no such data, the error SPICE(NOAVDATA) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the CK Required Reading file for a detailed description of
       !>     the structure of a type 4 pointing segment.
@@ -22903,7 +22903,7 @@ contains
       !>     from the request time, and CKE04 will evaluate RECORD to give
       !>     pointing at the time associated with that interval end time.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The CKRnn routines are usually used in tandem with the CKEnn
       !>     routines, which evaluate the record returned by CKRnn to give
@@ -23043,7 +23043,7 @@ contains
       !>
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The file containing the segment should be opened for read
       !>         or write access either by CKLPF, DAFOPR, or DAFOPW.
@@ -23051,11 +23051,11 @@ contains
       !>     2)  The record returned by this routine is intended to be
       !>         evaluated by CKE04.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -23063,7 +23063,7 @@ contains
       !>     E.D. Wright        (JPL)
       !>     Y.K. Zaiko         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.3, 17-AUG-2021 (NJB) (JDR)
       !>
@@ -23403,7 +23403,7 @@ contains
 
       end procedure ckr04
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is a target epoch, at which a state transformation
       !>              matrix is to be calculated.
@@ -23414,23 +23414,23 @@ contains
       !>              some inertial frame. The angular velocity is
       !>              expressed relative to the body fixed coordinate frame.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ROTMAT   is the state transformation matrix at epoch ET.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The exact format and structure of type 03 PCK segments are
       !>     described in the PCK Required Reading file.
@@ -23449,7 +23449,7 @@ contains
       !>     rotate an inertially referenced state into the bodyfixed
       !>     coordinate system.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The PCKEnn routines are almost always used in conjunction with
       !>     the corresponding PCKRnn routines, which read the records from
@@ -23485,22 +23485,22 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.0.2, 20-AUG-2021 (JDR)
       !>
@@ -23701,7 +23701,7 @@ contains
       return
       end procedure pcke03
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle for a type 03 PCK segment.
       !>
@@ -23710,18 +23710,18 @@ contains
       !>     ET       is a target epoch, for which a data record from
       !>              the specified segment is required.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the record from the specified segment which,
       !>              when evaluated at epoch ET, will give the RA, DEC,
       !>              W and body fixed angular rates for the body associated
       !>              with the segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  It is assumed that the descriptor and handle supplied are
       !>         for a properly constructed type 03 segment. No checks are
@@ -23734,11 +23734,11 @@ contains
       !>     3)  If any issue is detected while reading the PCK data, an error
       !>         is signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This subroutine reads a type 03 PCK record from the segment
       !>     specified by HANDLE and DESCR. The record read will contain
@@ -23749,7 +23749,7 @@ contains
       !>     See the PCK Required Reading file for a description of the
       !>     structure of a type 03 PCK segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the PCKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -23778,23 +23778,23 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  It is assumed that the descriptor and handle supplied are
       !>         for a properly constructed type 03 segment. No checks are
       !>         performed to ensure this.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 12-AUG-2021 (JDR)
       !>
@@ -23870,7 +23870,7 @@ contains
 
       end procedure pckr03
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is a target epoch, specified as ephemeris seconds past
       !>              J2000, at which a state vector is to be computed.
@@ -23903,27 +23903,27 @@ contains
       !>              first time. And if ET is greater than the last time
       !>              then, epochs 1 and 2 are set equal to this last time.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state produced by evaluating RECORD at ET.
       !>              Units are km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is a problem propagating, subject to the laws of two
       !>         body motion, either of the states from RECORD to the requested
       !>         time ET, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine interpolates a state from the two reference states
       !>     contained in RECORD.
@@ -23937,7 +23937,7 @@ contains
       !>     Where it is known in advance that the HANDLE, DESCR pair points
       !>     to a type 05 data segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SPKEnn routines are almost always used in conjunction with
       !>     the corresponding SPKRnn routines, which read the records from
@@ -23975,15 +23975,15 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -23992,7 +23992,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 12-AUG-2021 (JDR)
       !>
@@ -24014,7 +24014,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 01-APR-1992 (JML) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.2.0, 31-AUG-2005 (NJB)
       !>
@@ -24117,7 +24117,7 @@ contains
       return
       end procedure spke05
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is a target epoch, specified as ephemeris seconds past
       !>              J2000, at which a state vector is to be computed.
@@ -24176,16 +24176,16 @@ contains
       !>
       !>              Units are radians, km, seconds
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state produced by evaluating RECIN at ET.
       !>              Units are km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the eccentricity is less than zero, the error
       !>         SPICE(BADECCENTRICITY) is signaled.
@@ -24211,11 +24211,11 @@ contains
       !>     6)  If the radius of the central body is negative, the error
       !>         SPICE(BADRADIUS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This algorithm applies J2 corrections for precessing the
       !>     node and argument of periapse for an object orbiting an
@@ -24256,7 +24256,7 @@ contains
       !>     where it is known in advance that the HANDLE, DESCR pair points
       !>     to a type 15 data segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SPKEnn routines are almost always used in conjunction with
       !>     the corresponding SPKRnn routines, which read the records from
@@ -24294,11 +24294,11 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  J. Danby, "Fundamentals of Celestial Mechanics," 2nd Edition,
       !>          pp.345-347, Willman-Bell, 1989.
@@ -24306,7 +24306,7 @@ contains
       !>     [2]  R. H. Battin, "Astronautical Guidance," pp.199, McGraw-Hill
       !>          Book Company, 1964.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -24314,7 +24314,7 @@ contains
       !>     S. Schlaifer       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 14-APR-2021 (JDR)
       !>
@@ -24650,7 +24650,7 @@ contains
       return
       end procedure spke15
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle and segment descriptor for
@@ -24659,18 +24659,18 @@ contains
       !>     ET       is a target epoch, for which a data record from
       !>              a specific segment is required.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the record from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
       !>              (position and velocity) of some body, relative
       !>              to some center, in some inertial reference frame.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  It is assumed that the descriptor and handle supplied are
       !>         for a properly constructed type 10 segment. No checks are
@@ -24679,16 +24679,16 @@ contains
       !>     2)  If an error occurs while looking up SPK data, the error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the SPK Required Reading file for a description of the
       !>     structure of a data type 10 segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in its rawest form,
       !>     taken directly from the segment. As such, it will be meaningless
@@ -24717,21 +24717,21 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 17-JUN-2021 (JDR)
       !>
@@ -24847,7 +24847,7 @@ contains
       return
       end procedure spkr10
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the open SPK file which contains the
       !>              segment of interest.
@@ -24858,18 +24858,18 @@ contains
       !>     ET       is the target epoch used to determine the particular
       !>              record to be obtained from the SPK segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the record from the specified segment which,
       !>              when evaluated at epoch ET, will give the state
       !>              (position and velocity) of some body, relative
       !>              to some center, in some inertial reference frame.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  It is assumed that the descriptor and handle supplied are
       !>         for a properly constructed type 14 segment. No checks are
@@ -24882,11 +24882,11 @@ contains
       !>     3)  If any other error occurs while looking up SPK data, the error
       !>         is signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This subroutine will read a single record from a type 14 SPK
       !>     segment. The record read will provide the data necessary to
@@ -24896,7 +24896,7 @@ contains
       !>     See the SPK Required Reading file for a description of the
       !>     structure of a type 14 SPK segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The data returned by the SPKRnn routine is in a raw form, taken
       !>     directly from the segment. As such, it will be not be directly
@@ -24925,23 +24925,23 @@ contains
       !>                  .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This subroutine should not be called directly by a casual
       !>         user. It is intended for use by the subroutine SPKPV, and
       !>         certain tests for error conditions are not performed here, as
       !>         SPKPV will have already performed them.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 14-APR-2021 (JDR)
       !>
@@ -25019,7 +25019,7 @@ contains
 
       end procedure spkr14
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
       !>              desired segment. The file should have been opened
@@ -25037,7 +25037,7 @@ contains
       !>
       !>     NEEDAV   is .TRUE. when angular velocity data is requested.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CMAT     is a rotation matrix that transforms the components of
       !>              of a vector expressed in the reference frame given in
@@ -25083,11 +25083,11 @@ contains
       !>              (if requested) were found to satisfy the pointing
       !>              request. FOUND will be false otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the data type of the segment is not one of those supported
       !>         by this routine, the error SPICE(CKUNKNOWNDATATYPE) is
@@ -25107,11 +25107,11 @@ contains
       !>         an error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The structure of this routine is just a big case statement. Each
       !>     segment data type is supported by two routines:
@@ -25129,7 +25129,7 @@ contains
       !>     The data type is determined from the segment descriptor, and the
       !>     appropriate routines are called.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     CKPFS allows you to be more selective than CKGP or CKGPAV about
       !>     choosing segments to satisfy CK pointing requests.
@@ -25194,16 +25194,16 @@ contains
       !>
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  A C-kernel file should have been loaded by either CKLPF
       !>         or DAFOPR.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -25213,7 +25213,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 6.1.0, 12-AUG-2021 (JDR)
       !>
@@ -25262,7 +25262,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 6.0.0, 24-MAR-2014 (NJB)
       !>
@@ -25447,7 +25447,7 @@ contains
       return
       end procedure ckpfs
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the integer ID code of the body for which the
       !>              state transformation matrix is requested. Bodies
@@ -25458,7 +25458,7 @@ contains
       !>     ET       is the epoch at which the state transformation
       !>              matrix is requested.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     REF      is the integer code for the inertial reference frame
       !>              of the state transformation matrix TSIPM. (See the
@@ -25514,11 +25514,11 @@ contains
       !>              value .TRUE., otherwise it will have the value
       !>              .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the size of the type 20 PCK record to be  retrieved is too
       !>         large to fit into RECORD, the error SPICE(PCKRECTOOLARGE)
@@ -25531,12 +25531,12 @@ contains
       !>         using data from loaded binary PCK files, FOUND is returned
       !>         with the value .FALSE. This is not a SPICE error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine computes transformation matrices using data
       !>     provided by a loaded binary PCK kernel.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The matrix for transforming an inertial state into a body fixed
       !>     states is the 6x6 matrix shown below as a block structured
@@ -25557,7 +25557,7 @@ contains
       !>     files in backward time order. If no binary PCK file has been
       !>     loaded, the text P_constants kernel file is used.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Here we load a binary PCK files and use PCKEUL to get the
       !>     Euler angles.
@@ -25571,15 +25571,15 @@ contains
       !>
       !>        CALL PCKMAT ( BODY, ET, REF, TIPM, FOUND )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -25587,7 +25587,7 @@ contains
       !>     E.D. Wright        (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.0, 26-OCT-2021 (JDR)
       !>
@@ -26214,7 +26214,7 @@ contains
 !
 !     SPICELIB routines.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     GEOPHS   is a collection of 8 geophysical constants needed
       !>              for computing a state. The order of these
@@ -26299,24 +26299,24 @@ contains
       !>     OPMODE   Flag indicating which technique
       !>              to use to calculate sidereal time.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If radius of perigee has value less-than 1, the error
       !>         SPICE(SUBORBITAL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is based on the SGP4INIT code by David Vallado
       !>     corresponding to "Revisiting Spacetrack Report #3".
@@ -26347,15 +26347,15 @@ contains
       !>        xnodeo replaced with ELEMS array.
       !>        radiusearthkm replaced with ER
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Refer to $Examples section in ZZSGP4.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
       !>         Propagation of the NORAD Element Sets." Spacetrack Report #3.
@@ -26375,12 +26375,12 @@ contains
       !>         AIAA 2006-6753 presented at the AIAA/AAS Astrodynamics
       !>         Specialist Conference, August 21-24, 2006. Keystone, CO.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 30-MAY-2021 (EDW) (JDR)
       !>
@@ -26962,22 +26962,22 @@ contains
       end associate
       end procedure xxsgp4i
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     T        is the time in minutes from the elements epoch
       !>              at which to calculate a state from the
       !>              TLE set.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state produced by evaluating the input elements
       !>              at the input epoch T. Units are km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the mean motion is less than 0, the error
       !>         SPICE(BADMEANMOTION) is signaled.0D0.
@@ -26997,11 +26997,11 @@ contains
       !>     6)  If the scaled orbit radial distance has value less than 1, the
       !>         error SPICE(ORBITDECAY) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is based on the SGP4 code by David Vallado
       !>     corresponding to "Revisiting Spacetrack Report #3."
@@ -27032,15 +27032,15 @@ contains
       !>        Error         eliminated
       !>        whichconst    eliminated, function provided by GEOPHS
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Refer to $Examples section in ZZSGP4.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
       !>         Propagation of the NORAD Element Sets." Spacetrack Report #3.
@@ -27060,13 +27060,13 @@ contains
       !>         AIAA 2006-6753 presented at the AIAA/AAS Astrodynamics
       !>         Specialist Conference, August 21-24, 2006. Keystone, CO.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 30-MAY-2021 (BVS) (JDR)
       !>

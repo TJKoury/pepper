@@ -12,11 +12,11 @@ submodule (pepper_instance) pepper_cells
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CHBASE is the base used by ENCHAR and DECHAR to encode and decode
       !>     non-negative integers to and from character strings. Its value is
@@ -34,19 +34,19 @@ contains
       !>     Note that CHBASE can be (and probably is) different from the
       !>     number of characters in the character set used by the processor.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The function always returns a constant value, set by the user
       !>     prior to compilation.
@@ -104,15 +104,15 @@ contains
       !>            END DO
       !>            END
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ENCHAR, DECHAR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  "Programming in VAX FORTRAN", Digital Equipment Corporation,
       !>          Section 8.3, pp.8-6, September 1984.
@@ -126,7 +126,7 @@ contains
       !>     [4]  "Lahey F77L EM/32 FORTRAN Language Reference Manual", p.222,
       !>          Note 20.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -137,7 +137,7 @@ contains
       !>     F.S. Turner        (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.27.0, 28-NOV-2021 (BVS)
       !>
@@ -320,7 +320,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.1.0, 05-DEC-2001 (FST)
       !>
@@ -387,11 +387,11 @@ contains
       return
       end procedure chbase
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NUMBER   is an arbitrary nonnegative integer.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STRING   is the character string implied by the ASCII
       !>              interpretation of NUMBER when converted to its
@@ -415,7 +415,7 @@ contains
       !>              The string is, in effect, "padded with nulls"
       !>              on the left.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MINLEN   is the minimum length of a string into which a
       !>              number may be encoded. In order to avoid padding
@@ -430,7 +430,7 @@ contains
       !>              so long as both strings are of length MINLEN or
       !>              greater.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the length of the output string is less than MINLEN,
       !>         the error SPICE(INSUFFLEN) is signaled.
@@ -442,35 +442,35 @@ contains
       !>     3)  If the number to be encoded is larger than CHBASE       - 1,
       !>         the error SPICE(OUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The value of CHBASE, which varies from machine to machine, is
       !>     returned by a constant function of the same name.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See: SCARDC, SSIZEC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -489,7 +489,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-JAN-1989 (IMU)
       !>
@@ -547,7 +547,7 @@ contains
       return
       end procedure enchar
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is a character string previously encoded by ENCHAR.
       !>              This contains an integer in base CHBASE notation,
@@ -555,24 +555,24 @@ contains
       !>              available character set. See ENCHAR for details
       !>              about the format of STRING.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NUMBER   is the integer encoded in the input string.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the length of the input string is less than MINLEN,
       !>         the error SPICE(INSUFFLEN) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DECHAR is the inverse of ENCHAR. In the example below,
       !>
@@ -586,26 +586,26 @@ contains
       !>
       !>     the logical test (I .EQ. J) is always true.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See: CARDC, SIZEC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -624,7 +624,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-JAN-1989 (IMU)
       !>
@@ -668,7 +668,7 @@ contains
       return
       end procedure dechar
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NUMBER   is the number of excess elements encountered.
       !>              This may be zero or negative, which indicates
@@ -681,23 +681,23 @@ contains
       !>              The period at the end of the message is supplied
       !>              automatically.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine does not detect any errors.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is part of the SPICELIB error handling mechanism.
       !>
@@ -709,7 +709,7 @@ contains
       !>     Leading and trailing blanks in STRUCT are removed. If there is
       !>     no excess (NUMBER is zero or negative), then is blank.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The response of EXCESS to a variety of inputs is illustrated
       !>     below.
@@ -737,15 +737,15 @@ contains
       !>     the singular 'element' is used for an excess of one, while
       !>     the plural 'elements' is used for all other positive excesses.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -753,7 +753,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -768,7 +768,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 11-JAN-1989 (NJB)
       !>
@@ -842,20 +842,20 @@ contains
       return
       end procedure excess
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CELL     is a cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the cardinality of (number of elements in)
       !>     the input cell.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input array has invalid cardinality, the error
       !>         SPICE(INVALIDCARDINALITY) is signaled. CARDC returns
@@ -865,15 +865,15 @@ contains
       !>         SPICE(INVALIDSIZE) is signaled. CARDC returns
       !>         an unspecified value in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The cardinality (CARD) functions are typically used to process
       !>     each of the elements of a cell. In the following example, CARDC
@@ -901,15 +901,15 @@ contains
       !>            .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -918,7 +918,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 12-AUG-2021 (JDR)
       !>
@@ -945,7 +945,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -1007,20 +1007,20 @@ contains
       return
       end procedure cardc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CELL     is a cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the cardinality of (number of elements in)
       !>     the input cell.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input array has invalid cardinality, the error
       !>         SPICE(INVALIDCARDINALITY) is signaled. CARDD returns
@@ -1030,15 +1030,15 @@ contains
       !>         SPICE(INVALIDSIZE) is signaled. CARDD returns
       !>         an unspecified value in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The cardinality (CARD) functions are typically used to process
       !>     each of the elements of a cell. In the following example, CARDC
@@ -1066,15 +1066,15 @@ contains
       !>            .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -1083,7 +1083,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 12-AUG-2021 (JDR)
       !>
@@ -1110,7 +1110,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -1167,20 +1167,20 @@ contains
       return
       end procedure cardd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CELL     is a cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the cardinality of (number of elements in)
       !>     the input cell.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input array has invalid cardinality, the error
       !>         SPICE(INVALIDCARDINALITY) is signaled. CARDI returns
@@ -1190,15 +1190,15 @@ contains
       !>         SPICE(INVALIDSIZE) is signaled. CARDI returns
       !>         an unspecified value in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The cardinality (CARD) functions are typically used to process
       !>     each of the elements of a cell. In the following example, CARDC
@@ -1226,15 +1226,15 @@ contains
       !>            .
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -1243,7 +1243,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 12-AUG-2021 (JDR)
       !>
@@ -1270,7 +1270,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -1327,20 +1327,20 @@ contains
       return
       end procedure cardi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CELL     is a cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the size of (maximum number of elements in)
       !>     the input cell.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input array has invalid cardinality, the error
       !>         SPICE(INVALIDCARDINALITY) is signaled. SIZEC returns
@@ -1350,15 +1350,15 @@ contains
       !>         SPICE(INVALIDSIZE) is signaled. SIZEC returns
       !>         an unspecified value in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The size (SIZE) functions are typically used in conjunction
       !>     with the cardinality functions to predict (and subsequently
@@ -1377,15 +1377,15 @@ contains
       !>            .
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -1394,7 +1394,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 12-AUG-2021 (JDR)
       !>
@@ -1416,7 +1416,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -1478,20 +1478,20 @@ contains
       return
       end procedure sizec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CELL     is a cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the size of (maximum number of elements in)
       !>     the input cell.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input array has invalid cardinality, the error
       !>         SPICE(INVALIDCARDINALITY) is signaled. SIZEI returns
@@ -1501,15 +1501,15 @@ contains
       !>         SPICE(INVALIDSIZE) is signaled. SIZEI returns
       !>         an unspecified value in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The size (SIZE) functions are typically used in conjunction
       !>     with the cardinality functions to predict (and subsequently
@@ -1528,15 +1528,15 @@ contains
       !>            .
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -1545,7 +1545,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 12-AUG-2021 (JDR)
       !>
@@ -1567,7 +1567,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -1624,20 +1624,20 @@ contains
       return
       end procedure sized
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CELL     is a cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the size of (maximum number of elements in)
       !>     the input cell.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input array has invalid cardinality, the error
       !>         SPICE(INVALIDCARDINALITY) is signaled. SIZEI returns
@@ -1647,15 +1647,15 @@ contains
       !>         SPICE(INVALIDSIZE) is signaled. SIZEI returns
       !>         an unspecified value in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The size (SIZE) functions are typically used in conjunction
       !>     with the cardinality functions to predict (and subsequently
@@ -1674,15 +1674,15 @@ contains
       !>            .
       !>           END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -1691,7 +1691,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 12-AUG-2021 (JDR)
       !>
@@ -1713,7 +1713,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -1770,32 +1770,32 @@ contains
       return
       end procedure sizei
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CARD     is the cardinality of (number of elements in) the
       !>              cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CELL     is a cell.
       !>
       !>              On output, the cardinality of the cell is CARD.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the cardinality value supplied is less than 0 or greater
       !>         than the cell size, the error SPICE(INVALIDCARDINALITY) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The set cardinality (SCARDC, SCARDD, and SCARDI) and set size
       !>     (SSIZEC, SSIZED, and SSIZEI) routines are typically used to
@@ -1807,7 +1807,7 @@ contains
       !>     which manipulate cells (including set and window routines) to
       !>     reset the cardinalities of cells as they gain or lose elements.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the example below, the size and cardinality of the character
       !>     cell FRED are set in the main module of the program FLNSTN.
@@ -1849,15 +1849,15 @@ contains
       !>           RETURN
       !>           END
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -1865,7 +1865,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -1880,7 +1880,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -1922,32 +1922,32 @@ contains
       return
       end procedure scardc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CARD     is the cardinality of (number of elements in) the
       !>              cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CELL     is a cell.
       !>
       !>                On output, the cardinality of the cell is CARD.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the cardinality value supplied is less than 0 or greater
       !>         than the cell size, the error SPICE(INVALIDCARDINALITY) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The set cardinality (SCARDC, SCARDD, and SCARDI) and set size
       !>     (SSIZEC, SSIZED, and SSIZEI) routines are typically used to
@@ -1959,7 +1959,7 @@ contains
       !>     which manipulate cells (including set and window routines) to
       !>     reset the cardinalities of cells as they gain or lose elements.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the example below, the size and cardinality of the character
       !>     cell FRED are set in the main module of the program FLNSTN.
@@ -2001,15 +2001,15 @@ contains
       !>           RETURN
       !>           END
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -2017,7 +2017,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -2032,7 +2032,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -2069,32 +2069,32 @@ contains
       return
       end procedure scardd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CARD     is the cardinality of (number of elements in) the
       !>              cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CELL     is a cell.
       !>
       !>                On output, the cardinality of the cell is CARD.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the cardinality value supplied is less than 0 or greater
       !>         than the cell size, the error SPICE(INVALIDCARDINALITY) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The set cardinality (SCARDC, SCARDD, and SCARDI) and set size
       !>     (SSIZEC, SSIZED, and SSIZEI) routines are typically used to
@@ -2106,7 +2106,7 @@ contains
       !>     which manipulate cells (including set and window routines) to
       !>     reset the cardinalities of cells as they gain or lose elements.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the example below, the size and cardinality of the character
       !>     cell FRED are set in the main module of the program FLNSTN.
@@ -2148,15 +2148,15 @@ contains
       !>           RETURN
       !>           END
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -2164,7 +2164,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -2179,7 +2179,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -2216,11 +2216,11 @@ contains
       return
       end procedure scardi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SIZE     is the size (maximum number of elements) of the cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CELL     is a cell.
       !>
@@ -2228,19 +2228,19 @@ contains
       !>                cardinality of the cell is 0. The rest of the
       !>                control area is zeroed out.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The set cardinality (SCARDC, SCARDD, and SCARDI) and set size
       !>     (SSIZEC, SSIZED, and SSIZEI) routines are typically used to
@@ -2248,7 +2248,7 @@ contains
       !>     expect to find the size and cardinality of a cell in place,
       !>     no cell can be used until both have been set.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the example below, the size and cardinality of the character
       !>     cell FRED are set in the main module of the program FLNSTN.
@@ -2290,15 +2290,15 @@ contains
       !>           RETURN
       !>           END
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -2306,7 +2306,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -2321,7 +2321,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -2369,11 +2369,11 @@ contains
       return
       end procedure ssizec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SIZE     is the size (maximum number of elements) of the cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CELL     is a cell.
       !>
@@ -2381,19 +2381,19 @@ contains
       !>                cardinality of the cell is 0. The rest of the
       !>                control area is zeroed out.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The set cardinality (SCARDC, SCARDD, and SCARDI) and set size
       !>     (SSIZEC, SSIZED, and SSIZEI) routines are typically used to
@@ -2401,7 +2401,7 @@ contains
       !>     expect to find the size and cardinality of a cell in place,
       !>     no cell can be used until both have been set.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the example below, the size and cardinality of the character
       !>     cell FRED are set in the main module of the program FLNSTN.
@@ -2443,15 +2443,15 @@ contains
       !>           RETURN
       !>           END
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -2459,7 +2459,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -2474,7 +2474,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -2522,11 +2522,11 @@ contains
       return
       end procedure ssized
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SIZE     is the size (maximum number of elements) of the cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CELL     is a cell.
       !>
@@ -2534,19 +2534,19 @@ contains
       !>                cardinality of the cell is 0. The rest of the
       !>                control area is zeroed out.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The set cardinality (SCARDC, SCARDD, and SCARDI) and set size
       !>     (SSIZEC, SSIZED, and SSIZEI) routines are typically used to
@@ -2554,7 +2554,7 @@ contains
       !>     expect to find the size and cardinality of a cell in place,
       !>     no cell can be used until both have been set.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the example below, the size and cardinality of the character
       !>     cell FRED are set in the main module of the program FLNSTN.
@@ -2596,15 +2596,15 @@ contains
       !>           RETURN
       !>           END
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -2612,7 +2612,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -2627,7 +2627,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -2675,7 +2675,7 @@ contains
       return
       end procedure ssizei
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SIZE     is the maximum cardinality (number of elements)
       !>              of the set.
@@ -2692,27 +2692,27 @@ contains
       !>              and duplicate elements are removed. The contents
       !>              of A(LBCELL) through A(0) are lost during validation.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     A        on output, is the set containing the ordered,
       !>              distinct values in the input array, ready for
       !>              use with other set routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the size of the set is too small to hold the set BEFORE
       !>         validation, the error SPICE(INVALIDSIZE) is signaled. The set
       !>         A is not modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is typically used to turn an array which has been
       !>     initialized through DATA or I/O statements into a set, which
@@ -2728,7 +2728,7 @@ contains
       !>     Because validation is done in place, there is no chance of
       !>     overflow.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Empty sets may be initialized with the cell routines SSIZEx.
       !>     Sets may also be initialized from nonempty set arrays.
@@ -2754,15 +2754,15 @@ contains
       !>     The previous contents of elements LBCELL through 0 are lost
       !>     during the process of validation.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -2770,7 +2770,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-AUG-2021 (JDR)
       !>
@@ -2785,7 +2785,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -2837,7 +2837,7 @@ contains
       return
       end procedure validc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SIZE     is the maximum cardinality (number of elements)
       !>              of the set.
@@ -2854,27 +2854,27 @@ contains
       !>              and duplicate elements are removed. The contents
       !>              of A(LBCELL) through A(0) are lost during validation.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     A        on output, is the set containing the ordered,
       !>              distinct values in the input array, ready for
       !>              use with other set routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the size of the set is too small to hold the set BEFORE
       !>         validation, the error SPICE(INVALIDSIZE) is signaled. The set
       !>         A is not modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is typically used to turn an array which has been
       !>     initialized through DATA or I/O statements into a set, which
@@ -2890,7 +2890,7 @@ contains
       !>     Because validation is done in place, there is no chance of
       !>     overflow.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Empty sets may be initialized with the cell routines SSIZEx.
       !>     Sets may also be initialized from nonempty set arrays.
@@ -2916,15 +2916,15 @@ contains
       !>     The previous contents of elements LBCELL through 0 are lost
       !>     during the process of validation.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -2932,7 +2932,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-AUG-2021 (JDR)
       !>
@@ -2947,7 +2947,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -3002,7 +3002,7 @@ contains
       return
       end procedure validd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SIZE     is the maximum cardinality (number of elements)
       !>              of the set.
@@ -3019,27 +3019,27 @@ contains
       !>              and duplicate elements are removed. The contents
       !>              of A(LBCELL) through A(0) are lost during validation.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     A        on output, is the set containing the ordered,
       !>              distinct values in the input array, ready for
       !>              use with other set routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the size of the set is too small to hold the set BEFORE
       !>         validation, the error SPICE(INVALIDSIZE) is signaled. The set
       !>         A is not modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is typically used to turn an array which has been
       !>     initialized through DATA or I/O statements into a set, which
@@ -3055,7 +3055,7 @@ contains
       !>     Because validation is done in place, there is no chance of
       !>     overflow.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Empty sets may be initialized with the cell routines SSIZEx.
       !>     Sets may also be initialized from nonempty set arrays.
@@ -3081,15 +3081,15 @@ contains
       !>     The previous contents of elements LBCELL through 0 are lost
       !>     during the process of validation.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -3097,7 +3097,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-AUG-2021 (JDR)
       !>
@@ -3112,7 +3112,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 13-MAR-1989 (NJB)
       !>
@@ -3164,23 +3164,23 @@ contains
       return
       end procedure validi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is a character string which is to be appended to CELL.
       !>
       !>     CELL     is a character SPICE cell to which ITEM will be
       !>              appended.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CELL     is the input cell with ITEM appended. ITEM is the last
       !>              member of CELL.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input cell has invalid cardinality, an error is
       !>         signaled by a routine in the call tree of this routine.
@@ -3194,15 +3194,15 @@ contains
       !>     4)  If the length of the item is longer than the length of the
       !>         cell, ITEM is truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following example, the item 'PLUTO' is appended to
       !>     the character cell PLANETS.
@@ -3229,21 +3229,21 @@ contains
       !>     the item, an error is signaled. In this case, the cell is not
       !>     altered.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 27-AUG-2021 (JDR)
       !>
@@ -3301,7 +3301,7 @@ contains
       return
       end procedure appndc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is a double precision value which is to be appended to
       !>              CELL.
@@ -3309,16 +3309,16 @@ contains
       !>     CELL     is a double precision SPICE cell to which ITEM will be
       !>              appended.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CELL     is the input cell with ITEM appended. ITEM is the last
       !>              member of CELL.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input cell has invalid cardinality, an error is
       !>         signaled by a routine in the call tree of this routine.
@@ -3329,15 +3329,15 @@ contains
       !>     3)  If the cell is not big enough to accommodate the addition
       !>         of a new element, the error SPICE(CELLTOOSMALL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3437,21 +3437,21 @@ contains
       !>        addition of an item, an error is signaled. In this case, the
       !>        cell is not altered.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 27-AUG-2021 (JDR)
       !>
@@ -3515,23 +3515,23 @@ contains
       return
       end procedure appndd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is an integer value which is to be appended to CELL.
       !>
       !>     CELL     is an integer SPICE cell to which ITEM will be
       !>              appended.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CELL     is the input cell with ITEM appended. ITEM is the last
       !>              member of CELL.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input cell has invalid cardinality, an error is
       !>         signaled by a routine in the call tree of this routine.
@@ -3542,15 +3542,15 @@ contains
       !>     3)  If the cell is not big enough to accommodate the addition
       !>         of a new element, the error SPICE(CELLTOOSMALL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3648,22 +3648,22 @@ contains
       !>        addition of an item, an error is signaled. In this case, the
       !>        cell is not altered.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 27-AUG-2021 (JDR)
       !>
@@ -3727,11 +3727,11 @@ contains
       return
       end procedure appndi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CELL     is a cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     COPY     is a cell which contains the same elements as the
       !>              input cell, in the same order. If the size (maximum
@@ -3740,11 +3740,11 @@ contains
       !>              items as will fit in the output cell are copied,
       !>              and an error is signaled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the output cell in not large enough to hold the elements
       !>         of the input cell, the error SPICE(CELLTOOSMALL) is signaled.
@@ -3753,18 +3753,18 @@ contains
       !>         length of the elements of the input cell, the error
       !>         SPICE(ELEMENTSTOOSHORT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The copy routines (COPYC, COPYD, and COPYI) are used primarily
       !>     to manipulate working cells, since many routines that use cells
       !>     (binary set routines, for instance) do not allow cells to be
       !>     combined or manipulated in place.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following example, COPYC is used to copy the result
       !>     of the union of two sets (ordered cells) from a temporary
@@ -3778,22 +3778,22 @@ contains
       !>     sure that no overflow occurred. If BODIES is at least as
       !>     large as TEMP, no such check is necessary.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.A. Curzon        (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -3808,7 +3808,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 09-JAN-1989 (NJB)
       !>
@@ -3914,11 +3914,11 @@ contains
       return
       end procedure copyc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CELL     is a cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     COPY     is a cell which contains the same elements as the
       !>              input cell, in the same order. If the size (maximum
@@ -3927,27 +3927,27 @@ contains
       !>              items as will fit in the output cell are copied,
       !>              and an error is signaled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the output cell in not large enough to hold the elements
       !>         of the input cell, the error SPICE(CELLTOOSMALL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The copy routines (COPYC, COPYD, and COPYI) are used primarily
       !>     to manipulate working cells, since many routines that use cells
       !>     (binary set routines, for instance) do not allow cells to be
       !>     combined or manipulated in place.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following example, COPYC is used to copy the result
       !>     of the union of two sets (ordered cells) from a temporary
@@ -3961,22 +3961,22 @@ contains
       !>     sure that no overflow occurred. If BODIES is at least as
       !>     large as TEMP, no such check is necessary.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.A. Curzon        (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -3991,7 +3991,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 09-JAN-1989 (NJB)
       !>
@@ -4047,11 +4047,11 @@ contains
       return
       end procedure copyd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CELL     is a cell.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     COPY     is a cell which contains the same elements as the
       !>              input cell, in the same order. If the size (maximum
@@ -4060,27 +4060,27 @@ contains
       !>              items as will fit in the output cell are copied,
       !>              and an error is signaled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the output cell in not large enough to hold the elements
       !>         of the input cell, the error SPICE(CELLTOOSMALL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The copy routines (COPYC, COPYD, and COPYI) are used primarily
       !>     to manipulate working cells, since many routines that use cells
       !>     (binary set routines, for instance) do not allow cells to be
       !>     combined or manipulated in place.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following example, COPYC is used to copy the result
       !>     of the union of two sets (ordered cells) from a temporary
@@ -4094,22 +4094,22 @@ contains
       !>     sure that no overflow occurred. If BODIES is at least as
       !>     large as TEMP, no such check is necessary.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.A. Curzon        (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -4124,7 +4124,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 09-JAN-1989 (NJB)
       !>
@@ -4180,7 +4180,7 @@ contains
       return
       end procedure copyi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be inserted into the specified
       !>              set. ITEM may or may not already be an element of the
@@ -4196,7 +4196,7 @@ contains
       !>              On input, A may or may not contain the input item as an
       !>              element.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     A        on output, contains the union of the input set and the
       !>              singleton set containing the input item, unless there was
@@ -4204,11 +4204,11 @@ contains
       !>              included, in which case the set is not changed and an
       !>              error is signaled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the insertion of the item into the set causes an excess
       !>         of elements, the error SPICE(SETEXCESS) is signaled.
@@ -4221,15 +4221,15 @@ contains
       !>         be inserted matches an element already present in the set, no
       !>         insertion occurs.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4324,15 +4324,15 @@ contains
       !>            URANUS
       !>            VENUS
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -4340,7 +4340,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 24-AUG-2021 (JDR)
       !>
@@ -4368,7 +4368,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
@@ -4459,7 +4459,7 @@ contains
       return
       end procedure insrtc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be inserted into the specified
       !>              set. ITEM may or may not already be an element of the
@@ -4470,7 +4470,7 @@ contains
       !>              On input, A may or may not contain the input item as an
       !>              element.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     A        on output, contains the union of the input set and the
       !>              singleton set containing the input item, unless there was
@@ -4478,24 +4478,24 @@ contains
       !>              included, in which case the set is not changed and an
       !>              error is signaled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the insertion of the element into the set causes an excess
       !>         of elements, the error SPICE(SETEXCESS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4595,15 +4595,15 @@ contains
       !>         Odd numbers in set A:
       !>           1.0   3.0   5.0  13.0  21.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -4611,7 +4611,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 24-AUG-2021 (JDR)
       !>
@@ -4709,7 +4709,7 @@ contains
       return
       end procedure insrtd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be inserted into the specified
       !>              set. ITEM may or may not already be an element of the
@@ -4720,7 +4720,7 @@ contains
       !>              On input, A may or may not contain the input item as an
       !>              element.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     A        on output, contains the union of the input set and the
       !>              singleton set containing the input item, unless there was
@@ -4728,24 +4728,24 @@ contains
       !>              included, in which case the set is not changed and an
       !>              error is returned.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the insertion of the element into the set causes an excess
       !>         of elements, the error SPICE(SETEXCESS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4841,15 +4841,15 @@ contains
       !>         Odd numbers in set A:
       !>             1     3     5    13    21
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -4857,7 +4857,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 24-AUG-2021 (JDR)
       !>
@@ -4881,7 +4881,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
@@ -4958,7 +4958,7 @@ contains
       return
       end procedure insrti
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be removed from the specified set.
       !>              ITEM may or may not already be an element of the set.
@@ -4969,17 +4969,17 @@ contains
       !>              On input, A may or may not contain the input item as an
       !>              element.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     A        on output, contains the difference of the input set and
       !>              the input item. If the item is not an element of the set,
       !>              the set is not changed.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input set A has invalid cardinality, an error is
       !>         signaled by a routine in the call tree of this routine.
@@ -4991,15 +4991,15 @@ contains
       !>         This is not checked. If this condition is not met, the results
       !>         are unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5094,22 +5094,22 @@ contains
       !>            URANUS
       !>            VENUS
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.A. Curzon        (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 24-AUG-2021 (JDR)
       !>
@@ -5181,7 +5181,7 @@ contains
       return
       end procedure removc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be removed from the specified set.
       !>              ITEM may or may not already be an element of the set.
@@ -5191,17 +5191,17 @@ contains
       !>              On input, A may or may not contain the input item as an
       !>              element.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     A        on output, contains the difference of the input set and
       !>              the input item. If the item is not an element of the set,
       !>              the set is not changed.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input set A has invalid cardinality, an error is
       !>         signaled by a routine in the call tree of this routine.
@@ -5213,15 +5213,15 @@ contains
       !>         This is not checked. If this condition is not met, the results
       !>         are unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5321,15 +5321,15 @@ contains
       !>         Odd numbers in set A:
       !>           1.0   3.0   5.0  13.0  21.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -5337,7 +5337,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-MAR-2021 (JDR)
       !>
@@ -5406,7 +5406,7 @@ contains
       return
       end procedure removd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be removed from the specified set.
       !>              ITEM may or may not already be an element of the set.
@@ -5416,17 +5416,17 @@ contains
       !>              On input, A may or may not contain the input item as an
       !>              element.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     A        on output, contains the difference of the input set and
       !>              the input item. If the item is not an element of the set,
       !>              the set is not changed.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input set A has invalid cardinality, an error is
       !>         signaled by a routine in the call tree of this routine.
@@ -5438,15 +5438,15 @@ contains
       !>         This is not checked. If this condition is not met, the results
       !>         are unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5542,15 +5542,15 @@ contains
       !>         Odd numbers in set A:
       !>             1     3     5    13    21
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -5558,7 +5558,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 24-AUG-2021 (JDR)
       !>
@@ -5625,7 +5625,7 @@ contains
       return
       end procedure removi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is an item which may or may not be an element of the
       !>              input set. Trailing blanks in ITEM are not significant.
@@ -5633,7 +5633,7 @@ contains
       !>     A        is a SPICE set. Trailing blanks in the members of A
       !>              are not significant.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if ITEM is a member of the set A,
       !>     and returns .FALSE. otherwise.
@@ -5641,24 +5641,24 @@ contains
       !>     The comparison between ITEM and members of A is case-sensitive.
       !>     Trailing blanks are ignored.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The LOGICAL functions ELEMC, ELEMD and ELEMI correspond to the
       !>     set operator IN in the Pascal language.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5750,15 +5750,15 @@ contains
       !>         Item VENUS   is in the set.
       !>         Item CERES   is NOT in the set.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -5767,7 +5767,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 24-AUG-2021 (JDR)
       !>
@@ -5818,31 +5818,31 @@ contains
       return
       end procedure elemc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is an item which may or may not be an element of the
       !>              input set.
       !>
       !>     A        is a SPICE set.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if ITEM is a member of the set A, and
       !>     returns .FALSE. otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The LOGICAL functions ELEMC, ELEMD and ELEMI correspond to the
       !>     set operator IN in the Pascal language.
@@ -5850,7 +5850,7 @@ contains
       !>     This routine uses a binary search to check for the presence in
       !>     the set of the specified ITEM.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5938,15 +5938,15 @@ contains
       !>        Item   3.0 is in the set.
       !>        Item  -2.0 is NOT in the set.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -5955,7 +5955,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 24-AUG-2021 (JDR)
       !>
@@ -6003,31 +6003,31 @@ contains
       return
       end procedure elemd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is an item which may or may not be an element of
       !>              the input set.
       !>
       !>     A        is a SPICE set.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if ITEM is a member of the set A,
       !>     and returns .FALSE. otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The LOGICAL functions ELEMC, ELEMD and ELEMI correspond to the
       !>     set operator IN in the Pascal language.
@@ -6035,7 +6035,7 @@ contains
       !>     This routine uses a binary search to check for the presence in
       !>     the set of the specified ITEM.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6120,15 +6120,15 @@ contains
       !>        Item    3 is in the set.
       !>        Item   -2 is NOT in the set.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -6137,7 +6137,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 24-AUG-2021 (JDR)
       !>
@@ -6184,7 +6184,7 @@ contains
       return
       end procedure elemi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is a string to be located within a character set.
       !>              Trailing blanks are not significant in the comparison.
@@ -6193,7 +6193,7 @@ contains
       !>              searched for the occurrence of ITEM. Trailing blanks are
       !>              not significant in the comparison.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the ordinal position of ITEM within SET.
       !>     Ordinal positions range from 1 to N, where N is the cardinality
@@ -6201,11 +6201,11 @@ contains
       !>
       !>     If ITEM is not an element of SET, the function returns 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input set has invalid cardinality, an error is signaled
       !>         by a routine in the call tree of this routine. ORDC returns an
@@ -6215,11 +6215,11 @@ contains
       !>         routine in the call tree of this routine. ORDC returns an
       !>         unspecified value in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A natural ordering can be imposed upon the elements of any
       !>     SPICE set, be it INTEGER, CHARACTER or DOUBLE PRECISION. For
@@ -6247,7 +6247,7 @@ contains
       !>     position. If the item is not in the set, this function returns
       !>     a value of 0.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you wished to find the relative position of a value
       !>     in a large list of values stored within an array. Say we want
@@ -6278,15 +6278,15 @@ contains
       !>     POSITION now contains the ordinal position of ARRAY(I) within the
       !>     values represented in the array.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  SET must be a validated or empty set.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -6295,7 +6295,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 26-OCT-2021 (JDR)
       !>
@@ -6343,14 +6343,14 @@ contains
       return
       end procedure ordc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is a double precision value to be located within a set.
       !>
       !>     SET      is a properly validated SPICE set that is to be
       !>              searched for the occurrence of ITEM.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the ordinal position of ITEM within SET.
       !>     Ordinal positions range from 1 to N, where N is the cardinality of
@@ -6358,11 +6358,11 @@ contains
       !>
       !>     If ITEM is not an element of SET, the function returns 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input set has invalid cardinality, an error is signaled
       !>         by a routine in the call tree of this routine. ORDD returns an
@@ -6372,11 +6372,11 @@ contains
       !>         routine in the call tree of this routine. ORDD returns an
       !>         unspecified value in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A natural ordering can be imposed upon the elements of any
       !>     SPICE set, be it INTEGER, CHARACTER or DOUBLE PRECISION. For
@@ -6404,7 +6404,7 @@ contains
       !>     position. If the item is not in the set, this function returns
       !>     a value of 0.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you wished to find the relative position of a value
       !>     in a large list of values stored within an array. Say we want
@@ -6435,15 +6435,15 @@ contains
       !>     POSITION now contains the ordinal position of ARRAY(I) within the
       !>     values represented in the array.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  SET must be a validated or empty set.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -6452,7 +6452,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 26-OCT-2021 (JDR)
       !>
@@ -6500,14 +6500,14 @@ contains
       return
       end procedure ordd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ITEM     is an integer value to be located within a set.
       !>
       !>     SET      is a properly validated SPICE set that is to be
       !>              searched for the occurrence of ITEM.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the ordinal position of ITEM within SET.
       !>     Ordinal positions range from 1 to N, where N is the cardinality of
@@ -6515,11 +6515,11 @@ contains
       !>
       !>     If ITEM is not an element of SET, the function return 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input set has invalid cardinality, an error is signaled
       !>         by a routine in the call tree of this routine. ORDI returns an
@@ -6529,11 +6529,11 @@ contains
       !>         routine in the call tree of this routine. ORDI returns an
       !>         unspecified value in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A natural ordering can be imposed upon the elements of any
       !>     SPICE set, be it INTEGER, CHARACTER or DOUBLE PRECISION. For
@@ -6561,7 +6561,7 @@ contains
       !>     position. If the item is not in the set, this function returns
       !>     a value of 0.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you wished to find the relative position of a value
       !>     in a large list of values stored within an array. Say we want
@@ -6592,15 +6592,15 @@ contains
       !>     POSITION now contains the ordinal position of ARRAY(I) within the
       !>     values represented in the array.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  SET must be a validated or empty set.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -6609,7 +6609,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 26-OCT-2021 (JDR)
       !>
@@ -6655,7 +6655,7 @@ contains
       return
       end procedure ordi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
@@ -6691,28 +6691,28 @@ contains
       !>
       !>     B        is a set.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the result of the comparison: A (OP) B.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the set relational operator is not recognized, the error
       !>         SPICE(INVALIDOPERATION) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) In the following example, SETx is used to repeat an operation
       !>        for as long as the integer set FINISHED remains a proper
@@ -6760,22 +6760,22 @@ contains
       !>           SETI ( E, '<',   E )      "E is a proper subset of E"
       !>           SETI ( A, '~',   B )      "A and B are disjoint sets."
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 20-AUG-2021 (JDR)
       !>
@@ -6795,7 +6795,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 11-JAN-1989 (WLT) (HAN)
       !>
@@ -7212,7 +7212,7 @@ contains
       return
       end procedure setc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
@@ -7248,28 +7248,28 @@ contains
       !>
       !>     B        is a set.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the result of the comparison: A (OP) B.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the set relational operator is not recognized, the error
       !>         SPICE(INVALIDOPERATION) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) In the following example, SETx is used to repeat an operation
       !>        for as long as the integer set FINISHED remains a proper
@@ -7317,22 +7317,22 @@ contains
       !>           SETI ( E, '<',   E )      "E is a proper subset of E"
       !>           SETI ( A, '~',   B )      "A and B are disjoint sets."
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 20-AUG-2021 (JDR)
       !>
@@ -7352,7 +7352,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 11-JAN-1989 (WLT) (HAN)
       !>
@@ -7769,7 +7769,7 @@ contains
       return
       end procedure setd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
@@ -7805,28 +7805,28 @@ contains
       !>
       !>     B        is a set.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the result of the comparison: A (OP) B.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the set relational operator is not recognized, the error
       !>         SPICE(INVALIDOPERATION) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) In the following example, SETx is used to repeat an operation
       !>        for as long as the integer set FINISHED remains a proper
@@ -7874,22 +7874,22 @@ contains
       !>           SETI ( E, '<',   E )      "E is a proper subset of E"
       !>           SETI ( A, '~',   B )      "A and B are disjoint sets."
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 20-AUG-2021 (JDR)
       !>
@@ -7909,7 +7909,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 11-JAN-1989 (WLT) (HAN)
       !>
@@ -8326,13 +8326,13 @@ contains
       return
       end procedure seti
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
       !>     B        is a set, distinct from A.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is a set, distinct from sets A and B, which
       !>              contains the union of A and B (that is, all of
@@ -8343,11 +8343,11 @@ contains
       !>              then only as many items as will fit in C are
       !>              included, and an error is signaled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the union of the two sets causes an excess of elements, the
       !>         error SPICE(SETEXCESS) is signaled.
@@ -8356,15 +8356,15 @@ contains
       !>         maximum of the lengths of the elements of the input
       !>         sets, the error SPICE(ELEMENTSTOOSHORT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The UNION of two sets contains every element which is
       !>     in the first set, or in the second set, or in both sets.
@@ -8397,15 +8397,15 @@ contains
       !>           CALL UNIONI ( CURRENT, NEW,  TEMP )
       !>           CALL COPYI  ( TEMP,    NEW )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -8413,7 +8413,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 26-OCT-2021 (JDR)
       !>
@@ -8432,7 +8432,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 05-JAN-1989 (NJB)
       !>
@@ -8596,13 +8596,13 @@ contains
       return
       end procedure unionc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
       !>     B        is a set, distinct from A.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is a set, distinct from sets A and B, which
       !>              contains the union of A and B (that is, all of
@@ -8613,24 +8613,24 @@ contains
       !>              then only as many items as will fit in C are
       !>              included, and an error is signaled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the union of the two sets causes an excess of elements, the
       !>         error SPICE(SETEXCESS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The UNION of two sets contains every element which is
       !>     in the first set, or in the second set, or in both sets.
@@ -8663,15 +8663,15 @@ contains
       !>           CALL UNIONI ( CURRENT, NEW,  TEMP )
       !>           CALL COPYI  ( TEMP,    NEW )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -8679,7 +8679,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -8694,7 +8694,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 05-JAN-1989 (NJB)
       !>
@@ -8840,13 +8840,13 @@ contains
       return
       end procedure uniond
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
       !>     B        is a set, distinct from A.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is a set, distinct from sets A and B, which
       !>              contains the union of A and B (that is, all of
@@ -8857,24 +8857,24 @@ contains
       !>              then only as many items as will fit in C are
       !>              included, and an error is signaled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the union of the two sets causes an excess of elements, the
       !>         error SPICE(SETEXCESS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The UNION of two sets contains every element which is
       !>     in the first set, or in the second set, or in both sets.
@@ -8907,15 +8907,15 @@ contains
       !>           CALL UNIONI ( CURRENT, NEW,  TEMP )
       !>           CALL COPYI  ( TEMP,    NEW )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -8923,7 +8923,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -8938,7 +8938,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 05-JAN-1989 (NJB)
       !>
@@ -9083,13 +9083,13 @@ contains
       return
       end procedure unioni
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
       !>     B        is a set, distinct from A.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is a set, distinct from sets A and B, which
       !>              contains the intersection of A and B (that is,
@@ -9100,11 +9100,11 @@ contains
       !>              then only as many items as will fit in C are
       !>              included, and an error is signaled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the intersection of the two sets causes an excess of
       !>         elements, the error SPICE(SETEXCESS) is signaled.
@@ -9113,15 +9113,15 @@ contains
       !>         maximum of the lengths of the elements of the input
       !>         sets, the error SPICE(ELEMENTSTOOSHORT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The INTERSECTION of two sets contains every element
       !>     which is in the first set AND in the second set.
@@ -9154,15 +9154,15 @@ contains
       !>           CALL INTERI ( CURRENT, NEW,  TEMP )
       !>           CALL COPYI  ( TEMP,    NEW        )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -9170,7 +9170,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 20-AUG-2021 (JDR)
       !>
@@ -9189,7 +9189,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 05-JAN-1989 (NJB)
       !>
@@ -9325,13 +9325,13 @@ contains
       return
       end procedure interc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
       !>     B        is a set, distinct from A.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is a set, distinct from sets A and B, which
       !>              contains the intersection of A and B (that is,
@@ -9342,24 +9342,24 @@ contains
       !>              then only as many items as will fit in C are
       !>              included, and an error is signaled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the intersection of the two sets causes an excess of
       !>         elements, the error SPICE(SETEXCESS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The INTERSECTION of two sets contains every element
       !>     which is in the first set AND in the second set.
@@ -9392,15 +9392,15 @@ contains
       !>           CALL INTERI ( CURRENT, NEW,  TEMP )
       !>           CALL COPYI  ( TEMP,    NEW        )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -9408,7 +9408,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -9423,7 +9423,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
@@ -9540,13 +9540,13 @@ contains
       return
       end procedure interd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
       !>     B        is a set, distinct from A.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is a set, distinct from sets A and B, which
       !>              contains the intersection of A and B (that is,
@@ -9557,24 +9557,24 @@ contains
       !>              then only as many items as will fit in C are
       !>              included, and an error is signaled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the intersection of the two sets causes an excess of
       !>         elements, the error SPICE(SETEXCESS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The INTERSECTION of two sets contains every element
       !>     which is in the first set AND in the second set.
@@ -9607,15 +9607,15 @@ contains
       !>           CALL INTERI ( CURRENT, NEW,  TEMP )
       !>           CALL COPYI  ( TEMP,    NEW        )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -9623,7 +9623,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -9638,7 +9638,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
@@ -9755,13 +9755,13 @@ contains
       return
       end procedure interi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
       !>     B        is a set, distinct from A.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is a set, distinct from sets A and B, which
       !>              contains the difference of A and B (that is,
@@ -9773,11 +9773,11 @@ contains
       !>              then only as many items as will fit in C are
       !>              included, and an error is returned.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the difference of the two sets causes an excess of
       !>         elements, the error SPICE(SETEXCESS) is signaled.
@@ -9786,15 +9786,15 @@ contains
       !>         the length of the elements of the FIRST input set, the
       !>         error SPICE(ELEMENTSTOOSHORT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The DIFFERENCE of two sets contains every element which is
       !>     in the first set, but NOT in the second.
@@ -9827,15 +9827,15 @@ contains
       !>           CALL DIFFI  ( CURRENT, NEW,  TEMP )
       !>           CALL COPYI  ( TEMP,    NEW        )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -9843,7 +9843,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -9858,7 +9858,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 21-DEC-1988 (NJB)
       !>
@@ -10014,13 +10014,13 @@ contains
       return
       end procedure diffc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
       !>     B        is a set, distinct from A.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is a set, distinct from sets A and B, which
       !>              contains the difference of A and B (that is,
@@ -10032,24 +10032,24 @@ contains
       !>              then only as many items as will fit in C are
       !>              included, and an error is returned.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the difference of the two sets causes an excess of
       !>         elements, the error SPICE(SETEXCESS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The DIFFERENCE of two sets contains every element which is
       !>     in the first set, but NOT in the second.
@@ -10082,15 +10082,15 @@ contains
       !>           CALL DIFFI  ( CURRENT, NEW,  TEMP )
       !>           CALL COPYI  ( TEMP,    NEW       )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -10098,7 +10098,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -10113,7 +10113,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
@@ -10247,13 +10247,13 @@ contains
       return
       end procedure diffd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
       !>     B        is a set, distinct from A.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is a set, distinct from sets A and B, which
       !>              contains the difference of A and B (that is,
@@ -10265,24 +10265,24 @@ contains
       !>              then only as many items as will fit in C are
       !>              included, and an error is returned.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the difference of the two sets causes an excess of
       !>         elements, the error SPICE(SETEXCESS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The DIFFERENCE of two sets contains every element which is
       !>     in the first set, but NOT in the second.
@@ -10315,15 +10315,15 @@ contains
       !>           CALL DIFFI  ( CURRENT, NEW,  TEMP )
       !>           CALL COPYI  ( TEMP,    NEW        )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -10331,7 +10331,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -10346,7 +10346,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
@@ -10481,13 +10481,13 @@ contains
       return
       end procedure diffi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
       !>     B        is a set, distinct from A.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is a set, distinct from sets A and B, which
       !>              contains the symmetric difference of A and B
@@ -10499,11 +10499,11 @@ contains
       !>              A and B, then only as many items as will fit in C
       !>              are included, and an error is signaled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the symmetric difference of the two sets causes an excess
       !>         of elements, the error SPICE(SETEXCESS) is signaled.
@@ -10512,15 +10512,15 @@ contains
       !>         maximum of the lengths of the elements of the input
       !>         sets, the error SPICE(ELEMENTSTOOSHORT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SYMMETRIC DIFFERENCE of two sets contains every
       !>     element which is in the first set OR in the second set,
@@ -10554,15 +10554,15 @@ contains
       !>           CALL SDIFFI ( CURRENT, NEW,  TEMP )
       !>           CALL COPYI  ( TEMP,    NEW        )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -10570,7 +10570,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 20-AUG-2021 (JDR)
       !>
@@ -10589,7 +10589,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 05-JAN-1989 (NJB)
       !>
@@ -10752,13 +10752,13 @@ contains
       return
       end procedure sdiffc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
       !>     B        is a set, distinct from A.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is a set, distinct from sets A and B, which
       !>              contains the symmetric difference of A and B
@@ -10770,24 +10770,24 @@ contains
       !>              A and B, then only as many items as will fit in C
       !>              are included, and an error is signaled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the symmetric difference of the two sets causes an excess
       !>         of elements, the error SPICE(SETEXCESS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SYMMETRIC DIFFERENCE of two sets contains every
       !>     element which is in the first set OR in the second set,
@@ -10821,15 +10821,15 @@ contains
       !>           CALL SDIFFI ( CURRENT, NEW,  TEMP )
       !>           CALL COPYI  ( TEMP,    NEW )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -10837,7 +10837,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -10852,7 +10852,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
@@ -10994,13 +10994,13 @@ contains
       return
       end procedure sdiffd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a set.
       !>
       !>     B        is a set, distinct from A.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is a set, distinct from sets A and B, which
       !>              contains the symmetric difference of A and B
@@ -11012,24 +11012,24 @@ contains
       !>              A and B, then only as many items as will fit in C
       !>              are included, and an error is signaled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the symmetric difference of the two sets causes an excess
       !>         of elements, the error SPICE(SETEXCESS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The SYMMETRIC DIFFERENCE of two sets contains every
       !>     element which is in the first set OR in the second set,
@@ -11063,15 +11063,15 @@ contains
       !>           CALL SDIFFI ( CURRENT, NEW,  TEMP )
       !>           CALL COPYI  ( TEMP,    NEW )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -11079,7 +11079,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -11094,7 +11094,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
@@ -11236,7 +11236,7 @@ contains
       return
       end procedure sdiffi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>      LEFT,
       !>      RIGHT       are the left and right endpoints of the interval
@@ -11250,16 +11250,16 @@ contains
       !>      WINDOW      on input, is a window containing zero or more
       !>                  intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>      WINDOW      on output, is the original window following the
       !>                  insertion of the interval from LEFT to RIGHT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If LEFT is greater than RIGHT, the error SPICE(BADENDPOINTS) is
       !>        signaled.
@@ -11267,11 +11267,11 @@ contains
       !>     2) If the insertion of the interval causes an excess of elements,
       !>        the error SPICE(WINDOWEXCESS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>      None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>      This routine inserts the interval from LEFT to RIGHT into the
       !>      input window. If the new interval overlaps any of the intervals
@@ -11289,7 +11289,7 @@ contains
       !>      signal will return the long error message with the CONTEXT
       !>      string appended to that message.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>      Let WINDOW contain the intervals
       !>
@@ -11307,15 +11307,15 @@ contains
       !>            [ 1,  3 ]  [ 4, 11 ]  [ 23, 27 ]               (2)
       !>            [ 0, 30 ]                                      (3)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>      None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>      None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>      K.R. Gehringer  (JPL)
       !>      N.J. Bachman    (JPL)
@@ -11323,7 +11323,7 @@ contains
       !>      W.L. Taber      (JPL)
       !>      I.M. Underwood  (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-     SPICELIB Version 1.1.1, 05-OCT-2021 (NJB)
       !>
@@ -11521,36 +11521,36 @@ contains
       return
       end procedure zzwninsd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     WINDOW   is a window containing zero or more intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the cardinality of (number of intervals in)
       !>     the input window.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of elements in WINDOW is not even,
       !>         the error SPICE(INVALIDSIZE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The window cardinality (WNCARD) function simply wraps a CARD call
       !>     then divides the result by 2. A common error when using the SPICE
       !>     windows function is to use the CARDD value as the number of
       !>     window intervals rather than the CARDD/2 value.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -11628,20 +11628,20 @@ contains
       !>        Interval 2 [   7.000,  11.000]
       !>        Interval 3 [  23.000,  27.000]
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -11700,7 +11700,7 @@ contains
       return
       end procedure wncard
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LEFT,
       !>     RIGHT    are the left and right endpoints of the complement
@@ -11708,7 +11708,7 @@ contains
       !>
       !>     WINDOW   is the window to be complemented.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RESULT   is the output window, containing the complement
       !>              of WINDOW with respect to the interval from LEFT
@@ -11718,11 +11718,11 @@ contains
       !>
       !>              RESULT must be distinct from WINDOW.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If LEFT is greater than RIGHT, the error SPICE(BADENDPOINTS)
       !>         is signaled.
@@ -11734,11 +11734,11 @@ contains
       !>         data are not diagnosed by this routine and may lead to
       !>         unpredictable results.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Mathematically, the complement of a window contains those
       !>     points that are not contained in the window. That is, the
@@ -11777,7 +11777,7 @@ contains
       !>     point window twice does not necessarily yield the original
       !>     window.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let WINDOW contain the intervals
       !>
@@ -11792,15 +11792,15 @@ contains
       !>
       !>           [ 0, 1 ]  [ 3, 7 ]  [ 11, 23 ]  [ 27, 100 ]
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -11808,7 +11808,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR) (NJB)
       !>
@@ -11935,7 +11935,7 @@ contains
       return
       end procedure wncomd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LEFT     is the amount to be added to the left endpoint of each
       !>              interval in the input window. The amount LEFT is signed.
@@ -11946,17 +11946,17 @@ contains
       !>     WINDOW   on input, is a window containing zero or more
       !>              intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WINDOW   on output, is the original window with each of its
       !>              intervals contracted by LEFT units on the left and
       !>              RIGHT units on the right.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The cardinality of the input WINDOW must be even. Left
       !>         endpoints of stored intervals must be strictly greater than
@@ -11965,11 +11965,11 @@ contains
       !>         data are not diagnosed by this routine and may lead to
       !>         unpredictable results.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine contracts (shortens) each of the intervals in
       !>     the input window. The adjustments are not necessarily symmetric.
@@ -11980,7 +11980,7 @@ contains
       !>     Intervals are dropped when they are contracted by amounts
       !>     greater than their measures.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let WINDOW contain the intervals
       !>
@@ -12008,15 +12008,15 @@ contains
       !>
       !>           CALL WNEXPD ( 2, 1, WINDOW )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -12024,7 +12024,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR) (NJB)
       !>
@@ -12062,13 +12062,13 @@ contains
       return
       end procedure wncond
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B        are SPICE windows, each of which contains zero or more
       !>              intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is the output SPICE window, containing the difference
       !>              of A and B --- every point contained in A, but not
@@ -12076,11 +12076,11 @@ contains
       !>
       !>              C must be distinct from both A and B.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the difference of the two windows results in an excess of
       !>         elements, the error SPICE(WINDOWEXCESS) is signaled.
@@ -12092,11 +12092,11 @@ contains
       !>         data are not diagnosed by this routine and may lead to
       !>         unpredictable results.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Mathematically, the difference of two windows contains every
       !>     point contained in the first window but not contained in the
@@ -12108,7 +12108,7 @@ contains
       !>     the difference plus the endpoints of the first window that are
       !>     contained in the second window.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let A contain the intervals
       !>
@@ -12122,15 +12122,15 @@ contains
       !>
       !>           [ 1, 2 ]  [ 7, 8 ]  [ 10, 11 ]  [ 23, 27 ]
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -12138,7 +12138,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 24-AUG-2021 (JDR) (NJB)
       !>
@@ -12161,7 +12161,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 27-FEB-1989  (HAN)
       !>
@@ -12440,14 +12440,14 @@ contains
       return
       end procedure wndifd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     POINT    is a point, which may or may not be contained in one of
       !>              the intervals in WINDOW.
       !>
       !>     WINDOW   is a SPICE window containing zero or more intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if the input point is an element of
       !>     the input window --- that is, if
@@ -12458,11 +12458,11 @@ contains
       !>     for some interval [ a(i), b(i) ] in WINDOW --- and returns .FALSE.
       !>     otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The cardinality of the input WINDOW must be even. Left
       !>         endpoints of stored intervals must be strictly greater than
@@ -12471,15 +12471,15 @@ contains
       !>         data are not diagnosed by this routine and may lead to
       !>         unpredictable results.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let A contain the intervals
       !>
@@ -12496,22 +12496,22 @@ contains
       !>           WNELMD ( 13, WINDOW )
       !>           WNELMD ( 29, WINDOW )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 25-AUG-2021 (JDR)
       !>
@@ -12576,7 +12576,7 @@ contains
       return
       end procedure wnelmd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LEFT     is the amount to be subtracted from the left endpoint of
       !>              each interval in the input window. The amount LEFT is
@@ -12588,17 +12588,17 @@ contains
       !>     WINDOW   on input, is a window containing zero or more
       !>              intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WINDOW   on output, is the original window with each of its
       !>              intervals expanded by LEFT units on the left and
       !>              RIGHT units on the right.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The cardinality of the input WINDOW must be even. Left
       !>         endpoints of stored intervals must be strictly greater than
@@ -12607,11 +12607,11 @@ contains
       !>         data are not diagnosed by this routine and may lead to
       !>         unpredictable results.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine expands (lengthens) each of the intervals in
       !>     the input window. The adjustments are not necessarily symmetric.
@@ -12621,7 +12621,7 @@ contains
       !>
       !>     Intervals are merged when expansion causes them to overlap.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let WINDOW contain the intervals
       !>
@@ -12649,15 +12649,15 @@ contains
       !>
       !>           CALL WNCOND ( 2, 1, WINDOW )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -12665,7 +12665,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR) (NJB)
       !>
@@ -12767,7 +12767,7 @@ contains
       return
       end procedure wnexpd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SIDE     indicates whether the left or right endpoints of the
       !>              intervals in the window are to be extracted.
@@ -12780,17 +12780,17 @@ contains
       !>
       !>     WINDOW   on input, is a window containing zero or more intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WINDOW   on output, is the collection of singleton intervals
       !>              containing either the left or the right endpoints of the
       !>              intervals in the original window.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the endpoint specification, SIDE, is not recognized, the
       !>         error SPICE(INVALIDENDPNTSPEC) is signaled.
@@ -12802,17 +12802,17 @@ contains
       !>         data are not diagnosed by this routine and may lead to
       !>         unpredictable results.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine replaces every interval in the input window with
       !>     the singleton interval containing one of the endpoints of the
       !>     interval.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let WINDOW contain the intervals
       !>
@@ -12834,15 +12834,15 @@ contains
       !>
       !>           [ 3, 3 ]  [ 11, 11 ]  [ 27, 27 ]  [ 29, 29 ]
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -12850,7 +12850,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-MAR-2021 (JDR) (NJB)
       !>
@@ -12866,7 +12866,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.2.0, 24-FEB-1989  (HAN)
       !>
@@ -12922,7 +12922,7 @@ contains
       return
       end procedure wnextd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     WINDOW   is a window containing zero or more intervals.
       !>
@@ -12930,18 +12930,18 @@ contains
       !>              Indices range from 1 to NINT, where NINT is the number of
       !>              intervals in the window (CARDD(WINDOW)/2).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LEFT,
       !>     RIGHT    are the left and right endpoints of the N'th interval in
       !>              the input window. If the interval is not found, LEFT and
       !>              RIGHT are not defined.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If N is less than one, the error SPICE(NOINTERVAL) is
       !>         signaled.
@@ -12956,15 +12956,15 @@ contains
       !>         data are not diagnosed by this routine and may lead to
       !>         unpredictable results.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -13042,15 +13042,15 @@ contains
       !>        Interval 2 [   7.000,  11.000]
       !>        Interval 3 [  23.000,  27.000]
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -13058,7 +13058,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 15-MAR-2021 (JDR) (NJB)
       !>
@@ -13115,7 +13115,7 @@ contains
       return
       end procedure wnfetd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SMLGAP   is the limiting measure of the small gaps to be filled.
       !>              Adjacent intervals separated by gaps of measure less than
@@ -13126,16 +13126,16 @@ contains
       !>     WINDOW   on input, is a window containing zero or more
       !>              intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WINDOW   on output, is the original window, after adjacent
       !>              intervals separated by small gaps have been merged.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The cardinality of the input WINDOW must be even. Left
       !>         endpoints of stored intervals must be strictly greater than
@@ -13147,17 +13147,17 @@ contains
       !>     2)  If SMLGAP is less than or equal to zero, this routine has
       !>         no effect on the window.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine removes small gaps between adjacent intervals
       !>     by merging intervals separated by gaps of measure less than
       !>     or equal to the limiting measure SMLGAP.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -13289,15 +13289,15 @@ contains
       !>           [1.0,  3.0]  [7.0, 11.0]  [23.0, 29.0]                  (3)
       !>           [1.0, 29.0]                                             (4)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -13305,7 +13305,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUL-2021 (JDR) (NJB)
       !>
@@ -13393,7 +13393,7 @@ contains
       return
       end procedure wnfild
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SMLINT   is the limiting measure of the small intervals to be
       !>              filtered. Intervals of measure less than or equal to
@@ -13404,16 +13404,16 @@ contains
       !>     WINDOW   on input, is a window containing zero or more
       !>              intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WINDOW   on output, is the original window, after small
       !>              intervals have been removed.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The cardinality of the input WINDOW must be even. Left
       !>         endpoints of stored intervals must be strictly greater than
@@ -13425,16 +13425,16 @@ contains
       !>     2)  If SMLINT is less than or equal to zero, this routine has
       !>         no effect on the window.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine removes from the input window every interval with
       !>     measure less than or equal to the limiting measure (SMLINT).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -13562,15 +13562,15 @@ contains
       !>                          [ 7.0, 11.0 ]  [ 23.0, 27.0 ]            (2)
       !>                          [ 7.0, 11.0 ]  [ 23.0, 27.0 ]            (3)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -13578,7 +13578,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUL-2021 (JDR) (NJB)
       !>
@@ -13652,7 +13652,7 @@ contains
       return
       end procedure wnfltd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LEFT,
       !>     RIGHT    are the endpoints of an interval, which may or may not be
@@ -13660,7 +13660,7 @@ contains
       !>
       !>     WINDOW   is a window containing zero or more intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if the input interval is included in
       !>     the input window --- that is, if
@@ -13671,11 +13671,11 @@ contains
       !>     for some interval [ a(i), b(i) ] in WINDOW --- and is .FALSE.
       !>     otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The cardinality of the input WINDOW must be even. Left
       !>         endpoints of stored intervals must be strictly greater than
@@ -13687,15 +13687,15 @@ contains
       !>     2)  The order of the input interval's endpoints, LEFT and RIGHT,
       !>         is not checked, and that this does not affect the result.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let A contain the intervals
       !>
@@ -13712,15 +13712,15 @@ contains
       !>           WNINCD ( 13, 15, WINDOW )
       !>           WNINCD ( 29, 30, WINDOW )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -13728,7 +13728,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 14-MAR-2021 (JDR) (NJB)
       !>
@@ -13793,7 +13793,7 @@ contains
       return
       end procedure wnincd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LEFT,
       !>     RIGHT    are the left and right endpoints of the interval to be
@@ -13802,16 +13802,16 @@ contains
       !>     WINDOW   on input, is a SPICE window containing zero or more
       !>              intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WINDOW   on output, is the original window following the insertion
       !>              of the interval from LEFT to RIGHT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If LEFT is greater than RIGHT, the error SPICE(BADENDPOINTS)
       !>         is signaled.
@@ -13826,11 +13826,11 @@ contains
       !>         data are not diagnosed by this routine and may lead to
       !>         unpredictable results.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine inserts the interval from LEFT to RIGHT into the
       !>     input window. If the new interval overlaps any of the intervals
@@ -13840,7 +13840,7 @@ contains
       !>     disjoint from the other intervals in the window can increase the
       !>     cardinality of the window, the routine signals an error.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -13918,15 +13918,15 @@ contains
       !>        Interval 2 [   7.000,  11.000]
       !>        Interval 3 [  23.000,  27.000]
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -13934,7 +13934,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.0, 25-AUG-2021 (JDR) (NJB)
       !>
@@ -13982,7 +13982,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.3.0, 04-MAR-1993 (KRG)
       !>
@@ -14179,13 +14179,13 @@ contains
       return
       end procedure wninsd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B        are SPICE windows, each of which contains zero or more
       !>              intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is the output SPICE window, containing the
       !>              intersection of A and B --- every point contained in both
@@ -14193,11 +14193,11 @@ contains
       !>
       !>              C must be distinct from both A and B.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the intersection of the two windows results in an excess of
       !>         elements, the error SPICE(WINDOWEXCESS) is signaled.
@@ -14209,16 +14209,16 @@ contains
       !>         data are not diagnosed by this routine and may lead to
       !>         unpredictable results.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The intersection of two windows contains every point contained
       !>     both in the first window and in the second window.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let A contain the intervals
       !>
@@ -14232,15 +14232,15 @@ contains
       !>
       !>           [ 2, 3 ]  [ 8, 10 ]
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -14248,7 +14248,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 24-AUG-2021 (JDR) (NJB)
       !>
@@ -14266,7 +14266,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 27-FEB-1989  (HAN)
       !>
@@ -14399,7 +14399,7 @@ contains
       return
       end procedure wnintd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B        are SPICE windows, each of which contains zero or more
@@ -14426,15 +14426,15 @@ contains
       !>                   '>'     A > B is .TRUE. if B is a proper subset
       !>                           of A.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the result of the comparison.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the relational operator is not recognized, the error
       !>         SPICE(INVALIDOPERATION) is signaled.
@@ -14446,11 +14446,11 @@ contains
       !>         data are not diagnosed by this routine and may lead to
       !>         unpredictable results.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function returns .TRUE. whenever the specified relationship
       !>     between the input windows, A and B, is satisfied. For example,
@@ -14474,7 +14474,7 @@ contains
       !>        WNRELD ( A, '>=', B )
       !>        WNRELD ( B, '<=', A )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let A contain the intervals
       !>
@@ -14558,15 +14558,15 @@ contains
       !>
       !>     is .FALSE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -14574,7 +14574,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 24-AUG-2021 (JDR) (NJB)
       !>
@@ -14595,7 +14595,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 02-FEB-1989 (HAN)
       !>
@@ -14715,11 +14715,11 @@ contains
       return
       end procedure wnreld
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     WINDOW   is a window containing zero or more intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MEAS     is the total measure of the intervals in the input
       !>              window. This is just the sum of the measures of the
@@ -14751,11 +14751,11 @@ contains
       !>              Indices range from 1 to 2*N-1, where N is the number of
       !>              intervals in the window.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If WINDOW has odd cardinality, the error
       !>         SPICE(INVALIDCARDINALITY) is signaled.
@@ -14766,11 +14766,11 @@ contains
       !>         Invalid window data are not diagnosed by this routine and may
       !>         lead to unpredictable results.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a summary of the input window, consisting
       !>     of the following items:
@@ -14786,7 +14786,7 @@ contains
       !>     All of these quantities are zero if the window contains no
       !>     intervals.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -14937,15 +14937,15 @@ contains
       !>        interval; so the first ones found are returned: IDXSML and
       !>        IDXLON are 1 and 3 for A, 1 and 1 for B.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -14953,7 +14953,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 05-JUL-2021 (JDR) (NJB)
       !>
@@ -15082,13 +15082,13 @@ contains
       return
       end procedure wnsumd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B        are SPICE windows, each of which contains zero or more
       !>              intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     C        is the output SPICE window, containing the union of A
       !>              and B --- every point contained in A, or in B, or in
@@ -15096,11 +15096,11 @@ contains
       !>
       !>              C must be distinct from both A and B.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the union of the two windows results in an excess of
       !>         elements, the error SPICE(WINDOWEXCESS) is signaled.
@@ -15112,16 +15112,16 @@ contains
       !>         data are not diagnosed by this routine and may lead to
       !>         unpredictable results.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The union of two windows contains every point contained in the
       !>     first window, or the second window, or both.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let A contain the intervals
       !>
@@ -15135,15 +15135,15 @@ contains
       !>
       !>           [ 1, 6 ]  [ 7, 11 ]  [ 16, 18 ]  [ 23, 27 ]
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -15151,7 +15151,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 24-AUG-2021 (JDR) (NJB)
       !>
@@ -15176,7 +15176,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 27-FEB-1989  (HAN)
       !>
@@ -15343,7 +15343,7 @@ contains
       return
       end procedure wnunid
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SIZE     is the size of the window to be validated. This is the
       !>              maximum number of endpoints that the cell used to
@@ -15356,7 +15356,7 @@ contains
       !>              maximum size SIZE containing N endpoints of (possibly
       !>              unordered and non-disjoint) intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     WINDOW   on output is a validated window, in which any overlapping
       !>              input intervals have been merged and the resulting set of
@@ -15364,11 +15364,11 @@ contains
       !>
       !>              WINDOW is ready for use with any of the window routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the original number of endpoints N is odd, the error
       !>         SPICE(UNMATCHENDPTS) is signaled.
@@ -15379,11 +15379,11 @@ contains
       !>     3)  If the left endpoint is greater than the right endpoint, the
       !>         error SPICE(BADENDPOINTS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine takes as input a cell array containing pairs of
       !>     endpoints and validates it to form a window.
@@ -15401,7 +15401,7 @@ contains
       !>     intervals read from input files or initialized in DATA
       !>     statements.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -15486,15 +15486,15 @@ contains
       !>           13.000000000000000        15.000000000000000
       !>           23.000000000000000        29.000000000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -15502,7 +15502,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 16-MAR-2021 (JDR)
       !>

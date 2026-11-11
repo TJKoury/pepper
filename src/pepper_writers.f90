@@ -11,28 +11,28 @@ submodule (pepper_instance) pepper_writers
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the CK file that is to be closed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there are no segments in the file, the error
       !>         SPICE(NOSEGMENTSFOUND) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Close the CK file attached to HANDLE.
       !>
@@ -41,7 +41,7 @@ contains
       !>
       !>     A CKCLS call should balance every CKOPN call.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -244,22 +244,22 @@ contains
       !>        screen. After run completion, a new CK file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     F.S. Turner        (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.1, 26-MAY-2021 (JDR)
       !>
@@ -347,7 +347,7 @@ contains
 
       end procedure ckcls
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
       !>              desired segment. The file should have been opened
@@ -358,7 +358,7 @@ contains
       !>     RECNO    is the number of the individual pointing record to be
       !>              returned from the data type 1 segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the pointing record indexed by RECNO in the segment.
       !>              The contents are as follows:
@@ -385,11 +385,11 @@ contains
       !>              specified relative to the inertial reference
       !>              frame of the segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment is not of data type 1, the error
       !>         SPICE(CKWRONGDATATYPE) is signaled.
@@ -406,11 +406,11 @@ contains
       !>         the CK file specified by HANDLE, the results of this routine
       !>         are unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The file specified by HANDLE should be open for read access.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a detailed description of the structure of a type 1 segment,
       !>     see the CK required reading.
@@ -420,7 +420,7 @@ contains
       !>     fits the bounds of the segment, and then moves directly to get
       !>     the requested data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following code fragment prints the records of the first
       !>     segment in a CK file. Suppose MOC.CK is valid CK file that
@@ -481,17 +481,17 @@ contains
       !>
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The binary CK file containing the segment whose descriptor was
       !>         passed to this routine must be opened for read access by
       !>         either CKLPF or DAFOPR.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
@@ -500,7 +500,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 26-OCT-2021 (JDR)
       !>
@@ -530,7 +530,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 07-SEP-2001 (EDW)
       !>
@@ -683,7 +683,7 @@ contains
       return
       end procedure ckgr01
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
       !>              desired segment. The file should have been opened
@@ -694,7 +694,7 @@ contains
       !>     RECNO    is the number of the discrete pointing instance to be
       !>              returned from the data type 3 segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the pointing instance indexed by RECNO in the
       !>              segment. The contents are as follows:
@@ -725,11 +725,11 @@ contains
       !>              specified relative to the inertial reference
       !>              frame of the segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment is not of data type 3, the error
       !>         SPICE(CKWRONGDATATYPE) is signaled.
@@ -746,12 +746,12 @@ contains
       !>         file specified by HANDLE, the results of this routine are
       !>         unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The CK file specified by HANDLE should be open for read or
       !>     write access.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a detailed description of the structure of a type 3 segment,
       !>     see the CK required reading.
@@ -761,7 +761,7 @@ contains
       !>     used in conjunction with CKNR03, which gives the number of
       !>     pointing instances stored in a segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -959,23 +959,23 @@ contains
       !>           Boresight       :   0.000000000   0.000000000   1.000000000
       !>           Angular velocity:   0.000000000   0.000000000   0.000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The binary CK file containing the segment whose descriptor was
       !>         passed to this routine must be opened for read or write access
       !>         by CKLPF, DAFOPR or DAFOPW.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 26-OCT-2021 (JDR)
       !>
@@ -1116,7 +1116,7 @@ contains
       return
       end procedure ckgr03
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
       !>              desired segment. The file should have been opened
@@ -1128,7 +1128,7 @@ contains
       !>     RECNO    is the number of the pointing record to be returned
       !>              from the data type 4 segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the pointing record indexed by RECNO in the
       !>              segment. The contents of the record are as follows:
@@ -1167,11 +1167,11 @@ contains
       !>              | AV3 Cheby coefficients (optional)               |
       !>              ---------------------------------------------------
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See 'ckparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment is not of data type 4, the error
       !>         SPICE(CKWRONGDATATYPE) is signaled.
@@ -1188,12 +1188,12 @@ contains
       !>         file specified by HANDLE, the results of this routine are
       !>         unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The file specified by HANDLE should be open for read or
       !>     write access.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a detailed description of the structure of a type 4 segment,
       !>     see the CK required reading.
@@ -1203,7 +1203,7 @@ contains
       !>     used in conjunction with CKNR04, which gives the number of
       !>     pointing records stored in a segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that DATA.BC is a CK file that contains segments of
       !>     data type 4. Then the following code fragment extracts the
@@ -1299,23 +1299,23 @@ contains
       !>
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The binary CK file containing the segment whose descriptor
       !>         was passed to this routine must be opened for read or write
       !>         access by either CKLPF, DAFOPR, or DAFOPW.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     Y.K. Zaiko         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 26-OCT-2021 (JDR)
       !>
@@ -1427,7 +1427,7 @@ contains
 
       end procedure ckgr04
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
       !>              desired segment.
@@ -1437,7 +1437,7 @@ contains
       !>     RECNO    is the number of the discrete pointing instance to be
       !>              returned from the data type 5 segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the pointing instance indexed by RECNO in the
       !>              segment. The contents are as follows:
@@ -1500,11 +1500,11 @@ contains
       !>              specified relative to the inertial reference frame of
       !>              the segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment is not of data type 5, the error
       !>         SPICE(CKWRONGDATATYPE) is signaled.
@@ -1524,12 +1524,12 @@ contains
       !>     5)  If the segment subtype is not recognized, the error
       !>         SPICE(NOTSUPPORTED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The file specified by HANDLE should be open for read or
       !>     write access.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a detailed description of the structure of a type 5 segment,
       !>     see the CK required reading.
@@ -1539,7 +1539,7 @@ contains
       !>     used in conjunction with CKNR05, which gives the number of
       !>     pointing instances stored in a segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that MOC.BC is a CK file that contains segments of
       !>     data type 5. Then the following code fragment extracts the
@@ -1630,21 +1630,21 @@ contains
       !>
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR) (NJB)
       !>
@@ -1810,7 +1810,7 @@ contains
       return
       end procedure ckgr05
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
       !>              segment. Normally the CK file should be open for read
@@ -1821,7 +1821,7 @@ contains
       !>     RECNO    is the number of the discrete pointing instance to be
       !>              returned from the specified type 6 segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the pointing record indexed by RECNO in the
       !>              segment. The contents are as follows:
@@ -1895,11 +1895,11 @@ contains
       !>              derivatives are radians/second and 1/second
       !>              respectively.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment is not of data type 6, the error
       !>         SPICE(CKWRONGDATATYPE) is signaled.
@@ -1923,7 +1923,7 @@ contains
       !>     6)  If the segment subtype is not recognized, the error
       !>         SPICE(NOTSUPPORTED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The CK file specified by HANDLE may be open for read or write
       !>     access. Normally, the file should have been opened for read
@@ -1934,7 +1934,7 @@ contains
       !>     return invalid results, or it will cause a system-level runtime
       !>     error.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Note that the mini-segment interpolation window size is not
       !>     returned in the pointing record; this parameter is not required
@@ -1948,7 +1948,7 @@ contains
       !>     CKGM06 to obtain time tags and packet data from a specified type
       !>     6 CK segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -2262,22 +2262,22 @@ contains
       !>        Warning: incomplete output. Only 100 out of 2378824 lines have
       !>        been provided.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 06-JUL-2021 (JDR)
       !>
@@ -2506,7 +2506,7 @@ contains
       return
       end procedure ckgr06
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
       !>              segment. Normally the CK file should be open for
@@ -2517,7 +2517,7 @@ contains
       !>     MSNO     is the index of a mini-segment within the segment
       !>              identified by HANDLE and DESCR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RATE     is the spacecraft clock rate for the specified
       !>              mini-segment. RATE has units of seconds/tick.
@@ -2549,12 +2549,12 @@ contains
       !>              If LSTEPC precedes IVLBDS(2), the mini-segment has
       !>              a coverage gap between those two epochs.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file ck06.inc for a description of CK type 6
       !>     subtypes.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment indicated by DESCR is not a type 6 segment,
       !>         the error SPICE(CKWRONGDATATYPE) is signaled.
@@ -2571,7 +2571,7 @@ contains
       !>         mini-segments in the specified segment, the error
       !>         SPICE(INDEXOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The CK file specified by HANDLE may be open for read or write
       !>     access. Normally, the file should have been opened for read
@@ -2582,7 +2582,7 @@ contains
       !>     return invalid results, or it will cause a system-level runtime
       !>     error.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a complete description of the internal structure of a type 6
       !>     segment, see the CK Required Reading.
@@ -2591,7 +2591,7 @@ contains
       !>     CKGR06 to obtain time tags and packet data from a specified type
       !>     6 CK segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -2905,22 +2905,22 @@ contains
       !>        Warning: incomplete output. Only 100 out of 2378824 lines have
       !>        been provided.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 06-JUL-2021 (JDR)
       !>
@@ -3100,7 +3100,7 @@ contains
       return
       end procedure ckmp06
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
       !>              segment. Normally the CK file should be open for
@@ -3108,16 +3108,16 @@ contains
       !>
       !>     DESCR    is the DAF descriptor of a CK data type 6 segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NMINI    is the number of mini-segments in the CK segment
       !>              identified by HANDLE and DESCR.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment indicated by DESCR is not a type 6 segment,
       !>         the error SPICE(CKWRONGDATATYPE) is signaled.
@@ -3130,7 +3130,7 @@ contains
       !>         CK file specified by HANDLE, the results of this routine are
       !>         unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The CK file specified by HANDLE may be open for read or write
       !>     access. Normally, the file should have been opened for read
@@ -3141,7 +3141,7 @@ contains
       !>     return invalid results, or it will cause a system-level runtime
       !>     error.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a complete description of the internal structure of a type 6
       !>     segment, see the CK required reading.
@@ -3152,7 +3152,7 @@ contains
       !>     and with CKGR06, which returns a specified pointing instance
       !>     from a mini-segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3466,22 +3466,22 @@ contains
       !>        Warning: incomplete output. Only 100 out of 2378824 lines have
       !>        been provided.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
       !>
@@ -3563,7 +3563,7 @@ contains
       return
       end procedure cknm06
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
       !>              segment whose descriptor was also passed. The file
@@ -3572,15 +3572,15 @@ contains
       !>
       !>     DESCR    is the packed descriptor of a data type 1 segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NREC     is the number of pointing records in the type 1 segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment indicated by DESCR is not a type 1 segment,
       !>         the error SPICE(CKWRONGDATATYPE) is signaled.
@@ -3593,16 +3593,16 @@ contains
       !>         the CK file specified by HANDLE, the results of this routine
       !>         are unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The file specified by HANDLE should be open for read access.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a complete description of the internal structure of a type 1
       !>     segment, see the CK required reading.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following code fragment prints the records of the first
       !>     segment in a CK file. Suppose MOC.CK is binary CK file that
@@ -3663,17 +3663,17 @@ contains
       !>
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The binary CK file containing the segment whose descriptor was
       !>         passed to this routine must be opened for read access by
       !>         either CKLPF or DAFOPR.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
@@ -3682,7 +3682,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 26-OCT-2021 (JDR)
       !>
@@ -3712,7 +3712,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 07-SEP-1990 (RET) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.2, 06-MAR-1991 (JML)
       !>
@@ -3816,7 +3816,7 @@ contains
       return
       end procedure cknr01
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
       !>              segment. The file should have been opened for read or
@@ -3824,16 +3824,16 @@ contains
       !>
       !>     DESCR    is the packed descriptor of a data type 2 CK segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NREC     is the number of pointing records in the type 2 segment
       !>              associated with HANDLE and DESCR.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment indicated by DESCR is not a type 2 segment,
       !>         the error SPICE(CKWRONGDATATYPE) is signaled.
@@ -3846,12 +3846,12 @@ contains
       !>         file specified by HANDLE, the results of this routine are
       !>         unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The CK file specified by HANDLE should be open for read or write
       !>     access.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a complete description of the internal structure of a type 2
       !>     segment, see the CK required reading.
@@ -3860,7 +3860,7 @@ contains
       !>     in the specified segment. It is normally used in conjunction
       !>     with CKGR02, which returns the Ith record in the segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4094,22 +4094,22 @@ contains
       !>        Warning: incomplete output. Only 100 out of 875 lines have been
       !>        provided.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The binary CK file containing the segment whose descriptor was
       !>         passed to this routine must be opened for read or write access
       !>         by CKLPF, DAFOPR or DAFOPW.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -4229,7 +4229,7 @@ contains
       return
       end procedure cknr02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
       !>              segment. The file should have been opened for read
@@ -4237,16 +4237,16 @@ contains
       !>
       !>     DESCR    is the packed descriptor of a data type 3 CK segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NREC     is the number of pointing instances in the type 3
       !>              segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment indicated by DESCR is not a type 3 segment,
       !>         the error SPICE(CKWRONGDATATYPE) is signaled.
@@ -4259,12 +4259,12 @@ contains
       !>         file specified by HANDLE, the results of this routine are
       !>         unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The CK file specified by HANDLE should be open for read or
       !>     write access.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a complete description of the internal structure of a type 3
       !>     segment, see the CK required reading.
@@ -4274,7 +4274,7 @@ contains
       !>     conjunction with CKGR03 which returns the Ith pointing instance
       !>     in the segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4472,23 +4472,23 @@ contains
       !>           Boresight       :   0.000000000   0.000000000   1.000000000
       !>           Angular velocity:   0.000000000   0.000000000   0.000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The binary CK file containing the segment whose descriptor was
       !>         passed to this routine must be opened for read or write access
       !>         by CKLPF, DAFOPR or DAFOPW.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 26-OCT-2021 (JDR)
       !>
@@ -4579,23 +4579,23 @@ contains
       return
       end procedure cknr03
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
       !>              segment.
       !>
       !>     DESCR    is the packed descriptor of a data type 5 segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NREC     is the number of pointing instances in the type 5
       !>              segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment indicated by DESCR is not a type 5 segment,
       !>         the error SPICE(CKWRONGDATATYPE) is signaled.
@@ -4608,12 +4608,12 @@ contains
       !>         file specified by HANDLE, the results of this routine are
       !>         unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The file specified by HANDLE should be open for read or
       !>     write access.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a complete description of the internal structure of a type 5
       !>     segment, see the CK required reading.
@@ -4623,7 +4623,7 @@ contains
       !>     conjunction with CKGR05 which returns the Ith pointing instance
       !>     in the segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that MOC.BC is a CK file that contains segments of
       !>     data type 5. Then the following code fragment extracts the
@@ -4714,21 +4714,21 @@ contains
       !>
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 26-OCT-2021 (JDR)
       !>
@@ -4810,7 +4810,7 @@ contains
       return
       end procedure cknr05
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of the CK file to be opened.
       !>
@@ -4834,17 +4834,17 @@ contains
       !>              zero, i.e., 0 <= NCOMCH. A negative value, should one
       !>              occur, will be assumed to be zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the handle of the opened CK file. If an error
       !>              occurs the value of this variable will not represent a
       !>              valid handle.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of NCOMCH is negative, a value of zero (0) will
       !>         be used for the number of comment characters to be set aside
@@ -4853,17 +4853,17 @@ contains
       !>     2)  If an error occurs while attempting to open a CK file the
       !>         value of HANDLE will not represent a valid file handle.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See FNAME and HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Open a new CK file, reserving room for comments if requested.
       !>
       !>     A CKCLS call should balance every CKOPN call.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5066,21 +5066,21 @@ contains
       !>        screen. After run completion, a new CK file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 02-JUL-2021 (JDR)
       !>
@@ -5151,7 +5151,7 @@ contains
       return
       end procedure ckopn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the CK file to which the segment will
       !>              be written. The file must have been opened with write
@@ -5194,15 +5194,15 @@ contains
       !>              routine, however it still must be supplied as part of
       !>              the calling sequence.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Files section.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is not the handle of a C-kernel opened for writing,
       !>         an error is signaled by a routine in the call tree of this
@@ -5234,12 +5234,12 @@ contains
       !>     9)  If any quaternion has magnitude zero, the error
       !>         SPICE(ZEROQUATERNION) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine adds a type 1 segment to a C-kernel. The C-kernel
       !>     may be either a new one or an existing one opened for writing.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a detailed description of a type 1 CK segment please see the
       !>     CK Required Reading.
@@ -5439,7 +5439,7 @@ contains
       !>
       !>        M1*M2
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5627,15 +5627,15 @@ contains
       !>        screen. After run completion, a new CK file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -5643,7 +5643,7 @@ contains
       !>     J.M. Lynch         (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.0.1, 13-AUG-2021 (JDR)
       !>
@@ -5983,7 +5983,7 @@ contains
       return
       end procedure ckw01
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the CK file to which the segment will
       !>              be written. The file must have been opened with write
@@ -6037,15 +6037,15 @@ contains
       !>              nominal seconds per tick rates for Galileo and Voyager
       !>              are 1/120 and 0.06 respectively.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Files section.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is not the handle of a C-kernel opened for writing,
       !>         an error is signaled by a routine in the call tree of this
@@ -6091,12 +6091,12 @@ contains
       !>     13) If any quaternion has magnitude zero, the error
       !>         SPICE(ZEROQUATERNION) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine adds a type 2 segment to a C-kernel. The C-kernel
       !>     may be either a new one or an existing one opened for writing.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a detailed description of a type 2 CK segment please see the
       !>     CK Required Reading.
@@ -6296,7 +6296,7 @@ contains
       !>
       !>        M1*M2
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6488,15 +6488,15 @@ contains
       !>        screen. After run completion, a new CK file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -6504,7 +6504,7 @@ contains
       !>     J.M. Lynch         (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.0.1, 26-MAY-2021 (JDR)
       !>
@@ -6561,7 +6561,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1991 (JML)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.1.0, 22-FEB-1999 (WLT)
       !>
@@ -6907,7 +6907,7 @@ contains
       return
       end procedure ckw02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the CK file to which the segment will
       !>              be written. The file must have been opened with write
@@ -6995,15 +6995,15 @@ contains
       !>              and must coincide with times for which the segment
       !>              contains pointing.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Files section.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If HANDLE is not the handle of a C-kernel opened for writing,
       !>         an error is signaled by a routine in the call tree of this
@@ -7067,12 +7067,12 @@ contains
       !>         first pointing instance are not the same, the error
       !>         SPICE(TIMESDONTMATCH) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine adds a type 3 segment to a C-kernel. The C-kernel
       !>     may be either a new one or an existing one opened for writing.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a detailed description of a type 3 CK segment please see the
       !>     CK Required Reading.
@@ -7272,7 +7272,7 @@ contains
       !>
       !>        M1*M2
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -7474,7 +7474,7 @@ contains
       !>        screen. After run completion, a new CK file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The creator of the segment is given the responsibility for
       !>         determining whether it is reasonable to interpolate between
@@ -7501,11 +7501,11 @@ contains
       !>     3)  All pointing instances in the segment must belong to one and
       !>         only one of the intervals.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -7514,7 +7514,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.0.1, 08-JUL-2021 (JDR)
       !>
@@ -7959,7 +7959,7 @@ contains
       return
       end procedure ckw03
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a CK file that has been
       !>              opened for writing.
@@ -7979,7 +7979,7 @@ contains
       !>     BEGTIM   is the encoded SCLK time for the start of the segment
       !>              coverage.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
@@ -7989,12 +7989,12 @@ contains
       !>     See the $Particulars section for details about the structure of a
       !>     type 4 CK segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     This subroutine makes use of parameters defined in the files
       !>     'sgparam.inc' and 'ckparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If a file access error occurs while this routine begins a new
       !>         type 04 segment, the error is signaled by a routine in the
@@ -8009,11 +8009,11 @@ contains
       !>     4)  If SEGID contains any nonprintable characters, the error
       !>         SPICE(NONPRINTABLECHARS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See HANDLE in the $Detailed_Input section.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine begins writing a type 4 CK segment to the open DAF
       !>     file that is associated with HANDLE. The file must have been
@@ -8087,7 +8087,7 @@ contains
       !>        | AV3 Cheby coefficients (optional)                |
       !>        ----------------------------------------------------
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Assume that we have:
       !>
@@ -8146,22 +8146,22 @@ contains
       !>     C
       !>           CALL CKW04E ( HANDLE, ENDTIM )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The file containing the segment should be opened for read
       !>         or write access either by CKOPN or DAFOPW.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     Y.K. Zaiko         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 17-AUG-2021 (JDR)
       !>
@@ -8312,7 +8312,7 @@ contains
 
       end procedure ckw04b
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an CK file that has been
       !>              opened for writing, and to which a type 4 CK segment
@@ -8321,28 +8321,28 @@ contains
       !>     ENDTIM   is the encoded SCLK time for the end of the segment
       !>              coverage.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     The type 04 segment in the DAF file associated with HANDLE will be
       !>     ended, making the addition of the data to the file permanent.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while reading or writing the file
       !>         indicated by HANDLE, the error is signaled by a routine in
       !>         the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine ends a type 4 CK segment which is being written to
       !>     the DAF file associated with HANDLE. Ending the DAF segment is a
@@ -8417,7 +8417,7 @@ contains
       !>        | AV3 Cheby coefficients (optional)                |
       !>        ----------------------------------------------------
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Assume that we have:
       !>
@@ -8476,23 +8476,23 @@ contains
       !>     C
       !>           CALL CKW04E ( HANDLE, ENDTIM )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The type 4 CK segment being closed must have been started by
       !>         the routine CKW04B, the routine which begins a type 4 CK
       !>         segment.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     Y.K. Zaiko         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 02-JUN-2021 (JDR)
       !>
@@ -8589,7 +8589,7 @@ contains
 
       end procedure ckw04e
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a CK file that has been
       !>              opened for writing.
@@ -8719,12 +8719,12 @@ contains
       !>              and must coincide with times for which the segment
       !>              contains pointing.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXDEG   is the maximum allowed degree of the interpolating
       !>              polynomial. If the value of MAXDEG is increased,
@@ -8734,7 +8734,7 @@ contains
       !>              increased, and comments describing the record size
       !>              must be changed.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the following exceptions occur, this routine will
       !>     return without creating a new segment.
@@ -8813,12 +8813,12 @@ contains
       !>
       !>     18) If RATE is zero, the error SPICE(INVALIDVALUE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 5 CK segment is written to the CK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes a CK type 5 data segment to the open CK
       !>     file according to the format described in the type 5 section of
@@ -9017,7 +9017,7 @@ contains
       !>
       !>        M1*M2
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have data packets and are prepared to produce
       !>     a segment of type 5 in a CK file.
@@ -9038,15 +9038,15 @@ contains
       !>             .             INST,   REF,    AVFLAG, SEGID,  N,
       !>             .             SCLKDP, PACKTS, RATE,   NINTS,  STARTS )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -9054,7 +9054,7 @@ contains
       !>     J.M. Lynch         (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.0.1, 08-JUN-2021 (JDR)
       !>
@@ -9083,7 +9083,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-2002 (NJB) (KRG) (JML) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 08-FEB-2010 (NJB)
       !>
@@ -9570,7 +9570,7 @@ contains
       return
       end procedure ckw05
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a CK file that has been opened
       !>              for writing.
@@ -9806,12 +9806,12 @@ contains
       !>              last") is .TRUE., the later interval is selected;
       !>              otherwise the earlier interval is selected.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXDEG   is the maximum allowed degree of the interpolating
       !>              polynomial.
@@ -9819,7 +9819,7 @@ contains
       !>              See the INCLUDE file ck06.inc for the value of
       !>              MAXDEG.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the following exceptions occur, this routine will
       !>     return without creating a new segment.
@@ -9909,12 +9909,12 @@ contains
       !>     18) If any element of the input RATES array is non-positive, the
       !>         error SPICE(INVALIDSCLKRATE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 6 CK segment is written to the CK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes a CK type 6 data segment to the open CK
       !>     file according to the format described in the type 6 section of
@@ -10113,7 +10113,7 @@ contains
       !>
       !>        M1*M2
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have states and are prepared to produce
       !>     a segment of type 6 in a CK file.
@@ -10135,21 +10135,21 @@ contains
       !>             .             NPKTS,   SUBTPS,  DEGRES,  PACKTS,
       !>             .             RATES,   SCLKDP,  IVLBDS,  SELLST  )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 02-JUN-2021 (JDR)
       !>
@@ -10924,7 +10924,7 @@ contains
       return
       end procedure ckw06
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a PCK file that has been
       !>              opened for writing.
@@ -10949,27 +10949,27 @@ contains
       !>              coefficients. The epochs must form a strictly increasing
       !>              sequence.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     The data is stored in a segment in the binary PCK file
       !>     associated with HANDLE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of coefficient sets and epochs is not positive,
       !>         the error SPICE(INVALIDARGUMENT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine adds data to a type 03 PCK segment in the binary
       !>     PCK file that is associated with HANDLE. The segment must have
@@ -11029,7 +11029,7 @@ contains
       !>           |  CHBDEG+1 coefficients for the Z-axis rate   |
       !>           ------------------------------------------------
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Assume we have the following for each of the examples that
       !>     follow.
@@ -11169,23 +11169,23 @@ contains
       !>        C
       !>              CALL PCK03E ( HANDLE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The type 03 PCK segment to which we are adding data must have
       !>         been started by the routine PCK03B, the routine which begins a
       !>         type 03 PCK segment.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.2, 03-JUN-2021 (JDR)
       !>
@@ -11241,13 +11241,13 @@ contains
 
       end procedure pck03a
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a binary PCK file that has been
       !>              opened for writing and to which a type 03 PCK segment is
       !>              being written.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
@@ -11257,21 +11257,21 @@ contains
       !>     See the $Particulars section for details about the
       !>     structure of a type 03 PCK segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is no segment being written to the file associated
       !>         with HANDLE, an error is signaled by a routine in the call
       !>         tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine ends a type 03 PCK segment that is being written to
       !>     the binary PCK file associated with HANDLE. Ending the PCK segment
@@ -11332,7 +11332,7 @@ contains
       !>           |  CHBDEG+1 coefficients for the Z-axis rate   |
       !>           ------------------------------------------------
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Assume we have the following for each of the examples that
       !>     follow.
@@ -11472,23 +11472,23 @@ contains
       !>        C
       !>              CALL PCK03E ( HANDLE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The type 03 binary PCK segment being closed must have been
       !>         started by the routine PCK03B, the routine which begins a type
       !>         03 PCK segment.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 03-JUN-2021 (JDR)
       !>
@@ -11525,32 +11525,32 @@ contains
 
       end procedure pck03e
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the PCK file that is to be closed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there are no segments in the file, the error
       !>         SPICE(NOSEGMENTSFOUND) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Close the PCK file attached to HANDLE.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -11688,22 +11688,22 @@ contains
       !>        screen. After run completion, a new PCK type 2 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     F.S. Turner        (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.2, 03-JUN-2021 (JDR)
       !>
@@ -11722,7 +11722,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 27-JAN-1995 (KRG)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 27-NOV-2001 (FST)
       !>
@@ -11795,7 +11795,7 @@ contains
 
       end procedure pckcls
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of the PCK file to be created.
       !>
@@ -11817,17 +11817,17 @@ contains
       !>              zero, i.e., 0 <= NCOMCH. A negative value, should one
       !>              occur, will be assumed to be zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the handle of the opened PCK file. If an error occurs
       !>              when opening the file, the value of this variable should
       !>              not be used, as it will not represent a valid handle.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of NCOMCH is negative, a value of zero (0) will
       !>         be used for the number of comment characters to be set aside
@@ -11836,15 +11836,15 @@ contains
       !>     2)  If an error occurs while attempting to open a CK file the
       !>         value of HANDLE will not represent a valid file handle.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See NAME and HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Open a new PCK file, reserving room for comments if requested.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -11982,22 +11982,22 @@ contains
       !>        screen. After run completion, a new PCK type 2 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.2, 04-JUL-2021 (JDR)
       !>
@@ -12070,7 +12070,7 @@ contains
       return
       end procedure pckopn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the NAIF ID code for the body of the segment.
       !>
@@ -12085,16 +12085,16 @@ contains
       !>     LAST     is the last epoch for which the segment will have
       !>              ephemeris data.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DESCR    is a valid PCK segment descriptor to use
       !>              when creating a DAF segment for this body.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of BODY is the ID code of a barycenter --codes 0,
       !>         1, ..., 9, the error SPICE(BARYCENTERIDCODE) is signaled.
@@ -12112,17 +12112,17 @@ contains
       !>         arise from uninitialized values or improperly ordered calling
       !>         arguments.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine for validating and creating
       !>     the descriptor for a PCK segment. It is intended for
       !>     use only by routines that create PCK segments.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you wish to create a PCK segment of type X
       !>     and that you are writing a routine to handle the details
@@ -12137,21 +12137,21 @@ contains
       !>     CALL PCKPDS ( BODY, FRAME, TYPE, FIRST, LAST, DESCR )
       !>     CALL DAFBNA ( HANDLE, DESCR,  SEGID )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 20-AUG-2021 (JDR)
       !>
@@ -12269,11 +12269,11 @@ contains
 
       end procedure pckpds
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DESCR    is a PCK segment descriptor.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BODY     is the NAIF ID code for the body of the segment.
       !>
@@ -12294,26 +12294,26 @@ contains
       !>     END      is the last address of the data associated with
       !>              this descriptor.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine extracts the contents of a PCK segment
       !>     descriptor into the components needed for reading and
       !>     evaluating the data stored in the segment. It serves
       !>     as a macro for expanding the PCK segment descriptor.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you wished to summarize a particular PCK segment
       !>     and that you have the descriptor for that segment in hand.
@@ -12335,20 +12335,20 @@ contains
       !>     WRITE (*,*) 'Segment Start : ', FSTCAL
       !>     WRITE (*,*) 'Segment Stop  : ', LSTCAL
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 02-OCT-2021 (JDR)
       !>
@@ -12399,7 +12399,7 @@ contains
 
       end procedure pckuds
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of an PCK file to which a type 2
       !>              segment is to be added. The PCK file must be open
@@ -12456,15 +12456,15 @@ contains
       !>              first set of Chebyshev polynomial coefficients
       !>              (first logical record).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of sets of coefficients is not positive,
       !>         the error SPICE(NUMCOEFFSNOTPOS) is signaled.
@@ -12486,12 +12486,12 @@ contains
       !>         equal to the descriptor end time, the error
       !>         SPICE(BADDESCRTIMES) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 2 PCK segment is written to the PCK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an PCK type 2 data segment to the designated
       !>     PCK file, according to the format described in the PCK Required
@@ -12505,7 +12505,7 @@ contains
       !>     number of segments in a PCK file will help optimize how the SPICE
       !>     system accesses the file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -12643,21 +12643,21 @@ contains
       !>        screen. After run completion, a new PCK type 2 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 17-AUG-2021 (JDR)
       !>
@@ -12924,7 +12924,7 @@ contains
       return
       end procedure pckw02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of a PCK file to which a type 20
       !>              segment is to be added. The PCK file must be open
@@ -13109,11 +13109,11 @@ contains
       !>              equals the Julian ephemeris date of the initial
       !>              epoch of the first record.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. This routine writes data to a PCK file.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXDEG   is the maximum allowed degree of the input
       !>              Chebyshev expansions. MAXDEG is declared in the
@@ -13147,7 +13147,7 @@ contains
       !>              See the $Exceptions section below for a description
       !>              of the error check using this tolerance.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of sets of coefficients is not positive,
       !>         the error SPICE(INVALIDCOUNT) is signaled.
@@ -13178,12 +13178,12 @@ contains
       !>     8)  If either the angle or time scale is non-positive, the
       !>         error SPICE(NONPOSITIVESCALE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 20 PCK segment is written to the PCK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes a PCK type 20 data segment to the designated
       !>     PCK file, according to the format described in the PCK Required
@@ -13197,7 +13197,7 @@ contains
       !>     number of segments in a PCK file will help optimize how the
       !>     SPICE system accesses the file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have in an array CDATA sets of Chebyshev
       !>     polynomial coefficients and angles representing the orientation
@@ -13240,21 +13240,21 @@ contains
       !>     C
       !>            CALL DAFCLS ( HANDLE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-JUN-2021 (JDR)
       !>
@@ -13572,7 +13572,7 @@ contains
       return
       end procedure pckw20
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle assigned to the binary SPK or CK file
       !>              which has been opened for write access.
@@ -13612,15 +13612,15 @@ contains
       !>              file, nothing gets stored in the comment area of
       !>              the binary file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified DAF file is not open for write access, an
       !>         error is signaled by a routine in the call tree of this
@@ -13640,11 +13640,11 @@ contains
       !>         comments, an error is signaled by a routine in the call tree
       !>         of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See arguments HANDLE and UNIT.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The structure of SPK and CK files accommodates comments in
       !>     addition to data. The following three routines are available
@@ -13664,7 +13664,7 @@ contains
       !>     SPCT2B---include these comments when converting SPK and CK
       !>     files between binary and text formats.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose we have a binary SPK file called A.BSP and we have
       !>     a text file called COMMENTS.TXT that contains comments
@@ -13734,7 +13734,7 @@ contains
       !>     SPCAC would not have found the marker and no comments from
       !>     the text file would be written to the binary file.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The lines in the comment file should not exceed 1000
       !>         characters in length. SPCAC truncates lines longer than
@@ -13756,11 +13756,11 @@ contains
       !>         comments to be invisible to any reader that starts at the
       !>         first reserved record and reads until the first EOT present.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
@@ -13768,7 +13768,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     F.S. Turner        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 13-AUG-2021 (JDR)
       !>
@@ -13815,7 +13815,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
       !>
@@ -14200,7 +14200,7 @@ contains
       return
       end procedure spcac
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle assigned to the binary SPK or CK file
       !>              which has been opened for write access.
@@ -14211,24 +14211,24 @@ contains
       !>              are deleted. Note, however, that the size of the file
       !>              does not change.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the file does not contain any comments in its comment area
       !>         on input, it will be unchanged by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The structure of SPK and CK files accommodates comments in
       !>     addition to data. The following three routines are available
@@ -14248,7 +14248,7 @@ contains
       !>     SPCT2B---include these comments when converting SPK and CK
       !>     files between binary and text formats.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Suppose we have a binary SPK file called A.BSP. The following
       !>         code fragment deletes any comments that may have been stored
@@ -14290,21 +14290,21 @@ contains
       !>         contain the comments from the SPK file.  NOCOMMENTS.TXT
       !>         would be empty because of the call to SPCDC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.E. McLean        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-JUN-2021 (JDR)
       !>
@@ -14366,7 +14366,7 @@ contains
       return
       end procedure spcdc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle assigned to the binary SPK or CK file
       !>              which has been opened for read access.
@@ -14388,15 +14388,15 @@ contains
       !>              SPCEC was called. In other words, SPCEC does not rewind
       !>              or backspace this file before writing the text to it.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the comment area of the SPK or CK file is empty, nothing
       !>         will be written to the text file.
@@ -14407,11 +14407,11 @@ contains
       !>     3)  If there is a problem writing to the text file, the error
       !>         SPICE(FILEWRITEFAILED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE and UNIT.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The structure of SPK and CK files accommodates comments in
       !>     addition to data. The following three routines are available
@@ -14431,7 +14431,7 @@ contains
       !>     SPCT2B---include these comments when converting SPK and CK
       !>     files between binary and text formats.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose we have a binary SPK file called A.BSP. The following
       !>     code fragment stores the contents of the comment area of A.BSP
@@ -14448,7 +14448,7 @@ contains
       !>
       !>            WRITE (UNIT,*) '\endcomments'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Use TXTOPN to open new text files and get their logical unit.
       !>         There are system dependencies regarding opening text files,
@@ -14464,18 +14464,18 @@ contains
       !>         to this routine and routines in its call tree may be
       !>         required to properly handle other cases.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.E. McLean        (JPL)
       !>     W.L. Taber         (JPL)
       !>     F.S. Turner        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 03-JUN-2021 (JDR)
       !>
@@ -14499,7 +14499,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
       !>
@@ -14653,24 +14653,24 @@ contains
       return
       end procedure spcec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of a new SPK or CK file to be created.
       !>
       !>     IFNAME   is the internal file name of the file to be created.
       !>              IFNAME may contain up to 60 characters.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the file handle assigned to the new file. This
       !>              should be used to refer to the file in all subsequent
       !>              calls to DAF and SPC routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified file cannot be opened without exceeding the
       !>         maximum number of files, an error is signaled by a routine in
@@ -14694,11 +14694,11 @@ contains
       !>     6)  If the file name is blank or otherwise inappropriate, an error
       !>         is signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument FNAME above.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPCOPN opens a new SPK or CK file. It is identical to DAFOPN
       !>     except SPCOPN defines several of the inputs that DAFOPN requires
@@ -14712,7 +14712,7 @@ contains
       !>     internally, so there is no need to call SPCOPN when loading or
       !>     unloading SPK or CK files.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following code fragment, SPCOPN opens a new file,
       !>     to which an array is then added. GETDAT is a ficticious
@@ -14736,21 +14736,21 @@ contains
       !>
       !>               CALL DAFCLS ( HANDLE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.E. McLean        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 19-APR-2021 (JDR)
       !>
@@ -14801,7 +14801,7 @@ contains
       return
       end procedure spcopn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle assigned to the binary SPK or CK file
       !>              which has been opened for read access.
@@ -14811,7 +14811,7 @@ contains
       !>              been called and returned the handle. This file is
       !>              unchanged by calling SPCRFL.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LINE     is the first line of text from the comment area of
       !>              the SPK or CK file specified by HANDLE. LINE may
@@ -14820,11 +14820,11 @@ contains
       !>     EOC      is .TRUE. if the comment area is empty. If there
       !>              are comments in the comment area, then EOC is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the comment area of the SPK or CK file is empty, LINE
       !>         will be blank.
@@ -14839,11 +14839,11 @@ contains
       !>     4)  If the comments are not in the correct format, the error
       !>         SPICE(FORMATERROR) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The structure of SPK and CK files accommodates comments in
       !>     addition to data. The following routines are available
@@ -14867,7 +14867,7 @@ contains
       !>     SPCT2B---include these comments when converting SPK and CK
       !>     files between binary and text formats.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose we have a binary SPK file called A.BSP. The following
       !>     code fragment searches the comment area for a lines containing
@@ -14900,17 +14900,17 @@ contains
       !>
       !>            END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that the comment area of the binary SPK
       !>         or CK file contains only text stored by SPCAC. Comments
       !>         written any other way may not be handled properly.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
@@ -14918,7 +14918,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     F.S. Turner        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 17-AUG-2021 (JDR)
       !>
@@ -14955,7 +14955,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-1991 (JEM)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
       !>
@@ -15112,11 +15112,11 @@ contains
       end associate
       end procedure spcrfl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LINE     is the next line of text from the comment area of
       !>              the SPK or CK file. LINE may be blank.
@@ -15129,11 +15129,11 @@ contains
       !>     EOC      is .TRUE. if there are no more comments to read.
       !>              Otherwise, EOC is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If SPCRFL is not called prior to calling SPCRNL, the error
       !>         SPICE(SPCRFLNOTCALLED) is signaled.
@@ -15153,12 +15153,12 @@ contains
       !>     6)  If the comments are not in the correct format, the error
       !>         SPICE(FORMATERROR) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The handle of the binary SPK or CK is specified with the routine
       !>     SPCRFL.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The structure of SPK and CK files accommodates comments in
       !>     addition to data. The following five routines are available
@@ -15182,7 +15182,7 @@ contains
       !>     SPCT2B---include these comments when converting SPK and CK
       !>     files between binary and text formats.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose we have a binary SPK file called A.BSP. The following
       !>     code fragment searches the comment area for a lines containing
@@ -15215,17 +15215,17 @@ contains
       !>
       !>            END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that the comment area of the binary SPK
       !>         or CK file contains only text stored by SPCAC. Comments
       !>         written any other way may not be handled properly.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
@@ -15233,7 +15233,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     F.S. Turner        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 17-AUG-2021 (JDR)
       !>
@@ -15499,35 +15499,35 @@ contains
       end associate
       end procedure spcrnl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the SPK file that is to be closed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there are no segments in the file, the error
       !>         SPICE(NOSEGMENTSFOUND) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Close the SPK file attached to HANDLE. The close operation tests
       !>     the file to ensure the presence of data segments.
       !>
       !>     A SPKCLS call should balance each call to SPKOPN.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -15650,22 +15650,22 @@ contains
       !>        screen. After run completion, a new SPK type 8 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     F.S. Turner        (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.1, 28-MAY-2021 (JDR)
       !>
@@ -15752,22 +15752,22 @@ contains
 
       end procedure spkcls
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FILE     is the name of an existing SPK file to which
       !>              you wish to append additional SPK segments.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the DAF integer handle that refers to the SPK file
       !>              opened for appending. HANDLE is required by any of the
       !>              SPK writing routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the following exceptions occur, HANDLE will be returned
       !>     with the value 0.
@@ -15790,17 +15790,17 @@ contains
       !>         an error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This file provides an interface for opening existing SPK
       !>     files for the addition of SPK segments. If you need
       !>     to open an new SPK file for writing, call the routine SPKOPN.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -15970,20 +15970,20 @@ contains
       !>        screen. After run completion, a new SPK type 5, with two
       !>        segments, exists in the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -16061,7 +16061,7 @@ contains
 
       end procedure spkopa
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of the new SPK file to be created.
       !>
@@ -16085,18 +16085,18 @@ contains
       !>              zero, i.e., 0 <= NCOMCH. A negative value, should one
       !>              occur, will be assumed to be zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the handle of the opened SPK file. If an error
       !>              occurs when opening the file, the value of this
       !>              variable should not be used, as it will not represent
       !>              a valid handle.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of NCOMCH is negative, a value of zero (0) will
       !>         be used for the number of comment characters to be set aside
@@ -16105,15 +16105,15 @@ contains
       !>     2)  If an error occurs while attempting to open the SPK file, the
       !>         value of HANDLE will not represent a valid file handle.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See FNAME and HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Open a new SPK file, reserving room for comments if requested.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -16236,21 +16236,21 @@ contains
       !>        screen. After run completion, a new SPK type 8 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 05-AUG-2021 (JDR)
       !>
@@ -16324,7 +16324,7 @@ contains
       return
       end procedure spkopn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
       !>              opened for writing.
@@ -16398,16 +16398,16 @@ contains
       !>
       !>              The elements of EPOCHS must be strictly increasing.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the following exceptions occur, this routine will return
       !>     without creating a new segment.
@@ -16434,19 +16434,19 @@ contains
       !>     7)  If the last epoch EPOCHS(N) is less than LAST, the error
       !>         SPICE(BADDESCRTIMES) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 1 SPK segment is written to the SPK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an SPK type 1 data segment to the open SPK
       !>     file according to the format described in the type 1 section of
       !>     the SPK Required Reading. The SPK file must have been opened with
       !>     write access.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have difference lines and are prepared to
       !>     produce a segment of type 1 in an SPK file.
@@ -16467,21 +16467,21 @@ contains
       !>             .               FIRST,   LAST,    SEGID,   N,
       !>             .               DLINES,  EPOCHS                  )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The validity of the difference lines is not checked by
       !>         this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 03-JUN-2021 (JDR)
       !>
@@ -16704,7 +16704,7 @@ contains
       return
       end procedure spkw01
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of an SPK file to which a type 2
       !>              segment is to be added. The SPK file must be open for
@@ -16764,7 +16764,7 @@ contains
       !>              of Chebyshev polynomial coefficients (first logical
       !>              record). FIRST is an appropriate value for BTIME.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
@@ -16774,7 +16774,7 @@ contains
       !>     See the $Particulars section for details about the structure of a
       !>     type 02 SPK segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file spk02.inc for declarations of the
       !>     parameters described below.
@@ -16785,7 +16785,7 @@ contains
       !>     MAXDEG   is the maximum allowed degree of the input
       !>              Chebyshev expansions.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of sets of coefficients is not positive,
       !>         the error SPICE(NUMCOEFFSNOTPOS) is signaled.
@@ -16813,12 +16813,12 @@ contains
       !>         or if SEGID contains any nonprintable characters, an error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 2 SPK segment is written to the SPK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an SPK type 2 data segment to the designated
       !>     SPK file, according to the format described in the SPK Required
@@ -16871,7 +16871,7 @@ contains
       !>     Where T_n represents the Chebyshev polynomial
       !>     of the first kind of degree n.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -16993,15 +16993,15 @@ contains
       !>        screen. After run completion, a new SPK type 2 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -17009,7 +17009,7 @@ contains
       !>     E.D. Wright        (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 20-AUG-2021 (JDR)
       !>
@@ -17321,7 +17321,7 @@ contains
       return
       end procedure spkw02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of an SPK file to which a type 3
       !>              segment is to be added. The SPK file must be open for
@@ -17389,7 +17389,7 @@ contains
       !>              of Chebyshev polynomial coefficients (first logical
       !>              record).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
@@ -17399,7 +17399,7 @@ contains
       !>     See the $Particulars section for details about the structure of a
       !>     type 03 SPK segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file spk03.inc for declarations of the
       !>     parameters described below.
@@ -17410,7 +17410,7 @@ contains
       !>     MAXDEG   is the maximum allowed degree of the input
       !>              Chebyshev expansions.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of sets of coefficients is not positive,
       !>         the error SPICE(NUMCOEFFSNOTPOS) is signaled.
@@ -17438,12 +17438,12 @@ contains
       !>         or if SEGID contains any nonprintable characters, an error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 3 SPK segment is written to the SPK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an SPK type 3 data segment to the designated
       !>     SPK file, according to the format described in the SPK Required
@@ -17502,7 +17502,7 @@ contains
       !>     Where T_n represents the Chebyshev polynomial of the first kind of
       !>     degree n.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -17636,15 +17636,15 @@ contains
       !>        screen. After run completion, a new SPK type 3 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -17652,7 +17652,7 @@ contains
       !>     E.D. Wright        (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 17-JUN-2021 (JDR)
       !>
@@ -17961,7 +17961,7 @@ contains
       return
       end procedure spkw03
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file
       !>              opened for writing.
@@ -17999,15 +17999,15 @@ contains
       !>              corresponding to the states in STATES. Epochs must
       !>              form a strictly increasing sequence.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. A type 5 segment is written to the file attached to HANDLE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If GM is not positive, the error SPICE(NONPOSITIVEMASS)
       !>         is signaled.
@@ -18030,19 +18030,19 @@ contains
       !>     7)  If a file I/O problem occurs, an error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 05 SPK segment is written to the SPK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an SPK type 05 data segment to the open SPK
       !>     file according to the format described in the type 05 section of
       !>     the SPK Required Reading. The SPK file must have been opened with
       !>     write access.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -18161,15 +18161,15 @@ contains
       !>        screen. After run completion, a new SPK type 5 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
@@ -18179,7 +18179,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 17-JUN-2021 (JDR)
       !>
@@ -18415,7 +18415,7 @@ contains
       return
       end procedure spkw05
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
       !>              opened for writing.
@@ -18462,12 +18462,12 @@ contains
       !>              states in the input state array. STEP is specified
       !>              in seconds.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file spk08.inc for declarations of the
       !>     parameters described below.
@@ -18497,7 +18497,7 @@ contains
       !>                 STEP
       !>                 N
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the following exceptions occur, this routine will return
       !>     without creating a new segment.
@@ -18530,19 +18530,19 @@ contains
       !>         is signaled. See the $Parameters section above for a
       !>         description of the tolerance.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 8 SPK segment is written to the SPK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an SPK type 08 data segment to the open SPK
       !>     file according to the format described in the type 08 section of
       !>     the SPK Required Reading. The SPK file must have been opened with
       !>     write access.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -18665,15 +18665,15 @@ contains
       !>        screen. After run completion, a new SPK type 8 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -18681,7 +18681,7 @@ contains
       !>     J.M. Lynch         (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.0, 03-JUN-2021 (JDR)
       !>
@@ -19000,7 +19000,7 @@ contains
       return
       end procedure spkw08
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
       !>              opened for writing.
@@ -19041,12 +19041,12 @@ contains
       !>              of the state array. The epochs are specified as
       !>              seconds past J2000, TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXDEG   is the maximum allowed degree of the interpolating
       !>              polynomial. If the value of MAXDEG is increased,
@@ -19056,7 +19056,7 @@ contains
       !>              increased, and comments describing the record size
       !>              must be changed.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the following exceptions occur, this routine will return
       !>     without creating a new segment.
@@ -19089,19 +19089,19 @@ contains
       !>     9)  If the last epoch, EPOCHS(N), is less than LAST, the error
       !>         SPICE(BADDESCRTIMES) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 9 SPK segment is written to the SPK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an SPK type 09 data segment to the open SPK
       !>     file according to the format described in the type 09 section of
       !>     the SPK Required Reading. The SPK file must have been opened with
       !>     write access.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -19302,15 +19302,15 @@ contains
       !>        Note that after run completion, a new SPK file exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -19318,7 +19318,7 @@ contains
       !>     J.M. Lynch         (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.0.1, 05-JUL-2021 (JDR)
       !>
@@ -19624,7 +19624,7 @@ contains
       return
       end procedure spkw09
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been opened
       !>              for writing.
@@ -19735,18 +19735,18 @@ contains
       !>              of the I'th element set. EPOCHS must form a strictly
       !>              increasing sequence.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     The routine writes an SPK type 10 segment to the file attached to
       !>     HANDLE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the structure or content of the inputs are invalid, an
       !>         error is signaled by a routine in the call tree of this
@@ -19755,11 +19755,11 @@ contains
       !>     2)  If any file access error occurs, the error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes a type 10 SPK segment to the SPK file open
       !>     for writing that is attached to HANDLE.
@@ -19768,7 +19768,7 @@ contains
       !>     distributed by NORAD, and converts them to the elements in units
       !>     suitable for use in this routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -20020,11 +20020,11 @@ contains
       !>        screen. After run completion, a new SPK type 10 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  F. Hoots and R. Roehrich, "Spacetrack Report #3: Models for
       !>          Propagation of the NORAD Element Sets," U.S. Air Force
@@ -20044,14 +20044,14 @@ contains
       !>          AIAA/AAS Astrodynamics Specialist Conference, Keystone, CO.,
       !>          August 21-24, 2006.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     M. Costa Sitja     (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-NOV-2021 (JDR) (MCS)
       !>
@@ -20168,7 +20168,7 @@ contains
 
       end procedure spkw10
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
       !>              opened for writing.
@@ -20215,12 +20215,12 @@ contains
       !>              states in the input state array. STEP is specified
       !>              in seconds.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file spk12.inc for declarations of the
       !>     parameters described below.
@@ -20250,7 +20250,7 @@ contains
       !>              can be used to interpolate states from the segment
       !>              written by this routine.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the following exceptions occur, this routine will return
       !>     without creating a new segment.
@@ -20289,19 +20289,19 @@ contains
       !>         is signaled. See the $Parameters section for a description of
       !>         the tolerance.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 12 SPK segment is written to the SPK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an SPK type 12 data segment to the open SPK
       !>     file according to the format described in the type 12 section of
       !>     the SPK Required Reading. The SPK file must have been opened with
       !>     write access.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -20416,20 +20416,20 @@ contains
       !>        screen. After run completion, a new SPK type 12 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 03-JUN-2021 (JDR)
       !>
@@ -20730,7 +20730,7 @@ contains
       return
       end procedure spkw12
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
       !>              opened for writing.
@@ -20771,12 +20771,12 @@ contains
       !>              of the state array. The epochs are specified as
       !>              seconds past J2000, TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXDEG   is the maximum allowed degree of the interpolating
       !>              polynomial. If the value of MAXDEG is increased,
@@ -20786,7 +20786,7 @@ contains
       !>              increased, and comments describing the record size
       !>              must be changed.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the following exceptions occur, this routine will return
       !>     without creating a new segment.
@@ -20822,19 +20822,19 @@ contains
       !>     10) If the last epoch, EPOCHS(N), is less than LAST, the error
       !>         SPICE(BADDESCRTIMES) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 13 SPK segment is written to the SPK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an SPK type 13 data segment to the open SPK
       !>     file according to the format described in the type 13 section of
       !>     the SPK Required Reading. The SPK file must have been opened with
       !>     write access.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -21035,20 +21035,20 @@ contains
       !>        Note that after run completion, a new SPK file exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 05-JUL-2021 (JDR)
       !>
@@ -21322,7 +21322,7 @@ contains
       return
       end procedure spkw13
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
       !>              opened for writing.
@@ -21397,16 +21397,16 @@ contains
       !>
       !>     Units are radians, km, seconds.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. A type 15 segment is written to the file attached
       !>     to HANDLE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the eccentricity is less than zero, the error
       !>         SPICE(BADECCENTRICITY) is signaled.
@@ -21441,12 +21441,12 @@ contains
       !>         FIRST and LAST times, an error is signaled by
       !>         a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 15 SPK segment is written to the SPK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an SPK type 15 data segment to the open SPK
       !>     file according to the format described in the type 15 section of
@@ -21456,7 +21456,7 @@ contains
       !>     This routine is provided to provide direct support for the MASL
       !>     precessing orbit formulation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that at time EPOCH you have the J2000 periapsis
       !>      state of some object relative to some central body and would
@@ -21504,21 +21504,21 @@ contains
       !>            .              SEGID,  EPOCH, TP,     PA,    P,     ECC,
       !>            .              J2FLG,  PV,    GM,     J2,    RADIUS      )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 03-JUN-2021 (JDR)
       !>
@@ -21779,7 +21779,7 @@ contains
       return
       end procedure spkw15
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
       !>              opened for writing.
@@ -21875,18 +21875,18 @@ contains
       !>     DECPOL   is the declination of the pole of the reference plane
       !>              relative to FRAME measured in radians.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     The routine writes an SPK type 17 segment to the file attached to
       !>     HANDLE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the semi-major axis is less than or equal to zero, the
       !>         error SPICE(BADSEMIAXIS) is signaled.
@@ -21905,19 +21905,19 @@ contains
       !>         FIRST and LAST times, an error is signaled by a routine in
       !>         the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 17 SPK segment is written to the SPK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an SPK type 17 data segment to the open SPK
       !>     file according to the format described in the type 17 section of
       !>     the SPK Required Reading. The SPK file must have been opened with
       !>     write access.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -22096,20 +22096,20 @@ contains
       !>        screen. After run completion, a new SPK type 17 exists in
       !>        the output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -22272,7 +22272,7 @@ contains
       return
       end procedure spkw17
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been opened
       !>              for writing.
@@ -22345,12 +22345,12 @@ contains
       !>              packets array. The epochs are specified as seconds past
       !>              J2000, TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXDEG   is the maximum allowed degree of the interpolating
       !>              polynomial. If the value of MAXDEG is increased, the
@@ -22359,7 +22359,7 @@ contains
       !>              SPKEnn must be increased, and comments describing the
       !>              record size must be changed.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the following exceptions occur, this routine will
       !>     return without creating a new segment.
@@ -22398,19 +22398,19 @@ contains
       !>     11) If the subtype code is not recognized, the error
       !>         SPICE(INVALIDVALUE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 18 SPK segment is written to the SPK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an SPK type 18 data segment to the open SPK
       !>     file according to the format described in the type 18 section of
       !>     the SPK Required Reading. The SPK file must have been opened with
       !>     write access.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have states and are prepared to produce
       !>     a segment of type 18 in an SPK file.
@@ -22431,20 +22431,20 @@ contains
       !>             .               FIRST,   LAST,    SEGID,   DEGREE,
       !>             .               N,       STATES,  EPOCHS          )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 09-APR-2021 (JDR)
       !>
@@ -22784,7 +22784,7 @@ contains
       return
       end procedure spkw18
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an SPK file that has been opened
       !>              for writing.
@@ -22953,12 +22953,12 @@ contains
       !>              last") is .TRUE., the later interval is selected;
       !>              otherwise the earlier interval is selected.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXDEG   is the maximum allowed degree of the interpolating
       !>              polynomial.
@@ -22966,7 +22966,7 @@ contains
       !>              See the INCLUDE file spk19.inc for the value of
       !>              MAXDEG.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the following exceptions occur, this routine will
       !>     return without creating a new segment.
@@ -23020,19 +23020,19 @@ contains
       !>     14) If an error occurs while writing the output segment, the error
       !>         is signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 19 SPK segment is written to the SPK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an SPK type 19 data segment to the open SPK
       !>     file according to the format described in the type 19 section of
       !>     the SPK Required Reading. The SPK file must have been opened with
       !>     write access.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have states and are prepared to produce
       !>     a segment of type 19 in an SPK file.
@@ -23054,21 +23054,21 @@ contains
       !>             .              NPKTS,   SUBTPS,  DEGRES,  PACKTS,
       !>             .              EPOCHS,  IVLBDS,  SELLST           )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 03-JUN-2021 (JDR)
       !>
@@ -23746,7 +23746,7 @@ contains
       return
       end procedure spkw19
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of an SPK file to which a type 20
       !>              segment is to be added. The SPK file must be open
@@ -23886,11 +23886,11 @@ contains
       !>              equals the Julian ephemeris date of the initial
       !>              epoch of the first record.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. This routine writes data to an SPK file.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     The parameters described in this section are declared in the
       !>     Fortran INCLUDE file spk20.inc
@@ -23922,7 +23922,7 @@ contains
       !>              See the $Exceptions section below for a description
       !>              of the error check using this tolerance.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of sets of coefficients is not positive,
       !>         the error SPICE(INVALIDCOUNT) is signaled.
@@ -23953,12 +23953,12 @@ contains
       !>     8)  If either the distance or time scale is non-positive, the
       !>         error SPICE(NONPOSITIVESCALE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 20 SPK segment is written to the SPK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an SPK type 20 data segment to the designated
       !>     SPK file, according to the format described in the SPK Required
@@ -23972,7 +23972,7 @@ contains
       !>     number of segments in an SPK file will help optimize how the
       !>     SPICE system accesses the file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have in an array CDATA sets of Chebyshev
       !>     polynomial coefficients and position vectors representing the
@@ -24011,21 +24011,21 @@ contains
       !>     C
       !>            CALL DAFCLS ( HANDLE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 05-AUG-2021 (JDR)
       !>
@@ -24347,7 +24347,7 @@ contains
       return
       end procedure spkw20
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
       !>              opened for writing.
@@ -24431,12 +24431,12 @@ contains
       !>
       !>              The elements of EPOCHS must be strictly increasing.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXTRM   is the maximum number of terms allowed in
       !>              each component of the difference table
@@ -24444,7 +24444,7 @@ contains
       !>              See the INCLUDE file spk21.inc for the value
       !>              of MAXTRM.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the following exceptions occur, this routine will return
       !>     without creating a new segment.
@@ -24486,19 +24486,19 @@ contains
       !>         of the step size vector lies in the index range 2:KQMAX-1
       !>         of the difference line containing the vector.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A new type 21 SPK segment is written to the SPK file attached
       !>     to HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an SPK type 21 data segment to the open SPK
       !>     file according to the format described in the type 21 section of
       !>     the SPK Required Reading. The SPK file must have been opened with
       !>     write access.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have difference lines and are prepared to
       !>     produce a segment of type 21 in an SPK file.
@@ -24519,21 +24519,21 @@ contains
       !>             .               FIRST,   LAST,    SEGID,   N,
       !>             .               DLSIZE,  DLINES,  EPOCHS         )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The validity of the difference lines is not checked by
       !>         this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 03-JUN-2021 (JDR)
       !>
@@ -24826,7 +24826,7 @@ contains
       return
       end procedure spkw21
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -24840,7 +24840,7 @@ contains
       !>     type 4 CK record into a single DP number stored in a physical
       !>     type 4 CK record in a file.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     I          is an array containing integers to be packed.
       !>
@@ -24848,20 +24848,20 @@ contains
       !>
       !>     PARCOD     is the packing base.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DPCOEF     is a DP number containing elements of the input
       !>                array packed together.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -24869,7 +24869,7 @@ contains
       !>     I are within range [0:PARCOD-1] and whether PARCOD**NSETS will
       !>     cause DPCOEF mantissa overflow.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine packs NSETS elements of the array I into a single
       !>     double precision variable using base specified by PARCOD. When
@@ -24886,11 +24886,11 @@ contains
       !>        I(1:NSETS) - is an array of integer numbers with values
       !>                     in the range [0:PARCOD-1].
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) No checking is done to determine whether elements of the
       !>        array I are within range [0:PARCOD-1] to prevent "overflow"
@@ -24899,16 +24899,16 @@ contains
       !>     2) No checking is done to determine whether PARCOD**NSETS
       !>        will cause DPCOEF mantissa overflow.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     Y.K. Zaiko     (JPL)
       !>     B.V. Semenov   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
       module procedure zzck4i2d
@@ -24938,7 +24938,7 @@ contains
       return
       end procedure zzck4i2d
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
       !>              desired segment. The file should have been opened
@@ -24949,7 +24949,7 @@ contains
       !>     RECNO    is the number of the individual pointing record to be
       !>              returned from the data type 2 segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is the pointing record indexed by RECNO in the segment.
       !>              The contents are as follows:
@@ -24979,11 +24979,11 @@ contains
       !>              the right endpoint of the interval for which the constant
       !>              angular velocity model is valid.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the segment is not of data type 2, the error
       !>         SPICE(CKWRONGDATATYPE) is signaled.
@@ -25000,12 +25000,12 @@ contains
       !>         file specified by HANDLE, the results of this routine are
       !>         unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The CK file specified by HANDLE should be open for read or write
       !>     access.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For a detailed description of the structure of a type 2 segment,
       !>     see the CK Required Reading.
@@ -25015,7 +25015,7 @@ contains
       !>     normally used in combination with CKNR02, which gives the number
       !>     of pointing instances stored in a segment.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -25249,24 +25249,24 @@ contains
       !>        Warning: incomplete output. Only 100 out of 875 lines have been
       !>        provided.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The binary CK file containing the segment whose descriptor was
       !>         passed to this routine must be opened for read or write access
       !>         by CKLPF, DAFOPR or DAFOPW.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 26-OCT-2021 (NJB) (JDR)
       !>
@@ -25399,7 +25399,7 @@ contains
       return
       end procedure ckgr02
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a CK file in which a CK type 4
       !>              segment is currently being written.
@@ -25417,18 +25417,18 @@ contains
       !>              start time of the I'th packet coverage interval.
       !>              The times must form a strictly increasing sequence.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     Data is stored in a segment in the DAF file associated with
       !>     HANDLE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See 'ckparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of coefficient sets and epochs is not positive,
       !>         the error SPICE(INVALIDARGUMENT) is signaled.
@@ -25437,11 +25437,11 @@ contains
       !>         type 4 CK record size minus one, the error
       !>         SPICE(INVALIDARGUMENT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See HANDLE in the $Detailed_Input section.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine adds data to a type 4 CK segment that is currently
       !>     being written to the associated with HANDLE. The segment must
@@ -25710,7 +25710,7 @@ contains
       !>
       !>        M1*M2
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Assume that we have:
       !>
@@ -25769,17 +25769,17 @@ contains
       !>     C
       !>           CALL CKW04E ( HANDLE, ENDTIM )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The type 4 CK segment to which the data is added must have
       !>         been started by the routine CKW04B, the routine which begins
       !>         a type 4 CK segment.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -25787,7 +25787,7 @@ contains
       !>     E.D. Wright        (JPL)
       !>     Y.K. Zaiko         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.3, 02-JUN-2021 (JDR)
       !>
@@ -25948,7 +25948,7 @@ contains
 
       end procedure ckw04a
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a PCK file that has been
       !>              opened for writing.
@@ -25972,7 +25972,7 @@ contains
       !>              each set of Chebyshev coefficients that are to be stored
       !>              in the segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
@@ -25982,12 +25982,12 @@ contains
       !>     See the $Particulars section for details about the
       !>     structure of a type 03 PCK segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     This subroutine makes use of parameters defined in the file
       !>     'sgparam.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the degree of the Chebyshev Polynomial to be used for this
       !>         segment is negative, the error SPICE(INVALIDARGUMENT) is
@@ -26002,11 +26002,11 @@ contains
       !>         type 03 segment, the error is signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine begins a type 03 segment in the binary PCK file that
       !>     is associated with HANDLE. The file must have been opened with
@@ -26066,7 +26066,7 @@ contains
       !>           |  CHBDEG+1 coefficients for the Z-axis rate   |
       !>           ------------------------------------------------
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Assume we have the following for each of the examples that
       !>     follow.
@@ -26207,7 +26207,7 @@ contains
       !>        C
       !>              CALL PCK03E ( HANDLE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The binary PCK file must be open with write access.
       !>
@@ -26216,18 +26216,18 @@ contains
       !>         segment must be ended before another segment may be started in
       !>         the file.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 03-JUN-2021 (JDR)
       !>
@@ -26320,7 +26320,7 @@ contains
 
       end procedure pck03b
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BINARY   is the name of an existing binary SPK or CK file
       !>              that may contain comments in its comment area.
@@ -26332,15 +26332,15 @@ contains
       !>              file, but in text format which is more suitable for
       !>              transfer between heterogeneous computing environments.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is a problem opening or reading from the binary file,
       !>         an error is signaled by a routine in the call tree of this
@@ -26349,11 +26349,11 @@ contains
       !>     2)  If there is a problem writing to the text file,
       !>         the error SPICE(FILEWRITEFAILED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See arguments BINARY and UNIT above.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The SPICELIB SPK and CK reader subroutines read binary files.
       !>     However, because different computing environments have different
@@ -26383,7 +26383,7 @@ contains
       !>     See the SPC required reading for more information
       !>     about SPC routines and the SPK and CK file formats.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following code fragment creates a text file containing
       !>     text format SPK data and comments preceded and followed
@@ -26417,7 +26417,7 @@ contains
       !>
       !>            CLOSE ( UNIT )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that the comment area of the binary SPK
       !>         or CK file contains only text stored by SPCAC. Comments
@@ -26428,17 +26428,17 @@ contains
       !>         System dependencies regarding opening text files have
       !>         been isolated in the routines TXTOPN and TXTOPR.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.E. McLean        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-JUN-2021 (JDR)
       !>
@@ -26518,7 +26518,7 @@ contains
       return
       end procedure spcb2t
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UNIT     is the logical unit connected to an existing text
       !>              format SPK or CK file that may contain comments in
@@ -26541,15 +26541,15 @@ contains
       !>              as the text file, but in the binary format required
       !>              for use with the SPICELIB reader subroutines.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is a problem opening or writing to the binary file,
       !>         an error is signaled by a routine in the call tree of this
@@ -26564,14 +26564,14 @@ contains
       !>     4)  If there is a problem writing to the scratch file, the
       !>         error SPICE(FILEWRITEFAILED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See arguments UNIT and BINARY above.
       !>
       !>     This routine uses a Fortran scratch file to temporarily store the
       !>     lines of comments if there are any.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The SPICELIB SPK and CK reader subroutines read binary files.
       !>     However, because different computing environments have different
@@ -26601,7 +26601,7 @@ contains
       !>     See the SPC required reading for more information
       !>     about SPC routines and the SPK and CK file formats.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  The following code fragment creates a text file containing
       !>         text format SPK data and comments preceded and followed
@@ -26648,7 +26648,7 @@ contains
       !>
       !>            CLOSE ( UNIT )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that the data and comments in the
       !>         text format SPK or CK file come from a binary file
@@ -26672,17 +26672,17 @@ contains
       !>         dependencies regarding opening text files have been isolated
       !>         in the routines TXTOPN and TXTOPR.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.E. McLean        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -26833,7 +26833,7 @@ contains
       return
       end procedure spct2b
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TEXT     is the name of an existing text format SPK or CK
       !>              file that may contain comments in the appropriate
@@ -26845,15 +26845,15 @@ contains
       !>              as the text file, but in the binary format required
       !>              for use with the SPICELIB reader subroutines.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is an IOSTAT error while opening, reading, or writing
       !>         a file, the error is signaled by a routine in the call tree of
@@ -26862,11 +26862,11 @@ contains
       !>     2)  If the text file is not in the correct format, an error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See arguments TEXT and BINARY above.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The SPICELIB SPK and CK reader subroutines read binary files.
       !>     However, because different computing environments have different
@@ -26896,7 +26896,7 @@ contains
       !>     See the SPC required reading for more information
       !>     about SPC routines and the SPK and CK file formats.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This is an example of how to use SPCB2A and SPCA2B for
       !>     transferring files. Suppose A.BSP is a binary SPK file in
@@ -26919,7 +26919,7 @@ contains
       !>
       !>              CALL SPCA2B ( 'A.TSP', 'A.BSP' )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that the data and comments in the
       !>         text format SPK or CK file come from a binary file
@@ -26928,18 +26928,18 @@ contains
       !>         in the correct format and, therefore, may not be handled
       !>         properly.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.E. McLean        (JPL)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 03-JUN-2021 (JDR)
       !>
@@ -26988,7 +26988,7 @@ contains
       return
       end procedure spca2b
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BINARY   is the name of an existing binary SPK or CK file
       !>              that may contain comments in its comment area as
@@ -26999,25 +26999,25 @@ contains
       !>              as the binary file, but in a form more suitable for
       !>              transfer between heterogeneous computing environments.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If there is an IOSTAT error while opening, reading, or writing
       !>         a file, the error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See arguments BINARY and TEXT.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The SPICELIB SPK and CK reader subroutines read binary files.
       !>     However, because different computing environments have different
@@ -27047,7 +27047,7 @@ contains
       !>     See the SPC required reading for more information
       !>     about SPC routines and the SPK and CK file formats.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This is an example of how to use SPCB2A and SPCA2B for
       !>     transferring files. Suppose A.BSP is a binary SPK file in
@@ -27070,7 +27070,7 @@ contains
       !>
       !>              CALL SPCA2B ( 'A.TSP', 'A.BSP' )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that the data and comments in the
       !>         text format SPK or CK file come from a binary file
@@ -27079,17 +27079,17 @@ contains
       !>         in the correct format and, therefore, may not be handled
       !>         properly.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.E. McLean        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-JUN-2021 (JDR)
       !>

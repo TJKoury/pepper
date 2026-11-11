@@ -13,7 +13,7 @@ submodule (pepper_instance) pepper_das
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for a previously opened text
       !>              file. All reading will begin at the CURRENT POSITION
@@ -22,16 +22,16 @@ contains
       !>     N        is the number of characters to be read from the text file
       !>              attached to UNIT.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DATA     is the list of characters which were read from the text
       !>              file attached to UNIT and decoded.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If N, the number of data items, is not positive, the error
       !>         SPICE(INVALIDARGUMENT) is signaled.
@@ -42,11 +42,11 @@ contains
       !>     3)  If an error occurs while decoding a character, the error
       !>         SPICE(DECODINGERROR) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of UNIT in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine will read quoted character strings of length
       !>     MAXENC containing encoded characters produced by the routine
@@ -85,7 +85,7 @@ contains
       !>     extensions to it. The supported characters must have decimal
       !>     values in the range from 0 to 255.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples demonstrate the use of this routine. In
       !>     each of the examples, the variable UNIT is the Fortran logical
@@ -220,20 +220,20 @@ contains
       !>
       !>       No information has been lost, it is simply arranged differently.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -478,7 +478,7 @@ contains
       return
       end procedure rdencc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for a previously opened text
       !>              file. All writing will begin at the CURRENT POSITION
@@ -490,16 +490,16 @@ contains
       !>     DATA     is the list of characters to be encoded and written to
       !>              the text file attached to UNIT.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     See the $Particulars section for a description of the effect of
       !>     this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If N, the number of data items, is not positive, the error
       !>         SPICE(INVALIDARGUMENT) is signaled.
@@ -510,11 +510,11 @@ contains
       !>     3)  If the Fortran logical unit UNIT is not defined, the results
       !>         of this routine are unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of UNIT in the $Detailed_Input section.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine will encode and write the first N contiguous
       !>     characters contained in the data buffer array DATA. The
@@ -561,7 +561,7 @@ contains
       !>     extensions to it. The supported characters must have decimal
       !>     values in the range from 0 to 255.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples demonstrate the use of this routine. In
       !>     each of the examples, the variable UNIT is the Fortran logical
@@ -717,22 +717,22 @@ contains
       !>           INPBUF(6) = 'I will enj'
       !>           INPBUF(7) = 'oy it.    '
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     B.V. Semenov       (JPL)
       !>     F.S. Turner        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.30.0, 28-NOV-2021 (BVS)
       !>
@@ -868,7 +868,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 20-OCT-1992 (KRG)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.3.0, 05-DEC-2001 (FST)
       !>
@@ -1174,7 +1174,7 @@ contains
       end associate
       end procedure wrencc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LINE     is the text line which is to be written to UNIT.
       !>
@@ -1184,25 +1184,25 @@ contains
       !>              either the unit number for the terminal, or the unit
       !>              number of a previously opened text file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while attempting to write to the text
       !>         file attached to UNIT, the error SPICE(FILEWRITEFAILED) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine will write a single text line to the device
       !>     specified by UNIT. UNIT may be the terminal, or it may be
@@ -1210,21 +1210,21 @@ contains
       !>     statement. When written, the line will have trailing spaces
       !>     removed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     CALL WRITLN( LINE, UNIT )
       !>
       !>     You have now written a line of text to unit UNIT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -1233,7 +1233,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.27.0, 28-NOV-2021 (BVS)
       !>
@@ -1498,7 +1498,7 @@ contains
       return
       end procedure writln
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NUMLIN   is the number of text lines in ARRAY which are to be
       !>              written to UNIT. NUMLIN > 0.
@@ -1512,15 +1512,15 @@ contains
       !>              be either the unit number for the terminal, or the
       !>              unit number of a previously opened text file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of lines, NUMLIN, is not positive, the error
       !>         SPICE(INVALIDARGUMENT) is signaled.
@@ -1529,17 +1529,17 @@ contains
       !>         attached to UNIT, the error is signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of UNIT above.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes an array of character strings to a specified
       !>     Fortran logical unit, writing each array element as a line of
       !>     output.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -1577,20 +1577,20 @@ contains
       !>        And everywhere that mary went
       !>        The lamb was sure to go
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-JUN-2021 (JDR)
       !>
@@ -1663,13 +1663,13 @@ contains
 
       end procedure writla
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for the input. This may
       !>              be either the unit number for the terminal, or the
       !>              unit number of a previously opened text file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LINE     is the next text line encountered when reading from UNIT.
       !>
@@ -1687,11 +1687,11 @@ contains
       !>              encountered during the attempt to read from unit UNIT.
       !>              Otherwise, this variable will be set to .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     This routine only checks in with the error handler in the event
       !>     that an error occurred. (Discovery check in)
@@ -1699,11 +1699,11 @@ contains
       !>     1)  If an error occurs while attempting to read from the text file
       !>         attached to UNIT, the error SPICE(FILEREADFAILED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine will read a single line, a text record, from the
       !>     logical unit UNIT. UNIT may be the terminal, or it may be a
@@ -1711,7 +1711,7 @@ contains
       !>     statement. This routine will set a logical flag, EOF, on output
       !>     if the end of the file is encountered during the read attempt.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     CALL READLN ( UNIT, LINE, EOF )
       !>
@@ -1721,20 +1721,20 @@ contains
       !>
       !>     You now have a line of text from unit UNIT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -1782,7 +1782,7 @@ contains
       return
       end procedure readln
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for the input. This may
       !>              be either the unit number for the terminal, or the
@@ -1791,7 +1791,7 @@ contains
       !>     MAXLIN   is the maximum number of text lines that can be placed
       !>              into the ARRAY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NUMLIN   is the number of text lines read from the file attached
       !>              to UNIT and placed into ARRAY. 0 <= NUMLIN <= MAXLIN.
@@ -1814,11 +1814,11 @@ contains
       !>              attempt to read from UNIT. Otherwise, this variable
       !>              will be set to .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the maximum number of lines, MAXLIN, is not positive, the
       !>         error SPICE(INVALIDARGUMENT) is signaled.
@@ -1827,11 +1827,11 @@ contains
       !>         attached to unit, the error is signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of UNIT above.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine reads lines of text from a file, placing each line
       !>     into an element of a character string array.
@@ -1847,7 +1847,7 @@ contains
       !>     number of lines of text placed into the character string array.
       !>     This value may be zero.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     For the examples which follow, assume that we have a file named
       !>     'mary.txt' which contains the following lines of text:
@@ -1935,20 +1935,20 @@ contains
       !>
       !>        EOF      = .TRUE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -1960,7 +1960,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 20-DEC-1995 (KRG)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 05-JAN-1995 (KRG)
       !>
@@ -2047,7 +2047,7 @@ contains
 
       end procedure readla
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -2056,23 +2056,23 @@ contains
       !>     Read DAS double precision physical records from native
       !>     or non-native DAS files.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is the handle of an open DAS file.
       !>
       !>     RECNO          is the number of a record in a DAS file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD         is a double precision array containing the
       !>                    elements of the specified record.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NWD            is the number of DPs in a single DAS record
       !>                    containing DPs.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle cannot be mapped to a file
       !>         name, the error SPICE(HANDLENOTFOUND) will be signaled. The
@@ -2085,11 +2085,11 @@ contains
       !>         double precision data to native format, the error will be
       !>         diagnosed by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Routines outside of SPICELIB will normally have no need to call
       !>     this routine.
@@ -2100,23 +2100,23 @@ contains
       !>     This routine should be used to read only records that contain
       !>     double precision data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in DASRRD.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 10-FEB-2017 (NJB)
       module procedure zzdasgrd
@@ -2230,7 +2230,7 @@ contains
       end associate
       end procedure zzdasgrd
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -2239,23 +2239,23 @@ contains
       !>     Read DAS integer physical records from native or non-native DAS
       !>     files.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is the handle of an open DAS file.
       !>
       !>     RECNO          is the number of a record in a DAS file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD         is an integer array containing the elements of the
       !>                    specified record.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NWI            is the number of elements in a single DAS integer
       !>                    data record.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle cannot be mapped to a file
       !>         name, the error SPICE(HANDLENOTFOUND) will be signaled. The
@@ -2268,11 +2268,11 @@ contains
       !>         integer data to native format, the error will be diagnosed by
       !>         a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Routines outside of SPICELIB will normally have no need to call
       !>     this routine.
@@ -2283,23 +2283,23 @@ contains
       !>     This routine should be used to read only records that contain
       !>     integer data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in DASRRI.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 10-FEB-2017 (NJB)
       module procedure zzdasgri
@@ -2412,7 +2412,7 @@ contains
       end associate
       end procedure zzdasgri
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LUN        is a logical unit number of a DAS whose first record is
       !>                to be created with a DAS file record bearing the
@@ -2440,26 +2440,26 @@ contains
       !>     FORMAT     is a character string that indicates what the numeric
       !>                binary format the DAS is utilizing.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See include file zzftprms.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If any errors occur from the WRITE to the logical unit LUN,
       !>        the error SPICE(DASWRITEFAIL) is signaled.  Before returning
       !>        to the caller, the file attached to LUN is closed and deleted.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine writes to the first record of the DAS whose
       !>     logical unit is LUN.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine assembles the file record and writes it to the
       !>     first record in a DAS.  Its purpose is to write new file
@@ -2468,11 +2468,11 @@ contains
       !>     Make certain the caller checks FAILED() after this returns,
       !>     since on error it closes and deletes the file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) An individual character must occupy 1 byte of space and
       !>        conform to the ASCII standard.
@@ -2481,15 +2481,15 @@ contains
       !>        else the computations to null pad the gaps in the file
       !>        record may overstep record boundaries.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -2656,11 +2656,11 @@ contains
       end associate
       end procedure zzdasnfr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE         is a file handle for a previously opened DAS file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IDWORD      is the `ID word' contained in the first eight
       !>                 characters of the file record.
@@ -2681,11 +2681,11 @@ contains
       !>     NCOMC       is the number of characters in use in the comment area
       !>                 of the DAS file specified by HANDLE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the file read attempted by this routine fails, the error
       !>        SPICE(DASFILEREADFAILED) will be signaled.
@@ -2705,16 +2705,16 @@ contains
       !>        translated to native format, the error will diagnosed
       !>        by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of HANDLE under $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a convenient way of retrieving the
       !>     information contained in the file record of a DAS file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Obtain the internal file name of an existing DAS file.
       !>
@@ -2738,27 +2738,27 @@ contains
       !>                  WRITE (*,*) 'Internal file name is: '
       !>                  WRITE (*,*)  IFNAME
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     K.R. Gehringer (JPL)
       !>     N.J. Bachman   (JPL)
       !>     W.L. Taber     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-FEB-2015 (NJB)
       !>
       !>        Based on DASRFR Version 1.0.0, 15-JUL-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>     None.
       !>
@@ -3715,22 +3715,22 @@ contains
 !
 !     Standard SPICE error handling.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of a DAS file to be opened with read
       !>              access.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the handle that is  associated with the file. This
       !>              handle is used to identify the file in subsequent
       !>              calls to other DAS routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input filename is blank, the error
       !>         SPICE(BLANKFILENAME) is signaled.
@@ -3765,16 +3765,16 @@ contains
       !>     10) If no logical units are available, an error is signaled
       !>         by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument FNAME.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Most DAS files require only read access. If you do not need to
       !>     change the contents of a file, you should open it using DASOPR.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3906,15 +3906,15 @@ contains
       !>        Voxel edge length (km):             1.04248E-01
       !>        Number of voxels:                   11914500
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -3925,7 +3925,7 @@ contains
       !>     F.S. Turner        (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 8.0.1, 19-JUL-2021 (JDR)
       !>
@@ -3992,7 +3992,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 8.0.0, 30-JUL-2014 (NJB)
       !>
@@ -4364,22 +4364,22 @@ contains
       end associate
       end procedure dasopr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of a DAS file to be opened with write
       !>              access.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the handle that is associated with the file. This
       !>              handle is used to identify the file in subsequent
       !>              calls to other DAS routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input filename is blank, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -4410,16 +4410,16 @@ contains
       !>     8)  If no logical units are available, an error is signaled
       !>         by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument FNAME.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Most DAS files require only read access. If you do not need to
       !>     change the contents of a file, you should open it with DASOPR.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4583,15 +4583,15 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -4601,7 +4601,7 @@ contains
       !>     F.S. Turner        (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 8.0.1, 19-JUL-2021 (JDR)
       !>
@@ -4661,7 +4661,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 8.0.0, 30-JUL-2014 (NJB)
       !>
@@ -4992,7 +4992,7 @@ contains
       end associate
       end procedure dasopw
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of a new DAS file to be created (and
       !>              consequently opened for write access).
@@ -5021,17 +5021,17 @@ contains
       !>              reduce the likelihood of having to expand the
       !>              comment area later.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the file handle associated with the file. This
       !>              handle is used to identify the file in subsequent
       !>              calls to other DAS routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input filename is blank, the error
       !>         SPICE(BLANKFILENAME) is signaled.
@@ -5058,11 +5058,11 @@ contains
       !>     7)  If the number of comment records allocated NCOMR is negative,
       !>         the error SPICE(INVALIDCOUNT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument FNAME.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The DAS files created by this routine have initialized file
       !>     records.
@@ -5070,7 +5070,7 @@ contains
       !>     This entry point creates a new DAS file and sets the type of the
       !>     file to the mnemonic code passed to it.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5183,15 +5183,15 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -5200,7 +5200,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     F.S. Turner        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 7.0.1, 19-JUL-2021 (JDR)
       !>
@@ -5258,7 +5258,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 29-OCT-1993 (KRG)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 6.0.0, 11-DEC-2001 (NJB) (FST)
       !>
@@ -5516,14 +5516,14 @@ contains
       end associate
       end procedure dasonw
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Obsolete: This routine has been superseded by DASONW, and it is
       !>     supported for purposes of backward compatibility only.
       !>
       !>     Open a new DAS file for writing.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of a new DAS file to be created (and
       !>              consequently opened for write access).
@@ -5532,17 +5532,17 @@ contains
       !>              may contain as many as 60 characters. This should
       !>              uniquely identify the file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the file handle associated with the file. This
       !>              handle is used to identify the file in subsequent
       !>              calls to other DAS routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input filename is blank, the error
       !>         SPICE(BLANKFILENAME) is signaled.
@@ -5563,11 +5563,11 @@ contains
       !>         routine in the call tree of this routine. No file will be
       !>         created.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument FNAME.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The DAS files created by this routine have initialized file
       !>     records.
@@ -5576,7 +5576,7 @@ contains
       !>     and it is supported for reasons of backward compatibility only.
       !>     New software development should use the entry point DASONW.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5689,15 +5689,15 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -5707,7 +5707,7 @@ contains
       !>     F.S. Turner        (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 7.0.1, 19-JUL-2021 (JDR)
       !>
@@ -5772,7 +5772,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 7.0.0, 30-JUL-2014 (NJB)
       !>
@@ -5977,18 +5977,18 @@ contains
       end associate
       end procedure dasopn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the file handle associated with the scratch file
       !>              opened by this routine. This handle is used to
       !>              identify the file in subsequent calls to other DAS
       !>              routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     FTSIZE   is the maximum number of DAS files that a user can have
       !>              open simultaneously. This includes any files used by the
@@ -6007,7 +6007,7 @@ contains
       !>              access, then users may open FTSIZE files with no
       !>              possibility of overflowing the DAS file table.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified file cannot be opened without exceeding
       !>         the maximum allowed number of open DAS files, the error
@@ -6025,7 +6025,7 @@ contains
       !>         routine in the call tree of this routine. No file will be
       !>         created.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See output argument HANDLE.
       !>
@@ -6033,7 +6033,7 @@ contains
       !>     potential problem with overflowing the DAS file table when at
       !>     least one DAS file is opened with write access.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is a utility used by the DAS system to provide
       !>     work space needed when creating new DAS files.
@@ -6045,7 +6045,7 @@ contains
       !>     files opened by DASOPS are automatically deleted when they are
       !>     closed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6116,15 +6116,15 @@ contains
       !>         Last d.p. address in use     :            5
       !>         Last integer address in use  :           10
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -6133,7 +6133,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 7.0.1, 19-JUL-2021 (JDR)
       !>
@@ -6197,7 +6197,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 29-OCT-1993 (KRG)
       !>
@@ -6402,31 +6402,31 @@ contains
       end associate
       end procedure dasops
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     See $Particulars for a description of the effect of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified handle does not belong to a DAS file that is
       !>         currently open, this routine returns without signaling an
       !>         error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Normally, routines outside of SPICELIB will not need to call this
       !>     routine. Application programs should close DAS files by calling
@@ -6451,7 +6451,7 @@ contains
       !>     buffered records to the indicated file, nor does it segregate the
       !>     data records in the file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6732,15 +6732,15 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -6749,7 +6749,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 7.0.1, 19-JUL-2021 (NJB) (JDR)
       !>
@@ -6807,7 +6807,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.1, 01-NOV-1993 (KRG)
       !>
@@ -6931,12 +6931,12 @@ contains
       end associate
       end procedure dasllc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file. The file
       !>              may be open for read or write access.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NRESVR   is the number of reserved records in a specified DAS
       !>              file.
@@ -6969,7 +6969,7 @@ contains
       !>              clusters of character, double precision, and integer data
       !>              records, in that order.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See INCLUDE file das.inc for declarations and descriptions of
       !>     parameters used throughout the DAS system.
@@ -6981,17 +6981,17 @@ contains
       !>              parameters are used in all DAS routines that require a
       !>              data type specifier.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified handle does not belong to any file that is
       !>         currently known to be open, the error SPICE(DASNOSUCHHANDLE)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The quantities
       !>
@@ -7012,7 +7012,7 @@ contains
       !>     of each type are contained in the specified DAS file. The elements
       !>     of LASTLA can be conveniently retrieved by calling DASLLA.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -7278,15 +7278,15 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -7294,7 +7294,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 6.0.2, 19-JUL-2021 (JDR)
       !>
@@ -7340,7 +7340,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUL-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.1, 01-NOV-1993 (KRG)
       !>
@@ -7456,7 +7456,7 @@ contains
       end associate
       end procedure dashfs
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
       !>
@@ -7491,16 +7491,16 @@ contains
       !>              of clusters of character, double precision, and
       !>              integer data records, in that order.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified handle does not belong to any file that is
       !>         currently known to be open, the error SPICE(DASNOSUCHHANDLE)
@@ -7516,11 +7516,11 @@ contains
       !>     4)  If the attempt to write to the DAS file record fails, the
       !>         error SPICE(DASWRITEFAIL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The quantities NRESVR, NRESRC, NCOMR, NCOMC, FREE, LASTLA,
       !>     LASTRC, and LASTWD define the `state' of a DAS file, and in
@@ -7537,7 +7537,7 @@ contains
       !>     automatically update the file summary, so there is no need for
       !>     the calling program to perform the update explicitly.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Update the last d.p. logical address for a DAS file, leaving
       !>         the rest of the file summary intact.
@@ -7571,15 +7571,15 @@ contains
       !>                 .              LASTRC,
       !>                 .              LASTWD )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -7588,7 +7588,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     F.S. Turner        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 7.1.1, 19-JUL-2021 (JDR)
       !>
@@ -7654,7 +7654,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUL-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 6.1.0, 26-SEP-2005 (NJB)
       !>
@@ -7882,43 +7882,43 @@ contains
       end associate
       end procedure dasufs
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     UNIT     is the Fortran logical unit to which the file is
       !>              connected.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified handle does not belong to any file that is
       !>         currently known to be open, the error SPICE(DASNOSUCHHANDLE)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is a utility used by the DAS system to support
       !>     file I/O. DASHLU may also prove useful to general SPICELIB
       !>     users for constructing error messages.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Obtain the logical unit associated with a DAS file having
       !>         a known handle.
       !>
       !>            CALL DASHLU ( HANDLE, UNIT )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Successfully invoking this module has the side effect of
       !>         locking UNIT to HANDLE. This 'lock' guarantees until
@@ -7936,11 +7936,11 @@ contains
       !>         units to utilize when disconnecting and reconnecting
       !>         loaded files.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -7950,7 +7950,7 @@ contains
       !>     F.S. Turner        (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 7.0.1, 19-JUL-2021 (JDR)
       !>
@@ -7997,7 +7997,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.1, 01-NOV-1993 (KRG)
       !>
@@ -8108,37 +8108,37 @@ contains
       end associate
       end procedure dashlu
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UNIT     is the logical unit to which a DAS file has been
       !>              connected when it was opened.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the handle associated with the file.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified unit is not connected to any DAS file that is
       !>         currently known to be open, the error SPICE(DASNOSUCHUNIT)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     It is unlikely, but possible, that a calling program would know
       !>     the logical unit to which a file is connected without knowing the
       !>     handle associated with the file. DASLUH is provided mostly for
       !>     completeness.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following code fragment, the handle associated with
       !>     a DAS file is retrieved using the logical unit to which the
@@ -8148,15 +8148,15 @@ contains
       !>        CALL DASLUH ( UNIT,   HANDLE )
       !>        CALL DASHFN ( HANDLE, FNAME  )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -8165,7 +8165,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 7.0.1, 19-JUL-2021 (JDR)
       !>
@@ -8212,7 +8212,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.1, 01-NOV-1993 (KRG)
       !>
@@ -8315,20 +8315,20 @@ contains
       end associate
       end procedure dasluh
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     FNAME    is the name of the DAS file associated with the input
       !>              file handle.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified handle does not belong to any file that is
       !>         currently known to be open, the error SPICE(DASNOSUCHHANDLE)
@@ -8337,11 +8337,11 @@ contains
       !>     2)  If FNAME string is too short to contain the output string,
       !>         the name is truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     It may be desirable to recover the names of one or more DAS
       !>     files in a different part of the program from the one in which
@@ -8350,7 +8350,7 @@ contains
       !>     most operating systems, a particular file can be accessed using
       !>     many different names. DASHFN returns one of them.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -8410,15 +8410,15 @@ contains
       !>
       !>         DAS file name = <phobos512.bds>.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -8427,7 +8427,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 7.0.1, 19-JUL-2021 (JDR)
       !>
@@ -8476,7 +8476,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.1, 01-NOV-1993 (KRG)
       !>
@@ -8587,28 +8587,28 @@ contains
       end associate
       end procedure dashfn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME    is the name of a previously opened DAS file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE   is the handle associated with the file.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified name does not specify any DAS file currently
       !>         known to be open, the error SPICE(DASNOSUCHFILE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     It is sometimes easier to work with file names (which are
       !>     meaningful, and often predictable) than with file handles
@@ -8617,7 +8617,7 @@ contains
       !>     handles to refer to files. DASFNH is provided to bridge the gap
       !>     between the two representations.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following code fragment, the handle associated with a
       !>     DAS file is recovered using the name of the file.
@@ -8628,15 +8628,15 @@ contains
       !>
       !>        CALL DASFNH ( 'sample.DAS', HANDLE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -8645,7 +8645,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 7.0.1, 19-JUL-2021 (JDR)
       !>
@@ -8692,7 +8692,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.1, 01-NOV-1993 (KRG)
       !>
@@ -8793,20 +8793,20 @@ contains
       end associate
       end procedure dasfnh
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     FHSET    is a SPICE set containing the file handles of
       !>              all currently open DAS files.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the set FHSET is not initialized, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -8815,18 +8815,18 @@ contains
       !>         handles to be returned, an error is signaled by a routine in
       !>         the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows subroutines to test DAS file handles for
       !>     validity before using them. Many DAS operations that rely on
       !>     handles to identify DAS files cause errors to be signaled if
       !>     the handles are invalid.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Find out how may DAS files are open for writing.
       !>
@@ -8850,15 +8850,15 @@ contains
       !>
       !>                 END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -8866,7 +8866,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 6.0.2, 19-JUL-2021 (JDR)
       !>
@@ -9000,7 +9000,7 @@ contains
       end associate
       end procedure dashof
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is a DAS file handle to validate. For HANDLE to be
       !>              considered valid, it must specify a DAS file that
@@ -9024,25 +9024,25 @@ contains
       !>              Leading and trailing blanks in ACCESS are ignored,
       !>              and case is not significant.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input argument ACCESS has an unrecognized value,
       !>         the error SPICE(INVALIDOPTION) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine signals the error SPICE(DASINVALIDACCESS) if the
       !>     DAS designated by the input argument HANDLE is not open
@@ -9063,7 +9063,7 @@ contains
       !>     to a closed file, the entry point DASHOF should be used instead
       !>     of DASSIH.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Make sure that a file handle designates a DAS file that can
       !>         be read. Signal an error if not.
@@ -9077,15 +9077,15 @@ contains
       !>                     RETURN
       !>                  END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -9094,7 +9094,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 6.1.1, 19-JUL-2021 (JDR)
       !>
@@ -9142,7 +9142,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 6.1.0, 26-SEP-2005 (NJB)
       !>
@@ -9302,11 +9302,11 @@ contains
       end associate
       end procedure dassih
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ACCESS   is a string indicating the type of access that
       !>              the DAS file specified by the input argument HANDLE
@@ -9322,25 +9322,25 @@ contains
       !>                             write access may be read as well as
       !>                             written.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input handle is invalid, the error SPICE(INVALIDHANDLE)
       !>         is signaled. ACCESS is not modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows subroutines to determine the access methods
       !>     allowed for a given DAS file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Make sure that a file handle designates a DAS file that can
       !>         be read. Signal an error if not.
@@ -9354,15 +9354,15 @@ contains
       !>                     RETURN
       !>                  END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -9371,7 +9371,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 6.0.2, 19-JUL-2021 (JDR)
       !>
@@ -9413,7 +9413,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 01-FEB-1993 (NJB) (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.1, 01-NOV-1993 (KRG)
       !>
@@ -9758,7 +9758,7 @@ contains
 !
 !     Standard SPICE error handling.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an open DAS file.
       !>
@@ -9771,7 +9771,7 @@ contains
       !>              double precision numbers; these have indices
       !>              ranging from 1 to NWD.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DATAD    is a double precision array containing the
       !>              elements FIRST through LAST of the specified
@@ -9780,7 +9780,7 @@ contains
       !>              in DATAD(2), and so on; the record element LAST is
       !>              placed in DATAD(LAST-FIRST+1).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NWD      is the number of DPs in a single DAS record
       !>              containing DPs.
@@ -9788,7 +9788,7 @@ contains
       !>     BUFSZD   is the number of records in the double precision
       !>              record buffer.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine. The output argument
@@ -9813,11 +9813,11 @@ contains
       !>     5)  If FIRST > LAST, this routine will return without modifying
       !>         the output argument DATAD.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Routines outside of SPICELIB will normally have no need to call
       !>     this routine.
@@ -9832,22 +9832,22 @@ contains
       !>     This routine should be used to read only records that contain
       !>     double precision data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Read the 10th through 100th d.p. numbers from record number 9
       !>         in a DAS file designated by HANDLE.
       !>
       !>             CALL DASRRD ( HANDLE, 9, 10, 100, DATAD )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -9855,7 +9855,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 22-FEB-2021 (JDR)
       !>
@@ -9887,7 +9887,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 03-NOV-1995 (NJB)
       !>
@@ -10104,7 +10104,7 @@ contains
       end associate
       end procedure dasrrd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an open DAS file.
       !>
@@ -10116,7 +10116,7 @@ contains
       !>              The record contains NWI integers; these have
       !>              indices ranging from 1 to NWI.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DATAI    is an integer array containing the elements FIRST
       !>              through LAST of the specified record. The record
@@ -10125,7 +10125,7 @@ contains
       !>              the record element LAST is placed in
       !>              DATAI(LAST-FIRST+1).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NWI      is the number of integers in a single DAS record
       !>              containing integers.
@@ -10133,7 +10133,7 @@ contains
       !>     BUFSZI   is the number of records in the integer record
       !>              buffer.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled
       !>         by a routine in the call tree of this routine. The
@@ -10159,11 +10159,11 @@ contains
       !>     5)  If FIRST > LAST, this routine will return without modifying
       !>         the output argument DATAI.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Routines outside of SPICELIB will normally have no need to call
       !>     this routine.
@@ -10178,22 +10178,22 @@ contains
       !>     This routine should be used to read only records that contain
       !>     integer data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Read the 10th through 100th integers from record number 9
       !>         in a DAS file designated by HANDLE.
       !>
       !>             CALL DASRRI ( HANDLE, 9, 10, 100, DATAI )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -10201,7 +10201,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 22-FEB-2021 (JDR)
       !>
@@ -10234,7 +10234,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 05-FEB-2015 (NJB)
       !>
@@ -10443,7 +10443,7 @@ contains
       end associate
       end procedure dasrri
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an open DAS file.
       !>
@@ -10455,7 +10455,7 @@ contains
       !>              The record contains NWC characters; these have
       !>              indices ranging from 1 to NWC.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DATAC    is a character string containing the elements
       !>              FIRST through LAST of the specified record. The
@@ -10464,7 +10464,7 @@ contains
       !>              and so on; the record element LAST is placed in
       !>              DATAC( LAST-FIRST+1 : LAST-FIRST+1 ).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NWC      is the number of characters in a single DAS record
       !>              containing characters.
@@ -10472,7 +10472,7 @@ contains
       !>     BUFSZC   is the number of records in the character record
       !>              buffer.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is
       !>         signaled by a routine in the call tree of this routine. The
@@ -10498,11 +10498,11 @@ contains
       !>     5)  If FIRST > LAST, this routine will return without modifying
       !>         the output argument DATAC.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Routines outside of SPICELIB will normally have no need to call
       !>     this routine.
@@ -10517,22 +10517,22 @@ contains
       !>     This routine should be used to read only records that contain
       !>     character data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Read the 10th through 100th characters from record number 9
       !>         in a DAS file designated by HANDLE.
       !>
       !>             CALL DASRRC ( HANDLE, 9, 10, 100, DATAC )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -10540,7 +10540,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 22-FEB-2021 (JDR)
       !>
@@ -10572,7 +10572,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 05-FEB-2015 (NJB)
       !>
@@ -10772,7 +10772,7 @@ contains
       end associate
       end procedure dasrrc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
       !>
@@ -10782,12 +10782,12 @@ contains
       !>              contents of this array are to be written to the
       !>              physical file record having number RECNO.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the action of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NWD      is the number of DPs in a single DAS record
       !>              containing DPs.
@@ -10795,7 +10795,7 @@ contains
       !>     BUFSZD   is the number of records in the double precision
       !>              record buffer.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine. The DAS file
@@ -10808,11 +10808,11 @@ contains
       !>         designated by HANDLE if multiple DAS files are open for
       !>         writing.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Routines outside of SPICELIB will normally have no need to call
       !>     this routine.
@@ -10829,7 +10829,7 @@ contains
       !>     Closing a DAS file via DASCLS forces any remaining updated data
       !>     records buffered by this routine to be written to the file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Write an array of NWD double precision numbers to the 9th
       !>         record in a DAS file designated by HANDLE.
@@ -10846,15 +10846,15 @@ contains
       !>
       !>            CALL DASWRD ( HANDLE, 9, RECD )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -10862,7 +10862,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 22-FEB-2021 (JDR)
       !>
@@ -10890,7 +10890,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.1, 28-OCT-1993 (KRG)
       !>
@@ -11065,7 +11065,7 @@ contains
       end associate
       end procedure daswrd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
       !>
@@ -11075,12 +11075,12 @@ contains
       !>              array are to be written to the physical file
       !>              record having number RECNO.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the action of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NWI      is the number of integers in a single DAS record
       !>              containing integers.
@@ -11088,7 +11088,7 @@ contains
       !>     BUFSZI   is the number of records in the integer record
       !>              buffer.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine. The DAS file
@@ -11101,11 +11101,11 @@ contains
       !>         designated by HANDLE if multiple DAS files are open for
       !>         writing.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Routines outside of SPICELIB will normally have no need to call
       !>     this routine.
@@ -11122,7 +11122,7 @@ contains
       !>     Closing a DAS file via DASCLS forces any remaining updated data
       !>     records buffered by this routine to be written to the file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Write an array of NWI integers to the 9th record in a DAS
       !>         file designated by HANDLE.
@@ -11138,15 +11138,15 @@ contains
       !>
       !>            CALL DASWRI ( HANDLE, 9, RECI )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -11154,7 +11154,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 22-FEB-2021 (JDR)
       !>
@@ -11182,7 +11182,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.1, 28-OCT-1993 (KRG)
       !>
@@ -11359,7 +11359,7 @@ contains
       end associate
       end procedure daswri
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
       !>
@@ -11369,12 +11369,12 @@ contains
       !>              string are to be written to the physical file
       !>              record having number RECNO.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the action of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NWC      is the number of characters in a single DAS record
       !>              containing characters.
@@ -11382,7 +11382,7 @@ contains
       !>     BUFSZC   is the number of records in the character record
       !>              buffer.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine. The DAS file
@@ -11395,11 +11395,11 @@ contains
       !>         designated by HANDLE if multiple DAS files are open for
       !>         writing.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Routines outside of SPICELIB will normally have no need to call
       !>     this routine.
@@ -11416,7 +11416,7 @@ contains
       !>     Closing a DAS file via DASCLS forces any remaining updated data
       !>     records buffered by this routine to be written to the file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Write a string of NWC characters to the 9th record in a DAS
       !>         file designated by HANDLE.
@@ -11433,15 +11433,15 @@ contains
       !>
       !>            CALL DASWRC ( HANDLE, 9, RECC )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -11449,7 +11449,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 22-FEB-2021 (JDR)
       !>
@@ -11477,7 +11477,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.1, 28-OCT-1993 (KRG)
       !>
@@ -11651,7 +11651,7 @@ contains
       end associate
       end procedure daswrc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
       !>
@@ -11671,12 +11671,12 @@ contains
       !>              the array element DATAD(LAST-FIRST+1) is placed in
       !>              the record element LAST.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the action of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NWD      is the number of DPs in a single DAS record
       !>              containing DPs.
@@ -11684,7 +11684,7 @@ contains
       !>     BUFSZD   is the number of records in the double precision
       !>              record buffer.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine may be used to update only records that have
       !>         already been written by DASWRD or that already exist in the
@@ -11715,11 +11715,11 @@ contains
       !>     5)  If FIRST > LAST, this routine will return without modifying
       !>         the indicated record.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Routines outside of SPICELIB will normally have no need to call
       !>     this routine.
@@ -11737,7 +11737,7 @@ contains
       !>     This routine should be used to update only records that contain
       !>     double precision data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Update the 10th through 100th d.p. numbers in record number 9
       !>         in a DAS file designated by HANDLE.
@@ -11754,15 +11754,15 @@ contains
       !>
       !>             CALL DASURD ( HANDLE, 9, 10, 100, DATAD )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -11770,7 +11770,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 22-FEB-2021 (JDR)
       !>
@@ -11798,7 +11798,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.1, 28-OCT-1993 (KRG)
       !>
@@ -12009,7 +12009,7 @@ contains
       end associate
       end procedure dasurd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
       !>
@@ -12029,12 +12029,12 @@ contains
       !>              DATAI(LAST-FIRST+1) is placed in the record element
       !>              LAST.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the action of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NWI      is the number of integers in a single DAS record
       !>              containing integers.
@@ -12042,7 +12042,7 @@ contains
       !>     BUFSZI   is the number of records in the integer record
       !>              buffer.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine may be used to update only records that have
       !>         already been written by DASWRI or that already exist in the
@@ -12073,11 +12073,11 @@ contains
       !>     5)  If FIRST > LAST, this routine will return without modifying
       !>         the indicated record.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Routines outside of SPICELIB will normally have no need to call
       !>     this routine.
@@ -12095,7 +12095,7 @@ contains
       !>     This routine should be used to update only records that contain
       !>     integer data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Update the 10th through 100th integers in record number 9
       !>         in a DAS file designated by HANDLE.
@@ -12112,15 +12112,15 @@ contains
       !>
       !>             CALL DASURI ( HANDLE, 9, 10, 100, DATAI )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -12128,7 +12128,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 22-FEB-2021 (JDR)
       !>
@@ -12156,7 +12156,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.1, 28-OCT-1993 (KRG)
       !>
@@ -12365,7 +12365,7 @@ contains
       end associate
       end procedure dasuri
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
       !>
@@ -12385,12 +12385,12 @@ contains
       !>              DATAC(LAST-FIRST+1) is placed in the record element
       !>              LAST.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the action of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NWC      is the number of characters in a single DAS record
       !>              containing characters.
@@ -12398,7 +12398,7 @@ contains
       !>     BUFSZC   is the number of records in the character record
       !>              buffer.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine may be used to update only records that have
       !>         already been written by DASWRC or that already exist in the
@@ -12429,11 +12429,11 @@ contains
       !>     5)  If FIRST > LAST, this routine will return without modifying
       !>         the indicated record.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Routines outside of SPICELIB will normally have no need to call
       !>     this routine.
@@ -12456,7 +12456,7 @@ contains
       !>     This routine should be used to update only records that contain
       !>     character data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Update the 10th through 100th characters in record number 9
       !>         in a DAS file designated by HANDLE.
@@ -12473,15 +12473,15 @@ contains
       !>
       !>             CALL DASURC ( HANDLE, 9, 10, 100, DATAC )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -12489,7 +12489,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 22-FEB-2021 (JDR)
       !>
@@ -12517,7 +12517,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.1, 28-OCT-1993 (KRG)
       !>
@@ -12729,21 +12729,21 @@ contains
       end associate
       end procedure dasurc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     See $Particulars for a description of the action of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled
       !>         by a routine in the call tree of this routine. The indicated
@@ -12754,11 +12754,11 @@ contains
       !>         routine. The status of the DAS file written to is uncertain
       !>         in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes buffered records out to the DAS file to which
       !>     they correspond.
@@ -12788,7 +12788,7 @@ contains
       !>     However, routines outside of SPICELIB will generally not need to
       !>     call this routine directly.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -13070,22 +13070,22 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 19-MAY-2021 (NJB) (JDR)
       !>
@@ -13112,7 +13112,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.1, 28-OCT-1993 (KRG)
       !>
@@ -13341,7 +13341,7 @@ contains
       end associate
       end procedure daswbr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ACTION   is a character string specifying whether to read
       !>              from or write to the specified DAS file. Possible
@@ -13364,18 +13364,18 @@ contains
       !>     RECORD   is a character array whose contents are to be
       !>              written to record RECNO, if ACTION is WRITE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is a character array whose contents are to be
       !>              set equal to those of record RECNO, if ACTION is
       !>              READ.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NWC      is the number of characters in a DAS character
       !>              record.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of ACTION is not recognized, the error
       !>         SPICE(UNRECOGNIZEDACTION) is signaled.
@@ -13386,11 +13386,11 @@ contains
       !>     3)  If a Fortran write error occurs, the error
       !>         SPICE(DASFILEWRITEFAILED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument UNIT in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Normally, routines outside of SPICELIB will not need to call this
       !>     routine directly. Writes to DAS files should be performed using
@@ -13407,7 +13407,7 @@ contains
       !>     contains as entry points the routines DASHLU and DASLUH, which
       !>     map between handles and unit numbers.)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Read and print to the screen character records number 10
       !>         through 20 from the DAS file designated by HANDLE.
@@ -13448,21 +13448,21 @@ contains
       !>            CALL ZZDDHHLU ( HANDLE,  'DAS', .FALSE., UNIT   )
       !>            CALL DASIOC   ( 'WRITE', UNIT,  10,      RECORD )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -13543,7 +13543,7 @@ contains
       return
       end procedure dasioc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ACTION   is a character string specifying whether to read
       !>              from or write to the specified DAS file. Possible
@@ -13566,18 +13566,18 @@ contains
       !>     RECORD   is a double precision array whose contents are to
       !>              be written to record RECNO, if ACTION is WRITE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is a double precision array whose contents are to
       !>              be set equal to those of record RECNO, if ACTION
       !>              is READ.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NWD      is the number of elements in a DAS double precision
       !>              record.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of ACTION is not recognized, the error
       !>         SPICE(UNRECOGNIZEDACTION) is signaled.
@@ -13588,11 +13588,11 @@ contains
       !>     3)  If a Fortran write error occurs, the error
       !>         SPICE(DASFILEWRITEFAILED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument UNIT in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine may be used to write to and read from DAS files
       !>     having the native binary file format of the host system. The
@@ -13612,7 +13612,7 @@ contains
       !>     Using unit numbers allows the DASIOx routines to be called from
       !>     any DAS routine, including entry points of DASFM.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Read and print to the screen double precision records
       !>         number 10 through 20 from the DAS file designated by HANDLE.
@@ -13652,22 +13652,22 @@ contains
       !>            CALL ZZDDHHLU ( HANDLE,  'DAS', .FALSE., UNIT   )
       !>            CALL DASIOD   ( 'WRITE', UNIT,  10,      RECORD )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine may be used only on DAS files having
       !>         the native binary file format of the host system.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -13751,7 +13751,7 @@ contains
       return
       end procedure dasiod
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ACTION   is a character string specifying whether to read
       !>              from or write to the specified DAS file. Possible
@@ -13774,17 +13774,17 @@ contains
       !>     RECORD   is an integer array whose contents are to be
       !>              written to record RECNO, if ACTION is WRITE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECORD   is an integer array whose contents are to be
       !>              set equal to those of record RECNO, if ACTION
       !>              is READ.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NWI      is the number of elements in a DAS integer record.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of ACTION is not recognized, the error
       !>         SPICE(UNRECOGNIZEDACTION) is signaled.
@@ -13795,11 +13795,11 @@ contains
       !>     3)  If a Fortran write error occurs, the error
       !>         SPICE(DASFILEWRITEFAILED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument UNIT in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine may be used to write to and read from DAS files
       !>     having the native binary file format of the host system. The
@@ -13819,7 +13819,7 @@ contains
       !>     Using unit numbers allows the DASIOx routines to be called from
       !>     any DAS routine, including entry points of DASFM.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Read and print to the screen integer records number 10
       !>         through 20 from the DAS file designated by HANDLE.
@@ -13859,22 +13859,22 @@ contains
       !>            CALL ZZDDHHLU ( HANDLE,  'DAS', .FALSE., UNIT   )
       !>            CALL DASIOI   ( 'WRITE', UNIT,  10,      RECORD )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine may be used only on DAS files having
       !>         the native binary file format of the host system.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -13956,7 +13956,7 @@ contains
       return
       end procedure dasioi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an open DAS file.
       !>
@@ -13976,7 +13976,7 @@ contains
       !>              from 1 to the maximum current value for that type,
       !>              which is available from DAFRFR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CLBASE,
       !>     CLSIZE   are, respectively, the base record number and
@@ -13993,7 +13993,7 @@ contains
       !>              character, double precision, or integer records
       !>              respectively.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     CHAR,
       !>     DP,
@@ -14003,7 +14003,7 @@ contains
       !>              all DAS routines that require a data type
       !>              specifier as input.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the following exceptions occur, the output arguments may
       !>     contain bogus information.
@@ -14023,11 +14023,11 @@ contains
       !>     4)  If the input handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The DAS architecture allows a programmer to think of the data
       !>     within a DAS file as three one-dimensional arrays: one of
@@ -14058,7 +14058,7 @@ contains
       !>     this routine once per cluster read, rather than once per
       !>     physical record read.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Use this routine to read integers from a range of
       !>         addresses. This is done in the routine DASRDI.
@@ -14135,22 +14135,22 @@ contains
       !>
       !>                  END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.0.1, 12-AUG-2021 (JDR)
       !>
@@ -14225,7 +14225,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.2.0 03-JUL-1996 (NJB)
       !>
@@ -15044,7 +15044,7 @@ contains
       end associate
       end procedure dasa2l
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a DAS file open for writing.
       !>
@@ -15062,12 +15062,12 @@ contains
       !>              indicated by TYPE whose addition to the indicated
       !>              DAS file is to be accounted for.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the action of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     CHAR,
       !>     DP,
@@ -15077,7 +15077,7 @@ contains
       !>              all DAS routines that require a data type
       !>              specifier as input.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -15088,11 +15088,11 @@ contains
       !>     3)  If NWORDS is negative, the error SPICE(VALUEOUTOFRANGE) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates by side effects: the directories in the
       !>     indicated DAS file will be updated to reflect the addition of
@@ -15114,31 +15114,31 @@ contains
       !>     file, the DASADx and DASUDx routines should be used; these
       !>     routines take care of directory creation and updates.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Update directories after writing N integer words to a
       !>         DAS file designated by HANDLE:
       !>
       !>             CALL DASCUD ( HANDLE, INT, N )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine is intended for use by the SPICELIB DAS routines.
       !>         Non-SPICELIB software normally will not need to call this
       !>         routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.5.0, 13-AUG-2021 (JDR)
       !>
@@ -15178,7 +15178,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.4.0 07-AUG-2006 (NJB)
       !>
@@ -15881,7 +15881,7 @@ contains
       return
       end procedure dascud
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an existing DAS file opened for
       !>              comment area modification by DASOPC.
@@ -15891,16 +15891,16 @@ contains
       !>              present in the file on input, then on output the
       !>              number of comment records will be NCOMR + N.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -15909,11 +15909,11 @@ contains
       !>         is signaled by a routine in the call tree of this routine. The
       !>         DAS file will probably be corrupted in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used to create space in the comment area of a DAS
       !>     file to allow addition of comments to the file. If there are
@@ -15940,7 +15940,7 @@ contains
       !>     This routine has an inverse DASRCR, which removes a specified
       !>     number of records from the end of the comment area.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Make room for 10 comment records in the comment area of a
       !>         new DAS file.
@@ -15955,22 +15955,22 @@ contains
       !>            C
       !>                  CALL DASACR ( HANDLE, 10 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The DAS file must have a binary file format native to the host
       !>         system.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 13-AUG-2021 (JDR)
       !>
@@ -15993,7 +15993,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 01-FEB-1993 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 11-OCT-1996 (NJB)
       !>
@@ -16359,7 +16359,7 @@ contains
       return
       end procedure dasacr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an existing DAS file opened for
       !>              comment area modification by DASOPC.
@@ -16370,16 +16370,16 @@ contains
       !>              file on input, then on output the number of comment
       !>              records will be MAX ( 0,  NCOMR - N ).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -16388,11 +16388,11 @@ contains
       !>         is signaled by a routine in the call tree of this routine. The
       !>         DAS file will probably be corrupted in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used to reclaim freed space in the comment area
       !>     of a DAS file subsequent to removal of comments from the file.
@@ -16422,7 +16422,7 @@ contains
       !>     This routine has an inverse DASACR, which appends a specified
       !>     number of records to the end of the comment area.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     C
       !>     C     Open an existing DAS file for modification of
@@ -16441,22 +16441,22 @@ contains
       !>     C
       !>           CALL DASCLS ( HANDLE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The DAS file must have a binary file format native to the host
       !>         system.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 02-JUN-2021 (JDR)
       !>
@@ -16776,20 +16776,20 @@ contains
       return
       end procedure dasrcr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See $Particulars for a description of the effect of this
       !>     routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -16808,11 +16808,11 @@ contains
       !>         records in the indicated DAS file, the error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Normally, there should be no need for routines outside of
       !>     SPICELIB to call this routine.
@@ -16849,22 +16849,22 @@ contains
       !>     descriptors, mapping logical to physical addresses can be done
       !>     in constant time.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Segregate data records in a DAS file designated by
       !>         HANDLE:
       !>
       !>            CALL DASSDR ( HANDLE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -16873,7 +16873,7 @@ contains
       !>     M.J. Spencer       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 12-AUG-2021 (JDR)
       !>
@@ -16909,7 +16909,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 17-NOV-1993 (KRG)
       !>
@@ -17676,7 +17676,7 @@ contains
       return
       end procedure dassdr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
       !>
@@ -17715,17 +17715,17 @@ contains
       !>              element of DATA, and to increase with the indices of the
       !>              elements of DATA.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     See $Particulars for a description of the effect of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled
       !>         by a routine in the call tree of this routine.
@@ -17749,11 +17749,11 @@ contains
       !>         this routine are unpredictable. This routine cannot
       !>         detect this error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DAS is a low-level format meant to store and transmit data. As
       !>     such, character data in DAS files are not interpreted by SPICELIB
@@ -17820,7 +17820,7 @@ contains
       !>     contain data, the SPICELIB routine DASUDC (DAS, update data,
       !>     character) should be used.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -17964,22 +17964,22 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 08-OCT-2021 (JDR) (NJB)
       !>
@@ -18027,7 +18027,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 12-MAY-1994 (KRG) (NJB)
       !>
@@ -18271,7 +18271,7 @@ contains
       end associate
       end procedure dasadc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
       !>
@@ -18282,17 +18282,17 @@ contains
       !>              the specified DAS file. Elements 1 through N are appended
       !>              to the double precision data in the file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     See $Particulars for a description of the effect of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -18304,11 +18304,11 @@ contains
       !>     3)  If the input count N is less than 1, no data will be added to
       !>         the specified DAS file. No error will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine adds double precision data to a DAS file by
       !>     "appending" them after any double precision data already in the
@@ -18353,7 +18353,7 @@ contains
       !>     already contain data, the SPICELIB routine DASUDD
       !>     (DAS update data, double precision) should be used.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -18475,22 +18475,22 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 08-OCT-2021 (JDR) (NJB)
       !>
@@ -18537,7 +18537,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 12-MAY-1994 (KRG) (NJB)
       !>
@@ -18707,7 +18707,7 @@ contains
       end associate
       end procedure dasadd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
       !>
@@ -18718,17 +18718,17 @@ contains
       !>              file. Elements 1 through N are appended to the integer
       !>              data in the file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     See $Particulars for a description of the effect of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -18740,11 +18740,11 @@ contains
       !>     3)  If the input count N is less than 1, no data will be added to
       !>         the specified DAS file. No error will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine adds integer data to a DAS file by "appending" them
       !>     after any integer data already in the file. The sense in which
@@ -18789,7 +18789,7 @@ contains
       !>     data, the SPICELIB routine DASUDI (DAS update data, integer)
       !>     should be used.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -18902,22 +18902,22 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 07-OCT-2021 (JDR) (NJB)
       !>
@@ -18962,7 +18962,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 12-MAY-1994 (KRG) (NJB)
       !>
@@ -19128,7 +19128,7 @@ contains
       end associate
       end procedure dasadi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for an open DAS file.
       !>
@@ -19144,7 +19144,7 @@ contains
       !>              substrings in each of the elements of the output array
       !>              DATA into which character data is to be read.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DATA     is an array of strings. On output, the character words in
       !>              the logical address range FIRST through LAST are copied
@@ -19184,11 +19184,11 @@ contains
       !>
       !>                 SUBLEN  =  EPOS - BPOS + 1
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled
       !>         by a routine in the call tree of this routine. DATA will
@@ -19213,11 +19213,11 @@ contains
       !>
       !>         the error cannot be diagnosed by this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DAS is a low-level format meant to store and transmit data. As
       !>     such, character data in DAS files are not interpreted by SPICELIB
@@ -19244,7 +19244,7 @@ contains
       !>     having length 80 characters, mapping each 32-character string to
       !>     characters 1--32 of the output buffer.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -19388,22 +19388,22 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 09-OCT-2021 (JDR) (NJB)
       !>
@@ -19452,7 +19452,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.2.0, 03-NOV-1995 (NJB)
       !>
@@ -19646,7 +19646,7 @@ contains
       return
       end procedure dasrdc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for an open DAS file.
       !>
@@ -19657,16 +19657,16 @@ contains
       !>              and less than or equal to the highest double precision
       !>              DAS address in the DAS file designated by HANDLE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DATA     is an array of double precision numbers. DATA
       !>              should have length at least LAST - FIRST + 1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled
       !>         by a routine in the call tree of this routine. DATA will
@@ -19683,17 +19683,17 @@ contains
       !>     5)  If a file read error occurs, the error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides random read access to the double precision
       !>     data in a DAS file. This data are logically structured as a
       !>     one-dimensional array of double precision numbers.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -19815,22 +19815,22 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 09-OCT-2021 (JDR) (NJB)
       !>
@@ -19872,7 +19872,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 13-JUN-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 12-MAY-1994 (KRG) (NJB)
       !>
@@ -19965,7 +19965,7 @@ contains
       return
       end procedure dasrdd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for an open DAS file.
       !>
@@ -19976,16 +19976,16 @@ contains
       !>              or equal to the highest integer DAS address in the DAS
       !>              file designated by HANDLE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DATA     is an array of integers. DATA should have length
       !>              at least LAST - FIRST + 1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled
       !>         by a routine in the call tree of this routine. DATA will
@@ -20002,17 +20002,17 @@ contains
       !>     5)  If a file read error occurs, the error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides random read access to the integer data in
       !>     a DAS file. This data are logically structured as a
       !>     one-dimensional array of integers.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -20125,22 +20125,22 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 09-OCT-2021 (JDR) (NJB)
       !>
@@ -20182,7 +20182,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 13-JUN-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 12-MAY-1994 (KRG) (NJB)
       !>
@@ -20275,7 +20275,7 @@ contains
       return
       end procedure dasrdi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
       !>
@@ -20317,17 +20317,17 @@ contains
       !>
       !>                 SUBLEN  =  EPOS - BPOS + 1
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     See $Particulars for a description of the effect of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled by
       !>         a routine in the call tree of this routine.
@@ -20360,11 +20360,11 @@ contains
       !>         call tree of this routine. FIRST and LAST will not be
       !>         modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DAS is a low-level format meant to store and transmit data. As
       !>     such, character data in DAS files are not interpreted by SPICELIB
@@ -20391,7 +20391,7 @@ contains
       !>     SPICELIB routine DASADC (DAS add data, character) should be
       !>     used.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -20535,22 +20535,22 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 19-MAY-2021 (NJB) (JDR)
       !>
@@ -20602,7 +20602,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.2.0, 12-MAY-1995 (NJB)
       !>
@@ -20843,7 +20843,7 @@ contains
       return
       end procedure dasudc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
       !>
@@ -20863,17 +20863,17 @@ contains
       !>              written to the indicated DAS file, where N is
       !>              LAST - FIRST + 1.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     See $Particulars for a description of the effect of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is
       !>         signaled by a routine in the call tree of this routine.
@@ -20896,11 +20896,11 @@ contains
       !>         by this routine, the error is signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine replaces the double precision data in the specified
       !>     range of logical addresses within a DAS file with the contents of
@@ -20921,7 +20921,7 @@ contains
       !>     currently in use, the SPICELIB routine DASADD (DAS add data,
       !>     double precision) should be used.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -21042,22 +21042,22 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 16-JUL-2021 (JDR)
       !>
@@ -21097,7 +21097,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 12-MAY-1994 (KRG) (NJB)
       !>
@@ -21232,7 +21232,7 @@ contains
       return
       end procedure dasudd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
       !>
@@ -21250,17 +21250,17 @@ contains
       !>              DATA(1) through DATA(N) will be written to the
       !>              indicated DAS file, where N is LAST - FIRST + 1.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     See $Particulars for a description of the effect of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is
       !>         signaled by a routine in the call tree of this routine.
@@ -21283,11 +21283,11 @@ contains
       !>         by this routine, the error is signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine replaces the integer data in the specified range of
       !>     logical addresses within a DAS file with the contents of the
@@ -21307,7 +21307,7 @@ contains
       !>     last integer logical address currently in use, the SPICELIB
       !>     routine DASADI (DAS add data, integer) should be used.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -21422,22 +21422,22 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 16-JUL-2021 (JDR)
       !>
@@ -21477,7 +21477,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 12-MAY-1994 (KRG) (NJB)
       !>
@@ -21612,17 +21612,17 @@ contains
       return
       end procedure dasudi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an open DAS file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
       !>     See $Particulars for a description of the effect of this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     All parameters described here are declared in the SPICELIB
       !>     include file das.inc. See that file for parameter values.
@@ -21630,18 +21630,18 @@ contains
       !>     FTSIZE   is the maximum number of DAS files that can be
       !>              open at any one time.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If HANDLE is not the handle of an open DAS file, no error
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of input argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides the primary recommended method of closing an
       !>     open DAS file. It is also possible to close a DAS file without
@@ -21651,7 +21651,7 @@ contains
       !>     opened for writing by any other means may result in the production
       !>     of something other than a DAS file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -21845,22 +21845,22 @@ contains
       !>        Voxel edge length (km):             1.04248E-01
       !>        Number of voxels:                   11914500
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 12-OCT-2021 (JDR) (NJB)
       !>
@@ -21920,7 +21920,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.3.2, 24-MAR-2003 (NJB)
       !>
@@ -22051,11 +22051,11 @@ contains
       return
       end procedure dascls
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for a previously opened DAS file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IDWORD   is the "ID word" contained in the first eight
       !>              characters of the file record.
@@ -22076,11 +22076,11 @@ contains
       !>     NCOMC    is the number of characters in use in the comment area
       !>              of the DAS file specified by HANDLE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the file read attempted by this routine fails, an error is
       !>         signaled by a routine in the call tree of this routine.
@@ -22100,16 +22100,16 @@ contains
       !>         translated to native format, an error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of HANDLE under $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a convenient way of retrieving the
       !>     information contained in the file record of a DAS file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -22180,22 +22180,22 @@ contains
       !>         Number of comment records is:              10
       !>         Number of comment characters is:         1390
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.0, 22-FEB-2021 (JDR)
       !>
@@ -22247,7 +22247,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 15-JUL-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.1.0, 25-AUG-1995 (NJB)
       !>
@@ -22282,7 +22282,7 @@ contains
       return
       end procedure dasrfr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for a DAS file open for writing.
       !>
@@ -22305,15 +22305,15 @@ contains
       !>     NCOMC    is the number of characters in use in the comment area
       !>              of the DAS file specified by HANDLE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the handle passed to this routine is not the handle of an
       !>         open DAS file, an error is signaled by a routine in the call
@@ -22329,11 +22329,11 @@ contains
       !>     4)  If the file write attempted by this routine fails, the error
       !>         SPICE(DASFILEWRITEFAILED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of HANDLE under $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a convenient way of updating the internal
       !>     file name of a DAS file.
@@ -22342,7 +22342,7 @@ contains
       !>     characters that identifies the file as a DAS file and optionally
       !>     indicates a specific file format, for example, `EK'.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Update the internal file name of an existing DAS file.
       !>
@@ -22377,16 +22377,16 @@ contains
       !>                 .              NCOMR,
       !>                 .              NCOMC  )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The DAS file must have a binary file format native to the host
       !>         system.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -22394,7 +22394,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     F.S. Turner        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.1, 02-JUN-2021 (JDR)
       !>
@@ -22429,7 +22429,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 24-NOV-1992 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 3.0.0, 11-DEC-2001 (FST)
       !>
@@ -22636,7 +22636,7 @@ contains
       return
       end procedure daswfr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a binary DAS file which has been
       !>              opened with write access.
@@ -22649,15 +22649,15 @@ contains
       !>              to the comment area of the binary DAS file attached
       !>              to HANDLE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of comments to be added is not positive, the
       !>         error SPICE(INVALIDARGUMENT) is signaled.
@@ -22669,11 +22669,11 @@ contains
       !>         write access, an error is signaled by a routine in the call
       !>         tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Binary DAS files contain a data area which is reserved for storing
       !>     annotations or descriptive textual information about the data
@@ -22702,7 +22702,7 @@ contains
       !>     this can easily accommodate ``screen width'' lines as well as
       !>     long lines which may contain some other form of information.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>
@@ -22723,23 +22723,23 @@ contains
       !>     will append the first N line(s) in BUFFER to the comment area
       !>     of the binary DAS file attached to HANDLE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine uses constants that are specific to the ASCII
       !>         character sequence. The results of using this routine with
       !>         a different character sequence are unpredictable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 13-AUG-2021 (JDR)
       !>
@@ -23101,7 +23101,7 @@ contains
       return
       end procedure dasac
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     COMLUN   is the Fortran logical unit of a previously opened text
       !>              file which contains comments that are to be added to
@@ -23148,11 +23148,11 @@ contains
       !>     HANDLE   is the file handle for a binary DAS file that has been
       !>              opened with write access.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LNSIZE   is both the maximum length of a comment line that can
       !>              be read from the input file, and the maximum length
@@ -23166,7 +23166,7 @@ contains
       !>              that the character count must be expressible in a
       !>              32-bit signed integer.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the scratch file for temporarily holding the comments
       !>         culled from the text file cannot be opened, the
@@ -23181,7 +23181,7 @@ contains
       !>     4)  If the end marker cannot be found in the text file, the
       !>         error SPICE(MARKERNOTFOUND) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See parameters COMLUN and HANDLE in the $Detailed_Inputs
       !>     section.
@@ -23191,7 +23191,7 @@ contains
       !>     place where we started searching for comments in the original
       !>     file.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine will place all lines between two specified markers,
       !>     a "begin comments marker" and an "end comments marker," in a
@@ -23202,7 +23202,7 @@ contains
       !>     marker" is blank, then the comments are assumed to stop at the
       !>     end of the comment text file attached to COMLUN.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     We will be using the files 'jabber.txt', 'batty.txt', and
       !>     'wndrland.DAS' in the example which follows.
@@ -23360,7 +23360,7 @@ contains
       !>     where -BOC- and -EOC- represent the beginning and end of the
       !>     comments, respectively.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The begin comments marker, BEGMRK, and the end comments
       !>         marker, ENDMRK, must each appear alone on a line in the
@@ -23379,17 +23379,17 @@ contains
       !>         character sequence. The results of using this routine with a
       !>         different character sequence are unpredictable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.2, 02-JUN-2021 (JDR)
       !>
@@ -23413,7 +23413,7 @@ contains
       !>
       !>     Beta Version 1.0.0, 04-JAN-1993 (KRG)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.2.0, 07-JUL-1996 (NJB)
       !>
@@ -23806,31 +23806,31 @@ contains
       return
       end procedure dasacu
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a binary DAS file that is to have its
       !>              entire comment area deleted. The DAS file should have
       !>              been opened with write access.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the binary DAS file attached to HANDLE is not open with
       !>         write access, an error is signaled by a routine in the call
       !>         tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Binary DAS files contain an area which is reserved for storing
       !>     annotations or descriptive textual information about the data
@@ -23848,7 +23848,7 @@ contains
       !>     remain unchanged. The space that was used by the comment records
       !>     is reclaimed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>
@@ -23862,21 +23862,21 @@ contains
       !>     will delete the entire comment area of the binary DAS file
       !>     attached to HANDLE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 02-JUN-2021 (JDR)
       !>
@@ -23981,7 +23981,7 @@ contains
       return
       end procedure dasdc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a binary DAS file which has been
       !>              opened with read access.
@@ -23991,7 +23991,7 @@ contains
       !>              for the Fortran character string array passed into this
       !>              routine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     N        is the number of comment lines extracted from the comment
       !>              area of the binary DAS file attached to HANDLE. This
@@ -24015,11 +24015,11 @@ contains
       !>              If there are no comments in the comment area, this
       !>              variable will have the value .TRUE., and N = 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the size of the output line buffer is is not positive,
       !>         the error SPICE(INVALIDARGUMENT) is signaled.
@@ -24036,11 +24036,11 @@ contains
       !>         reading, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE in $Detailed_Input.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Binary DAS files contain an area which is reserved for storing
       !>     annotations or descriptive textual information describing the data
@@ -24066,7 +24066,7 @@ contains
       !>     from the comment areas of multiple binary DAS files. See Example
       !>     2 in the $Examples section.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Example 1
       !>     ---------
@@ -24178,7 +24178,7 @@ contains
       !>
       !>            END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The comment area may consist only of printing ASCII
       !>         characters, decimal values 32 - 126.
@@ -24191,18 +24191,18 @@ contains
       !>         this can easily accommodate "screen width" lines as well as
       !>         long lines which may contain some other form of information.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.1, 20-AUG-2021 (JDR)
       !>
@@ -24244,7 +24244,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 23-NOV-1992 (KRG)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.2.0, 04-AUG-1994 (KRG)
       !>
@@ -24655,7 +24655,7 @@ contains
       end associate
       end procedure dasec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle for a binary DAS file that has been
       !>              opened with read access.
@@ -24668,18 +24668,18 @@ contains
       !>              at the current location in the file, and continuing
       !>              until all of the comments have been written.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     COMNTS   is a logical flag indicating whether or not any comments
       !>              were found in the comment area of a DAS file. COMNTS will
       !>              have the value .TRUE. if there were some comments, and
       !>              the value .FALSE. otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while reading from the binary DAS file
       !>         attached to HANDLE, the error is signaled by a routine in the
@@ -24689,11 +24689,11 @@ contains
       !>         COMLUN, the error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See parameters COMLUN and HANDLE in the $Detailed_Inputs section.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine will extract all of the comments from the comment
       !>     area of a binary DAS file, placing them into a text file
@@ -24701,7 +24701,7 @@ contains
       !>     text file. If there are no comments in the DAS file, nothing is
       !>     written to the text file attached to COMLUN.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>
@@ -24722,22 +24722,22 @@ contains
       !>     value of COMNTS will be .TRUE. if there were some comments
       !>     in the comment area and .FALSE. otherwise.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The maximum length of a single line comment in the comment
       !>         area is specified by the parameter LINLEN defined below.
       !>         Currently this value is 255 characters.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -24817,7 +24817,7 @@ contains
       return
       end procedure dasecu
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BINFIL   is the name of a binary DAS file which is to be converted
       !>              to an equivalent DAS transfer file.
@@ -24827,15 +24827,15 @@ contains
       !>              file attached to this logical unit beginning at the
       !>              current position in the file.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the binary DAS file specified by the filename BINFIL cannot
       !>         be opened for read access, an error is signaled by a routine
@@ -24859,11 +24859,11 @@ contains
       !>         IS SIGNALED ONLY BECAUSE THE RESERVED RECORD AREA HAS
       !>         NOT YET BEEN IMPLEMENTED.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See arguments BINFIL, XFRLUN.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Any binary DAS file may be transferred between heterogeneous
       !>     Fortran environments by converting it to an equivalent file
@@ -24887,7 +24887,7 @@ contains
       !>     will be positioned to write on the first line following the
       !>     encoded data from the binary DAS file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>
@@ -24907,21 +24907,21 @@ contains
       !>
       !>        CALL DASBT ( BINFIL, XFRLUN )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.2.0, 02-JUN-2021 (JDR)
       !>
@@ -25910,7 +25910,7 @@ contains
       return
       end procedure dasbt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     XFRLUN   is the Fortran logical unit number of a previously opened
       !>              DAS transfer file.
@@ -25920,15 +25920,15 @@ contains
       !>
       !>     BINFIL   is the name of the binary DAS file to be created.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the DAS transfer file cannot be read, the error
       !>         SPICE(FILEREADFAILED) is signaled.
@@ -25949,11 +25949,11 @@ contains
       !>         the caller of this routine is required to close the binary
       !>         DAS file BINFIL.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See arguments XFRLUN, BINFIL.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Any binary DAS file may be transferred between heterogeneous
       !>     Fortran environments by converting it to an equivalent file
@@ -25976,7 +25976,7 @@ contains
       !>     file will remain open, as it was on entry, and it will be
       !>     positioned to read the first line after the encoded DAS file data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>
@@ -25994,22 +25994,22 @@ contains
       !>
       !>        CALL DASTB( XFRLUN, BINFIL )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that it is positioned ready to read the
       !>         DAS file ID word from the encoded text DAS file.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.3.0, 02-JUN-2021 (JDR)
       !>
@@ -26051,7 +26051,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-1992 (KRG)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 3.1.0, 06-DEC-1995 (KRG)
       !>
@@ -28130,12 +28130,12 @@ contains
       return
       end procedure dastb
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a DAS file whose active
       !>              logical address ranges are desired.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LASTC,
       !>     LASTD,
@@ -28143,26 +28143,26 @@ contains
       !>              character, double precision, and integer type in use in
       !>              the specified DAS file.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file handle is invalid, an error is signaled by
       !>         a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is a utility that allows a calling program to
       !>     find the range of logical addresses currently in use in any
       !>     DAS file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -28250,21 +28250,21 @@ contains
       !>        Note that after run completion, a new DAS file exists in the
       !>        output directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 30-JUN-2021 (JDR)
       !>

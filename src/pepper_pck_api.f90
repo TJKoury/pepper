@@ -11,7 +11,7 @@ submodule (pepper_instance) pepper_pck_api
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     PCKFNM   is the name of a binary PCK file.
       !>
@@ -28,7 +28,7 @@ contains
       !>              If COVER contains no data on input, its size and
       !>              cardinality still must be initialized.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     COVER    is a SPICE window data structure which represents the
       !>              merged coverage for the reference frame having frame
@@ -45,11 +45,11 @@ contains
       !>              See the $Examples section below for a complete example
       !>              program showing how to retrieve the endpoints from COVER.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file has transfer format, the error
       !>         SPICE(INVALIDFORMAT) is signaled.
@@ -69,17 +69,17 @@ contains
       !>         coverage window for IDCODE, an error is signaled by a routine
       !>         in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine reads a PCK file.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides an API via which applications can determine
       !>     the coverage a specified PCK file provides for a specified PCK
       !>     class reference frame.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -441,22 +441,22 @@ contains
       !>         Start:    1962 JAN 20 00:00:41.184 (TDB)
       !>         Stop:     2037 JUL 17 00:01:05.183 (TDB)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If an error occurs while this routine is updating the window
       !>         COVER, the window may be corrupted.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 08-OCT-2021 (JDR) (NJB)
       !>
@@ -608,7 +608,7 @@ contains
       return
       end procedure pckcov
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     This routine is obsolete. It supports only the type 02 binary
       !>     PCK format. It is maintained only for backward compatibility
@@ -617,7 +617,7 @@ contains
       !>     frame, given an input time and body and reference frame from
       !>     a PCK binary file.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the integer ID code of the body for which the
       !>              state transformation matrix is requested. Bodies
@@ -628,7 +628,7 @@ contains
       !>     ET       is the epoch at which the state transformation
       !>              matrix is requested.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     FOUND    if the Euler angles for the requested time
       !>              and body are found in a PCK binary file,
@@ -646,23 +646,23 @@ contains
       !>                    dEULANG(2)/dt = EULANG(5)
       !>                    dEULANG(3)/dt = EULANG(6)
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Here we load a binary PCK files and use PCKEUL to get the
       !>     Euler angles.
@@ -679,22 +679,22 @@ contains
       !>     The Euler angles and their derivatives are returned
       !>     in EULANG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  A binary PCK kernel must be loaded with PCKLOF before
       !>         calling this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 20-AUG-2021 (JDR)
       !>
@@ -801,7 +801,7 @@ contains
       return
       end procedure pckeul
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     PCKFNM   is the name of a binary PCK file.
       !>
@@ -813,7 +813,7 @@ contains
       !>              If IDS contains no data on input, its size and
       !>              cardinality still must be initialized.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IDS      is a SPICE set data structure which contains the union
       !>              of its contents upon input with the set of reference
@@ -826,11 +826,11 @@ contains
       !>              See the $Examples section below for a complete example
       !>              program showing how to retrieve the ID codes from IDS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input file has transfer format, the error
       !>         SPICE(INVALIDFORMAT) is signaled.
@@ -849,17 +849,17 @@ contains
       !>         indicated PCK file, an error is signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides an API via which applications can determine
       !>     the set of reference frames for which there are data in a
       !>     specified PCK file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1026,22 +1026,22 @@ contains
       !>
       !>         ========================================
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If an error occurs while this routine is updating the set
       !>         IDS, the set may be corrupted.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-OCT-2021 (JDR) (NJB)
       !>
@@ -1188,7 +1188,7 @@ contains
       return
       end procedure pckfrm
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the integer ID code of the body for which the
       !>              transformation is requested. Bodies are numbered
@@ -1197,7 +1197,7 @@ contains
       !>     ET       is the epoch at which the transformation is
       !>              requested.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RA,
       !>     DEC      are the right ascension and declination of the
@@ -1220,11 +1220,11 @@ contains
       !>              See the $Particulars section below for further
       !>              discussion.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of the PCK keywords required to compute the angles are
       !>         not available in the kernel pool, an error is signaled by a
@@ -1260,7 +1260,7 @@ contains
       !>         body is present but has a value outside the range 1:3,
       !>         the error SPICE(DEGREEOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A text or binary PCK containing orientation data for the
       !>     body designated by BODY must be loaded at the time this
@@ -1269,7 +1269,7 @@ contains
       !>     Normally PCK files are loaded during program initialization;
       !>     they need not be re-loaded prior to each call to this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Applications that need to compute the transformation between
       !>     body-fixed and inertial frames usually can call the higher-level
@@ -1341,7 +1341,7 @@ contains
       !>     See the Frames Required Reading frames.req for details on
       !>     constructing a fixed-offset frame specification.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following code fragment, BODEUL is used to get the unit
       !>     vector (POLE) parallel to the north pole of a target body (BODY)
@@ -1354,15 +1354,15 @@ contains
       !>     must have been loaded into the kernel pool (by one or more
       !>     previous calls to LDPOOL).
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -1371,7 +1371,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.0, 14-APR-2021 (NJB) (JDR)
       !>
@@ -1451,7 +1451,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 4.1.0, 24-OCT-2005 (NJB)
       !>

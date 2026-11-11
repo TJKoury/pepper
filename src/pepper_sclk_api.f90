@@ -11,7 +11,7 @@ submodule (pepper_instance) pepper_sclk_api
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SC       is a NAIF integer code for a spacecraft whose
       !>              encoded SCLK value at the epoch specified by ET is
@@ -20,7 +20,7 @@ contains
       !>     ET       is an epoch, specified as ephemeris seconds past
       !>              J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SCLKDP   is an encoded integral spacecraft clock value.
       !>              SCLKDP is an encoded representation of the total
@@ -30,11 +30,11 @@ contains
       !>              value. SCLKDP is rounded to the nearest integral
       !>              double precision number.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an SCLK kernel has not been loaded, does not contain all of
       !>         the required data, or contains invalid data, an error is
@@ -67,11 +67,11 @@ contains
       !>         SC, an error is signaled by a routine in the call tree of this
       !>         routine. The output argument SCLKDP will not be modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine outputs discrete, encoded SCLK values. Since
       !>     continuous SCLK values are generally more useful, the newer
@@ -92,7 +92,7 @@ contains
       !>     See the SCLK Required Reading for a list of the entire set of
       !>     SCLK conversion routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Convert ET directly to an encoded SCLK value; use both of
       !>         these time values to look up both C-kernel (pointing) and
@@ -164,7 +164,7 @@ contains
       !>                     CALL UTC2ET ( UTC,  ET          )
       !>                     CALL SCE2T  ( -32,  ET,  SCLKDP )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  An SCLK kernel appropriate to the spacecraft clock identified
       !>         by SC must be loaded at the time this routine is called.
@@ -173,17 +173,17 @@ contains
       !>         directly to barycentric dynamical time, a leapseconds kernel
       !>         must be loaded at the time this routine is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -251,7 +251,7 @@ contains
       return
       end procedure sce2t
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SC       is the NAIF ID number for the spacecraft whose clock's
       !>              time is being decoded.
@@ -286,7 +286,7 @@ contains
       !>              See the $Examples section below for examples of
       !>              actual spacecraft clock conversions.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CLKSTR   is the spacecraft clock character string
       !>              corresponding to TICKS. Partition information is
@@ -325,11 +325,11 @@ contains
       !>              description of the Voyager and Mars Observer clock
       !>              formats.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the data type for the spacecraft is not supported,
       !>         the error SPICE(NOTSUPPORTED) is signaled.
@@ -345,11 +345,11 @@ contains
       !>         contain the output clock string, an error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The routine SCTIKS performs the inverse operation to SCFMT,
       !>     converting from clock format to number of ticks.
@@ -360,7 +360,7 @@ contains
       !>     SCFMT, which is called by SCDECD, does not make use of partition
       !>     information.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -522,15 +522,15 @@ contains
       !>           48000                '00001:00:001'
       !>           3145727999           '65535:59:800'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
@@ -538,7 +538,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -599,12 +599,12 @@ contains
       return
       end procedure scfmt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SC       is the NAIF ID for the spacecraft whose clock partition
       !>              information is being requested.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NPARTS   is the number of spacecraft clock time partitions
       !>              described in the kernel file for spacecraft SC.
@@ -619,7 +619,7 @@ contains
       !>              ("ticks"). The values contained in PSTOP are whole
       !>              numbers.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file
       !>
@@ -632,7 +632,7 @@ contains
       !>              each partition. See the include file sclk.inc for this
       !>              parameter's value.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the kernel variables containing the spacecraft clock
       !>         partition start and stop times have not been loaded in the
@@ -642,13 +642,13 @@ contains
       !>     2)  If the number of start and stop times are different,
       !>         the error SPICE(NUMPARTSUNEQUAL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     An SCLK kernel containing spacecraft clock partition start
       !>     and stop times for the spacecraft clock indicated by SC must
       !>     be loaded into the kernel pool.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SCPART looks for two variables in the kernel pool for each
       !>     spacecraft's partition information. If SC = -nn, then the names of
@@ -659,7 +659,7 @@ contains
       !>
       !>     The start and stop times returned are in units of "ticks".
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -783,17 +783,17 @@ contains
       !>            Start : 0674564040.000
       !>            Stop  : 4294537252.255
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that an SCLK kernel appropriate to the
       !>         spacecraft identified by SC has been loaded into the kernel
       !>         pool.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -803,7 +803,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.4.0, 06-JUL-2021 (JDR) (NJB)
       !>
@@ -851,7 +851,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1990 (NJB) (JML) (RET)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.4.0, 04-NOV-2020 (JDR) (NJB)
       !>
@@ -879,7 +879,7 @@ contains
       return
       end procedure scpart
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SC       is a NAIF integer code for a spacecraft, one of
       !>              whose encoded clock values is represented by
@@ -890,16 +890,16 @@ contains
       !>              start: partition information IS reflected in the
       !>              encoded value.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ET       is the epoch, specified as ephemeris seconds past
       !>              J2000, that corresponds to SCLKDP.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an SCLK kernel has not been loaded, does not contain all of
       !>         the required data, or contains invalid data, an error is
@@ -931,11 +931,11 @@ contains
       !>         by a routine in the call tree of this routine. The output
       !>         argument ET will not be modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine operates on encoded SCLK values. These values
       !>     are obtained by calling the SPICELIB routine SCENCD or other
@@ -952,7 +952,7 @@ contains
       !>     See the SCLK Required Reading for a list of the entire set of
       !>     SCLK conversion routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Encode a Galileo SCLK string, and convert the encoded value
       !>         to ET; use these time values to look up both GLL orbiter
@@ -1042,7 +1042,7 @@ contains
       !>                     CALL SCT2E  ( -32,  SCLKDP,     ET  )
       !>                     CALL ET2UTC (  ET,  'C',    3,  UTC )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  An SCLK kernel appropriate to the spacecraft clock identified
       !>         by SC must be loaded at the time this routine is called.
@@ -1051,18 +1051,18 @@ contains
       !>         directly to barycentric dynamical time, a leapseconds kernel
       !>         must be loaded at the time this routine is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -1130,7 +1130,7 @@ contains
       return
       end procedure sct2e
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SC       is the NAIF ID number for the spacecraft whose clock
       !>              string is being converted.
@@ -1185,7 +1185,7 @@ contains
       !>              description of the Voyager and Mars Observer clock
       !>              formats.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TICKS    is the number of ticks represented by the spacecraft
       !>              clock string. A tick is defined to be the smallest
@@ -1211,11 +1211,11 @@ contains
       !>              See the $Examples section below for examples for
       !>              actual spacecraft clocks.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the spacecraft clock type is not supported, the
       !>         error SPICE(NOTSUPPORTED) is signaled.
@@ -1228,11 +1228,11 @@ contains
       !>
       !>     3)  Invalid spacecraft ID's are not diagnosed.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Each spacecraft is assigned a clock type code in the kernel file.
       !>     SCTIKS calls the function SCTYPE to determine this value. If the
@@ -1252,7 +1252,7 @@ contains
       !>     since the beginning of the mission, and so uses partition
       !>     information. SCTIKS just converts to absolute ticks.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     SCTIKS is used as part of the process of encoding spacecraft clock
       !>     by SCENCD, though SCTIKS does not process any partition informa-
@@ -1339,15 +1339,15 @@ contains
       !>          '1-1-1'                48800
       !>          '1-1-2'                48801
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
@@ -1355,7 +1355,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 01-NOV-2021 (JDR)
       !>
@@ -1405,7 +1405,7 @@ contains
       return
       end procedure sctiks
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SC       is the NAIF integer code of the spacecraft whose
       !>              clock's time is being decoded.
@@ -1436,7 +1436,7 @@ contains
       !>              is the same as if SCLKDP had been rounded to the
       !>              nearest whole number.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SCLKCH   is the character representation of the clock count.
       !>              The exact form that SCLKCH takes depends on the
@@ -1527,14 +1527,14 @@ contains
       !>              description of the Voyager and Mars Observer clock
       !>              formats.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MXPART   is the maximum number of spacecraft clock partitions
       !>              expected in the kernel file for any one spacecraft.
       !>              See the INCLUDE file sclk.inc for this parameter's
       !>              value.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If kernel variables required by this routine are unavailable,
       !>         an error is signaled by a routine in the call tree of this
@@ -1556,13 +1556,13 @@ contains
       !>         routine in the call tree of this routine. On output SCLKCH
       !>         will contain a portion of the truncated clock string.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A kernel file containing spacecraft clock partition information
       !>     for the desired spacecraft must be loaded, using the routine
       !>     FURNSH, before calling this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In general, it is difficult to compare spacecraft clock counts
       !>     numerically since there are too many clock components for a
@@ -1588,7 +1588,7 @@ contains
       !>
       !>              'partition_number/clock_string'
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -1748,17 +1748,17 @@ contains
       !>        Input s/c clock count : 1/1465644361.0
       !>        No pointing found.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Assumes that an SCLK kernel file appropriate for the clock
       !>         designated by SC is loaded in the kernel pool at the time
       !>         this routine is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -1767,7 +1767,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.2.0, 18-NOV-2021 (NJB) (JDR)
       !>
@@ -1809,7 +1809,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 06-SEP-1990 (JML) (RET)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 17-APR-1992 (JML) (WLT)
       !>
@@ -1967,7 +1967,7 @@ contains
       return
       end procedure scdecd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SC       is the standard NAIF ID of the spacecraft whose clock's
       !>              time is being encoded.
@@ -2063,7 +2063,7 @@ contains
       !>              description of the Voyager and Mars Observer clock
       !>              formats.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SCLKDP   is the double precision encoding of SCLKCH.
       !>
@@ -2106,14 +2106,14 @@ contains
       !>
       !>              we would obtain X = Y.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MXPART   is the maximum number of spacecraft clock partitions
       !>              expected in the kernel file for any one spacecraft.
       !>              See the INCLUDE file sclk.inc for this parameter's
       !>              value.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of partitions in the kernel file for spacecraft
       !>         SC exceeds the parameter MXPART, the error
@@ -2150,13 +2150,13 @@ contains
       !>         position of SCLKCH, the error SPICE(INVALIDSCLKSTRING) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A kernel file containing spacecraft clock partition information
       !>     for the desired spacecraft must be loaded, using the routine
       !>     FURNSH, before calling this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In general, it is difficult to compare spacecraft clock counts
       !>     numerically since there are too many clock components for a
@@ -2181,7 +2181,7 @@ contains
       !>           measured in ticks, to compute the number of ticks
       !>           from the beginning of the mission to the clock time.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -2341,15 +2341,15 @@ contains
       !>        Input s/c clock count : 1/1465644361.0
       !>        No pointing found.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -2359,7 +2359,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 21-NOV-2021 (NJB) (JDR)
       !>
@@ -2581,7 +2581,7 @@ contains
       return
       end procedure scencd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SC       is a NAIF ID code for a spacecraft clock whose
       !>              reading at the epoch specified by ET is desired.
@@ -2589,7 +2589,7 @@ contains
       !>     ET       is an epoch, specified as ephemeris seconds past
       !>              J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SCLKCH   is a character string representation of the
       !>              spacecraft clock value that corresponds to ET, for
@@ -2608,11 +2608,11 @@ contains
       !>              by kernel variables associated with the clock. See
       !>              $Examples below for further information.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an SCLK kernel has not been loaded, does not contain all of
       !>         the required data, or contains invalid data, an error is
@@ -2646,7 +2646,7 @@ contains
       !>         routine. The output argument SCLKCH may contain a portion of
       !>         the truncated string.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     An SCLK kernel, appropriate to the spacecraft clock identified
       !>     by SC, must be loaded at the time this routine is called.
@@ -2655,7 +2655,7 @@ contains
       !>     directly to barycentric dynamical time, a leapseconds kernel
       !>     must be loaded at the time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is provided as a convenience; it is simply shorthand
       !>     for the code fragment
@@ -2666,7 +2666,7 @@ contains
       !>     See the SCLK Required Reading for a list of the entire set of
       !>     SCLK conversion routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -2764,21 +2764,21 @@ contains
       !>
       !>            SCLKCH  =  '4/11390:22:012'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 05-JUL-2021 (JDR)
       !>
@@ -2816,7 +2816,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1990 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.2.0, 10-APR-1992 (NJB) (WLT)
       !>
@@ -2843,7 +2843,7 @@ contains
       return
       end procedure sce2s
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SC       is a NAIF ID code for a spacecraft, one of whose
       !>              clock values is represented by SCLKCH. The set of
@@ -2858,16 +2858,16 @@ contains
       !>              string. The precise format of SCLKCH is specified
       !>              in the SCLK Required Reading.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ET       is the epoch, specified as ephemeris seconds past
       !>              J2000, that corresponds to SCLKCH.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an SCLK kernel has not been loaded, does not contain all of
       !>         the required data, or contains invalid data, an error is
@@ -2894,11 +2894,11 @@ contains
       !>         routine in the call tree of this routine. The output argument
       !>         ET will not be modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is provided as a convenience; it is simply shorthand
       !>     for the code fragment
@@ -2909,7 +2909,7 @@ contains
       !>     See the SCLK Required Reading for a list of the entire set of
       !>     SCLK conversion routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Find the state (position and velocity) of Jupiter, as seen
       !>         from the Galileo spacecraft, at the epoch corresponding to
@@ -2979,7 +2979,7 @@ contains
       !>                     CALL SCS2E  ( -32,  '11389.29.768',  ET  )
       !>                     CALL ET2UTC (  ET,  'C',      3,     UTC )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  An SCLK kernel appropriate to the spacecraft clock identified
       !>         by SC must be loaded at the time this routine is called.
@@ -2988,18 +2988,18 @@ contains
       !>         directly to barycentric dynamical time, a leapseconds kernel
       !>         must be loaded at the time this routine is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>

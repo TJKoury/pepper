@@ -12,7 +12,7 @@ submodule (pepper_instance) pepper_array_ops
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NELT     is the number of elements in the input array.
       !>
@@ -27,15 +27,15 @@ contains
       !>
       !>     ARRAY    is the array to be cycled.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    is the input array after it has been cycled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of DIR is not recognized, the error
       !>         SPICE(INVALIDDIRECTION) is signaled.
@@ -45,11 +45,11 @@ contains
       !>     3)  If NCYCLE is negative, the array is cycled NCYCLE times in
       !>         the opposite direction of DIR.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine cycles a character array in place. To cycle
       !>     an array and store the result in a new array, use CYCLAC.
@@ -59,7 +59,7 @@ contains
       !>     array is brought around to the other end of the array instead
       !>     of disappearing.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let the integer array A contain the following elements.
       !>
@@ -85,15 +85,15 @@ contains
       !>     Cycling by any multiple of the number of elements in the array
       !>     yields the same array.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -101,7 +101,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -243,7 +243,7 @@ contains
       return
       end procedure cyacip
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NELT     is the number of elements in the input array.
       !>
@@ -258,15 +258,15 @@ contains
       !>
       !>     ARRAY    is the array to be cycled.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    is the input array after it has been cycled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of DIR is not recognized, the error
       !>         SPICE(INVALIDDIRECTION) is signaled.
@@ -276,11 +276,11 @@ contains
       !>     3)  If NCYCLE is negative, the array is cycled NCYCLE times in
       !>         the opposite direction of DIR.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine cycles a double precision array in place. To cycle
       !>     an array and store the result in a new array, use CYCLAD.
@@ -290,7 +290,7 @@ contains
       !>     is brought around to the other end of the array instead of
       !>     disappearing.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let the double precision A contain the following elements.
       !>
@@ -316,15 +316,15 @@ contains
       !>     Cycling by any multiple of the number of elements in the array
       !>     yields the same array.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -332,7 +332,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -433,7 +433,7 @@ contains
       return
       end procedure cyadip
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NELT     is the number of elements in the input array.
       !>
@@ -448,15 +448,15 @@ contains
       !>
       !>     ARRAY    is the array to be cycled.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    is the input array after it has been cycled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of DIR is not recognized, the error
       !>         SPICE(INVALIDDIRECTION) is signaled.
@@ -466,11 +466,11 @@ contains
       !>     3)  If NCYCLE is negative, the array is cycled NCYCLE times in
       !>         the opposite direction of DIR.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine cycles an integer array in place. To cycle
       !>     an array and store the result in a new array, use CYCLAI.
@@ -480,7 +480,7 @@ contains
       !>     array is brought around to the other end of the array instead
       !>     of disappearing.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let the integer array A contain the following elements.
       !>
@@ -506,15 +506,15 @@ contains
       !>     Cycling by any multiple of the number of elements in the array
       !>     yields the same array.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -522,7 +522,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -623,7 +623,7 @@ contains
       return
       end procedure cyaiip
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is the array to be cycled.
       !>
@@ -638,16 +638,16 @@ contains
       !>     NCYCLE   is the number of times the elements in the array
       !>              are to be cycled.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the input array after it has been cycled.
       !>              OUT may overwrite ARRAY.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of DIR is not recognized, the error
       !>         SPICE(INVALIDDIRECTION) is signaled.
@@ -657,18 +657,18 @@ contains
       !>     3)  If NCYCLE is negative, the array is cycled NCYCLE times in
       !>         the opposite direction of DIR.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     An array is cycled when its contents are shifted forward or
       !>     backward by one place. An element pushed off one end of the
       !>     array is brought around to the other end of the array instead
       !>     of disappearing.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let the integer array A contain the following elements.
       !>
@@ -694,7 +694,7 @@ contains
       !>     Cycling by any multiple of the number of elements in the array
       !>     yields the same array.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The memory used for the output array must be identical to or
       !>         disjoint from the memory used for the input array.
@@ -709,11 +709,11 @@ contains
       !>
       !>         will produce garbage.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
@@ -721,7 +721,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -740,7 +740,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (WLT) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 2.0.0, 16-JAN-1989 (HAN)
       !>
@@ -890,7 +890,7 @@ contains
       return
       end procedure cyclac
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is the array to be cycled.
       !>
@@ -905,15 +905,15 @@ contains
       !>     NCYCLE   is the number of times the elements in the array
       !>              are to be cycled.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the input array after it has been cycled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of DIR is not recognized, the error
       !>         SPICE(INVALIDDIRECTION) is signaled.
@@ -923,18 +923,18 @@ contains
       !>     3)  If NCYCLE is negative, the array is cycled NCYCLE times in
       !>         the opposite direction of DIR.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     An array is cycled when its contents are shifted forward or
       !>     backward by one place. An element pushed off one end of the
       !>     array is brought around to the other end of the array instead
       !>     of disappearing.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let the double precision A contain the following elements.
       !>
@@ -960,16 +960,16 @@ contains
       !>     Cycling by any multiple of the number of elements in the array
       !>     yields the same array.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The memory used for the output array must be disjoint from the
       !>         memory used for the input array.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -978,7 +978,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -1002,7 +1002,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (WLT) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 2.0.0, 16-JAN-1989 (HAN)
       !>
@@ -1106,7 +1106,7 @@ contains
       return
       end procedure cyclad
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARRAY    is the array to be cycled.
       !>
@@ -1121,15 +1121,15 @@ contains
       !>     NCYCLE   is the number of times the elements in the array
       !>              are to be cycled.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the input array after it has been cycled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of DIR is not recognized, the error
       !>         SPICE(INVALIDDIRECTION) is signaled.
@@ -1139,18 +1139,18 @@ contains
       !>     3)  If NCYCLE is negative, the array is cycled NCYCLE times in
       !>         the opposite direction of DIR.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     An array is cycled when its contents are shifted forward or
       !>     backward by one place. An element pushed off one end of the
       !>     array is brought around to the other end of the array instead
       !>     of disappearing.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let the integer array A contain the following elements.
       !>
@@ -1176,16 +1176,16 @@ contains
       !>     Cycling by any multiple of the number of elements in the array
       !>     yields the same array.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The memory used for the output array must be disjoint from the
       !>         memory used for the input array.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -1194,7 +1194,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -1218,7 +1218,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (WLT) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 2.0.0, 16-JAN-1989 (HAN)
       !>
@@ -1322,7 +1322,7 @@ contains
       return
       end procedure cyclai
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ELTS     contains one or more elements which are to be
       !>              inserted into the input array.
@@ -1338,7 +1338,7 @@ contains
       !>
       !>     NA       on input, is the number of elements in ARRAY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output, is the original array with the elements
       !>              of ELT inserted into positions LOC through LOC+NE-1.
@@ -1350,11 +1350,11 @@ contains
       !>
       !>     NA       on output, is the number of elements in ARRAY.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The dimension of the array is set equal to zero if its
       !>         input value is less than one.
@@ -1365,17 +1365,17 @@ contains
       !>     3)  If the number of elements to be inserted is less than one,
       !>         the array is not modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The elements in positions LOC through LOC+NE-1 are moved back
       !>     by NE spaces to make room for the new elements, which are then
       !>     inserted into the vacated spaces.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>
@@ -1405,22 +1405,22 @@ contains
       !>     CALL INSLAC ( ELTS, 3,  2, ARRAY, -1 )
       !>     CALL INSLAC ( ELTS, 3, -1, ARRAY, -1 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The array must be large enough to contain both the original
       !>         and the inserted elements.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUN-2021 (JDR)
       !>
@@ -1435,7 +1435,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 2.0.0, 30-DEC-1988 (HAN)
       !>
@@ -1518,7 +1518,7 @@ contains
       return
       end procedure inslac
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ELTS     contains one or more elements which are to be
       !>              inserted into the input array.
@@ -1534,7 +1534,7 @@ contains
       !>
       !>     NA       on input, is the number of elements in ARRAY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output, is the original array with the elements
       !>              of ELT inserted into positions LOC through LOC+NE-1.
@@ -1543,11 +1543,11 @@ contains
       !>
       !>     NA       on output, is the number of elements in ARRAY.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The dimension of the array is set equal to zero if its
       !>         input value is less than one.
@@ -1558,17 +1558,17 @@ contains
       !>     3)  If the number of elements to be inserted is less than one,
       !>         the array is not modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The elements in positions LOC through LOC+NE-1 are moved back
       !>     by NE spaces to make room for the new elements, which are then
       !>     inserted into the vacated spaces.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>
@@ -1598,23 +1598,23 @@ contains
       !>     CALL INSLAD ( ELTS, 3,  2, ARRAY, -1 )
       !>     CALL INSLAD ( ELTS, 3, -1, ARRAY, -1 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The array must be large enough to contain both the original
       !>         and the inserted elements.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -1629,7 +1629,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 2.0.0, 30-DEC-1988 (HAN)
       !>
@@ -1712,7 +1712,7 @@ contains
       return
       end procedure inslad
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ELTS     contains one or more elements which are to be
       !>              inserted into the input array.
@@ -1728,7 +1728,7 @@ contains
       !>
       !>     NA       on input, is the number of elements in ARRAY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output, is the original array with the elements
       !>              of ELT inserted into positions LOC through LOC+NE-1.
@@ -1737,11 +1737,11 @@ contains
       !>
       !>     NA       on output, is the number of elements in ARRAY.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The dimension of the array is set equal to zero if its
       !>         input value is less than one.
@@ -1752,17 +1752,17 @@ contains
       !>     3)  If the number of elements to be inserted is less than one,
       !>         the array is not modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The elements in positions LOC through LOC+NE-1 are moved back
       !>     by NE spaces to make room for the new elements, which are then
       !>     inserted into the vacated spaces.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>
@@ -1792,23 +1792,23 @@ contains
       !>     CALL INSLAI ( ELTS, 3,  2, ARRAY, -1 )
       !>     CALL INSLAI ( ELTS, 3, -1, ARRAY, -1 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The array must be large enough to contain both the original
       !>         and the inserted elements.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -1823,7 +1823,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 2.0.0, 30-DEC-1988 (HAN)
       !>
@@ -1906,7 +1906,7 @@ contains
       return
       end procedure inslai
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NE       is the number of elements to be removed.
       !>
@@ -1917,7 +1917,7 @@ contains
       !>
       !>     NA       on input, is the number of elements in ARRAY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output, is the original array with elements
       !>              LOC through LOC+NE-1 removed. Succeeding elements
@@ -1925,11 +1925,11 @@ contains
       !>
       !>     NA       on output, is the number of elements in ARRAY.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If LOC is not in the interval [1, NA], the error
       !>         SPICE(INVALIDINDEX) is signaled.
@@ -1943,16 +1943,16 @@ contains
       !>     4)  If NA is less than one, any location is invalid, and, the
       !>         error SPICE(INVALIDINDEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The elements in positions LOC through LOC+NE-1 are overwritten
       !>     as the elements beginning at LOC+NE are moved back.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>
@@ -1981,21 +1981,21 @@ contains
       !>     CALL REMLAC ( 3, -1, ARRAY,  7 )
       !>     CALL REMLAC ( 3,  6, ARRAY,  7 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUN-2021 (JDR)
       !>
@@ -2010,7 +2010,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 2.0.0, 1-JAN-1989 (HAN)
       !>
@@ -2090,7 +2090,7 @@ contains
       return
       end procedure remlac
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NE       is the number of elements to be removed.
       !>
@@ -2101,7 +2101,7 @@ contains
       !>
       !>     NA       on input, is the number of elements in ARRAY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output, is the original array with elements
       !>              LOC through LOC+NE-1 removed. Succeeding elements
@@ -2109,11 +2109,11 @@ contains
       !>
       !>     NA       on output, is the number of elements in ARRAY.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If LOC is not in the interval [1, NA], the error
       !>         SPICE(INVALIDINDEX) is signaled.
@@ -2127,16 +2127,16 @@ contains
       !>     4)  If NA is less than one, any location is invalid, and, the
       !>         error SPICE(INVALIDINDEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The elements in positions LOC through LOC+NE-1 are overwritten
       !>     as the elements beginning at LOC+NE are moved back.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>
@@ -2165,22 +2165,22 @@ contains
       !>     CALL REMLAD ( 3, -1, ARRAY,  7 )
       !>     CALL REMLAD ( 3,  6, ARRAY,  7 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -2195,7 +2195,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 2.0.0, 1-JAN-1989 (HAN)
       !>
@@ -2275,7 +2275,7 @@ contains
       return
       end procedure remlad
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NE       is the number of elements to be removed.
       !>
@@ -2286,7 +2286,7 @@ contains
       !>
       !>     NA       on input, is the number of elements in ARRAY.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output, is the original array with elements
       !>              LOC through LOC+NE-1 removed. Succeeding elements
@@ -2294,11 +2294,11 @@ contains
       !>
       !>     NA       on output, is the number of elements in ARRAY.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If LOC is not in the interval [1, NA], the error
       !>         SPICE(INVALIDINDEX) is signaled.
@@ -2312,16 +2312,16 @@ contains
       !>     4)  If NA is less than one, any location is invalid, and, the
       !>         error SPICE(INVALIDINDEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The elements in positions LOC through LOC+NE-1 are overwritten
       !>     as the elements beginning at LOC+NE are moved back.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let
       !>
@@ -2350,22 +2350,22 @@ contains
       !>     CALL REMLAI ( 3, -1, ARRAY,  7 )
       !>     CALL REMLAI ( 3,  6, ARRAY,  7 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-OCT-2021 (JDR)
       !>
@@ -2380,7 +2380,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 2.0.0, 01-JAN-1989 (HAN)
       !>
@@ -2460,7 +2460,7 @@ contains
       return
       end procedure remlai
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N,
       !>     LOCN     define the first group of elements to be exchanged:
@@ -2474,16 +2474,16 @@ contains
       !>     ARRAY    on input contains both groups of elements in their
       !>              original locations.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output contains the input array with the indicated
       !>              groups of elements exchanged.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the elements to be swapped are not distinct, the error
       !>         SPICE(NOTDISTINCT) is signaled.
@@ -2494,11 +2494,11 @@ contains
       !>     3)  If the number of elements to be swapped is less than zero,
       !>         the error SPICE(INVALIDARGUMENT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If N [M] is zero, the second [first] group is removed from
       !>     its current location and inserted in front of ARRAY(LOCN)
@@ -2510,7 +2510,7 @@ contains
       !>
       !>     All of the elements to be swapped must be distinct.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following elements.
       !>
@@ -2580,15 +2580,15 @@ contains
       !>
       !>     respectively.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -2596,7 +2596,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 05-JUN-2021 (JDR)
       !>
@@ -2620,7 +2620,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 09-SEP-2005 (NJB)
       !>
@@ -2845,7 +2845,7 @@ contains
       return
       end procedure swapac
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N,
       !>     LOCN     define the first group of elements to be exchanged:
@@ -2859,16 +2859,16 @@ contains
       !>     ARRAY    on input contains both groups of elements in their
       !>              original locations.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output contains the input array with the indicated
       !>              groups of elements exchanged.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the elements to be swapped are not distinct, the error
       !>         SPICE(NOTDISTINCT) is signaled.
@@ -2879,11 +2879,11 @@ contains
       !>     3)  If the number of elements to be swapped is less than zero,
       !>         the error SPICE(INVALIDARGUMENT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If N [M] is zero, the second [first] group is removed from
       !>     its current location and inserted in front of ARRAY(LOCN)
@@ -2895,7 +2895,7 @@ contains
       !>
       !>     All of the elements to be swapped must be distinct.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following elements.
       !>
@@ -2965,15 +2965,15 @@ contains
       !>
       !>     respectively.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -2982,7 +2982,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 13-AUG-2021 (JDR)
       !>
@@ -3006,7 +3006,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 09-SEP-2005 (NJB)
       !>
@@ -3232,7 +3232,7 @@ contains
       return
       end procedure swapad
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N,
       !>     LOCN     define the first group of elements to be exchanged:
@@ -3246,16 +3246,16 @@ contains
       !>     ARRAY    on input contains both groups of elements in their
       !>              original locations.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARRAY    on output contains the input array with the indicated
       !>              groups of elements exchanged.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the elements to be swapped are not distinct, the error
       !>         SPICE(NOTDISTINCT) is signaled.
@@ -3266,11 +3266,11 @@ contains
       !>     3)  If the number of elements to be swapped is less than zero,
       !>         the error SPICE(INVALIDARGUMENT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If N [M] is zero, the second [first] group is removed from
       !>     its current location and inserted in front of ARRAY(LOCN)
@@ -3282,7 +3282,7 @@ contains
       !>
       !>     All of the elements to be swapped must be distinct.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ARRAY contain the following elements.
       !>
@@ -3352,15 +3352,15 @@ contains
       !>
       !>     respectively.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -3369,7 +3369,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 13-AUG-2021 (JDR)
       !>
@@ -3393,7 +3393,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 09-SEP-2005 (NJB)
       !>
@@ -3618,7 +3618,7 @@ contains
       return
       end procedure swapai
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is the input array.
       !>
@@ -3634,7 +3634,7 @@ contains
       !>              into the output array. If NPACK is larger than
       !>              MAXOUT, the extra items are ignored.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NOUT     is the number of elements in the output array.
       !>
@@ -3642,20 +3642,20 @@ contains
       !>              MAXOUT elements from the input array, located
       !>              in the first NOUT elements of the array.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an element in the PACK array is less than 1, the error
       !>         SPICE(INVALIDINDEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The indicated elements are moved from their current locations
       !>     in the input array to consecutive positions in the output array.
@@ -3668,7 +3668,7 @@ contains
       !>
       !>     NOUT is either NPACK or MAXOUT, whichever is smaller.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The most common use for this routine is to remove unwanted items
       !>     from an array or set of arrays. For example, suppose that the
@@ -3706,15 +3706,15 @@ contains
       !>                                         'TITAN'
       !>                                         'HYPERION'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -3722,7 +3722,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -3742,7 +3742,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 2.0.0, 4-JAN-1989 (HAN)
       !>
@@ -3791,7 +3791,7 @@ contains
       return
       end procedure packac
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is the input array.
       !>
@@ -3807,7 +3807,7 @@ contains
       !>              the output array. If NPACK is larger than MAXOUT, the
       !>              extra items are ignored.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NOUT     is the number of elements in the output array.
       !>
@@ -3815,20 +3815,20 @@ contains
       !>              MAXOUT elements from the input array, located
       !>              in the first NOUT elements of the array.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an element in the PACK array is less than 1, the error
       !>         SPICE(INVALIDINDEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The indicated elements are moved from their current locations
       !>     in the input array to consecutive positions in the output array.
@@ -3841,7 +3841,7 @@ contains
       !>
       !>     NOUT is either NPACK or MAXOUT, whichever is smaller.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The most common use for this routine is to remove unwanted items
       !>     from an array or set of arrays. For example, suppose that the
@@ -3879,15 +3879,15 @@ contains
       !>                                         'TITAN'
       !>                                         'HYPERION'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -3895,7 +3895,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -3915,7 +3915,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 2.0.0, 4-JAN-1989 (HAN)
       !>
@@ -3964,7 +3964,7 @@ contains
       return
       end procedure packad
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is the input array.
       !>
@@ -3980,7 +3980,7 @@ contains
       !>              into the output array. If NPACK is larger than
       !>              MAXOUT, the extra items are ignored.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NOUT     is the number of elements in the output array.
       !>
@@ -3988,20 +3988,20 @@ contains
       !>              MAXOUT elements from the input array, located
       !>              in the first NOUT elements of the array.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an element in the PACK array is less than 1, the error
       !>         SPICE(INVALIDINDEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The indicated elements are moved from their current locations
       !>     in the input array to consecutive positions in the output array.
@@ -4014,7 +4014,7 @@ contains
       !>
       !>     NOUT is either NPACK or MAXOUT, whichever is smaller.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The most common use for this routine is to remove unwanted items
       !>     from an array or set of arrays. For example, suppose that the
@@ -4052,15 +4052,15 @@ contains
       !>                                         'TITAN'
       !>                                         'HYPERION'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -4068,7 +4068,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -4088,7 +4088,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     Beta Version 2.0.0, 4-JAN-1989 (HAN)
       !>
@@ -4137,11 +4137,11 @@ contains
       return
       end procedure packai
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     POOL     is a doubly linked list pool.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     POOL     is the input pool, with the following
       !>              modifications:
@@ -4154,22 +4154,22 @@ contains
       !>
       !>     NEW      is the number of the newly allocated node.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL   is the lower bound of the column indices of the POOL
       !>              array. The columns indexed LBPOOL to 0 are reserved
       !>              as a control area for the pool.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If no free nodes are available for allocation, the error
       !>         SPICE(NOFREENODES) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In a doubly linked list pool, an `allocated node' is one that has
       !>     been removed from the free list. An allocated node may be linked
@@ -4180,7 +4180,7 @@ contains
       !>     A node must be allocated before it can be linked to another
       !>     node.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Let POOL be a doubly linked list pool. To build a new list
       !>         of ten nodes, the code fragment below can be used:
@@ -4223,23 +4223,23 @@ contains
       !>                           .
       !>                           .
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Linked list pools must be initialized via the routine
       !>         LNKINI. Failure to initialize a linked list pool
       !>         will almost certainly lead to confusing results.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 24-NOV-2021 (JDR)
       !>
@@ -4347,7 +4347,7 @@ contains
       return
       end procedure lnkan
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HEAD,
       !>     TAIL     are, respectively, the head and tail nodes of a
@@ -4355,7 +4355,7 @@ contains
       !>
       !>     POOL     is a doubly linked list pool.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     POOL     is the input pool, with the following
       !>              modifications:
@@ -4371,13 +4371,13 @@ contains
       !>                 -- The successor of PREV is NEXT.
       !>                 -- The predecessor of NEXT is PREV.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL   is the lower bound of the column indices of the POOL
       !>              array. The columns indexed LBPOOL to 0 are reserved
       !>              as a control area for the pool.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either of HEAD or TAIL are not valid node numbers, the
       !>         error SPICE(INVALIDNODE) is signaled. POOL will not be
@@ -4391,11 +4391,11 @@ contains
       !>         containing HEAD, the error SPICE(INVALIDSUBLIST) is signaled.
       !>         POOL will not be modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Deleting a sublist from a list returns all of the nodes in
       !>     the sublist to the free list.
@@ -4404,7 +4404,7 @@ contains
       !>     as a second list, use the routine LNKXSL ( LNK, extract
       !>     sublist ).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Let POOL be a doubly linked list pool containing the list
       !>
@@ -4434,23 +4434,23 @@ contains
       !>
       !>         should be used.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Linked list pools must be initialized via the routine
       !>         LNKINI. Failure to initialize a linked list pool
       !>         will almost certainly lead to confusing results.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 24-NOV-2021 (JDR)
       !>
@@ -4705,7 +4705,7 @@ contains
       return
       end procedure lnkfsl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NODE     is the number of a node in POOL. Normally,
       !>              NODE will designate an allocated node, but NODE
@@ -4713,19 +4713,19 @@ contains
       !>
       !>     POOL     is a doubly linked list pool.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the number of the head node of the list
       !>     containing NODE. If NODE is non-positive, the function returns
       !>     zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL   is the lower bound of the column indices of the POOL
       !>              array. The columns indexed LBPOOL to 0 are reserved
       !>              as a control area for the pool.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the NODE is less than or equal to zero, NODE is not
       !>         considered to be erroneous. The value 0 is returned.
@@ -4736,11 +4736,11 @@ contains
       !>     3)  If NODE is not the number of an allocated node, the error
       !>         SPICE(UNALLOCATEDNODE) is signaled. The value 0 is returned.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a convenient way to find the head of a list
       !>     in a doubly linked list pool. The need to find the head of a
@@ -4749,7 +4749,7 @@ contains
       !>     replacement policy, the head of a list may point to the most
       !>     recently accessed buffer element.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  If POOL is a doubly linked list pool that contains the list
       !>
@@ -4774,23 +4774,23 @@ contains
       !>
       !>         will assign the value 44 to HEAD.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Linked list pools must be initialized via the routine
       !>         LNKINI. Failure to initialize a linked list pool
       !>         will almost certainly lead to confusing results.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 24-NOV-2021 (JDR)
       !>
@@ -4922,7 +4922,7 @@ contains
       return
       end procedure lnkhl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     PREV     is a node in a list. PREV is permitted to be
       !>              nil, in which case POOL is not modified.
@@ -4935,7 +4935,7 @@ contains
       !>
       !>     POOL     is a doubly linked list pool.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     POOL     is the input pool, with the following
       !>              modifications:
@@ -4957,13 +4957,13 @@ contains
       !>                 inserted sublist is set to the negative of
       !>                 the head of the list containing PREV.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL   is the lower bound of the column indices of the POOL
       !>              array. The columns indexed LBPOOL to 0 are reserved
       !>              as a control area for the pool.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If LIST is not a valid node number, the error
       !>         SPICE(INVALIDNODE) is signaled. POOL will not be
@@ -4984,11 +4984,11 @@ contains
       !>         may fail in mysterious ways. For efficiency, this error
       !>         condition is not checked.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used for augmenting lists by inserting other
       !>     lists into them. The case of insertion of a single allocated
@@ -4997,7 +4997,7 @@ contains
       !>     To insert a list into a list BEFORE a specified element, use the
       !>     routine LNKILB.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Let POOL be a doubly linked list pool that contains the lists
       !>
@@ -5030,7 +5030,7 @@ contains
       !>         Note that the first call to LNKILA does not cause an error
       !>         to be signaled, even though TAIL is 0 at that point.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Linked list pools must be initialized via the routine
       !>         LNKINI. Failure to initialize a linked list pool
@@ -5038,17 +5038,17 @@ contains
       !>
       !>     2)  For efficiency, discovery check-in is used in this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 24-NOV-2021 (JDR)
       !>
@@ -5209,7 +5209,7 @@ contains
       return
       end procedure lnkila
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LIST     is a node in the list to be inserted. The entire
       !>              list containing LIST is to be inserted into the
@@ -5221,7 +5221,7 @@ contains
       !>
       !>     POOL     is a doubly linked list pool.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     POOL     is the input pool, with the following
       !>              modifications:
@@ -5245,13 +5245,13 @@ contains
       !>                 inserted sublist is set to the negative of
       !>                 the tail of the list containing NEXT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL   is the lower bound of the column indices of the POOL
       !>              array. The columns indexed LBPOOL to 0 are reserved
       !>              as a control area for the pool.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     For efficiency, discovery check-in is used in this routine.
       !>
@@ -5274,11 +5274,11 @@ contains
       !>         may fail in mysterious ways. For efficiency, this error
       !>         condition is not checked.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used for augmenting lists by inserting other
       !>     lists into them. The case of insertion of a single allocated
@@ -5287,7 +5287,7 @@ contains
       !>     To insert a list into a list AFTER a specified element, use the
       !>     routine LNKILA.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Let POOL be a doubly linked list pool that contains the lists
       !>
@@ -5320,7 +5320,7 @@ contains
       !>         Note that the first call to LNKILB does not cause an error
       !>         to be signaled, even though HEAD is 0 at that point.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Linked list pools must be initialized via the routine
       !>         LNKINI. Failure to initialize a linked list pool
@@ -5328,17 +5328,17 @@ contains
       !>
       !>     2)  For efficiency, discovery check-in is used in this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 24-NOV-2021 (JDR)
       !>
@@ -5499,14 +5499,14 @@ contains
       return
       end procedure lnkilb
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SIZE     is the number of nodes in the pool.
       !>
       !>     POOL     is an integer array that will contain the linked
       !>              pool on output.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     POOL     is an initialized doubly linked list pool.
       !>              The status of the pool is as follows:
@@ -5520,22 +5520,22 @@ contains
       !>
       !>                --  The free node count is the input value, SIZE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL   is the lower bound of the column indices of the POOL
       !>              array. The columns indexed LBPOOL to 0 are reserved
       !>              as a control area for the pool.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the requested number of nodes is nonpositive, the error
       !>         SPICE(INVALIDCOUNT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     LNKINI must be called once to initialize a doubly linked list
       !>     pool before the pool is used. LNKINI can be called at any time
@@ -5549,7 +5549,7 @@ contains
       !>     will both return the value PLSIZE if called immediately after a
       !>     call to LNKINI.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Let POOL be a doubly linked list pool with a maximum of
       !>         100 nodes. POOL should be declared as follows:
@@ -5566,21 +5566,21 @@ contains
       !>
       !>            CALL LNKINI ( PLSIZE, POOL )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 24-NOV-2021 (JDR)
       !>
@@ -5703,31 +5703,31 @@ contains
       return
       end procedure lnkini
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SIZE     is the number of nodes in the pool.
       !>
       !>     POOL     is a doubly linked list pool.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the number of free nodes in the pool.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL   is the lower bound of the column indices of the POOL
       !>              array. The columns indexed LBPOOL to 0 are reserved
       !>              as a control area for the pool.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows the caller to find the number of free nodes
       !>     available in a doubly linked list pool, without having to make
@@ -5738,7 +5738,7 @@ contains
       !>     a node when no free nodes are available causes a SPICELIB error
       !>     to be signaled.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Let POOL be a doubly linked list pool containing 5 nodes.
       !>         If POOL contains the list
@@ -5751,23 +5751,23 @@ contains
       !>
       !>         will assign the value 1 to NFREE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Linked list pools must be initialized via the routine
       !>         LNKINI. Failure to initialize a linked list pool
       !>         will almost certainly lead to confusing results.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 24-NOV-2021 (JDR)
       !>
@@ -5847,26 +5847,26 @@ contains
       return
       end procedure lnknfn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NODE     is the number of an allocated node in POOL.
       !>
       !>     POOL     is a doubly linked list pool.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the number of the successor of the node
       !>     indicated by NODE. If NODE is the tail node of a list, the
       !>     function returns the negative of the node number of the head
       !>     of the list.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL   is the lower bound of the column indices of the POOL
       !>              array. The columns indexed LBPOOL to 0 are reserved
       !>              as a control area for the pool.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If NODE is the tail node of a list, the function returns the
       !>         negative of the node number of the head of the list.
@@ -5877,11 +5877,11 @@ contains
       !>     3)  If NODE is not the number of an allocated node, the error
       !>         SPICE(UNALLOCATEDNODE) is signaled. The value 0 is returned.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The raison d'etre of this routine is to allow forward traversal
       !>     of lists in a doubly linked list pool.
@@ -5892,7 +5892,7 @@ contains
       !>
       !>     To traverse a list in backward order, use LNKPRV.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Let POOL be doubly linked list pool, and let
       !>
@@ -5933,23 +5933,23 @@ contains
       !>
       !>                  END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Linked list pools must be initialized via the routine
       !>         LNKINI. Failure to initialize a linked list pool
       !>         will almost certainly lead to confusing results.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 24-NOV-2021 (JDR)
       !>
@@ -6060,26 +6060,26 @@ contains
       return
       end procedure lnknxt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NODE     is the number of an allocated node in POOL.
       !>
       !>     POOL     is a doubly linked list pool.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the number of the predecessor of the node
       !>     indicated by NODE. If NODE is the head node of a list, the
       !>     function returns the negative of the node number of the tail
       !>     of the list.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL   is the lower bound of the column indices of the POOL
       !>              array. The columns indexed LBPOOL to 0 are reserved
       !>              as a control area for the pool.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If NODE is the head node of a list, the function returns the
       !>         negative of the node number of the tail of the list.
@@ -6090,11 +6090,11 @@ contains
       !>     3)  If NODE is not the number of an allocated node, the error
       !>         SPICE(UNALLOCATEDNODE) is signaled. The value 0 is returned.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The raison d'etre of this routine is to allow backward traversal
       !>     of lists in a doubly linked list pool.
@@ -6105,7 +6105,7 @@ contains
       !>
       !>     To traverse a list in forward order, use LNKNXT.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Let POOL be doubly linked list pool, and let
       !>
@@ -6146,23 +6146,23 @@ contains
       !>
       !>                  END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Linked list pools must be initialized via the routine
       !>         LNKINI. Failure to initialize a linked list pool
       !>         will almost certainly lead to confusing results.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 24-NOV-2021 (JDR)
       !>
@@ -6274,36 +6274,36 @@ contains
       return
       end procedure lnkprv
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     POOL     is a doubly linked list pool.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the size (total number of nodes) of the pool.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL   is the lower bound of the column indices of the POOL
       !>              array. The columns indexed LBPOOL to 0 are reserved
       !>              as a control area for the pool.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows an application program to determine the size
       !>     of a doubly linked list pool at run-time, without having to rely
       !>     on knowledge of the internals of the doubly linked list pool
       !>     structure.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Let POOL be a doubly linked list pool. The total number of
       !>         nodes in a doubly linked list pool is set when the pool is
@@ -6316,23 +6316,23 @@ contains
       !>                  CALL LNKINI ( 100, POOL )
       !>                  SIZE = LNKSIZ ( POOL )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Linked list pools must be initialized via the routine
       !>         LNKINI. Failure to initialize a linked list pool
       !>         will almost certainly lead to confusing results.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 24-NOV-2021 (JDR)
       !>
@@ -6412,7 +6412,7 @@ contains
       return
       end procedure lnksiz
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NODE     is the number of a node in POOL. Normally,
       !>              NODE will designate an allocated node, but NODE
@@ -6420,19 +6420,19 @@ contains
       !>
       !>     POOL     is a doubly linked list pool.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the number of the tail node of the list
       !>     containing NODE. If NODE is non-positive, the function returns
       !>     zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL   is the lower bound of the column indices of the POOL
       !>              array. The columns indexed LBPOOL to 0 are reserved
       !>              as a control area for the pool.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the NODE is less than or equal to zero, NODE is not
       !>         considered to be erroneous. The value 0 is returned.
@@ -6443,11 +6443,11 @@ contains
       !>     3)  If NODE is not the number of an allocated node, the error
       !>         SPICE(UNALLOCATEDNODE) is signaled. The value 0 is returned.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a convenient way to find the tail of a list
       !>     in a doubly linked list pool. The need to find the tail of a
@@ -6456,7 +6456,7 @@ contains
       !>     replacement policy, the tail of a list may point to the least
       !>     recently accessed buffer element.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  If POOL is a doubly linked list pool that contains the list
       !>
@@ -6481,23 +6481,23 @@ contains
       !>
       !>         will assign the value 44 to TAIL.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Linked list pools must be initialized via the routine
       !>         LNKINI. Failure to initialize a linked list pool,
       !>         will almost certainly lead to confusing results.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 24-NOV-2021 (JDR)
       !>
@@ -6509,7 +6509,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 09-JAN-1997 (NJB)
       !>
@@ -6641,7 +6641,7 @@ contains
       return
       end procedure lnktl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HEAD,
       !>     TAIL     are, respectively, the head and tail nodes of a
@@ -6649,7 +6649,7 @@ contains
       !>
       !>     POOL     is a doubly linked list pool.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     POOL     is the input pool, with the following
       !>              modifications:
@@ -6665,13 +6665,13 @@ contains
       !>                 -- The successor of PREV is NEXT.
       !>                 -- The predecessor of NEXT is PREV.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBPOOL   is the lower bound of the column indices of the POOL
       !>              array. The columns indexed LBPOOL to 0 are reserved
       !>              as a control area for the pool.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either of HEAD or TAIL are not valid node numbers, the
       !>         error SPICE(INVALIDNODE) is signaled. POOL will not be
@@ -6685,11 +6685,11 @@ contains
       !>         containing HEAD, the error SPICE(INVALIDSUBLIST) is signaled.
       !>         POOL will not be modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Extracting a sublist from a list is necessary when a list is
       !>     to be re-arranged in some way. For example, to move a node
@@ -6697,7 +6697,7 @@ contains
       !>     singleton sublist) is first extracted from the list containing
       !>     it, then inserted before the head of the list.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Let POOL be a doubly linked list pool, and let
       !>
@@ -6734,23 +6734,23 @@ contains
       !>
       !>            2000 <--> 9 <--> 8 <--> 4 <--> 1
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Linked list pools must be initialized via the routine
       !>         LNKINI. Failure to initialize a linked list pool
       !>         will almost certainly lead to confusing results.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 24-NOV-2021 (JDR)
       !>

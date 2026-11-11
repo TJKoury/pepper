@@ -11,7 +11,7 @@ submodule (pepper_instance) pepper_transforms
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INFRM    is the SPICE ID-code for some reference frame.
       !>
@@ -19,7 +19,7 @@ contains
       !>              which the user wishes to retrieve a state
       !>              transformation matrix.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XFORM    is a 6x6 matrix that transforms states relative to
       !>              INFRM to states relative to OUTFRM. (Assuming such a
@@ -41,11 +41,11 @@ contains
       !>              set to .FALSE. and XFORM will be returned as the zero
       !>              matrix.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See include file.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If a transformation matrix cannot be located, then FOUND will
       !>         be set to .FALSE., OUTFRM will be set to zero and XFORM will
@@ -54,36 +54,36 @@ contains
       !>     2)  If the class of the requested frame is not recognized the
       !>         exception, the error SPICE(UNKNOWNFRAMETYPE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     LSK, SCLK, PCK, FK, SPK, and/or CK kernels may need to be loaded
       !>     to provide the needed frame definition and transformation data.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a low level routine used for determining a chain of state
       !>     transformation matrices from one frame to another.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See FRMCHG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.0, 15-MAR-2021 (NJB) (JDR)
       !>
@@ -280,14 +280,14 @@ contains
       end associate
       end procedure frmget
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INFRM    is the SPICE ID-code for some reference frame.
       !>
       !>     ET       is an epoch in ephemeris seconds past J2000 at which
       !>              the user wishes to retrieve a rotation matrix.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ROTATE   is a 3x3 matrix that rotates positions relative to
       !>              INFRM to positions relative to OUTFRM. (Assuming such
@@ -309,11 +309,11 @@ contains
       !>              OUTFRM will be set to zero, FOUND will be set to
       !>              .FALSE. and ROTATE will be returned as the zero matrix.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If a rotation matrix cannot be located, then FOUND will be set
       !>         to .FALSE., OUTFRM will be set to zero and ROTATE will be set
@@ -322,36 +322,36 @@ contains
       !>     2)  If the class of the requested frame is not recognized the
       !>         exception, the error SPICE(UNKNOWNFRAMETYPE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     LSK, SCLK, PCK, FK, SPK, and/or CK kernels may need to be loaded
       !>     to provide the needed frame definition and transformation data.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a low level routine used for determining a chain of
       !>     position transformation matrices from one frame to another.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See REFCHG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 5.0.0, 15-MAR-2021 (NJB) (JDR)
       !>
@@ -509,7 +509,7 @@ contains
       end associate
       end procedure rotget
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FRAME1   is the frame id-code in which some states are known.
       !>
@@ -520,7 +520,7 @@ contains
       !>              transformation matrix. This epoch should be
       !>              in TDB seconds past the ephemeris epoch of J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XFORM    is a 6 x 6 state transformation matrix that can
       !>              be used to transform states relative to the frame
@@ -533,11 +533,11 @@ contains
       !>
       !>                 CALL MXVG ( XFORM, STATE, 6, 6, STATE2 )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either of the reference frames is unrecognized, the error
       !>         SPICE(UNKNOWNFRAME) is signaled.
@@ -546,11 +546,11 @@ contains
       !>         frame is not available, an error is signaled
       !>         by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows you to compute the state transformation matrix
       !>     between two reference frames.
@@ -558,7 +558,7 @@ contains
       !>     The currently supported reference frames are IAU bodyfixed frames
       !>     and inertial reference frames.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Example 1. Suppose that you have a state STATE1 at epoch ET
       !>     relative to  FRAME1 and wish to determine its representation
@@ -666,21 +666,21 @@ contains
       !>        CALL MXV  ( R, W1,  W  )
       !>        CALL VADD ( A, W,   W2 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 08-OCT-2021 (JDR) (NJB)
       !>
@@ -1167,7 +1167,7 @@ contains
 
       end procedure frmchg
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FRAME1   is the frame id-code in which some positions
       !>              are known.
@@ -1179,7 +1179,7 @@ contains
       !>              matrix. This epoch should be in TDB seconds past
       !>              the ephemeris epoch of J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ROTATE   is a 3 x 3 rotation matrix that can be used to
       !>              transform positions relative to the frame
@@ -1192,11 +1192,11 @@ contains
       !>
       !>                 CALL MXV ( ROTATE, POS, POS2 )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either of the reference frames is unrecognized, the error
       !>         SPICE(UNKNOWNFRAME) is signaled.
@@ -1205,16 +1205,16 @@ contains
       !>         frame is not available, an error is signaled
       !>         by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows you to compute the rotation matrix
       !>     between two reference frames.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have a position POS1 at epoch ET
       !>     relative to  FRAME1 and wish to determine its representation
@@ -1224,21 +1224,21 @@ contains
       !>        CALL REFCHG ( FRAME1, FRAME2, ET,   ROTATE )
       !>        CALL MXV    ( ROTATE, POS1,   POS2 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 08-OCT-2021 (JDR) (NJB)
       !>
@@ -1660,7 +1660,7 @@ contains
 
       end procedure refchg
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FROM     is the name of a reference frame in which a position
       !>              vector is known.
@@ -1672,7 +1672,7 @@ contains
       !>              (TDB) at which the position transformation matrix ROTATE
       !>              should be evaluated.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ROTATE   is the matrix that transforms position vectors from
       !>              the reference frame FROM to the frame TO at epoch ET.
@@ -1687,11 +1687,11 @@ contains
       !>                 | z'  |     |          |   | z  |
       !>                 `-   -'     `-        -'   `-  -'
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If sufficient information has not been supplied via loaded
       !>         SPICE kernels to compute the transformation between the
@@ -1701,11 +1701,11 @@ contains
       !>     2)  If either frame FROM or TO is not recognized, the error
       !>         SPICE(UNKNOWNFRAME) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides the user level interface to computing
       !>     position transformations from one reference frame to another.
@@ -1725,7 +1725,7 @@ contains
       !>     SPICELIB routine PXFRM2 computes this type of frame
       !>     transformation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have geodetic coordinates of a station on the
       !>     surface of the earth and that you need the inertial (J2000)
@@ -1746,15 +1746,15 @@ contains
       !>
       !>     The position JPOS is the desired J2000 position of the station.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -1762,7 +1762,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 09-AUG-2021 (NJB) (JDR)
       !>
@@ -1860,7 +1860,7 @@ contains
       end associate
       end procedure pxform
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FROM     is the name of a reference frame in which a state is
       !>              known.
@@ -1872,7 +1872,7 @@ contains
       !>              J2000 (TDB) at which the state transformation matrix
       !>              should be evaluated.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XFORM    is the state transformation matrix that transforms
       !>              states from the reference frame FROM to the frame TO
@@ -1891,11 +1891,11 @@ contains
       !>                 | dz' |     |            |   | dz |
       !>                 `-   -'     `-          -'   `-  -'
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If sufficient information has not been supplied via loaded
       !>         SPICE kernels to compute the transformation between the two
@@ -1905,11 +1905,11 @@ contains
       !>     2)  If either frame FROM or TO is not recognized, the error
       !>         SPICE(UNKNOWNFRAME) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides the user level interface to computing state
       !>     transformations from one reference frame to another.
@@ -1919,7 +1919,7 @@ contains
       !>     information is loaded to provide a complete state transformation
       !>     path from the FROM frame to the TO frame.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have geodetic coordinates of a station on
       !>     the surface of the earth and that you need the inertial
@@ -1944,15 +1944,15 @@ contains
       !>
       !>     The state JSTATE is the desired J2000 state of the station.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -1960,7 +1960,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 05-JUL-2021 (JDR)
       !>

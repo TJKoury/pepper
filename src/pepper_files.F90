@@ -12,7 +12,7 @@ submodule (pepper_instance) pepper_files
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     KEY         is a string value that indicates which platform
       !>                 specific information is desired.  Acceptable inputs
@@ -30,18 +30,18 @@ contains
       !>                       supplied value must fit into a string buffer
       !>                       KYSIZE characters in length.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUE       is the string that holds the information requested
       !>                 by the input string KEY. VALUE must be able to
       !>                 contain the maximum number of characters returned
       !>                 by this routine, WDSIZE, or truncation will occur.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the KEY is invalid, then VALUE is set to the value
       !>        stored in the character string parameter DEFRPY defined
@@ -50,11 +50,11 @@ contains
       !>     2) If VALUE is not large enough to contain the requested
       !>        KEY's value, then truncation will occur.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine serves to identify the platform and compiler
       !>     used in creating SPICELIB.  It is provided so that routines
@@ -86,7 +86,7 @@ contains
       !>        This returns a space delimited list of all the binary file
       !>        formats this environment can read for DAF/DAS based files.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine could be used so that a single routine
       !>     could be written that translates the meaning of IOSTAT values
@@ -94,7 +94,7 @@ contains
       !>     the routine could look up the appropriate message to associate
       !>     with an IOSTAT value.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) VALUE must be large enough to contain the requested
       !>        information, otherwise truncation will occur.
@@ -103,18 +103,18 @@ contains
       !>        of being properly copied into the KEYCPY buffer internal
       !>        to this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber      (JPL)
       !>     F.S. Turner     (JPL)
       !>     E.D. Wright     (JPL)
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.0, 28-NOV-2021 (BVS)
       !>
@@ -311,7 +311,7 @@ contains
       end associate
       end procedure zzplatfm
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -320,54 +320,54 @@ contains
       !>     Validate the runtime environment against values assumed by the
       !>     current toolkit source package.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OK         is a logical when set to .TRUE. indicates that the
       !>                runtime environment passes any checks implemented
       !>                by this routine against the configured code.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) This routine signals SPICE(BUG) if it determines the runtime
       !>        environment is incompatible with the configured binary file
       !>        format.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine encapsulates a series of checks to diagnose the
       !>     runtime environment against assumptions configured in the
       !>     source code.  Configuration errors are reported via the error
       !>     SPICE(BUG).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDDHOPN for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 07-AUG-2002 (FST)
       module procedure zzpltchk
@@ -444,11 +444,11 @@ contains
 
       end procedure zzpltchk
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TSTCOM     is a string composed of clusters of characters that
       !>                are susceptible to FTP ASCII mode transfer corruption,
@@ -476,7 +476,7 @@ contains
       !>                FTP corruption, this delimiter blocks any unintended
       !>                interaction.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     1) See include file zzftprms.inc
       !>
@@ -497,18 +497,18 @@ contains
       !>        These naming conventions should be preserved when the FTP
       !>        validation string is updated.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     While this routine is designed to aid in the detection of
       !>     improper FTP transfers, it simply returns the candidate
       !>     string for validation and does not interact with any
       !>     files directly.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error Free.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     To minimize code alterations in the event of a string update,
       !>     the calling routine that declares the variables to receive
@@ -576,30 +576,30 @@ contains
       !>     indicating corruption under new Toolkits, as well as newer files
       !>     failing on old Toolkits.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine just fetches the components of the FTP validation
       !>     string.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) TSTCOM, LEND, REND, and DELIM must be large enough to hold
       !>        the entire values returned by this routine, otherwise
       !>        truncation will occur.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 21-MAR-1999 (FST)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.0, 21-MAR-1999 (FST)
       !>
@@ -758,7 +758,7 @@ contains
       end associate
       end procedure zzftpstr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING     is a string read in directly from a binary file.  This
       !>                string should, but does not have to, contain the FTP
@@ -769,7 +769,7 @@ contains
       !>                these two special strings in STRING is also an issue.
       !>                See Restrictions for details.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     FTPERR     is a logical that indicates whether or not an FTP
       !>                error has occurred.  If an error is detected FTPERR
@@ -778,11 +778,11 @@ contains
       !>                bracketing strings, then the test will not be
       !>                performed.  Thus, FTPERR is set to FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See include file zzftprms.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) In the event that both the left and right end markers of the
       !>        FTP validation string are not present in STRING, the routine
@@ -801,13 +801,13 @@ contains
       !>        incorrectly compare [THISISNOTATEST] to the test component
       !>        returned from ZZFTPSTR.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Although this routine validates information from a binary file,
       !>     it does not interact with the file directly, and relies upon
       !>     the caller to pass the appropriate string block.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The purpose of this routine is to examine for FTP errors a
       !>     string brought in from a binary kernel.  This text may or may
@@ -821,7 +821,7 @@ contains
       !>     file, then ZZFTPCHK may be confused and incorrectly indicate an
       !>     error condition.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following code fragment from DAFOPR reads in the DAF file
       !>     record and attempts to examine the contents for FTP errors.
@@ -873,7 +873,7 @@ contains
       !>
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) STRING may contain multiple occurrences of the FTP bracketing
       !>        substrings ('FTPSTR' and 'ENDFTP'), but only if the last
@@ -883,15 +883,15 @@ contains
       !>        'ENDFTP' in STRING indicates that validation is to be
       !>        attempted.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 02-OCT-2021 (NJB)
       !>
@@ -899,7 +899,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 22-MAR-1999 (FST)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.0.0, 22-MAR-1999 (FST)
       !>
@@ -1046,7 +1046,7 @@ contains
       end associate
       end procedure zzftpchk
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING     is a string to be searched for a substring bracketed
       !>                by the strings LFTEND and RGTEND (see below).
@@ -1057,7 +1057,7 @@ contains
       !>                discussion of the case in which either of these strings
       !>                is absent.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SUBSTR     is the substring of interest.  It consists of the
       !>                substring between the last instances of LFTEND
@@ -1074,15 +1074,15 @@ contains
       !>     BKPRES     is a logical that indicates whether or not at least
       !>                one of LFTEND or RGTEND is present in STRING.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If LFTEND or RGTEND are not present in STRING, then the routine
       !>        does not modify the contents of SUBSTR, LENGTH is returned as
@@ -1091,7 +1091,7 @@ contains
       !>     2) If LFTEND and RGTEND are adjacent, then SUBSTR is not modified,
       !>        LENGTH is returned as 0, and BKPRES is TRUE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The purpose of this routine is to extract the last instance of
       !>     a substring bracketed by two specified strings.  The searching
@@ -1104,7 +1104,7 @@ contains
       !>     This is diagnostic information of some limited use in the event
       !>     that SUBSTR was not assigned a value.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following table demonstrates the behavior of this routine:
       !>     ( If a row in the table has no entry for SUBSTR, then the
@@ -1130,21 +1130,21 @@ contains
       !>     'ab  ef   ijklm '    '  '     'm'      'ijkl'               4
       !>     'ab   ef  ijklm '    '   '    'm'      'ef  ijkl'           8
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) The size of SUBSTR must be large enough to contain any
       !>        possible substring bracketed by LFTEND or RGTEND, otherwise
       !>        truncation will occur at assignment.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 22-MAR-1999 (FST)
       module procedure zzrbrkst
@@ -1231,7 +1231,7 @@ contains
       return
       end procedure zzrbrkst
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -1239,11 +1239,11 @@ contains
       !>
       !>     Initialize ZZDDHMAN data structures.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NATBFF     is an integer code for the binary file format native
       !>                to this system as described in the include file
@@ -1276,40 +1276,40 @@ contains
       !>                file 'zzddhman.inc'.  These values are retrieved from
       !>                ZZDDHGSD.  See it for details.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file 'zzddhman.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine populates a variety data structures that ZZDDHMAN
       !>     requires to perform its functions.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDDHMAN for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-OCT-2021 (NJB)
       !>
@@ -1435,7 +1435,7 @@ contains
       return
       end procedure zzddhini
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -1443,11 +1443,11 @@ contains
       !>
       !>     Fetch binary file format.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BFFID      is an integer code that indicates the binary file
       !>                format that is determined to be native to this
@@ -1460,15 +1460,15 @@ contains
       !>
       !>                as defined in the include file 'zzddhman.inc'.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -1476,7 +1476,7 @@ contains
       !>        produce results that match any of the known binary file
       !>        formats, this routine sets BFFID to 0.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This simple program:
       !>
@@ -1526,25 +1526,25 @@ contains
       !>     are checked against those displayed here, and if a match is
       !>     found, returned.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDDHOPN for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This routine derives the binary file format ID for a particular
       !>     platform, but for verification purposes only.  ZZPLATFM should
       !>     be used to obtain the binary file format for the current platform.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-AUG-2002 (FST)
       !>
@@ -1604,7 +1604,7 @@ contains
       return
       end procedure zzgetbff
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -1612,7 +1612,7 @@ contains
       !>
       !>     Retrieve string definitions for various CLASS and ID pairs.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CLASS      is the class of the input ID code.  Acceptable
       !>                values are:
@@ -1624,51 +1624,51 @@ contains
       !>     ID         is a integer value that is defined in the include
       !>                file 'zzddhman.inc'.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LABEL      is the 'decoded' ID value that describes a particular
       !>                CLASS/ID pair. In the event that CLASS and ID do not
       !>                correspond to parameters in the include file, the
       !>                routine simply returns a blank string.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the CLASS/ID pair is not known, then this routine
       !>        simply returns a blank label.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is designed to consolidate label definitions for
       !>     parameters in the include file 'zzddhman.inc'.  These labels
       !>     are to be used in error messages and user level subroutines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDDHMAN for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This routine must be kept compatible with the contents of
       !>     'zzddhman.inc' as its functionality is heavily dependent
       !>     on its contents.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 11-OCT-2005 (NJB)
       !>
@@ -1749,7 +1749,7 @@ contains
       end associate
       end procedure zzddhgsd
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -1758,12 +1758,12 @@ contains
       !>     Return a unique enough DP number ("Magic NuMber") computed
       !>     using the contents of the file attached to the specified unit.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UNIT        is the logical unit attached to a file opened for
       !>                 direct access prior to calling this routine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns a DP number, computed using a few integers
       !>     read from the file attached to the UNIT, that is unique enough
@@ -1774,7 +1774,7 @@ contains
       !>     routines called by this function fail for any reason, the
       !>     returned value is set to 0.D0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     IDLEN       is the length of the ID word.
       !>
@@ -1787,7 +1787,7 @@ contains
       !>     The function also uses some DDH general parameters from
       !>     zzddhman.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -1796,12 +1796,12 @@ contains
       !>     in its calling tree are improperly configured to run on this
       !>     platform.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The input UNIT must be attached to a file opened for direct
       !>     access prior to calling this function.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function reads the first IDLEN characters (assumed to be the
       !>     ID word) followed by NINTS integers from the first record of the
@@ -1833,24 +1833,24 @@ contains
       !>     If the initial read is not successful, the output value is set to
       !>     zero.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the caller routine, ZZDDHF2H.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     The input UNIT must be attached to a file opened for direct
       !>     access prior to calling this function.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.B. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 26-APR-2012 (BVS)
       !>
@@ -2052,7 +2052,7 @@ contains
       end associate
       end procedure zzddhmnm
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -2061,7 +2061,7 @@ contains
       !>     Prepare preexisting binary file for entry into the handle
       !>     table.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UNIT       is a logical unit attached to the binary file to be
       !>                prepared for inclusion into the handle table.
@@ -2075,7 +2075,7 @@ contains
       !>
       !>                defined in ZZDDHMAN.INC.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BFF        is an integer that indicates the binary file format
       !>                of the DAF attached to UNIT.  Possible values are
@@ -2088,11 +2088,11 @@ contains
       !>
       !>                defined in ZZDDHMAN.INC.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file ZZDDHMAN.INC.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) SPICE(UNKNOWNFILARC) is signaled when ARCH is not in the
       !>        range of codes for known file architectures or the binary
@@ -2120,12 +2120,12 @@ contains
       !>        diagnostics are performed, and the file is assumed to be
       !>        in proper, working order.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine reads at least one, and potentially, several records
       !>     from the file attached to UNIT.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine exists to prepare a binary file for inclusion
       !>     in the handle table in ZZDDHMAN.  This includes verifying
@@ -2160,11 +2160,11 @@ contains
       !>        sequences are present, diagnostics are only performed on
       !>        sequences known to this version of the toolkit.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDDHMAN for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) The file attached to UNIT was written on a platform whose
       !>        characters are of a single byte in length.
@@ -2178,15 +2178,15 @@ contains
       !>        the integer created the 8 least significant bits will be
       !>        precisely those found in the character.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.26.0, 28-NOV-2021 (BVS)
       !>
@@ -2304,7 +2304,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 06-FEB-2002 (FST)
       !>
@@ -2797,13 +2797,13 @@ contains
       end associate
       end procedure zzddhppf
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IDWORD   is the ID word from a SPICE binary kernel file or a
       !>              text version of a binary kernel file whose
       !>              architecture and type are to be extracted.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ARCH     is the file architecture used to store the data in
       !>              a SPICE binary kernel file. If the architecture cannot
@@ -2842,20 +2842,20 @@ contains
       !>              to a higher level authority to determine whether a type
       !>              is valid.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the variable ID word is blank, both the architecture and
       !>         type will be unknown, specified by '?'.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This subroutine is a support utility routine that attempts
       !>     to extract the architecture and type of a file from its ID word.
@@ -2875,7 +2875,7 @@ contains
       !>     Whenever a new architecture is added, both of the subroutines are
       !>     affected.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you wish to write a single routine for converting files
       !>     between text and binary formats. You can use this routine to
@@ -2899,20 +2899,20 @@ contains
       !>
       !>        END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 20-AUG-2021 (JDR)
       !>
@@ -2939,7 +2939,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-SEP-1993 (KRG)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     SPICELIB Version 2.0.0, 26-OCT-1995 (KRG)
       !>
@@ -3129,7 +3129,7 @@ contains
 
       end procedure idw2at
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -3137,7 +3137,7 @@ contains
       !>
       !>     Convert integers from one binary file format to another.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INBFF      is an integer code that indicates the binary file
       !>                format of INPUT.  Acceptable values are the
@@ -3159,16 +3159,16 @@ contains
       !>     SPACE      is the number of integers that OUTPUT has room to
       !>                store.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUTPUT     is an array of integers containing the translated
       !>                values from INPUT into the native binary format.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -3180,20 +3180,20 @@ contains
       !>     need not check in.  See the $Restrictions section for a
       !>     discussion of input argument restrictions.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine translates integers from a non-native integer format
       !>     read from a file as a sequence of characters to the native format.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDAFGFR, ZZDAFGSR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) Numeric data when read as characters from a file preserve
       !>        the bit patterns present in the file in memory.
@@ -3222,15 +3222,15 @@ contains
       !>        non-native entries in the value of 'READS_BFF' returned by
       !>        ZZPLATFM for this environment.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.27.0, 28-NOV-2021 (BVS)
       !>
@@ -3857,7 +3857,7 @@ contains
       end associate
       end procedure zzxlatei
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -3865,14 +3865,14 @@ contains
       !>
       !>     Identify VAX DAF file format.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NSUM       is a string whose first 8 bytes contain NSUM (the third
       !>                double precision number) from the first descriptor
       !>                record of a non-empty DAF suspected to be in one of
       !>                the VAX binary file formats.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BFF        is an integer that signals whether NSUM indicates the
       !>                DAF is VAX-DFLT or VAX-GFLT.  Possible values are:
@@ -3888,31 +3888,31 @@ contains
       !>                VAX-DFLT or VAX-GFLT binary file format.  If FALSE,
       !>                then BFF is untouched.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file 'zzddhman.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine examines a series of bytes from a potential pre-N0050
       !>     DAF to determine its architecture, but does not access the file
       !>     itself.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine examines the bit patterns stored in NSUM to determine
       !>     which of the two VAX binary file formats are used to store the
       !>     double precision values in the DAF file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDDHPPF for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) The first 8 bytes of NSUM must contain the third double
       !>        precision value from the first descriptor record in a DAF
@@ -3926,16 +3926,16 @@ contains
       !>     4) Assumes that ICHAR(CHAR(CHARACTER)) yields an integer with
       !>        the same bit pattern as the source character.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1) Binary File Formats and Code Relying on Function Not Addressed
       !>        by the ANSI '77 Fortran Standard.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.26.0, 28-NOV-2021 (BVS)
       !>
@@ -4243,7 +4243,7 @@ contains
       return
       end procedure zzddhivf
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -4251,7 +4251,7 @@ contains
       !>
       !>     Convert filename to a handle.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME      is the name of the file to locate in the file table.
       !>
@@ -4281,7 +4281,7 @@ contains
       !>
       !>     NUT        is the number of entries in the unit table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     UTCST,
       !>     UTHAN,
@@ -4345,11 +4345,11 @@ contains
       !>                associated with FNAME computed by this examining the
       !>                file contents.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If any of the INQUIRE statements this routine performs fail,
       !>        the error SPICE(INQUIREFAILED) is signaled. FOUND is set to
@@ -4361,38 +4361,38 @@ contains
       !>     3) If FNAME is determined not to be loaded into the file table
       !>        then FOUND is set to FALSE and HANDLE is set to 0.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     If the file named by FNAME is not connected to a logical unit,
       !>     this routine will open it for direct access to complete its
       !>     examination.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine encapsulates the logic necessary to determine if
       !>     a particular filename names a file already loaded into the
       !>     DAF/DAS handle manager.  If it discovers the file is loaded,
       !>     the routine returns the handle to the caller.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDDHFNH for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>     E.D. Wright     (JPL)
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.0.1, 02-OCT-2021 (NJB)
       !>
@@ -4417,7 +4417,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 05-AUG-2002 (FST)
       !>
@@ -4742,7 +4742,7 @@ contains
 
       end procedure zzddhf2h
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -4751,7 +4751,7 @@ contains
       !>     Manage augmentation of the handle to logical unit request counter
       !>     and the cost column in the unit table.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NUT        is the number of entries in the unit table.
       !>
@@ -4760,7 +4760,7 @@ contains
       !>     REQCNT     is the current value of the HLU request counter to
       !>                adjust.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     UTCST      is the updated cost column of the unit table.  In
       !>                the nominal case, UTCST will not be adjusted, but
@@ -4772,15 +4772,15 @@ contains
       !>                value.  However, in the case where REQCNT will
       !>                exceed INTMAX it will be assigned to INTMAX()/2 + 1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -4788,7 +4788,7 @@ contains
       !>        be assigned INTMAX()/2 + 1 and the UTCST column will be
       !>        recomputed.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This module manages the request counter and the cost column of
       !>     the unit table which is used to determine the expense of
@@ -4806,23 +4806,23 @@ contains
       !>     The occurrence of rollover is rare, and thus the destruction of
       !>     relative cost relationships as well.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDDHHLU for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
       module procedure zzddhrcm
@@ -4853,7 +4853,7 @@ contains
       return
       end procedure zzddhrcm
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -4862,7 +4862,7 @@ contains
       !>     Get or prepare an entry in the unit table to receive a new
       !>     file.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UTCST,
       !>     UTHAN,
@@ -4873,7 +4873,7 @@ contains
       !>
       !>     NUT        is the number of entries in the unit table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     UTCST,
       !>     UTHAN,
@@ -4889,22 +4889,22 @@ contains
       !>     UINDEX     is the index of the row where the new unit should
       !>                be attached.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine may disconnect a file from its logical unit, to
       !>     successfully process the caller's request for a unit.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If GETLUN fails to assign a logical unit for any reason to
       !>        the row of interest, this routine sets the logical unit to -1,
       !>        since negative logical units in Fortran are not permitted.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>      This routine only manipulates the contents of the unit table.
       !>      Any "zero" cost rows in the table indicate rows where the
@@ -4914,25 +4914,25 @@ contains
       !>      Callers of this routine should check FAILED since this
       !>      routine may invoke GETLUN.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDDHHLU for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This routine must not be used to retrieve a unit for a
       !>        file that is already connected to a unit listed in the
       !>        unit table.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 29-MAY-2001 (FST)
       module procedure zzddhgtu
@@ -5107,7 +5107,7 @@ contains
          end function size_of_table
       end procedure zzddhgtu
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -5115,7 +5115,7 @@ contains
       !>
       !>     Remove an entry from the unit table.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the index of the row in the unit table for the
       !>                unit to remove.
@@ -5132,7 +5132,7 @@ contains
       !>
       !>     NUT        is the number of entries in the unit table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     UTCST,
       !>     UTHAN,
@@ -5147,22 +5147,22 @@ contains
       !>                change.  See the $Particulars section below for
       !>                details.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) SPICE(INDEXOUTOFRANGE) is signaled when the input UINDEX is
       !>        either greater than NUT or less than 1.
       !>
       !>     2) If NUT is 0 on input, then this module simply returns.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine only manipulates the contents of the unit table.
       !>     It is utilized to delete an entry in the unit table that is
@@ -5181,11 +5181,11 @@ contains
       !>     The file attached to UNIT is not closed by this routine, the
       !>     closure should occur before invoking this module.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDDHHLU for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This routine operates when an error condition introduced
       !>        by a prior call to SIGERR exists.  It calls no routines
@@ -5201,15 +5201,15 @@ contains
       !>        externally prior to calling this routine.  Knowledge of its
       !>        value could be lost otherwise.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-NOV-2001 (FST)
       module procedure zzddhrmu
@@ -5286,7 +5286,7 @@ contains
       return
       end procedure zzddhrmu
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -5294,7 +5294,7 @@ contains
       !>
       !>     Retrieve the number of locked units in the unit table.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UTLCK      is the lock column of the unit table.  TRUE entries in
       !>                this column indicate a handle is locked to a particular
@@ -5302,44 +5302,44 @@ contains
       !>
       !>     NUT        is the number of entries in the unit table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the number of locked units in the unit table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine simply encapsulates some logic used in several
       !>     places in ZZDDHMAN.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDDHMAN for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
       module procedure zzddhclu
@@ -5364,7 +5364,7 @@ contains
       return
       end procedure zzddhclu
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -5373,31 +5373,31 @@ contains
       !>     Return the integer code for the native binary file format
       !>     of the host system.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NATBFF         is the native binary file format code for the host
       !>                    system on which this routine is called.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the INCLUDE file zzddhman.inc for a description of
       !>     binary file format codes.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while attempting to obtain the host
       !>         binary file format code, the error will be diagnosed by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Routines outside of SPICELIB will normally have no need to call
       !>     this routine.
@@ -5405,23 +5405,23 @@ contains
       !>     This routine centralizes the logic needed to obtain the host
       !>     system's binary file format code.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in DASGRD.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-FEB-2015 (NJB)
       module procedure zzddhnfc
@@ -5703,7 +5703,7 @@ contains
 !
 !     Standard SPICE error handling.
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -5711,7 +5711,7 @@ contains
       !>
       !>     Load a new direct access file.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME      is the file name of the file to be loaded for direct
       !>                access.
@@ -5734,17 +5734,17 @@ contains
       !>
       !>                Note: The value of ARCH is case-insensitive.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE     is the file handle associated with the file.  This
       !>                handle is used to identify the file in subsequent
       !>                calls to other routines.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) The error SPICE(UNSUPPORTEDMETHOD) is signaled when the
       !>        METHOD input argument is improperly specified.  The value of
@@ -5817,7 +5817,7 @@ contains
       !>        runtime environment, routines in the call tree of this
       !>        routine may signal errors.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     1) All direct access files loaded by this routine for
       !>        access methods other than 'SCRATCH' are specified by name.
@@ -5825,32 +5825,32 @@ contains
       !>     2) Files opened with access method 'SCRATCH' are referenced
       !>        only by their logical unit.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This private routine is designed to provide a common, unified
       !>     file load interface for DAF and DAS.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See DAFOPR, DAFONW, DAFOPW, DASOPR, DASOPS, DASONW, DASOPW for
       !>     sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) Files loaded through this interface should not be opened by
       !>        any other mechanism until the appropriate call to ZZDDHCLS
       !>        is made.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 26-APR-2012 (BVS)
       !>
@@ -6611,7 +6611,7 @@ contains
       end associate
       end procedure zzddhopn
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -6619,7 +6619,7 @@ contains
       !>
       !>     Close the file associated with HANDLE.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the file handle associated with the file that is
       !>                to be closed.
@@ -6635,15 +6635,15 @@ contains
       !>                on the file.  This only works if HANDLE is currently
       !>                assigned a UNIT in the UNIT table.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) SPICE(FILARCMISMATCH) is signaled if the specified architecture
       !>        does not match the one listed in the file table.
@@ -6659,12 +6659,12 @@ contains
       !>     4) If HANDLE is not found in the file table, this routine simply
       !>        returns to the caller.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine will close the file associated with HANDLE if it
       !>     is currently utilizing a logical unit.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine closes files in the file table and performs
       !>     any necessary operations to facilitate the proper disconnect
@@ -6673,24 +6673,24 @@ contains
       !>     This routine may also be used to delete a file that is open
       !>     for write access if it currently has an entry in the UNIT table.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See DAFCLS or DASLLC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.1, 01-OCT-2021 (NJB)
       !>
@@ -6708,7 +6708,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 02-APR-2002 (FST)
       !>
@@ -6949,7 +6949,7 @@ contains
       end associate
       end procedure zzddhcls
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -6958,7 +6958,7 @@ contains
       !>     Return the logical unit associated with a handle, in the event
       !>     the handle is not connected to a unit, connect it to one.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle associated with the file to retrieve a
       !>                logical unit.
@@ -6971,17 +6971,17 @@ contains
       !>                open and assigned the same logical unit.  They may
       !>                only be unlocked by calling ZZDDHUNL.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     UNIT       is the logical unit that is currently assigned to
       !>                HANDLE.  This unit may be used to perform I/O
       !>                operations on the file.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) The error SPICE(NOSUCHHANDLE) is signaled when HANDLE is not
       !>        found in the file table.  The value of UNIT is undefined when
@@ -7002,14 +7002,14 @@ contains
       !>        'lockable' units left in the unit table.  The value of UNIT
       !>        returned when this error is signaled is undefined.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     If HANDLE refers to a file not currently connected to a logical
       !>     unit, this routine will locate an entry in the unit table;
       !>     disconnect it if necessary; and connect the file associated with
       !>     HANDLE in its place.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used to retrieve a logical unit for a desired
       !>     handle.  It also serves as a mechanism for locking the UNIT
@@ -7017,23 +7017,23 @@ contains
       !>     can not be used to unlock this relationship.  See ZZDDHUNL for
       !>     that functionality.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See DAFHLU or DASHLU for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 01-OCT-2021 (NJB)
       !>
@@ -7308,7 +7308,7 @@ contains
       end associate
       end procedure zzddhhlu
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -7316,7 +7316,7 @@ contains
       !>
       !>     Unlock a logical unit from the specified handle.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the file handle associated with the file that
       !>                is to have its logical unit lock released.
@@ -7324,15 +7324,15 @@ contains
       !>     ARCH       is the expected architecture of the file associated
       !>                with HANDLE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If HANDLE is 0, not found in the unit table, or found and
       !>        not currently locked, this routine just returns to the
@@ -7345,23 +7345,23 @@ contains
       !>        simply returns, as scratch files may not be unlocked from
       !>        their logical units.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine does not explicitly alter the open or closed
       !>     state of the file associated with HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows users to unlock a handle from it's logical
       !>     unit in the event a handle to logical unit request was made
       !>     with the LOCK argument set to true.  (DAFHLU and DASHLU both
       !>     lock units, and require a call to this routine to unlock them).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See some routine that calls this one (TBD).
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This routine utilizes discovery check in and out.  However,
       !>     routines in the initialization loop may signal the error
@@ -7370,15 +7370,15 @@ contains
       !>     no check in or out is performed around the initialization
       !>     block.  This is by design.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
       !>
@@ -7536,7 +7536,7 @@ contains
       end associate
       end procedure zzddhunl
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -7544,12 +7544,12 @@ contains
       !>
       !>     Get information about the file attached to HANDLE.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the file handle associated with the file for which
       !>                information is requested.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     FNAME      is the name of the file used associated with HANDLE.
       !>                This is the name used to load the file originally.
@@ -7583,32 +7583,32 @@ contains
       !>                was located in the file table.  Otherwise, it was
       !>                not found in the table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1) If FOUND is FALSE, then the other output arguments
       !>        are undefined.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides access to information necessary for
       !>     translation and other I/O based tasks to modules that are
       !>     not entry points to this handle manager.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDAFGFR, ZZDAFGSR, or ZZDAFGDR for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     Routines in the call tree of this routine may signal the error
       !>     SPICE(BUG) under the conditions of the existence of a bug
@@ -7616,15 +7616,15 @@ contains
       !>     routine is error free with the exception of this bug condition,
       !>     it does not participate in tracing by design.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
       !>
@@ -7720,7 +7720,7 @@ contains
       end associate
       end procedure zzddhnfo
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -7729,12 +7729,12 @@ contains
       !>     Determine whether the file attached to HANDLE is uses the
       !>     binary file format native to the system.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the file handle associated with the file that is
       !>                to be determined to be native or not.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NATIVE     is a logical that when set to TRUE indicates that
       !>                the file associated with HANDLE is of the native
@@ -7746,31 +7746,31 @@ contains
       !>                with a file.  If FALSE, then NATIVE remains unchanged,
       !>                since the file was not found in the table.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error Free.
       !>
       !>     1) In the event that HANDLE can not be found in the file table,
       !>        FOUND is set to FALSE and NATIVE is left unchanged.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine simply answers the question:  "Is the file attached
       !>     to this handle of the native binary file format?"
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See DAFRDA for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     Routines in the call tree of this routine may signal the error
       !>     SPICE(BUG) under the conditions of the existence of a bug
@@ -7778,15 +7778,15 @@ contains
       !>     routine is error free with the exception of this bug condition,
       !>     it does not participate in tracing by design.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
       !>
@@ -7875,7 +7875,7 @@ contains
       end associate
       end procedure zzddhisn
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -7883,11 +7883,11 @@ contains
       !>
       !>     Retrieve handle associated with filename.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FNAME      is the name of a file previously loaded with ZZDDHOPN.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE     is the handle associated with the file.
       !>
@@ -7895,46 +7895,46 @@ contains
       !>                for FNAME.  If FALSE no handle was found associated
       !>                with FNAME.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) ZZDDHF2H in the call tree of this routine performs I/O
       !>        functions and may signal errors that are the result of
       !>        I/O failures.  See ZZDDHF2H header for details.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is provided for completeness and serves only to
       !>     support the DAFFNH and DASFNH interfaces.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See DAFFNH or DASFNH for sample usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) On VAX environments, this routine may only be used when
       !>        FNAME refers to a DAF or DAS file.  An error may be
       !>        signaled when used with unopened files that utilize other
       !>        architectures.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 26-APR-2012 (BVS)
       !>
@@ -8035,7 +8035,7 @@ contains
       end associate
       end procedure zzddhfnh
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -8043,12 +8043,12 @@ contains
       !>
       !>     Return the handle associated with a logical unit.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UNIT       is the logical unit to which a file managed by DDH is
       !>                currently connected.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HANDLE     is the handle associated with the logical unit of
       !>                interest.
@@ -8057,31 +8057,31 @@ contains
       !>                was found associated with UNIT.  If FALSE indicates
       !>                no handle was found for UNIT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1) If UNIT is not found in the unit table, HANDLE is undefined
       !>        and FOUND is set to .FALSE.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is provided for completeness and serves only to
       !>     support the DAFLUH and DASLUH interfaces.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See DAFLUH or DASLUH for usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     Routines in the call tree of this routine may signal the error
       !>     SPICE(BUG) under the conditions of the existence of a bug
@@ -8089,15 +8089,15 @@ contains
       !>     routine is error free with the exception of this bug condition,
       !>     it does not participate in tracing by design.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     F.S. Turner     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
       !>

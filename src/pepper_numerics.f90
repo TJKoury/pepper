@@ -12,30 +12,30 @@ submodule (pepper_instance) pepper_numerics
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is any double precision number greater than or equal to
       !>              1.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the inverse hyperbolic cosine of the double
       !>     precision number X.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If X is less than 1.0D0, the error SPICE(INVALIDARGUMENT) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function simply implements the definition of the inverse
       !>     hyperbolic cosine as follows:
@@ -44,7 +44,7 @@ contains
       !>
       !>     If the input value is not valid, an error is signaled.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following table gives a few values for X and the resulting
       !>     value of DACOSH.
@@ -56,24 +56,24 @@ contains
       !>     100.0000000000000       5.298292365610485
       !>     1000.000000000000       7.600902209541989
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The value of the input variable X must be greater than or
       !>         equal to 1.0d0.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W.H. Beyer, "CRC Standard Mathematical Tables," CRC Press,
       !>          1987.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 17-JUN-2021 (JDR)
       !>
@@ -128,7 +128,7 @@ contains
       return
       end procedure dacosh
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Compute arc cosine of a bracketed argument.
       !>
@@ -137,7 +137,7 @@ contains
       !>     evaluated as if it equaled 1.D0, if ARG is less than -1.,
       !>     the argument is evaluated as if it equaled -1.D0.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARG      is the arc cosine argument that is to be evaluated such
       !>              that if it is less than -1.D0 by more than TOL or greater
@@ -146,7 +146,7 @@ contains
       !>     TOL      is a tolerance such that |ARG| is considered to be equal
       !>              to 1.D0 if |ARG| <= 1.D0 + TOL. TOL must be non-negative.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the arc cosine of ARG. If
       !>
@@ -155,11 +155,11 @@ contains
       !>     it returns DACOS (1.D0) or DACOS (-1.D0) as appropriate. Values
       !>     range from 0 to PI.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If |ARG| > 1.D0 + TOL, the error SPICE(INPUTOUTOFBOUNDS) is
       !>         signaled.
@@ -167,17 +167,17 @@ contains
       !>     2)  If TOL is less than zero, the error SPICE(VALUEOUTOFRANGE) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines whether |ARG| > 1.D0 + TOL. If it is, an
       !>     error will be flagged. In addition, the values of ARG are
       !>     constrained to [-1.D0, 1.D0].
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following illustrate the operation of DACOSN.
       !>
@@ -188,20 +188,20 @@ contains
       !>           DACOSN (   1.00001D0,   1.D-3 )  =   0.
       !>           DACOSN (   1.00001D0,   1.D-7 )  =   0. (error flagged)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     L.S. Elson         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -253,7 +253,7 @@ contains
       return
       end procedure dacosn
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Compute arc sine of a bracketed argument.
       !>
@@ -262,7 +262,7 @@ contains
       !>     evaluated as if it equaled 1.D0, if ARG is less than -1.,
       !>     the argument is evaluated as if it equaled -1.D0.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ARG      is the arc sine argument that is to be evaluated such
       !>              that if it is less than -1.D0 by more than TOL or greater
@@ -271,7 +271,7 @@ contains
       !>     TOL      is a tolerance such that |ARG| is considered to be equal
       !>              to 1.D0 if |ARG| <= 1.D0 + TOL. TOL must be non-negative.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the arc sine of ARG. If
       !>
@@ -280,11 +280,11 @@ contains
       !>     it returns DASIN (1.D0) or DASIN (-1.D0) as appropriate. Values
       !>     range from -PI/2 to PI/2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If TOL is less than zero, the error SPICE(VALUEOUTOFRANGE) is
       !>         signaled.
@@ -292,17 +292,17 @@ contains
       !>     2)  If |ARG| > 1.D0 + TOL, the error SPICE(INPUTOUTOFBOUNDS) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines whether |ARG| > 1.D0 + TOL. If it is, an
       !>     error will be flagged. In addition, the values of ARG are
       !>     constrained to [-1.D0, 1.D0].
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following illustrate the operation of DASINE.
       !>
@@ -313,20 +313,20 @@ contains
       !>           DASINE (   1.00001D0,   1.D-3 )  =   PI/2
       !>           DASINE (   1.00001D0,   1.D-7 )  =   PI/2 (error flagged)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     L.S. Elson         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -378,31 +378,31 @@ contains
       return
       end procedure dasine
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is any double precision.
       !>
       !>              X must be within the range -1 < X < +1.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the inverse hyperbolic tangent of the double
       !>     precision number X.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If X is not between -1.0 and 1.0, the error
       !>         SPICE(INVALIDARGUMENT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function simply implements the definition of the inverse
       !>     hyperbolic tangent as follows:
@@ -411,7 +411,7 @@ contains
       !>
       !>     If the input value is not valid, an error is signaled.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following table gives a few values for X and the resulting
       !>     value of DATANH.
@@ -426,24 +426,24 @@ contains
       !>         0.4000000000000000      0.4236489301936018
       !>        0.8000000000000000       1.098612288668110
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The value of the input variable X must be between -1.0 and
       !>         1.0, otherwise an error is signaled.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W.H. Beyer, "CRC Standard Mathematical Tables," CRC Press,
       !>          1987.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 17-JUN-2021 (JDR)
       !>
@@ -492,7 +492,7 @@ contains
       return
       end procedure datanh
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X,
       !>     Y,
@@ -511,7 +511,7 @@ contains
       !>              If ELPLSZ is .TRUE., the elevation increases from the
       !>              XY plane toward +Z; otherwise toward -Z.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     JACOBI   is the matrix of partial derivatives of the
       !>              transformation from rectangular to azimuth/elevation
@@ -525,21 +525,21 @@ contains
       !>
       !>               evaluated at the input values of X, Y, and Z.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input point is on the Z-axis ( X = 0 and Y = 0 ), the
       !>         Jacobian matrix is undefined and therefore, the error
       !>         SPICE(POINTONZAXIS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     When performing vector calculations with velocities it is
       !>     usually most convenient to work in rectangular coordinates.
@@ -574,7 +574,7 @@ contains
       !>     and ELPLSZ flags, users indicate which conventions shall be used.
       !>     See the descriptions of these input arguments for details.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -839,20 +839,20 @@ contains
       !>           dY/dt (km/s)           =      -13797.77164550
       !>           dZ/dt (km/s)           =       -8704.32385654
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-2021 (JDR) (NJB)
       module procedure dazldr
@@ -925,7 +925,7 @@ contains
       return
       end procedure dazldr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X,
       !>     Y,
@@ -933,7 +933,7 @@ contains
       !>              which the Jacobian of the map from rectangular
       !>              to cylindrical coordinates is desired.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     JACOBI   is the matrix of partial derivatives of the conversion
       !>              between rectangular and cylindrical coordinates. It
@@ -947,21 +947,21 @@ contains
       !>
       !>              evaluated at the input values of X, Y, and Z.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input point is on the Z-axis (X = 0 and Y = 0), the
       !>         Jacobian is undefined, the error SPICE(POINTONZAXIS) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     When performing vector calculations with velocities it is
       !>     usually most convenient to work in rectangular coordinates.
@@ -991,7 +991,7 @@ contains
       !>        JACOBI|
       !>              |(x,y,z)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1186,20 +1186,20 @@ contains
       !>          dY/dt (km/s)           =     0.53760111E+04
       !>          dZ/dt (km/s)           =    -0.20881149E+02
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 26-OCT-2021 (JDR)
       !>
@@ -1264,7 +1264,7 @@ contains
       return
       end procedure dcyldr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X,
       !>     Y,
@@ -1272,7 +1272,7 @@ contains
       !>              which the Jacobian of the map from rectangular
       !>              to latitudinal coordinates is desired.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     JACOBI   is the matrix of partial derivatives of the conversion
       !>              between rectangular and latitudinal coordinates. It
@@ -1286,21 +1286,21 @@ contains
       !>
       !>               evaluated at the input values of X, Y, and Z.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input point is on the z-axis (X = 0 and Y = 0), the
       !>         Jacobian is undefined, the error SPICE(POINTONZAXIS) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     When performing vector calculations with velocities it is
       !>     usually most convenient to work in rectangular coordinates.
@@ -1330,7 +1330,7 @@ contains
       !>        JACOBI|
       !>              |(x, y, z)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1526,20 +1526,20 @@ contains
       !>          dY/dt (km/s)           =     0.53760111E+04
       !>          dZ/dt (km/s)           =    -0.20881149E+02
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 26-OCT-2021 (JDR)
       !>
@@ -1604,7 +1604,7 @@ contains
       return
       end procedure dlatdr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RANGE    is the distance from the origin of the input point
       !>              specified by RANGE, AZ, and EL.
@@ -1656,7 +1656,7 @@ contains
       !>              If ELPLSZ is .TRUE., the elevation increases from
       !>              the XY plane toward +Z; otherwise toward -Z.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     JACOBI   is the matrix of partial derivatives of the
       !>              transformation from azimuth/elevation to rectangular
@@ -1682,11 +1682,11 @@ contains
       !>              otherwise, and ELDIR is +1 when ELPLSZ is .TRUE.
       !>              and -1 otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the value of the input parameter RANGE is negative,
       !>         the error SPICE(VALUEOUTOFRANGE) is signaled.
@@ -1700,11 +1700,11 @@ contains
       !>         inside the range that differs from the input value by an
       !>         integer multiple of 2*pi.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     It is often convenient to describe the motion of an object
       !>     in azimuth/elevation coordinates. It is also convenient to
@@ -1736,7 +1736,7 @@ contains
       !>     and ELPLSZ flags, users indicate which conventions shall be used.
       !>     See the descriptions of these input arguments for details.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -2001,20 +2001,20 @@ contains
       !>           dY/dt (km/s)           =      -13797.77164550
       !>           dZ/dt (km/s)           =       -8704.32385654
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 08-SEP-2021 (JDR) (NJB)
       module procedure drdazl
@@ -2127,7 +2127,7 @@ contains
       return
       end procedure drdazl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LON      is the geodetic longitude of point (radians).
       !>
@@ -2141,7 +2141,7 @@ contains
       !>              RP is the polar radius of the spheroid. (More
       !>              importantly RP = RE*(1-F).)
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     JACOBI   is the matrix of partial derivatives of the conversion
       !>              between geodetic and rectangular coordinates. It
@@ -2174,11 +2174,11 @@ contains
       !>
       !>                    sqrt ( cos(lat)**2 + (1-f)**2 * sin(lat)**2 )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the flattening coefficient is greater than or equal to
       !>         one, the error SPICE(VALUEOUTOFRANGE) is signaled.
@@ -2186,11 +2186,11 @@ contains
       !>     2)  If the equatorial radius is non-positive, the error
       !>         SPICE(BADRADIUS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     It is often convenient to describe the motion of an object in
       !>     the geodetic coordinate system. However, when performing
@@ -2217,7 +2217,7 @@ contains
       !>        JACOBI|
       !>              |(lon,lat,alt)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -2450,20 +2450,20 @@ contains
       !>          dY/dt (km/s)           =     0.53760111E+04
       !>          dZ/dt (km/s)           =    -0.20881149E+02
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -2701,7 +2701,7 @@ contains
       return
       end procedure drdgeo
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X,
       !>     Y,
@@ -2709,7 +2709,7 @@ contains
       !>              which the Jacobian of the map from rectangular
       !>              to spherical coordinates is desired.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     JACOBI   is the matrix of partial derivatives of the conversion
       !>              between rectangular and spherical coordinates. It
@@ -2723,21 +2723,21 @@ contains
       !>
       !>              evaluated at the input values of X, Y, and Z.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input point is on the Z-axis (X and Y = 0), the
       !>         Jacobian is undefined, the error SPICE(POINTONZAXIS) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     When performing vector calculations with velocities it is
       !>     usually most convenient to work in rectangular coordinates.
@@ -2767,7 +2767,7 @@ contains
       !>        JACOBI|
       !>              |(x, y, z)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -2964,20 +2964,20 @@ contains
       !>          dY/dt (km/s)            =     0.53760111E+04
       !>          dZ/dt (km/s)            =    -0.20881149E+02
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 26-OCT-2021 (JDR)
       !>
@@ -3042,7 +3042,7 @@ contains
       return
       end procedure dsphdr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the epoch (ephemeris time) at which the state
       !>              of the target body is to be computed. ET is measured
@@ -3125,17 +3125,17 @@ contains
       !>              with respect to some inertial frame (measured in
       !>              radians).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state of the object described by EQEL relative to
       !>              the inertial frame used to define RAPOL and DECPOL. Units
       !>              are in km and km/sec.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the eccentricity corresponding to the input elements is
       !>         greater than 0.9, the error SPICE(ECCOUTOFRANGE) is signaled.
@@ -3143,11 +3143,11 @@ contains
       !>     2)  If the semi-major axis of the elements is non-positive, the
       !>         error SPICE(BADSEMIAXIS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine evaluates the input equinoctial elements for
       !>     the specified epoch and return the corresponding state.
@@ -3156,7 +3156,7 @@ contains
       !>     Bob Jacobson of the Planetary Dynamics Group of
       !>     the Navigation and Flight Mechanics Section at JPL.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you have classical elements and rates of
       !>     change of the ascending node and argument of periapse
@@ -3209,7 +3209,7 @@ contains
       !>
       !>        CALL EQNCPV ( ET, EPOCH, EQEL, RAPOL, DECPOL, STATE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The equinoctial elements used by this routine are taken
       !>         from  "Tangent" formulation of equinoctial elements
@@ -3233,20 +3233,20 @@ contains
       !>         This will convert the Sine formulation to the Tangent
       !>         formulation.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W. Owen and R. Vaughan, "Optical Navigation Program
       !>          Mathematical Models," JPL Engineering Memorandum 314-513,
       !>          August 9, 1991.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     R.A. Jacobson      (JPL)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.3, 14-APR-2021 (JDR)
       !>
@@ -3570,7 +3570,7 @@ contains
       return
       end procedure eqncpv
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     P        is a non-zero point in three-dimensional space.
       !>
@@ -3581,17 +3581,17 @@ contains
       !>              the ellipsoid are aligned with the axes of the
       !>              Cartesian coordinate system.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EP       is the result of scaling the input point P so that
       !>              it lies on the surface of the triaxial ellipsoid
       !>              defined by the input semi-axis lengths.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of the target ellipsoid's semi-axis lengths is
       !>         non-positive, the error SPICE(INVALIDAXES) is signaled.
@@ -3602,18 +3602,18 @@ contains
       !>     3)  If the level surface parameter of the input point
       !>         underflows, the error SPICE(POINTTOOSMALL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine efficiently computes the ellipsoid surface point
       !>     corresponding to a specified ray emanating from the origin.
       !>     Practical examples of this computation occur in the SPICELIB
       !>     routines LATSRF and SRFREC.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3672,21 +3672,21 @@ contains
       !>        EP    =   0.85714285714286  0.85714285714286  0.85714285714286
       !>        LEVEL =   1.00000000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 09-JUL-2020 (JDR)
       !>
@@ -3764,7 +3764,7 @@ contains
       return
       end procedure edpnt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is the length of the semi-axis of the ellipsoid
       !>              that is parallel to the X-axis of the body-fixed
@@ -3782,7 +3782,7 @@ contains
       !>              ellipsoid at which NORMAL is an outward normal vector
       !>              is sought.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     POINT    is the unique point on the ellipsoid at which NORMAL
       !>              is an outward normal vector.
@@ -3793,11 +3793,11 @@ contains
       !>              aligned with the X, Y, and Z-axes of the coordinate
       !>              system.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of the semi-axis lengths is non-positive, the error
       !>         SPICE(BADAXISLENGTH) is signaled.
@@ -3814,17 +3814,17 @@ contains
       !>         of a fractional exponential expression, the error
       !>         SPICE(DEGENERATECASE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine can be used to determine the distance between an
       !>     ellipsoid and a non-intersecting plane. This distance computation
       !>     supports computation of terminator points on an ellipsoid.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3988,21 +3988,21 @@ contains
       !>        Angular error (rad):     0.00000000
       !>        Off-surface error:       0.00000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 09-JUL-2020 (JDR)
       !>
@@ -4148,7 +4148,7 @@ contains
 
       end procedure ednmpt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MA       is the elliptic mean anomaly of an orbiting body at
       !>              some epoch t,
@@ -4162,41 +4162,41 @@ contains
       !>
       !>     ECC      is the eccentricity of the orbit.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     E        is the corresponding eccentric anomaly. This is the
       !>              solution to the time of flight equation
       !>
       !>                 MA = E - e sin(E)
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the eccentricity (ECC) is outside the range [0,1),
       !>         the error SPICE(WRONGCONIC) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Iterate to solve
       !>
       !>        f(E,MA,e) = E - e sin(E) - MA = 0
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     ELLTOF, HYPTOF, and PARTOF are used by CONICS.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  R. Bate, D. Mueller, and J. White, "Fundamentals of
       !>          Astrodynamics," Dover Publications Inc., 1971.
@@ -4205,14 +4205,14 @@ contains
       !>          Equation for Elliptic Orbits", Cel. Mech. 20, pp.243-249,
       !>          1979.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 14-APR-2021 (JDR)
       !>
@@ -4234,7 +4234,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 8-JAN-1989 (IMU)
       !>
@@ -4436,7 +4436,7 @@ contains
       return
       end procedure elltof
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial.
       !>              The array YVALS contains 2*N elements.
@@ -4469,18 +4469,18 @@ contains
       !>     X        is the abscissa value at which the interpolating
       !>              polynomial and its derivative are to be evaluated.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     F,
       !>     DF       are the value and derivative at X of the unique
       !>              polynomial of degree 2*N-1 that fits the points and
       !>              derivatives defined by FIRST, STEP, and YVALS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If STEP is zero, the error SPICE(INVALIDSTEPSIZE) is
       !>         signaled.
@@ -4491,11 +4491,11 @@ contains
       !>     3)  This routine does not attempt to ward off or diagnose
       !>         arithmetic overflows.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Users of this routine must choose the number of points to use
       !>     in their interpolation method. The authors of Reference [1] have
@@ -4518,7 +4518,7 @@ contains
       !>        outside the range of tabulated values by more than the typical
       !>        spacing of tabulated points.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4581,11 +4581,11 @@ contains
       !>         ANSWER =    141.00000000000000
       !>         DERIV  =    456.00000000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W. Press, B. Flannery, S. Teukolsky and W. Vetterling,
       !>          "Numerical Recipes -- The Art of Scientific Computing,"
@@ -4594,13 +4594,13 @@ contains
       !>     [2]  S. Conte and C. de Boor, "Elementary Numerical Analysis -- An
       !>          Algorithmic Approach," 3rd Edition, p 64, McGraw-Hill, 1980.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.2, 01-OCT-2021 (JDR) (NJB)
       !>
@@ -4812,7 +4812,7 @@ contains
       return
       end procedure hrmesp
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial.
       !>              The arrays XVALS and YVALS contain N and 2*N
@@ -4840,18 +4840,18 @@ contains
       !>     X        is the abscissa value at which the interpolating
       !>              polynomial and its derivative are to be evaluated.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     F,
       !>     DF       are the value and derivative at X of the unique
       !>              polynomial of degree 2N-1 that fits the points and
       !>              derivatives defined by XVALS and YVALS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If two input abscissas are equal, the error
       !>         SPICE(DIVIDEBYZERO) is signaled.
@@ -4862,11 +4862,11 @@ contains
       !>     3)  This routine does not attempt to ward off or diagnose
       !>         arithmetic overflows.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Users of this routine must choose the number of points to use
       !>     in their interpolation method. The authors of Reference [1] have
@@ -4889,7 +4889,7 @@ contains
       !>        outside the range of tabulated values by more than the typical
       !>        spacing of tabulated points.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4954,11 +4954,11 @@ contains
       !>         ANSWER =    141.00000000000000
       !>         DERIV  =    456.00000000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W. Press, B. Flannery, S. Teukolsky and W. Vetterling,
       !>          "Numerical Recipes -- The Art of Scientific Computing,"
@@ -4967,13 +4967,13 @@ contains
       !>     [2]  S. Conte and C. de Boor, "Elementary Numerical Analysis -- An
       !>          Algorithmic Approach," 3rd Edition, p 64, McGraw-Hill, 1980.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.2, 01-OCT-2021 (NJB) (JDR)
       !>
@@ -5179,7 +5179,7 @@ contains
       return
       end procedure hrmint
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial. The
       !>              array YVALS contains N elements.
@@ -5211,17 +5211,17 @@ contains
       !>     X        is the abscissa value at which the interpolating
       !>              polynomial is to be evaluated.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value at X of the unique polynomial of
       !>     degree N-1 that fits the points in the plane defined by FIRST,
       !>     STEP, and YVALS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If STEP is zero, the error SPICE(INVALIDSTEPSIZE) is
       !>         signaled. The function will return the value 0.D0.
@@ -5232,11 +5232,11 @@ contains
       !>     3)  This routine does not attempt to ward off or diagnose
       !>         arithmetic overflows.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given a set of N distinct abscissa values and corresponding
       !>     ordinate values, there is a unique polynomial of degree N-1,
@@ -5269,7 +5269,7 @@ contains
       !>     For Lagrange interpolation on unequally spaced abscissa values,
       !>     see the SPICELIB routine LGRINT.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -5362,22 +5362,22 @@ contains
       !>
       !>         ANSWER =    1.0000000000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W. Press, B. Flannery, S. Teukolsky and W. Vetterling,
       !>          "Numerical Recipes -- The Art of Scientific Computing,"
       !>          chapters 3.0 and 3.1, Cambridge University Press, 1986.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 19-FEB-2021 (JDR)
       !>
@@ -5561,7 +5561,7 @@ contains
       return
       end procedure lgresp
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial.
       !>              The arrays XVALS and YVALS contain N elements.
@@ -5584,7 +5584,7 @@ contains
       !>     X        is the abscissa value at which the interpolating
       !>              polynomial is to be evaluated.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     P        is the value at X of the unique polynomial of
       !>              degree N-1 that fits the points in the plane
@@ -5593,11 +5593,11 @@ contains
       !>     DP       is the derivative at X of the interpolating
       !>              polynomial described above.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any two elements of the array XVALS are equal, the error
       !>         SPICE(DIVIDEBYZERO) is signaled.
@@ -5608,11 +5608,11 @@ contains
       !>     3)  This routine does not attempt to ward off or diagnose
       !>         arithmetic overflows.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given a set of N distinct abscissa values and corresponding
       !>     ordinate values, there is a unique polynomial of degree N-1, often
@@ -5642,7 +5642,7 @@ contains
       !>        outside the range of tabulated values by more than the typical
       !>        spacing of tabulated points.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5705,22 +5705,22 @@ contains
       !>
       !>         P, DP =    1.0000000000000000        16.000000000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W. Press, B. Flannery, S. Teukolsky and W. Vetterling,
       !>          "Numerical Recipes -- The Art of Scientific Computing,"
       !>          chapters 3.0 and 3.1, Cambridge University Press, 1986.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -5904,7 +5904,7 @@ contains
       return
       end procedure lgrind
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial.
       !>              The arrays XVALS and YVALS contain N elements.
@@ -5926,17 +5926,17 @@ contains
       !>     X        is the abscissa value at which the interpolating
       !>              polynomial is to be evaluated.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value at X of the unique polynomial of
       !>     degree N-1 that fits the points in the plane defined by XVALS and
       !>     YVALS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any two elements of the array XVALS are equal, the error
       !>         SPICE(DIVIDEBYZERO) is signaled. The function will return the
@@ -5948,11 +5948,11 @@ contains
       !>     3)  This routine does not attempt to ward off or diagnose
       !>         arithmetic overflows.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given a set of N distinct abscissa values and corresponding
       !>     ordinate values, there is a unique polynomial of degree N-1, often
@@ -5982,7 +5982,7 @@ contains
       !>        outside the range of tabulated values by more than the typical
       !>        spacing of tabulated points.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6038,22 +6038,22 @@ contains
       !>
       !>         ANSWER =    1.0000000000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W. Press, B. Flannery, S. Teukolsky and W. Vetterling,
       !>          "Numerical Recipes -- The Art of Scientific Computing,"
       !>          chapters 3.0 and 3.1, Cambridge University Press, 1986.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 19-MAY-2021 (JDR)
       !>
@@ -6222,7 +6222,7 @@ contains
       return
       end procedure lgrint
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DEGP     is the degree of the input Chebyshev expansion.
       !>
@@ -6263,7 +6263,7 @@ contains
       !>
       !>              See the $Restrictions section below.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     P,
       !>     ITGRLP   define S and f(X) as above in the description of the
@@ -6278,11 +6278,11 @@ contains
       !>
       !>                 ITGRLP( X2S(1) ) = 0
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input degree is negative, the error
       !>         SPICE(INVALDDEGREE) is signaled.
@@ -6290,11 +6290,11 @@ contains
       !>     2)  If the input interval radius is non-positive, the error
       !>         SPICE(INVALIDRADIUS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Let
       !>
@@ -6343,7 +6343,7 @@ contains
       !>     This routine supports the SPICELIB SPK type 20 and PCK type 20
       !>     evaluators SPKE20 and PCKE20.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6451,7 +6451,7 @@ contains
       !>         ITGRLP =    10.000000000000000
       !>         P      =    6.0000000000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The value (X-X2S(1)) / X2S(2) normally should lie within the
       !>         interval -1:1 inclusive, that is, the closed interval
@@ -6472,7 +6472,7 @@ contains
       !>         verify that the requested computation provides appropriate
       !>         accuracy.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W. Press, B. Flannery, S. Teukolsky and W. Vetterling,
       !>          "Numerical Recipes -- The Art of Scientific Computing,"
@@ -6484,12 +6484,12 @@ contains
       !>          http://en.wikipedia.org/w/index.php?title=
       !>          Chebyshev_polynomials&oldid=574881046
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
       !>
@@ -6880,7 +6880,7 @@ contains
       return
       end procedure chbigr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ELLIPS   is a SPICE ellipse. The ellipse is allowed to
       !>              be degenerate: one or both semi-axes may have
@@ -6888,7 +6888,7 @@ contains
       !>
       !>     PLANE    is a SPICE plane.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NXPTS    is the number of points of intersection of the
       !>              geometric plane and ellipse represented by PLANE
@@ -6909,11 +6909,11 @@ contains
       !>              infinite, the contents of XPT1 and XPT2 are
       !>              undefined.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input plane is invalid, the error SPICE(INVALIDPLANE)
       !>         is signaled. The input plane must be a SPICE plane: the normal
@@ -6929,11 +6929,11 @@ contains
       !>         the output arguments XPT1 and XPT2 are assigned the value
       !>         of the ellipse's center.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes the intersection set of a non-degenerate
       !>     plane with a possibly degenerate ellipse. The ellipse is allowed
@@ -6944,7 +6944,7 @@ contains
       !>     the ellipse must lie in the plane and consist of more than one
       !>     point.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  If we want to find the angle of some ray above the limb of an
       !>         ellipsoid, where the angle is measured in a plane containing
@@ -7012,21 +7012,21 @@ contains
       !>            C
       !>                  ANGLE = MIN ( SEP1, SEP2 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.0, 24-AUG-2021 (JDR)
       !>
@@ -7067,7 +7067,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-1990 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 14-JAN-2008 (NJB)
       !>
@@ -7379,7 +7379,7 @@ contains
       return
       end procedure inelpl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VERTEX,
       !>     DIR      are a point and direction vector that define a
@@ -7387,7 +7387,7 @@ contains
       !>
       !>     PLANE    is a SPICE plane.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NXPTS    is the number of points of intersection of the
       !>              input ray and plane. Values and meanings of
@@ -7406,11 +7406,11 @@ contains
       !>              and plane, when there is exactly one point of
       !>              intersection. Otherwise, XPT is the zero vector.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the ray's direction vector is the zero vector, the error
       !>         SPICE(ZEROVECTOR) is signaled. NXPTS and XPT are not
@@ -7443,16 +7443,16 @@ contains
       !>         met, then NXPTS is set to 0 and XPT is set to the zero
       !>         vector.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The intersection of a ray and plane in three-dimensional space
       !>     can be a the empty set, a single point, or the ray itself.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Find the camera projection of the center of an extended
       !>         body. For simplicity, we assume:
@@ -7799,22 +7799,22 @@ contains
       !>
       !>            END
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 24-AUG-2021 (JDR)
       !>
@@ -8101,20 +8101,20 @@ contains
       return
       end procedure inrypl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M        is a 3x3 matrix.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MIT      is the matrix obtained by transposing M and dividing
       !>              the rows by squares of their norms.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of the columns of M have zero length, the error
       !>         SPICE(ZEROLENGTHCOLUMN) is signaled.
@@ -8123,11 +8123,11 @@ contains
       !>         reciprocal of its length without causing a floating
       !>         point overflow, the error SPICE(COLUMNTOOSMALL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Suppose that M is the matrix
       !>
@@ -8159,7 +8159,7 @@ contains
       !>
       !>     where a = 1/A, b = 1/B, and c = 1/C.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -8245,22 +8245,22 @@ contains
       !>               0.0000000       1.0000000       0.0000000
       !>               0.0000000       0.0000000       1.0000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 26-OCT-2021 (JDR)
       !>
@@ -8346,7 +8346,7 @@ contains
       return
       end procedure invort
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MAT      is a state transformation matrix for converting states
       !>              relative to one frame to states relative to another.
@@ -8373,7 +8373,7 @@ contains
       !>              NOTE: no checks are performed on MAT to ensure that it
       !>                    does indeed have the form described above.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     INVMAT   is the inverse of MAT under the operation of matrix
       !>              multiplication.
@@ -8393,22 +8393,22 @@ contains
       !>              (The superscript "t" denotes the matrix transpose
       !>              operation.)
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  No checks are performed to ensure that the input matrix is
       !>         indeed a state transformation matrix.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given a matrix for transforming states relative frame 1 to
       !>     states relative frame 2, the routine produces the inverse
@@ -8419,7 +8419,7 @@ contains
       !>     rotation matrix, the inverse of a state transformation matrix,
       !>     is NOT simply the transpose of the matrix.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -8526,21 +8526,21 @@ contains
       !>           Position:   192681395.921  -143792821.383   -62934296.473
       !>           Velocity:          30.312          32.007          13.876
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 25-NOV-2021 (JDR)
       !>
@@ -8582,7 +8582,7 @@ contains
       return
       end procedure invstm
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M        is a 3x3 matrix to be tested.
       !>
@@ -8592,7 +8592,7 @@ contains
       !>     DTOL     is the tolerance for the determinant of a matrix
       !>              whose columns are the unitized columns of M.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if and only if M is found to be a
       !>     rotation matrix. The criteria that M must meet are:
@@ -8608,21 +8608,21 @@ contains
       !>           1.D0 - DTOL  <   determinant   <  1.D0 + DTOL
       !>                        -                 -
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either of NTOL or DTOL is negative, the error
       !>         SPICE(VALUEOUTOFRANGE) is signaled. ISROT returns the
       !>         value .FALSE. in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is an error checking `filter'; its purpose is to
       !>     detect gross errors, such as uninitialized matrices. Matrices
@@ -8673,7 +8673,7 @@ contains
       !>                | det(U) - 1 |  <  DTOL.
       !>                                _
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  We have obtained an instrument pointing matrix C from a
       !>         C-kernel, and we wish to test whether it is in fact a
@@ -8697,22 +8697,22 @@ contains
       !>
       !>                 END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 17-JUN-2021 (JDR)
       !>
@@ -8808,7 +8808,7 @@ contains
       return
       end procedure isrot
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ML       is the mean longitude of some body following two body
       !>              motion. (Mean longitude = Mean anomaly + argument of
@@ -8820,7 +8820,7 @@ contains
       !>     K        is the k component of the equinoctial element set
       !>              ( k = ECC*COS( arg of periapse + long ascending node) )
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the solution to the equinoctial version of
       !>     Kepler's equation, given the mean longitude and the h and k
@@ -8832,11 +8832,11 @@ contains
       !>
       !>     Note that ECC = DSQRT ( K*K + H*H )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the sum of the squares of H and K is not less than .9,
       !>         the error SPICE(ECCOUTOFBOUNDS) is signaled.
@@ -8845,11 +8845,11 @@ contains
       !>         equation does not converge in 10 or fewer steps, the error
       !>         SPICE(NOCONVERGENCE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine solves the equinoctial element version of
       !>     Kepler's equation.
@@ -8862,26 +8862,26 @@ contains
       !>
       !>     where E is eccentric anomaly.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W. Owen and R. Vaughan, "Optical Navigation Program
       !>          Mathematical Models," JPL Engineering Memorandum 314-513,
       !>          August 9, 1991.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 26-AUG-2021 (JDR)
       !>
@@ -8980,31 +8980,31 @@ contains
       return
       end procedure kepleq
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     EVEC     is any two dimensional vector whose magnitude is
       !>              less than 1.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value X such that the equation
       !>
       !>        X = EVEC(1)COS(X) + EVEC(2)SIN(X).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the magnitude of EVEC is greater than or equal to 1,
       !>         the error SPICE(EVECOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine uses bisection and Newton's method to find
       !>     the root of the equation
@@ -9013,7 +9013,7 @@ contains
       !>
       !>     This equation is just a "vector form" of Kepler's equation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you need to solve the equation
       !>
@@ -9038,20 +9038,20 @@ contains
       !>         EVEC(2) = ECC * DCOS(M)
       !>         E       = M   + KPSOLV( EVEC )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 26-OCT-2021 (JDR)
       !>
@@ -9226,11 +9226,11 @@ contains
       return
       end procedure kpsolv
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     R        is a rotation matrix.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     Q        is a unit-length SPICE-style quaternion
       !>              representing R. See the discussion of quaternion
@@ -9262,20 +9262,20 @@ contains
       !>
       !>              are possible outputs.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If R is not a rotation matrix, the error SPICE(NOTAROTATION)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A unit quaternion is a 4-dimensional vector for which the sum of
       !>     the squares of the components is 1. Unit quaternions can be used
@@ -9503,7 +9503,7 @@ contains
       !>
       !>        M1*M2
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  A case amenable to checking by hand calculation:
       !>
@@ -9571,21 +9571,21 @@ contains
       !>
       !>            yields a quaternion Q that represents R.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 24-AUG-2021 (JDR)
       !>
@@ -9796,7 +9796,7 @@ contains
       return
       end procedure m2q
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LINPT,
       !>     LINDIR   are, respectively, a point and a direction vector
@@ -9809,7 +9809,7 @@ contains
       !>
       !>     POINT    is a point in 3-dimensional space.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PNEAR    is the nearest point on the input line to the input
       !>              point.
@@ -9817,27 +9817,27 @@ contains
       !>     DIST     is the distance between the input line and input
       !>              point.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the line direction vector LINDIR is the zero vector, the
       !>         error SPICE(ZEROVECTOR) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For every line L and point P, there is a unique closest point
       !>     on L to P. Call this closest point C. It is always true that
       !>     P - C  is perpendicular to L, and the length of P - C is called
       !>     the `distance' between P and L.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Suppose a line passes through the point ( 1, 2, 3 ) and
       !>         has direction vector ( 0, 1, 1 ).  We wish to find the
@@ -9864,21 +9864,21 @@ contains
       !>
       !>         DIST will be 7.0.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 27-MAY-2021 (JDR)
       !>
@@ -9936,7 +9936,7 @@ contains
       return
       end procedure nplnpt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     EP1,
       !>     EP2      are the endpoints of a line segment in 3-dimensional
@@ -9944,30 +9944,30 @@ contains
       !>
       !>     POINT    is an arbitrary point in 3-dimensional space.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PNEAR    is the closest point on the line segment to POINT.
       !>
       !>     DIST     is the distance between POINT and PNEAR.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The input segment is allowed to be degenerate: it may be
       !>         a single point.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input
@@ -10031,20 +10031,20 @@ contains
       !>        Near point:     1.00000000   0.00000000   3.00000000
       !>        Distance:       3.00000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 06-JUL-2021 (JDR)
       !>
@@ -10143,7 +10143,7 @@ contains
       return
       end procedure npsgpt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NORMAL,
       !>     KONST    are, respectively, a normal vector and constant
@@ -10155,25 +10155,25 @@ contains
       !>
       !>                 < X,  NORMAL >  =  KONST.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PLANE    is a SPICE plane that represents the geometric
       !>              plane defined by NORMAL and KONST.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input vector NORMAL is the zero vector, the error
       !>         SPICE(ZEROVECTOR) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPICELIB geometry routines that deal with planes use the `plane'
       !>     data type to represent input and output planes. This data type
@@ -10197,7 +10197,7 @@ contains
       !>     routine's output, PLANE, to another representation of a
       !>     geometric plane.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -10370,22 +10370,22 @@ contains
       !>        Unit normal vector:  -0.1616904  -0.8084521   0.5659165
       !>        Constant          :   4.8102897
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No checking is done to prevent arithmetic overflow.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  G. Thomas and R. Finney, "Calculus and Analytic Geometry,"
       !>          7th Edition, Addison Wesley, 1988.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 24-AUG-2021 (JDR)
       !>
@@ -10492,7 +10492,7 @@ contains
       return
       end procedure nvc2pl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NORMAL,
       !>     POINT    are, respectively, a normal vector and point that
@@ -10504,25 +10504,25 @@ contains
       !>
       !>                 < X - POINT, NORMAL >  =  0.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PLANE    is a SPICE plane that represents the geometric
       !>              plane defined by POINT and NORMAL.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input vector NORMAL is the zero vector, the error
       !>         SPICE(ZEROVECTOR) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPICELIB geometry routines that deal with planes use the `plane'
       !>     data type to represent input and output planes. This data type
@@ -10546,7 +10546,7 @@ contains
       !>     routine's output, PLANE, to another representation of a
       !>     geometric plane.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Project a vector V orthogonally onto a plane defined by POINT
       !>         and NORMAL. PROJ is the projection we want; it is the
@@ -10565,22 +10565,22 @@ contains
       !>            CALL NVP2PL ( NORMAL, POINT,  PLANE )
       !>            CALL PL2NVC ( PLANE,  NORMAL, CONST )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  G. Thomas and R. Finney, "Calculus and Analytic Geometry,"
       !>          7th Edition, Addison Wesley, 1988.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 24-AUG-2021 (JDR)
       !>
@@ -10667,7 +10667,7 @@ contains
       return
       end procedure nvp2pl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     POINT,
       !>     SPAN1,
@@ -10681,26 +10681,26 @@ contains
       !>              SPAN1 and SPAN2 must be linearly independent, but they
       !>              need not be orthogonal or unitized.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PLANE    is a SPICE plane that represents the geometric plane
       !>              defined by POINT, SPAN1, and SPAN2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If SPAN1 and SPAN2 are linearly dependent, i.e. the vectors
       !>         POINT, SPAN1, and SPAN2 do not define a plane, the error
       !>         SPICE(DEGENERATECASE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPICELIB geometry routines that deal with planes use the `plane'
       !>     data type to represent input and output planes. This data type
@@ -10724,7 +10724,7 @@ contains
       !>     routine's output, PLANE, to another representation of a
       !>     geometric plane.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Project a vector V orthogonally onto a plane defined by
       !>         POINT, SPAN1, and SPAN2. PROJ is the projection we want; it
@@ -10747,22 +10747,22 @@ contains
       !>            C
       !>                  CALL PSV2PL ( POS, POS, VEL, PLANE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  G. Thomas and R. Finney, "Calculus and Analytic Geometry,"
       !>          7th Edition, Addison Wesley, 1988.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 24-AUG-2021 (JDR)
       !>
@@ -10851,7 +10851,7 @@ contains
       return
       end procedure psv2pl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NV       is the number of vertices comprising the plate
       !>              set.
@@ -10897,7 +10897,7 @@ contains
       !>              points in the outward normal direction. Here
       !>              "x" denotes the vector cross product operator.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the total area of the input set of plates.
       !>     Each plate contributes the area of the triangle defined by the
@@ -10909,11 +10909,11 @@ contains
       !>         2
       !>        L
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of plates is less than 0, the error
       !>         SPICE(BADPLATECOUNT) is signaled.
@@ -10927,11 +10927,11 @@ contains
       !>
       !>         the error SPICE(INDEXOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes the total area of a set of triangular
       !>     plates. The plates need not define a closed surface.
@@ -10947,7 +10947,7 @@ contains
       !>        Single plate
       !>        Empty plate set
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input
@@ -11027,20 +11027,20 @@ contains
       !>                         =    0.2366025403784438E+01
       !>         Computed area   =    2.3660254037844384
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR)
       !>
@@ -11152,7 +11152,7 @@ contains
       return
       end procedure pltar
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     POINT    is an arbitrary point in 3-dimensional space.
       !>
@@ -11164,31 +11164,31 @@ contains
       !>              The plate is allowed to be degenerate: it may
       !>              consist of a line segment or of a single point.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PNEAR    is the closest point on the plate to POINT.
       !>              PNEAR is unique, since the plate is convex.
       !>
       !>     DIST     is the distance between POINT and PNEAR.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The input plate is allowed to be degenerate: it may be
       !>         a line segment or a single point.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input
@@ -11257,20 +11257,20 @@ contains
       !>        Near point     =   0.3333333E+00  0.3333333E+00  0.3333333E+00
       !>        Distance       =   0.2886751E+01
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.3, 04-JUL-2021 (JDR)
       !>
@@ -11493,7 +11493,7 @@ contains
       return
       end procedure pltnp
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NV       is the number of vertices comprising the plate
       !>              model.
@@ -11539,7 +11539,7 @@ contains
       !>              points in the outward normal direction. Here
       !>              "x" denotes the vector cross product operator.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the volume of the spatial region bounded
       !>     by the plates.
@@ -11550,11 +11550,11 @@ contains
       !>         3
       !>        L
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The input plate model must define a spatial region with
       !>         a boundary. This routine does not check the inputs to
@@ -11572,11 +11572,11 @@ contains
       !>
       !>         the error SPICE(INDEXOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes the volume of a spatial region bounded by
       !>     a set of triangular plates. If the plate set does not actually
@@ -11598,7 +11598,7 @@ contains
       !>        Tiled ellipsoid with one plate removed
       !>        Two boxes with intersection having positive volume
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input
@@ -11682,22 +11682,22 @@ contains
       !>         Expected volume =    1/6
       !>         Computed volume =   0.16666666666666666
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The plate collection must describe a surface and enclose a
       !>         volume such that the divergence theorem (see [1]) is
       !>         applicable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  T. Apostol, "Calculus, Vol. II," John Wiley & Sons, 1969.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR)
       !>
@@ -11995,7 +11995,7 @@ contains
       return
       end procedure pltvol
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NDIM     is the dimension of the function to be
       !>              differentiated. The derivative of each
@@ -12016,7 +12016,7 @@ contains
       !>
       !>              DELTA may be negative but must be non-zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DFDT     is an N-dimensional vector representing an estimate
       !>              of the derivative of the input function at the
@@ -12036,22 +12036,22 @@ contains
       !>              differences of the input function defined by
       !>              F0(I), F2(I), and DELTA.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If DELTA is zero, the error SPICE(DIVIDEBYZERO) is signaled.
       !>
       !>     2)  If NDIM is less than 1, this routine will fail in a
       !>         system-dependent manner.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine estimates the derivative of a vector-valued function
       !>     using the average of forward and backward differences.
@@ -12069,7 +12069,7 @@ contains
       !>
       !>     and finding the derivative of the parabolas at X1.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -12108,20 +12108,20 @@ contains
       !>        Note that the difference displayed is platform-dependent, but
       !>        should be on the order of 1.E-12.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-AUG-2020 (JDR)
       !>
@@ -12163,11 +12163,11 @@ contains
       return
       end procedure qderiv
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MATRIX   is a 3x3 rotation matrix in double precision.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     AXIS     is a unit vector pointing along the axis of the
       !>              rotation. In other words, AXIS is a unit eigenvector
@@ -12182,11 +12182,11 @@ contains
       !>              radians. The angle returned will be in the range from
       !>              0 to PI.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input matrix is not a rotation matrix (where a fairly
       !>         loose tolerance is used to check this), an error is signaled
@@ -12195,11 +12195,11 @@ contains
       !>     2)  If the input matrix is the identity matrix, this routine
       !>         returns an angle of 0.0, and an axis of ( 0.0, 0.0, 1.0 ).
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Every rotation matrix has an axis A such any vector, V, parallel
       !>     to that axis satisfies the equation
@@ -12227,7 +12227,7 @@ contains
       !>     0 radians, AXIS is along the positive z-axis. In the case of a
       !>     rotation by 180 degrees, two choices are
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -12416,7 +12416,7 @@ contains
       !>         Instantaneous angular velocity vector:
       !>           0.0000000000   0.0000000000   0.0000729212
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  If the input matrix is not a rotation matrix but is close
       !>         enough to pass the tests this routine performs on it, no error
@@ -12428,11 +12428,11 @@ contains
       !>         transformation, input the transpose of that matrix to this
       !>         routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -12441,7 +12441,7 @@ contains
       !>     F.S. Turner        (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.2.0, 05-JUL-2021 (JDR)
       !>
@@ -12491,7 +12491,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.1.0, 30-MAY-2002 (FST)
       !>
@@ -12571,7 +12571,7 @@ contains
 
       end procedure raxisa
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B,
@@ -12580,7 +12580,7 @@ contains
       !>                      2
       !>                 A * x   +  B * x  +  C.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ROOT1,
       !>     ROOT2    are the roots of the equation
@@ -12614,25 +12614,25 @@ contains
       !>
       !>                 - C / B.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input coefficients A and B are both zero, the error
       !>         SPICE(DEGENERATECASE) is signaled. The output arguments
       !>         are not modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)   Humor us and suppose we want to compute the "golden ratio."
       !>
@@ -12685,21 +12685,21 @@ contains
       !>             ROOT1 is 0.000000000000000    1.000000000000000
       !>             ROOT2 is 0.000000000000000   -1.000000000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No checks for overflow of the roots are performed.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 17-JUN-2021 (JDR)
       !>
@@ -12855,32 +12855,32 @@ contains
       return
       end procedure rquad
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NUM      is the numerator of a quotient
       !>
       !>     DENOM    is the denominator of a quotient
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     Q        is the largest integer less than or equal to the
       !>              quotient NUM/DENOM
       !>
       !>     REM      is the remainder of the integer division NUM/DENOM
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If DENOM is zero, the error SPICE(DIVIDEBYZERO) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given the double precision inputs NUM and DENOM, this routine
       !>     finds double precision numbers Q and REM that satisfy the
@@ -12895,7 +12895,7 @@ contains
       !>     This routine serves as a macro. In this way the code to perform
       !>     this task can be written and maintained in a single location.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     One frequently needs to compute the  ``Two pi modulus'' of a
       !>     number. For positive numbers the FORTRAN intrinsic mod
@@ -12906,21 +12906,21 @@ contains
       !>
       !>         CALL RMAIND ( X, TWOPI(), I, MOD2PI )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Arithmetic overflows are not trapped or detected by this
       !>         routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -12960,32 +12960,32 @@ contains
       return
       end procedure rmaind
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NUM      is the numerator of a quotient
       !>
       !>     DENOM    is the denominator of a quotient
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     Q        is the largest integer less than or equal to the
       !>              quotient NUM/DENOM
       !>
       !>     REM      is the remainder of the integer division NUM/DENOM
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If DENOM is zero, the error SPICE(DIVIDEBYZERO) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given the integer inputs NUM and DENOM, this routine
       !>     finds integers Q and REM that satisfy the following conditions:
@@ -12998,7 +12998,7 @@ contains
       !>     This routine serves as a macro. In this way the code to perform
       !>     this task can be written and maintained in a single location.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     One frequently needs to compute the  ``360 modulus'' of a
       !>     number. For positive numbers the FORTRAN intrinsic mod
@@ -13009,20 +13009,20 @@ contains
       !>
       !>         CALL RMAINI ( I, 360, Q, MOD360 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -13056,7 +13056,7 @@ contains
       return
       end procedure rmaini
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VIN      is a 3-vector that is to be orthogonally projected
       !>              onto a specified plane.
@@ -13067,27 +13067,27 @@ contains
       !>              The normal vector component of a SPICE plane has
       !>              unit length.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is the vector resulting from the orthogonal
       !>              projection of VIN onto PLANE. VOUT is the closest
       !>              point in the specified plane to VIN.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     UBPL     is the upper bound of a SPICE plane array.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the normal vector of the input plane does not have unit
       !>         length (allowing for round-off error), the error
       !>         SPICE(NONUNITNORMAL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Projecting a vector VIN orthogonally onto a plane can be thought
       !>     of as finding the closest vector in the plane to VIN. This
@@ -13098,7 +13098,7 @@ contains
       !>     projection of a vector onto a plane, and VPROJ, which projects
       !>     a vector orthogonally onto another vector.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -13165,7 +13165,7 @@ contains
       !>        Projection of S/C position onto ring plane:
       !>             -29703.16955     879765.72163          0.00000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  It is recommended that the input plane be created by one of
       !>         the SPICELIB routines
@@ -13178,18 +13178,18 @@ contains
       !>         vector and a plane constant consistent with the normal
       !>         vector.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  G. Thomas and R. Finney, "Calculus and Analytic Geometry,"
       !>          7th Edition, Addison Wesley, 1988.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 24-AUG-2021 (NJB) (JDR)
       !>
@@ -13270,7 +13270,7 @@ contains
       return
       end procedure vprjp
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VIN,
       !>     PROJPL,
@@ -13279,7 +13279,7 @@ contains
       !>              containing the inverse image of the vector under
       !>              orthogonal projection onto PROJPL.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is the inverse orthogonal projection of VIN. This
       !>              is the vector lying in the plane INVPL whose
@@ -13291,11 +13291,11 @@ contains
       !>              of VIN could be computed. FOUND is .TRUE. if so,
       !>              .FALSE. otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     UBPL     is the upper bound of a SPICE plane array.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the normal vector of either input plane does not have unit
       !>         length (allowing for round-off error), the error
@@ -13312,11 +13312,11 @@ contains
       !>         compute with it. It's up to you to make sure that this
       !>         situation does not occur in your application of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Projecting a vector orthogonally onto a plane can be thought of
       !>     as finding the closest vector in the plane to the original vector.
@@ -13333,7 +13333,7 @@ contains
       !>     orthogonally, and VPROJ, which projects a vector onto another
       !>     vector orthogonally.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)   Suppose
       !>
@@ -13380,7 +13380,7 @@ contains
       !>
       !>             VOUT = ( 0.0, 1.0, 1.0 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  It is recommended that the input planes be created by one of
       !>         the SPICELIB routines
@@ -13393,18 +13393,18 @@ contains
       !>         vector and a plane constant consistent with the normal
       !>         vector.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  G. Thomas and R. Finney, "Calculus and Analytic Geometry,"
       !>          7th Edition, Addison Wesley, 1988.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 25-AUG-2021 (NJB) (JDR)
       !>
@@ -13428,7 +13428,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 01-NOV-1990 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 17-FEB-2004 (NJB)
       !>
@@ -13604,7 +13604,7 @@ contains
       return
       end procedure vprjpi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     POBJ     is the position (x, y, z, km) of an object with
       !>              respect to the observer, possibly corrected for
@@ -13614,26 +13614,26 @@ contains
       !>              of the observer with respect to the Solar System
       !>              barycenter.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     APPOBJ   is the apparent position of the object relative
       !>              to the observer, corrected for stellar aberration.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the velocity of the observer is greater than or equal
       !>         to the speed of light, the error SPICE(VALUEOUTOFRANGE)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Let r be the vector from the observer to the object, and v be
       !>         -                                                    -
@@ -13653,7 +13653,7 @@ contains
       !>            -                      -
       !>     of the object.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -13807,16 +13807,16 @@ contains
       !>         Apparent difference
       !>                    -27.204429         -16.323525          -8.326615
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W. Owen, "The Treatment of Aberration in Optical Navigation",
       !>          JPL IOM #314.8-524, 8 February 1985.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -13824,7 +13824,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 05-JUL-2021 (JDR)
       !>
@@ -13857,7 +13857,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (WLT) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.1.0, 9-MAR-1989 (HAN)
       !>
@@ -13955,7 +13955,7 @@ contains
       return
       end procedure stelab
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     POBJ     is the cartesian position vector of an object with
       !>              respect to the observer, possibly corrected for
@@ -13965,7 +13965,7 @@ contains
       !>              with respect to the Solar System barycenter. Units
       !>              are km/s.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CORPOS   is the  position of the object relative to the
       !>              observer, corrected for the stellar aberration
@@ -13978,21 +13978,21 @@ contains
       !>              observer, in order to reach the position indicated by
       !>              the input vector POBJ.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the velocity of the observer is greater than or equal to
       !>         the speed of light, an error is signaled by a routine in the
       !>         call tree of this routine. The outputs are undefined.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In order to transmit radiation from an observer to a specified
       !>     target, the emission direction must be corrected for one way
@@ -14023,7 +14023,7 @@ contains
       !>     This routine applies the inverse correction, so here the rotation
       !>     about H is by -PHI radians.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -14183,23 +14183,23 @@ contains
       !>         Apparent difference
       !>                     27.202563          16.325802           8.327911
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W. Owen, "The Treatment of Aberration in Optical Navigation",
       !>          JPL IOM #314.8-524, 8 February 1985.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 13-AUG-2021 (JDR)
       !>
@@ -14237,7 +14237,7 @@ contains
       return
       end procedure stlabx
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NROW     is the number of rows in the input matrix.
       !>
@@ -14272,7 +14272,7 @@ contains
       !>                          ij
       !>              and columns.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BTMAT    is the matrix obtained from BMAT when each of its
       !>              blocks is transposed. Given the description of
@@ -14299,11 +14299,11 @@ contains
       !>                 |......:......:.......:     :......|
       !>                  -                                -
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of rows input is not positive, the error
       !>         SPICE(BADROWCOUNT) is signaled.
@@ -14317,18 +14317,18 @@ contains
       !>     4)  If BMAT cannot be partitioned into an integer number of
       !>         blocks, the error SPICE(BLOCKSNOTEVEN) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine transposes the blocks of a block structured
       !>     matrix. This operation is valuable, as it is a means
       !>     for computing the inverse of a state transformation matrix
       !>     (see the example below).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following code fragment illustrates how you would convert
       !>     a state relative to earth-fixed coordinates to J2000 coordinates.
@@ -14358,21 +14358,21 @@ contains
       !>     C
       !>           CALL MXVG   ( TSPMI, ESTATE, 6, 6, ISTATE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
       !>

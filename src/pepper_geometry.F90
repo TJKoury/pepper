@@ -11,7 +11,7 @@ submodule (pepper_instance) pepper_geometry
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TIME     is an ignored double precision number. This argument
       !>              is present so the argument list of this routine is
@@ -24,7 +24,7 @@ contains
       !>              value resulting from the last search step, is passed in
       !>              via the TIME argument.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STEP     is the output step size. This is the value set by the
       !>              most recent call to GFSSTP. Units are TDB seconds.
@@ -34,26 +34,26 @@ contains
       !>              TIME+STEP may bracket a state transition and definitely
       !>              do not bracket more than one state transition.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If this routine is called before a step size has been
       !>         set via a call to GFSSTP, the error SPICE(NOTINITIALIZED)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the time step set by the most recent call to
       !>     GFSSTP.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) In normal usage of a high-level GF API routine, the caller
       !>        will pass in a constant step size STEP. The API routine will
@@ -80,15 +80,15 @@ contains
       !>          .              RPT,     GFREPI,  GFREPU,  GFREPF,
       !>          .              BAIL,    GFBAIL,  CNFINE,  RESULT )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -97,7 +97,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 03-JUN-2021 (JDR)
       !>
@@ -135,7 +135,7 @@ contains
       end associate
       end procedure gfstep
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STEP     is the output step size to be returned by the next call
       !>              GFSTEP. Units are TDB seconds.
@@ -145,49 +145,49 @@ contains
       !>              TIME+STEP may bracket a state transition and definitely
       !>              do not bracket more than one state transition.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input step size is non-positive, the error
       !>         SPICE(INVALIDSTEP) is signaled. The stored step value
       !>         is not updated.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the header of GFSTEP above.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the header of GFSTEP above.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine must be called before the first time
       !>         GFSTEP is called during a program run.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     L.S. Elson         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 03-JUN-2021 (JDR)
       !>
@@ -220,7 +220,7 @@ contains
       end associate
       end procedure gfsstp
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     T1       is one of two abscissa values (usually times)
       !>              bracketing a state change.
@@ -233,23 +233,23 @@ contains
       !>     S2       is the system state at T2. This argument is provided
       !>              for forward compatibility; it's not currently used.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     T        is the midpoint of T1 and T2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     "Refinement" means reducing the size of a bracketing interval on
       !>     the real line in which a solution is known to lie. In the GF
@@ -265,7 +265,7 @@ contains
       !>     by users must have the same argument list in order to be used by
       !>     the GF mid-level APIs such as GFOCCE and GFFOVE.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following code fragment from an example program in the header
       !>     of GFOCCE shows the routine passed as the 12th argument.
@@ -290,21 +290,21 @@ contains
       !>             .               GFREPI,   GFREPU,       GFREPF,
       !>             .               BAIL,     GFBAIL,       CNFINE,  RESULT )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 26-OCT-2021 (JDR)
       !>
@@ -327,7 +327,7 @@ contains
       return
       end procedure gfrefn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     WORD     is any English word for which you want to write the
       !>              correct phrase "a(an) response(answer)".  The case of the
@@ -349,7 +349,7 @@ contains
       !>              those specified result in ANA being returned in all lower
       !>              case.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the correct indefinite article needed to
       !>     modify the word contained in WORD.
@@ -360,22 +360,22 @@ contains
       !>
       !>     (or CHARACTER*(N) where N > 1) in the calling program.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the uppercase value of CASE is not 'U', 'C' or 'L', it
       !>         shall be treated as 'L'.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows you to construct grammatically correct phrases
       !>     when you need to modify a word by an indefinite article. Using
@@ -386,7 +386,7 @@ contains
       !>
       !>     will be grammatically correct.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you wished to construct one of the messages
       !>
@@ -399,23 +399,23 @@ contains
       !>        MESSAGE = ANA( WORD, 'L' ) // ' ' // WORD // ' file '
       !>        CALL CMPRSS ( ' ', 1, MESSAGE, MESSAGE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  Merriam-Webster (Ed.), "Webster's Ninth New Collegiate
       !>          Dictionary," 10th edition, 1990.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.3, 24-NOV-2021 (JDR)
       !>
@@ -545,7 +545,7 @@ contains
       end associate
       end procedure ana
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining the
       !>              computation method to be used to obtain the surface
@@ -713,7 +713,7 @@ contains
       !>              Case and leading and trailing blanks are not significant
       !>              in the string OBSREF.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     AZLSTA   is a state vector representing the position and
       !>              velocity of the target relative to the specified
@@ -766,11 +766,11 @@ contains
       !>              between the observer and the light time corrected
       !>              target location.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either the name of the center of motion or the target
       !>         cannot be translated to its NAIF ID code, an error is signaled
@@ -833,7 +833,7 @@ contains
       !>         a routine in the call tree of this routine. See item 2 in the
       !>         $Restrictions section for further details.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -873,7 +873,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes azimuth/elevation coordinates of a target
       !>     as seen from an observer whose trajectory is not provided by SPK
@@ -920,7 +920,7 @@ contains
       !>     In both cases, the origin of the local topocentric frame is
       !>     the observer's location.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1212,7 +1212,7 @@ contains
       !>        computation methods. Please refer to the task description for
       !>        an explanation.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine may not be suitable for work with stars or other
       !>         objects having large distances from the observer, due to loss
@@ -1239,17 +1239,17 @@ contains
       !>         By definition, the azimuth is zero and the elevation is
       !>         either pi/2 if ELPLSZ is .TRUE., or -pi/2 otherwise.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 01-NOV-2021 (JDR) (NJB) (EDW)
       module procedure azlcpo
@@ -1455,7 +1455,7 @@ contains
       end associate
       end procedure azlcpo
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FRMCLS   is an integer code specifying the frame class or
       !>              classes for which built-in frame ID codes are
@@ -1477,7 +1477,7 @@ contains
       !>                 DYN               5     Dynamic frame
       !>                 SWTCH             6     Switch frame
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IDSET    is a SPICE set containing the ID codes of all
       !>              built-in reference frames of the specified class
@@ -1489,11 +1489,11 @@ contains
       !>              IDSET must be initialized by the caller via the
       !>              SPICELIB routine SSIZEI.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the INCLUDE file frmtyp.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input frame class argument is not defined in
       !>         frmtyp.inc, the error SPICE(BADFRAMECLASS) is signaled.
@@ -1501,11 +1501,11 @@ contains
       !>     2)  If the size of IDSET is too small to hold the requested
       !>         frame ID set, the error SPICE(SETTOOSMALL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine has a counterpart
       !>
@@ -1514,7 +1514,7 @@ contains
       !>     which fetches the frame IDs of all frames specified in the kernel
       !>     pool.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1668,21 +1668,21 @@ contains
       !>        current SPICE Toolkit. Only the first 5 frames of each
       !>        family are presented in the output.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 08-AUG-2021 (JDR) (NJB)
       !>
@@ -1832,7 +1832,7 @@ contains
       end associate
       end procedure bltfrm
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the integer ID code of the body for which the
       !>              transformation is requested. Bodies are numbered
@@ -1844,18 +1844,18 @@ contains
       !>              the observer to the body at the epoch of
       !>              observation.)
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TIPM     is the transformation matrix from Inertial to body
       !>              Equator and Prime Meridian. The X axis of the PM
       !>              system is directed to the intersection of the
       !>              equator and prime meridian. The Z axis points north.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If data required to define the body-fixed frame associated
       !>         with BODY are not found in the binary PCK system or the kernel
@@ -1880,11 +1880,11 @@ contains
       !>     5)  If the specified body code BODY is not recognized, an error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is related to the more general routine TIPBOD
       !>     which returns a matrix that transforms vectors from a
@@ -1939,7 +1939,7 @@ contains
       !>     These angles -- typically nodal rates -- vary in number and
       !>     definition from one planetary system to the next.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following code fragment, BODMAT is used to rotate
       !>     the position vector (POS) from a target body (BODY) to a
@@ -1967,15 +1967,15 @@ contains
       !>     TIPM must have been loaded into the kernel pool (by one or more
       !>     previous calls to FURNSH).
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -1984,7 +1984,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     K.S. Zukor         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.2.1, 14-APR-2021 (JDR)
       !>
@@ -2048,7 +2048,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 4.2.0, 27-JUL-2016 (BVS)
       !>
@@ -2163,7 +2163,7 @@ contains
       return
       end procedure bodmat
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ELTS     are conic elements describing the orbit of a body
       !>              around a primary. The elements are, in order:
@@ -2185,16 +2185,16 @@ contains
       !>     ET       is the time at which the state of the orbiting body
       !>              is to be determined, in ephemeris seconds J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state (position and velocity) of the body at
       !>              time ET. Components are x, y, z, dx/dt, dy/dt, dz/dt.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the eccentricity supplied is less than 0, the error
       !>         SPICE(BADECCENTRICITY) is signaled.
@@ -2216,15 +2216,15 @@ contains
       !>         danger of floating point overflow during computation, an error
       !>         is signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let VINIT contain the initial state of a spacecraft relative to
       !>     the center of a planet at epoch ET, and let GM be the gravitation
@@ -2249,22 +2249,22 @@ contains
       !>        WRITE (*,*) '                y, dy/dt = ', DIFF(2), DIFF(5)
       !>        WRITE (*,*) '                z, dz/dt = ', DIFF(3), DIFF(6)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  R. Bate, D. Mueller, and J. White, "Fundamentals of
       !>          Astrodynamics," Dover Publications Inc., 1971.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.1.0, 13-AUG-2021 (JDR)
       !>
@@ -2316,7 +2316,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 3.0.0, 12-NOV-1992 (WLT)
       !>
@@ -2557,22 +2557,22 @@ contains
       return
       end procedure conics
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FILNAM   is the name of a file that is to be deleted. Upon
       !>              successful completion of this routine this file will
       !>              no longer exist. The file to be deleted must be closed
       !>              when this routine is called.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the file name is blank, the error SPICE(BLANKFILENAME)
       !>         is signaled.
@@ -2592,17 +2592,17 @@ contains
       !>     6)  If the attempt to close the file with STATUS='DELETE' fails,
       !>         the error SPICE(FILEDELETEFAILED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The  file specified by FILNAM is opened and then closed by this
       !>     routine with STATUS = 'DELETE' to delete it. The file must be
       !>     closed for this routine to delete it.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This subroutine is a support utility that deletes a file.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you wish to delete a file named 'delete.me' in the
       !>     current directory. The code fragment below would accomplish this.
@@ -2610,21 +2610,21 @@ contains
       !>        FILE = 'delete.me'
       !>        CALL DELFIL ( FILE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The file to be deleted must be closed when this routine is
       !>         invoked.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 02-JUN-2021 (JDR)
       !>
@@ -2741,7 +2741,7 @@ contains
 
       end procedure delfil
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X,
       !>     Y,
@@ -2755,7 +2755,7 @@ contains
       !>              is the polar radius of the spheroid. (More importantly
       !>              RP = RE*(1-F).)
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     JACOBI   is the matrix of partial derivatives of the conversion
       !>              between rectangular and geodetic coordinates. It
@@ -2769,11 +2769,11 @@ contains
       !>
       !>               evaluated at the input values of X, Y, and Z.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input point is on the z-axis (X = 0 and Y = 0), the
       !>         Jacobian is undefined, the error SPICE(POINTONZAXIS) is
@@ -2785,11 +2785,11 @@ contains
       !>     3)  If the equatorial radius is not positive, the error
       !>         SPICE(BADRADIUS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     When performing vector calculations with velocities it is
       !>     usually most convenient to work in rectangular coordinates.
@@ -2818,7 +2818,7 @@ contains
       !>        JACOBI|
       !>              |(x, y, z)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3051,20 +3051,20 @@ contains
       !>          dY/dt (km/s)           =     0.53760111E+04
       !>          dZ/dt (km/s)           =    -0.20881149E+02
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 26-OCT-2021 (JDR)
       !>
@@ -3152,7 +3152,7 @@ contains
       return
       end procedure dgeodr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STATE    is the state vector of a target body as seen from an
       !>              observer.
@@ -3160,17 +3160,17 @@ contains
       !>     BODYR    is the radius of the target body observed from the
       !>              position in STATE; the target body assumed as a sphere.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the double precision value of the time
       !>     derivative of the half angle of a spherical body in radians
       !>     per second.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the radius of the body BODYR is less than zero, the error
       !>         SPICE(BADRADIUS) is signaled.
@@ -3181,11 +3181,11 @@ contains
       !>     3)  If the body radius exceeds the distance from the body to the
       !>         observer, the error SPICE(BADGEOMETRY) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In this discussion, the notation
       !>
@@ -3259,7 +3259,7 @@ contains
       !>        dt                 2            2  1/2
       !>                     (range - body_radius )      range
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3377,21 +3377,21 @@ contains
       !>            at begin time  :   -2.5387993682459762E-011
       !>            two weeks later:    2.9436205837172777E-011
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 23-JUN-2020 (JDR)
       !>
@@ -3487,7 +3487,7 @@ contains
 
       end procedure dhfa
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SYMMAT   is a symmetric 2x2 matrix. That is, SYMMAT has the
       !>              form
@@ -3507,7 +3507,7 @@ contains
       !>
       !>              to determine the outputs DIAG and ROTATE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DIAG,
       !>     ROTATE   are, respectively, a diagonal matrix and a 2x2
@@ -3523,11 +3523,11 @@ contains
       !>              that meet these criteria (they will be inverses of one
       !>              another), either rotation may be chosen.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -3538,11 +3538,11 @@ contains
       !>
       !>         has no effect on this routine's outputs.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The capability of diagonalizing a 2x2 symmetric matrix is
       !>     especially useful in a number of geometric applications
@@ -3604,7 +3604,7 @@ contains
       !>     get ever closer to being diagonal without converging. Choosing
       !>     the smallest rotation angle precludes this possibility.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  A case that can be verified by hand computation:
       !>         Suppose SYMMAT is
@@ -3708,24 +3708,24 @@ contains
       !>               SMINOR(I) = ROTATE(I,2)  /  DSQRT( DIAG(2,2) )
       !>            END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  T. Apostol, "Calculus, Vol. II," chapter 5, "Eigenvalues of
       !>          Operators Acting on Euclidean Spaces," John Wiley & Sons,
       !>          1969.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 17-JUN-2021 (JDR)
       !>
@@ -3981,7 +3981,7 @@ contains
       end associate
       end procedure diags2
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ANGLE    is the angle given in radians, through which the rotation
       !>              is performed.
@@ -3993,7 +3993,7 @@ contains
       !>              rotation [ANGLE]     .
       !>                              IAXIS
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DMOUT    is the derivative of the rotation matrix with respect to
       !>              the angle of rotation. That is, DMOUT is the derivative
@@ -4004,20 +4004,20 @@ contains
       !>              the rotation of the COORDINATE system through ANGLE
       !>              radians about the axis whose index is IAXIS.)
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the axis index is not in the range 1 to 3, the error
       !>         SPICE(BADAXIS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A coordinate system rotation by ANGLE radians rotation about
       !>     the first, i.e. x-axis, [ANGLE]  is described by
@@ -4063,7 +4063,7 @@ contains
       !>           | -cos(ANGLE) -sin(ANGLE)   0   |
       !>           |       0           0       0   |
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     If ROTATE is called from a FORTRAN program as follows:
       !>
@@ -4075,20 +4075,20 @@ contains
       !>           |-SQRT(2)/2  -SQRT(2)/2   0  |
       !>           |     0           0       0  |
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -4158,7 +4158,7 @@ contains
       return
       end procedure drotat
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     KEYWD    is a word used to mark the start of a set of numeric
       !>              words of interest.
@@ -4168,7 +4168,7 @@ contains
       !>
       !>     STRING   is a string potentially containing KEYWD and numbers.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STRING   is the input string stripped of all parsed
       !>              numeric words. If there was room available to parse
@@ -4191,19 +4191,19 @@ contains
       !>              numeric words that follow the first occurrence of the
       !>              keyword but precede the next non-numeric word.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Definitions:
       !>
@@ -4236,7 +4236,7 @@ contains
       !>     In all other cases, some part of the string (possibly all of it)
       !>     will be removed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Input   STRING  'LONGITUDE 39.2829  LATITUDE 24.27682'
       !>             KEYWD   'LONGITUDE'
@@ -4280,22 +4280,22 @@ contains
       !>                     1.9D+01
       !>                     2.3D+01
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 05-JUN-2021 (JDR)
       !>
@@ -4314,7 +4314,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-     SPICELIB Version 1.1.0, 23-MAY-1990 (HAN)
       !>
@@ -4473,7 +4473,7 @@ contains
 
       end procedure dxtrct
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Deprecated: This routine has been superseded by the SPICELIB
       !>     routine EVSGP4. *ALL* TLE evaluations should use that routine.
@@ -4484,7 +4484,7 @@ contains
       !>     less-than 225 minutes). This evaluator uses algorithms as
       !>     described in Hoots 1980 [1].
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the epoch in TDB seconds past ephemeris epoch J2000
       !>              at which a state should be produced from the
@@ -4567,13 +4567,13 @@ contains
       !>                 ELEMS ( 10 ) = EPOCH of the elements in seconds
       !>                                past ephemeris epoch J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state produced by evaluating the input elements
       !>              at the input epoch ET. Units are km and km/sec relative
       !>              to the TEME reference frame.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NMODL    is a parameter that controls how many element sets
       !>              can be buffered internally. Since there are a lot
@@ -4586,7 +4586,7 @@ contains
       !>              with the NMODL. Empirically, 6 seems to be a good
       !>              break even value for NMODL.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  No checks are made on the reasonableness of the inputs.
       !>
@@ -4595,11 +4595,11 @@ contains
       !>         signaled. This error should signal only for bad (nonphysical)
       !>         TLEs.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine evaluates NORAD two-line element sets for
       !>     near-earth orbiting satellites using the algorithms described in
@@ -4611,7 +4611,7 @@ contains
       !>     Near earth is as an orbital period of less than 225
       !>     minutes.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4773,11 +4773,11 @@ contains
       !>        Position:  -4644.60403398  -5038.95025540   -337.27141117
       !>        Velocity:     -0.45719025      0.92884817     -7.55917355
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  F. Hoots and R. Roehrich, "Spacetrack Report #3: Models for
       !>          Propagation of the NORAD Element Sets," U.S. Air Force
@@ -4797,13 +4797,13 @@ contains
       !>          AIAA/AAS Astrodynamics Specialist Conference, Keystone, CO.,
       !>          August 21-24, 2006.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 01-NOV-2021 (JDR) (EDW)
       !>
@@ -6055,7 +6055,7 @@ contains
       end associate
       end procedure ev2lin
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Evaluate NORAD two-line element data for earth orbiting
       !>     spacecraft. This evaluator uses algorithms as described
@@ -6063,7 +6063,7 @@ contains
       !>
       !>     This routine supersedes SPICELIB routines EV2LIN and DPSPCE.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the epoch in seconds past ephemeris epoch J2000
       !>              at which a state should be produced from the
@@ -6146,19 +6146,19 @@ contains
       !>                 ELEMS ( 10 ) = EPOCH of the elements in seconds
       !>                                past ephemeris epoch J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state produced by evaluating the input elements
       !>              at the input epoch ET. Units are km and km/sec relative
       !>              to the TEME reference frame.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     AFSPC    set the SGP4 propagator to use the original
       !>              Space Track #3 GST algorithm as described in Hoots [1];
       !>              value defined in zzsgp4.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  No checks are made on the reasonableness of the inputs.
       !>
@@ -6166,17 +6166,17 @@ contains
       !>         error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine evaluates any NORAD two-line element sets for
       !>     near-earth orbiting satellites using the algorithms described in
       !>     Vallado 2006 [4].
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6338,11 +6338,11 @@ contains
       !>        Position:  -4644.60403398  -5038.95025539   -337.27141116
       !>        Velocity:     -0.45719025      0.92884817     -7.55917355
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  F. Hoots and R. Roehrich, "Spacetrack Report #3: Models for
       !>          Propagation of the NORAD Element Sets," U.S. Air Force
@@ -6362,12 +6362,12 @@ contains
       !>          AIAA/AAS Astrodynamics Specialist Conference, Keystone, CO.,
       !>          August 21-24, 2006.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     M. Costa Sitja     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-2021 (EDW) (MCS)
       module procedure evsgp4
@@ -6413,7 +6413,7 @@ contains
 
       end procedure evsgp4
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NTH      is an index to an element of a set. If the set is to
       !>              be conceived as sorted in increasing order, then the
@@ -6421,7 +6421,7 @@ contains
       !>
       !>     SET      is a set.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the location within the set array of the
       !>     NTH element within the order imposed by the ASCII collating
@@ -6433,20 +6433,20 @@ contains
       !>         .
       !>        SET( FETCHC ( CARDC ( SET ) ) )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the element does not exist, the error SPICE(INVALIDINDEX)
       !>         is signaled, and the value of FETCHC is zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Within a set, the elements may be stored in arbitrary
       !>     order. The elements of a set may be retrieved by stepping
@@ -6469,7 +6469,7 @@ contains
       !>
       !>     In general, FETCHC ( I, SET ) is not equal to I.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let SET contain the following elements.
       !>
@@ -6499,22 +6499,22 @@ contains
       !>
       !>     produces the same elements in unspecified order.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 27-AUG-2021 (JDR)
       !>
@@ -6569,7 +6569,7 @@ contains
       return
       end procedure fetchc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NTH      is an index to an element of a set. If the set is to
       !>              be conceived as sorted in increasing order, then the
@@ -6577,7 +6577,7 @@ contains
       !>
       !>     SET      is a set.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the location within the set array of the NTH
       !>     element within the order imposed by the values of the elements,
@@ -6592,20 +6592,20 @@ contains
       !>         .
       !>        SET( FETCHD ( CARDD ( SET ) ) )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the element does not exist, the error SPICE(INVALIDINDEX)
       !>         is signaled, and the value of FETCHD is zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Within a set, the elements may be stored in arbitrary order.
       !>     The elements of a set may be retrieved by stepping through the
@@ -6628,7 +6628,7 @@ contains
       !>
       !>     In general, FETCHD ( I, SET ) is not equal to I.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let SET contain the following elements.
       !>
@@ -6660,22 +6660,22 @@ contains
       !>
       !>      produces the same elements in unspecified order.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 20-AUG-2021 (JDR)
       !>
@@ -6729,7 +6729,7 @@ contains
       return
       end procedure fetchd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NTH      is an index to an element of a set. If the set is to
       !>              be conceived as sorted in increasing order, then the
@@ -6737,7 +6737,7 @@ contains
       !>
       !>     SET      is a set.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the location within the set array of the NTH
       !>     element within the order imposed by the values of the elements,
@@ -6752,20 +6752,20 @@ contains
       !>         .
       !>        SET( FETCHI ( CARDI ( SET ) ) )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the element does not exist, the error SPICE(INVALIDINDEX)
       !>         is signaled, and the value of FETCHI is zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Within a set, the elements may be stored in arbitrary order.
       !>     The elements of a set may be retrieved by stepping through the
@@ -6788,7 +6788,7 @@ contains
       !>
       !>     In general, FETCHI ( I, SET ) is not equal to I.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let SET contain the following elements.
       !>
@@ -6820,22 +6820,22 @@ contains
       !>
       !>     produces the same elements in unspecified order.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 20-AUG-2021 (JDR)
       !>
@@ -6890,22 +6890,22 @@ contains
       return
       end procedure fetchi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FILNAM   is the filename that is to be mapped to its associated
       !>              Fortran logical unit.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LUNIT    is the Fortran logical unit that is associated with the
       !>              filename FILNAM. The file must be open for this routine
       !>              to work properly.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the filename is blank, the error SPICE(BLANKFILENAME) is
       !>         signaled.
@@ -6922,16 +6922,16 @@ contains
       !>     5)  In the event of an error the contents of the variable LUNIT
       !>         are not defined, and should not be used.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Use the Fortran INQUIRE statement to determine the filename
       !>     that is associated with the Fortran logical unit LUNIT.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following code fragment illustrates the use of FN2LUN.
       !>
@@ -6941,20 +6941,20 @@ contains
       !>            CALL FN2LUN ( FNAME, LUNIT )
       !>            WRITE (*,*) 'The logical unit is: ', LUNIT
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -7039,7 +7039,7 @@ contains
       return
       end procedure fn2lun
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LON      is the geodetic longitude of the input point. This is
       !>              the angle between the prime meridian and the meridian
@@ -7072,18 +7072,18 @@ contains
       !>     F        is the flattening coefficient = (RE-RP) / RE,  where
       !>              RP is the polar radius of the spheroid.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECTAN   are the rectangular coordinates of a point.
       !>
       !>              The units associated with RECTAN are those associated
       !>              with the inputs ALT and RE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the flattening coefficient is greater than or equal to
       !>         one, the error SPICE(VALUEOUTOFRANGE) is signaled.
@@ -7091,11 +7091,11 @@ contains
       !>     2)  If the equatorial radius is less than or equal to zero,
       !>         the error SPICE(VALUEOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given the geodetic coordinates of a point, and the constants
       !>     describing the reference spheroid,  this routine returns the
@@ -7107,7 +7107,7 @@ contains
       !>     this coordinate system may not be a right-handed coordinate
       !>     system.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine can be used to convert body fixed geodetic
       !>     coordinates (such as the used for United States Geological
@@ -7313,16 +7313,16 @@ contains
       !>           90.000   88.707  -6355.573      0.000      1.000      1.000
       !>           45.000   88.171  -6355.561      1.000      1.000      1.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  R. Bate, D. Mueller, and J. White, "Fundamentals of
       !>          Astrodynamics," Dover Publications Inc., 1971.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -7331,7 +7331,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 01-OCT-2021 (JDR) (NJB)
       !>
@@ -7359,7 +7359,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (HAN)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 3.0.0, 09-JUN-1989  (HAN)
       !>
@@ -7468,14 +7468,14 @@ contains
       return
       end procedure georec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INSTID   is the NAIF ID of an instrument.
       !>
       !>     ROOM     is the maximum number of 3-dimensional vectors that can
       !>              be returned in BOUNDS.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SHAPE    is a character string that describes the "shape" of
       !>              the field of view. Possible values returned are:
@@ -7544,13 +7544,13 @@ contains
       !>              magnitude of the boresight (for 'ANGLES'-style FOV
       !>              specifications.)
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MINCOS   is the lower limit on the value of the cosine of the
       !>              cross or reference angles in the 'ANGLES' specification
       !>              cases. The current value for MINCOS is 1.0D-15.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the frame associated with the instrument can not be found,
       !>         the error SPICE(FRAMEMISSING) is signaled.
@@ -7631,13 +7631,13 @@ contains
       !>         kernel pool for the instrument whose FOV is sought, this
       !>         module assumes the 'CORNERS' specification is to be utilized.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine relies upon having successfully loaded an instrument
       !>     kernel (IK file) via the routine FURNSH prior to calling this
       !>     routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a common interface for retrieving from the
       !>     kernel pool the geometric characteristics of an instrument field
@@ -7786,7 +7786,7 @@ contains
       !>     software to further manipulate the vectors retrieved by this
       !>     routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -7979,7 +7979,7 @@ contains
       !>                        -0.40000000  0.80000000 -0.20000000
       !>        --------------------------------------
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine will not operate unless an I-kernel for the
       !>         instrument with the NAIF ID specified in INSTID have been
@@ -7987,11 +7987,11 @@ contains
       !>         this IK contains the specification for the instrument field of
       !>         view consistent with the expectations of this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -8001,7 +8001,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     F.S. Turner        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.3.0, 17-DEC-2021 (JDR) (ML) (BVS)
       !>
@@ -8930,7 +8930,7 @@ contains
 
       end procedure getfov
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MA       is the hyperbolic mean anomaly of an orbiting body at
       !>              some epoch t,
@@ -8944,53 +8944,53 @@ contains
       !>
       !>     ECC      is the eccentricity of the orbit.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     F        is the corresponding eccentric anomaly. This is the
       !>              solution to the time of flight equation
       !>
       !>                 MA = e sinh(F) - F
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the eccentricity (ECC) is less than one, the error
       !>         SPICE(WRONGCONIC) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Iterate to solve
       !>
       !>        f(F,MA,e) = e sinh(F) - F - MA = 0
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     ELLTOF, HYPTOF, and PARTOF are used by CONICS.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  R. Bate, D. Mueller, and J. White, "Fundamentals of
       !>          Astrodynamics," Dover Publications Inc., 1971.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.2.0, 14-APR-2021 (JDR)
       !>
@@ -9026,7 +9026,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 8-JAN-1989 (IMU)
       !>
@@ -9246,7 +9246,7 @@ contains
       end associate
       end procedure hyptof
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Deprecated: This routine has been superseded by the SPICELIB
       !>     routine ILUMIN. This routine is supported for purposes of
@@ -9255,7 +9255,7 @@ contains
       !>     Find the illumination angles at a specified surface point of a
       !>     target body.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARGET   is the name of the target body. TARGET is
       !>              case-insensitive, and leading and trailing blanks
@@ -9339,7 +9339,7 @@ contains
       !>              meridian) coordinates. SPOINT need not be visible
       !>              from the observer's location at time ET.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PHASE    is the phase angle at SPOINT, as seen from OBSRVR
       !>              at time ET. This is the angle between the
@@ -9362,11 +9362,11 @@ contains
       !>              range of EMISSN is [0, pi]. See $Particulars below
       !>              for a detailed discussion of the definition.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If TARGET and OBSRVR are not distinct, the error
       !>         SPICE(BODIESNOTDISTINCT) is signaled.
@@ -9402,13 +9402,13 @@ contains
       !>         zero, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     No files are input to this routine. However, ILLUM expects
       !>     that the appropriate SPK and PCK files have been loaded via
       !>     FURNSH.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The term "illumination angles" refers to following set of
       !>     angles:
@@ -9532,7 +9532,7 @@ contains
       !>     computation. The problem becomes a purely geometrical one,
       !>     and is described by the diagram above.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -9729,15 +9729,15 @@ contains
       !>         The emission angle should be 0.
       !>         The solar incidence and phase angles should be equal.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -9745,7 +9745,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.0, 01-NOV-2021 (EDW) (JDR)
       !>
@@ -9982,7 +9982,7 @@ contains
       end associate
       end procedure illum
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     REFA,
       !>     REFB     are the names of two inertial reference frames. Any names
@@ -9990,7 +9990,7 @@ contains
       !>              $Particulars for a list of some of the more commonly used
       !>              inertial reference frame names.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ROTAB    is a rotation matrix that transforms the
       !>              coordinates of a vector V relative to the
@@ -10001,21 +10001,21 @@ contains
       !>
       !>                 V = ROTAB * V.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either of the input reference frame names is invalid, an
       !>         error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Normally applications should call the more general, higher level
       !>     routine PXFORM instead of this routine.
@@ -10046,7 +10046,7 @@ contains
       !>
       !>     See the SPICELIB routine GHGIRF for details.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Transform a vector V1950 from the B1950 to the J2000
       !>         reference frame.
@@ -10062,21 +10062,21 @@ contains
       !>            C
       !>                  CALL MXV ( TRANS, V1950, V2000 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 20-AUG-2021 (JDR)
       !>
@@ -10118,7 +10118,7 @@ contains
       return
       end procedure irftrn
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Deprecated: This routine is deprecated because all high-level
       !>     time conversion routines (STR2ET, UTC2ET, TPARSE) were updated
@@ -10129,7 +10129,7 @@ contains
       !>     International Standards Organization (ISO) to equivalent UTC time
       !>     strings recognized by the SPICELIB routine TPARSE.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TSTRNG   is an input time string, containing a time string
       !>              in ISO format. This routine is not sensitive to
@@ -10161,17 +10161,17 @@ contains
       !>              interpretation and exercise adequate care in their
       !>              programs to avoid this possible confusion.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     UTCSTR   is the equivalent of TSTRNG, expressed in a UTC
       !>              time string that can be parsed by the SPICELIB
       !>              routine TPARSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the string is interpreted as an ISO format string and
       !>         the year portion is not within the range [1000, 2999], the
@@ -10182,16 +10182,16 @@ contains
       !>         the error SPICE(NOTISOFORMAT) is signaled. UTCSTR is not
       !>         changed.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The input string is converted to a UTC time string as defined
       !>     by the SPICELIB routine TPARSE.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     To convert the time string 1992-04-03T14:12:28 to the
       !>     corresponding ephemeris time, execute the following instructions:
@@ -10206,17 +10206,17 @@ contains
       !>
       !>        ET = DELTA + UTCSEC
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  J. Jespersen and J. Fitz-Randolph, "From Sundials to Atomic
       !>          Clocks, Understanding Time and Frequency," Dover
       !>          Publications, Inc. New York, 1877.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
@@ -10224,7 +10224,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 23-DEC-2021 (JDR)
       !>
@@ -10461,20 +10461,20 @@ contains
 
       end procedure iso2utc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FILE     is the name of the file in question.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value .TRUE. if the file is open, .FALSE.
       !>     otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the filename is blank, the error SPICE(BLANKFILENAME) is
       !>         signaled.
@@ -10482,16 +10482,16 @@ contains
       !>     2)  If an error occurs during the execution of the Fortran INQUIRE
       !>         statement, the error SPICE(INQUIREFAILED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Use the Fortran INQUIRE statement to determine the open status
       !>     of FILE.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following code fragment illustrates the use of ISOPEN.
       !>
@@ -10501,20 +10501,20 @@ contains
       !>              ERROR = 'Input file is already open.'
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 12-AUG-2021 (JDR)
       !>
@@ -10595,7 +10595,7 @@ contains
       return
       end procedure isopen
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FRMCLS   is an integer code specifying the frame class or
       !>              classes for which frame ID codes are requested.
@@ -10633,7 +10633,7 @@ contains
       !>
       !>                 SWTCH             6     Switch frame
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IDSET    is a SPICE set containing the ID codes of all
       !>              reference frames having specifications present in
@@ -10643,11 +10643,11 @@ contains
       !>              Note that if FRMCLS is set to INERTL, IDSET
       !>              will be empty on output.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the INCLUDE file frmtyp.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input frame class argument is not defined in
       !>         frmtyp.inc, the error SPICE(BADFRAMECLASS) is signaled.
@@ -10680,12 +10680,12 @@ contains
       !>         deciding that a frame has been specified. This routine
       !>         does not attempt to diagnose this problem.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Reference frame specifications for frames that are not built in
       !>     are typically established by loading frame kernels.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine enables SPICE-based applications to conveniently
       !>     find the frame ID codes of reference frames having specifications
@@ -10709,7 +10709,7 @@ contains
       !>
       !>     which fetches the frame IDs of all built-in reference frames.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -10891,7 +10891,7 @@ contains
       !>               31002   MOON_PA_DE403
       !>               31003   MOON_ME_DE403
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine will work correctly if the kernel pool contains
       !>         no invalid frame specifications. See the description of
@@ -10899,16 +10899,16 @@ contains
       !>         specifications are introduced into the kernel pool, either by
       !>         loaded kernels or by means of the kernel pool "put" APIs.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 08-AUG-2021 (JDR) (NJB)
       !>
@@ -11169,7 +11169,7 @@ contains
       return
       end procedure kplfrm
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LIST     is a list of items delimited by any one of the characters
       !>              in the string DELIMS. Consecutive delimiters, and
@@ -11188,7 +11188,7 @@ contains
       !>              delimiters. In addition, leading and trailing blanks are
       !>              ignored.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SET      is a SPICE set containing the items in the list, left
       !>              justified. Any item in the list too long to fit into an
@@ -11201,11 +11201,11 @@ contains
       !>              The size of the set must be initialized prior to calling
       !>              LPARSS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the size of the set is not large enough to accommodate all
       !>         of the items in the set, an error is signaled by a routine in
@@ -11218,15 +11218,15 @@ contains
       !>         integers via the SPICELIB routine ENCHAR, an error is signaled
       !>         by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following examples illustrate the operation of LPARSS.
       !>
@@ -11308,15 +11308,15 @@ contains
       !>              SET (1)     = ' '
       !>              SET (2)     = '1 2 3 4 5 6 7 8 9 10'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -11324,7 +11324,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 24-AUG-2021 (JDR)
       !>
@@ -11349,7 +11349,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (HAN) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2005 (NJB)
       !>
@@ -11624,7 +11624,7 @@ contains
       return
       end procedure lparss
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the name of the central body, typically a planet.
       !>
@@ -11646,7 +11646,7 @@ contains
       !>                            relative to the central body, for
       !>                            planetary and stellar aberrations.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the planetocentric longitude of the Sun,
       !>     often called "L_s," for the specified body at the specified time.
@@ -11666,11 +11666,11 @@ contains
       !>     Units are radians; the range is 0 to 2*pi. Longitudes are
       !>     positive to the east.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input body name cannot be translated to an ID code,
       !>         and if the name is not a string representation of an integer
@@ -11691,7 +11691,7 @@ contains
       !>         are parallel, an error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPICE kernels must be loaded by the calling program
       !>     before this routine is called.
@@ -11711,7 +11711,7 @@ contains
       !>     -  A PCK file containing rotational elements for the central body
       !>        must be loaded before this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The direction of the vernal equinox for the central body is
       !>     determined from the instantaneous equatorial and orbital planes
@@ -11731,7 +11731,7 @@ contains
       !>     Astronomical Almanac, due to differences in these input data,
       !>     and due to differences in precision of the computations.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -11822,23 +11822,23 @@ contains
       !>         Time                      = 2018 Mar 8  17:59 UTC
       !>         Planetocentric L_s (deg.) =    348.11593978317080
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  "The Astronomical Almanac for the Year 2005," page L9,
       !>          United States Naval Observatory, U.S. Government Printing
       !>          Office, Washington, D.C., 2004.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 25-AUG-2021 (JDR)
       !>
@@ -11853,7 +11853,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 07-JAN-2005 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 19-SEP-2013 (BVS)
       !>
@@ -12011,7 +12011,7 @@ contains
       end associate
       end procedure lspcn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ETOBS    is an epoch expressed as ephemeris seconds past J2000
       !>              TDB. This is the time at which an electromagnetic signal
@@ -12041,7 +12041,7 @@ contains
       !>
       !>     TARG     is the NAIF ID of the target.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ETTARG   is the epoch expressed as ephemeris seconds past J2000
       !>              TDB at which the electromagnetic signal is "at" the
@@ -12057,11 +12057,11 @@ contains
       !>
       !>                 ELAPSD = DABS( ETOBS - ETTARG )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If DIR is not one of '->' or '<-', the error
       !>         SPICE(BADDIRECTION) is signaled. In this case
@@ -12076,11 +12076,11 @@ contains
       !>         In this case, the value of ETTARG will be set to ETOBS
       !>         and ELAPSD will be set to zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Suppose a radio signal travels between two solar system
       !>     objects. Given an ephemeris for the two objects, which way
@@ -12090,7 +12090,7 @@ contains
       !>     target TARG). It also returns the elapsed time between
       !>     transmission and receipt of the signal.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Example 1.
       !>     ----------
@@ -12177,21 +12177,21 @@ contains
       !>        WRITE (*,*) 'The  signal arrives in Canberra at: ', ETCANB
       !>        WRITE (*,*) 'Round trip time for the signal was: ', RNDTRP
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.3, 26-OCT-2021 (JDR)
       !>
@@ -12320,22 +12320,22 @@ contains
 
       end procedure ltime
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LUNIT    is the Fortran logical unit that is to be mapped to the
       !>              filename with which it is associated. The file must be
       !>              open for this routine to work properly.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     FILNAM   is the filename that is associated with the Fortran
       !>              logical unit LUNIT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the logical unit is not positive, the error
       !>         SPICE(INVALIDARGUMENT) is signaled.
@@ -12349,16 +12349,16 @@ contains
       !>     4)  In the event of an error the contents of the variable FILNAM
       !>         are not defined and should not be used.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Uses the Fortran INQUIRE statement to determine the filename that
       !>     is associated with the Fortran logical unit LUNIT.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following code fragment illustrates the use of LUN2FN.
       !>
@@ -12368,20 +12368,20 @@ contains
       !>            CALL LUN2FN ( UNIT1, FNAME1 )
       !>            WRITE (*,*) 'The filename is: ', FNAME1
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -12455,7 +12455,7 @@ contains
       return
       end procedure lun2fn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is any character string.
       !>
@@ -12463,7 +12463,7 @@ contains
       !>              for a signed integer. It is assumed that the
       !>              signed integer begins at FIRST.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LAST     is the last character at or after FIRST such that
       !>              the substring STRING(FIRST:LAST) is a signed
@@ -12474,11 +12474,11 @@ contains
       !>              that begins at FIRST and ends at last. If there
       !>              is no such string NCHAR will be given the value 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -12490,11 +12490,11 @@ contains
       !>         then LAST will be returned with the value FIRST-1 and NCHAR
       !>         will be returned with the value 0.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows you to scan forward in a string to locate
       !>     a signed integer that begins on the input character FIRST. Note
@@ -12502,7 +12502,7 @@ contains
       !>     integers. The signed integers may in addition have a leading
       !>     plus ('+') or minus ('-') sign.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you believe that a string has the form
       !>
@@ -12536,20 +12536,20 @@ contains
       !>
       !>     END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-AUG-2021 (JDR)
       !>
@@ -12839,7 +12839,7 @@ contains
 !
 !     Standard SPICE error handling.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IDSPEC   is an integer cell containing a specification of
       !>              the head and tail identifier character sets to be
@@ -12868,7 +12868,7 @@ contains
       !>              the first identifier following the position
       !>              FIRST.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LAST     is the last character position such that the
       !>              substring STRING(FIRST:LAST) is an identifier, if
@@ -12880,11 +12880,11 @@ contains
       !>              is not found, the returned value of NCHAR is
       !>              zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL   is the SPICE cell lower bound.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -12892,35 +12892,35 @@ contains
       !>         LEN(STRING)-1, the returned value of LAST is FIRST-1, and the
       !>         returned value of NCHAR is zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The default syntax rules for valid identifiers are specified in
       !>     the $Particulars section of the umbrella routine LXNAME. These
       !>     rules may be overridden by calling LXCSID.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the $Examples section of the umbrella routine LXNAME.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -13017,19 +13017,19 @@ contains
       return
       end procedure lxidnt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IDSPEC   is an integer cell. The caller must initialize
       !>              IDSPEC as a cell, and should use MXSPEC as the size
       !>              of IDSPEC.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IDSPEC   is an integer cell containing a specification of
       !>              the head and tail identifier character sets to be
       !>              used the entry point LXIDNT in scanning strings.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MXSPEC   is the recommended size for the declaration of
       !>              IDSPEC; the caller should declare IDSPEC as shown:
@@ -13042,18 +13042,18 @@ contains
       !>
       !>     LBCELL   is the SPICE cell lower bound.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If IDSPEC is not properly initialized on input, or if its size
       !>         is too small, an error is signaled by a routine in the call
       !>         tree of this routine. IDSPEC is undefined on output in this
       !>         case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows a calling program to obtain the default set of
       !>     allowed patterns for identifiers recognized by LXIDNT.
@@ -13061,25 +13061,25 @@ contains
       !>     Normally, this routine should be called once during the calling
       !>     program's initialization.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the $Examples section of the umbrella routine LXNAME.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 27-AUG-2021 (JDR)
       !>
@@ -13179,7 +13179,7 @@ contains
       return
       end procedure lxdfid
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HDCHRS   is a string containing the set of characters
       !>              allowed as the first (`head') character of an
@@ -13198,7 +13198,7 @@ contains
       !>              IDSPEC as a cell, and should use MXSPEC as the size
       !>              of IDSPEC.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     IDSPEC   is an integer cell containing a specification of
       !>              the head and tail identifier character sets to be
@@ -13206,7 +13206,7 @@ contains
       !>              The caller must initialize IDSPEC as a cell, and
       !>              should use MXSPEC as the size of IDSPEC.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MXSPEC   is the recommended size for the declaration of
       !>              IDSPEC; the caller should declare IDSPEC as shown:
@@ -13219,18 +13219,18 @@ contains
       !>
       !>     LBCELL   is the SPICE cell lower bound.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If non-printing characters are found in either of the input
       !>         arguments HDCHRS or TLCHRS, the error SPICE(NONPRINTINGCHARS)
       !>         is signaled. The set of allowed identifier characters is not
       !>         modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows a calling program to customize the set of
       !>     allowed patterns for identifiers recognized by LXIDNT.
@@ -13238,25 +13238,25 @@ contains
       !>     Normally, this routine should be called once during the calling
       !>     program's initialization, if this routine is called at all.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the $Examples section of the umbrella routine LXNAME.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 27-AUG-2021 (JDR)
       !>
@@ -13399,25 +13399,25 @@ contains
       return
       end procedure lxcsid
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     POINT    is a point in 3-dimensional space.
       !>
       !>     ELLIPS   is a SPICE ellipse that represents an ellipse
       !>              in three-dimensional space.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PNEAR    is the nearest point on ELLIPS to POINT.
       !>
       !>     DIST     is the distance between POINT and PNEAR. This is
       !>              the distance between POINT and the ellipse.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input ellipse ELLIPS has one or both semi-axis lengths
       !>         equal to zero, the error SPICE(DEGENERATECASE) is signaled.
@@ -13434,11 +13434,11 @@ contains
       !>     4)  The routine does not check for overflow when scaling or
       !>         translating the input point.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given an ellipse and a point in 3-dimensional space, if the
       !>     orthogonal projection of the point onto the plane of the ellipse
@@ -13457,7 +13457,7 @@ contains
       !>     NEARPT, the input point is on, inside, or outside the ellipsoid,
       !>     so it makes sense to speak of its altitude.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  For planetary rings that can be modeled as flat disks with
       !>         elliptical outer boundaries, the distance of a point in
@@ -13485,21 +13485,21 @@ contains
       !>         out this process and uses NPELPT to find the ellipse-to-point
       !>         distance.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 24-AUG-2021 (JDR) (NJB)
       !>
@@ -13678,7 +13678,7 @@ contains
       return
       end procedure npelpt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STATE    is the state (position and velocity) of the body
       !>              at some epoch. Components are x, y, z, dx/dt, dy/dt,
@@ -13692,7 +13692,7 @@ contains
       !>     MU       is the gravitational parameter (GM, km /sec ) of
       !>              the primary body.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ELTS     are equivalent conic elements describing the orbit
       !>              of the body around its primary. The elements are,
@@ -13712,11 +13712,11 @@ contains
       !>              are used to describe all three types (elliptic,
       !>              hyperbolic, and parabolic) of conic orbit.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If MU is not positive, the error SPICE(NONPOSITIVEMASS)
       !>         is signaled.
@@ -13754,17 +13754,17 @@ contains
       !>         frame, the resulting elements are invalid. No error checking
       !>         is done to detect this problem.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The SPICELIB routine CONICS is the inverse of this routine:
       !>     CONICS maps a set of osculating elements and a time to a state
       !>     vector.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -14011,7 +14011,7 @@ contains
       !>        2008 NOV 14 11:59:59.001    36.084745
       !>        2009 MAY 13 11:59:57.999    36.608971
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The input state vector must be expressed relative to an
       !>         inertial reference frame.
@@ -14053,12 +14053,12 @@ contains
       !>         SPICELIB routine CONICS and compare the resulting state
       !>         vector with the one supplied to this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  R. Bate, D. Mueller, and J. White, "Fundamentals of
       !>          Astrodynamics," Dover Publications Inc., 1971.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -14067,7 +14067,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.2, 13-AUG-2021 (JDR)
       !>
@@ -14120,7 +14120,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.3.0, 17-NOV-2005 (NJB)
       !>
@@ -14524,7 +14524,7 @@ contains
       end associate
       end procedure oscelt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MA       is the parabolic mean anomaly of an orbiting body at
       !>              some epoch t,
@@ -14536,7 +14536,7 @@ contains
       !>              the gravitational parameter of the primary body,
       !>              and q is the perifocal distance.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     D        is the corresponding parabolic anomaly. This is the
       !>              solution to the time of flight equation
@@ -14544,45 +14544,45 @@ contains
       !>                           3
       !>                 MA = D + D / 3
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Iterate to solve
       !>
       !>                         3
       !>        f(D,MA,p) = D + D / 3 - MA = 0
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     ELLTOF, HYPTOF, and PARTOF are used by CONICS.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  R. Bate, D. Mueller, and J. White, "Fundamentals of
       !>          Astrodynamics," Dover Publications Inc., 1971.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 14-APR-2021 (JDR)
       !>
@@ -14676,12 +14676,12 @@ contains
       return
       end procedure partof
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODID    is the NAIF id-code of some planet, asteroid, comet
       !>              or natural satellite of a planet.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns 1 if planetographic and planetocentric
       !>     longitude increase in the same sense for the input body, and
@@ -14697,11 +14697,11 @@ contains
       !>     If PCK information for the specified body can not be located in
       !>     the kernel pool, the function returns the value 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -14709,13 +14709,13 @@ contains
       !>         specified by BODID is not available in the kernel pool,
       !>         the function returns the value 0.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A text PCK kernel must be loaded via the routine FURNSH
       !>     that contains the orientation information for the body specified
       !>     by BODID.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the multiplicative factor needed
       !>     to convert planetographic longitude to planetocentric
@@ -14724,7 +14724,7 @@ contains
       !>     This routine relies on the proper orientation for the
       !>     specified body having been loaded in the kernel pool.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have the planetographic coordinates
       !>     of some point on the surface of an object and that you
@@ -14770,21 +14770,21 @@ contains
       !>
       !>        CALL GEOREC ( LAT, PCLONG, HEIGHT, EQRAD, F, REC )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 26-OCT-2021 (JDR)
       !>
@@ -14867,7 +14867,7 @@ contains
       return
       end procedure plnsns
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DSPMSG   is a character string that will be displayed from the
       !>              current cursor position and describes the input that
@@ -14879,16 +14879,16 @@ contains
       !>              All characters (including trailing blanks) in DSPMSG
       !>              are considered significant and will be displayed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BUFFER   is a character string that contains the string
       !>              entered by the user.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     This subroutine uses discovery check-in so that it may be called
       !>     after an error has occurred.
@@ -14901,18 +14901,18 @@ contains
       !>         device fails, returning an IOSTAT value not equal to zero, the
       !>         error SPICE(READFAILED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility that allows you to "easily" request information
       !>     from a program user. At a high level, it frees you from the
       !>     peculiarities of a particular implementation of FORTRAN cursor
       !>     control.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -15042,17 +15042,17 @@ contains
       !>           y-velocity (km/s):          19.0770886182
       !>           z-velocity (km/s):           7.9424268278
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine is environment specific. Standard FORTRAN does
       !>         not provide for user control of cursor position after write
       !>         statements.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -15060,7 +15060,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.27.0, 28-NOV-2021 (BVS)
       !>
@@ -15221,7 +15221,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 15-OCT-1992 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 3.0.0, 08-APR-1998 (NJB)
       !>
@@ -15323,7 +15323,7 @@ contains
       return
       end procedure prompt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is a string representing a numeric value. Commas and
       !>              spaces may be used in this string for ease of reading
@@ -15352,32 +15352,32 @@ contains
       !>
       !>              as appropriate.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DPVAL    is the double precision number obtained by parsing
       !>              STRING.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input string cannot be parsed  due to use of an
       !>         unexpected or misplaced character or due to a string
       !>         representing a number too large for double precision, the
       !>         error SPICE(NOTADPNUMBER) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The purpose of this routine is to enable safe parsing of double
       !>     precision numbers without the necessity of in-line error checking.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -15451,20 +15451,20 @@ contains
       !>                 Pi              3.141592653590
       !>                -PI             -3.141592653590
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 28-MAY-2020 (JDR)
       !>
@@ -15503,11 +15503,11 @@ contains
       return
       end procedure prsdp
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NUMBER   is an arbitrary nonnegative integer.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STRING   is the character string implied by the ASCII
       !>              interpretation of NUMBER when converted to its
@@ -15531,7 +15531,7 @@ contains
       !>              The string is, in effect, "padded with nulls"
       !>              on the left.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MINLEN   is the minimum length of a string into which a
       !>              number may be encoded. In order to avoid padding
@@ -15546,7 +15546,7 @@ contains
       !>              so long as both strings are of length MINLEN or
       !>              greater.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the length of the output string is less than MINLEN,
       !>         the error SPICE(INSUFFLEN) is signaled.
@@ -15558,11 +15558,11 @@ contains
       !>     3)  If the number to be encoded is larger than 128       - 1,
       !>         the error SPICE(OUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is identical to ENCHAR, except that this routine
       !>     does not use the machine-dependent encoding base returned by
@@ -15570,25 +15570,25 @@ contains
       !>     This base is expected to work on all systems supporting ASCII
       !>     encoding of characters.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See: SCARDC, SSIZEC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -15639,7 +15639,7 @@ contains
       return
       end procedure prtenc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is a character string previously encoded by PRTENC.
       !>              This contains an integer in base 128 notation,
@@ -15647,24 +15647,24 @@ contains
       !>              available character set. See PRTENC for details
       !>              about the format of STRING.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NUMBER   is the integer encoded in the input string.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the length of the input string is less than MINLEN,
       !>         the error SPICE(INSUFFLEN) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     PRTDEC is the inverse of PRTENC. In the example below,
       !>
@@ -15684,25 +15684,25 @@ contains
       !>     This base is expected to work on all systems supporting ASCII
       !>     encoding of characters.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See: CARDC, SIZEC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -15739,7 +15739,7 @@ contains
       return
       end procedure prtdec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FROM     is the name of a reference frame recognized by
       !>              SPICELIB that corresponds to the input ETFROM.
@@ -15756,7 +15756,7 @@ contains
       !>              of J2000 (TDB) that corresponds to the TO reference
       !>              frame.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ROTATE   is the transformation matrix that relates the reference
       !>              frame FROM at epoch ETFROM to the frame TO at epoch
@@ -15774,11 +15774,11 @@ contains
       !>                |  Z'  |     |          |   |  Z  |
       !>                `-    -'     `-        -'   `-   -'
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If sufficient information has not been supplied via loaded
       !>         SPICE kernels to compute the transformation between the
@@ -15788,7 +15788,7 @@ contains
       !>     2)  If either frame FROM or TO is not recognized, the error
       !>         SPICE(UNKNOWNFRAME) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called. Kernels that may be required include
@@ -15797,7 +15797,7 @@ contains
       !>     Such kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     PXFRM2 is most commonly used to transform a position between
       !>     time-dependent reference frames.
@@ -15809,7 +15809,7 @@ contains
       !>           SUBSLR
       !>           ILUMIN
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -16225,22 +16225,22 @@ contains
       !>         SURFPT and SINCPT:
       !>            Distance (mm):        32.139880286899256
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     S.C. Krening       (JPL)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 13-AUG-2021 (JDR)
       !>
@@ -16341,7 +16341,7 @@ contains
       end associate
       end procedure pxfrm2
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FILE     is the name of the text file from which the next
       !>              line is to be read. If the file is not currently
@@ -16350,27 +16350,27 @@ contains
       !>              returned. Otherwise, the next line not yet read
       !>              from the file is read and returned.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LINE     is next non-blank line of text in the specified file.
       !>
       !>     EOF      is .TRUE. when the end of the file is reached, and is
       !>              otherwise .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either the end of the file is reached or an error occurs
       !>         before a non-blank line is found, LINE is blank.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See input FILES.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     RDNBL simply calls RDTEXT until one of two things happens:
       !>
@@ -16381,7 +16381,7 @@ contains
       !>           file is closed, a blank line is returned, and the
       !>           end-of-file indicator becomes .TRUE.)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let FILE.1 contain the following lines.
       !>
@@ -16430,20 +16430,20 @@ contains
       !>           CALL RDTEXT ( FILE, LINE, EOF )
       !>        END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Any restrictions that apply to RDTEXT apply to RDNBL as well.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -16486,7 +16486,7 @@ contains
       return
       end procedure rdnbl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
       !>
@@ -16511,7 +16511,7 @@ contains
       !>
       !>                 C, c     Capitalized    One hundred fifty-three
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the string obtained by substituting the text
       !>              representation of the cardinal number VALUE for the first
@@ -16519,7 +16519,7 @@ contains
       !>
       !>              OUT and IN must be identical or disjoint.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXLCN   is the maximum expected length of any cardinal text. 145
       !>              characters are sufficient to hold the text representing
@@ -16532,7 +16532,7 @@ contains
       !>
       !>                 - 777 777 777 777
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If OUT does not have sufficient length to accommodate the
       !>         result of the substitution, the result will be truncated on
@@ -16544,11 +16544,11 @@ contains
       !>     3)  If the value of RTCASE is not recognized, the error
       !>         SPICE(INVALIDCASE) is signaled. OUT is not changed.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is one of a family of related routines for inserting values
       !>     into strings. They are typically used to construct messages that
@@ -16579,7 +16579,7 @@ contains
       !>        REPMCT   ( Replace marker with cardinal text          )
       !>        REPMOT   ( Replace marker with ordinal text           )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -16664,7 +16664,7 @@ contains
       !>            Input : Name:  YY.  Rank:  XX.
       !>            Output: Name:  Moriarty.  Rank:  Five.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  VALUE must be in the range accepted by the SPICELIB routine
       !>         INTTXT. This range is currently
@@ -16673,11 +16673,11 @@ contains
       !>
       !>         Note that the endpoints of the interval are excluded.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -16685,7 +16685,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 06-JUL-2021 (JDR)
       !>
@@ -16810,7 +16810,7 @@ contains
       return
       end procedure repmct
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
       !>
@@ -16838,7 +16838,7 @@ contains
       !>
       !>                 C, c      Capitalized    'True', 'False'
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the string obtained by substituting the text
       !>              representation of VALUE for the first occurrence of
@@ -16846,11 +16846,11 @@ contains
       !>
       !>              OUT and IN must be disjoint.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If OUT does not have sufficient length to accommodate the
       !>         result of the substitution, the result will be truncated on
@@ -16862,11 +16862,11 @@ contains
       !>     3)  If the value of RTCASE is not recognized, the error
       !>         SPICE(INVALIDCASE) is signaled. OUT is not changed.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is one of a family of related routines for inserting values
       !>     into strings. They are typically used to construct messages that
@@ -16897,7 +16897,7 @@ contains
       !>        REPMCT   ( Replace marker with cardinal text          )
       !>        REPMOT   ( Replace marker with ordinal text           )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -16981,20 +16981,20 @@ contains
       !>            Input : Invalid value. The value was:  #.
       !>            Output: Invalid value. The value was:  False.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 08-JAN-2021 (JDR) (NJB)
       module procedure repml
@@ -17096,7 +17096,7 @@ contains
       end associate
       end procedure repml
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1       is a vector (typically representing a vector fixed in
       !>              inertial space) which is to be expressed in another
@@ -17109,7 +17109,7 @@ contains
       !>     IAXIS    is the index of the axis of rotation. The X, Y, and Z
       !>              axes have indices 1, 2 and 3 respectively.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is the vector expressed in the new reference frame
       !>              specified by the angle of rotation and axis. If
@@ -17123,11 +17123,11 @@ contains
       !>                 VOUT =  M * V1  = [ANGLE]      * V1
       !>                                          IAXIS
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -17135,11 +17135,11 @@ contains
       !>         treated the same as that integer 1, 2, or 3 that is congruent
       !>         to it mod 3.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A rotation about the first, i.e. X-axis, is described by
       !>
@@ -17168,7 +17168,7 @@ contains
       !>     ROTVEC decides which form is appropriate according to the value
       !>     of IAXIS and applies the rotation to the input vector.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -17224,22 +17224,22 @@ contains
       !>        Input vector  :     1.414     0.000     0.000
       !>        Rotated vector:     1.000    -1.000     0.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -17269,7 +17269,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 04-JAN-1989 (WLT)
       !>
@@ -17327,7 +17327,7 @@ contains
       return
       end procedure rotvec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SC       is a NAIF spacecraft identification code. See the
       !>              `Examples' section below, and also the NAIF_IDS
@@ -17390,7 +17390,7 @@ contains
       !>
       !>              See the `Examples' section in SCPS01, below.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ERROR    is .TRUE. if an error occurred parsing the input clock
       !>              string and converting it to ticks.
@@ -17422,11 +17422,11 @@ contains
       !>
       !>              See $Examples below.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the INCLUDE file sclk.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     In the case of any SPICELIB error occurring, ERROR is set to
       !>     .TRUE. and MSG to 'SPICELIB error detected.'.
@@ -17496,11 +17496,11 @@ contains
       !>         ERROR is set to .TRUE. and MSG contains the specific issue.
       !>         The output argument TICKS will not be modified.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine converts a character string representation of a
       !>     spacecraft clock count into the number of ticks represented
@@ -17512,7 +17512,7 @@ contains
       !>     This routine does not make use of any partition information.
       !>     See SCENCD for details on how to make use of partition numbers.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Below are some examples illustrating various inputs and the
       !>         resulting outputs for the Galileo spacecraft.
@@ -17554,7 +17554,7 @@ contains
       !>         '1-1-1'               48800
       !>         '1-1-2'               48801
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  An SCLK kernel appropriate to the spacecraft clock identified
       !>         by SC must be loaded at the time this routine is called.
@@ -17563,17 +17563,17 @@ contains
       !>         directly to barycentric dynamical time, a leapseconds kernel
       !>         must be loaded at the time this routine is called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 20-AUG-2021 (JDR)
       !>
@@ -17861,7 +17861,7 @@ contains
 !
 !     Standard SPICE error handling.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CLKNAM   is a short string identifying the spacecraft
       !>              clock of interest. The form of the string
@@ -17879,7 +17879,7 @@ contains
       !>              Case and white space (including embedded white
       !>              space) are not significant.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CLKID    is the NAIF integer code associated with the
       !>              input clock. CLKID is defined only if the
@@ -17888,11 +17888,11 @@ contains
       !>     FOUND    is a logical flag indicating whether the input
       !>              string specified a clock known to this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -17903,17 +17903,17 @@ contains
       !>         spacecraft, no error is signaled. For example, the string
       !>         'JUPITER BARYCENTER SCLK' maps to the code 5.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SCN2ID provides a means of mapping human-readable clock names
       !>     to integer codes used by the SPICELIB SCLK routines to
       !>     identify spacecraft clocks.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Look up the spacecraft clock code for the Galileo orbiter.
       !>
@@ -17924,20 +17924,20 @@ contains
       !>            CLKID  =  -77
       !>            FOUND  =  .TRUE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.1, 12-AUG-2021 (JDR)
       !>
@@ -17954,7 +17954,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 17-NOV-1995 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.2.0, 12-AUG-2001 (NJB)
       !>
@@ -17988,12 +17988,12 @@ contains
       return
       end procedure scn2id
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CLKID    is the NAIF integer code of a spacecraft clock of
       !>              interest.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CLKNAM   is a short, human-readable string identifying
       !>              the specified spacecraft clock. The returned
@@ -18011,11 +18011,11 @@ contains
       !>     FOUND    is a logical flag indicating whether the input
       !>              code specified a clock known to this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -18026,17 +18026,17 @@ contains
       !>         spacecraft, no error is signaled. For example, the code
       !>         5 maps to the string 'JUPITER BARYCENTER SCLK'.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine converts a NAIF spacecraft clock code to a human-
       !>     readable string. This function is useful for constructing
       !>     messages.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Look up the spacecraft clock name for code -77.
       !>
@@ -18047,20 +18047,20 @@ contains
       !>            CLKNAM  =  'GALILEO ORBITER SCLK'
       !>            FOUND   =  .TRUE.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
       !>
@@ -18088,7 +18088,7 @@ contains
       return
       end procedure scid2n
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RADIUS   is the radius of the sphere on which the points are
       !>              located.
@@ -18101,16 +18101,16 @@ contains
       !>     LAT2     are, respectively, the longitude and latitude of the
       !>              second point. The units are radians.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the distance between the two input points,
       !>     measured along the shortest great circle arc connecting them.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If RADIUS is negative, the error SPICE(INPUTOUTOFRANGE)
       !>         is signaled. SPHSD is set to zero. RADIUS may be zero;
@@ -18130,17 +18130,17 @@ contains
       !>         computation, regardless of whether or not they are in range.
       !>         See the code for the equation used.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     You may need to consider whether a spherical model is adequate
       !>     for your application; some bodies may be more accurately modeled
       !>     by an oblate or prolate spheroid, or by a triaxial ellipsoid.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -18186,22 +18186,22 @@ contains
       !>
       !>         Spherical surface distance:   1047.1975511965979
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 13-AUG-2021 (JDR)
       !>
@@ -18292,7 +18292,7 @@ contains
       return
       end procedure sphsd
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE,
       !>     DESCR    are the file handle assigned to a SPK file, and the
@@ -18308,7 +18308,7 @@ contains
       !>              be rotated. This may be any frame supported by
       !>              the SPICELIB subroutine FRMCHG.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    contains the position and velocity, at epoch ET,
       !>              for whatever body is covered by the specified segment.
@@ -18323,21 +18323,21 @@ contains
       !>     CENTER   is the integer ID code of the center of motion for
       !>              the state.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the requested reference frame is not supported by the
       !>         current version of CHGIRF, the error SPICE(SPKREFNOTSUPP)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Once SPKPV was the most basic of the SPK readers, the reader upon
       !>     which SPKSSB, SPKAPP, and SPKEZ were built. However, its function
@@ -18345,7 +18345,7 @@ contains
       !>     be called except by old software written before the release of
       !>     SPKPVN. This routine should be considered obsolete.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following code fragment, an entire SPK file is searched
       !>     for segments containing a particular epoch. For each one found,
@@ -18375,15 +18375,15 @@ contains
       !>           CALL DAFFNA ( FOUND )
       !>        END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -18395,7 +18395,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 6.1.1, 14-APR-2021 (JDR)
       !>
@@ -18505,7 +18505,7 @@ contains
       end associate
       end procedure spkpv
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the NAIF integer code of an extended body on which
       !>              a surface point of interest is located. The body is
@@ -18526,17 +18526,17 @@ contains
       !>              Latitude is measured in radians. On input, the range
       !>              of latitude is unrestricted.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECTAN   are the rectangular coordinates of the input surface
       !>              point. Units are the same as those used to define the
       !>              radii of BODY. Normally, these units are km.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If radii for BODY are not found in the kernel pool, an error
       !>         is signaled by a routine in the call tree of this routine.
@@ -18549,11 +18549,11 @@ contains
       !>         zero, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the rectangular coordinates of a surface
       !>     point on an extended body with known radii, where the location
@@ -18593,7 +18593,7 @@ contains
       !>     accepts a radius, longitude, and latitude as inputs and produces
       !>     equivalent rectangular coordinates as outputs.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -18706,24 +18706,24 @@ contains
       !>           Latitude  (deg) =   -35.000000000000000
       !>           Radius    (km)  =    6371.0790891167535
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  A PCK text kernel containing the body radius definitions
       !>         required by this routine must be loaded into the kernel
       !>         pool prior to any calls to this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 01-NOV-2021 (JDR) (EDW)
       !>
@@ -18789,7 +18789,7 @@ contains
       return
       end procedure srfrec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the "name" of a FORTRAN unit to return.
       !>              Recognized names are 'STDIN' and 'STDOUT'.
@@ -18799,32 +18799,32 @@ contains
       !>              SPICE(BADSTDIONAME) is signaled and UNIT is
       !>              set to -100.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     UNIT     is the logical unit associated with NAME. If
       !>              NAME is not recognized, UNIT is set to -100.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If NAME is not recognized, the error SPICE(BADSTDIONAME) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a low level utility for retrieving the logical units
       !>     associated with standard input and output. It exists to
       !>     isolate SPICE based code from compiler writer choices in the
       !>     implementation of standard input and output.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you would like to send a message to standard output
       !>     and that this message is contained in the array of N character
@@ -18836,20 +18836,20 @@ contains
       !>           CALL WRITLN ( MESSGE(I), STDOUT )
       !>        END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 20-AUG-2021 (JDR)
       !>
@@ -18887,7 +18887,7 @@ contains
       return
       end procedure stdio
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     POSITN   is a 3-vector giving the position of an observer with
       !>              respect to the center of an ellipsoid. The vector is
@@ -18906,7 +18906,7 @@ contains
       !>     C        is the length of the semi-axis of the ellipsoid that is
       !>              parallel to the Z-axis of the body-fixed reference frame.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     POINT    is the position of the intercept of the input ray,
       !>              defined by the direction vector U emanating from POSITN,
@@ -18923,11 +18923,11 @@ contains
       !>              will be returned as .TRUE. If the ray misses the
       !>              ellipsoid, FOUND will be returned as .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input vector is the zero vector, the error
       !>         SPICE(ZEROVECTOR) is signaled.
@@ -18935,11 +18935,11 @@ contains
       !>     2)  If any of the body's axes is zero, the error
       !>         SPICE(BADAXISLENGTH) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine assumes that an ellipsoid having semi-axes of
       !>     length A, B and C is given. Moreover, it is assumed that these
@@ -18947,7 +18947,7 @@ contains
       !>     whose origin is the geometric center of the ellipsoid---this is
       !>     called the body-fixed reference frame.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     A typical use of SURFPT would be to obtain the planetocentric
       !>     coordinates of the point at which the optic axis of a
@@ -19002,22 +19002,22 @@ contains
       !>         CALL VSUB ( VSURF, VPOS,  VSURF )
       !>         CALL MTXV ( TIBF,  VSURF, VSURF )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.0, 25-MAY-2021 (JDR)
       !>
@@ -19063,7 +19063,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.2.0, 28-NOV-2002 (NJB)
       !>
@@ -19287,7 +19287,7 @@ contains
       end associate
       end procedure surfpt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     AXDEF    is a "generalized" state vector defining one of the
       !>              principal axes of a reference frame. This vector
@@ -19402,7 +19402,7 @@ contains
       !>              determined by AXDEF and PLNDEF. The association of
       !>              integer values and axes is the same as for INDEXA.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XFORM    is the 6x6 matrix that transforms states from the
       !>              frame relative to which AXDEF and PLNDEF are specified
@@ -19427,11 +19427,11 @@ contains
       !>              PLNDEF, and where dR/dt is the derivative of R
       !>              with respect to that independent variable.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If INDEXA or INDEXP is not in the set {1,2,3}, the error
       !>         SPICE(BADINDEX) is signaled.
@@ -19442,11 +19442,11 @@ contains
       !>     3)  If the cross product of the vectors AXDEF and PLNDEF is zero,
       !>         the error SPICE(DEPENDENTVECTORS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given two linearly independent state vectors AXDEF and PLNDEF,
       !>     define vectors DIR1 and DIR2 by
@@ -19476,7 +19476,7 @@ contains
       !>
       !>     in the frame F determined by AXDEF and PLNDEF.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -19662,22 +19662,22 @@ contains
       !>           position:   -16659764.322    97343706.915   106745539.738
       !>           velocity:           2.691         -10.345          -7.877
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 03-SEP-2020 (JDR)
       !>
@@ -19712,7 +19712,7 @@ contains
       return
       end procedure twovxf
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UDFUNC   is the routine that returns the value of the scalar
       !>              quantity function of interest at X. The calling
@@ -19746,7 +19746,7 @@ contains
       !>
       !>              DX may be negative but must be non-zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DERIV    is the scalar double precision approximate value of the
       !>              first derivative of UDFUNC with respect to X.
@@ -19757,16 +19757,16 @@ contains
       !>                 DERIV = ---------------- |
       !>                                dy        | y=X
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If DX has a value of zero, an error is signaled by a routine
       !>         in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     If the evaluation of UDFUNC requires SPICE kernel data, the
       !>     appropriate kernels must be loaded before calling this routine.
@@ -19786,7 +19786,7 @@ contains
       !>     Such kernel data are normally loaded once per program run, NOT
       !>     every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a simple interface to numerically calculate
       !>     the first derivative of a scalar quantity function, UDFUNC.
@@ -19800,7 +19800,7 @@ contains
       !>     details of the discrete derivative computation performed by this
       !>     routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -19918,22 +19918,22 @@ contains
       !>
       !>          -1.3567094055133566E-004
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The function UDFUNC must exist everywhere within
       !>         [X - DX, X + DX].
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 05-JUL-2021 (JDR)
       !>
@@ -19997,53 +19997,53 @@ contains
 
       end subroutine uddf
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is a double precision value, unused.
       !>
       !>     VALUE    is a double precision value, unused.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The routine performs no evaluations. It exists for routines
       !>     expecting an UDFUNS argument. In the cases where UDFUNC is
       !>     unneeded or unavailable, this routine provides a null operation
       !>     alternative.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 27-AUG-2021 (JDR)
       !>
@@ -20061,7 +20061,7 @@ contains
 
       end procedure udf
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     EXTREM         is a string indicating the type of extremum to
       !>                    find.  Values are 'MIN' and 'MAX'.  Blanks and
@@ -20075,7 +20075,7 @@ contains
       !>     DIR            are the vertex and direction vector of a ray in
       !>                    three-dimensional space.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ANGLE          is the specified extremum of angular separation of
       !>                    the input ray and the ellipse.  This is the
@@ -20096,7 +20096,7 @@ contains
       !>                    extremum is achieved, any such point may be
       !>                    selected.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     UBEL           is the upper bound of a SPICELIB ellipse data
       !>                    structure.
@@ -20104,7 +20104,7 @@ contains
       !>     UBPL           is the upper bound of a SPICELIB plane data
       !>                    structure.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the length of any semi-axis of the ellipse is
       !>         non-positive, the error SPICE(INVALIDAXISLENGTH) is
@@ -20120,11 +20120,11 @@ contains
       !>     4)  If EXTREM contains an unrecognized value, the error
       !>         SPICE(NOTSUPPORTED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Definition
       !>     ==========
@@ -20217,7 +20217,7 @@ contains
       !>           an umbral or penumbral shadow cast by another ellipsoidal
       !>           body blocking an ellipsoidal light source.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  An example that can be readily checked by hand computation.
       !>
@@ -20329,7 +20329,7 @@ contains
       !>
       !>               END
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) Under some unusual geometric conditions, the search used
       !>        in this algorithm may find a relative extremum which is not
@@ -20358,18 +20358,18 @@ contains
       !>        angular parameter THETA defining the location relative to the
       !>        semi-axes is determined at the single precision level.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  "Numerical Recipes -- The Art of Scientific Computing" by
       !>           William H. Press, Brian P. Flannery, Saul A. Teukolsky,
       !>           William T. Vetterling.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.2, 01-OCT-2021 (NJB)
       !>
@@ -20869,7 +20869,7 @@ contains
       return
       end procedure zzasryel
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -20878,7 +20878,7 @@ contains
       !>     Solve a quadratic equation using an upper bound for the absolute
       !>     value of the roots. Only real roots are computed.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B,
@@ -20892,7 +20892,7 @@ contains
       !>                roots to be found by this routine. Roots having
       !>                absolute value larger than UB are not returned.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     N          is the number of real roots found that satisfy the
       !>                magnitude bound constraint.
@@ -20920,7 +20920,7 @@ contains
       !>               corresponding output argument is set to zero. If the
       !>               roots are complex, both R1 and R2 are set to zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     BIG            is a limit on the absolute value of the input
       !>                    coefficients and on the magnitude limit for the
@@ -20928,7 +20928,7 @@ contains
       !>
       !>                       SQRT( DPMAX() ) / 100
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of the input coefficients have absolute value larger
       !>         than the parameter BIG, the error SPICE(VALUEOUTOFRANGE) is
@@ -20937,20 +20937,20 @@ contains
       !>     2)  If UB is non-positive or larger than the parameter BIG, the
       !>         error SPICE(VALUEOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See ZZCNQUAD for a more robust implementation that makes use
       !>     of this one.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZCNQUAD
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine may suffer from loss of precision for coefficient
       !>         sets having small, non-zero leading coefficients. See ZZCNQUAD
@@ -20959,15 +20959,15 @@ contains
       !>     2)  This is a private routine; it should not be called by
       !>         non-SPICELIB code.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 21-JUN-2016 (NJB)
       !>
@@ -20977,7 +20977,7 @@ contains
       !>
       !>           Original version.
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>     None.
       !>
@@ -21249,7 +21249,7 @@ contains
       end associate
       end procedure zzbquad
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MIDLAT     is the latitude of the midpoint of a chord of a circle
       !>                of constant latitude. Units are radians. The range of
@@ -21260,17 +21260,17 @@ contains
       !>                chords, expressed as a non-negative value. Units are
       !>                radians. DLON must be strictly less than pi.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EPTLAT     is the latitude of the circle to which the chord
       !>                is tangent. Units are radians.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     ANGMRG is a tolerance used to determine whether the input latitude
       !>     is within range. See 'dsktol.inc' for further information.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input longitude extent DLON is negative, or if the
       !>         extent is greater than or equal to pi radians, the error
@@ -21282,11 +21282,11 @@ contains
       !>
       !>         the error SPICE(VALUEOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In the remarks below, the coordinate system is presumed to be
       !>     latitudinal.
@@ -21316,7 +21316,7 @@ contains
       !>     that the minimum latitude on the polygon is greater than a
       !>     specified value.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -21397,19 +21397,19 @@ contains
       !>        Endpoint latitude (deg) =    26.565051177077986
       !>        Check: difference (deg) =   6.36110936292703354E-015
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 20-APR-2016 (NJB) (EDW)
       module procedure zzchrlat
@@ -21464,11 +21464,11 @@ contains
       return
       end procedure zzchrlat
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TVEC       is a 6-vector containing the current system time.
       !>                The various components have the following meaning
@@ -21488,20 +21488,20 @@ contains
       !>                The first 5 components will be double precision
       !>                integers.  (They truncate without change.)
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the components of the current date and
       !>     time as determined by the system clock.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Example 1.
       !>
@@ -21626,11 +21626,11 @@ contains
       !>
       !>           WRITE (*,*) 'The average running time for VDOT is ', AVE
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     1) "Absoft FORTRAN 77 Compatibility Libraries", 1992,
       !>        Chapter 2, Chapter 3, pages 3-14 and 3-16.
@@ -21654,7 +21654,7 @@ contains
       !>
       !>     7) "The Intel Fortran Reference, Document Number: 253261-003"
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     K.R. Gehringer (JPL)
@@ -21663,7 +21663,7 @@ contains
       !>     M.J. Spencer   (JPL)
       !>     W.L. Taber     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 7.14.0, 17-OCT-2021 (NJB) (BVS)
       !>
@@ -21850,7 +21850,7 @@ contains
 
       end procedure zzcputim
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -21860,7 +21860,7 @@ contains
       !>     a cone and a line segment by "brute force"---specifically by
       !>     bisection.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     APEX       is the apex (tip) of the cone. In this routine's
       !>                documentation, we'll consider the cone to be a
@@ -21893,7 +21893,7 @@ contains
       !>                Exactly one of ENDPT1 and ENDPT2 must be inside
       !>                the cone.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NXPTS      is the number of points of intersection of the input
       !>                line segment and cone.
@@ -21907,42 +21907,42 @@ contains
       !>                endpoints bracket a root when exactly one of ENDPT1
       !>                and ENDPT2 is inside the cone.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If AXIS is the zero vector, the error SPICE(ZEROVECTOR)
       !>         will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used by the SPICELIB routine INCNSG to handle
       !>     cases where solution of a quadratic equation is subject to
       !>     excessive loss of precision.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in INCNSG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private SPICELIB routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 30-SEP-2016 (NJB)
       module procedure zzcxbrut
@@ -22093,21 +22093,21 @@ contains
       return
       end procedure zzcxbrut
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NUMR       Numerator for the division operation.
       !>
       !>     DENOM      Denominator for the division operation.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ZZDIV      The value NUMR/DENOM.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) SPICE(DIVIDEBYZERO) signals if DENOM equals zero. This
       !>        signal occurs for NUMR/0 and 0/0 cases.
@@ -22116,11 +22116,11 @@ contains
       !>        of the division is greater than EXPNT (defined
       !>        below).
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     We want to avoid a floating point exception signal from
       !>     the platform. This routine does not trap exceptions,
@@ -22163,7 +22163,7 @@ contains
       !>     of NUMR and DENOM to ensure the magnitude of NUMR/DENOM is
       !>     within the range [-(EXPNT-1), EXPNT].
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Demonstrate the use of ZZDIV with DPMAX and zero as the
       !>     numerator and denominator.
@@ -22301,19 +22301,19 @@ contains
       !>     =================================================================
       !>      DIV 0/0       =    0.0000000000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-2014 (EDW)
       module procedure zzdiv
@@ -22425,7 +22425,7 @@ contains
       end associate
       end procedure zzdiv
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -22434,27 +22434,27 @@ contains
       !>     Force the ZZDSKBSR subsystem to build a complete, current segment
       !>     list for a specified body.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the ID code of the body for which a complete
       !>                segment list is to be built by the ZZDSKBSR subsystem.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. See Particulars for a description of the side effects of
       !>     this routine.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while building the segment list for
       !>         the specified body, the error will be diagnosed by
       !>         a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -22465,7 +22465,7 @@ contains
       !>     Kernel data are normally loaded once per program run, NOT every
       !>     time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine forces the ZZDSKBSR subsystem to form a complete
       !>     segment list for a specified body. This will allow a ZZDSKBSR
@@ -22480,24 +22480,24 @@ contains
       !>     number of physical file reads to occur.  It should be called only
       !>     when the set of loaded DSKs is known to have changed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZDSKSBF entry points ZZSBFXR and ZZSBFNRM.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 08-JUL-2016 (NJB)
       !>
@@ -22574,7 +22574,7 @@ contains
       end associate
       end procedure zzdskbbl
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -22582,7 +22582,7 @@ contains
       !>
       !>     Initialize DSK API segment buffer data structures.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MAXBOD     is the maximum size of the body table. BTBODY, BTSEGP,
       !>                and BTSTSZ must each be declared by the caller with
@@ -22629,7 +22629,7 @@ contains
       !>     STRAD      is an array of radii of outer bounding spheres of
       !>                segments. Units are km.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BTBODY     is the input body ID table, zero-filled.
       !>
@@ -22655,19 +22655,19 @@ contains
       !>     STRAD      is the segment bounding sphere radius array,
       !>                zero-filled.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by the DSK subsystem.
       !>
@@ -22697,24 +22697,24 @@ contains
       !>     tables must be re-initialized. Entry points of ZZDSKSBF are
       !>     expected to perform this action by calling this routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZDSKSBF.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a private routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 14-OCT-2021 (BVS)
       !>
@@ -22767,7 +22767,7 @@ contains
       return
       end procedure zzdsksbi
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -22776,7 +22776,7 @@ contains
       !>     Remove entries from DSK API segment buffer data structures
       !>     to make room for a new entry.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NEEDED     is the number of segment table entries needed to store
       !>                the segment list for a new body.
@@ -22829,7 +22829,7 @@ contains
       !>     STRAD      is an array of radii of outer bounding spheres of
       !>                segments. Units are km.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BTBODY     is the input body ID table, modified by this routine.
       !>                If it was necessary to delete a body from the table to
@@ -22871,11 +22871,11 @@ contains
       !>                If it was necessary to make room, entries of
       !>                STRAD will have been deleted.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If MAXBOD is less than 1, the error SPICE(INVALIDTABLESIZE)
       !>         is signaled.
@@ -22883,11 +22883,11 @@ contains
       !>     2)  If the segment table doesn't have at least NEEDED entries,
       !>         the error SPICE(SEGTABLETOOSMALL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by the DSK subsystem.
       !>
@@ -22918,23 +22918,23 @@ contains
       !>     tables must be re-initialized. Entry points of ZZDSKSBF are
       !>     expected to perform this action by calling ZZDSKSBI.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZDSKSBF.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a private routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
       !>
@@ -23256,7 +23256,7 @@ contains
 !
 !     Set return value.
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -23264,12 +23264,12 @@ contains
       !>
       !>     Set body ID only for segment matching.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the body ID against which DSK segments' body IDs
       !>                are to be compared.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function always returns the value .FALSE. An output
       !>     is necessary because this routine is an entry point of
@@ -23277,20 +23277,20 @@ contains
       !>
       !>     This function operates by side effects.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine does not use SPICE kernels directly, but it
       !>     supports searches for DSK segments.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to prepare for DSK segment searches
       !>     using the DSK segment comparison callback
@@ -23300,24 +23300,24 @@ contains
       !>     That routine will indicate a match for segments having
       !>     body ID equal to the input BODYID.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZDSKSBA.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
       module procedure zzdsksbd
@@ -23358,7 +23358,7 @@ contains
       end associate
       end procedure zzdsksbd
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -23366,7 +23366,7 @@ contains
       !>
       !>     Check DSK segment for body ID match.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of the DSK containing a segment to
       !>                be checked.
@@ -23375,25 +23375,25 @@ contains
       !>     DSKDSC     are, respectively, the DLA descriptor and DSK
       !>                descriptor of a segment to be checked.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if and only if the specified segment
       !>     matches the body ID set via ZZDSKSBD.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine does not use SPICE kernels directly, but it
       !>     supports searches for DSK segments.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used to search for DSK segments that
       !>     have body ID codes matching that set via the latest
@@ -23404,24 +23404,24 @@ contains
       !>     These searches are conducted by ZZDSKSNS. This function
       !>     is passed to that routine as a callback argument.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZDSKSBA.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 23-NOV-2020 (NJB)
       !>
@@ -23462,7 +23462,7 @@ contains
       end associate
       end procedure zzdskbdc
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -23470,7 +23470,7 @@ contains
       !>
       !>     Return .FALSE. for any segment.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of the DSK containing a segment to
       !>                be checked.
@@ -23479,24 +23479,24 @@ contains
       !>     DSKDSC     are, respectively, the DLA descriptor and DSK
       !>                descriptor of a segment to be checked.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .FALSE. for all segments.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine does not use SPICE kernels directly, but it
       !>     supports searches for DSK segments.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function is passed to ZZDSKSNS as a callback argument.
       !>
@@ -23507,24 +23507,24 @@ contains
       !>     prevents a search for matching segments from terminating
       !>     until all available files have been searched.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZDSKBBL.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 23-NOV-2020 (JDR) (NJB)
       !>
@@ -23562,7 +23562,7 @@ contains
       return
       end procedure zzdsknot
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -23570,7 +23570,7 @@ contains
       !>
       !>     Set body ID code, surface list, and time for segment matching.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the body ID against which DSK segments' body IDs
       !>                are to be compared.
@@ -23587,7 +23587,7 @@ contains
       !>                All matching segments must contain ET in their
       !>                time coverage intervals.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function always returns the value .FALSE. An output
       !>     is necessary because this routine is an entry point of
@@ -23595,44 +23595,44 @@ contains
       !>
       !>     This function operates by side effects.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine does not use SPICE kernels directly, but it
       !>     supports searches for DSK segments.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to prepare for DSK segment searches
       !>     using the DSK segment comparison callback
       !>
       !>        ZZDSKCIT
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
       module procedure zzdsksit
@@ -23703,7 +23703,7 @@ contains
       end associate
       end procedure zzdsksit
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -23711,7 +23711,7 @@ contains
       !>
       !>     Check DSK segment for body ID, surface, and time coverage match.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of the DSK containing a segment to
       !>                be checked.
@@ -23720,25 +23720,25 @@ contains
       !>     DSKDSC     are, respectively, the DLA descriptor and DSK
       !>                descriptor of a segment to be checked.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if and only if the specified segment
       !>     matches the body ID set via ZZDSKSIT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine does not use SPICE kernels directly, but it
       !>     supports searches for DSK segments.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used to search for DSK segments that
       !>     have body ID codes and time coverage intervals matching the
@@ -23749,24 +23749,24 @@ contains
       !>     These searches are conducted by ZZDSKSNS. This function
       !>     is passed to that routine as a callback argument.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 23-NOV-2020 (JDR) (NJB)
       !>
@@ -23844,7 +23844,7 @@ contains
       end associate
       end procedure zzdskcit
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -23852,7 +23852,7 @@ contains
       !>
       !>     Set body ID, time, and coordinates for "raw" unchecked search.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the body ID against which DSK segments' body IDs
       !>                are to be compared.
@@ -23868,7 +23868,7 @@ contains
       !>                These are "domain" coordinates for class 1
       !>                segments.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function always returns the value .FALSE. An output
       !>     is necessary because this routine is an entry point of
@@ -23876,20 +23876,20 @@ contains
       !>
       !>     This function operates by side effects.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine does not use SPICE kernels directly, but it
       !>     supports searches for DSK segments.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to prepare for DSK segment searches
       !>     using the DSK segment comparison callback
@@ -23900,24 +23900,24 @@ contains
       !>     segments have a common reference frame and coordinate system,
       !>     and where the segment class is 1 ("single-valued function").
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
       module procedure zzdskusc
@@ -23962,7 +23962,7 @@ contains
       end associate
       end procedure zzdskusc
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -23971,7 +23971,7 @@ contains
       !>     Perform an unchecked segment match using body ID, time,
       !>     and coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of the DSK containing a segment to
       !>                be checked.
@@ -23980,7 +23980,7 @@ contains
       !>     DSKDSC     are, respectively, the DLA descriptor and DSK
       !>                descriptor of a segment to be checked.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if and only if the specified segment
       !>     matches the body ID, time, and coordinates set via ZZDSKUSC.
@@ -23989,20 +23989,20 @@ contains
       !>     contained in the respective time interval and spatial coverage
       !>     region of the segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine does not use SPICE kernels directly, but it
       !>     supports searches for DSK segments.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used to search for DSK segments that
       !>     have body ID codes and time coverage intervals matching the
@@ -24013,24 +24013,24 @@ contains
       !>     These searches are conducted by ZZDSKSNS. This function
       !>     is passed to that routine as a callback argument.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 23-NOV-2020 (JDR) (NJB)
       !>
@@ -24172,7 +24172,7 @@ contains
       end associate
       end procedure zzdskumc
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -24181,7 +24181,7 @@ contains
       !>     Set inputs for a matched attribute search, also known as a
       !>     "checked" search.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the body ID against which DSK segments' body IDs
       !>                are to be compared.
@@ -24212,7 +24212,7 @@ contains
       !>                These are "domain" coordinates for class 1
       !>                segments.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function always returns the value .FALSE. An output
       !>     is necessary because this routine is an entry point of
@@ -24220,20 +24220,20 @@ contains
       !>
       !>     This function operates by side effects.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine does not use SPICE kernels directly, but it
       !>     supports searches for DSK segments.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to prepare for DSK segment searches
       !>     using the DSK segment comparison callback
@@ -24243,24 +24243,24 @@ contains
       !>     This routine supports "matched attribute" searches.
       !>     Segment attributes are checked explicitly.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
       module procedure zzdskmsc
@@ -24315,7 +24315,7 @@ contains
       end associate
       end procedure zzdskmsc
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -24325,7 +24325,7 @@ contains
       !>     ID, frame ID, coordinate system, coordinate parameters, time, and
       !>     coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of the DSK containing a segment to
       !>                be checked.
@@ -24334,7 +24334,7 @@ contains
       !>     DSKDSC     are, respectively, the DLA descriptor and DSK
       !>                descriptor of a segment to be checked.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if and only if the specified segment
       !>     matches the
@@ -24353,20 +24353,20 @@ contains
       !>     contained in the respective time interval and spatial coverage
       !>     region of the segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine does not use SPICE kernels directly, but it
       !>     supports searches for DSK segments.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used to search for DSK segments that have
       !>     attributes matching the values set via the latest call to
@@ -24379,24 +24379,24 @@ contains
       !>     These searches are conducted by ZZDSKSNS. This function
       !>     is passed to that routine as a callback argument.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 23-NOV-2020 (JDR) (NJB)
       !>
@@ -24559,7 +24559,7 @@ contains
       end associate
       end procedure zzdskmmc
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -24570,7 +24570,7 @@ contains
       !>     as well; this is needed to define the position vector.
       !>     Matching segments need not use the same frame.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SURFID     is the surface ID against which DSK segments' surface
       !>                IDs are to be compared.
@@ -24597,7 +24597,7 @@ contains
       !>                latitude and longitude of POS are within the
       !>                spatial boundaries of those segments.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function always returns the value .FALSE. An output
       !>     is necessary because this routine is an entry point of
@@ -24605,31 +24605,31 @@ contains
       !>
       !>     This function operates by side effects.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine does not use SPICE kernels directly, but it
       !>     supports searches for DSK segments.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to prepare for DSK segment searches
       !>     using the DSK segment comparison callback
       !>
       !>        ZZDSKMRC
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a private routine. It is meant to be used only by the
       !>         DSK subsystem.
@@ -24637,15 +24637,15 @@ contains
       !>     2)  This routine works only with segments that use latitudinal or
       !>         planetodetic coordinates.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
       module procedure zzdsksrc
@@ -24694,7 +24694,7 @@ contains
       end associate
       end procedure zzdsksrc
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -24706,7 +24706,7 @@ contains
       !>     A search using this function must be initialized
       !>     by a call to ZZDSKSRC.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of the DSK containing a segment to
       !>                be checked.
@@ -24715,7 +24715,7 @@ contains
       !>     DSKDSC     are, respectively, the DLA descriptor and DSK
       !>                descriptor of a segment to be checked.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if and only if the specified segment
       !>     matches the
@@ -24733,20 +24733,20 @@ contains
       !>     contained in the respective time interval and spatial coverage
       !>     region of the segment.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine does not use SPICE kernels directly, but it
       !>     supports searches for DSK segments.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used to search for DSK segments that have
       !>     attributes matching the values set via the latest call to
@@ -24756,25 +24756,25 @@ contains
       !>     These searches are conducted by ZZDSKSNS. This function
       !>     is passed to that routine as a callback argument.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 23-NOV-2020 (JDR) (NJB)
       !>
@@ -24964,7 +24964,7 @@ contains
       end associate
       end procedure zzdskmrc
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -24975,11 +24975,11 @@ contains
       !>     from the origin of the coordinate system associated from the
       !>     segment.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DSKDSC         is a DSK descriptor.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the maximum radius attained on the
       !>     boundary of the coverage region of the segment associated
@@ -24989,12 +24989,12 @@ contains
       !>
       !>     Units are km.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the INCLUDE file dskdsc.inc for parameter declarations and
       !>     documentation.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the coordinate system code in the descriptor is not
       !>         recognized, the error SPICE(NOTSUPPORTED) is signaled.
@@ -25005,11 +25005,11 @@ contains
       !>     3)  If an invalid flattening coefficient is found, the error
       !>         SPICE(INVALIDVALUE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes an upper bound on the radius of
       !>     the coverage region of a DSK segment. The radius at
@@ -25023,7 +25023,7 @@ contains
       !>     segments' central bodies must be taken into account when
       !>     computing a bounding sphere.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) Get a bounding radius for a DSK segment using the
       !>        latitudinal coordinate system.
@@ -25075,19 +25075,19 @@ contains
       !>
       !>           Radius bound for latitudinal section:    1100.0000000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 13-FEB-2017 (NJB)
       !>
@@ -25240,7 +25240,7 @@ contains
 
       end procedure zzdsksgr
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -25249,7 +25249,7 @@ contains
       !>     Compute a set of points on the umbral or penumbral terminator of
       !>     a specified ellipsoid, given a spherical light source.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TYPE           is a string indicating the type of terminator to
       !>                    compute:  umbral or penumbral.  The umbral
@@ -25285,7 +25285,7 @@ contains
       !>
       !>     NPTS           is the number of terminator points to compute.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TRMPTS         is an array of points on the umbral or penumbral
       !>                    terminator of the ellipsoid, as specified by the
@@ -25316,11 +25316,11 @@ contains
       !>                    is non-spherical, the longitude distribution of
       !>                    the points generally is not uniform.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the terminator type is not recognized, the error
       !>         SPICE(NOTSUPPORTED) is signaled.
@@ -25338,11 +25338,11 @@ contains
       !>         centered at the origin and containing the ellipsoid, the
       !>         error SPICE(OBJECTSTOOCLOSE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine models the boundaries of shadow regions on an
       !>     ellipsoid "illuminated" by a spherical light source.  Light rays
@@ -25372,24 +25372,24 @@ contains
       !>     the center of the light source, then X lies on the umbral
       !>     terminator; otherwise X lies on the penumbral terminator.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the SPICELIB routine EDTERM.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private SPICELIB routine.  User applications should not
       !>     call this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 02-OCT-2021 (NJB)
       !>
@@ -25763,7 +25763,7 @@ contains
       return
       end procedure zzedterm
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -25773,7 +25773,7 @@ contains
       !>     target. The point is confined to a specified half-plane. The
       !>     illumination source is spherical.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UMBRAL     is a logical flag that must be set by the caller
       !>                to .TRUE. if an umbral terminator point is to be
@@ -25803,7 +25803,7 @@ contains
       !>                The terminator point that is sought lies within
       !>                the half-plane.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     POINT      is a terminator point lying within the half-plane
       !>                defined by AXIS and PLNVEC.
@@ -25824,11 +25824,11 @@ contains
       !>                illumination source at a point outside the plane
       !>                containing the cutting half-plane.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of the target ellipsoid's semi-axis lengths is
       !>         non-positive, the error SPICE(INVALIDAXISLENGTH) is signaled.
@@ -25853,11 +25853,11 @@ contains
       !>     7)  If the terminator solution doesn't converge, the error
       !>         SPICE(NOCONVERGENCE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The "umbral" terminator on an ellipsoid is the boundary of the
       !>     region that is in total shadow. At any point P on this boundary,
@@ -25869,23 +25869,23 @@ contains
       !>     the illumination source is above and tangent to the local
       !>     horizontal plane at P.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a SPICELIB private routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 30-JUN-2016 (NJB)
       module procedure zzedtmpt
@@ -26207,7 +26207,7 @@ contains
       return
       end procedure zzedtmpt
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -26217,7 +26217,7 @@ contains
       !>     relative to that spheroid, determine radii of inner and outer
       !>     bounding spheroids.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A          is the semi-major axis length of a reference
       !>                spheroid. A may have any units; B, HMAX, and
@@ -26235,7 +26235,7 @@ contains
       !>                is a signed quantity. HMIN must not exceed HMAX.
       !>                HMIN must be greater than -B.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     AMAX,
       !>     BMAX       are, respectively, semi-major and semi-minor axis
@@ -26270,11 +26270,11 @@ contains
       !>                   AMIN  =  A + HMIN*(B/A)
       !>                   BMIN  =  B + HMIN
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the semi-minor axis length B is non-positive, the
       !>         error SPICE(NONPOSITIVERADIUS) will be signaled.
@@ -26290,11 +26290,11 @@ contains
       !>         upper height bound HMAX, the error SPICE(BOUNDSOUTOFORDER)
       !>         will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Ellipsoidal bounding surfaces may be used for volume elements in
       !>     planetodetic coordinates. The combination of these surfaces,
@@ -26447,11 +26447,11 @@ contains
       !>
       !>        BMIN, BMIN, AMIN
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZRYXPDT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The bounding spheroids generated by this routine may not be
       !>         suitable for reference spheroids with high eccentricity.
@@ -26461,15 +26461,15 @@ contains
       !>         routine's header comments. The formulas could be upgraded
       !>         in a future version of this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 13-JAN-2017 (NJB)
       !>
@@ -26640,7 +26640,7 @@ contains
 
       end procedure zzellbds
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -26651,7 +26651,7 @@ contains
       !>     line corresponding to the point at that latitude in the right
       !>     (positive X) half-plane.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B          are, respectively, an ellipse's semi-axis lengths
@@ -26672,7 +26672,7 @@ contains
       !>
       !>                Units are radians.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XXPT       is the X-intercept of a line passing through the
       !>                ellipse and normal to the ellipse at the point having
@@ -26697,11 +26697,11 @@ contains
       !>                         2
       !>                   -B + A / B
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the X semi-axis length A is non-positive, the
       !>         error SPICE(NONPOSITIVEAXIS) will be signaled.
@@ -26709,11 +26709,11 @@ contains
       !>     2)  If the Y semi-axis length B is non-positive, the
       !>         error SPICE(NONPOSITIVEAXIS) will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The outputs of this routine can be used to determine the
       !>     apex of a cone of constant planetodetic latitude.
@@ -26773,23 +26773,23 @@ contains
       !>                    2   2
       !>        B (  1 - ( A / B )  )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZRYXPDT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 09-MAR-2016 (NJB)
       module procedure zzelnaxx
@@ -26839,13 +26839,13 @@ contains
       return
       end procedure zzelnaxx
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET             is the epoch at which the precession matrix is
       !>                    to be computed.  ET is barycentric dynamical time,
       !>                    expressed as seconds past J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PRECM          is a 3x3 matrix representing the precession of
       !>                    the Earth from J2000 to the epoch ET.  The
@@ -26853,19 +26853,19 @@ contains
       !>                    mean equator and equinox frame of date, evaluated
       !>                    at ET.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     According to reference [2], the precession model used in this
       !>     routine is that used in the JPL navigation program "Regres."
@@ -26895,7 +26895,7 @@ contains
       !>         theta  =  2004".3109*T  -  0".42665*T   -  0".041833*T
       !>              A
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) Convert a vector V from J2000 to Earth Mean equator and equinox
       !>        of date coordinates at epoch ET.  Call the resulting vector
@@ -26904,7 +26904,7 @@ contains
       !>           CALL ZZEPRCSS ( ET,    PRECM       )
       !>           CALL MXV      ( PRECM, V,     VMOD )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a preliminary version of the routine.
       !>
@@ -26914,7 +26914,7 @@ contains
       !>         by polynomials implies that the model is not valid for all
       !>         time.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1] "Explanatory Supplement to the Astronomical Almanac"
       !>          edited by P. Kenneth Seidelmann. University Science
@@ -26925,11 +26925,11 @@ contains
       !>         Draft of JPL Publication documenting the JPL navigation
       !>         program "Regres."
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    Beta Version 1.0.0, 24-SEP-1996 (NJB)
       module procedure zzeprcss
@@ -26983,7 +26983,7 @@ contains
 
       end procedure zzeprcss
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FRSTYR    is the first year possible for two line elements.
       !>               Since two line elements allow only two digits for
@@ -27035,7 +27035,7 @@ contains
       !>  1 22076U 92052A   97173.53461370 -.00000038  00000-0  10000-3 0   594
       !>  2 22076  66.0378 163.4372 0008359 278.7732  81.2337 12.80930736227550
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EPOCH      is the epoch of the two line elements supplied via
       !>                the input array LINES.  Epoch is returned in TDB
@@ -27071,16 +27071,16 @@ contains
       !>     ERROR      a string containing a description of any TLE
       !>                processing error.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     You must have loaded a SPICE leapseconds kernel into the
       !>     kernel pool prior to caling this routine.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     This routine does not signal errors, rather it returns an
       !>     error flag and description to the calling program. Errors
@@ -27099,7 +27099,7 @@ contains
       !>     5) The value of an angular measure, NODE0, OMEGA, MO, or INCL
       !>        fails to lie within the expected numerical bounds.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine parses a Space Command Two-line element set and
       !>     returns the orbital elements properly scaled and in units
@@ -27139,7 +27139,7 @@ contains
       !>     to units of radians, radians/minute, radians/minute**2, and
       !>     radians/minute**3
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you have a set of two-line elements and an array
       !>     containing the related geophysical constants necessary
@@ -27200,7 +27200,7 @@ contains
       !>
       !>        CALL EV2LIN ( ET, GEOPHS, ELEMS, STATE )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>    The format of the two-line elements suffer from a "millenium"
       !>    problem---only two digits are used for the year of the elements.
@@ -27228,16 +27228,16 @@ contains
       !>     representations make this method of computing the full year
       !>     inaccurate.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber      (JPL)
       !>     E.D. Wright     (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 26-APR-2004 (EDW)
       !>
@@ -27681,31 +27681,31 @@ contains
       end associate
       end procedure zzgetelm
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     GRAV       An array of three geophysical constants vectors.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     Refer to include file zzsgp4.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>           INCLUDE               'zzsgp4.inc'
       !>
@@ -27724,11 +27724,11 @@ contains
       !>           J4   = GRAV( P_WGS, P_J4)
       !>           J3OJ2= GRAV( P_WGS, P_J3J2)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>   [1] Hoots, F. R., and Roehrich, R. L. 1980. "Models for
       !>       Propagation of the NORAD Element Sets." Spacetrack Report #3.
@@ -27748,12 +27748,12 @@ contains
       !>       AIAA 2006-6753 presented at the AIAA/AAS Astrodynamics
       !>       Specialist Conference, August 21-24, 2006. Keystone, CO.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     David Vallado   (AGI)
       !>     E. D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 22-JUL-2014 (EDW)
       module procedure zzgrav
@@ -27833,7 +27833,7 @@ contains
 
       end procedure zzgrav
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -27842,7 +27842,7 @@ contains
       !>     Persistently store double precision values or retrieve stored
       !>     double precision values. That's it, not really rocket science.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     OP          The scalar integer key for the operation to execute.
       !>                 Proper values of OP:
@@ -27873,7 +27873,7 @@ contains
       !>     The include file "zzholdd.inc" lists all accepted values for
       !>     ID and OP.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OK          The logical flag indicating if a get operation
       !>                 returned a valid value for ID. OK returns false if a
@@ -27884,11 +27884,11 @@ contains
       !>
       !>     VALUE       The scalar double precision value retrieved (get).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>    None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The error SPICE(UNKNOWNID) signals if the value of ID is
       !>         not one of those coded in zzholdd.inc.
@@ -27896,11 +27896,11 @@ contains
       !>     2)  The error SPICE(UNKNOWNOP) signals if the value of OP is
       !>         not one of those coded in zzholdd.inc.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>    zzholdd.inc
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine simply stores double precision values for later
       !>     retrieval.
@@ -27915,7 +27915,7 @@ contains
       !>        for that ID returns with OK as true, VALUE as the value
       !>        assigned by the put.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -28003,19 +28003,19 @@ contains
       !>
       !>    As expected.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>    None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>    None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>    E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-   SPICELIB Version 1.2.0  07-OCT-2021 (EDW)
       !>
@@ -28146,7 +28146,7 @@ contains
       end associate
       end procedure zzholdd
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -28156,7 +28156,7 @@ contains
       !>     polygonal FOV, and use this face to generate an axis of the
       !>     FOV.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INST       is the name of an instrument with which the field of
       !>                view (FOV) of interest is associated. This name is
@@ -28216,7 +28216,7 @@ contains
       !>
       !>                The boundary vectors need not have unit length.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     AXIS       is a unit vector normal to a plane containing the
       !>                FOV polygon. All boundary vectors have angular
@@ -28229,14 +28229,14 @@ contains
       !>                This routine signals an error if it cannot find
       !>                a satisfactory value of AXIS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MARGIN     is a small positive number used to constrain the
       !>                orientation of the boundary vectors. See the two
       !>                constraints described in the Detailed_Input section
       !>                above for specifics.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In the input vector count N is not at least 3, the error
       !>         SPICE(INVALIDCOUNT) is signaled.
@@ -28261,12 +28261,12 @@ contains
       !>         (pi/2)-MARGIN radians from the candidate FOV axis, the
       !>         error SPICE(FOVTOOWIDE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The boundary vectors input to this routine are typically
       !>     obtained from an IK file.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Normally implementation is not discussed in SPICE headers, but we
       !>     make an exception here because this routine's implementation and
@@ -28348,11 +28348,11 @@ contains
       !>     axis for many such intractable FOVs---that's why this routine
       !>     should be called after the simple approach fails.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See SPICELIB private routine ZZFOVAXI.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a SPICE private routine. User applications should not
       !>        call this routine.
@@ -28360,15 +28360,15 @@ contains
       !>     2) There are "reasonable" polygonal FOVs that cannot be handled
       !>        by this routine. See the discussion in Particulars above.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB 1.0.1, 24-NOV-2021 (BVS)
       !>
@@ -28862,7 +28862,7 @@ contains
       return
       end procedure zzhullax
 
-       !> ## Abstract
+       !>## Abstract
        !>
        !>     SPICE Private routine intended solely for the support of SPICE
        !>     routines. Users should not call this routine directly due
@@ -28871,51 +28871,51 @@ contains
        !>     Return true if voxel is inside the voxel grid. This routine
        !>     operates on integer voxel coordinates.
        !>
-       !> ## Detailed Input
+       !>## Detailed Input
        !>
        !>     NVOX       Dimensions of voxel grid.
        !>
        !>     VOXEL      Coordinates of voxel in voxel grid units. The
        !>                coordinates are 1-based integers.
        !>
-       !> ## Detailed Output
+       !>## Detailed Output
        !>
        !>     The function returns .TRUE. if the voxel is inside the grid.
        !>
-       !> ## Parameters
+       !>## Parameters
        !>
        !>     None.
        !>
-       !> ## Exceptions
+       !>## Exceptions
        !>
        !>     Error free.
        !>
-       !> ## Files
+       !>## Files
        !>
        !>     None.
        !>
-       !> ## Particulars
+       !>## Particulars
        !>
        !>     This routine supports the SPICELIB routine XDDA.
        !>
-       !> ## Examples
+       !>## Examples
        !>
        !>     None.
        !>
-       !> ## Restrictions
+       !>## Restrictions
        !>
        !>     None.
        !>
-       !> ## Literature References
+       !>## Literature References
        !>
        !>     None.
        !>
-       !> ## Author and Institution
+       !>## Author and Institution
        !>
        !>     N.J. Bachman    (JPL)
        !>     J.A. Bytof      (JPL)
        !>
-       !> ## Version
+       !>## Version
        !>
        !>-    SPICELIB Version 1.0.0, 02-FEB-2016 (NJB) (JAB)
        !>
@@ -28945,7 +28945,7 @@ contains
       return
       end procedure zzingrd
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -28955,7 +28955,7 @@ contains
       !>     inclusion in a specified rectangular volume element. The test is
       !>     performed using margins for the element.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     P          is a point expressed in Cartesian coordinates. The
       !>                point is to be checked to determine whether it is
@@ -29005,7 +29005,7 @@ contains
       !>                need not be used in the comparison and in fact can't
       !>                be meaningfully compared, due to round-off errors.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     INSIDE     is a logical flag that is set to .TRUE. if and
       !>                only if the input coordinates represent a
@@ -29016,13 +29016,13 @@ contains
       !>                The value of INSIDE is not affected by the value
       !>                of any excluded coordinate.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     NONE       when used as a value of the input argument EXCLUD,
       !>                indicates that no coordinates should be excluded from
       !>                comparison.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If MARGIN is negative, the error SPICE(VALUEOUTOFRANGE)
       !>         is signaled.
@@ -29033,32 +29033,32 @@ contains
       !>     3) If any coordinate upper bound is less than the corresponding
       !>        lower bound, the error SPICE(BOUNDSOUTOFORDER) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZRYTREC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 16-MAY-2016 (NJB)
       !>
@@ -29174,7 +29174,7 @@ contains
       return
       end procedure zzinrec
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -29183,7 +29183,7 @@ contains
       !>     Quickly find the intersection of a ray and a plane, without
       !>     performing normal error handling.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VERTEX,
       !>     UDIR           are a point and unit-length direction vector that
@@ -29205,7 +29205,7 @@ contains
       !>                    MAXD, the intercept will be considered NOT to
       !>                    exist.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NXPTS          is the number of points of intersection of the
       !>                    input ray and plane.  Values and meanings of
@@ -29222,11 +29222,11 @@ contains
       !>                    and plane, when there is exactly one point of
       !>                    intersection. Otherwise, XPT is the zero vector.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The ray's direction vector must have unit length. The
       !>         outputs of this routine will be invalid otherwise.
@@ -29240,11 +29240,11 @@ contains
       !>     4)  If the input ray lies in the input plane, no intersection
       !>         is considered to exist.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine performs a simplified version of the ray-plane
       !>     intersection computation performed by INRYPL. This routine
@@ -29257,24 +29257,24 @@ contains
       !>
       !>     This routine is meant to be used only by the DSK subsystem.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZRYXLAT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) All inputs must be checked by the caller; they are not checked
       !>        here.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JAN-2016 (NJB)
       module procedure zzinrypl
@@ -29377,14 +29377,14 @@ contains
 
       end procedure zzinrypl
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Create a bounding box for a latitudinal volume element.
       !>
       !>     The outputs are the box's center, dimensions in the radial,
       !>     tangential, and vertical directions, and the box's radius.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BOUNDS     is a 2 x 3 double precision array containing bounds
       !>                on the latitudinal coordinates of the spatial region
@@ -29398,7 +29398,7 @@ contains
       !>                Elements (1,*) are lower bounds; elements (2,*) are
       !>                upper bounds. Angular units are radians.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CENTER     is a double precision 3-vector representing the center
       !>                of a box tangent to and containing the volume
@@ -29419,12 +29419,12 @@ contains
       !>                box. RADIUS is equal to the length of a line segment
       !>                connecting the center of the box to any corner.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MARGIN     is used for latitude range validity tests. Latitude
       !>                values can be out of range by as much as MARGIN.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the minimum longitude exceeds the maximum by more than
       !>        2*pi, the error SPICE(BADLONGITUDERANGE) is signaled.
@@ -29436,33 +29436,33 @@ contains
       !>        if the maximum latitude is greater than pi/2 + MARGIN,
       !>        the error SPICE(BADLATITUDERANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a simple way to compute the center and
       !>     radius for an outer bounding sphere for the volume covered
       !>     by a DSK segment using latitudinal coordinates.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 03-FEB-2015 (NJB)
       module procedure zzlatbox
@@ -29674,7 +29674,7 @@ contains
       return
       end procedure zzlatbox
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -29683,7 +29683,7 @@ contains
       !>     Scan a method input string passed by a caller to a SPICE
       !>     high-level geometry API. Return tokens found in the string.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD     is a "method" string to be parsed. This string
       !>                normally is passed by a caller to a SPICE high-level
@@ -29700,7 +29700,7 @@ contains
       !>                arrays that are too small to hold all of the tokens in
       !>                the input method string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     N          is the number of tokens found in the method string.
       !>
@@ -29713,11 +29713,11 @@ contains
       !>                See the Particulars section for a list of token
       !>                delimiters.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error is found while parsing a quoted string,
       !>         the error SPICE(SYNTAXERROR) is signaled.
@@ -29726,11 +29726,11 @@ contains
       !>         is greater than the input limit MAXN, the error
       !>         SPICE(ARRAYTOOSMALL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports parsing of the METHOD input argument
       !>     used by SPICE geometry APIs such as, but not limited to:
@@ -29754,7 +29754,7 @@ contains
       !>     individual tokens. There is no escape syntax for indicating a
       !>     doubly quoted string within a doubly quoted string.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Example:
       !>
@@ -29778,21 +29778,21 @@ contains
       !>          ,
       !>          MARS_LOWRES
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a specialized scanning routine. It it meant to
       !>     be used only for the parsing "method" strings as
       !>     described in Particulars.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 02-FEB-2016 (NJB)
       !>
@@ -29999,31 +29999,31 @@ contains
       return
       end procedure zzlexmet
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A          Multiplier for the multiplication operation.
       !>
       !>     B          Multiplicand for the multiplication operation.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ZZMULT      The value A*B.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) SPICE(NUMERICOVERFLOW) signals if the logarithm base 10
       !>        of the multiplication is greater than EXPNT (defined
       !>        below).
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     We want to avoid a floating point exception signal from
       !>     the platform. This routine does not trap exceptions,
@@ -30066,7 +30066,7 @@ contains
       !>     of A and B to ensure the magnitude of A*B is
       !>     within the range [-(EXPNT-1), EXPNT].
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Demonstrate the use of ZZMULT with DPMAX and zero as the
       !>     multiplier and multiplicand.
@@ -30188,19 +30188,19 @@ contains
       !>
       !>      MULT 0*0          =    0.0000000000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-2014 (EDW)
       module procedure zzmult
@@ -30294,7 +30294,7 @@ contains
       end associate
       end procedure zzmult
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -30307,7 +30307,7 @@ contains
       !>     Put the bounds in order and ensure that the bounds differ by no
       !>     more than 2*pi.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INMIN,
       !>     INMAX      are, respectively, the lower and upper
@@ -30330,7 +30330,7 @@ contains
       !>                If INMAX exceeds INMIN by less than TOL, the bounds
       !>                are interpreted as being 2*pi radians apart.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUTMIN,
       !>     OUTMAX     are, respectively, the normalized lower and upper
@@ -30349,11 +30349,11 @@ contains
       !>
       !>                   3) OUTMAX does not exceed OUTMIN by more than 2*pi.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If TOL is negative, the error SPICE(VALUEOUTOFRANGE)
       !>         is signaled.
@@ -30366,33 +30366,33 @@ contains
       !>         by an integer multiple of 2*pi, the error
       !>         SPICE(ZEROBOUNDSEXTENT) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine centralizes an oft-repeated algorithm. It is
       !>     called by several DSK routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZINLAT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by SPICE
       !>     routines.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-OCT-2016 (NJB)
       !>
@@ -30566,7 +30566,7 @@ contains
 
       end procedure zznrmlon
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -30579,7 +30579,7 @@ contains
       !>     directions, and the box's radius. The box itself coincides with
       !>     the input box.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BOUNDS     is a 2 x 3 double precision array containing bounds
       !>                on the rectangular coordinates of the spatial region
@@ -30593,7 +30593,7 @@ contains
       !>                Elements (1,*) are lower bounds; elements (2,*) are
       !>                upper bounds.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CENTER     is a double precision 3-vector representing the center
       !>                of the volume specified by BOUNDS.
@@ -30608,41 +30608,41 @@ contains
       !>                box. RADIUS is equal to the length of a line segment
       !>                connecting the center of the box to any corner.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the minimum value of of any coordinate exceeds the maximum,
       !>        the error SPICE(BOUNDSOUTOFORDER) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports the DSK ray-surface intercept segment
       !>     selection algorithms.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-JUN-2016 (NJB)
       module procedure zzrecbox
@@ -30717,14 +30717,14 @@ contains
       return
       end procedure zzrecbox
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V              is any vector that does not lie on the Z-axis
       !>                    of the reference frame relative to which the
       !>                    vector is expressed: at least one of V's X or
       !>                    Y components must be non-zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     M              is a rotation matrix that transforms vectors
       !>                    from the base frame of V---that is, the reference
@@ -30748,20 +30748,20 @@ contains
       !>                   The unit vectors R, T, N are, respectively, the
       !>                   first, second and third rows of M.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the input vector V has X and Y components equal to zero,
       !>        the error SPICE(DEGENERATECASE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The RTN frame supported this routine is a generalization of
       !>     the frame defined by a solar system object's spin axis and
@@ -30774,7 +30774,7 @@ contains
       !>     correspond to the "up", "East," and "North" directions at the
       !>     location indicated by V.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) Get the RTN transformation matrix for the vector ( 1, 0, 1 ):
       !>
@@ -30802,19 +30802,19 @@ contains
       !>            0.0000000E+00  0.1000000E+01  0.0000000E+00
       !>           -0.7071068E+00  0.0000000E+00  0.7071068E+00
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
       module procedure zzrtnmat
@@ -30886,7 +30886,7 @@ contains
       end associate
       end procedure zzrtnmat
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -30895,7 +30895,7 @@ contains
       !>     Quickly find the intersection of a ray and a sphere, without
       !>     performing normal error handling.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VERTEX,
       !>     UDIR           are a point and unit-length direction vector that
@@ -30907,7 +30907,7 @@ contains
       !>     R              is the radius of a sphere. The sphere is centered
       !>                    at the origin.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XPT            is the point of intersection nearest to the ray's
       !>                    vertex of the input ray and sphere, if the
@@ -30916,20 +30916,20 @@ contains
       !>     FOUND          is a local flag that is .TRUE. if and only if
       !>                    the input ray intersects the sphere.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The ray's direction vector must have unit length. The
       !>         outputs of this routine will be invalid otherwise.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine performs a simplified version of the ray-ellipsoid
       !>     intersection computation performed by SURFPT; this routine works
@@ -30942,24 +30942,24 @@ contains
       !>
       !>     This routine is meant to be used only by the DSK subsystem.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZRYXLAT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) All inputs must be checked by the caller; they are not checked
       !>        here.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JAN-2016 (NJB)
       module procedure zzryxsph
@@ -31042,7 +31042,7 @@ contains
 
       end procedure zzryxsph
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ISYNFL      is the flag used to indicate the need for resonance
       !>                 calculations.
@@ -31066,7 +31066,7 @@ contains
       !>
       !>     XFACT       is the value BFACT - XNQ calculated in ZZDPINIT
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XLDOT       time derivative of the XL term.
       !>
@@ -31075,19 +31075,19 @@ contains
       !>     XNDDT       second time derivative of XN, time derivative of the
       !>                 time derivative.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This subroutine was constructed from a section of code in ZZDPSEC
       !>     in the original Spacetrack 3 report.  The code block was called
@@ -31095,24 +31095,24 @@ contains
       !>     this subroutine to improve clarity and maintainability and to
       !>     conform to the NAIF style standard.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None needed.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine should be called only by ZZDPSEC as part of the
       !>     DPSPCE subroutine package.  It has no other use.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     Spacetrack 3 report.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     E.D. Wright      (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-   SPICELIB Version 1.1.1, 03-OCT-2021 (NJB)
       !>
@@ -31216,7 +31216,7 @@ contains
       return
       end procedure zzsecprt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the time in ephemeris seconds past J2000 TDB at
       !>              which the separation is to be measured.
@@ -31289,17 +31289,17 @@ contains
       !>              orientation of the frame is evaluated at an epoch
       !>              dependent on the selected aberration correction.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the light-time (and stellar aberration
       !>     corrected if this feature is enabled) separation of the two
       !>     objects BOD1 and BOD2 as observed from OBS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The kernel files to be used by this routine must be loaded
       !>         (normally using the SPICELIB routine FURNSH) before this
@@ -31315,11 +31315,11 @@ contains
       !>     4)  If R1 < RANGE1 or R2 < RANGE2, the error SPICE(INSIDEBODY)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines the apparent separation between the limbs
       !>     of two objects as observed from a third. The value reported is
@@ -31328,26 +31328,26 @@ contains
       !>     correction will also be applied to the apparent positions of the
       !>     centers of the two objects.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     L.S. Elson         (JPL)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 16-JAN-2021 (EDW) (JDR)
       !>
@@ -31494,7 +31494,7 @@ contains
       return
       end procedure zzsepq
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -31507,7 +31507,7 @@ contains
       !>     to carry out low-level ray-surface intercept and ray-surface
       !>     near point computations.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UDNEAR     is an external routine that computes the nearest point
       !>                on a bounding surface to the input ray. The caller
@@ -31618,7 +31618,7 @@ contains
       !>                LTCENT is computed using the method indicated by
       !>                ABCORR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SPOINT      is the surface intercept point on the target body of
       !>                 the ray defined by the observer and the direction
@@ -31698,12 +31698,12 @@ contains
       !>                 FOUND will be returned as .TRUE. If the ray misses
       !>                 the target, FOUND will be returned as .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file frmtyp.inc for frame class parameter
       !>     values.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the observer-target distance is zero, the error
       !>         SPICE(NOSEPARATION) is signaled.
@@ -31718,7 +31718,7 @@ contains
       !>         an unspecified manner if such checking has not
       !>         been performed.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -31788,7 +31788,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine implements the core ray-surface intercept algorithm
       !>     of the SPICELIB routine SINCPT. Parsing and analysis of inputs
@@ -31818,11 +31818,11 @@ contains
       !>     modeled as ellipsoids or as surfaces represented by topographic
       !>     data.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in SINCPT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a private routine. It is meant to be used only by the
       !>         DSK subsystem.
@@ -31837,15 +31837,15 @@ contains
       !>     4)  If the direction vector DVEC is the zero vector, the error
       !>         SPICE(ZEROVECTOR) will be signaled.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 14-JUN-2021 (NJB)
       !>
@@ -31880,7 +31880,7 @@ contains
       !>
       !>        Version 1.0.0 15-OCT-2014 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 2.0.0, 14-JUN-2021 (NJB)
       !>
@@ -32657,7 +32657,7 @@ contains
       end associate
       end subroutine zzsfxcor
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -32666,12 +32666,12 @@ contains
       !>     Find the latitude extent (extrema of latitude) of a line segment.
       !>     Latitude is defined in the planetocentric sense.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     P1,
       !>     P2         are endpoints of a given line segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MINLAT     is the minimum planetocentric (latitudinal) latitude
       !>                that occurs on the line segment defined by the input
@@ -32689,11 +32689,11 @@ contains
       !>                MAXLAT is attained. Note that in some cases, the
       !>                maximum latitude can occur at more than one point.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs when this routine attempts to construct a
       !>         SPICE plane, the error will be diagnosed by routines in the
@@ -32703,11 +32703,11 @@ contains
       !>         ray-plane intersection, the error will be diagnosed by
       !>         routines in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In this routine, "latitude" of a point refers to planetocentric
       !>     latitude: the angle between the X-Y plane and the ray emanating
@@ -32785,7 +32785,7 @@ contains
       !>        contain a point where a local extremum occurs. The extrema
       !>        of latitude on the segment occur at the endpoints.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  One application of this routine is to assist in subsetting
       !>         a type 2 DSK segment; this task requires determination of
@@ -32797,19 +32797,19 @@ contains
       !>     2)  This routine is also used to find the maximum latitude
       !>         change that can occur between two points on a given ray.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 29-SEP-2016 (NJB)
       !>
@@ -33020,7 +33020,7 @@ contains
       end associate
       end procedure zzsglatx
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TARG1    the string naming the first body of interest. You can
       !>              also supply the integer ID code for the object as an
@@ -33127,7 +33127,7 @@ contains
       !>                 The ABCORR string lacks sensitivity to case, leading
       !>                 and trailing blanks.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BODS     the NAIF SPK/body IDs of the two objects for which to
       !>              determine the angular separation.
@@ -33140,11 +33140,11 @@ contains
       !>
       !>     OBS      the NAIF SPK/body ID of the observer.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the three objects TARG1, TARG2, and OBSRVR are not
       !>         distinct, the error SPICE(BODIESNOTDISTINCT) is signaled.
@@ -33173,34 +33173,34 @@ contains
       !>         recognized, an error is signaled by a routine in the call tree
       !>         of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Please refer to the Aberration Corrections Required Reading
       !>     (abcorr.req) for detailed information describing the nature and
       !>     calculation of the applied corrections.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 16-JAN-2021 (EDW) (JDR)
       !>
@@ -33479,7 +33479,7 @@ contains
       end associate
       end procedure zzspin
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -33489,7 +33489,7 @@ contains
       !>     where the rays are confined to a specified half-plane. It may
       !>     be used for limb and terminator computations.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     For the purpose of solving for ray tangency points on a target
       !>     body, the independent variable can be considered to be angular
@@ -33640,7 +33640,7 @@ contains
       !>                of the intervals found by the search (SPICELIB: RESULT
       !>                had to be large enough).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RESULT     is a SPICE window containing the results of the
       !>                search. With the exception of the first and last
@@ -33700,11 +33700,11 @@ contains
       !>                if and only if there is a state transition at the
       !>                last element of RESULT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBCELL     is the SPICELIB cell lower bound.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If TOL is negative, the error SPICE(INVALIDTOLERANCE)
       !>         will be signaled.
@@ -33735,7 +33735,7 @@ contains
       !>         POINTS, and its window routines SPICE(WINDOWEXCESS) for
       !>         RESULT).
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Kernels used by this routine are those needed by the input
       !>     routines
@@ -33745,25 +33745,25 @@ contains
       !>        UDSTEP
       !>        UDREFN
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports limb and terminator point detection.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     It is important that the user understand how the routines UDCOND,
       !>     UDSTEP and UDREFN are to be used and that the calling sequences
       !>     match precisely with the descriptions given here.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     L.S. Elson     (JPL)
@@ -33771,7 +33771,7 @@ contains
       !>     I.M. Underwood (JPL)
       !>     E.D. Wright    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-2016 (NJB) (EDW)
       !>
@@ -34389,7 +34389,7 @@ contains
       return
       end subroutine zztanslv
 
-       !> ## Abstract
+       !>## Abstract
        !>
        !>     SPICE Private routine intended solely for the support of SPICE
        !>     routines. Users should not call this routine directly due
@@ -34398,7 +34398,7 @@ contains
        !>     Shift and scale plate model coordinates to zero-based, double
        !>     precision voxel grid coordinates.
        !>
-       !> ## Detailed Input
+       !>## Detailed Input
        !>
        !>     MODXYZ     Coordinates of point in model coordinates. The
        !>                point is expressed as an offset from the center
@@ -34412,7 +34412,7 @@ contains
        !>     VOXSIZ     Voxel size in model coordinates. VOXSIZ is the
        !>                voxel's edge length. Units are km.
        !>
-       !> ## Detailed Output
+       !>## Detailed Output
        !>
        !>     GRDXYZ     Coordinates of the input point, scaled to voxel grid
        !>                coordinates, and expressed as an offset from the voxel
@@ -34420,24 +34420,24 @@ contains
        !>                precision values. The units are the voxel edge length
        !>                multiplied by km.
        !>
-       !> ## Parameters
+       !>## Parameters
        !>
        !>     None.
        !>
-       !> ## Exceptions
+       !>## Exceptions
        !>
        !>     1)  If VOXSIZ is less than or equal to zero, the error
        !>         SPICE(NONPOSITIVEVALUE) is signaled.
        !>
-       !> ## Files
+       !>## Files
        !>
        !>     None.
        !>
-       !> ## Particulars
+       !>## Particulars
        !>
        !>     This routine supports DSKX02.
        !>
-       !> ## Examples
+       !>## Examples
        !>
        !>   C
        !>   C     Some position in model coordinates, i.e. the body fixed
@@ -34457,20 +34457,20 @@ contains
        !>   C
        !>         CALL ZZTOGRID ( POS, VOXORI, VOXSIZ, POSVOX )
        !>
-       !> ## Restrictions
+       !>## Restrictions
        !>
        !>     None.
        !>
-       !> ## Literature References
+       !>## Literature References
        !>
        !>     None.
        !>
-       !> ## Author and Institution
+       !>## Author and Institution
        !>
        !>     N.J. Bachman    (JPL)
        !>     J.A. Bytof      (JPL)
        !>
-       !> ## Version
+       !>## Version
        !>
        !>-    SPICELIB Version 1.0.0, 18-MAY-2016 (NJB)
        !>
@@ -34519,7 +34519,7 @@ contains
       return
       end procedure zztogrid
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -34528,7 +34528,7 @@ contains
       !>     Find the winding number of a planar polygon, embedded in
       !>     3-dimensional space, about a specified point.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     PLANE          is a SPICELIB plane containing a polygon and
       !>                    a point.
@@ -34542,7 +34542,7 @@ contains
       !>     POINT          is a point lying in PLANE; the winding number
       !>                    of the polygon about POINT is sought.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the winding number of the input polygon
       !>     about the input point.  The winding number measures the "net"
@@ -34572,11 +34572,11 @@ contains
       !>
       !>                       POINT is outside the polygon.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     UBPL           is the array upper bound for SPICELIB planes.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of boundary vectors N is not at least 3,
       !>         or if the number exceeds MAXFOV, the error
@@ -34592,11 +34592,11 @@ contains
       !>     3)  If the input plane as a zero normal vector, the error
       !>         SPICE(ZEROVECTOR) will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Find the winding number of a 3-D polygon about a specified
       !>     point.  Although in principle the polygon is two-dimensional,
@@ -34677,23 +34677,23 @@ contains
       !>
       !>     where vertex N+1 is considered identical to vertex 1.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZELVUPY.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1] `Calculus and Analytic Geometry', Thomas and Finney.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-AUG-2005 (NJB)
       module procedure zzwind
@@ -34833,7 +34833,7 @@ contains
       return
       end procedure zzwind
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -34842,7 +34842,7 @@ contains
       !>     Find the winding number of a planar polygon about a specified
       !>     point in 2-dimensional space.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N,
       !>     VERTCS         are, respectively, the number vertices defining
@@ -34850,7 +34850,7 @@ contains
       !>                    pair of consecutive vectors in the array VERTCS
       !>                    defines an edge of the polygon.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the winding number of the input polygon
       !>     about the input point. The winding number measures the "net"
@@ -34880,11 +34880,11 @@ contains
       !>
       !>                       POINT is outside the polygon.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of boundary vectors N is not at least 3,
       !>         or if the number exceeds MAXFOV, the error
@@ -34900,11 +34900,11 @@ contains
       !>     3)  If the input plane as a zero normal vector, the error
       !>         SPICE(ZEROVECTOR) will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Find the winding number of a 2-D polygon about a specified
       !>     point.
@@ -34972,23 +34972,23 @@ contains
       !>     where vertex N+1 is considered have length identical to that of
       !>     vertex 1 and argument differing from that of vertex 1 by w*2*pi.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1] `Calculus and Analytic Geometry', Thomas and Finney.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 08-JUL-2008 (NJB)
       module procedure zzwind2d
@@ -35083,7 +35083,7 @@ contains
       return
       end procedure zzwind2d
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the name of the body with which the planetographic
       !>              coordinate system is associated.
@@ -35105,7 +35105,7 @@ contains
       !>              is the polar radius of the spheroid. (More importantly
       !>              RP = RE*(1-F).)
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     JACOBI   is the matrix of partial derivatives of the conversion
       !>              from rectangular to planetographic coordinates. It
@@ -35119,11 +35119,11 @@ contains
       !>
       !>              evaluated at the input values of X, Y, and Z.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the body name BODY cannot be mapped to a NAIF ID code,
       !>         and if BODY is not a string representation of an integer,
@@ -35157,7 +35157,7 @@ contains
       !>         Jacobian matrix is undefined, an error is signaled by a
       !>         routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine expects a kernel variable giving BODY's prime
       !>     meridian angle as a function of time to be available in the
@@ -35185,7 +35185,7 @@ contains
       !>     coefficients for BODY are not required by this routine. See the
       !>     $Particulars section for details.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     When performing vector calculations with velocities it is usually
       !>     most convenient to work in rectangular coordinates. However, once
@@ -35271,7 +35271,7 @@ contains
       !>     It does not affect the other SPICELIB coordinate conversion
       !>     routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -35495,22 +35495,22 @@ contains
       !>           dY/dt (km/s)           =    9.0732615496727167
       !>           dZ/dt (km/s)           =    4.7579169009978992
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 12-AUG-2021 (JDR)
       !>
@@ -35731,7 +35731,7 @@ contains
       end associate
       end procedure dpgrdr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the name of the body with which the planetographic
       !>              coordinate system is associated.
@@ -35790,7 +35790,7 @@ contains
       !>              where RP is the polar radius of the spheroid, and the
       !>              units of RP match those of RE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     JACOBI   is the matrix of partial derivatives of the conversion
       !>              from planetographic to rectangular coordinates. It
@@ -35804,11 +35804,11 @@ contains
       !>
       !>              evaluated at the input values of LON, LAT and ALT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the body name BODY cannot be mapped to a NAIF ID code,
       !>         and if BODY is not a string representation of an integer,
@@ -35838,7 +35838,7 @@ contains
       !>     5)  If the flattening coefficient is greater than or equal to one,
       !>         the error SPICE(VALUEOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine expects a kernel variable giving BODY's prime
       !>     meridian angle as a function of time to be available in the
@@ -35866,7 +35866,7 @@ contains
       !>     coefficients for BODY are not required by this routine. See the
       !>     $Particulars section for details.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     It is often convenient to describe the motion of an object in the
       !>     planetographic coordinate system. However, when performing
@@ -35939,7 +35939,7 @@ contains
       !>     It does not affect the other SPICELIB coordinate conversion
       !>     routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -36163,22 +36163,22 @@ contains
       !>           dY/dt (km/s)           =    9.0732615496727167
       !>           dZ/dt (km/s)           =    4.7579169009978992
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 12-AUG-2021 (JDR)
       !>
@@ -36402,7 +36402,7 @@ contains
       end associate
       end procedure drdpgr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     S1,
       !>     S2       are, respectively, the state vector of the first and
@@ -36413,16 +36413,16 @@ contains
       !>              epoch. If this is not the case, the numerical result has
       !>              no meaning.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the double precision value of the time
       !>     derivative of the angular separation between S1 and S2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If numeric overflow and underflow cases are detected, an error
       !>         is signaled by a routine in the call tree of this routine.
@@ -36432,11 +36432,11 @@ contains
       !>     3)  Linear dependent position components of S1 and S1 constitutes
       !>         a non-error exception. The function returns 0 for this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In this discussion, the notation
       !>
@@ -36527,7 +36527,7 @@ contains
       !>     with respect to time; typically the graph is roughly v-shaped at
       !>     the singular points.)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -36629,20 +36629,20 @@ contains
       !>         Time derivative of angular
       !>            separation (rad/sec):    3.8121193666132696E-009
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 06-JUL-2021 (JDR)
       !>
@@ -36724,7 +36724,7 @@ contains
       return
       end procedure dvsep
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TRMTYP   is a string indicating the type of terminator to
       !>              compute: umbral or penumbral. The umbral terminator
@@ -36888,7 +36888,7 @@ contains
       !>
       !>     NPTS     is the number of terminator points to compute.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TRGEPC   is the "target epoch." TRGEPC is defined as follows:
       !>              letting LT be the one-way light time between the
@@ -36951,11 +36951,11 @@ contains
       !>              The terminator points are expressed in the body-fixed
       !>              reference frame designated by FIXREF. Units are km.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input frame name FIXREF cannot be mapped
       !>         to a frame ID code, the error SPICE(NOTRANSLATION) is
@@ -36998,7 +36998,7 @@ contains
       !>     11) If any SPK look-up fails, an error is signaled by
       !>         a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPK, PCK, and frame kernels must be loaded by the
       !>     calling program before this routine is called.
@@ -37031,7 +37031,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine models the boundaries of shadow regions on an
       !>     ellipsoidal target body "illuminated" by a spherical light
@@ -37070,7 +37070,7 @@ contains
       !>     the center of the light source, then X lies on the umbral
       !>     terminator; otherwise X lies on the penumbral terminator.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -37363,22 +37363,22 @@ contains
       !>             Solar incidence angle adjusted for
       !>             sun's angular radius (deg):             90.000000044
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine models light paths as straight lines.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 01-NOV-2021 (EDW) (JDR)
       !>
@@ -37590,7 +37590,7 @@ contains
       end associate
       end procedure edterm
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FRSTYR   is the first year possible for two-line elements.
       !>              Since two-line elements allow only two digits for
@@ -37638,7 +37638,7 @@ contains
       !>              (formerly NORAD). See $Particulars for a detailed
       !>              description of the format.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EPOCH    is the epoch of the two-line elements supplied via
       !>              the input array LINES. EPOCH is returned in TDB
@@ -37666,23 +37666,23 @@ contains
       !>                 ELEMS ( 10 ) = EPOCH of the elements in seconds
       !>                                past ephemeris epoch J2000.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while trying to parse the two-line element
       !>         set, the error SPICE(BADTLE) is signaled and a description of
       !>         the detected issue in the "two-line element" set is reported
       !>         on the long error message.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     You must have loaded a SPICE leapseconds kernel into the
       !>     kernel pool prior to calling this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine parses a Space Command Two-line element set and
       !>     returns the orbital elements properly scaled and in units
@@ -37789,7 +37789,7 @@ contains
       !>     to units of radians, radians/minute, radians/minute**2, and
       !>     radians/minute**3
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -38165,7 +38165,7 @@ contains
       !>        Position:  -4644.60403398  -5038.95025539   -337.27141116
       !>        Velocity:     -0.45719025      0.92884817     -7.55917355
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The format of the two-line elements suffer from a "millennium"
       !>         problem --- only two digits are used for the year of the
@@ -38190,7 +38190,7 @@ contains
       !>         representations make this method of computing the full year
       !>         inaccurate.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  F. Hoots and R. Roehrich, "Spacetrack Report #3: Models for
       !>          Propagation of the NORAD Element Sets," U.S. Air Force
@@ -38213,13 +38213,13 @@ contains
       !>          AIAA/AAS Astrodynamics Specialist Conference, Keystone, CO.,
       !>          August 21-24, 2006.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.0, 06-NOV-2021 (JDR) (MCS)
       !>
@@ -38280,7 +38280,7 @@ contains
       return
       end procedure getelm
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INST     is the name of an instrument, such as a
       !>              spacecraft-mounted framing camera, for which the field of
@@ -38295,7 +38295,7 @@ contains
       !>     ROOM     is the maximum number of 3-dimensional vectors that can
       !>              be returned in BOUNDS.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SHAPE    is a character string that describes the "shape" of
       !>              the field of view. Possible values returned are:
@@ -38364,14 +38364,14 @@ contains
       !>              magnitude of the boresight (for 'ANGLES'-style FOV
       !>              specifications.)
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MINCOS   is the lower limit on the value of the cosine of the
       !>              cross or reference angles in the 'ANGLES' specification
       !>              cases. See the header of the routine GETFOV for its
       !>              current value.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the name of the instrument cannot be translated to its
       !>         NAIF ID code, the error SPICE(IDCODENOTFOUND) is signaled.
@@ -38464,7 +38464,7 @@ contains
       !>         kernel pool for the instrument whose FOV is sought, this
       !>         module assumes the 'CORNERS' specification is to be utilized.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPICE kernels must be loaded by the calling program
       !>     before this routine is called.
@@ -38479,7 +38479,7 @@ contains
       !>     Kernel data are normally loaded via FURNSH once per program run,
       !>     NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a common interface for retrieving from the
       !>     kernel pool the geometric characteristics of an instrument field
@@ -38633,7 +38633,7 @@ contains
       !>     software to further manipulate the vectors retrieved by this
       !>     routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -38848,7 +38848,7 @@ contains
       !>                        -0.40000000  0.80000000 -0.20000000
       !>        --------------------------------------
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine will not operate unless proper mapping between
       !>         the instrument name INST and a NAIF ID exists, an I-kernel for
@@ -38857,17 +38857,17 @@ contains
       !>         for the instrument field of view consistent with the
       !>         expectations of this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     M. Liukis          (JPL)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 17-DEC-2021 (JDR) (BVS) (ML)
       module procedure getfvn
@@ -38925,7 +38925,7 @@ contains
       end associate
       end procedure getfvn
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is any character string.
       !>
@@ -38933,7 +38933,7 @@ contains
       !>              for a decimal number. It is assumed that the
       !>              decimal number begins at FIRST.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LAST     is the last character at or after FIRST such that
       !>              the substring STRING(FIRST:LAST) is a decimal
@@ -38944,11 +38944,11 @@ contains
       !>              that begins at FIRST and ends at last. If there
       !>              is no such string NCHAR will be given the value 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -38960,11 +38960,11 @@ contains
       !>         LAST will be returned with the value FIRST-1 and NCHAR will be
       !>         returned with the value 0.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows you to scan forward in a string to locate
       !>     a decimal number that begins on the input character FIRST. Note
@@ -38983,7 +38983,7 @@ contains
       !>        -.U
       !>        +.U
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you believe that a string has the form
       !>
@@ -39017,20 +39017,20 @@ contains
       !>
       !>     END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 04-AUG-2021 (JDR)
       !>
@@ -39168,7 +39168,7 @@ contains
       return
       end procedure lx4dec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STATE    is the state (position and velocity) of the body
       !>              at some epoch. Components are x, y, z, dx/dt, dy/dt,
@@ -39182,7 +39182,7 @@ contains
       !>     MU       is the gravitational parameter (GM, km /sec ) of
       !>              the primary body.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ELTS     are equivalent conic elements describing the orbit
       !>              of the body around its primary. The elements are,
@@ -39214,7 +39214,7 @@ contains
       !>
       !>              See the $Parameters section below.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     OSCXSZ   is the size of the output elements array ELTS. OSCXSZ
       !>              is declared in the Fortran include file
@@ -39229,7 +39229,7 @@ contains
       !>
       !>                 DOUBLE PRECISION   ELTS( OSCXSZ )
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If MU is not positive, the error SPICE(NONPOSITIVEMASS)
       !>         is signaled.
@@ -39272,11 +39272,11 @@ contains
       !>         axis is not computable, both it and the period are set to
       !>         zero. If the period is not computable, it is set to zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns in the first 8 elements of the array ELTS
       !>     the outputs computed by OSCELT, and in addition returns in
@@ -39298,7 +39298,7 @@ contains
       !>     routine: CONICS maps a set of osculating elements and a time to a
       !>     state vector.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -39558,7 +39558,7 @@ contains
       !>        2008 NOV 14 11:59:59.001  27578.920610
       !>        2009 MAY 13 11:59:57.999  27577.800624
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The input state vector must be expressed relative to an
       !>         inertial reference frame.
@@ -39600,17 +39600,17 @@ contains
       !>         SPICELIB routine CONICS and compare the resulting state
       !>         vector with the one supplied to this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  R. Bate, D. Mueller, and J. White, "Fundamentals of
       !>          Astrodynamics," Dover Publications Inc., 1971.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 06-JUL-2021 (JDR)
       !>
@@ -39900,7 +39900,7 @@ contains
       return
       end procedure oscltx
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the name of the body with which the planetographic
       !>              coordinate system is associated.
@@ -39960,7 +39960,7 @@ contains
       !>              where RP is the polar radius of the spheroid, and the
       !>              units of RP match those of RE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECTAN   are the rectangular coordinates of the input point.
       !>              See the discussion below in the $Particulars header
@@ -39969,11 +39969,11 @@ contains
       !>              The units associated with RECTAN are those associated
       !>              with the inputs ALT and RE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the body name BODY cannot be mapped to a NAIF ID code,
       !>         and if BODY is not a string representation of an integer,
@@ -40003,7 +40003,7 @@ contains
       !>     5)  If the flattening coefficient is greater than or equal to one,
       !>         the error SPICE(VALUEOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine expects a kernel variable giving BODY's prime
       !>     meridian angle as a function of time to be available in the
@@ -40031,7 +40031,7 @@ contains
       !>     coefficients for BODY are not required by this routine. See the
       !>     $Particulars section below for details.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given the planetographic coordinates of a point, this routine
       !>     returns the body-fixed rectangular coordinates of the point. The
@@ -40098,7 +40098,7 @@ contains
       !>     It does not affect the other SPICELIB coordinate conversion
       !>     routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -40261,15 +40261,15 @@ contains
       !>            0.000      0.000  -6356.750     0.000   -90.000      0.000
       !>            0.000      0.000      0.000     0.000    90.000  -6356.750
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -40278,7 +40278,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 27-MAY-2021 (JDR)
       !>
@@ -40471,7 +40471,7 @@ contains
       end associate
       end procedure pgrrec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODY     is the name of the body with which the planetographic
       !>              coordinate system is associated.
@@ -40498,7 +40498,7 @@ contains
       !>              where RP is the polar radius of the spheroid, and the
       !>              units of RP match those of RE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LON      is the planetographic longitude of the input point. This
       !>              is the angle between the prime meridian and the meridian
@@ -40543,11 +40543,11 @@ contains
       !>              The units associated with ALT are those associated with
       !>              the input RECTAN and RE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the body name BODY cannot be mapped to a NAIF ID code,
       !>         and if BODY is not a string representation of an integer,
@@ -40581,7 +40581,7 @@ contains
       !>         on the ellipsoid to RECTAN may not be unique, so latitude may
       !>         not be well-defined.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine expects a kernel variable giving BODY's prime
       !>     meridian angle as a function of time to be available in the
@@ -40606,7 +40606,7 @@ contains
       !>     coefficients for BODY are not required by this routine. See the
       !>     $Particulars section for details.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given the body-fixed rectangular coordinates of a point, this
       !>     routine returns the planetographic coordinates of the point. The
@@ -40673,7 +40673,7 @@ contains
       !>     It does not affect the other SPICELIB coordinate conversion
       !>     routines.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -40838,15 +40838,15 @@ contains
       !>            0.000      0.000  -6356.750     0.000   -90.000      0.000
       !>            0.000      0.000      0.000     0.000    90.000  -6356.750
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -40856,7 +40856,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 06-JUL-2021 (JDR)
       !>
@@ -41073,7 +41073,7 @@ contains
       end associate
       end procedure recpgr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VEC1,
       !>     VEC2     are two vectors that define an ellipse.
@@ -41090,17 +41090,17 @@ contains
       !>              VEC2 and VEC1 need not be linearly independent;
       !>              degenerate input ellipses are allowed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SMAJOR,
       !>     SMINOR   are semi-major and semi-minor axes of the ellipse,
       !>              respectively.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If one or more semi-axes of the ellipse is found to be the
       !>         zero vector, the input ellipse is degenerate. This case is
@@ -41108,11 +41108,11 @@ contains
       !>         whether the semi-axes are suitable for the program's intended
       !>         use.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Two linearly independent but not necessarily orthogonal vectors
       !>     VEC1 and VEC2 can define an ellipse centered at the origin: the
@@ -41147,7 +41147,7 @@ contains
       !>     gnomonic projections of an ellipse, and also for finding the limb
       !>     and terminator of an ellipsoidal body.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  An example using inputs that can be readily checked by
       !>         hand calculation.
@@ -41191,23 +41191,23 @@ contains
       !>
       !>          The call to SAELGV determines the required semi-axes.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  T. Apostol, "Calculus, Vol. II," chapter 5, "Eigenvalues of
       !>          Operators Acting on Euclidean Spaces," John Wiley & Sons,
       !>          1969.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 28-MAY-2021 (JDR)
       !>
@@ -41464,7 +41464,7 @@ contains
       return
       end procedure saelgv
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SC       is the standard NAIF ID of the spacecraft whose clock's
       !>              time is being encoded.
@@ -41560,7 +41560,7 @@ contains
       !>              description of the Voyager and Mars Observer clock
       !>              formats.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ERROR    is .TRUE. if an error occurred parsing the input clock
       !>              string and converting it to ticks.
@@ -41612,14 +41612,14 @@ contains
       !>              clock type code, contain more detailed information
       !>              on the conversion process.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MXPART   is the maximum number of spacecraft clock partitions
       !>              expected in the kernel file for any one spacecraft.
       !>              See the INCLUDE file sclk.inc for this parameter's
       !>              value.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     This routine uses both the normal SPICELIB error handling and
       !>     an ERROR flag and message. Errors that deal with kernel pool
@@ -41666,13 +41666,13 @@ contains
       !>         type specific routine. The precise issue detected while
       !>         parsing the clock string is provided in the MSG string.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A kernel file containing spacecraft clock partition information
       !>     for the desired spacecraft must be loaded, using the routines
       !>     CLPOOL and FURNSH, before calling this routine.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In general, it is difficult to compare spacecraft clock counts
       !>     numerically since there are too many clock components for a
@@ -41697,7 +41697,7 @@ contains
       !>           measured in ticks, to compute the number of ticks
       !>           since the beginning of the mission of the clock time.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Double precision encodings of spacecraft clock counts are used to
       !>     tag pointing data in the C-kernel.
@@ -41787,15 +41787,15 @@ contains
       !>           Output s/c clock count:  2/20561:58:768
       !>           Output C-Matrix:  'fourth C-matrix'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -41804,7 +41804,7 @@ contains
       !>     R.E. Thurman       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 22-NOV-2021 (JDR) (NJB)
       !>
@@ -42129,7 +42129,7 @@ contains
 
       end procedure scpars
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Deprecated: This routine has been superseded by the SPICELIB
       !>     routine SUBPNT. This routine is supported for purposes of
@@ -42142,7 +42142,7 @@ contains
       !>     target body. Also, return the observer's altitude above the
       !>     target body.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string specifying the computation method
       !>              to be used. The choices are:
@@ -42233,7 +42233,7 @@ contains
       !>              'EARTH' and '399' are legitimate strings to supply
       !>              to indicate the observer is Earth.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SPOINT   is the sub-observer point on the target body at ET
       !>              expressed relative to the body-fixed frame of the
@@ -42270,11 +42270,11 @@ contains
       !>              to the surface point SPOINT, but this segment in
       !>              general is not perpendicular to the surface.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the listed errors occur, the output arguments are
       !>     left unchanged.
@@ -42319,7 +42319,7 @@ contains
       !>         have not been loaded prior to calling SUBPT, an error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPK, PCK, and frame kernels must be loaded
       !>     prior by the calling program before this routine is called.
@@ -42350,7 +42350,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SUBPT computes the sub-observer point on a target body.
       !>     (The sub-observer point is commonly called the sub-spacecraft
@@ -42367,7 +42367,7 @@ contains
       !>     other than SPICE, it's essential to make sure the same geometric
       !>     definitions are used.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -42474,15 +42474,15 @@ contains
       !>          Planetocentric Longitude (deg) =  -159.226663
       !>          Altitude                 (km)  =   373.166636
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -42491,7 +42491,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.0, 01-NOV-2021 (EDW) (JDR)
       !>
@@ -42750,7 +42750,7 @@ contains
       end associate
       end procedure subpt
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Deprecated: This routine has been superseded by the SPICELIB
       !>     routine SUBSLR. This routine is supported for purposes of
@@ -42761,7 +42761,7 @@ contains
       !>     optionally corrected for planetary (light time) and stellar
       !>     aberration.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string specifying the computation method
       !>              to be used. The choices are:
@@ -42864,7 +42864,7 @@ contains
       !>              'EARTH' and '399' are legitimate strings that indicate
       !>              the earth is the observer.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SPOINT   is the sub-solar point on the target body at ET
       !>              expressed relative to the body-fixed frame of the
@@ -42894,11 +42894,11 @@ contains
       !>              applied at the epoch ET-LT, where LT is the one way
       !>              light time from target to observer.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the listed errors occur, the output arguments are
       !>     left unchanged.
@@ -42943,7 +42943,7 @@ contains
       !>         have not been loaded prior to calling SUBSOL, an error is
       !>         signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPK, PCK, and frame data must be available to
       !>     the calling program before this routine is called. Typically
@@ -42976,7 +42976,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SUBSOL computes the sub-solar point on a target body, as seen by
       !>     a specified observer.
@@ -42990,7 +42990,7 @@ contains
       !>     other than SPICE, it's essential to make sure the same geometric
       !>     definitions are used.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following example program, the file MGS.BSP is a
       !>     hypothetical binary SPK ephemeris file containing data for the
@@ -43067,16 +43067,16 @@ contains
       !>
       !>           END
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The appropriate kernel data must have been loaded before this
       !>         routine is called. See the $Files section above.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -43085,7 +43085,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.0, 01-NOV-2021 (EDW) (JDR)
       !>
@@ -43139,7 +43139,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1999 (NJB) (JEM)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 22-JUL-2004 (NJB)
       !>
@@ -43361,7 +43361,7 @@ contains
       end associate
       end procedure subsol
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STVRTX   is the state of a ray's vertex. The first three
       !>              components of STVRTX are the vertex's x, y, and z
@@ -43398,7 +43398,7 @@ contains
       !>              z axes of the reference frame relative to which
       !>              STVRTX and STDIR are specified.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STX      is the state of the intercept of the input ray on
       !>              the surface of the input ellipsoid. The first
@@ -43424,11 +43424,11 @@ contains
       !>              while the velocity is not; this can happen for
       !>              near-tangency cases.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input ray's direction vector is the zero vector, an
       !>         error is signaled by a routine in the call tree of this
@@ -43441,11 +43441,11 @@ contains
       !>     3)  If the vertex of the ray is on the ellipsoid, the error
       !>         SPICE(INVALIDVERTEX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The position and velocity of the ray's vertex as well as the
       !>     ray's direction vector and velocity vary with time. The
@@ -43534,7 +43534,7 @@ contains
       !>                                             2
       !>                                  < D(t), N >
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -43727,22 +43727,22 @@ contains
       !>         Intercept velocity:
       !>          -0.387453203621+307  0.000000000000E+00  0.299999997419+300
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.E. McLean        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 22-JUL-2020 (JDR)
       !>
@@ -43940,30 +43940,30 @@ contains
       return
       end procedure surfpv
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     LINE     is a character string containing text to be written
       !>              to standard output.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while attempting to write to the standard
       !>         output, the error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is a macro for the subroutine call
       !>
@@ -43971,7 +43971,7 @@ contains
       !>
       !>     Where STDOUT is the logical unit connected to standard output.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you need to create a message to be printed on the
       !>     user's terminal. Here is how to use TOSTDO to handle this
@@ -43983,20 +43983,20 @@ contains
       !>        CALL TOSTDO ( 'campus of the University of Illinois in '      )
       !>        CALL TOSTDO ( 'Urbana, Illinois.' )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-JUN-2021 (JDR)
       !>
@@ -44019,7 +44019,7 @@ contains
       end associate
       end procedure tostdo
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the time in ephemeris seconds past J2000 TDB at
       !>              which the separation is to be measured.
@@ -44129,7 +44129,7 @@ contains
       !>              The ABCORR string lacks sensitivity to case, leading
       !>              and trailing blanks.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the angular separation between two targets,
       !>     TARG1 and TARG2, as seen from an observer OBSRVR expressed in
@@ -44155,11 +44155,11 @@ contains
       !>     The positions of the targets may optionally be corrected for light
       !>     time and stellar aberration.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the three objects TARG1, TARG2 and OBSRVR are not
       !>         distinct, an error is signaled by a routine in the call tree
@@ -44203,7 +44203,7 @@ contains
       !>     10) If an error is signaled, the function returns a meaningless
       !>         result.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPICE kernels must be loaded by the calling program
       !>     before this routine is called.
@@ -44222,7 +44222,7 @@ contains
       !>     -  If non-inertial reference frames are used, then PCK files,
       !>        frame kernels, C-kernels, and SCLK kernels may be needed.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine determines the apparent separation between the
       !>     two objects as observed from a third. The value reported is
@@ -44235,7 +44235,7 @@ contains
       !>     (abcorr.req) for detailed information describing the nature and
       !>     calculation of the applied corrections.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -44365,21 +44365,21 @@ contains
       !>           point body models  (deg.):   0.15729276
       !>           sphere body models (deg.):   0.15413221
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     M. Costa Sitja     (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 07-AUG-2021 (EDW) (JDR) (MCS)
       !>
@@ -44442,7 +44442,7 @@ contains
       return
       end procedure trgsep
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UDFUNC   is the routine that returns the value of the scalar
       !>              quantity function of interest at X. The calling
@@ -44476,7 +44476,7 @@ contains
       !>
       !>              DX may be negative but must be non-zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ISDECR   is a scalar boolean indicating if the first derivative
       !>              of UDFUNC with respect to the independent variable
@@ -44489,16 +44489,16 @@ contains
       !>                                 dx     |
       !>                                         X
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If DX has a value of zero, an error is signaled by a routine
       !>         in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     If the evaluation of UDFUNC requires SPICE kernel data, the
       !>     appropriate kernels must be loaded before calling this routine.
@@ -44518,31 +44518,31 @@ contains
       !>     Such kernel data are normally loaded once per program run, NOT
       !>     every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine only wraps a UDDF call, examining the sign of the
       !>     derivative value returned by UDDF. Please refer to this routine
       !>     for further details.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See GFUDS.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 26-OCT-2021 (JDR)
       !>
@@ -44580,7 +44580,7 @@ contains
 
       end subroutine uddc
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UNIT     is the logical unit to which the variable will be
       !>              written. This is usually the logical unit to which the
@@ -44598,31 +44598,31 @@ contains
       !>
       !>              On input, the table may or may not contain any variables.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs writing the variable to UNIT, the error
       !>         SPICE(WRITEERROR) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     If the variable is to be written to an output kernel file, the
       !>     file should be opened with a logical unit determined by the
       !>     calling program.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If the table symbol table does not contain any variables, nothing
       !>     will be written to UNIT.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     If  NAME   = 'MEAN_ANOM'
       !>         DIRCTV = '='
@@ -44641,22 +44641,22 @@ contains
       !>        MEAN_ANOM   = ( 6.239996D0,
       !>                        1.99096871D-7  )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -44677,7 +44677,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 20-DEC-1988 (NJB)
       !>
@@ -44780,7 +44780,7 @@ contains
       return
       end procedure wrkvar
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VERTEX   is the voxel grid coordinates of ray's vertex. These
       !>              coordinates are zero-based, double precision offsets from
@@ -44796,7 +44796,7 @@ contains
       !>     MAXNVX   is the maximum number of voxel coordinate sets that can
       !>              be stored in VOXLST.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NVX      is the number of voxel coordinate sets contained in
       !>              VOXLST.
@@ -44812,7 +44812,7 @@ contains
       !>              The voxels in the output list are ordered by increasing
       !>              distance from the ray's vertex.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     GRDTOL   is a tolerance value used to determine whether
       !>              VERTEX is too far from the voxel grid. The Ith
@@ -44822,7 +44822,7 @@ contains
       !>
       !>                  GRDTOL * EXTENT(I)
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input RAYDIR has all zero components, the error
       !>         SPICE(ZEROVECTOR) is signaled.
@@ -44842,28 +44842,28 @@ contains
       !>         exceeds the size of the VOXLST input vector, the error
       !>         SPICE(ARRAYTOOSMALL) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports use of a spatial index for rapid
       !>     selection of plates that could be hit by a specified ray.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the routine DSKX02 for a usage example.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J.A. Bytof         (JPL)
@@ -44871,7 +44871,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.1, 26-OCT-2021 (NJB) (JDR)
       !>
@@ -45469,7 +45469,7 @@ contains
       return
       end procedure xdda
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -45479,7 +45479,7 @@ contains
       !>     value of the roots. Only real roots are computed. This routine
       !>     addresses the case of a small, non-zero leading coefficient.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B,
@@ -45493,7 +45493,7 @@ contains
       !>                roots to be found by this routine. Roots having
       !>                absolute value larger than UB are not returned.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     N          is the number of real roots found that satisfy the
       !>                magnitude bound constraint.
@@ -45516,7 +45516,7 @@ contains
       !>               corresponding output argument is set to zero. If the
       !>               roots are complex, both R1 and R2 are set to zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     BIG            is a limit on the absolute value of the input
       !>                    coefficients and on the magnitude limit for the
@@ -45524,7 +45524,7 @@ contains
       !>
       !>                       SQRT( DPMAX() ) / 100
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of the input coefficients have absolute value larger
       !>         than the parameter BIG, the error is diagnosed by a routine
@@ -45534,11 +45534,11 @@ contains
       !>         error is diagnosed by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports INCNSG.
       !>
@@ -45546,24 +45546,24 @@ contains
       !>     cases that can be handled accurately by that routine.
       !>     Other cases are handled in-line.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in INCNSG.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a private routine; it should not be called by
       !>         non-SPICELIB code.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 23-JAN-2017 (NJB)
       !>
@@ -45877,7 +45877,7 @@ contains
       end associate
       end procedure zzcnquad
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -45887,7 +45887,7 @@ contains
       !>     and surface list. The shape of the body is represented by DSK
       !>     data. The outputs of this routine are time-independent.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the body ID of the target for which radii
       !>                of bounding spheres are to be generated.
@@ -45899,7 +45899,7 @@ contains
       !>                If the count is zero, all surfaces for the body
       !>                are considered applicable.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MINRAD     is the radius of an inner bounding sphere for the
       !>                surface of the body designated by BODYID, NSURF,
@@ -45921,11 +45921,11 @@ contains
       !>
       !>                Units are km.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If, for a DSK segment's reference frame, frame information
       !>         cannot be looked up, the error SPICE(NOFRAMEDATA) is
@@ -45949,7 +45949,7 @@ contains
       !>     6)  If the surface list size is negative, the error
       !>         SPICE(VALUEOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of DSK files loaded by the ZZDSKBSR
       !>     subsystem.
@@ -45966,7 +45966,7 @@ contains
       !>     as CK kernels and SCLK kernels could be required to support
       !>     the offset vector lookup.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used as an initialization step by the ZZDSKSBF
       !>     entry point ZZSUDSKI.
@@ -45974,11 +45974,11 @@ contains
       !>     The operation of this routine usually will result in physical
       !>     file reads, and so will be rather slow.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZSUDSKI.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine does not take time into account when it
       !>         selects segments. All segments for the specified body
@@ -45990,15 +45990,15 @@ contains
       !>     2)  This is a private routine. It is meant to be used only by the
       !>         DSK subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 11-OCT-2021 (NJB)
       !>
@@ -46460,7 +46460,7 @@ contains
       end associate
       end procedure zzdsksph
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -46470,7 +46470,7 @@ contains
       !>     of the FOV's boundary vectors have angular separation of strictly
       !>     less than pi/2 radians from this axis.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INST       is the name of an instrument with which the field of
       !>                view (FOV) of interest is associated. This name is
@@ -46530,7 +46530,7 @@ contains
       !>
       !>                The boundary vectors need not have unit length.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     AXIS       is a unit vector normal to a plane containing the
       !>                FOV polygon. All boundary vectors have angular
@@ -46543,14 +46543,14 @@ contains
       !>                This routine signals an error if it cannot find
       !>                a satisfactory value of AXIS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MARGIN     is a small positive number used to constrain the
       !>                orientation of the boundary vectors. See the two
       !>                constraints described in the Detailed_Input section
       !>                above for specifics.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  In the input vector count N is not at least 3, the error
       !>         SPICE(INVALIDCOUNT) is signaled.
@@ -46575,12 +46575,12 @@ contains
       !>         (pi/2)-MARGIN radians from the candidate FOV axis, the
       !>         error SPICE(FOVTOOWIDE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     The boundary vectors input to this routine are typically
       !>     obtained from an IK file.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Normally implementation is not discussed in SPICE headers, but we
       !>     make an exception here because this routine's implementation and
@@ -46605,11 +46605,11 @@ contains
       !>     axis for many such intractable FOVs---that's why ZZHULLAX
       !>     is called after the simple approach fails.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See SPICELIB private routine ZZGFFVIN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a SPICE private routine. User applications should not
       !>        call this routine.
@@ -46619,15 +46619,15 @@ contains
       !>        Exceptions, and Particulars above for restrictions on the
       !>        input set of FOV boundary vectors.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
       module procedure zzfovaxi
@@ -46768,7 +46768,7 @@ contains
       return
       end procedure zzfovaxi
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -46780,7 +46780,7 @@ contains
       !>     The built-in angular rounding tolerance is still used for the
       !>     longitude comparison.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     R,
       !>     LON,
@@ -46835,7 +46835,7 @@ contains
       !>                not be used in the comparison and in fact can't be
       !>                meaningfully compared, due to round-off errors.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     INSIDE     is a logical flag that is set to .TRUE. if and only if
       !>                the input coordinates represent a point inside or on
@@ -46845,7 +46845,7 @@ contains
       !>                The value of INSIDE is not affected by the value
       !>                of any excluded coordinate.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LONALI     is a longitude shift margin. If the input longitude
       !>                coordinate LON is less than the longitude lower bound
@@ -46887,37 +46887,37 @@ contains
       !>                EXCLUD, indicates that radius should be excluded
       !>                from comparison.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Note that a margin is used for longitude shifting, although
       !>     none is used to expand the volume element.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZINLAT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 07-AUG-2016 (NJB)
       module procedure zzinlat0
@@ -47281,7 +47281,7 @@ contains
 !
 !     Standard SPICE error handling.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     AO          the original semimajor axis of the orbit.
       !>
@@ -47312,39 +47312,39 @@ contains
       !>                    ELEMS ( 10 ) = EPOCH of the elements in seconds
       !>                                   past ephemeris epoch J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     No direct output.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine only initializes non-time dependent variables and
       !>     sets flags concerning whether the orbit is synchronous or
       !>     experiences resonance effects.  It should be called once per
       !>     element set.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine should only be called by DPSPCE when propagating
       !>         two line element sets.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     Hoots, Felix R., Ronald L. Roehrich (31 December 1988). "Models
       !>     for Propagation of NORAD Element Sets". United States Department
@@ -47354,12 +47354,12 @@ contains
       !>     Kelso, T. S., "Revisiting Spacetrack Report #3," AIAA/AAS
       !>     Astrodynamics Specialist Conference, Keystone, CO, Aug 2006.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     E.D. Wright      (JPL)
       !>     W.L. Taber       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.1, 01-OCT-2021 (NJB)
       !>
@@ -48077,7 +48077,7 @@ contains
       end associate
       end procedure zzdpinit
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     XLL         a long-period periodic term dependent on inclination,
       !>                 eccentricity and argument of periapsis
@@ -48112,7 +48112,7 @@ contains
       !>                    ELEMS ( 10 ) = EPOCH of the elements in seconds
       !>                                   past ephemeris epoch J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XN          is the perturbed mean motion from the 'mean' mean
       !>                 motion at epoch at time T.
@@ -48123,19 +48123,19 @@ contains
       !>     XINC        is the perturbed inclination of the orbit plane from
       !>                 the mean inclination at the epoch at time T
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The operation of this routine is to calculate the current secular
       !>     perturbations of the 'mean' orbit elements.  The extent of the
@@ -48145,16 +48145,16 @@ contains
       !>     mean motion is between 0.8 to 1.2 orbits per day (approximately
       !>     geosynch), or between 1.9 and 2.1 orbits per days.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine should only be called by DPSPCE when propagating
       !>         two line element sets.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     Hoots, Felix R., Ronald L. Roehrich (31 December 1988). "Models
       !>     for Propagation of NORAD Element Sets". United States Department
@@ -48164,12 +48164,12 @@ contains
       !>     Kelso, T. S., "Revisiting Spacetrack Report #3," AIAA/AAS
       !>     Astrodynamics Specialist Conference, Keystone, CO, Aug 2006.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     E.D. Wright      (JPL)
       !>     W.L. Taber       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.6.0, 27-JUN-2016 (EDW)
       !>
@@ -48370,12 +48370,12 @@ contains
       end associate
       end procedure zzdpsec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     T           the time from the epoch in minutes of the element set
       !>                 at which to calculate the perturbation.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EM          is the perturbed eccentricity from the mean
       !>                 eccentricity at epoch at time T.
@@ -48394,19 +48394,19 @@ contains
       !>     XLL         a long-period periodic term dependent on inclination,
       !>                 eccentricity and argument of periapsis.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine calculates the current time dependent periodic
       !>     perturbations values due to the sun and the moon.  The original
@@ -48427,11 +48427,11 @@ contains
       !>     condition has been removed.  Perturbation terms are always
       !>     calculated.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None needed.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine should only be called by DPSPCE when propagating
       !>         two line element sets.
@@ -48440,18 +48440,18 @@ contains
       !>         a call with the time epoch set to 0.  Failure to do so
       !>         invalidates the perturbation calculation.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     Hoots, Felix R., Ronald L. Roehrich (31 December 1988). "Models
       !>     for Propagation of NORAD Element Sets". United States Department
       !>     of Defense Spacetrack Report (3).
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     E.D. Wright      (JPL)
       !>     W.L. Taber       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.5.1, 19-SEP-2006 (EDW)
       !>
@@ -48705,7 +48705,7 @@ contains
       end associate
       end procedure zzdpper
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -48715,7 +48715,7 @@ contains
       !>     space against a specified value, without converting the point to
       !>     planetodetic coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RE,
       !>     F          are, respectively, the equatorial radius
@@ -48738,7 +48738,7 @@ contains
       !>                against the planetodetic latitude of P. Units
       !>                are radians.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     REL        is an integer code that indicates the order
       !>                relation between the planetodetic latitude of P
@@ -48752,7 +48752,7 @@ contains
       !>                is true. See the Parameters section below for
       !>                the parameter names.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LT,
       !>     EQ,
@@ -48765,40 +48765,40 @@ contains
       !>                   Code EQ indicates   LP = LAT
       !>                   Code GT indicates   LP > LAT
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either the equatorial radius or flattening coefficient
       !>         is invalid, the error will be signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine performs a planetodetic latitude comparison more
       !>     efficiently than can be done using a rectangular-to-planetodetic
       !>     coordinate conversion.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     There are some cases for which this routine cannot be applied.
       !>     See the SPICELIB routine ZZPDPLTC and its usage in ZZRYTPDT.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 19-JAN-2017 (NJB)
       !>
@@ -49027,7 +49027,7 @@ contains
       end associate
       end procedure zzpdcmpl
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -49036,7 +49036,7 @@ contains
       !>     Indicate whether a given point on a planetodetic latitude cone
       !>     has the correct latitude sign.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RE,
       !>     F          are, respectively, the equatorial radius
@@ -49059,7 +49059,7 @@ contains
       !>     LAT        is a planetodetic latitude value defining a cone.
       !>                Units are radius.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if any of the following
       !>     are true:
@@ -49075,20 +49075,20 @@ contains
       !>
       !>    See Particulars below for details.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either the equatorial radius or flattening coefficient is
       !>         invalid, the error SPICE(VALUEOUTOFRANGE) will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports computation of the intersection between
       !>     a ray and a planetodetic volume element. The routine is used
@@ -49129,25 +49129,25 @@ contains
       !>     it lies on the latitude cone defined by the input argument LAT.
       !>     The caller must ensure that this is the case.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This routine does not test the input point to determine whether
       !>     it lies on the latitude cone defined by the input argument LAT.
       !>     The caller must ensure that this is the case.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 13-JAN-2017 (NJB)
       module procedure zzpdpltc
@@ -49301,14 +49301,14 @@ contains
       return
       end procedure zzpdpltc
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Create a bounding box for a planetodetic volume element.
       !>
       !>     The outputs are the box's center, dimensions in the radial,
       !>     tangential, and vertical directions, and the box's radius.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BOUNDS     is a 2 x 3 double precision array containing bounds
       !>                on the planetodetic coordinates of the spatial region
@@ -49328,7 +49328,7 @@ contains
       !>                the coordinate system. Any additional elements are
       !>                ignored by this routine.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CENTER     is a double precision 3-vector representing the center
       !>                of a box tangent to and containing the volume
@@ -49349,14 +49349,14 @@ contains
       !>                box. RADIUS is equal to the length of a line segment
       !>                connecting the center of the box to any corner.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     ANGMRG     is used for latitude range validity tests. Latitude
       !>                values can be out of range by as much as ANGMRG.
       !>
       !>                See dsktol.inc for details.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the minimum longitude exceeds the maximum by more than
       !>        2*pi, the error SPICE(BADLONGITUDERANGE) is signaled.
@@ -49375,34 +49375,34 @@ contains
       !>        greater than or equal to 1, the error
       !>        SPICE(VALUEOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a simple way to compute the center and
       !>     radius for an outer bounding sphere for the volume covered
       !>     by a DSK segment using planetodetic coordinates.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>     H.A. Neilan    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 02-MAR-2015 (NJB)
       module procedure zzpdtbox
@@ -49675,7 +49675,7 @@ contains
       return
       end procedure zzpdtbox
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -49684,7 +49684,7 @@ contains
       !>     Find the surface intercept of a ray on a specified box in
       !>     three-dimensional space.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VERTEX     is the vertex of a ray in three dimensional space.
       !>
@@ -49699,7 +49699,7 @@ contains
       !>                the X, Y, and Z directions. All lengths must be
       !>                positive.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XPT        is the point of intersection closest to VERTEX
       !>                of the ray and the box. If VERTEX lies within the
@@ -49710,11 +49710,11 @@ contains
       !>     FOUND      is set to .TRUE. if and only if the ray intersects
       !>                the box.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input ray is the zero vector, the error
       !>         SPICE(ZEROVECTOR) is signaled.
@@ -49722,35 +49722,35 @@ contains
       !>     2)  If any element of EXTENT is non-positive, the error
       !>         SPICE(VALUEOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See use in DSKX02.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine; its interface or functionality
       !>     may be changed without notice. SPICE user applications
       !>     should not call this routine directly.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     J.A. Bytof      (JPL)
       !>     E.D. Wright     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-JUN-2014 (NJB)
       module procedure zzraybox
@@ -50083,7 +50083,7 @@ contains
       return
       end procedure zzraybox
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -50093,11 +50093,11 @@ contains
       !>     using the contents of kernel variables that define the surface
       !>     name/ID mapping.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     KERNAM    is an array containing surface names from kernel pool
       !>               assignments to the kernel variable NAIF_SURFACE_NAME.
@@ -50151,14 +50151,14 @@ contains
       !>               maps nodes in the ID collision list to entries in the
       !>               parallel KERSID, KERBID, and KERNAM arrays.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LBSNGL    is the lower bound of the hashes' collision list array.
       !>
       !>     SFNMLN    is the maximum length of a surface name. Defined in the
       !>               include file 'srftrn.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while fetching kernel variables, the error
       !>         will be signaled by a routine in the call tree of this
@@ -50188,11 +50188,11 @@ contains
       !>         structures will be signaled by a routine in the call tree
       !>         of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine manages updates of the surface name/ID mapping
       !>     subsystem data structures. The outputs of this routine contain
@@ -50203,11 +50203,11 @@ contains
       !>     on the kernel variables that define the surface name/ID mapping.
       !>     This routine must be called after any change to these variables.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the routine ZZSRFTRN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine is intended only for use by ZZSRFTRN and
       !>         ZZSRFKER.
@@ -50220,11 +50220,11 @@ contains
       !>         first and the mapping with the highest priority being the
       !>         last.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov       (JPL)
       !>     M.J. Spencer       (JPL)
@@ -50232,7 +50232,7 @@ contains
       !>     F.S. Turner        (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-DEC-2015 (NJB) (BVS) (EDW)
       !>
@@ -50382,7 +50382,7 @@ contains
          end subroutine normalize
       end procedure zzsrfker
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CENTER,
       !>     VEC1,
@@ -50395,26 +50395,26 @@ contains
       !>              where theta ranges over the interval (-pi, pi].
       !>              VEC1 and VEC2 need not be linearly independent.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ELLIPS   is the SPICE ellipse defined by the input
       !>              vectors.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If VEC1 and VEC2 are linearly dependent, ELLIPS will be
       !>         degenerate. SPICE ellipses are allowed to represent
       !>         degenerate geometric ellipses.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPICE ellipses serve to simplify calling sequences and reduce
       !>     the chance for error in declaring and describing argument lists
@@ -50425,7 +50425,7 @@ contains
       !>        CGV2EL ( Center and generating vectors to ellipse )
       !>        EL2CGV ( Ellipse to center and generating vectors )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -50588,21 +50588,21 @@ contains
       !>          Point 1:  1.131371  0.000000 -2.687006
       !>          Point 2: -1.131371 -0.000000  2.687006
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 24-AUG-2021 (JDR)
       !>
@@ -50658,7 +50658,7 @@ contains
       return
       end procedure cgv2el
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Deprecated: This routine has been superseded by the SPICELIB
       !>     routine EVSGP4. *ALL* TLE evaluations should use that routine.
@@ -50669,7 +50669,7 @@ contains
       !>     greater-than 225 minutes). This evaluator uses algorithms as
       !>     described in Hoots 1980 [1].
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the epoch in TDB seconds past ephemeris epoch J2000
       !>              to produced a state from the input elements.
@@ -50751,25 +50751,25 @@ contains
       !>                 ELEMS ( 10 ) = EPOCH of the elements in seconds
       !>                                past ephemeris epoch J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STATE    is the state produced by evaluating the input elements
       !>              at the input epoch ET. Units are km and km/sec relative
       !>              to the TEME reference frame.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This subroutine is an extensive rewrite of the SDP4
       !>     routine as described in the Spacetrack 3 report. All common
@@ -50809,7 +50809,7 @@ contains
       !>     and these NAIF routines for the same elements and time parameters
       !>     will produce unacceptably different results.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -51027,11 +51027,11 @@ contains
       !>        Position:  -35671.56713967 -22493.50518477    320.10323846
       !>        Velocity:       1.63950543     -2.60040084     -0.01710490
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  F. Hoots and R. Roehrich, "Spacetrack Report #3: Models for
       !>          Propagation of the NORAD Element Sets," U.S. Air Force
@@ -51051,13 +51051,13 @@ contains
       !>          AIAA/AAS Astrodynamics Specialist Conference, Keystone, CO.,
       !>          August 21-24, 2006.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 01-NOV-2021 (JDR) (EDW)
       !>
@@ -51665,7 +51665,7 @@ contains
       end associate
       end procedure dpspce
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the epoch expressed in TDB seconds past the J2000
       !>              epoch at which a local time is desired.
@@ -51687,7 +51687,7 @@ contains
       !>              Both 'PLANETOCENTRIC' and 'planetocentric' are
       !>              recognized.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HR       is the local "hour" of the site specified at the epoch
       !>              ET. Note that an "hour" of local time does not have the
@@ -51714,11 +51714,11 @@ contains
       !>              indicate whether the sun has crossed the local zenith
       !>              meridian.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  This routine defines local solar time for any point on the
       !>         surface of the Sun to be 12:00:00 noon.
@@ -51738,7 +51738,7 @@ contains
       !>         is not a numeric keyword with at least two elements, the error
       !>         SPICE(CANTGETROTATIONTYPE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Suitable SPK and PCK files must be loaded prior to calling this
       !>     routine so that the body-fixed position of the sun relative to
@@ -51754,7 +51754,7 @@ contains
       !>
       !>     which is normally defined via loading a text kernel.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the local solar time at a user
       !>     specified location on a user specified body.
@@ -51815,7 +51815,7 @@ contains
       !>     Normally such assignments are made by placing them in a text
       !>     kernel and loading that kernel via FURNSH.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -51934,7 +51934,7 @@ contains
       !>        Local time at Mars 326.17 degrees planetographic longitude:
       !>            at UTC 2002 SEP 02 00:00:00, LST = 03:25:35 A.M.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine relies on being able to determine the name
       !>         of the body-fixed frame associated with BODY through the
@@ -51959,11 +51959,11 @@ contains
       !>         such cases; for them it will compute incorrect the local time
       !>         progressing backwards.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -51971,7 +51971,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.0, 26-OCT-2021 (JDR)
       !>
@@ -52294,7 +52294,7 @@ contains
       return
       end procedure et2lst
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     APEX     is the apex (tip) of the cone. In this routine's
       !>              documentation, we'll consider the cone to be a
@@ -52324,7 +52324,7 @@ contains
       !>     ENDPT2   are endpoints of a line segment. These points
       !>              must be distinct.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NXPTS    is the number of points of intersection of the input
       !>              line segment and cone.
@@ -52338,11 +52338,11 @@ contains
       !>              intersection exist. If there are not two
       !>              intersections, XPT2 is undefined.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If AXIS is the zero vector, the error SPICE(ZEROVECTOR)
       !>         is signaled.
@@ -52353,18 +52353,18 @@ contains
       !>     3)  If ENDPT1 and ENDPT2 coincide, the error
       !>         SPICE(ENDPOINTSMATCH) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is used by the SPICELIB DSK subsystem. In
       !>     particular, it is used to determine whether a ray contacts a
       !>     latitude boundary of a volume element in either planetocentric
       !>     latitudinal or planetodetic coordinates.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input
@@ -52466,7 +52466,7 @@ contains
       !>        Point 1:       1.00000000  -0.50000000   0.86602540
       !>        Point 2:       1.00000000   0.50000000   0.86602540
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine is designed to avoid arithmetic overflow in
       !>         normal cases, such as those in which the line segment is
@@ -52474,16 +52474,16 @@ contains
       !>         arithmetic overflow by using input vectors with extremely
       !>         large magnitudes.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 06-JUL-2021 (JDR)
       !>
@@ -53088,7 +53088,7 @@ contains
       end associate
       end procedure incnsg
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is any character string.
       !>
@@ -53096,7 +53096,7 @@ contains
       !>              for a  number. It is assumed that the number begins
       !>              at FIRST.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LAST     is the last character at or after FIRST such that
       !>              the substring STRING(FIRST:LAST) is a number.
@@ -53107,11 +53107,11 @@ contains
       !>              that begins at FIRST and ends at last. If there
       !>              is no such string NCHAR will be given the value 0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -53123,11 +53123,11 @@ contains
       !>         then LAST will be returned with the value FIRST-1 and NCHAR
       !>         will be returned with the value 0.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows you to scan forward in a string to locate
       !>     a number that begins on the input character FIRST. Note
@@ -53137,7 +53137,7 @@ contains
       !>     exponent character 'e','E','d' or 'D' followed by an signed
       !>     integer).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you believe that a string has the form
       !>
@@ -53171,20 +53171,20 @@ contains
       !>
       !>     END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-AUG-2021 (JDR)
       !>
@@ -53258,14 +53258,14 @@ contains
       return
       end procedure lx4num
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TABSYM,
       !>     TABPTR,
       !>     TABVAL   are the components of a double precision symbol table. On
       !>              input, the table may or may not contain any variables.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TABSYM,
       !>     TABPTR,
@@ -53281,11 +53281,11 @@ contains
       !>              reached, and is .FALSE. otherwise. The kernel file is
       !>              closed automatically when the end of the file is reached.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LINLEN   is the maximum length of a line in the kernel file.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs parsing a date from the kernel file, the
       !>         error SPICE(DATEEXPECTED) is signaled.
@@ -53293,15 +53293,15 @@ contains
       !>     2)  If an error occurs parsing a numeric value from the kernel
       !>         file, the error SPICE(NUMBEREXPECTED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     RDKVAR reads from the file most recently opened by RDKNEW.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following example, RDKNEW and RDKVAR are used to read
       !>     the contents of two kernel files into a single symbol table.
@@ -53351,22 +53351,22 @@ contains
       !>     In particular, the value of K read from the second file replaces
       !>     the value read from the first file.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The input file must be opened and initialized by RDKNEW prior
       !>         to the first call to RDKVAR.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 17-JUN-2021 (JDR)
       !>
@@ -53387,7 +53387,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 10-MAR-1992 (WLT)
       !>
@@ -53580,7 +53580,7 @@ contains
       return
       end procedure rdkvar
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ISTATE   is a state vector in the input ICOSYS coordinate
       !>              system representing position and velocity.
@@ -53630,16 +53630,16 @@ contains
       !>              Leading spaces, trailing spaces, and letter case are
       !>              ignored.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OSTATE   is the state vector that has been converted to the
       !>              output coordinate system OCOSYS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either the input or output coordinate system is not
       !>         recognized, the error SPICE(COORDSYSNOTREC) is signaled.
@@ -53698,7 +53698,7 @@ contains
       !>         input or output coordinate system is geodetic or
       !>         planetographic, the error SPICE(NOTSUPPORTED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     SPK, PCK, CK, and FK kernels may be required.
       !>
@@ -53709,7 +53709,7 @@ contains
       !>     Kernel data are normally loaded once per program run, NOT every
       !>     time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Input Order
       !>     -------------------------------------------
@@ -53772,7 +53772,7 @@ contains
       !>            LAT            Latitude        -pi/2  <= LAT   <= pi/2
       !>            COLAT          Colatitude       0     <= COLAT <= pi
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -54045,22 +54045,22 @@ contains
       !>           Velocity [km/s, rad/s, km/s]:
       !>                0.200000        0.100000       -0.200000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     S.C. Krening       (JPL)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 01-NOV-2021 (EDW) (JDR)
       !>
@@ -54695,7 +54695,7 @@ contains
       end associate
       end procedure xfmsta
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due
@@ -54704,7 +54704,7 @@ contains
       !>     Compute illumination angles and their rates of change at a
       !>     surface point.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD         is a string specifying the computation method to
       !>                    be used by this routine. The only value currently
@@ -54754,7 +54754,7 @@ contains
       !>                    plane tangent at SPOINT to the target body's
       !>                    surface.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PHSSTA         is the phase angle and its rate of change with
       !>                    respect to TDB, evaluated at ET.
@@ -54765,11 +54765,11 @@ contains
       !>     EMISTA         is the emission angle and its rate of change with
       !>                    respect to TDB, evaluated at ET.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the computation method is not recognized, the error
       !>         SPICE(INVALIDMETHOD) is signaled.
@@ -54784,11 +54784,11 @@ contains
       !>     4)  If the input normal vector is zero, the error
       !>         SPICE(ZEROVECTOR) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See GFILUM.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The term "state" used in the name of this routine refers to
       !>     the combination of a function and its derivative with respect
@@ -54802,23 +54802,23 @@ contains
       !>     See the SPICELIB routine ILUMIN for a description of the
       !>     illumination angles computed by this routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZGFILDC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This routine is intended for use only by the GF subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 02-APR-2012 (NJB)
       !>
@@ -55011,7 +55011,7 @@ contains
       return
       end procedure zzilusta
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -55021,7 +55021,7 @@ contains
       !>     inclusion in a specified latitudinal volume element. The test is
       !>     performed using margins for the element.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     P          is a point expressed in Cartesian coordinates. The
       !>                point is to be checked to determine whether it is
@@ -55098,7 +55098,7 @@ contains
       !>                not be used in the comparison and in fact can't be
       !>                meaningfully compared, due to round-off errors.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     INSIDE     is a logical flag that is set to .TRUE. if and
       !>                only if the input coordinates represent a
@@ -55109,7 +55109,7 @@ contains
       !>                The value of INSIDE is not affected by the value
       !>                of any excluded coordinate.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LATMRG     Margin for determining whether the input latitude is
       !>                "close" to the poles. Units are radians. This value
@@ -55158,7 +55158,7 @@ contains
       !>                EXCLUD, indicates that radius should be excluded
       !>                from comparison.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If MARGIN is negative, the error SPICE(VALUEOUTOFRANGE)
       !>         is signaled.
@@ -55166,32 +55166,32 @@ contains
       !>     2)  If EXCLUD is outside of the range 0:3, the error
       !>         SPICE(VALUEOUTOFRANGE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZRYTLAT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 03-JUN-2016 (NJB)
       !>
@@ -55487,7 +55487,7 @@ contains
 
       end procedure zzinlat
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -55500,7 +55500,7 @@ contains
       !>     element. The built-in angular rounding tolerance is still used
       !>     for the longitude comparison.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     P          is a point expressed in Cartesian coordinates. The
       !>                reference frame is that of the segment of interest.
@@ -55562,7 +55562,7 @@ contains
       !>                fact can't be meaningfully compared, due to round-off
       !>                errors.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     INSIDE     is a logical flag that is set to .TRUE. if and
       !>                only if the input coordinates represent a
@@ -55573,7 +55573,7 @@ contains
       !>                The value of INSIDE is not affected by the value
       !>                of any excluded coordinate.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LONALI     is a longitude shift margin. If the input longitude
       !>                coordinate LON is less than the longitude lower bound
@@ -55613,15 +55613,15 @@ contains
       !>                EXCLUD, indicates that altitude should be excluded
       !>                from comparison.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine uses ellipsoidal bounding surfaces, in place of
       !>     surfaces of constant altitude, to represent the "outer" and
@@ -55635,11 +55635,11 @@ contains
       !>     Note that a margin is used for longitude shifting, although
       !>     none is used to expand the volume element.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZINPDT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Validity of the ellipsoid shape parameters must be ensured by
       !>         the caller.
@@ -55647,15 +55647,15 @@ contains
       !>     2)  This is a private routine. It is meant to be used only by the
       !>         DSK subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 16-AUG-2016 (NJB)
       !>
@@ -55879,7 +55879,7 @@ contains
       return
       end procedure zzinpdt0
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -55889,7 +55889,7 @@ contains
       !>     rectangular volume element. If the vertex is inside
       !>     the element, the vertex is considered to be the solution.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VERTEX,
       !>     RAYDIR     are, respectively, the vertex and direction vector of
@@ -55916,7 +55916,7 @@ contains
       !>                   I = 1   ->   lower bound
       !>                   I = 2   ->   upper bound
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XPT        is the intercept of the ray on the boundary of the
       !>                input volume element, if such an intercept exists. If
@@ -55942,44 +55942,44 @@ contains
       !>                If the vertex is inside the element, NXPTS is
       !>                set to 1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the minimum value of any coordinate exceeds the maximum,
       !>        the error will be signaled by a routine in the call tree of
       !>        this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None. However, the input segment boundaries normally have
       !>     been obtained from a loaded DSK file.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine sits on top of data DSK type-specific ray-segment
       !>     intercept routines such as DSKX02.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZDSKBUX.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 01-MAR-2016 (NJB)
       module procedure zzrytrec
@@ -56077,11 +56077,11 @@ contains
       return
       end procedure zzrytrec
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     DSKDSC     is the DSK descriptor for the segment of interest.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BOXCTR     is a double precision 3-vector representing the center
       !>                of a box tangent to and containing the volume
@@ -56098,11 +56098,11 @@ contains
       !>                box. RADIUS is equal to the length of a line segment
       !>                connecting the center of the box to any corner.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If coordinate system specified in the descriptor is not
       !>         recognized, the error SPICE(NOTSUPPORTED) is signaled.
@@ -56111,11 +56111,11 @@ contains
       !>         will be signaled by routines in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine consolidates the logic branch needed to compute a
       !>     bounding box for a DSK segment. Using this routine can eliminate
@@ -56129,23 +56129,23 @@ contains
       !>     To compute a body's DSK bounding sphere, centered at the body,
       !>     and taking into account all loaded segments, use ZZDSKSPH.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 17-JUN-2016 (NJB)
       module procedure zzsegbox
@@ -56504,7 +56504,7 @@ contains
 !
 !     Initial values
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due to the
@@ -56512,14 +56512,14 @@ contains
       !>
       !>     Map a surface name and body ID code to a surface ID code.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SRFNAM     is the name of surface to be translated.
       !>
       !>     BODYID     is the ID code of a body with which the surface
       !>                designated by SRFNAM is associated.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SURFID     is the surface ID code associated with the input
       !>                surface name and body ID code.
@@ -56532,17 +56532,17 @@ contains
       !>                were mapped to a surface ID code and .FALSE.
       !>                otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs when the data structures of this package
       !>         are initialized, it will be signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Surface-to-name mappings may be defined at run time by loading
       !>     text kernels containing kernel variable assignments of the form
@@ -56574,7 +56574,7 @@ contains
       !>     operator; this operator appends to rather than overwrites the
       !>     kernel variable named on the left hand side of the assignment.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine maps pairs of surface names and body ID codes to
       !>     surface ID codes. It relies on the mapping variables in the
@@ -56584,28 +56584,28 @@ contains
       !>     initializes the shared data structures of this package,
       !>     if the initialization has not already been done.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the routines
       !>
       !>        SRFS2C
       !>        SRFSCC
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This routine must not be called by user applications.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     B.V. Semenov    (JPL)
       !>     E.D. Wright     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 01-APR-2016 (NJB) (EDW) (BVS)
       module procedure zzsrfn2c
@@ -56706,7 +56706,7 @@ contains
       end associate
       end procedure zzsrfn2c
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due to the
@@ -56714,14 +56714,14 @@ contains
       !>
       !>     Map a surface ID code and body ID code to a surface name.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SURFID     is a surface ID code.
       !>
       !>     BODYID     is the ID code of a body with which the surface
       !>                designated by SURFID is associated.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SRFNAM     is the name of the surface corresponding to the input
       !>                surface ID code and body ID code.
@@ -56734,17 +56734,17 @@ contains
       !>                were mapped to a surface name and .FALSE.
       !>                otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs when the data structures of this package
       !>         are initialized, it will be signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Surface-to-name mappings may be defined at run time by loading
       !>     text kernels containing kernel variable assignments of the form
@@ -56776,7 +56776,7 @@ contains
       !>     operator; this operator appends to rather than overwrites the
       !>     kernel variable named on the left hand side of the assignment.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine maps pairs of surface ID codes and body ID codes to
       !>     surface names. It relies on the mapping variables in the kernel
@@ -56786,28 +56786,28 @@ contains
       !>     initializes the shared data structures of this package,
       !>     if the initialization has not already been done.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the routines
       !>
       !>        SRFC2S
       !>        SRFCSS
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This routine must not be called by user applications.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     B.V. Semenov    (JPL)
       !>     E.D. Wright     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 05-NOV-2021 (NJB)
       !>
@@ -56908,7 +56908,7 @@ contains
       end associate
       end procedure zzsrfc2n
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due to the
@@ -56918,14 +56918,14 @@ contains
       !>     maintained by this package. Indicate whether the caller
       !>     needs to update variables associated with the user counter.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     USRCTR     is a counter passed in by a calling routine. Normally
       !>                USRCTR would be used to enable the application calling
       !>                this routine to determine whether local associations
       !>                of surface names and IDs are up to date.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     USRCTR     is the user counter, updated if necessary to match the
       !>                counter maintained by this package.
@@ -56933,17 +56933,17 @@ contains
       !>     UPDATE     is a logical flag indicating whether USRCTR was
       !>                updated.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs when the data structures of this package
       !>         are initialized, it will be signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Surface-to-name mappings may be defined at run time by loading
       !>     text kernels containing kernel variable assignments of the form
@@ -56975,7 +56975,7 @@ contains
       !>     operator; this operator appends to rather than overwrites the
       !>     kernel variable named on the left hand side of the assignment.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows SPICELIB routines to determine whether the
       !>     the surface mapping has been updated.
@@ -56985,7 +56985,7 @@ contains
       !>     the data structures are re-initialized using the surface mapping
       !>     variables, if these are present in the kernel pool.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See use of this routine in SPICELIB high-level geometry
       !>     routines such as
@@ -56994,21 +56994,21 @@ contains
       !>        SINCPT
       !>        SUBPNT
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This routine must not be called by user applications.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     B.V. Semenov    (JPL)
       !>     E.D. Wright     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 01-APR-2016 (NJB) (EDW) (BVS)
       module procedure zzsrftrk
@@ -57098,7 +57098,7 @@ contains
       end associate
       end procedure zzsrftrk
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B,
@@ -57111,7 +57111,7 @@ contains
       !>
       !>     PLANE    is a SPICE plane.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ELLIPS   is the SPICE ellipse formed by the intersection
       !>              of the input plane and ellipsoid. ELLIPS will
@@ -57124,11 +57124,11 @@ contains
       !>     FOUND    is .TRUE. if and only if the intersection of the
       !>              ellipsoid and plane is non-empty.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of the lengths of the semi-axes of the input ellipsoid
       !>         are non-positive, the error SPICE(DEGENERATECASE) is
@@ -57149,16 +57149,16 @@ contains
       !>         .TRUE. You must decide whether this output makes sense for
       !>         your application.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     An ellipsoid and a plane can intersect in an ellipse, a single
       !>     point, or the empty set.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -57393,22 +57393,22 @@ contains
       !>           Semi-major axis:  27305.667297  66066.222576      0.000000
       !>           Center         :    791.732472   -327.228993   -153.408849
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 24-AUG-2021 (JDR)
       !>
@@ -57655,7 +57655,7 @@ contains
       return
       end procedure inedpl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ELIN,
       !>     PLANE    are, respectively, a SPICE ellipse and a
@@ -57663,18 +57663,18 @@ contains
       !>              by ELIN is to be orthogonally projected onto the
       !>              geometric plane represented by PLANE.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ELOUT    is a SPICE ellipse that represents the geometric
       !>              ellipse resulting from orthogonally projecting the
       !>              ellipse represented by INEL onto the plane
       !>              represented by PLANE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input plane is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -57686,11 +57686,11 @@ contains
       !>         ellipse onto a plane may be degenerate, even if the input
       !>         ellipse is not.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Projecting an ellipse orthogonally onto a plane can be thought of
       !>     finding the points on the plane that are `under' or `over' the
@@ -57701,7 +57701,7 @@ contains
       !>     The orthogonal projection of an ellipse onto a plane yields
       !>     another ellipse.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  With  CENTER  = ( 1.D0,  1.D0,  1.D0 ),
       !>               VECT1   = ( 2.D0,  0.D0,  0.D0 ),
@@ -57829,21 +57829,21 @@ contains
       !>           The procedure described here is carried out in the routine
       !>           NPEDLN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 24-AUG-2021 (JDR)
       !>
@@ -57957,7 +57957,7 @@ contains
       return
       end procedure pjelpl
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CODE     is an integer code for a surface associated with a
       !>              body.
@@ -57966,7 +57966,7 @@ contains
       !>              surface designated by CODE. The combination of CODE
       !>              and BODYID is to be mapped to a surface name.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SRFSTR   is the name of the surface identified by CODE, for the
       !>              body designated by BODYID, if an association exists
@@ -57991,14 +57991,14 @@ contains
       !>              string SRFSTR contains a string representing the
       !>              integer CODE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     SFNMLN   is the maximum length of a surface name. This
       !>              parameter is declared in the SPICELIB include file
       !>
       !>                 srftrn.inc
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input surface ID code cannot be mapped to a name, the
       !>         output SRFSTR is set to a string representation of the code.
@@ -58007,7 +58007,7 @@ contains
       !>
       !>         This case is not treated as an error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Surface name-to-ID mappings may be defined at run time by loading
       !>     text kernels containing kernel variable assignments of the form
@@ -58039,7 +58039,7 @@ contains
       !>     operator; this operator appends to rather than overwrites the
       !>     kernel variable named on the left hand side of the assignment.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Surfaces are always associated with bodies (which usually are
       !>     ephemeris objects). For any given body, a mapping between surface
@@ -58067,7 +58067,7 @@ contains
       !>     Refer to naif_ids.req for details concerning adding new surface
       !>     name/code associations at run time by loading text kernels.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The formatting of the results shown for this example may differ
       !>     across platforms.
@@ -58186,22 +58186,22 @@ contains
       !>         name found     =  F
       !>         surface string = 1
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
       !>
@@ -58235,7 +58235,7 @@ contains
       return
       end procedure srfc2s
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CODE     is an integer ID code for a surface associated with a
       !>              specified body.
@@ -58265,7 +58265,7 @@ contains
       !>              However, '67P/CHURYUMOV-GERASIMENKO(1969R1)'
       !>              is not equivalent to the names above.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SRFSTR   is the name of the surface identified by CODE, for the
       !>              body designated by BODSTR, if for this body an
@@ -58291,14 +58291,14 @@ contains
       !>              string SRFSTR contains a string representing the
       !>              integer CODE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     SFNMLN   is the maximum length of a surface name. This
       !>              parameter is declared in the SPICELIB include file
       !>
       !>                 srftrn.inc
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input body string cannot be mapped to a body name, the
       !>         output SRFSTR is set to a string representation of the
@@ -58313,7 +58313,7 @@ contains
       !>
       !>         This case is not treated as an error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Surface name-to-ID mappings may be defined at run time by loading
       !>     text kernels containing kernel variable assignments of the form
@@ -58345,7 +58345,7 @@ contains
       !>     operator; this operator appends to rather than overwrites the
       !>     kernel variable named on the left hand side of the assignment.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Surfaces are always associated with bodies (which usually are
       !>     ephemeris objects). For any given body, a mapping between surface
@@ -58373,7 +58373,7 @@ contains
       !>     Refer to naif_ids.req for details concerning adding new surface
       !>     name/code associations at run time by loading text kernels.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The formatting of the results shown for this example may differ
       !>     across platforms.
@@ -58495,22 +58495,22 @@ contains
       !>         name found     =  F
       !>         surface string = 1
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 12-AUG-2021 (JDR)
       !>
@@ -58563,7 +58563,7 @@ contains
       return
       end procedure srfcss
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SRFSTR   is a string designating a surface. SRFSTR may contain
       !>              a surface name or a string representation of the
@@ -58606,7 +58606,7 @@ contains
       !>              significant. The treatment of blanks in BODSTR is the
       !>              same as for SRFSTR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CODE     is integer ID code of the surface designated by
       !>              SRFSTR, for the body designated by BODSTR, if for this
@@ -58618,11 +58618,11 @@ contains
       !>              corresponding to the input strings was found and
       !>              .FALSE. otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input surface string does not map to an ID code
       !>         and does not represent an integer, the output CODE is
@@ -58636,7 +58636,7 @@ contains
       !>
       !>         This case is not treated as an error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Surface name-to-ID mappings may be defined at run time by loading
       !>     text kernels containing kernel variable assignments of the form
@@ -58668,7 +58668,7 @@ contains
       !>     operator; this operator appends to rather than overwrites the
       !>     kernel variable named on the left hand side of the assignment.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Surfaces are always associated with bodies (which usually are
       !>     ephemeris objects). For any given body, a mapping between surface
@@ -58696,7 +58696,7 @@ contains
       !>     Refer to naif_ids.req for details concerning adding new surface
       !>     name/code associations at run time by loading text kernels.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The formatting of the results shown for this example may differ
       !>     across platforms.
@@ -58839,22 +58839,22 @@ contains
       !>         body string      = ZZZ
       !>         surface ID found =  F
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 22-OCT-2021 (JDR) (NJB)
       !>
@@ -58924,7 +58924,7 @@ contains
       return
       end procedure srfs2c
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SRFSTR   is a string designating a surface. SRFSTR may contain
       !>              a surface name or a string representation of the
@@ -58955,7 +58955,7 @@ contains
       !>     BODYID   is the integer ID code of the body associated with the
       !>              surface designated by SRFSTR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CODE     is integer ID code of the surface designated by
       !>              SRFSTR, for the body designated by BODYID, if for this
@@ -58967,11 +58967,11 @@ contains
       !>              corresponding to the input surface string and body ID
       !>              code was found. FOUND is .FALSE. otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input surface string does not map to an ID code
       !>         and does not represent an integer, the output CODE is
@@ -58979,7 +58979,7 @@ contains
       !>
       !>         This case is not treated as an error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Surface name-to-ID mappings may be defined at run time by loading
       !>     text kernels containing kernel variable assignments of the form
@@ -59011,7 +59011,7 @@ contains
       !>     operator; this operator appends to rather than overwrites the
       !>     kernel variable named on the left hand side of the assignment.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Surfaces are always associated with bodies (which usually are
       !>     ephemeris objects). For any given body, a mapping between surface
@@ -59039,7 +59039,7 @@ contains
       !>     Refer to naif_ids.req for details concerning adding new surface
       !>     name/code associations at run time by loading text kernels.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The formatting of the results shown for this example may differ
       !>     across platforms.
@@ -59176,22 +59176,22 @@ contains
       !>         body ID          =          499
       !>         surface ID found =  F
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 22-OCT-2021 (JDR) (NJB)
       !>
@@ -59249,7 +59249,7 @@ contains
       return
       end procedure srfscc
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -59258,7 +59258,7 @@ contains
       !>     Add an entry for a specified body to the DSK API segment buffer
       !>     data structure.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the integer ID code of a body for which a new
       !>                entry is to be made.
@@ -59311,7 +59311,7 @@ contains
       !>     STRAD      is an array of radii of outer bounding spheres of
       !>                segments. Units are km.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     BTBODY     is the input body ID table, modified by this routine.
       !>                If BODYID was not in the table on input, it has been
@@ -59386,11 +59386,11 @@ contains
       !>                If it was necessary to make room, other entries of
       !>                STRAD may have been deleted.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an attempt is made to add an entry for a body already in
       !>         the body table, the error SPICE(INVALIDADD) is signaled.
@@ -59422,7 +59422,7 @@ contains
       !>         the specified body, the error SPICE(SEGMENTTABLEFULL) will
       !>         be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of DSK files loaded by the ZZDSKBSR
       !>     subsystem.
@@ -59437,7 +59437,7 @@ contains
       !>     as CK kernels and SCLK kernels could be required to support
       !>     the offset vector lookup.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by the DSK subsystem.
       !>
@@ -59469,23 +59469,23 @@ contains
       !>     tables must be re-initialized. Entry points of ZZDSKSBF are
       !>     expected to perform this action by calling ZZDSKSBI.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZDSKSBF.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a private routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 13-JUL-2016 (NJB)
       module procedure zzdsksba
@@ -59719,7 +59719,7 @@ contains
       return
       end procedure zzdsksba
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ELLIPS         is a SPICELIB ellipse having non-zero semi-axes.
       !>
@@ -59749,12 +59749,12 @@ contains
       !>                    vertices of a polygon.  The polygon need not be
       !>                    convex, but it must be non-self-intersecting.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     FOUND          is set to .TRUE. if the pyramid and ellipse
       !>                    intersect; otherwise FOUND is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     UBEL           is the array upper bound for SPICELIB ellipses.
       !>
@@ -59764,7 +59764,7 @@ contains
       !>                    boundary vectors (10000) in BOUNDS; the work
       !>                    array grows to N.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If an error is found, the output argument FOUND will be set to
       !>     .FALSE.
@@ -59818,17 +59818,17 @@ contains
       !>         This routine does not attempt to judge the minimum
       !>         acceptable level of accuracy.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is useful for determining whether an ellipsoidal
       !>     body is in the field of view of a remote-sensing instrument
       !>     with a field of view having polygonal cross section.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Test an ellipse for intersection with a square field
       !>     of view.
@@ -59909,20 +59909,20 @@ contains
       !>
       !>           END
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1] `Calculus and Analytic Geometry', Thomas and Finney.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 28-FEB-2008 (BVS)
       !>
@@ -60530,7 +60530,7 @@ contains
       end associate
       end procedure zzelvupy
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -60541,7 +60541,7 @@ contains
       !>     surfaces are used in place of surfaces of constant altitude. The
       !>     test is performed using margins for the element.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     P          is a point expressed in Cartesian coordinates. The
       !>                point is to be checked to determine whether it is
@@ -60630,7 +60630,7 @@ contains
       !>                in the comparison and in fact can't be meaningfully
       !>                compared, due to round-off errors.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     INSIDE     is a logical flag that is set to .TRUE. if and
       !>                only if the input coordinates represent a
@@ -60641,7 +60641,7 @@ contains
       !>                The value of INSIDE is not affected by the value
       !>                of any excluded coordinate.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LONALI     is a longitude shift margin. If the input longitude
       !>                coordinate LON is less than the longitude lower bound
@@ -60675,7 +60675,7 @@ contains
       !>                The value of this parameter must be kept in sync
       !>                with the "greedy" margin declared in dsktol.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If MARGIN is negative, the error SPICE(VALUEOUTOFRANGE)
       !>         is signaled.
@@ -60687,32 +60687,32 @@ contains
       !>         coordinates of the input point, the error will be signaled by
       !>         a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZRYTPDT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a private routine. It is meant to be used only by the
       !>         DSK subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 13-FEB-2017 (NJB)
       !>
@@ -61065,7 +61065,7 @@ contains
       end associate
       end procedure zzinpdt
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -61075,7 +61075,7 @@ contains
       !>     at latitudinal volume element. If the vertex is inside the
       !>     element, the vertex is considered to be the solution.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VERTEX,
       !>     RAYDIR     are, respectively, the vertex and direction vector of
@@ -61110,7 +61110,7 @@ contains
       !>                segment boundaries so as to include intersections
       !>                that lie slightly outside the volume element.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XPT        is the intercept of the ray on the surface described
       !>                by the input coordinate bounds, if such an intercept
@@ -61136,7 +61136,7 @@ contains
       !>                If the vertex is inside the element, NXPTS is
       !>                set to 1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LONIDX     is the index of longitude in the second dimension of
       !>                BOUNDS.
@@ -61147,40 +61147,40 @@ contains
       !>     RADIDX     is the index of radius in the second dimension of
       !>                BOUNDS.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     For the sake of run-time efficiency, this routine does not
       !>     participate in call tracing. However, it's possible for
       !>     routines called by this routine to signal errors.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None. However, the input volume element boundaries normally have
       !>     been obtained from a segment in a loaded DSK file.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine sits on top of data DSK type-specific ray-segment
       !>     intercept routines such as DSKX02.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZDSKBUX.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 18-JAN-2017 (NJB)
       !>
@@ -61742,7 +61742,7 @@ contains
       end associate
       end procedure zzrytlat
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B,
@@ -61756,16 +61756,16 @@ contains
       !>     VIEWPT   is a point from which the ellipsoid is viewed.
       !>              VIEWPT must be outside of the ellipsoid.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     LIMB     is a SPICE ellipse that represents the limb of
       !>              the ellipsoid.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the length of any semi-axis of the ellipsoid is
       !>         non-positive, the error SPICE(INVALIDAXISLENGTH) is signaled.
@@ -61788,11 +61788,11 @@ contains
       !>         limb may be a degenerate ellipse. You must determine whether
       !>         this possibility poses a problem for your application.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The limb of a body, as seen from a viewing point, is the boundary
       !>     of the portion of the body's surface that is visible from that
@@ -61814,7 +61814,7 @@ contains
       !>     umbra. So, this routine can be used to solve this simplified
       !>     version of the problem of finding the terminator.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -62033,21 +62033,21 @@ contains
       !>           Semi-major axis:  27305.667297  66066.222576      0.000000
       !>           Center         :    791.732472   -327.228993   -153.408849
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.0, 24-AUG-2021 (NJB) (JDR)
       !>
@@ -62080,7 +62080,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-1990 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 04-DEC-1990 (NJB)
       !>
@@ -62263,7 +62263,7 @@ contains
       return
       end procedure edlimb
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A,
       !>     B,
@@ -62282,7 +62282,7 @@ contains
       !>
       !>              where t is any real number.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PNEAR    is the point on the ellipsoid that is closest to
       !>              the line, if the line doesn't intersect the
@@ -62301,7 +62301,7 @@ contains
       !>
       !>              If the line intersects the ellipsoid, DIST is zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     UBEL     is the upper bound of the array used to contain
       !>              a SPICE ellipse. See the ELLIPSES Required
@@ -62311,7 +62311,7 @@ contains
       !>              a SPICE plane. See the PLANES Required Reading
       !>              for details.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If this routine detects an error, the output arguments PNEAR and
       !>     DIST are not modified.
@@ -62333,11 +62333,11 @@ contains
       !>         to fail, in which case, the error SPICE(DEGENERATECASE) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For any ellipsoid and line, if the line does not intersect the
       !>     ellipsoid, there is a unique point on the ellipsoid that is
@@ -62349,7 +62349,7 @@ contains
       !>     If the line intersects the ellipsoid, the distance between the
       !>     line and ellipsoid is zero.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)   We can find the distance between an instrument optic axis ray
       !>          and the surface of a body modeled as a tri-axial ellipsoid
@@ -62418,21 +62418,21 @@ contains
       !>
       !>                   END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.0, 24-AUG-2021 (JDR)
       !>
@@ -62470,7 +62470,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-1990 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.2.0, 25-NOV-1992 (NJB)
       !>
@@ -62764,7 +62764,7 @@ contains
       return
       end procedure npedln
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -62775,7 +62775,7 @@ contains
       !>     The volume element is bounded by surfaces on which one coordinate
       !>     is constant. The test is performed using margins for the element.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     P          is a point expressed in Cartesian coordinates. The
       !>                point is to be checked to determine whether it is
@@ -62866,7 +62866,7 @@ contains
       !>
       !>                for details regarding the application of EXCLUD.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     INSIDE     is a logical flag that is set to .TRUE. if and only if
       !>                the input coordinates represent a point inside or on
@@ -62876,7 +62876,7 @@ contains
       !>                The value of INSIDE is not affected by the value of
       !>                any excluded coordinate.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include files
       !>
@@ -62889,7 +62889,7 @@ contains
       !>        ZZINPDT
       !>        ZZINREC
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If CORSYS is not recognized, the error SPICE(NOTSUPPORTED)
       !>         is signaled.
@@ -62908,32 +62908,32 @@ contains
       !>         corresponding lower bound, the error will be signaled by
       !>         a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZPTPL02.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-APR-2017 (NJB)
       !>
@@ -62988,7 +62988,7 @@ contains
       return
       end procedure zzinvelt
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -62998,7 +62998,7 @@ contains
       !>     high-level geometry API. Return parameter values specified by the
       !>     string.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the body ID code of an ephemeris object. This
       !>                object is normally the "target" body of a geometric
@@ -63020,7 +63020,7 @@ contains
       !>                the caller should use the parameter MAXSRF to
       !>                set this value.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SHAPE      is a string describing the shape model. Values are
       !>
@@ -63053,12 +63053,12 @@ contains
       !>
       !>                   'UMBRAL' or 'PENUMBRAL'
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXSRF is the maximum surface list size used by the DSK
       !>     subsystem. See dsk.inc for the parameter's value.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If more than one shape keyword is found in METHOD,
       !>         the error SPICE(BADMETHODSYNTAX) is signaled.
@@ -63115,7 +63115,7 @@ contains
       !>    18)  If the string METHOD contains any other unexpected tokens,
       !>         the error SPICE(BADMETHODSYNTAX) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Surface name-to-ID mappings may be defined at run time by loading
       !>     text kernels containing kernel variable assignments of the form
@@ -63147,7 +63147,7 @@ contains
       !>     operator; this operator appends to rather than overwrites the
       !>     kernel variable named on the left hand side of the assignment.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports parsing of the METHOD input argument
       !>     used by the SPICE geometry APIs
@@ -63176,7 +63176,7 @@ contains
       !>     individual tokens. There is no escape syntax for indicating a
       !>     doubly quoted string within a doubly quoted string.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) For the routine SUBPNT,
       !>
@@ -63214,21 +63214,21 @@ contains
       !>             PNTDEF = 'TANGENT'
       !>             TRMTYP = 'UMBRAL'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a specialized parsing routine. It it meant to be used
       !>     only for the parsing "method" strings as described in
       !>     Particulars.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 24-FEB-2016 (NJB)
       !>
@@ -63923,7 +63923,7 @@ contains
       return
       end procedure zzprsmet
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -63940,7 +63940,7 @@ contains
       !>     bounded by the input latitude and longitude boundaries and by the
       !>     ellipsoidal surfaces.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VERTEX,
       !>     RAYDIR     are, respectively, the vertex and direction vector of
@@ -63981,7 +63981,7 @@ contains
       !>                segment boundaries so as to include intersections
       !>                that lie slightly outside the volume element.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XPT        is the intercept of the ray on the surface described
       !>                by the segment, if such an intercept exists. If the
@@ -64007,7 +64007,7 @@ contains
       !>                If the vertex is inside the element, NXPTS is
       !>                set to 1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     LONIDX     is the index of longitude in the second dimension of
       !>                BOUNDS.
@@ -64018,7 +64018,7 @@ contains
       !>     ALTIDX     is the index of altitude in the second dimension of
       !>                BOUNDS.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If MARGIN is negative, the error SPICE(VALUEOUTOFRANGE)
       !>         is signaled.
@@ -64030,34 +64030,34 @@ contains
       !>         intercept will be signaled by routines in the call tree
       !>         of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None. However, the input segment boundaries normally have
       !>     been obtained from a loaded DSK file.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine sits on top of data DSK type-specific ray-segment
       !>     intercept routines such as DSKX02.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZDSKBUX.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 19-JAN-2017 (NJB)
       module procedure zzrytpdt
@@ -64888,7 +64888,7 @@ contains
       end associate
       end procedure zzrytpdt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a DSK file containing a shape
       !>              model for a target body. The shape model is stored
@@ -64917,7 +64917,7 @@ contains
       !>              relative to the body fixed reference frame associated
       !>              with the target body.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PLID     is the ID of the plate closest to the input ray's
       !>              vertex at which a ray-surface intercept exists.
@@ -64935,7 +64935,7 @@ contains
       !>              intersects a plate FOUND is .TRUE. Otherwise FOUND is
       !>              .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     XFRACT   is the default plate expansion fraction. This
       !>              parameter can be overridden.
@@ -64967,7 +64967,7 @@ contains
       !>
       !>     for declarations of DSK data type 2 (plate model) parameters.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input handle is invalid, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -65011,11 +65011,11 @@ contains
       !>         a plate will be selected. Due to round-off error, the
       !>         selection may vary across platforms.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See the description of the input argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine solves the ray-surface intercept problem for
       !>     a specified ray and a surface represented by triangular plate
@@ -65031,7 +65031,7 @@ contains
       !>     In general, this routine should be expected to run faster
       !>     when used with smaller shape models.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -65350,16 +65350,16 @@ contains
       !>        Warning: incomplete output. Only 100 out of 1135 lines have
       !>        been provided.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  A. Woo, "Fast Ray-Box Intersection", Graphic Gems I,
       !>          395-396, Aug. 1990
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J.A. Bytof         (JPL)
@@ -65367,7 +65367,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-JAN-2021 (NJB) (JDR) (BVS)
       !>
@@ -65539,7 +65539,7 @@ contains
       !>
       !>           Based on PLBORE and PLBORE_2.
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 13-JAN-2021 (NJB)
       !>
@@ -66539,7 +66539,7 @@ contains
       end associate
       end procedure dskx02
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Deprecated: This routine has been superseded by the SPICELIB
       !>     routine SINCPT. This routine is supported for purposes of
@@ -66550,7 +66550,7 @@ contains
       !>     specified epoch, optionally corrected for light time and stellar
       !>     aberration.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
       !>              the computation method to be used. Parameters
@@ -66746,7 +66746,7 @@ contains
       !>              LTCENT is computed using the method indicated by
       !>              ABCORR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SPOINT   is the surface intercept point on the target body of
       !>              the ray defined by the observer and the direction
@@ -66812,11 +66812,11 @@ contains
       !>              FOUND will be returned as .TRUE. If the ray misses
       !>              the target, FOUND will be returned as .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     If any of the listed errors occur, the output arguments are
       !>     left unchanged.
@@ -66886,7 +66886,7 @@ contains
       !>         zero, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate SPK, PCK, and frame kernels must be loaded by the
       !>     calling program before this routine is called.  CK, SCLK, and
@@ -66939,7 +66939,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given a ray defined by a direction vector and the location of an
       !>     observer, SRFXPT computes the surface intercept point of the ray
@@ -66972,7 +66972,7 @@ contains
       !>     from sources other than SPICE, it's essential to make sure the
       !>     same geometric definitions are used.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -67363,7 +67363,7 @@ contains
       !>                        .
       !>                        .
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  A cautionary note: if aberration corrections are used, and if
       !>         DREF is the target body-fixed frame, the epoch at which that
@@ -67383,18 +67383,18 @@ contains
       !>         to always use as DREF a frame other than the target body-fixed
       !>         frame.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.6.0, 01-NOV-2021 (EDW) (JDR)
       !>
@@ -68210,7 +68210,7 @@ contains
       end associate
       end procedure srfxpt
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Compute, for a given observer, ray emanating from the observer,
       !>     and target, the "tangent point": the point on the ray nearest
@@ -68222,7 +68222,7 @@ contains
       !>
       !>     The surface shape is modeled as a triaxial ellipsoid.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
       !>              the computation method to be used.
@@ -68546,7 +68546,7 @@ contains
       !>              omitted. LTCENT is computed using the method
       !>              indicated by ABCORR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TANPT    is the "tangent point": the point on the ray defined by
       !>              DREF and DVEC nearest to the target body's surface.
@@ -68663,11 +68663,11 @@ contains
       !>                 CALL PXFRM2 ( FIXREF, REF,    TRGEPC, ET, XFORM )
       !>                 CALL MXV    ( XFORM,  SRFVEC, REFVEC )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified aberration correction is unrecognized, an
       !>         error is signaled by a routine in the call tree of this
@@ -68759,7 +68759,7 @@ contains
       !>         to the ellipsoid on the line containing the ray lies behind
       !>         the ray's vertex.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -68826,7 +68826,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given an observer, the direction vector of a ray emanating from
       !>     the observer, and an extended target body represented by a
@@ -68863,7 +68863,7 @@ contains
       !>     which aberration correction magnitudes are significant, and cases
       !>     for which they are not.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -69992,7 +69992,7 @@ contains
       !>            SRFPT  delta (km) =        -0.000        0.000     0.000
       !>            SRFVEC delta (km) =        -0.003       -0.005     0.013
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine is applicable only to computations for which
       !>         radiation paths can be modeled as straight lines.
@@ -70020,16 +70020,16 @@ contains
       !>         to always use as DREF a frame other than the target
       !>         body-fixed frame.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     M. Costa Sitja     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 20-OCT-2021 (NJB) (MCS)
       module procedure tangpt
@@ -71003,7 +71003,7 @@ contains
       end associate
       end procedure tangpt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VIEWPT         is a point from which a possible occultation of
       !>                    one ellipsoidal "target" body by another is
@@ -71060,7 +71060,7 @@ contains
       !>                    target body.  See the description of SEMAX1 for
       !>                    details.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns an integer code indicating the geometric
       !>     relationship of the three bodies.
@@ -71089,13 +71089,13 @@ contains
       !>        TOTAL2                Total occultation of second target by
       !>                              first.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     UBEL           Upper bound of SPICELIB ellipse data structure.
       !>
       !>     UBPL           Upper bound of SPICELIB plane data structure.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the observer is inside either target ellipsoid, the error
       !>         SPICE(NOTDISJOINT) is signaled.
@@ -71110,11 +71110,11 @@ contains
       !>         mutually orthogonal set of columns, the error
       !>         SPICE(NOTAROTATION) will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For many purposes, modeling extended bodies as tri-axial
       !>     ellipsoids is adequate for determining whether one body is
@@ -71123,7 +71123,7 @@ contains
       !>     This routine may be used as a tool to support more higher-level
       !>     occultation tests involving ephemeris objects.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  View a total occultation of one ellipsoid by another
       !>         as seen from a viewing location on the +x axis.
@@ -71181,7 +71181,7 @@ contains
       !>     ZZOCCED, completely occults the larger, so the return code should
       !>     be 3.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) The test done by this routine for intersection of target bodies
       !>        may return a false negative result.  The test is based on
@@ -71198,15 +71198,15 @@ contains
       !>        extremum.  This can result in erroneous classification of a
       !>        partial occultation as a total occultation or annular transit.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 17-MAR-2006 (NJB)
       !>
@@ -72355,7 +72355,7 @@ contains
       return
       end procedure zzocced
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -72368,7 +72368,7 @@ contains
       !>     represents an offset from the center of the segment's reference
       !>     frame.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of a DSK file containing a type 2 DSK
       !>                segment. The input point is to be matched with the
@@ -72384,7 +72384,7 @@ contains
       !>                offset from the center of that frame. The frame center
       !>                may be distinct from the central body of the segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PLID       is the ID of the plate nearest to the input point, if
       !>                such a plate is found. A plate ID is the index of a
@@ -72419,7 +72419,7 @@ contains
       !>                The outputs PLID, PLATE, and VERTS are valid if and
       !>                only if FOUND is .TRUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file
       !>
@@ -72446,7 +72446,7 @@ contains
       !>                routine consistent with those of DSKX02, which also
       !>                performs plate expansion.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an invalid voxel edge length is detected, the error
       !>         SPICE(VALUEOUTOFRANGE) is signaled.
@@ -72461,7 +72461,7 @@ contains
       !>         DSK data, the error will be signaled by a routine in
       !>         the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -72475,30 +72475,30 @@ contains
       !>     Kernel data are normally loaded once per program run, NOT every
       !>     time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports geometry routines that must associate
       !>     a computed surface point with the plate to which that point
       !>     belongs.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZDSKNRM.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -72861,7 +72861,7 @@ contains
       end associate
       end procedure zzptpl02
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -72871,7 +72871,7 @@ contains
       !>     a coordinate volume element. If the vertex is inside
       !>     the element, the vertex is considered to be the solution.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VERTEX,
       !>     RAYDIR     are, respectively, the vertex and direction vector of
@@ -72887,7 +72887,7 @@ contains
       !>                and spatial boundaries of a the segment are specified
       !>                by members of this descriptor.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XPT        is the intercept of the ray on the boundary of the
       !>                input volume element, if such an intercept exists. If
@@ -72913,44 +72913,44 @@ contains
       !>                If the vertex is inside the element, NXPTS is
       !>                set to 1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the coordinate system code in the segment descriptor
       !>        is not recognized, the error SPICE(NOTSUPPORTED) will be
       !>        signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None. However, the input segment boundaries normally have
       !>     been obtained from a loaded DSK file.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine sits on top of data DSK type-specific ray-segment
       !>     intercept routines such as DSKX02.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZDSKBUX.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 19-JUL-2016 (NJB)
       module procedure zzrytelt
@@ -72991,7 +72991,7 @@ contains
       return
       end procedure zzrytelt
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -73007,7 +73007,7 @@ contains
       !>
       !>     Segment descriptor and derived bounding data are passed in.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the body ID of the target on which the input
       !>                point is located.
@@ -73061,17 +73061,17 @@ contains
       !>                POINT must be located on the surface of the target
       !>                body, within a small tolerance.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NORMAL     is the unit length, outward normal vector on the
       !>                surface of the target body at POINT. NORMAL is
       !>                expressed in the reference frame designated by FIXFID.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input segment count is non-positive, the error
       !>         SPICE(NODSKSEGMENTS) is signaled.
@@ -73098,7 +73098,7 @@ contains
       !>         mapping the surface point to a normal vector will be signaled
       !>         by routines in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of DSK files loaded by the ZZDSKBSR
       !>     subsystem.
@@ -73108,7 +73108,7 @@ contains
       !>     additional kernels such as CK kernels and SCLK kernels could be
       !>     required to support the offset vector lookup.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be called from the DSK API segment
       !>     buffering subsystem. All of the input buffers should contain
@@ -73118,24 +73118,24 @@ contains
       !>     information to efficiently determine which segments may contain
       !>     the input point.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 22-FEB-2017 (NJB)
       !>
@@ -73576,7 +73576,7 @@ contains
       return
       end procedure zzdskbun
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -73585,7 +73585,7 @@ contains
       !>     Find the intersection of a ray and the surface described by
       !>     a single DSK segment.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE     is the handle of a DSK file containing a segment
       !>                to be used in a ray-surface intercept computation.
@@ -73610,7 +73610,7 @@ contains
       !>                vertex is considered to be an offset from the center
       !>                of the reference frame associated with the segment.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XPT        is the intercept of the ray on the surface described
       !>                by the segment, if such an intercept exists. If the
@@ -73640,16 +73640,16 @@ contains
       !>     FOUND      is a logical flag that is set to .TRUE. if and only
       !>                if a ray-surface intercept was found.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the DSK segment data type is not recognized, the error
       !>         SPICE(TYPENOTSUPPORTED) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -73663,29 +73663,29 @@ contains
       !>     Kernel data are normally loaded once per program run, NOT every
       !>     time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine sits on top of data DSK type-specific ray-segment
       !>     intercept routines such as DSKX02.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZDSKBUX.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 18-FEB-2016 (NJB)
       !>
@@ -73732,7 +73732,7 @@ contains
       return
       end procedure zzdsksgx
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -73749,7 +73749,7 @@ contains
       !>
       !>     Segment descriptor and derived bounding data are passed in.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the body ID of the target on which the input
       !>                point is located.
@@ -73803,7 +73803,7 @@ contains
       !>                reference frame designated by FIXFID. The vertex is
       !>                considered to be an offset from the target body.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XPT        is the surface intercept, if an intercept exists. If
       !>                multiple intercepts exist, the one closest to the
@@ -73819,7 +73819,7 @@ contains
       !>     FOUND      is a logical flag that is .TRUE. if and only if a
       !>                ray-surface intercept was found.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     SGREED     is the default margin used to determine whether
       !>                segments should be tested for intersection. Segments
@@ -73852,7 +73852,7 @@ contains
       !>                This parameter can be overridden. See the include
       !>                file dsktol.inc and the routine DSKSTL for details.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input segment count is non-positive, the error
       !>         SPICE(NODSKSEGMENTS) is signaled.
@@ -73869,7 +73869,7 @@ contains
       !>         mapping the surface point to a normal vector will be signaled
       !>         by routines in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of DSK files loaded by the ZZDSKBSR
       !>     subsystem.
@@ -73879,7 +73879,7 @@ contains
       !>     additional kernels such as CK kernels and SCLK kernels could be
       !>     required to support the offset vector lookup.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be called from the DSK API segment
       !>     buffering subsystem. All of the input buffers should contain
@@ -73893,24 +73893,24 @@ contains
       !>     DSK segments having the required body, surface, and time
       !>     attributes are considered in the computation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     This is a private routine. It is meant to be used only by the DSK
       !>     subsystem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 19-JUL-2016 (NJB)
       !>
@@ -74609,7 +74609,7 @@ contains
 !
 !     Initial values
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -74618,7 +74618,7 @@ contains
       !>     Prepare and execute unprioritized ray-surface intercept
       !>     computation using DSK API segment buffers.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the ID code of a target body. The ray-surface
       !>                intercept computation is performed using data
@@ -74648,7 +74648,7 @@ contains
       !>                of a ray. Both vectors are expressed in the frame
       !>                designated by FIXFID.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XPT        is the surface intercept on the target body
       !>                nearest to the ray's vertex, if the intercept
@@ -74657,11 +74657,11 @@ contains
       !>     FOUND      is a logical flag that is set to .TRUE. if and
       !>                only if an intercept exists.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If this routine is called directly, it signals the error
       !>         SPICE(BOGUSENTRY).
@@ -74669,12 +74669,12 @@ contains
       !>     See the entry points for descriptions of errors specific to
       !>     those routines.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of DSK files loaded by the ZZDSKBSR
       !>     subsystem.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by the DSK subsystem.
       !>
@@ -74682,23 +74682,23 @@ contains
       !>     intercept computation using unprioritized DSK data.
       !>     It calls ZZDSKBUX to perform the computation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZRAYSFX.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a private routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 22-FEB-2017 (NJB)
       !>
@@ -74818,7 +74818,7 @@ contains
       end associate
       end procedure zzsbfxr
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -74829,7 +74829,7 @@ contains
       !>     information including handle, DLA descriptor, and
       !>     segment-specific information such as plate ID.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the ID code of a target body. The ray-surface
       !>                intercept computation is performed using data
@@ -74859,7 +74859,7 @@ contains
       !>                of a ray. Both vectors are expressed in the frame
       !>                designated by FIXFID.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XPT        is the surface intercept on the target body
       !>                nearest to the ray's vertex, if the intercept
@@ -74887,11 +74887,11 @@ contains
       !>                only if an intercept exists. The other outputs
       !>                are valid if and only if FOUND is .TRUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If this routine is called directly, it signals the error
       !>         SPICE(BOGUSENTRY).
@@ -74899,12 +74899,12 @@ contains
       !>     See the entry points for descriptions of errors specific to
       !>     those routines.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of DSK files loaded by the ZZDSKBSR
       !>     subsystem.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by the DSK subsystem.
       !>
@@ -74912,23 +74912,23 @@ contains
       !>     intercept computation using unprioritized DSK data.
       !>     It calls ZZDSKBUX to perform the computation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZRAYSFX.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a private routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 22-FEB-2017 (NJB)
       !>
@@ -75064,7 +75064,7 @@ contains
       end associate
       end procedure zzsbfxri
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -75073,7 +75073,7 @@ contains
       !>     Prepare and execute unprioritized outward surface normal
       !>     computation using DSK API segment buffers.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     BODYID     is the ID code of a target body. The outward
       !>                normal vector computation is performed using data
@@ -75104,18 +75104,18 @@ contains
       !>
       !>                POINT is expressed in the frame designated by FIXFID.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NORMAL     is the unit-length outward surface normal vector at
       !>                the input POINT.
       !>
       !>                NORMAL is expressed in the frame designated by FIXFID.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If this routine is called directly, it signals the error
       !>         SPICE(BOGUSENTRY).
@@ -75123,12 +75123,12 @@ contains
       !>     See the entry points for descriptions of errors specific to
       !>     those routines.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of DSK files loaded by the ZZDSKBSR
       !>     subsystem.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by the DSK subsystem.
       !>
@@ -75136,23 +75136,23 @@ contains
       !>     vector computation using unprioritized DSK data. It calls
       !>     ZZDSKBUN to perform the computation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in DSKNRM (provisional name).
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a private routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 22-FEB-2017 (NJB)
       !>
@@ -75276,7 +75276,7 @@ contains
       end associate
       end procedure zzsbfnrm
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     PRI      is a logical flag indicating whether to perform a
       !>              prioritized or unprioritized DSK segment search. In an
@@ -75328,7 +75328,7 @@ contains
       !>              and IC. MAXD must be at least DCSIZE, while MAXI must be
       !>              at least ICSIZE. See the $Parameters section for details.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XPT      is the intercept of the input ray on the surface
       !>              specified by the inputs
@@ -75376,7 +75376,7 @@ contains
       !>     FOUND    is a logical flag that is set to .TRUE. if and only if
       !>              and intercept was found.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file
       !>
@@ -75408,7 +75408,7 @@ contains
       !>     ray-surface intercept algorithm. These are discussed in the
       !>     $Particulars section below.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input prioritization flag PRI is set to .TRUE.,
       !>         the error SPICE(BADPRIORITYSPEC) is signaled.
@@ -75434,7 +75434,7 @@ contains
       !>     8)  If an error occurs during the intercept computation, the error
       !>         is signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -75473,7 +75473,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is the lowest-level public interface for computing
       !>     ray-surface intercepts, where the surface is modeled using
@@ -75613,7 +75613,7 @@ contains
       !>              cause an intersection to be found when the ray misses
       !>              the target by a very small distance.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -75961,7 +75961,7 @@ contains
       !>         NHITS  =        32580
       !>         NDERR  =            0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The frame designated by FIXREF must have a fixed
       !>         orientation relative to the frame of any DSK segment
@@ -75970,16 +75970,16 @@ contains
       !>         so this responsibility is delegated to the calling
       !>         application.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 06-AUG-2021 (JDR)
       !>
@@ -76188,7 +76188,7 @@ contains
       end associate
       end procedure dskxsi
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     PRI      is a logical flag indicating whether to perform
       !>              a prioritized or unprioritized DSK segment search.
@@ -76239,7 +76239,7 @@ contains
       !>              represented in the reference frame designated by
       !>              FIXREF.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XPTARR   is an array containing the intercepts of the input
       !>              rays on the surface specified by the inputs
@@ -76266,7 +76266,7 @@ contains
       !>              FNDARR is set to .TRUE. if and only if an intercept
       !>              was found for the Ith ray.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the include file
       !>
@@ -76292,7 +76292,7 @@ contains
       !>     for declarations of DSK descriptor sizes and documentation of the
       !>     contents of DSK descriptors.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input prioritization flag PRI is set to .TRUE.,
       !>         the error SPICE(BADPRIORITYSPEC) is signaled.
@@ -76318,7 +76318,7 @@ contains
       !>     8)  If an error occurs during the intercept computation, the error
       !>         is signaled by a routine in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -76357,7 +76357,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is suitable for efficient ray-surface intercept
       !>     computations in which the relative observer-target geometry is
@@ -76492,7 +76492,7 @@ contains
       !>              cause an intersection to be found when the ray misses
       !>              the target by a very small distance.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -76881,7 +76881,7 @@ contains
       !>         NHITS  =        32580
       !>         NDERR  =            0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The frame designated by FIXREF must have a fixed
       !>         orientation relative to the frame of any DSK segment
@@ -76890,17 +76890,17 @@ contains
       !>         so this responsibility is delegated to the calling
       !>         application.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 06-AUG-2021 (JDR) (BVS)
       !>
@@ -77109,7 +77109,7 @@ contains
       end associate
       end procedure dskxv
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Find the illumination angles (phase, incidence, and
       !>     emission) at a specified surface point of a target body.
@@ -77119,7 +77119,7 @@ contains
       !>
       !>     The illumination source is a specified ephemeris object.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
       !>              the computation method to be used. In the syntax
@@ -77350,7 +77350,7 @@ contains
       !>
       !>              The components of SPOINT have units of km.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TRGEPC   is the "target surface point epoch." TRGEPC is defined as
       !>              follows: letting LT be the one-way light time between the
@@ -77419,11 +77419,11 @@ contains
       !>              $Particulars below for a detailed discussion of the
       !>              definition.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified aberration correction is relativistic or
       !>         calls for stellar aberration but not light time correction,
@@ -77504,7 +77504,7 @@ contains
       !>         zero, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -77570,7 +77570,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPICELIB contains four routines that compute illumination angles:
       !>
@@ -77832,7 +77832,7 @@ contains
       !>        all. In all cases, the light time computation will terminate,
       !>        but the result may be less accurate than expected.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -78123,25 +78123,25 @@ contains
       !>              Solar incidence angle (deg.):   101.555993667
       !>              Emission angle        (deg.):     0.117861156
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Results from this routine are not meaningful if the input
       !>         point lies on a ridge or vertex of a surface represented by
       !>         DSK data, or if for any other reason the direction of the
       !>         outward normal vector at the point is undefined.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 20-NOV-2021 (JDR) (EDW) (NJB)
       !>
@@ -78566,7 +78566,7 @@ contains
       end associate
       end procedure illumg
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Map array of surface points on a specified target body to
       !>     the corresponding unit length outward surface normal vectors.
@@ -78574,7 +78574,7 @@ contains
       !>     The surface of the target body may be represented by a triaxial
       !>     ellipsoid or by topographic data provided by DSK files.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
       !>              the computation method to be used. In the syntax
@@ -78693,7 +78693,7 @@ contains
       !>              must be less than a small margin. See the $Parameters
       !>              section below for a description of this margin.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NORMLS   is an array of unit length, outward normal vectors
       !>              corresponding to the points in SRFPTS. Elements
@@ -78706,7 +78706,7 @@ contains
       !>              reference frame designated by FIXREF, of the Ith
       !>              normal vector in the array.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     PTMEMM   is the default point-surface membership margin. This
       !>              margin limits the distance an input point can be from
@@ -78736,7 +78736,7 @@ contains
       !>              This margin can be overridden. See dsktol.inc
       !>              and DSKSTL for details.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the target body name specified in the input string cannot
       !>         be converted to an integer ID code, the error
@@ -78792,7 +78792,7 @@ contains
       !>         ellipsoid are strictly positive, the error
       !>         SPICE(BADAXISLENGTH) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -78852,7 +78852,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Using DSK data
       !>     ==============
@@ -78971,7 +78971,7 @@ contains
       !>
       !>           'DSK/UNPRIORITIZED/SURFACES = "Mars MEGDR 64 PIXEL/DEG", 3'
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -79271,20 +79271,20 @@ contains
       !>        presented in the output (the rest of the points are not
       !>        shown due to their large number).
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR)
       !>
@@ -79768,7 +79768,7 @@ contains
 !
 !     Initial values
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -79779,22 +79779,22 @@ contains
       !>     ellipsoid radii to be used by the callback entry points of this
       !>     package.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TRGCDE   is the integer body ID of the target body for which
       !>              ray-surface intercept or ray-surface near point
       !>              computations are to be performed by the callback
       !>              entry points of this package.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs during lookup of the target body's radii,
       !>         the error is signaled by a routine in the call tree of this
@@ -79808,7 +79808,7 @@ contains
       !>         This routine does not have the capability of detecting such
       !>         an error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of DSK files loaded by the ZZDSKBSR
       !>     subsystem.
@@ -79816,7 +79816,7 @@ contains
       !>     This routine expects the radii of the target body's reference
       !>     ellipsoid to be present in the kernel pool.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by SPICELIB.
       !>
@@ -79834,26 +79834,26 @@ contains
       !>     center, having its axes aligned with the principal axes of the
       !>     target body's reference ellipsoid.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in SINCPT, ZZSFXCOR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a private routine.
       !>
       !>     2)  See exception (2) above.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 30-MAY-2021 (NJB) (JDR)
       !>
@@ -79888,7 +79888,7 @@ contains
       end associate
       end procedure zzsuelin
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -79901,7 +79901,7 @@ contains
       !>     computations in which the target surface is modeled using
       !>     DSK data.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TRGCDE   is the integer body ID of the target body for which
       !>              ray-surface intercept or ray-surface near point
@@ -79919,17 +79919,17 @@ contains
       !>              associated with the target body. The frame must be
       !>              centered at the target body's center.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXSRF   is the maximum supported size of a surface ID list.
       !>              See the include file dsk.inc for the parameter's
       !>              value.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the number of IDs in the surface list is negative or
       !>         exceeds MAXSRF, the error SPICE(INVALIDCOUNT) is signaled.
@@ -79951,12 +79951,12 @@ contains
       !>         zero, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of DSK files loaded by the ZZDSKBSR
       !>     subsystem.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by the DSK subsystem.
       !>
@@ -79974,27 +79974,27 @@ contains
       !>     The stored quantities are used by the callback entry points of
       !>     this package.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in SINCPT, ZZSFXCOR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a private routine.
       !>
       !>     2)  See exception (2) above.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 07-SEP-2021 (EDW) (JDR)
       !>
@@ -80059,7 +80059,7 @@ contains
       end associate
       end procedure zzsudski
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -80070,7 +80070,7 @@ contains
       !>     is used as a callback by the generalized ray-surface intercept
       !>     algorithm.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VERTEX,
       !>     RAYDIR   are, respectively, the vertex and direction vector of
@@ -80089,7 +80089,7 @@ contains
       !>              coverage interval will be used. ET is expressed as
       !>              seconds past J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SPOINT   is the surface intercept on the target body
       !>              nearest to the ray's vertex, if the intercept
@@ -80098,17 +80098,17 @@ contains
       !>     FOUND    is a logical flag that is set to .TRUE. if and
       !>              only if an intercept exists.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while this routine attempts to compute a
       !>         surface intercept, the error is signaled by a routine in
       !>         the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of DSK files loaded by the ZZDSKBSR
       !>     subsystem.
@@ -80129,7 +80129,7 @@ contains
       !>     the radii of the target body's reference ellipsoid to be present
       !>     in the kernel pool.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by SPICELIB.
       !>
@@ -80137,11 +80137,11 @@ contains
       !>     intercept computation using unprioritized DSK data. It calls
       !>     ZZSBFXR to perform the computation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in SINCPT, ZZSFXCOR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a private routine.
       !>
@@ -80151,16 +80151,16 @@ contains
       !>         initialization call must be made before this routine may
       !>         be called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 30-MAY-2021 (NJB) (JDR)
       !>
@@ -80216,7 +80216,7 @@ contains
       end associate
       end procedure zzraysfx
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -80225,7 +80225,7 @@ contains
       !>     Return the radius of an outer bounding sphere for the target body.
       !>     The radius is not necessarily a minimum upper bound.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MAXRAD   is the radius of an outer bounding sphere for the
       !>              target body. The sphere is centered at the center of
@@ -80241,26 +80241,26 @@ contains
       !>
       !>              Units are km.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If a bounding sphere has not been computed due to
       !>         initialization failure, the value returned by this
       !>         routine will be invalid.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None. However, see the $Files sections of routines ZZSUELIN
       !>     and ZZSUDSKI.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by SPICELIB.
       !>
@@ -80285,11 +80285,11 @@ contains
       !>     that routine should be given a new name, and the routine should
       !>     be added to this package.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in SINCPT, ZZSFXCOR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a private routine.
       !>
@@ -80299,16 +80299,16 @@ contains
       !>         initialization call must be made before this routine may
       !>         be called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 16-JUL-2021 (NJB) (JDR)
       !>
@@ -80333,7 +80333,7 @@ contains
       end associate
       end procedure zzmaxrad
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -80342,7 +80342,7 @@ contains
       !>     Return the radius of an inner bounding sphere for the target body.
       !>     The radius is not necessarily a maximum lower bound.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MINRAD   is the radius of the inner bounding sphere for the
       !>              target body. The sphere is centered at the center of
@@ -80358,26 +80358,26 @@ contains
       !>
       !>              Units are km.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If a bounding sphere has not been computed due to
       !>         initialization failure, the value returned by this
       !>         routine will be invalid.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None. However, see the $Files sections of routines ZZSUELIN
       !>     and ZZSUDSKI.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by SPICELIB.
       !>
@@ -80402,11 +80402,11 @@ contains
       !>     that routine should be given a new name, and the routine should
       !>     be added to this package.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in SINCPT, ZZSFXCOR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a private routine.
       !>
@@ -80416,16 +80416,16 @@ contains
       !>         initialization call must be made before this routine may
       !>         be called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 16-JUL-2021 (NJB) (JDR)
       !>
@@ -80450,7 +80450,7 @@ contains
       end associate
       end procedure zzminrad
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -80462,7 +80462,7 @@ contains
       !>     routine is used as a callback by the generalized ray-surface
       !>     intercept algorithm.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VERTEX,
       !>     RAYDIR   are, respectively, the vertex and direction vector of
@@ -80481,7 +80481,7 @@ contains
       !>              coverage interval will be used. ET is expressed as
       !>              seconds past J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PNEAR    is, when the target shape is modeled by a reference
       !>              ellipsoid, the point on the target body nearest to the
@@ -80501,18 +80501,18 @@ contains
       !>     DIST     is the distance between PNEAR and VERTEX. Units are
       !>              km.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If an error occurs while this routine attempts to
       !>         find the nearest point on the target surface to the
       !>         input ray, the error is signaled by a routine
       !>         in the call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of DSK files loaded by the ZZDSKBSR
       !>     subsystem.
@@ -80521,7 +80521,7 @@ contains
       !>     the radii of the target body's reference ellipsoid to be present
       !>     in the kernel pool.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by SPICELIB.
       !>
@@ -80535,11 +80535,11 @@ contains
       !>     This routine calls NPEDLN to perform the computation for
       !>     both the ellipsoid and DSK cases.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in SINCPT, ZZSFXCOR.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a private routine.
       !>
@@ -80549,16 +80549,16 @@ contains
       !>         initialization call must be made before this routine may
       !>         be called.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 30-MAY-2021 (NJB) (JDR)
       !>
@@ -80611,7 +80611,7 @@ contains
       end associate
       end procedure zzraynp
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Compute the illumination angles---phase, incidence, and
       !>     emission---at a specified point on a target body. Return logical
@@ -80624,7 +80624,7 @@ contains
       !>
       !>     The illumination source is a specified ephemeris object.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
       !>              the computation method to be used. In the syntax
@@ -80859,7 +80859,7 @@ contains
       !>
       !>              The components of SPOINT have units of km.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TRGEPC   is the "target surface point epoch." TRGEPC is defined as
       !>              follows: letting LT be the one-way light time between the
@@ -80945,11 +80945,11 @@ contains
       !>              returned with the value .TRUE. if SPOINT is
       !>              illuminated; otherwise it is .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified aberration correction is relativistic or
       !>         calls for stellar aberration but not light time correction,
@@ -81031,7 +81031,7 @@ contains
       !>         zero, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -81097,7 +81097,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPICELIB contains four routines that compute illumination angles:
       !>
@@ -81359,7 +81359,7 @@ contains
       !>        all. In all cases, the light time computation will terminate,
       !>        but the result may be less accurate than expected.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -81662,7 +81662,7 @@ contains
       !>              Emission angle        (deg.):     0.117861156
       !>              Visible, Lit flags:             T  F
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Results from this routine are not meaningful if the input
       !>         point lies on a ridge or vertex of a surface represented by
@@ -81675,18 +81675,18 @@ contains
       !>         source are classified as "lit" or not depending on whether the
       !>         center of the source is visible from those points.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 20-NOV-2021 (JDR) (EDW) (NJB)
       !>
@@ -82205,14 +82205,14 @@ contains
       end associate
       end procedure illumf
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Find the illumination angles (phase, solar incidence, and
       !>     emission) at a specified surface point of a target body.
       !>
       !>     This routine supersedes ILLUM.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
       !>              the computation method to be used. In the syntax
@@ -82436,7 +82436,7 @@ contains
       !>
       !>              The components of SPOINT have units of km.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TRGEPC   is the "target surface point epoch." TRGEPC is defined as
       !>              follows: letting LT be the one-way light time between the
@@ -82504,11 +82504,11 @@ contains
       !>              $Particulars below for a detailed discussion of the
       !>              definition.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified aberration correction is unrecognized, an
       !>         error is signaled by a routine in the call tree of this
@@ -82582,7 +82582,7 @@ contains
       !>         results computed by this routine will be unreliable if SPOINT
       !>         is too far from the ellipsoid.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -82648,7 +82648,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPICELIB contains four routines that compute illumination angles:
       !>
@@ -82908,7 +82908,7 @@ contains
       !>        all. In all cases, the light time computation will terminate,
       !>        but the result may be less accurate than expected.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -83199,24 +83199,24 @@ contains
       !>              Solar incidence angle (deg.):   101.555993667
       !>              Emission angle        (deg.):     0.117861156
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Results from this routine are not meaningful if the input
       !>         point lies on a ridge or vertex of a surface represented by
       !>         DSK data, or if for any other reason the direction of the
       !>         outward normal vector at the point is undefined.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     S.C. Krening       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 20-NOV-2021 (NJB) (JDR)
       !>
@@ -83275,7 +83275,7 @@ contains
       return
       end procedure ilumin
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Map array of planetocentric longitude/latitude coordinate pairs
       !>     to surface points on a specified target body.
@@ -83283,7 +83283,7 @@ contains
       !>     The surface of the target body may be represented by a triaxial
       !>     ellipsoid or by topographic data provided by DSK files.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
       !>              the computation method to be used. In the syntax
@@ -83405,7 +83405,7 @@ contains
       !>
       !>              The units of longitude and latitude are radians.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SRFPTS   is an array of target body surface points
       !>              corresponding to the pairs of coordinates in the
@@ -83425,11 +83425,11 @@ contains
       !>              at those coordinates having the greatest distance
       !>              from the origin of the coordinate system.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the target body name input string cannot be converted to an
       !>         integer ID code, the error SPICE(IDCODENOTFOUND) is signaled.
@@ -83490,7 +83490,7 @@ contains
       !>         ellipsoid are strictly positive, the error
       !>         SPICE(BADAXISLENGTH) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -83550,7 +83550,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is intended to be used for target body surfaces that
       !>     have a unique radius for each pair of planetocentric longitude
@@ -83698,7 +83698,7 @@ contains
       !>
       !>           'DSK/UNPRIORITIZED/SURFACES = "Mars MEGDR 64 PIXEL/DEG", 3'
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -83948,7 +83948,7 @@ contains
       !>            Longitude (deg):  240.000000
       !>            Latitude  (deg):  -30.000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine assumes that the origin of the body-fixed
       !>         reference frame associated with the target body is located in
@@ -83958,16 +83958,16 @@ contains
       !>         if the target surface has multiple surface points associated
       !>         with some (longitude, latitude) coordinates.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (NJB) (JDR)
       !>
@@ -84341,7 +84341,7 @@ contains
       end associate
       end procedure latsrf
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Compute, for a given observer and a ray emanating from the
       !>     observer, the surface intercept of the ray on a target body at
@@ -84353,7 +84353,7 @@ contains
       !>
       !>     This routine supersedes SRFXPT.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
       !>              the computation method to be used. In the syntax
@@ -84647,7 +84647,7 @@ contains
       !>              LTCENT is computed using the method indicated by
       !>              ABCORR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SPOINT   is the surface intercept point on the target body of
       !>              the ray defined by the observer and the direction
@@ -84727,11 +84727,11 @@ contains
       !>              FOUND will be returned as .TRUE. If the ray misses
       !>              the target, FOUND will be returned as .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified aberration correction is unrecognized, an
       !>         error is signaled by a routine in the call tree of this
@@ -84800,7 +84800,7 @@ contains
       !>         This routine does not revert to using an ellipsoidal surface
       !>         in this case.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -84870,7 +84870,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given a ray defined by a direction vector and the location of an
       !>     observer, SINCPT computes the surface intercept point of the ray
@@ -85096,7 +85096,7 @@ contains
       !>        all. In all cases, the light time computation will terminate,
       !>        but the result may be less accurate than expected.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -85851,7 +85851,7 @@ contains
       !>
       !>           Intercept comparison error (km) =           0.000000001
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  A cautionary note: if aberration corrections are used, and
       !>         if DREF is the target body-fixed frame, the epoch at which
@@ -85880,11 +85880,11 @@ contains
       !>         not be used for surfaces for which "outside" cannot be
       !>         defined.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -85892,7 +85892,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.0, 26-OCT-2021 (JDR) (NJB)
       !>
@@ -85968,7 +85968,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 02-MAR-2008 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 3.0.0, 04-APR-2017 (NJB)
       !>
@@ -86379,7 +86379,7 @@ contains
       end associate
       end procedure sincpt
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Compute the rectangular coordinates of the sub-observer point on
       !>     a target body at a specified epoch, optionally corrected for
@@ -86390,7 +86390,7 @@ contains
       !>
       !>     This routine supersedes SUBPT.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
       !>              the computation method to be used. In the syntax
@@ -86682,7 +86682,7 @@ contains
       !>              legitimate strings that indicate the Moon is the
       !>              observer.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SPOINT   is the sub-observer point on the target body.
       !>
@@ -86772,11 +86772,11 @@ contains
       !>              below presents a complete program that demonstrates
       !>              this procedure.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified aberration correction is unrecognized, an
       !>         error is signaled by a routine in the call tree of this
@@ -86863,7 +86863,7 @@ contains
       !>         zero, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -86928,7 +86928,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For ellipsoidal target bodies, there are two different popular
       !>     ways to define the sub-observer point: "nearest point on the
@@ -87100,7 +87100,7 @@ contains
       !>        all. In all cases, the light time computation will terminate,
       !>        but the result may be less accurate than expected.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -87765,15 +87765,15 @@ contains
       !>
       !>           Intercept comparison error (km) =           0.000000001
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -87781,7 +87781,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 01-NOV-2021 (JDR) (EDW) (NJB)
       !>
@@ -88726,7 +88726,7 @@ contains
       end associate
       end procedure subpnt
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Compute the rectangular coordinates of the sub-solar point on
       !>     a target body at a specified epoch, optionally corrected for
@@ -88737,7 +88737,7 @@ contains
       !>
       !>     This routine supersedes SUBSOL.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
       !>              the computation method to be used. In the syntax
@@ -88992,7 +88992,7 @@ contains
       !>
       !>              The observer may coincide with the target.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SPOINT   is the sub-solar point on the target body.
       !>
@@ -89074,11 +89074,11 @@ contains
       !>                  CALL PXFRM2 ( FIXREF, REF,    TRGEPC, ET, XFORM )
       !>                  CALL MXV    ( XFORM,  SRFVEC, REFVEC )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified aberration correction is unrecognized, an
       !>         error is signaled by a routine in the call tree of this
@@ -89162,7 +89162,7 @@ contains
       !>         zero, an error is signaled by a routine in the call tree of
       !>         this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -89227,7 +89227,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     There are two different popular ways to define the sub-solar
       !>     point: "nearest point on target to the Sun" or "target surface
@@ -89382,7 +89382,7 @@ contains
       !>        all. In all cases, the light time computation will terminate,
       !>        but the result may be less accurate than expected.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -89688,15 +89688,15 @@ contains
       !>          Sub-solar planetocentric latitude  (deg) =       23.174793924
       !>          Sun's planetocentric latitude      (deg) =       23.420819936
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -89704,7 +89704,7 @@ contains
       !>     B.V. Semenov       (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.1.0, 01-NOV-2021 (JDR) (NJB) (EDW)
       !>
@@ -90740,7 +90740,7 @@ contains
 !
 !     Saved variables
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -90750,7 +90750,7 @@ contains
       !>     ZZTANSTA, which is used directly by ZZTANGNT and indirectly by
       !>     LIMBPT and TERMPT.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CURVE      is an integer code indicating the type of set on the
       !>                target body on which tangent points are to be found.
@@ -90818,11 +90818,11 @@ contains
       !>                For terminator computations, AXIS points from the
       !>                target toward the center of the illumination source.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. This routine operates by side effects.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the INCLUDE file zzdsk.inc for declarations of these
       !>     parameters.
@@ -90850,7 +90850,7 @@ contains
       !>                the source than the penumbral terminator, the source
       !>                appears to be a lit disc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If AXIS is the zero vector, the error SPICE(ZEROVECTOR) is
       !>         signaled.
@@ -90871,7 +90871,7 @@ contains
       !>     6)  If the target shape code is unrecognized, the error
       !>         SPICE(BADSHAPE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of DSK files loaded by the ZZDSKBSR
       !>     subsystem.
@@ -90889,30 +90889,30 @@ contains
       !>     This routine uses PCK data for target body reference
       !>     ellipsoids.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by the DSK subsystem.
       !>
       !>     This routine initializes the tangent ray utilities for limb or
       !>     terminator computation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZTANGNT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a private routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-     SPICELIB Version 1.0.0 11-FEB-2016 (NJB)
       !>
@@ -91050,7 +91050,7 @@ contains
       end associate
       end procedure zztanini
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -91070,7 +91070,7 @@ contains
       !>     This routine is called directly by ZZTANGNT and is used
       !>     indirectly by LIMBPT and TERMPT.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ANGLE      is the angle between a ray and the AXIS vector
       !>                stored by ZZTANINI. AXIS points away from the
@@ -91095,7 +91095,7 @@ contains
       !>
       !>                Units are radians.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OCULTD     is a logical flag that is .TRUE. if and only if the
       !>                ray defined by ANGLE and the values set by ZZTANINI
@@ -91104,11 +91104,11 @@ contains
       !>     POINT      is the ray-surface intercept closest to the ray's
       !>                vertex, if an intercept exists.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See zzdsk.inc for declarations of parameters used internally.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  Any errors that occur while looking up DSK data will be
       !>         signaled by a routine in the call tree of this routine.
@@ -91117,7 +91117,7 @@ contains
       !>         will be signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of DSK files loaded by the ZZDSKBSR
       !>     subsystem.
@@ -91135,7 +91135,7 @@ contains
       !>     This routine uses PCK data for target body reference
       !>     ellipsoids.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by the DSK subsystem.
       !>
@@ -91147,23 +91147,23 @@ contains
       !>     This is the state callback routine used by ZZTANSLV to
       !>     find tangent rays on the target body's surface.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in ZZTANGNT and ZZTANSLV.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a private routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-     SPICELIB Version 1.0.0 11-FEB-2016 (NJB)
       !>
@@ -91257,7 +91257,7 @@ contains
       end associate
       end procedure zztansta
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -91269,7 +91269,7 @@ contains
       !>     first case supports limb finding and the second terminator
       !>     finding.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CURVE      is an integer code indicating the type of set on the
       !>                target body on which tangent points are to be found.
@@ -91343,7 +91343,7 @@ contains
       !>                rays and associated limb points within each cutting
       !>                half plane.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RESULT     is a cell (not a window) containing ray-axis angular
       !>                separation values at which ray-surface tangencies
@@ -91385,7 +91385,7 @@ contains
       !>                from AXIS. Here the ray's vertex is as described
       !>                above in the discussion of the RESULT output cell.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the INCLUDE file zzdsk.inc for declarations of these
       !>     parameters.
@@ -91413,7 +91413,7 @@ contains
       !>                the source than the penumbral terminator, the source
       !>                appears to be a lit disc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If AXIS is the zero vector, the error SPICE(ZEROVECTOR) is
       !>         signaled.
@@ -91434,7 +91434,7 @@ contains
       !>     6)  If the target shape code is unrecognized, the error
       !>         SPICE(BADSHAPE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     This routine makes use of DSK files loaded by the ZZDSKBSR
       !>     subsystem.
@@ -91452,30 +91452,30 @@ contains
       !>     This routine uses PCK data for target body reference
       !>     ellipsoids.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is meant to be used only by the DSK subsystem.
       !>
       !>     This routine computes target tangent points for limb or
       !>     terminator computations.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See usage in LIMBPT and TERMPT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a private routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-     SPICELIB Version 1.1.0, 17-OCT-2021 (NJB)
       !>
@@ -91764,7 +91764,7 @@ contains
       return
       end procedure zztangnt
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Find limb points on a target body. The limb is the set of points
       !>     of tangency on the target of rays emanating from the observer.
@@ -91774,7 +91774,7 @@ contains
       !>     The surface of the target body may be represented either by a
       !>     triaxial ellipsoid or by topographic data.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
       !>              the computation method to be used. In the syntax
@@ -92208,7 +92208,7 @@ contains
       !>     MAXN     is the maximum number of limb points that can be
       !>              stored in the output array POINTS.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NPTS     is an array of counts of limb points within the
       !>              specified set of cutting half-planes. The Ith
@@ -92331,11 +92331,11 @@ contains
       !>              the light time error is proportional to the
       !>              observer-target distance.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified aberration correction is unrecognized, an
       !>         error is signaled by a routine in the call tree of this
@@ -92443,7 +92443,7 @@ contains
       !>     25) If the roll step is non-positive and NCUTS is greater
       !>         than 1, the error SPICE(INVALIDROLLSTEP) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -92514,7 +92514,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Using DSK data
       !>     ==============
@@ -92634,7 +92634,7 @@ contains
       !>
       !>     'TANGENT/DSK/UNPRIORITIZED/SURFACES= "Mars MEGDR 64 PIXEL/DEG",3'
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -93687,7 +93687,7 @@ contains
       !>                  0.959495690         0.170340551         0.905212642
       !>                  0.370611049        -0.167047205         0.395076979
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The light time approximations made by this routine may be
       !>         unsuitable for some observation geometries. For example, when
@@ -93695,16 +93695,16 @@ contains
       !>         tangent vectors returned by this routine may be in error by
       !>         several km due to the light time error.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 01-NOV-2021 (NJB) (JDR)
       !>
@@ -95090,7 +95090,7 @@ contains
       end associate
       end procedure limbpt
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Find terminator points on a target body. The caller specifies
       !>     half-planes, bounded by the illumination source center-target
@@ -95106,7 +95106,7 @@ contains
       !>     The surface of the target body may be represented either by a
       !>     triaxial ellipsoid or by topographic data.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
       !>              the computation method to be used. In the syntax
@@ -95569,7 +95569,7 @@ contains
       !>     MAXN     is the maximum number of terminator points that can
       !>              be stored in the output array POINTS.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NPTS     is an array of counts of terminator points within
       !>              the specified set of cutting half-planes. The Ith
@@ -95670,11 +95670,11 @@ contains
       !>
       !>              Units of the terminator vectors are km.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the specified aberration correction is unrecognized, an
       !>         error is signaled by a routine in the call tree of this
@@ -95769,7 +95769,7 @@ contains
       !>         positive. Otherwise, the error SPICE(INVALIDROLLSTEP) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     Appropriate kernels must be loaded by the calling program before
       !>     this routine is called.
@@ -95849,7 +95849,7 @@ contains
       !>     In all cases, kernel data are normally loaded once per program
       !>     run, NOT every time this routine is called.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Terminator definition
       !>     =====================
@@ -96036,7 +96036,7 @@ contains
       !>           'UMBRAL/TANGENT/DSK/UNPRIORITIZED/
       !>            SURFACES= "Mars MEGDR 64 PIXEL/DEG",3'
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -96825,20 +96825,20 @@ contains
       !>              Adjusted angle  (deg):          89.999999877
       !>              Distance offset  (km):          19.411437239
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-SEP-2021 (NJB) (JDR)
       !>

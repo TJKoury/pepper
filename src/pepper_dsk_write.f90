@@ -11,7 +11,7 @@ submodule (pepper_instance) pepper_dsk_write
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     HANDLE   is the DAS file handle associated with a DSK file.
       !>              The file must be open for write access.
@@ -195,11 +195,11 @@ contains
       !>              DSKMI2 be used to create these arrays. See the
       !>              $Examples section below.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None. This routine operates by side effects.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See the SPICELIB include files
       !>
@@ -210,7 +210,7 @@ contains
       !>     for declarations and detailed descriptions of the parameters
       !>     referenced in this header.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the reference frame name FRAME could not be mapped to
       !>         an ID code, the error SPICE(FRAMEIDNOTFOUND) is signaled.
@@ -315,11 +315,11 @@ contains
       !>         DSK file, the error is signaled by a routine in the call
       !>         tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     See argument HANDLE.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine writes a type 2 segment to a DSK file that
       !>     has been opened for write access.
@@ -410,7 +410,7 @@ contains
       !>
       !>        In general, FS should not smaller than 1.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -736,20 +736,20 @@ contains
       !>        Note that after run completion, a new DSK exists in the output
       !>        directory.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 28-AUG-2021 (JDR) (NJB)
       !>

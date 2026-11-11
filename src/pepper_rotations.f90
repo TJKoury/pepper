@@ -11,7 +11,7 @@ submodule (pepper_instance) pepper_rotations
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ANGLE    is the angle, given in radians, through which the
       !>              rotation is performed.
@@ -19,17 +19,17 @@ contains
       !>     IAXIS    is the index of the axis of rotation. The X, Y, and Z
       !>              axes have indices 1, 2 and 3 respectively.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MOUT     is the rotation matrix which describes the rotation of
       !>              a reference frame through ANGLE radians about the axis
       !>              whose index is IAXIS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -37,11 +37,11 @@ contains
       !>         treated the same as that integer 1, 2, or 3 that is congruent
       !>         to it mod 3.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A rotation about the first, i.e. x-axis, is described by
       !>
@@ -70,7 +70,7 @@ contains
       !>     ROTATE decides which form is appropriate according to the value
       !>     of IAXIS.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     If ROTATE is called from a FORTRAN program as follows:
       !>
@@ -82,21 +82,21 @@ contains
       !>           MOUT = |-SQRT(2)/2   SQRT(2)/2   0  |
       !>                  |     0           0       1  |
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 25-MAY-2021 (JDR)
       !>
@@ -111,7 +111,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 03-JAN-1989 (WLT)
       !>
@@ -164,7 +164,7 @@ contains
       return
       end procedure rotate
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M1       is a 3x3 matrix to which a rotation is to be applied. In
       !>              matrix algebra, the components of the matrix are relevant
@@ -180,7 +180,7 @@ contains
       !>              performed. IAXIS = 1,2 or 3 designates the X-, Y- or
       !>              Z-axis, respectively.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MOUT     is the matrix resulting from the application of the
       !>              specified rotation to the input matrix M1. If
@@ -195,11 +195,11 @@ contains
       !>                 MOUT = [ANGLE]      * M1
       !>                               IAXIS
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -207,15 +207,15 @@ contains
       !>         treated the same as that integer 1, 2, or 3 that is congruent
       !>         to it mod 3.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that to rotate a set of inertial axes to body fixed
       !>     axes, one must first roll the coordinate axes about the x-axis by
@@ -230,22 +230,22 @@ contains
       !>        CALL ROTMAT ( M1, P,     2,     M2   )
       !>        CALL ROTMAT ( M2, Y,     3,     TIBF )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 27-MAY-2021 (JDR)
       !>
@@ -266,7 +266,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 3-JAN-1989 (WLT)
       !>
@@ -322,7 +322,7 @@ contains
       return
       end procedure rotmat
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     R        is a 3x3 rotation matrix that is to be factored as
       !>              a product of three rotations about a specified
@@ -345,7 +345,7 @@ contains
       !>              See the $Particulars section below for details
       !>              concerning this notation.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ANGLE3,
       !>     ANGLE2,
@@ -383,11 +383,11 @@ contains
       !>              uniquely determined, ANGLE3 will always be set to
       !>              zero; ANGLE1 is then uniquely determined.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of AXIS3, AXIS2, or AXIS1 do not have values in
       !>
@@ -406,11 +406,11 @@ contains
       !>     4)  If ANGLE3 and ANGLE1 are not uniquely determined, ANGLE3
       !>         is set to zero, and ANGLE1 is determined.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A word about notation: the symbol
       !>
@@ -529,7 +529,7 @@ contains
       !>     preserve ANGLE3, ANGLE2, and ANGLE1 only if these angles start
       !>     out in the ranges that M2EUL's outputs are restricted to.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -779,21 +779,21 @@ contains
       !>        that the definition given here is consistent with that used
       !>        in your application.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 06-JUL-2021 (JDR)
       !>
@@ -837,7 +837,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1990 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 02-NOV-1990 (NJB)
       !>
@@ -1279,7 +1279,7 @@ contains
       return
       end procedure m2eul
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ANGLE3,
       !>     ANGLE2,
@@ -1309,7 +1309,7 @@ contains
       !>              The values of AXISx may be 1, 2, or 3, indicating the X,
       !>              Y, and Z axes respectively.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     R        is a rotation matrix representing the composition of the
       !>              rotations defined by the input angle-axis pairs.
@@ -1339,11 +1339,11 @@ contains
       !>              are performed belong to the bases resulting from the
       !>              previous rotations.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of AXIS3, AXIS2, or AXIS1 do not have values in
       !>
@@ -1351,11 +1351,11 @@ contains
       !>
       !>         the error SPICE(BADAXISNUMBERS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A word about notation: the symbol
       !>
@@ -1453,7 +1453,7 @@ contains
       !>     preserve ANGLE3, ANGLE2, and ANGLE1 only if these angles start
       !>     out in the ranges that M2EUL's outputs are restricted to.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Create a coordinate transformation matrix by rotating
       !>         the original coordinate axes first by 30 degrees about
@@ -1539,25 +1539,25 @@ contains
       !>               CALL EUL2M (  TWIST,   HALFPI()-DEC,   RA,
       !>              .              3,       2,              3,   TISP  )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Beware: more than one definition of "RA, DEC and twist"
       !>         exists.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W. Owen, "Galileo Attitude and Camera Models," JPL
       !>          Interoffice Memorandum 314-323, Nov. 11, 1983. NAIF document
       !>          number 204.0.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     L.S. Elson         (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 06-JUL-2021 (JDR)
       !>
@@ -1593,7 +1593,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 02-NOV-1990 (NJB)
       !>
@@ -1678,7 +1678,7 @@ contains
       return
       end procedure eul2m
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     XFORM    is a state transformation matrix from some frame FRAME1
       !>              to another frame FRAME2. Pictorially, XFORM has the
@@ -1724,7 +1724,7 @@ contains
       !>              The value 2 corresponds to the Y axis.
       !>              The value 3 corresponds to the Z axis.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EULANG   is the set of Euler angles corresponding to the
       !>              specified factorization.
@@ -1766,11 +1766,11 @@ contains
       !>              components ( EULANG(1) and EULANG(4) ) have been set
       !>              to zero, then UNIQUE will have the value .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of AXISA, AXISB, or AXISC do not have values in
       !>
@@ -1791,11 +1791,11 @@ contains
       !>     4)  If EULANG(1) and EULANG(3) are not uniquely determined,
       !>         EULANG(1) is set to zero, and EULANG(3) is determined.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A word about notation: the symbol
       !>
@@ -1909,7 +1909,7 @@ contains
       !>     are in the range produced by XF2EUL and the Euler representation
       !>     of the rotation component of XFORM is unique within that range.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -2049,22 +2049,22 @@ contains
       !>        dDEC/dt =   0.0000000004021737
       !>        dRA/dt  =   0.0000000039334471
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 26-OCT-2021 (JDR)
       !>
@@ -2283,7 +2283,7 @@ contains
       return
       end procedure xf2eul
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     EULANG   is the set of Euler angles corresponding to the
       !>              specified factorization.
@@ -2321,7 +2321,7 @@ contains
       !>              The value 2 corresponds to the Y axis.
       !>              The value 3 corresponds to the Z axis.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XFORM    is the state transformation matrix corresponding to R
       !>              and dR/dt as described above. Pictorially,
@@ -2339,11 +2339,11 @@ contains
       !>              where R is a rotation matrix that varies with respect to
       !>              time and dR/dt is its time derivative.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If any of AXISA, AXISB, or AXISC do not have values in
       !>
@@ -2352,11 +2352,11 @@ contains
       !>         an error is signaled by a routine in the call tree of this
       !>         routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A word about notation: the symbol
       !>
@@ -2468,7 +2468,7 @@ contains
       !>     are in the range produced by XF2EUL and the Euler representation
       !>     of the rotation component of XFORM is unique within that range.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -2547,22 +2547,22 @@ contains
       !>        Pitch  -0.000299950, dPitch/dt   0.000059980
       !>        Yaw     0.099995501, dYaw/dt    -0.009998650
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 26-OCT-2021 (JDR)
       !>
@@ -2795,7 +2795,7 @@ contains
       return
       end procedure eul2xf
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     AXDEF    is a vector defining one of the principle axes of a
       !>              coordinate frame.
@@ -2829,17 +2829,17 @@ contains
       !>              If INDEXP is 3, the second axis of the principal plane
       !>              is the Z-axis.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MOUT     is a rotation matrix that transforms coordinates given
       !>              in the input frame to the frame determined by AXDEF,
       !>              PLNDEF, INDEXA and INDEXP.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If INDEXA or INDEXP is not in the set {1,2,3}, the error
       !>         SPICE(BADINDEX) is signaled.
@@ -2850,11 +2850,11 @@ contains
       !>     3)  If the cross product of the vectors AXDEF and PLNDEF is zero,
       !>         the error SPICE(DEPENDENTVECTORS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given two linearly independent vectors there is a unique
       !>     right-handed coordinate frame having:
@@ -2873,29 +2873,29 @@ contains
       !>
       !>     in the frame determined by AXDEF and PLNDEF.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The rotation matrix TICC from inertial to Sun-Canopus
       !>     (celestial) coordinates is found by the call
       !>
       !>        CALL TWOVEC (Sun vector, 3, Canopus vector, 1, TICC)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 06-JUL-2021 (JDR)
       !>
@@ -3017,7 +3017,7 @@ contains
       return
       end procedure twovec
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -3028,7 +3028,7 @@ contains
       !>     vector defining a specified axis and a second state vector
       !>     defining a specified coordinate plane.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     AXDEF      is a "generalized" state vector defining one of the
       !>                principal axes of a reference frame. This vector
@@ -3143,7 +3143,7 @@ contains
       !>                determined by AXDEF and PLNDEF.  The association of
       !>                integer values and axes is the same as for INDEXA.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XFORM      is the 6x6 matrix that transforms states to the frame
       !>                relative to which AXDEF and PLNDEF are specified (the
@@ -3166,11 +3166,11 @@ contains
       !>                PLNDEF, and where dR_dt is the derivative of R
       !>                with respect to that independent variable.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If INDEXA or INDEXP is not in the set {1,2,3} the error
       !>        SPICE(BADINDEX) will be signaled.
@@ -3181,11 +3181,11 @@ contains
       !>     3) If the cross product of the vectors AXDEF and PLNDEF is zero,
       !>        the error SPICE(DEPENDENTVECTORS) will be signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine exists to support the public routine TWOVXF:
       !>     TWOVXF does its job by calling this routine, inverting the
@@ -3227,25 +3227,25 @@ contains
       !>     in the base frame relative to which AXDEF and PLNDEF are
       !>     specified.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See TWOVXF.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     W.M. Owen       (JPL)
       !>     W.L. Taber      (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-SEP-2005 (NJB)
       !>
@@ -3254,7 +3254,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB) (WMO) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 06-SEP-2005 (NJB)
       !>
@@ -3811,7 +3811,7 @@ contains
 !
 !     Standard SPICE error handling.
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     REFA,
       !>     REFB     are the indices of two standard inertial reference
@@ -3867,7 +3867,7 @@ contains
       !>
       !>                 21    DE-143    JPL Developmental Ephemeris (143)
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ROTAB    is the rotation which, when applied to a vector v
       !>              in reference frame A,
@@ -3882,26 +3882,26 @@ contains
       !>                 v  = (ROTAB)  v
       !>                  A             B
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If either REFA or REFB is outside the range [1,MAXF],
       !>         where MAXF is the number of supported frames, the error
       !>         SPICE(IRFNOTREC) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     IRFROT exists primarily for use by the ephemeris and star
       !>     catalog readers in the SPICELIB toolkit library.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following code fragment, IRFROT is used to rotate
       !>     vectors originally referenced to the DE-118 coordinate frame
@@ -3913,11 +3913,11 @@ contains
       !>        CALL MXV ( R, SC1950, SC2000 )
       !>        CALL MXV ( R, MP1950, MP2000 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  J. Lieske, "Precession Matrix Based on IAU (1976) System of
       !>          Astronomical Constants," Astron. Astrophys. 73, 282-284,
@@ -3944,7 +3944,7 @@ contains
       !>     [7]  P. Kenneth Seidelmann (Ed.), "Explanatory Supplement to the
       !>          Astronomical Almanac," University Science Books, 1992.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
@@ -3952,7 +3952,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.4.0, 17-JUN-2021 (JDR)
       !>
@@ -4200,36 +4200,36 @@ contains
       end associate
       end procedure irfrot
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NAME     is the name of one of the standard inertial
       !>              reference frames supported by IRFROT, or
       !>              'DEFAULT'.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     INDEX    is the index of the frame specified by NAME.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If NAME is not recognized, INDEX is zero.
       !>
       !>     2)  If no default frame has been specified, INDEX is zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     IRFNUM is supplied as a convenience, to allow users to refer to
       !>     the various standard inertial reference frames by name.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following example, the rotation from DE-118 to FK4 is
       !>     computed without knowing the indices of these frames.
@@ -4248,11 +4248,11 @@ contains
       !>        CALL IRFROT ( A, B, ROTAB                 )
       !>        CALL MXV    (       ROTAB, OLDVEC, NEWVEC )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  J. Lieske, "Precession Matrix Based on IAU (1976) System of
       !>          Astronomical Constants," Astron. Astrophys. 73, 282-284,
@@ -4279,7 +4279,7 @@ contains
       !>     [7]  P. Kenneth Seidelmann (Ed.), "Explanatory Supplement to the
       !>          Astronomical Almanac," University Science Books, 1992.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
@@ -4287,7 +4287,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.4.0, 17-JUN-2021 (JDR)
       !>
@@ -4451,34 +4451,34 @@ contains
       end associate
       end procedure irfnum
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INDEX    is the index of one of the standard inertial
       !>              reference frames supported by IRFROT.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NAME     is the name of the frame specified by INDEX.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If INDEX is not the index of a supported frame, NAME is blank.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     IRFNAM is supplied as a convenience, to allow users to determine
       !>     the names of standard inertial reference frames referred to only
       !>     by index (as in the segment descriptors of a GEF ephemeris file).
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In the following example, the identity of a rotation from DE-118
       !>     to FK4 is deduced from the indices used to create the rotation.
@@ -4496,11 +4496,11 @@ contains
       !>        CALL IRFNUM ( 'DEFAULT', DINDEX        )
       !>        CALL IRFNAM (            DINDEX, DNAME )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  J. Lieske, "Precession Matrix Based on IAU (1976) System of
       !>          Astronomical Constants," Astron. Astrophys. 73, 282-284,
@@ -4527,14 +4527,14 @@ contains
       !>     [7]  P. Kenneth Seidelmann (Ed.), "Explanatory Supplement to the
       !>          Astronomical Almanac," University Science Books, 1992.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.3.0, 17-JUN-2021 (JDR)
       !>
@@ -4685,36 +4685,36 @@ contains
       return
       end procedure irfnam
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     INDEX    is the index of one of the standard inertial
       !>              reference frames supported by IRFROT.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     None.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If INDEX is outside the range [1,MAXF], where MAXF is the
       !>         number of supported frames, the error SPICE(IRFNOTREC) is
       !>         signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     IRFDEF allows tools to be written at a relatively high level
       !>     without requiring the reference frame to be tramp coupled or
       !>     placed in global memory.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Typically, the calling program will select a default frame
       !>     during initialization,
@@ -4741,11 +4741,11 @@ contains
       !>
       !>        CALL SPKEZ ( TARGET, ..., 'DEFAULT', ... )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  J. Lieske, "Precession Matrix Based on IAU (1976) System of
       !>          Astronomical Constants," Astron. Astrophys. 73, 282-284,
@@ -4772,14 +4772,14 @@ contains
       !>     [7]  P. Kenneth Seidelmann (Ed.), "Explanatory Supplement to the
       !>          Astronomical Almanac," University Science Books, 1992.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 4.3.0, 17-JUN-2021 (JDR)
       !>
@@ -4942,7 +4942,7 @@ contains
       end associate
       end procedure irfdef
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     Return the mean obliquity of the ecliptic, and its time
       !>     derivative, at a specified epoch.
@@ -4951,13 +4951,13 @@ contains
       !>     routines.  Users should not call this routine directly due
       !>     to the volatile nature of this routine.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET             is the epoch at which the obliquity of the ecliptic
       !>                    is to be computed.  ET is barycentric dynamical
       !>                    time, expressed as seconds past J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MOB            is the mean obliquity of the ecliptic at epoch ET.
       !>                    The mean obliquity of the ecliptic is the
@@ -4967,19 +4967,19 @@ contains
       !>     DMOB           is the time derivative of MOB at ET, expressed in
       !>                    radians per second.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The expression for mean is obliquity is
       !>
@@ -4992,15 +4992,15 @@ contains
       !>     where T indicates Julian centuries past J2000.  This is from
       !>     equation 5-153 of reference [2].
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the routine ENUTAT for an example of usage.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This is a preliminary version of the routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1] "Explanatory Supplement to the Astronomical Almanac"
       !>          edited by P. Kenneth Seidelmann. University Science
@@ -5011,12 +5011,12 @@ contains
       !>         Draft of JPL Publication documenting the JPL navigation
       !>         program "Regres."
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber         (JPL)
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1 02-OCT-2021 (NJB)
       !>
@@ -5066,13 +5066,13 @@ contains
       end associate
       end procedure zzmobliq
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET         is the epoch for which nutation angles are being
       !>                requested expressed in TDB seconds past the epoch
       !>                of J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DVNUT      are the nutation angles and their derivatives.
       !>                Following the notation on page 112 of the
@@ -5084,43 +5084,43 @@ contains
       !>                DVNUT(3) = dPsi/dt     (radians/second)
       !>                DVNUT(4) = dEpsilon/dt (radians/second)
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes the angles required for computing the
       !>     transformation from the mean of date frame for the earth
       !>     to the true of date frame of the earth.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     Explanatory Supplement to the Astronomical Almanac edited
       !>     by P. Kenneth Siedelmann. (1992) (University Science
       !>     Books, Mill Valley CA) pp. 111-116
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber      (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 02-OCT-2021 (NJB)
       !>
@@ -5583,7 +5583,7 @@ contains
       end associate
       end procedure zzwahr
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -5592,11 +5592,11 @@ contains
       !>     Compute the state transformation matrix implementing the IAU 1980
       !>     nutation model.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET             is an epoch, expressed as seconds past J2000 TDB.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NUTXF          is a state transformation matrix that maps states
       !>                    from the earth mean equator and equinox of date
@@ -5604,19 +5604,19 @@ contains
       !>                    the earth true equator and equinox frame of date
       !>                    (based on the 1980 IAU nutation model).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     See the private SPICELIB routine ZZWAHR for a discussion
       !>     of the implementation of the 1980 IAU nutation model.
@@ -5625,21 +5625,21 @@ contains
       !>     of the implementation of the 1980 IAU earth mean obliquity
       !>     of date model.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDYNFRM.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a SPICE private routine; the routine is subject
       !>        to change without notice.  User applications should not
       !>        call this routine.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1] "Explanatory Supplement to the Astronomical Almanac"
       !>          edited by P. Kenneth Seidelmann. University Science
@@ -5650,7 +5650,7 @@ contains
       !>         Draft of JPL Publication documenting the JPL navigation
       !>         program "Regres."
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
       !>
@@ -5727,7 +5727,7 @@ contains
       return
       end procedure zzenut80
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -5736,31 +5736,31 @@ contains
       !>     Compute the state transformation matrix implementing the IAU 1976
       !>     precession model.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET             is the epoch at which the precession matrix is
       !>                    to be computed.  ET is barycentric dynamical time,
       !>                    expressed as seconds past J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PRECXF         is a 6x6 matrix that transforms states from the
       !>                    J2000 frame to the mean equator and equinox frame
       !>                    of the earth at the epoch ET.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     According to reference [2], the precession model used in this
       !>     routine is that used in the JPL navigation program "Regres."
@@ -5790,7 +5790,7 @@ contains
       !>         theta  =  2004".3109*T  -  0".42665*T   -  0".041833*T
       !>              A
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1) Convert a state vector S from J2000 to Earth Mean equator and
       !>        equinox of date coordinates at epoch ET.  Call the resulting
@@ -5799,7 +5799,7 @@ contains
       !>           CALL ZZEPRC76 ( ET,     PRECXF        )
       !>           CALL MXVG     ( PRECXF, S, 6, 6, SMOD )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a SPICE private routine; the routine is subject to
       !>        change without notice.  User applications should not call this
@@ -5810,7 +5810,7 @@ contains
       !>        the rotation angles used in the model are defined by
       !>        polynomials implies that the model is not valid for all time.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1] "Explanatory Supplement to the Astronomical Almanac"
       !>          edited by P. Kenneth Seidelmann. University Science
@@ -5821,11 +5821,11 @@ contains
       !>         Draft of JPL Publication documenting the JPL navigation
       !>         program "Regres."
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.1, 18-APR-2016 (NJB)
       !>
@@ -5903,7 +5903,7 @@ contains
 
       end procedure zzeprc76
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STATE    is a 6-vector giving the position and velocity of some
       !>              object in the body-fixed coordinates of the ellipsoid.
@@ -5927,7 +5927,7 @@ contains
       !>              parallel to the Z-axis of the body-fixed coordinate
       !>              system.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DNEAR    is the 3-vector giving the velocity in
       !>              body-fixed coordinates of the point on the ellipsoid,
@@ -5964,11 +5964,11 @@ contains
       !>              non-spheroidal ellipsoids the focal set contains small
       !>              portions of the planes of symmetry of the ellipsoid.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the axes are non-positive, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -5979,11 +5979,11 @@ contains
       !>         points the velocity of the near point is undefined. (See
       !>         the description of the output variable FOUND).
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes DNEAR from STATE. In addition it returns
       !>     the range rate of altitude.
@@ -5994,25 +5994,25 @@ contains
       !>     interior of the ellipsoid. See the discussion of FOUND above
       !>     for a description of this set of points.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     W.L. Taber      (JPL)
       !>     E.D. Wright     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 30-SEP-2021 (EDW)
       module procedure zzdnpt
@@ -6234,7 +6234,7 @@ contains
       end associate
       end procedure zzdnpt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STATE    is a 6-vector giving the position and velocity of some
       !>              object in the body-fixed coordinates of the ellipsoid.
@@ -6255,7 +6255,7 @@ contains
       !>              parallel to the Z-axis of the body-fixed coordinate
       !>              system.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DNEAR    is the 6-vector giving the position and velocity in
       !>              body-fixed coordinates of the point on the ellipsoid,
@@ -6295,11 +6295,11 @@ contains
       !>              non-spheroidal ellipsoids the focal set contains small
       !>              portions of the planes of symmetry of the ellipsoid.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the axes are non-positive, an error is signaled by a
       !>         routine in the call tree of this routine.
@@ -6310,11 +6310,11 @@ contains
       !>         velocity of the near point is undefined. (See the description
       !>         of the output variable FOUND).
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If an object is moving relative to some triaxial body along a
       !>     trajectory C(t) then there is a companion trajectory N(t) that
@@ -6332,7 +6332,7 @@ contains
       !>     in the interior of the ellipsoid. See the discussion of FOUND
       !>     above for a description of this set of points.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -6578,22 +6578,22 @@ contains
       !>        Central frequency (MHz): 20.0000000000000000
       !>        Doppler shift     (MHz): -0.0000005500991159
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 26-OCT-2021 (JDR) (EDW)
       !>
@@ -6665,7 +6665,7 @@ contains
       return
       end procedure dnearp
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -6675,7 +6675,7 @@ contains
       !>     relative to an observing body, optionally corrected for light
       !>     time (planetary aberration) and stellar aberration.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     XMIT        is a logical flag which is set to .TRUE. for the
       !>                 "transmission" case in which photons *depart* from
@@ -6713,7 +6713,7 @@ contains
       !>                 reference frame as ACCOBS. Components are
       !>                 (x, y, z, dx, dy, dz). Units are km and km/sec.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SCORR       is the stellar aberration correction for the position
       !>                 component of STARG. Adding SCORR to this position
@@ -6733,11 +6733,11 @@ contains
       !>                 relative to which the inputs ACCOBS, VOBS, and STARG
       !>                 are expressed. Units are km/s.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If attempt to divide by zero occurs, the error
       !>        SPICE(DIVIDEBYZERO) will be signaled. This case may occur
@@ -6746,11 +6746,11 @@ contains
       !>     2) Loss of precision will occur for geometric cases in which
       !>        VOBS is nearly parallel to the position component of STARG.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes a Newtonian estimate of the stellar
       !>     aberration correction of an input state. Normally the input state
@@ -6763,23 +6763,23 @@ contains
       !>     vector. This allows the caller to manipulate (for example,
       !>     interpolate) the corrections with greater accuracy.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See SPICELIB routine SPKACS.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     SPK Required Reading.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 15-APR-2014 (NJB)
       !>

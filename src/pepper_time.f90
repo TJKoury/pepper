@@ -11,7 +11,7 @@ submodule (pepper_instance) pepper_time
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CALLER   is the name of the routine calling this routine
       !>              to check correctness of kernel pool variables.
@@ -62,17 +62,17 @@ contains
       !>              no check for the type of the variable will be
       !>              performed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value .FALSE. if the kernel pool
       !>     variable has the expected properties. Otherwise the routine
       !>     signals an error and returns the value .TRUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the kernel pool variable specified by NAME is not present
       !>         in the kernel pool, the error SPICE(VARIABLENOTFOUND) is
@@ -95,11 +95,11 @@ contains
       !>         SPICE(BADVARIABLETYPE) is signaled and the routine will
       !>         return the value .TRUE.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine takes care of routine checking that often needs
       !>     to be done by programs and routines that rely upon kernel
@@ -109,7 +109,7 @@ contains
       !>     examines the type and dimension of the variable to make sure
       !>     they conform to the requirements of the calling routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -270,22 +270,22 @@ contains
       !>        indicated that the requested array is numeric, when actually
       !>        it is of character type.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 05-SEP-2021 (JDR) (BVS)
       !>
@@ -499,7 +499,7 @@ contains
       return
       end procedure badkpv
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is a string representing a numeric value. Commas and
       !>              spaces may be used in this string for ease of reading
@@ -524,7 +524,7 @@ contains
       !>
       !>              and returns the value ( + OR - ) 3 as appropriate.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     INTVAL   is the integer obtained by parsing STRING. If an error is
       !>              encountered, INTVAL is not changed from whatever the
@@ -532,11 +532,11 @@ contains
       !>              part, the fractional part will be truncated. Thus
       !>              3.18 is interpreted as 3. -4.98 is interpreted as -4.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input string cannot be parsed or if the string
       !>         represents a number that is outside the range of
@@ -544,17 +544,17 @@ contains
       !>         error SPICE(NOTANINTEGER) is signaled. The value of INTVAL is
       !>         not changed from whatever the input value was.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The purpose of this routine is to enable safe parsing of numeric
       !>     values into an INTEGER variable without the necessity of in-line
       !>     error checking.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -631,20 +631,20 @@ contains
       !>        -2147483648   -2147483648
       !>         2147483647    2147483647
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 04-JUL-2021 (JDR)
       !>
@@ -678,7 +678,7 @@ contains
       return
       end procedure prsint
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is a number representing a measurement in the units
       !>              specified by IN.
@@ -725,16 +725,16 @@ contains
       !>     OUT      is the identifier of the units desired for the
       !>              measurement X. See the description of IN.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     Y        is the input measurement converted to the desired
       !>              units.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input units, output units, or both input and
       !>         output units are not recognized, the error
@@ -743,11 +743,11 @@ contains
       !>     2)  If the units being converted between are incompatible, the
       !>         error SPICE(INCOMPATIBLEUNITS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine converts a measurement X given in units specified by
       !>     IN to the equivalent value Y in units specified by OUT.
@@ -759,7 +759,7 @@ contains
       !>     and DISTANCE units) and error message will be produced stating
       !>     the requested units and associated types.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     To convert 1 meter to statute miles and feet you could
       !>
@@ -771,7 +771,7 @@ contains
       !>        CALL CONVRT ( 1.0D0, 'METERS', 'STATUTE_MILES', MILES )
       !>        CALL CONVRT ( 1.0D0, 'METERS', 'FEET',          FEET  )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine does not do any checking for overflow. The caller
       !>         is required to make sure that the units used for the
@@ -799,11 +799,11 @@ contains
       !>                             value is dependent upon the value of the
       !>                             astronomical unit.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     C.A. Curzon        (JPL)
@@ -812,7 +812,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.0, 06-JUL-2021 (JDR)
       !>
@@ -1047,7 +1047,7 @@ contains
 
       end procedure convrt
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines. Users should not call this routine directly due to the
@@ -1058,7 +1058,7 @@ contains
       !>     updated, but do the full watcher check only if the POOL state
       !>     counter has changed.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     AGENT       is the name of a subroutine, entry point, or
       !>                 significant portion of code that needs to access
@@ -1070,7 +1070,7 @@ contains
       !>                 (saved in) the caller (user) routine specifically
       !>                 for this agent.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     USRCTR      is the current POOL state counter.
       !>
@@ -1079,22 +1079,22 @@ contains
       !>                 AGENT have been updated since the last call to
       !>                 CVPOOL.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     CTRSIZ      is the dimension of the counter array used by
       !>                 various SPICE subsystems to uniquely identify
       !>                 changes in their states. This parameter is
       !>                 defined in the private include file 'zzctr.inc'.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine uses ZZPCTRCK to check the caller's saved POOL state
       !>     counter specific for the input AGENT against the current POOL
@@ -1111,7 +1111,7 @@ contains
       !>
       !>     For details on ZZPCTRCK and CVPOOL see POOL the umbrella routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have an application subroutine, TASK, that
       !>     needs to access to two large independent data set in the kernel
@@ -1191,7 +1191,7 @@ contains
       !>              HAVE2 = .TRUE.
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     The POOL counter passed to the routine by the caller must be
       !>     specific to the POOL agent that's being checked.
@@ -1199,15 +1199,15 @@ contains
       !>     The caller routines watching more than one agent must set up a
       !>     separate local POOL counter for each agent.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     B.V. Semenov   (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-SEP-2013 (BVS)
       module procedure zzcvpool
@@ -1242,7 +1242,7 @@ contains
 
       end procedure zzcvpool
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -1250,7 +1250,7 @@ contains
       !>
       !>     Parse a substring of the form ::UTC[+/-]1-12:0-59
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING     is a string that has an embedded substring of the
       !>                form ::UTC+HR[:MN] ( or ::UTC-HR[:MN] starting at
@@ -1259,7 +1259,7 @@ contains
       !>     START      is the location in STRING where a time zone
       !>                specification is believed to begin.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     HOFF       is the double precision value associated with
       !>                HR in the picture above.  This value will be
@@ -1279,21 +1279,21 @@ contains
       !>     SUCCES     is a logical which if true, indicates that a time
       !>                zone was successfully parsed.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) There are no exceptions.  Either the string matches
       !>        the template or it doesn't.  No case is regarded
       !>        as an error.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a private routine for parsing time zones specified
       !>     as UTC+/-HR:MN  where HR is an unsigned integer between 0 and
@@ -1301,23 +1301,23 @@ contains
       !>     to be an unsigned integer between 0 and 59 inclusive.  It must
       !>     have no more than 2 digits.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See TIMOUT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber      (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 27-SEP-1996 (WLT)
       module procedure zzutcpm
@@ -1568,7 +1568,7 @@ contains
 !
 !     This routine doesn't do anything.
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -1578,7 +1578,7 @@ contains
       !>     exponent associated with X when represented in scientific
       !>     notation.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X          is a double precision number that from which
       !>                a virtual decimal string should be created.
@@ -1586,46 +1586,46 @@ contains
       !>     FILL       is the character to use for the leading character
       !>                in the virtual decimal string.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     EXPONT     is the value of the scientific notation
       !>                exponent associated with X.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point is used to establish a virtual decimal string.
       !>     The companion entry point ZZVSBSTR is used to retrieve the
       !>     characters in the virtual string.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the main entry point or the routine DPFMT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber      (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 12-SEP-1996 (WLT)
       module procedure zzvststr
@@ -1696,7 +1696,7 @@ contains
       end associate
       end procedure zzvststr
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -1705,7 +1705,7 @@ contains
       !>     Return the character from the specified SLOT of a virtual
       !>     decimal string.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     FROM       is the index in the virtual decimal string of the
       !>                first character that will be returned in SUBSTR.
@@ -1718,7 +1718,7 @@ contains
       !>                that results from rounding to the TO'th decimal
       !>                location.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SUBSTR     is we regard the virtual string as VIRTUL.  Then
       !>                in FORTRAN notation SUBSTR = VIRTUL(FROM:TO)
@@ -1727,41 +1727,41 @@ contains
       !>                the left most character returned by ZZVSBSTR became
       !>                a zero as a result of rounding up from 9.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This entry point retrieves a specified character from the
       !>     virtual decimal string that was established by the last
       !>     call to the entry point ZZVSTSTR.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See the main entry point or the routine DPFMT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber      (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 12-SEP-1996 (WLT)
       !>
@@ -2015,7 +2015,7 @@ contains
       end associate
       end procedure zzvsbstr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is any double precision number.
       !>
@@ -2035,7 +2035,7 @@ contains
       !>
       !>              ' ', '+', '-', '.', '+.', '-.'
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STRING   is a string representing X that matches the input
       !>              picture. The format of STRING is governed by PICTUR.
@@ -2104,11 +2104,11 @@ contains
       !>
       !>              STRING may overwrite PICTUR.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If PICTUR begins with a blank, the error SPICE(NOPICTURE) is
       !>         signaled.
@@ -2121,11 +2121,11 @@ contains
       !>         non-blank portion of PICTUR, the error SPICE(OUTPUTTOOSHORT)
       !>         is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a mechanism for producing numeric strings
       !>     formatted according to a user supplied picture. We expect that
@@ -2142,7 +2142,7 @@ contains
       !>     the same. But, they are unlikely to have the same internal
       !>     binary representation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that X has the binary representation of PI. Then the
       !>     table below illustrates the strings that would be produced
@@ -2195,15 +2195,15 @@ contains
       !>     'xxx.xxx'      |  ' -0.889'
       !>     '000.000'      |  '-00.889'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -2211,7 +2211,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.3, 27-OCT-2021 (JDR) (EDW) (NJB)
       !>
@@ -2589,7 +2589,7 @@ contains
       return
       end procedure dpfmt
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is a double precision number.
       !>
@@ -2610,7 +2610,7 @@ contains
       !>              will be strictly decimal. The first symbol will be
       !>              a sign ('-' or ' ').
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     STRING   is a character representation of X to the number of
       !>              significant digits specified by SIGDIG. The number of
@@ -2619,22 +2619,22 @@ contains
       !>              have adequate length, the number returned will be
       !>              truncated on the right.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If SIGDIG is less than one, this routine returns one
       !>         significant digit in the output string.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes an approximate character representation
       !>     of the input string X. The maximum number of significant
@@ -2686,7 +2686,7 @@ contains
       !>     and enter a value of 7.00000001 for the read statement
       !>     the output written will be 0.7000000010000001E+01
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you wished to insert the character representation
       !>     of some DOUBLE PRECISION number into a line of text.
@@ -2719,7 +2719,7 @@ contains
       !>
       !>          'There are 4.2 meters between lamp posts'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The maximum number of significant digits returned is 14.
       !>
@@ -2734,16 +2734,16 @@ contains
       !>         returned by DPSTR, should that routine change, substantial
       !>         work may be required to bring this routine back up to snuff.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.1, 12-AUG-2021 (JDR)
       !>
@@ -2765,7 +2765,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 30-JUL-1990 (WLT)
       !>
@@ -2895,7 +2895,7 @@ contains
 
       end procedure dpstrf
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
       !>
@@ -2922,7 +2922,7 @@ contains
       !>
       !>                 F, f     Fixed-point notation    3141.59
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUT      is the string obtained by substituting the text
       !>              representation of VALUE for the first occurrence of
@@ -2938,14 +2938,14 @@ contains
       !>
       !>              OUT and IN must be identical or disjoint.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MAXLFD   is the maximum expected length of the text representation
       !>              of a formatted double precision number. 56 characters are
       !>              sufficient to hold any result returned by the SPICELIB
       !>              routine DPSTRF. (See $Restrictions)
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -2959,11 +2959,11 @@ contains
       !>     3)  If FORMAT is anything other than 'E', this routine defaults
       !>         to 'F'. This is not considered an error.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is one of a family of related routines for inserting values
       !>     into strings. They are typically to construct messages that
@@ -2994,7 +2994,7 @@ contains
       !>        REPMCT   ( Replace marker with cardinal text          )
       !>        REPMOT   ( Replace marker with ordinal text           )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3119,7 +3119,7 @@ contains
       !>        Note that, in Case #5 even though 100 digits of precision were
       !>        requested, only 14 were returned.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The maximum number of significant digits returned is 14.
       !>
@@ -3128,11 +3128,11 @@ contains
       !>         change, substantial work may be required to bring this routine
       !>         back up to snuff.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -3140,7 +3140,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 03-OCT-2021 (JDR)
       !>
@@ -3240,7 +3240,7 @@ contains
       return
       end procedure repmf
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     YEAR     is an integer representing the year of an epoch, E, in
       !>              the Julian proleptic calendar. Note that the year 0
@@ -3261,7 +3261,7 @@ contains
       !>              Note to input an epoch as the day of a year, set MONTH
       !>              to 1 and DAY to the day of the year.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     YEAR     is an integer representing the year of the epoch, E,
       !>              above in the Gregorian calendar. Note that the year
@@ -3279,19 +3279,19 @@ contains
       !>     DOY      is the day of the year of the epoch, E, above in the
       !>              Gregorian Calendar.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a mid-level utility routine to assist in the assignment
       !>     and presentation of ancient epochs.
@@ -3318,7 +3318,7 @@ contains
       !>     To convert from Gregorian Calendar to Julian proleptic
       !>     calendar, use the entry point GR2JUL.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you need to find the epoch (in seconds past the
       !>     J2000) of some ancient epoch that occurred at
@@ -3365,21 +3365,21 @@ contains
       !>
       !>        TDB = TVEC(1)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.1, 02-OCT-2021 (JDR)
       !>
@@ -3401,7 +3401,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 13-MAR-1996 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 23-FEB-1998 (NJB)
       !>
@@ -3717,7 +3717,7 @@ contains
       end associate
       end procedure jul2gr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     YEAR     is an integer representing the year of an epoch, E, in
       !>              the Gregorian calendar. Note that the year 0 (zero)
@@ -3738,7 +3738,7 @@ contains
       !>              Note to input an epoch as the day of a year, set MONTH
       !>              to 1 and DAY to the day of the year.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     YEAR     is an integer representing the year of the epoch, E,
       !>              above in the Julian calendar. Note that the year 0
@@ -3756,19 +3756,19 @@ contains
       !>     DOY      is the day of the year of the epoch, E, above in the
       !>              Julian Calendar.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     None.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a mid-level utility routine to assist in the assignment
       !>     and presentation of Ancient epochs.
@@ -3790,7 +3790,7 @@ contains
       !>     To convert from Julian Calendar to Gregorian
       !>     calendar, use the entry point JUL2GR.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you need to print an epoch (given in seconds past the
       !>     J2000 epoch) of some ancient epoch that occurred during
@@ -3831,20 +3831,20 @@ contains
       !>     Now create a string from the YEAR, MONTH, DAY and TVEC(4)
       !>     through TVEC(6).
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 02-OCT-2021 (JDR)
       !>
@@ -4088,12 +4088,12 @@ contains
       end associate
       end procedure gr2jul
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is an epoch measured in ephemeris seconds
       !>              past the epoch of J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CALSTR   is a calendar string representing the input ephemeris
       !>              epoch. This string is based upon extending the
@@ -4145,11 +4145,11 @@ contains
       !>                          than 10. Seconds are truncated, not
       !>                          rounded.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -4165,11 +4165,11 @@ contains
       !>     2)  If the output string is not sufficiently long to hold
       !>         the full date, it will be truncated on the right.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is an error free routine for converting ephemeris epochs
       !>     represented as seconds past the J2000 epoch to formal
@@ -4188,7 +4188,7 @@ contains
       !>     times without employing leapseconds to produce exact UTC
       !>     epochs.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you wish to  report that no data is
       !>     available at a particular ephemeris epoch ET. The following
@@ -4204,7 +4204,7 @@ contains
       !>           WRITE (*,*) 'at requested time: '
       !>           WRITE (*,*) '   ', CALSTR(1:E1), ' (', ETSTR(1:E2), ')'
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  One must keep in mind when using this routine that
       !>         ancient times are not based upon the Gregorian
@@ -4222,19 +4222,19 @@ contains
       !>         Therefore you must be careful in your interpretation
       !>         of ancient dates produced by this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  J. Jespersen and J. Fitz-Randolph, "From Sundials to Atomic
       !>          Clocks, Understanding Time and Frequency," Dover
       !>          Publications, Inc. New York, 1982.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.3.0, 17-JUN-2021 (JDR)
       !>
@@ -4671,7 +4671,7 @@ contains
       end associate
       end procedure etcal
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TVEC     is called a time vector. It is an array of double
       !>              precision numbers that represent some epoch. To
@@ -4928,18 +4928,18 @@ contains
       !>              times that are given in atomic seconds past some
       !>              reference epoch other than J2000.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     TVEC     is the time vector corresponding to the input
       !>              time vector but with components consistent with
       !>              the type specified by input variable TO.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     MXCOMP   is the maximum number of components that can appear in
       !>              TVEC.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the type of either FROM or TO is not recognized, the
       !>         error SPICE(UNKNONWNTIMESYSTEM) is signaled.
@@ -4951,11 +4951,11 @@ contains
       !>         kernel are not in increasing order, the error
       !>         SPICE(BADLEAPSECONDS) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is the fundamental translator between various
       !>     representations of time in the SPICE system. However, it
@@ -4968,7 +4968,7 @@ contains
       !>     representation. This allows you to easily do arithmetic
       !>     with epochs.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you need to convert a time expressed as seconds
       !>     past J2000 (TDB) to Pacific Daylight time. The following
@@ -4996,15 +4996,15 @@ contains
       !>
       !>      TVEC(6) = SECNDS
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -5012,7 +5012,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.6.0, 05-SEP-2021 (EDW) (JDR)
       !>
@@ -5057,7 +5057,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 17-SEP-1996 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.2.0, 24-OCT-2005 (NJB)
       !>
@@ -6328,7 +6328,7 @@ contains
       end associate
       end procedure ttrans
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ACTION   is a word that specifies whether TIMDEF sets the
       !>              value associated with ITEM or retrieves the value
@@ -6365,7 +6365,7 @@ contains
       !>              the expected range and appropriate error message
       !>              is signaled. The case of VALUE is not significant.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VALUE    if the action is 'GET' then VALUE will be the
       !>              value associated with the requested ITEM. Note that
@@ -6373,11 +6373,11 @@ contains
       !>              UTC offset form ( UTC(+/-)HR[:MN] ). When VALUE is
       !>              an output it will be in upper case.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the ACTION specified is not 'SET' or 'GET', the error
       !>         SPICE(BADACTION) is signaled.
@@ -6389,11 +6389,11 @@ contains
       !>         is not one of the recognized items, the error
       !>         SPICE(BADDEFAULTVALUE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine exists to allow SPICE toolkit users to alter
       !>     the default interpretation of time strings made by the
@@ -6488,7 +6488,7 @@ contains
       !>     Note that such a call has the side effect of setting the value
       !>     associated with SYSTEM to a blank.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you wish to modify the behavior of STR2ET so that
       !>     it interprets unlabeled time strings as being times in
@@ -6499,21 +6499,21 @@ contains
       !>         CALL TIMDEF ( 'SET', 'CALENDAR', 'MIXED' )
       !>         CALL TIMDEF ( 'SET', 'ZONE',     'PDT'   )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 14-OCT-2021 (EDW) (JDR)
       !>
@@ -6722,7 +6722,7 @@ contains
       end associate
       end procedure timdef
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     EPOCH    is an epoch relative to the INSYS time scale.
       !>
@@ -6748,16 +6748,16 @@ contains
       !>              Acceptable values are the same as for INSYS. The
       !>              routine is not sensitive to the case of OUTSYS.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the time in the system specified by OUTSYS
       !>     that is equivalent to the EPOCH in the INSYS time scale.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The kernel pool must contain the variables:
       !>
@@ -6774,11 +6774,11 @@ contains
       !>     2)  If the names of either the input or output time types are
       !>         unrecognized, the error SPICE(BADTIMETYPE) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     We use the term uniform time scale to refer to those
       !>     representations of time that are numeric (each epoch is
@@ -6792,7 +6792,7 @@ contains
       !>     scale specified by OUTSYS. A list of the recognized uniform time
       !>     scales is given in the detailed input for INSYS.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     To convert an epoch with respect to the International Atomic
       !>     Time (TAI) scale to ET (Barycentric Dynamical Time), make the
@@ -6800,17 +6800,17 @@ contains
       !>
       !>           ET = UNITIM ( TAI, 'TAI', 'ET' )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The appropriate variable must be loaded into the SPICE kernel
       !>         pool (normally by loading a leapseconds kernel with FURNSH)
       !>         prior to calling this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -6819,7 +6819,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.5.0, 05-SEP-2020 (EDW) (JDR)
       !>
@@ -7309,7 +7309,7 @@ contains
       end associate
       end procedure unitim
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     TIMSTR   is a string representing an epoch. Virtually all
       !>              common calendar representations are allowed. You may
@@ -7322,16 +7322,16 @@ contains
       !>              in great detail in the reference document time.req. The
       !>              basics are given in the $Particulars section below.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ET       is the double precision number of TDB seconds past the
       !>              J2000 epoch that corresponds to the input TIMSTR.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the TIMSTR input string cannot be recognized as a
       !>         legitimate time string, the error SPICE(UNPARSEDTIME) is
@@ -7350,11 +7350,11 @@ contains
       !>         that are outside of the normal range, the error
       !>         SPICE(TIMEZONEERROR) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes the ephemeris epoch corresponding to an
       !>     input string. The ephemeris epoch is represented as seconds
@@ -7694,7 +7694,7 @@ contains
       !>            is interpreted as Year Day-of-Year. However, I-I/ is
       !>            regarded as ambiguous.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -7861,15 +7861,15 @@ contains
       !>        specification. Thus 1001-1821//12:28:28 is interpreted as
       !>        specifying two years and will be rejected as ambiguous.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -7878,7 +7878,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.4.0, 23-DEC-2021 (JDR) (EDW) (MCS)
       !>
@@ -7932,7 +7932,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 15-NOV-1996 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.3.0, 31-AUG-2006 (NJB)
       !>
@@ -8633,7 +8633,7 @@ contains
       end associate
       end procedure str2et
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -8641,7 +8641,7 @@ contains
       !>
       !>     Parse an aberration correction string; return attributes.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ABCORR         is a string representing a aberration
       !>                    correction.  The supported values are:
@@ -8678,7 +8678,7 @@ contains
       !>                    Case and embedded blanks are not significant in
       !>                    ABCORR.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ATTBLK         is a block of logical flags indicating the
       !>                    attributes of the aberration correction
@@ -8706,20 +8706,20 @@ contains
       !>                    The size of ATTBLK and the offsets of the
       !>                    component flags are defined there.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See INCLUDE file zzabcorr.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the input aberration correction choice is not recognized,
       !>        the error SPICE(INVALIDOPTION) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Many SPICELIB routines have logic branches based on the
       !>     attributes of aberration corrections.  Much duplicated
@@ -8729,11 +8729,11 @@ contains
       !>     to combine an epoch and light time value to compute
       !>     a light-time-adjusted epoch.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZCOREPC.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a SPICE private routine; the routine is subject
       !>        to change without notice.  User applications should not
@@ -8744,16 +8744,16 @@ contains
       !>        their own checking to ensure the parsed correction is
       !>        acceptable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>     B.V. Semenov    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 21-SEP-2013 (BVS)
       !>
@@ -8844,7 +8844,7 @@ contains
       return
       end procedure zzprscor
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -8853,7 +8853,7 @@ contains
       !>     Validate an aberration correction string suitable for use by
       !>     the SPK system; return attributes.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ABCORR         is a string representing a aberration
       !>                    correction.  The supported values are:
@@ -8890,7 +8890,7 @@ contains
       !>                    If ABCORR contains an unsupported value, this
       !>                    routine will signal an error.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ATTBLK         is a block of logical flags indicating the
       !>                    attributes of the aberration correction
@@ -8921,31 +8921,31 @@ contains
       !>                    The size of ATTBLK and the offsets of the
       !>                    component flags are defined there.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See INCLUDE file zzabcorr.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the input aberration correction choice is not allowed,
       !>        the error SPICE(INVALIDOPTION) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is similar to ZZPRSCOR, but stellar aberration-only
       !>     and relativistic corrections specifications are not allowed
       !>     by this routine. The allowed values are precisely those allowed
       !>     by SPKEZR.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZGFOCIN.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a SPICE private routine; the routine is subject
       !>        to change without notice.  User applications should not
@@ -8956,15 +8956,15 @@ contains
       !>        their own checking to ensure the parsed correction is
       !>        acceptable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 01-OCT-2021 (NJB)
       !>
@@ -9019,7 +9019,7 @@ contains
       return
       end procedure zzvalcor
 
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -9028,7 +9028,7 @@ contains
       !>     Compute an aberration corrected epoch, given an aberration
       !>     correction specification, an epoch, and a light time.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ABCORR         is a string representing a aberration
       !>                    correction.  The supported values are:
@@ -9069,7 +9069,7 @@ contains
       !>
       !>     LT             is a light time value, expressed as TDB seconds.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ETCORR         is the input epoch ET, corrected for light time:
       !>
@@ -9090,44 +9090,44 @@ contains
       !>
       !>                          ETCORR = ET
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     See INCLUDE file zzabcorr.inc.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1) If the input aberration correction choice is not recognized,
       !>        the error SPICE(INVALIDOPTION) is signaled.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Many SPICELIB routines have logic branches based on the
       !>     attributes of aberration corrections.  Much duplicated
       !>     parsing code can be avoided by using this routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     See ZZDYNFRM.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1) This is a SPICE private routine; the routine is subject
       !>        to change without notice.  User applications should not
       !>        call this routine.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman    (JPL)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 24-NOV-2004 (NJB)
       !>

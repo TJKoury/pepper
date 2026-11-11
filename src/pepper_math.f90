@@ -32,7 +32,7 @@ contains
       !>
       !> The function is .TRUE. whenever |X - Y| <= TOL.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X,
       !>     Y        are arbitrary double precision numbers.
@@ -41,28 +41,28 @@ contains
       !>              if they differ by no more than this amount. If TOL
       !>              is negative, X and Y are never considered equal.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function is .TRUE. whenever |X - Y| <= TOL, and is .FALSE.
       !>     otherwise.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     C
       !>     C     If the eccentricity is near one, this a parabola.
@@ -77,21 +77,21 @@ contains
       !>              TYPE = 'HYPERBOLA'
       !>           END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -124,7 +124,7 @@ contains
       !> Construct a rotation matrix that rotates vectors by a specified
       !> angle about a specified axis.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     AXIS,
       !>     ANGLE    are, respectively, a rotation axis and a rotation
@@ -132,29 +132,29 @@ contains
       !>              transformation whose effect on any vector V is to
       !>              rotate V by ANGLE radians about the vector AXIS.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     R        is a rotation matrix representing the coordinate
       !>              transformation determined by AXIS and ANGLE: for
       !>              each vector V, R*V is the vector resulting from
       !>              rotating V by ANGLE radians about AXIS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If AXIS is the zero vector, the rotation generated is the
       !>         identity. This is consistent with the specification of VROTV.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     AXISAR can be thought of as a partial inverse of RAXISA.  AXISAR
       !>     really is a `left inverse': the code fragment
@@ -174,7 +174,7 @@ contains
       !>     ANGLE is in the range (0, pi). So AXISAR is a right inverse
       !>     of RAXISA only over a limited domain.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -380,21 +380,21 @@ contains
       !>           0.70711   0.70711   0.00000
       !>           0.00000   0.00000   1.00000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 06-JUL-2021 (JDR)
       !>
@@ -450,7 +450,7 @@ contains
       !> Convert from range, azimuth and elevation of a point to
       !> rectangular coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RANGE    is the distance of the point from the origin. The
       !>              input should be in terms of the same units in which
@@ -501,7 +501,7 @@ contains
       !>              If ELPLSZ is .TRUE., the elevation increases from
       !>              the XY plane toward +Z; otherwise toward -Z.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECTAN   is an array containing the rectangular coordinates of
       !>              the point.
@@ -509,11 +509,11 @@ contains
       !>              The units associated with the point are those
       !>              associated with the input RANGE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -532,11 +532,11 @@ contains
       !>         inside the range that differs from the input value by an
       !>         integer multiple of 2*pi.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine converts the azimuth, elevation, and range
       !>     of a point into the associated rectangular coordinates.
@@ -551,7 +551,7 @@ contains
       !>     flags. See the descriptions of these input arguments
       !>     for details.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -951,20 +951,20 @@ contains
       !>        Pointing right ascension (deg):    280.06179939
       !>        Pointing declination (deg):         26.92826084
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 08-SEP-2021 (JDR) (NJB)
       pure subroutine azlrec ( range, az, el, azccw, elplsz, rectan )
@@ -1053,7 +1053,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (MIN and MAX instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NUMBER   is the number to be bracketed. That is, the
       !>              value of NUMBER is constrained to lie in the
@@ -1063,25 +1063,25 @@ contains
       !>     END2     are the lower and upper bounds for NUMBER. The
       !>              order is not important.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the bracketed number. That is NUMBER, if it
       !>     was already in the interval provided. Otherwise the returned
       !>     value is the nearest bound of the interval.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a shorthand notation for code fragments
       !>     like the following:
@@ -1102,7 +1102,7 @@ contains
       !>
       !>     which occur frequently during the processing of program inputs.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1236,22 +1236,22 @@ contains
       !>        Enter star magnitude: 10.1
       !>        Provided star magnitude 10.1 is out of range (0-10).
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-AUG-2021 (JDR) (BVS)
       !>
@@ -1270,7 +1270,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 30-DEC-1988 (WLT)
       !>
@@ -1302,7 +1302,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (MIN and MAX instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NUMBER   is the number to be bracketed. That is, the
       !>              value of NUMBER is constrained to lie in the
@@ -1312,25 +1312,25 @@ contains
       !>     END2     are the lower and upper bounds for NUMBER. The
       !>              order is not important.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the bracketed number. That is NUMBER, if it
       !>     was already in the interval provided. Otherwise the returned
       !>     value is the nearest bound of the interval.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine provides a shorthand notation for code fragments
       !>     like the following:
@@ -1351,7 +1351,7 @@ contains
       !>
       !>     which occur frequently during the processing of program inputs.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1481,22 +1481,22 @@ contains
       !>        Enter object code: 710
       !>        Provided object code 710 is out of range (701-705).
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-AUG-2021 (JDR) (BVS)
       !>
@@ -1515,7 +1515,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 30-DEC-1988 (WLT)
       !>
@@ -1541,7 +1541,7 @@ contains
       !> derivatives, evaluated at the input X, using the coefficients of
       !> the Chebyshev expansion of the polynomial.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CP       is an array of coefficients a polynomial with respect
       !>              to the Chebyshev basis. The polynomial to be
@@ -1601,7 +1601,7 @@ contains
       !>
       !>                 DOUBLE PRECISION    PARTDP(3, 0:NDERIV)
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DPDXS    is an array containing the value of the polynomial and
       !>              its derivatives evaluated at X.
@@ -1638,11 +1638,11 @@ contains
       !>              superscript [i] indicates its I'th derivative,
       !>              evaluated at the number S = ( X - X2S(1) )/X2S(2).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -1652,11 +1652,11 @@ contains
       !>         reason it has been elected as a routine that will not
       !>         participate in error handling.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes the value of a Chebyshev polynomial
       !>     expansion and the derivatives of the expansion with respect to X.
@@ -1675,7 +1675,7 @@ contains
       !>        T(I,S) is the I'th Chebyshev polynomial of the first kind
       !>        evaluated at S.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -1760,7 +1760,7 @@ contains
       !>           Derivative 2 at X=1        :   4.288066
       !>           Derivative 3 at X=1        :  -1.514403
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user must be sure that the provided workspace is declared
       !>         properly in the calling routine. The proper declaration is:
@@ -1786,7 +1786,7 @@ contains
       !>         derivatives of the Chebyshev fit, match the derivatives of the
       !>         function it approximates.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W. Press, B. Flannery, S. Teukolsky and W. Vetterling,
       !>          "Numerical Recipes -- The Art of Scientific Computing,"
@@ -1798,12 +1798,12 @@ contains
       !>     [3]  R. Weast and S. Selby, "CRC Handbook of Tables for
       !>          Mathematics," 4th Edition, CRC Press, 1976.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -1822,7 +1822,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.0.1, 16-FEB-1988 (WLT) (NJB)
       !>
@@ -1932,7 +1932,7 @@ contains
       !> the input X, using the coefficients of the Chebyshev expansion of
       !> the polynomial.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CP       is an array of coefficients of a polynomial with
       !>              respect to the Chebyshev basis. The polynomial to be
@@ -1982,7 +1982,7 @@ contains
       !>     X        is the value for which the polynomial is to be
       !>              evaluated.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     P        is the value of the polynomial to be evaluated. It
       !>              is given by
@@ -2011,11 +2011,11 @@ contains
       !>              polynomial and its derivative, respectively,
       !>              evaluated  at a number S = ( X - X2S(1) )/X2S(2)
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -2024,11 +2024,11 @@ contains
       !>         ephemeris evaluations. For that reason it has been elected as
       !>         a routine that will not participate in error handling.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes the value of a Chebyshev polynomial
       !>     expansion and the derivative of the expansion with respect to X.
@@ -2047,7 +2047,7 @@ contains
       !>        T(I,S) is the I'th Chebyshev polynomial of the first kind
       !>        evaluated at S.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -2121,7 +2121,7 @@ contains
       !>        Value of the polynomial at X=1:  -0.340878
       !>           First derivative at X=1    :   0.382716
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  One needs to be careful that the value
       !>
@@ -2130,7 +2130,7 @@ contains
       !>         lies between -1 and 1. Otherwise, the routine may fail
       !>         spectacularly (for example with a floating point overflow).
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W. Press, B. Flannery, S. Teukolsky and W. Vetterling,
       !>          "Numerical Recipes -- The Art of Scientific Computing,"
@@ -2142,12 +2142,12 @@ contains
       !>     [3]  R. Weast and S. Selby, "CRC Handbook of Tables for
       !>          Mathematics," 4th Edition, CRC Press, 1976.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -2163,7 +2163,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.0.1, 30-DEC-1988 (WLT)
       !>
@@ -2232,7 +2232,7 @@ contains
       !> Return the value of a polynomial evaluated at the input X using
       !> the coefficients for the Chebyshev expansion of the polynomial.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     CP       is an array of coefficients a polynomial with respect
       !>              to the Chebyshev basis. The polynomial to be
@@ -2283,7 +2283,7 @@ contains
       !>     X        is the value for which the polynomial is to be
       !>              evaluated.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     P        is the value of the polynomial to be evaluated. It
       !>              is given by
@@ -2295,11 +2295,11 @@ contains
       !>              where T(I,S) is the I'th Chebyshev polynomial
       !>              evaluated  at a number S = ( X - X2S(1) )/X2S(2)
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -2308,11 +2308,11 @@ contains
       !>         ephemeris evaluations. For that reason it has been elected as
       !>         a routine that will not participate in error handling.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes the value P given by
       !>
@@ -2329,7 +2329,7 @@ contains
       !>        T(I,S) is the I'th Chebyshev polynomial of the first kind
       !>        evaluated at S.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -2398,7 +2398,7 @@ contains
       !>
       !>        Value of the polynomial at X=1:  -0.340878
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  One needs to be careful that the value
       !>
@@ -2407,7 +2407,7 @@ contains
       !>         lies between -1 and 1. Otherwise, the routine may fail
       !>         spectacularly (for example with a floating point overflow).
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  W. Press, B. Flannery, S. Teukolsky and W. Vetterling,
       !>          "Numerical Recipes -- The Art of Scientific Computing,"
@@ -2419,13 +2419,13 @@ contains
       !>     [3]  R. Weast and S. Selby, "CRC Handbook of Tables for
       !>          Mathematics," 4th Edition, CRC Press, 1976.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-JUL-2021 (JDR)
       !>
@@ -2441,7 +2441,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.0.1, 30-DEC-1988 (WLT)
       !>
@@ -2488,7 +2488,7 @@ contains
 
       !> Convert from cylindrical to latitudinal coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     R        is the distance of the input point from Z axis.
       !>
@@ -2497,7 +2497,7 @@ contains
       !>
       !>     Z        is the height of the point above XY plane.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RADIUS   is the distance of the input point from origin.
       !>
@@ -2507,19 +2507,19 @@ contains
       !>     LAT      is the latitude (i.e. angle above the XY plane) of the
       !>              input point (radians). The range of LAT is [-pi, pi].
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine converts coordinates given in cylindrical
       !>     coordinates to coordinates in latitudinal coordinates.
@@ -2529,7 +2529,7 @@ contains
       !>     above the equator of a sphere centered at the central reference
       !>     point.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -2788,22 +2788,22 @@ contains
       !>            0.000  180.000    1.000    1.000  180.000   90.000
       !>            0.000   33.000    0.000    0.000   33.000    0.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -2877,7 +2877,7 @@ contains
 
       !> Convert from cylindrical to rectangular coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     R        is the distance of the point of interest from Z-axis.
       !>
@@ -2886,29 +2886,29 @@ contains
       !>
       !>     Z        is the height of the point above XY plane.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECTAN   are the rectangular coordinates of the point of
       !>              interest.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine transforms the coordinates of a point from
       !>     cylindrical to rectangular coordinates.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3142,20 +3142,20 @@ contains
       !>            1.000   90.000    1.000    0.000    1.000    1.000
       !>            1.414   45.000    1.000    1.000    1.000    1.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -3204,7 +3204,7 @@ contains
 
       !> Convert from cylindrical to spherical coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     R        is the distance of the point of interest from Z axis.
       !>
@@ -3213,7 +3213,7 @@ contains
       !>
       !>     Z        is the height of the point above XY plane.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RADIUS   is the distance of the point from origin.
       !>
@@ -3223,24 +3223,24 @@ contains
       !>     SLON     is the azimuthal angle (longitude) of the point
       !>              (radians). SLON is set equal to CLON.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This returns the spherical coordinates of a point whose position
       !>     is input through cylindrical coordinates.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3499,22 +3499,22 @@ contains
       !>            0.000  180.000    1.000    1.000    0.000  180.000
       !>            0.000   33.000    0.000    0.000    0.000   33.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 06-JUL-2021 (JDR)
       !>
@@ -3598,27 +3598,27 @@ contains
       !>
       !> The function returns the cube root of the input value.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is a double precision value.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the cube root of the input value.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DCBRT calculates the cube root of the input value by using the
       !>     exponentiation operator to raise the input value to the 1/3
@@ -3629,7 +3629,7 @@ contains
       !>     All values of the input variable X should be acceptable to the
       !>     DCBRT.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following table gives sample values of the variable X and
       !>     DCBRT(X)
@@ -3640,21 +3640,21 @@ contains
       !>      8.0D0                    2.0D0
       !>     -1.0D3                   -1.0D1
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 17-JUN-2021 (JDR)
       !>
@@ -3684,28 +3684,28 @@ contains
       !> The function returns the value of the determinant found by direct
       !> application of the definition of the determinant.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M1       is any double precision, 3x3 matrix.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value of the determinant found by direct
       !>     application of the definition of the determinant.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DET calculates the determinant of M1 in a single arithmetic
       !>     expression which is, effectively, the expansion of M1 about its
@@ -3714,7 +3714,7 @@ contains
       !>     there is the possibility of floating point overflow or underflow.
       !>     NO error checking or recovery is implemented in this routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -3764,7 +3764,7 @@ contains
       !>        Determinant of M1:  0.00
       !>        Determinant of M2: 45.00
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No checking is implemented to determine whether M1 will cause
       !>         overflow or underflow in the process of calculating the
@@ -3772,17 +3772,17 @@ contains
       !>         The user is required to determine if M1 is suitable matrix
       !>         for DET to operate on.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 02-JUL-2021 (JDR)
       !>
@@ -3813,7 +3813,7 @@ contains
       !> Compute the Jacobian matrix of the transformation from
       !> cylindrical to rectangular coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     R        is the distance of the point of interest from Z-axis.
       !>
@@ -3823,7 +3823,7 @@ contains
       !>
       !>     Z        is the height of the point above XY plane.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     JACOBI   is the matrix of partial derivatives of the conversion
       !>              between cylindrical and rectangular coordinates. It
@@ -3844,19 +3844,19 @@ contains
       !>                 Y = R*SIN(CLON)
       !>                 Z = Z
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     It is often convenient to describe the motion of an object in
       !>     the cylindrical coordinate system. However, when performing
@@ -3882,7 +3882,7 @@ contains
       !>        JACOBI|
       !>              |(r,clon,z)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4077,22 +4077,22 @@ contains
       !>          dY/dt (km/s)           =     0.53760111E+04
       !>          dZ/dt (km/s)           =    -0.20881149E+02
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -4150,7 +4150,7 @@ contains
       !> Compute the Jacobian matrix of the transformation from
       !> latitudinal to rectangular coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     R        is the distance of a point from the origin.
       !>
@@ -4162,7 +4162,7 @@ contains
       !>              radians. The angle increases in the direction of the
       !>              +Z axis.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     JACOBI   is the matrix of partial derivatives of the conversion
       !>              between latitudinal and rectangular coordinates. It has
@@ -4183,19 +4183,19 @@ contains
       !>                 Y = R * SIN(LON) * COS(LAT)
       !>                 Z = R *            SIN(LAT)
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     It is often convenient to describe the motion of an object
       !>     in latitudinal coordinates. It is also convenient to manipulate
@@ -4221,7 +4221,7 @@ contains
       !>        JACOBI|
       !>              |(r,lon,lat)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4417,20 +4417,20 @@ contains
       !>          dY/dt (km/s)           =     0.53760111E+04
       !>          dZ/dt (km/s)           =    -0.20881149E+02
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2020 (JDR)
       !>
@@ -4491,7 +4491,7 @@ contains
       !> Compute the Jacobian matrix of the transformation from spherical
       !> to rectangular coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     R        is the distance of a point from the origin.
       !>
@@ -4502,7 +4502,7 @@ contains
       !>              radians. The angle increases in the counterclockwise
       !>              sense about the +Z axis.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     JACOBI   is the matrix of partial derivatives of the conversion
       !>              between spherical and rectangular coordinates,
@@ -4524,19 +4524,19 @@ contains
       !>                 Y = R*SIN(SLON)*SIN(COLAT)
       !>                 Z = R*COS(COLAT)
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     It is often convenient to describe the motion of an object in
       !>     the spherical coordinate system. However, when performing
@@ -4562,7 +4562,7 @@ contains
       !>        JACOBI|
       !>              |(r,colat,slon)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -4759,21 +4759,21 @@ contains
       !>          dY/dt (km/s)            =     0.53760111E+04
       !>          dZ/dt (km/s)            =    -0.20881149E+02
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -4839,7 +4839,7 @@ contains
       !> Compute the unit vector parallel to the cross product of
       !> two 3-dimensional vectors and the derivative of this unit vector.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     S1       is any state vector. Typically, this might represent the
       !>              apparent state of a planet or the Sun, which defines the
@@ -4847,7 +4847,7 @@ contains
       !>
       !>     S2       is any state vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SOUT     is the unit vector parallel to the cross product of the
       !>              position components of S1 and S2 and the derivative of
@@ -4859,11 +4859,11 @@ contains
       !>              of the output will simply be the derivative of the
       !>              cross product of the position components of S1 and S2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -4881,16 +4881,16 @@ contains
       !>         derivative may be well within the range of double
       !>         precision numbers.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DUCRSS calculates the unit vector parallel to the cross product
       !>     of two vectors and the derivative of that unit vector.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5054,7 +5054,7 @@ contains
       !>
       !>           DATA         dRdt  / X_NEW(4:6), Y_NEW(4:6), Z_NEW(4:6)  /
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No checking of S1 or S2 is done to prevent floating point
       !>         overflow. The user is required to determine that the magnitude
@@ -5063,17 +5063,17 @@ contains
       !>         case there will be no problem and no checking actually needs
       !>         to be done.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 06-JUL-2021 (JDR)
       !>
@@ -5150,7 +5150,7 @@ contains
       !> Compute the cross product of two 3-dimensional vectors
       !> and the derivative of this cross product.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     S1       is any state vector. Typically, this might represent the
       !>              apparent state of a planet or the Sun, which defines the
@@ -5158,18 +5158,18 @@ contains
       !>
       !>     S2       is any state vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SOUT     is the state associated with the cross product of the
       !>              position components of S1 and S2. In other words, if
       !>              S1 = (P1,V1) and S2 = (P2,V2) then SOUT is
       !>              ( P1xP2, d/dt( P1xP2 ) ).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -5184,17 +5184,17 @@ contains
       !>         DVCRSS does NOT check the magnitude of S1 or S2 to
       !>         insure that overflow will not occur.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     DVCRSS calculates the three-dimensional cross product of two
       !>     vectors and the derivative of that cross product according to
       !>     the definition.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5432,21 +5432,21 @@ contains
       !>
       !>           DATA         dRdt  / X_NEW(4:6), Y_NEW(4:6), Z_NEW(4:6)  /
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -5498,31 +5498,31 @@ contains
       !>
       !> The function returns the derivative of the dot product <S1,S2>
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     S1       is any state vector. The components are in order
       !>              (x, y, z, dx/dt, dy/dt, dz/dt )
       !>
       !>     S2       is any state vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the derivative of the dot product of the
       !>     position portions of the two state vectors S1 and S2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given two state vectors S1 and S2 made up of position and
       !>     velocity components (P1,V1) and (P2,V2) respectively,
@@ -5535,7 +5535,7 @@ contains
       !>
       !>     where <,> denotes the dot product operation.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5608,7 +5608,7 @@ contains
       !>        between two position vectors should account for the case
       !>        when the position components are parallel.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is responsible for determining that the states S1 and
       !>         S2 are not so large as to cause numeric overflow. In most
@@ -5618,16 +5618,16 @@ contains
       !>         the same reference frame. If this is not the case, the
       !>         numerical result has no meaning.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -5653,14 +5653,14 @@ contains
       !> Find the unit vector corresponding to a state vector and the
       !> derivative of the unit vector.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     S1       is any double precision state. If the position
       !>              component of the state is the zero vector, this
       !>              routine will detect it and will not attempt to divide
       !>              by zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SOUT     is a state containing the unit vector pointing in
       !>              the direction of position component of S1 and the
@@ -5668,11 +5668,11 @@ contains
       !>
       !>              SOUT may overwrite S1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -5681,11 +5681,11 @@ contains
       !>         velocity component will be the velocity component
       !>         of S1.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Let S1 be a state vector with position and velocity components P
       !>     and V respectively. From these components one can compute the
@@ -5693,7 +5693,7 @@ contains
       !>     with respect to time, DU. This pair (U,DU) is the state returned
       !>     by this routine in SOUT.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -5816,22 +5816,22 @@ contains
       !>
       !>        Instantaneous angular velocity (rad/s): 0.248106659269E-05
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 06-JUL-2021 (JDR)
       !>
@@ -5906,7 +5906,7 @@ contains
        !> The function returns the derivative of the norm of the position
        !> component of the input STATE vector.
        !>
-       !> ## Detailed Input
+       !>## Detailed Input
        !>
        !>     STATE    is a double precision 6-vector, the second three
        !>              components being the derivatives of the first three
@@ -5919,7 +5919,7 @@ contains
        !>              A common form for STATE would contain position and
        !>              velocity.
        !>
-       !> ## Detailed Output
+       !>## Detailed Output
        !>
        !>     The function returns the derivative of the norm of the position
        !>     component of the input STATE vector:
@@ -5948,11 +5948,11 @@ contains
        !>             ds        .---------
        !>                     \/ < x, x >
        !>
-       !> ## Parameters
+       !>## Parameters
        !>
        !>     None.
        !>
-       !> ## Exceptions
+       !>## Exceptions
        !>
        !>     Error free.
        !>
@@ -5960,16 +5960,16 @@ contains
        !>         origin (zero vector) the routine returns zero as the
        !>         derivative of the vector norm.
        !>
-       !> ## Files
+       !>## Files
        !>
        !>     None.
        !>
-       !> ## Particulars
+       !>## Particulars
        !>
        !>     A common use for this routine is to calculate the time derivative
        !>     of the radius corresponding to a state vector.
        !>
-       !> ## Examples
+       !>## Examples
        !>
        !>     The numerical results shown for this example may differ across
        !>     platforms. The results depend on the SPICE kernels used as
@@ -6061,20 +6061,20 @@ contains
        !>         Anti-parallel x, dx/ds    :   -2.4494897427831779
        !>         Zero vector x, large dx/ds:    0.0000000000000000
        !>
-       !> ## Restrictions
+       !>## Restrictions
        !>
        !>     None.
        !>
-       !> ## Literature References
+       !>## Literature References
        !>
        !>     None.
        !>
-       !> ## Author and Institution
+       !>## Author and Institution
        !>
        !>     J. Diaz del Rio    (ODC Space)
        !>     E.D. Wright        (JPL)
        !>
-       !> ## Version
+       !>## Version
        !>
        !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
        !>
@@ -6135,11 +6135,11 @@ contains
       !> vectors. The selected generating vectors are semi-axes of the
       !> ellipse.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ELLIPS   is a SPICE ellipse.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     CENTER,
       !>     SMAJOR,
@@ -6152,19 +6152,19 @@ contains
       !>
       !>              where theta ranges over the interval (-pi, pi].
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPICE ellipses serve to simplify calling sequences and reduce
       !>     the chance for error in declaring and describing argument lists
@@ -6192,7 +6192,7 @@ contains
       !>
       !>     where theta ranges over the interval (-pi, pi].
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -6346,21 +6346,21 @@ contains
       !>           Semi-major axis:   0.000000   2.000000  -0.000000
       !>           Center         :   1.000000   0.000000   0.000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 24-AUG-2021 (JDR)
       !>
@@ -6421,32 +6421,32 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (MOD instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IVAL     is the integer to be tested for evenness.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if IVAL is even, .FALSE. if IVAL is
       !>     odd.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ENDPTS contain a series of endpoints,
       !>
@@ -6469,21 +6469,21 @@ contains
       !>           END IF
       !>        END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -6519,7 +6519,7 @@ contains
       !> The function returns VALUE whenever |NUMBER - VALUE| < TOL.
       !> -
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NUMBER   is an arbitrary double precision number.
       !>
@@ -6529,49 +6529,49 @@ contains
       !>              be equal if they differ by no more than this amount.
       !>              If TOL is negative, they are never considered equal.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns VALUE whenever |NUMBER - VALUE| < TOL, and
       !>     otherwise returns NUMBER.                            -
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     C
       !>     C     If the eccentricity is near one, make this a parabola.
       !>     C
       !>           ECC = EXACT ( ECC, 1.D0, 10.D-12 )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -6610,12 +6610,12 @@ contains
       !> 3-dimensional input vector, where the X-axis of the resulting
       !> frame is parallel to the original input vector.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is a 3-dimensional vector used to form the first vector
       !>              of a right-handed orthonormal triple.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     X,
       !>     Y,
@@ -6625,22 +6625,22 @@ contains
       !>              special geometric properties connected to Y and Z (other
       !>              than that they complete the right handed frame).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If X on input is the zero vector the "standard" frame (ijk)
       !>         is returned.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given an input vector X, this routine returns unit vectors X,
       !>     Y, and Z such that XYZ forms a right-handed orthonormal frame
@@ -6664,7 +6664,7 @@ contains
       !>     in which one can describe the curve and from which one can
       !>     then determine the principal axes of the limb ellipse.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     In addition to using a vector to construct a right handed frame
       !>     with the x-axis aligned with the input vector, one can construct
@@ -6694,22 +6694,22 @@ contains
       !>
       !>           CALL FRAME (Y, Z, X)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 03-JUL-2021 (JDR)
       !>
@@ -6730,7 +6730,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 2.0.0, 29-DEC-1988 (WLT) (IMU)
       !>
@@ -6844,21 +6844,21 @@ contains
       !>
       !> The function returns the greatest common divisor of A and B.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is any integer.
       !>
       !>     B        is any integer.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the greatest common divisor of A and B.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -6867,11 +6867,11 @@ contains
       !>     2)  If exactly one of A and B is zero, then GCD is by definition
       !>         the maximum of the absolute values of A and B.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine uses Euclid's Algorithm to find the greatest common
       !>     divisor (GCD) of the integers A and B. In other words the
@@ -6882,7 +6882,7 @@ contains
       !>     the definition above does not give us a GCD, so we take the GCD
       !>     of 0 and 0 to be 0.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     A      B            GCD
       !>     -----  -----         -----
@@ -6895,21 +6895,21 @@ contains
       !>       0    111           111
       !>       0      0             0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  D. Knuth, "The Art of Computer Programming Vol 1. --
       !>          Fundamental Algorithms," 2nd Ed., Addison-Wesley, 1973
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -6970,11 +6970,11 @@ contains
 
       !> Return the 3x3 identity matrix.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     None.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MATRIX   is the 3x3 Identity matrix. That MATRIX is
       !>              the following
@@ -6985,25 +6985,25 @@ contains
       !>                 |  0.0D0   0.0D0   1.0D0  |
       !>                 `-                       -'
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a utility routine for obtaining the 3x3 identity matrix
       !>     so that you may avoid having to write the loop or assignments
       !>     needed to get the matrix.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -7098,20 +7098,20 @@ contains
       !>               0.0000000       0.0000000       0.0000000
       !>               0.0000000       0.0000000       0.0000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-JUN-2021 (JDR)
       !>
@@ -7145,7 +7145,7 @@ contains
       !> point where the scale factor such that SCALE*V lies in the
       !> plane spanned by E1, E2, and E3.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V        is a 3-vector. This is the vector to test to see
       !>              if it lies between the 3 vectors E1, E2 and E3
@@ -7155,7 +7155,7 @@ contains
       !>     E3       are the three edges of a solid tetrahedral angle. (See
       !>              particulars for a discussion of the solid angle).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     FOUND    indicates that V lies inside the solid tetrahedral
       !>              angle determined by E1, E2 and E3.
@@ -7165,11 +7165,11 @@ contains
       !>              scalar multiple of V that pierces the triangle
       !>              determined by the points E1, E2, E3.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -7179,11 +7179,11 @@ contains
       !>     2)  If V is the zero vector, the routine returns .FALSE.
       !>         SCALE will be set to 0.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given 3 linearly independent vectors E1, E2, and E3 the
       !>     set of vectors a*E1 + b*E2 + c*E3  where a, b, and c
@@ -7201,7 +7201,7 @@ contains
       !>     This is necessarily a point in the triangle determined by
       !>     E1, E2 and E3.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you have a triangle in space specified by three
       !>     vertices P1, P2 and P3 and that an observer at location
@@ -7241,7 +7241,7 @@ contains
       !>
       !>     END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  This routine can suffer from extreme loss of precision if the
       !>         vectors E1, E2, E3 are too long compared to the lengths of the
@@ -7250,17 +7250,17 @@ contains
       !>         The user of this routine must ensure that the inputs are
       !>         suitable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.3, 12-AUG-2021 (JDR)
       !>
@@ -7444,7 +7444,7 @@ contains
 
       !> Generate the inverse of a 3x3 matrix.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M        is an arbitrary 3x3 matrix. The limits on the size of
       !>              elements of M are determined by the process of
@@ -7455,27 +7455,27 @@ contains
       !>              the range of double precision numbers or else an overflow
       !>              error will occur.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MOUT     is the inverse of M and is calculated explicitly using
       !>              the matrix of cofactors. MOUT is set to be the zero
       !>              matrix if M is singular.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If M is singular, MOUT is set to be the zero matrix.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     First the determinant is explicitly calculated using the
       !>     fundamental definition of the determinant. If this value is less
@@ -7491,7 +7491,7 @@ contains
       !>     A FLOATING POINT OVERFLOW OR UNDERFLOW IN THE PROCESS OF
       !>     CALCULATING THE MATRIX OF COFACTORS.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -7576,7 +7576,7 @@ contains
       !>               0.0000000       1.0000000       0.0000000
       !>               0.0000000       0.0000000       1.0000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The input matrix must be such that generating the cofactors
       !>         will not cause a floating point overflow or underflow. The
@@ -7584,18 +7584,18 @@ contains
       !>         computer installation and the resultant maximum and minimum
       !>         values of double precision numbers.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -7662,7 +7662,7 @@ contains
 
       !> Convert from latitudinal coordinates to cylindrical coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RADIUS   is the distance of a point from the origin.
       !>
@@ -7672,7 +7672,7 @@ contains
       !>     LAT      is the angle of the point from the XY plane in
       !>              radians.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     R        is the distance of the point from the Z-axis.
       !>
@@ -7681,19 +7681,19 @@ contains
       !>
       !>     Z        is the height of the point above the XY plane.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the cylindrical coordinates of a point
       !>     whose position is input in latitudinal coordinates.
@@ -7703,7 +7703,7 @@ contains
       !>     above the equator of a sphere centered at the central reference
       !>     point.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -8031,21 +8031,21 @@ contains
       !>          Longitude (deg):          45.00000000000
       !>          Z          (km):         -21.64396139381
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -8101,7 +8101,7 @@ contains
 
       !> Convert from latitudinal coordinates to rectangular coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RADIUS   is the distance of a point from the origin.
       !>
@@ -8120,7 +8120,7 @@ contains
       !>              Latitude is measured in radians. On input, the range
       !>              of latitude is unrestricted.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECTAN   are the rectangular coordinates of the input point.
       !>              RECTAN is a 3-vector.
@@ -8128,19 +8128,19 @@ contains
       !>              The units associated with RECTAN are those
       !>              associated with the input RADIUS.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the rectangular coordinates of a point
       !>     whose position is input in latitudinal coordinates.
@@ -8150,7 +8150,7 @@ contains
       !>     above the equator of a sphere centered at the central reference
       !>     point.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -8389,22 +8389,22 @@ contains
       !>            1.414   90.000   45.000    0.000    1.000    1.000
       !>            1.732   45.000   35.264    1.000    1.000    1.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -8462,7 +8462,7 @@ contains
 
       !> Convert from latitudinal coordinates to spherical coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RADIUS   is the distance of a point from the origin.
       !>
@@ -8472,7 +8472,7 @@ contains
       !>     LAT      is the angle of the point from the XY plane in
       !>              radians.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RHO      is the distance of the point from the origin.
       !>
@@ -8483,19 +8483,19 @@ contains
       !>     SLON     is the angle of the point from the XZ plane (radians).
       !>              SLON is set equal to LON.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the spherical coordinates of a point
       !>     whose position is input in latitudinal coordinates.
@@ -8509,7 +8509,7 @@ contains
       !>     reference point, an angle from a reference meridian, and an angle
       !>     from the z-axis.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -8784,21 +8784,21 @@ contains
       !>            1.000  180.000   90.000    1.000    0.000  180.000
       !>            0.000   33.000    0.000    0.000   90.000   33.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-JUL-2021 (JDR)
       !>
@@ -8854,32 +8854,32 @@ contains
 
       !> Set one double precision 3x3 matrix equal to another.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M1       is an arbitrary input 3x3 matrix. There are no
       !>              restrictions on what it may contain.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MOUT     is a 3x3 matrix set to be equal to M1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -8932,21 +8932,21 @@ contains
       !>               1.0000000       0.0000000       0.0000000
       !>               0.0000000       0.0000000       1.0000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-JUL-2021 (JDR)
       !>
@@ -8976,7 +8976,7 @@ contains
       !> Set one double precision matrix of arbitrary size equal to
       !> another.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M1       is an arbitrary-sized double precision matrix.
       !>              There are no restrictions on what it may contain.
@@ -8985,30 +8985,30 @@ contains
       !>
       !>     NC       is the number of columns in the input matrix.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MOUT     is a NRxNC matrix set to be equal to M1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NR < 1 or NC < 1, the elements of the matrix MOUT are not
       !>         assigned any values.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     If  M1 = | 1.0D0   2.0D0 |
       !>              |               |
@@ -9028,21 +9028,21 @@ contains
       !>              |               |
       !>              | 4.0D0   6.0D0 |
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-JUL-2021 (JDR)
       !>
@@ -9069,7 +9069,7 @@ contains
 
       !> Multiply the transpose of a 3x3 matrix and a 3x3 matrix.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M1       is any 3x3 double precision matrix. Typically,
       !>              M1 will be a rotation matrix since then its
@@ -9078,24 +9078,24 @@ contains
       !>
       !>     M2       is any 3x3 double precision matrix.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MOUT     is s 3x3 double precision matrix. MOUT is the
       !>              product MOUT = (M1**T) x M2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical expression
       !>
@@ -9107,7 +9107,7 @@ contains
       !>     matrix M1 is what makes MOUT the product of the TRANSPOSE of M1
       !>     and not simply of M1 itself.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -9165,25 +9165,25 @@ contains
       !>            -3.000     7.000     8.000
       !>            -3.000     9.000     9.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is responsible for checking the magnitudes of the
       !>         elements of M1 and M2 so that a floating point overflow does
       !>         not occur. (In the typical use where M1 and M2 are rotation
       !>         matrices, this not a risk at all.)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-JUL-2021 (JDR)
       !>
@@ -9240,7 +9240,7 @@ contains
       !> both of arbitrary size. (The dimensions of the matrices must be
       !> compatible with this multiplication.)
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M1       is an double precision matrix of arbitrary dimension
       !>              whose transpose is the left hand multiplier of a
@@ -9257,7 +9257,7 @@ contains
       !>
       !>     NC2      is the column dimension of both M2 and MOUT.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MOUT     is a double precision matrix containing the product
       !>
@@ -9268,22 +9268,22 @@ contains
       !>
       !>              MOUT must NOT overwrite either M1 or M2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NR1R2 < 1, the elements of the matrix MOUT are set equal to
       !>         zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical expression
       !>
@@ -9300,7 +9300,7 @@ contains
       !>     is not possible to buffer intermediate results. Thus, MOUT
       !>     should NOT overwrite either M1 or M2.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -9360,7 +9360,7 @@ contains
       !>             3.000     6.000     9.000
       !>             0.000     0.000     0.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is responsible for checking the magnitudes of the
       !>         elements of M1 and M2 so that a floating point overflow does
@@ -9369,17 +9369,17 @@ contains
       !>     2)  MOUT must not overwrite M1 or M2 or else the intermediate
       !>         will affect the final result.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-JUL-2021 (JDR)
       !>
@@ -9433,7 +9433,7 @@ contains
       !> Multiply the transpose of a 3x3 matrix on the left with a vector
       !> on the right.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M        is an arbitrary 3x3 double precision matrix.
       !>              Typically, M will be a rotation matrix since
@@ -9443,24 +9443,24 @@ contains
       !>     VIN      is an arbitrary 3-dimensional double precision
       !>              vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is a 3-dimensional double precision vector. VOUT is
       !>              the product VOUT = (M**T)  x (VIN).
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical expression
       !>
@@ -9478,7 +9478,7 @@ contains
       !>     matrix M is what makes VOUT the product of the TRANSPOSE of
       !>     and not simply of M itself.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -9541,24 +9541,24 @@ contains
       !>
       !>        If M is an orthogonal matrix, then (M**T) * VIN = VOUT.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is responsible for checking the magnitudes of the
       !>         elements of M and VIN so that a floating point overflow does
       !>         not occur.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 25-AUG-2021 (JDR)
       !>
@@ -9615,7 +9615,7 @@ contains
       !> Multiply the transpose of a matrix and a vector of
       !> arbitrary size.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M1       is a double precision matrix of arbitrary size whose
       !>              transpose forms the left-hand matrix of the
@@ -9628,7 +9628,7 @@ contains
       !>
       !>     NR1R2    is the row dimension of M1 and length of V2.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is the double precision vector which results from
       !>              the expression
@@ -9640,19 +9640,19 @@ contains
       !>
       !>              VOUT must NOT overwrite either M1 or V2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical expression
       !>
@@ -9668,7 +9668,7 @@ contains
       !>     is not feasible to buffer intermediate results. Thus, VOUT
       !>     should NOT overwrite either M1 or V2.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -9717,7 +9717,7 @@ contains
       !>        Transpose of M times VIN:
       !>             6.000    20.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is responsible for checking the magnitudes of the
       !>         elements of M1 and V2 so that a floating point overflow does
@@ -9726,17 +9726,17 @@ contains
       !>     2)  VOUT not overwrite M1 or V2 or else the intermediate
       !>         will affect the final result.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-JUL-2021 (JDR)
       !>
@@ -9785,30 +9785,30 @@ contains
 
       !> Multiply two 3x3 matrices.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M1       is an arbitrary 3x3 double precision matrix.
       !>
       !>     M2       is an arbitrary 3x3 double precision matrix.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MOUT     is a 3x3 double precision matrix. MOUT is the product
       !>              M1*M2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical expression
       !>
@@ -9822,7 +9822,7 @@ contains
       !>                       '-----
       !>                         K=1
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -9906,22 +9906,22 @@ contains
       !>              -1.0000000       1.0000000       1.0000000
       !>               0.0000000      -1.0000000       1.0000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -9974,7 +9974,7 @@ contains
 
       !> Multiply two double precision matrices of arbitrary size.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M1       is any double precision matrix of arbitrary size.
       !>
@@ -9989,29 +9989,29 @@ contains
       !>
       !>     NC2      is the number of columns in both M2 and MOUT.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MOUT     is a a double precision matrix of dimension
       !>              NR1 x NC2. MOUT is the product matrix given
       !>              by MOUT = (M1) x (M2). MOUT must not overwrite
       !>              M1 or M2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If NC1R2 < 1, the elements of the matrix MOUT are set equal to
       !>         zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical expression
       !>
@@ -10024,7 +10024,7 @@ contains
       !>     is not feasible to buffer intermediate results. Thus, MOUT
       !>     should NOT overwrite either M1 or M2.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -10081,7 +10081,7 @@ contains
       !>            12.000    26.000    40.000
       !>            15.000    33.000    51.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No error checking is performed to prevent numeric overflow or
       !>         underflow.
@@ -10091,17 +10091,17 @@ contains
       !>
       !>     3)  MOUT should not overwrite M1 or M2.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-JUL-2021 (JDR)
       !>
@@ -10153,7 +10153,7 @@ contains
 
       !> Multiply a 3x3 matrix and the transpose of another 3x3 matrix.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M1       is an arbitrary 3x3 double precision matrix.
       !>
@@ -10162,26 +10162,26 @@ contains
       !>              then its transpose is its inverse (but this is
       !>              NOT a requirement).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MOUT     is a 3x3 double precision matrix. MOUT is the product
       !>
       !>                               T
       !>                 MOUT = M1 x M2
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical expression
       !>
@@ -10199,7 +10199,7 @@ contains
       !>     hand matrix M2 is what makes MOUT the product of the TRANSPOSE of
       !>     M2 and not simply of M2 itself.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -10284,25 +10284,25 @@ contains
       !>               0.0000000       1.0000000       0.0000000
       !>               0.0000000       0.0000000       1.0000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is responsible for checking the magnitudes of the
       !>         elements of M1 and M2 so that a floating point overflow does
       !>         not occur. (In the typical use where M1 and M2 are rotation
       !>         matrices, this not a risk at all.)
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -10356,7 +10356,7 @@ contains
       !> Multiply a matrix and the transpose of a matrix, both of
       !> arbitrary size.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M1       is any double precision matrix of arbitrary size.
       !>
@@ -10373,7 +10373,7 @@ contains
       !>     NR2      is the number of rows in both M2 and the number of
       !>              columns in MOUT.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MOUT     is a double precision matrix of dimension NR1 x NR2.
       !>
@@ -10387,19 +10387,19 @@ contains
       !>
       !>              MOUT must not overwrite M1 or M2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical expression
       !>
@@ -10417,7 +10417,7 @@ contains
       !>     is not feasible to buffer intermediate results. Thus, MOUT
       !>     should NOT overwrite either M1 or M2.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -10474,7 +10474,7 @@ contains
       !>             5.000    10.000     5.000    10.000
       !>             7.000    10.000     7.000    10.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No error checking is performed to prevent numeric overflow or
       !>         underflow.
@@ -10486,17 +10486,17 @@ contains
       !>     2)  No error checking is performed to determine if the input and
       !>         output matrices have, in fact, been correctly dimensioned.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-JUL-2021 (JDR)
       !>
@@ -10552,30 +10552,30 @@ contains
       !> Multiply a 3x3 double precision matrix with a 3-dimensional
       !> double precision vector.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M        is an arbitrary 3x3 double precision matrix.
       !>
       !>     VIN      is an arbitrary 3-dimensional double precision vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is a 3-dimensional double precision vector. VOUT is
       !>              the product M * V.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical expression
       !>
@@ -10589,7 +10589,7 @@ contains
       !>                     '-----
       !>                       K=1
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -10636,24 +10636,24 @@ contains
       !>        M times VIN:
       !>             2.000    -1.000     3.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is responsible for checking the magnitudes of the
       !>         elements of M and VIN so that a floating point overflow does
       !>         not occur.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -10708,7 +10708,7 @@ contains
 
       !> Multiply a matrix and a vector of arbitrary size.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M1       is a double precision matrix of arbitrary size which
       !>              forms the left-hand matrix of the multiplication.
@@ -10720,24 +10720,24 @@ contains
       !>
       !>     NC1R2    is the column dimension of M1 and length of V2.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is the double precision vector which results from
       !>              the expression VOUT = (M1) x V2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical expression
       !>
@@ -10745,7 +10745,7 @@ contains
       !>
       !>        VOUT(I) = Summation from K=1 to NC1R2 of  ( M1(I,K) * V2(K) )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -10795,24 +10795,24 @@ contains
       !>        M times VIN:
       !>             6.000    20.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is responsible for checking the magnitudes of the
       !>         elements of M1 and V2 so that a floating point overflow does
       !>         not occur.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 04-JUL-2021 (JDR)
       !>
@@ -10865,32 +10865,32 @@ contains
       !>
       !> The function returns .TRUE. if IVAL is odd, otherwise .FALSE.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IVAL     is the integer to be tested for oddness.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if IVAL is odd, .FALSE. if IVAL is
       !>     even.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Divide IVAL by two. If the remainder is one, IVAL is odd.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let ENDPTS contain a series of endpoints,
       !>
@@ -10913,22 +10913,22 @@ contains
       !>           END IF
       !>        END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -10970,31 +10970,31 @@ contains
       !> The function returns .TRUE. when the double precision numbers X
       !> and Y have opposite signs.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is any double precision number.
       !>
       !>     Y        is any double precision number.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if one of the pair X,Y is positive and
       !>     the other is negative. If either of the two values is zero, OPSGND
       !>     will be .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the value:
       !>
@@ -11008,7 +11008,7 @@ contains
       !>     Note that if either of the two values is zero, OPSGND will be
       !>     false.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine can be used whenever a decision depends upon two
       !>     Double Precision values having opposite signs.
@@ -11027,20 +11027,20 @@ contains
       !>           .
       !>     END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -11075,31 +11075,31 @@ contains
       !> The function returns .TRUE. when the integer numbers X and Y have
       !> opposite signs.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is any integer number.
       !>
       !>     Y        is any integer number.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if one of the pair X,Y is positive and
       !>     the other is negative. If either of the two values is zero, OPSGNI
       !>     will be .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the value:
       !>
@@ -11113,7 +11113,7 @@ contains
       !>     Note that if either of the two values is zero, OPSGNI will be
       !>     false.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine can be used whenever a decision depends upon two
       !>     integer values having opposite signs.
@@ -11132,21 +11132,21 @@ contains
       !>           .
       !>     END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -11185,11 +11185,11 @@ contains
       !>
       !> UBPL       P   SPICE plane upper bound.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     PLANE    is a SPICE plane.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NORMAL,
       !>     KONST    are, respectively, a unit normal vector and
@@ -11208,11 +11208,11 @@ contains
       !>
       !>              is the closest point in the plane to the origin.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     UBPL     is the upper bound of a SPICE plane array.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -11225,11 +11225,11 @@ contains
       !>
       !>         Otherwise, the results of this routine are unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPICELIB geometry routines that deal with planes use the `plane'
       !>     data type to represent input and output planes. This data type
@@ -11249,7 +11249,7 @@ contains
       !>        PL2NVP ( Plane to normal vector and point    )
       !>        PL2PSV ( Plane to point and spanning vectors )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -11446,22 +11446,22 @@ contains
       !>        Unit normal vector:  -0.1616904  -0.8084521   0.5659165
       !>        Constant          :   4.8102897
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  G. Thomas and R. Finney, "Calculus and Analytic Geometry,"
       !>          7th Edition, Addison Wesley, 1988.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 24-AUG-2021 (NJB) (JDR)
       !>
@@ -11528,11 +11528,11 @@ contains
       !> Return a unit normal vector and point that define a specified
       !> plane.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     PLANE    is a SPICE plane.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NORMAL,
       !>     POINT    are, respectively, a unit normal vector and point
@@ -11548,11 +11548,11 @@ contains
       !>              plane to the origin. POINT is always a
       !>              non-negative scalar multiple of NORMAL.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -11565,11 +11565,11 @@ contains
       !>
       !>         Otherwise, the results of this routine are unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPICELIB geometry routines that deal with planes use the `plane'
       !>     data type to represent input and output planes. This data type
@@ -11589,7 +11589,7 @@ contains
       !>        PL2NVP ( Plane to normal vector and point    )
       !>        PL2PSV ( Plane to point and spanning vectors )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Given a plane normal and constant, find a point in
       !>         the plane. POINT is the point we seek.
@@ -11597,22 +11597,22 @@ contains
       !>            CALL NVC2PL ( NORMAL, CONST,  PLANE )
       !>            CALL PL2NVP ( PLANE,  NORMAL, POINT )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  G. Thomas and R. Finney, "Calculus and Analytic Geometry,"
       !>          7th Edition, Addison Wesley, 1988.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 24-AUG-2021 (NJB) (JDR)
       !>
@@ -11658,11 +11658,11 @@ contains
       !> Return a point and two orthogonal spanning vectors that generate
       !> a specified plane.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     PLANE    is a SPICE plane.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     POINT,
       !>     SPAN1,
@@ -11678,11 +11678,11 @@ contains
       !>              are an orthonormal pair of vectors. POINT, SPAN1, and
       !>              SPAN2 are mutually orthogonal.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -11695,11 +11695,11 @@ contains
       !>
       !>         Otherwise, the results of this routine are unpredictable.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     SPICELIB geometry routines that deal with planes use the `plane'
       !>     data type to represent input and output planes. This data type
@@ -11719,7 +11719,7 @@ contains
       !>        PL2NVP ( Plane to normal vector and point    )
       !>        PL2PSV ( Plane to point and spanning vectors )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  Project a vector V orthogonally onto a plane defined by
       !>         POINT, SPAN1, and SPAN2. PROJ is the projection we want; it
@@ -11816,22 +11816,22 @@ contains
       !>                  CALL PSV2PL ( TPOINT,  TSPAN1,  TSPAN2,  TPLANE )
       !>                  CALL PL2NVC ( TPLANE,  TN,      TC              )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  G. Thomas and R. Finney, "Calculus and Analytic Geometry,"
       !>          7th Edition, Addison Wesley, 1988.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 24-AUG-2021 (NJB) (JDR)
       !>
@@ -11888,7 +11888,7 @@ contains
       !> plate is co-planar with, and has the same orientation as, the
       !> original. The centroids of the two plates coincide.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     IVERTS   is an array containing three vertices of a triangular
       !>              plate. Each vertex is a three-dimensional vector. The
@@ -11915,7 +11915,7 @@ contains
       !>                    (1+DELTA) times the corresponding distance for
       !>                    the input plate
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OVERTS   is an array containing three vertices of the triangular
       !>              plate resulting from scaling the input plate.
@@ -11931,19 +11931,19 @@ contains
       !>
       !>                 J = 1, 3
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine supports "greedy" ray-plate intercept algorithms.
       !>     Such algorithms attempt to ensure that false negatives---in which
@@ -11951,7 +11951,7 @@ contains
       !>     occur. In such an algorithm, the plate of interest is expanded
       !>     slightly before the intersection test is performed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input
@@ -12025,20 +12025,20 @@ contains
       !>        Note that the height of the plate is unchanged, but the vectors
       !>        from the centroid to the vertices have doubled in length.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR)
       !>
@@ -12107,13 +12107,13 @@ contains
       !> Compute an outward normal vector of a triangular plate.
       !> The vector does not necessarily have unit length.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1,
       !>     V2,
       !>     V3       are vertices of a triangular plate.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NORMAL   is an outward normal vector of the plate defined by
       !>              the input vertices. The order of the vertices is
@@ -12122,26 +12122,26 @@ contains
       !>
       !>                 ( V2 - V1 ) x ( V3 - V2 )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  The input plate may be degenerate: it may be a line segment
       !>         or a point. These are not considered to be erroneous inputs.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine saves computation time by not scaling the output
       !>     vector to unit length. The caller can scale the vector using
       !>     the routine VHAT.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input
@@ -12179,20 +12179,20 @@ contains
       !>
       !>        NORMAL =   0.00000000000000  0.00000000000000  2.59807621135332
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 08-JUL-2020 (JDR)
       !>
@@ -12231,7 +12231,7 @@ contains
       !> Compute the value of a polynomial and its first
       !> NDERIV derivatives at the value T.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     COEFFS   are the coefficients of the polynomial that is
       !>              to be evaluated. The first element of this array
@@ -12258,7 +12258,7 @@ contains
       !>     T        is the point at which the polynomial and its
       !>              derivatives should be evaluated.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     P        is an array containing the value of the polynomial and
       !>              its derivatives evaluated at T. The first element of
@@ -12268,11 +12268,11 @@ contains
       !>              element of the array contains the NDERIV'th derivative
       !>              of P evaluated at T.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -12281,18 +12281,18 @@ contains
       !>     2)  If the degree of the polynomial is less than 0, the routine
       !>         returns the first NDERIV+1 elements of P set to 0.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine uses the user supplied coefficients (COEFFS)
       !>     to evaluate a polynomial (having these coefficients) and its
       !>     derivatives at the point T. The zero'th derivative of the
       !>     polynomial is regarded as the polynomial itself.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -12370,7 +12370,7 @@ contains
       !>         P =    23.000000000000000
       !>         P =    78.000000000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Depending on the coefficients the user should be careful when
       !>         taking high order derivatives. As the example shows, these
@@ -12378,17 +12378,17 @@ contains
       !>         derivatives of a polynomial grow at a rate greater
       !>         than N! (N factorial).
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 16-JUL-2021 (JDR)
       !>
@@ -12410,7 +12410,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.0.1, 30-DEC-1988 (WLT)
       !>
@@ -12548,7 +12548,7 @@ contains
       !> Find the rotation matrix corresponding to a specified unit
       !> quaternion.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     Q        is a unit-length SPICE-style quaternion. Q has the
       !>              property that
@@ -12558,18 +12558,18 @@ contains
       !>              See the discussion of quaternion styles in
       !>              $Particulars below.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     R        is a 3 by 3 rotation matrix representing the same
       !>              rotation as does Q. See the discussion titled
       !>              "Associating SPICE Quaternions with Rotation
       !>              Matrices" in $Particulars below.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -12580,11 +12580,11 @@ contains
       !>     2)  If Q is the zero quaternion, the output matrix R is
       !>         the identity matrix.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     If a 4-dimensional vector Q satisfies the equality
       !>
@@ -12813,7 +12813,7 @@ contains
       !>
       !>        M1*M2
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  A case amenable to checking by hand calculation:
       !>
@@ -12897,22 +12897,22 @@ contains
       !>
       !>               DELTA = HALFPI() - DELTA
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     F.S. Turner        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 12-APR-2021 (JDR)
       !>
@@ -13103,7 +13103,7 @@ contains
       !> Derive angular velocity from a unit quaternion and its derivative
       !> with respect to time.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     Q        is a unit length 4-vector representing a
       !>              SPICE-style quaternion. See the discussion of
@@ -13112,7 +13112,7 @@ contains
       !>     DQ       is a 4-vector representing the derivative of
       !>              Q with respect to time.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     AV       is 3-vector representing the angular velocity
       !>              defined by Q and DQ, that is, the angular velocity
@@ -13144,11 +13144,11 @@ contains
       !>
       !>              is the unit associated with DQ.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -13156,11 +13156,11 @@ contains
       !>         computation. No attempt is made to diagnose an invalid
       !>         input quaternion.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Quaternion Styles
       !>     -----------------
@@ -13505,7 +13505,7 @@ contains
       !>     DQ at a given time t have the same angular velocity at time t,
       !>     that angular velocity must be AVF1.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -13695,20 +13695,20 @@ contains
       !>         XF2RAV's angular velocity:
       !>           1.0000000000000002  2.0000000000000000  3.0000000000000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.2, 04-JUL-2021 (JDR)
       !>
@@ -13732,7 +13732,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 26-AUG-2002 (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 1.1.0, 31-AUG-2005 (NJB)
       !>
@@ -13776,7 +13776,7 @@ contains
 
       !> Multiply two quaternions.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     Q1       is a 4-vector representing a SPICE-style
       !>              quaternion. See the discussion of quaternion
@@ -13790,7 +13790,7 @@ contains
       !>
       !>     Q2       is a second SPICE-style quaternion.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     QOUT     is 4-vector representing the quaternion product
       !>
@@ -13815,19 +13815,19 @@ contains
       !>              product operator and x indicates the cross
       !>              product operator.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Quaternion Styles
       !>     -----------------
@@ -14021,7 +14021,7 @@ contains
       !>
       !>        M1*M2
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -14246,20 +14246,20 @@ contains
       !>           -1.0000    0.0000    0.0000
       !>            0.0000    0.0000    1.0000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 06-JUL-2021 (JDR)
       !>
@@ -14302,7 +14302,7 @@ contains
       !> Convert from range, right ascension, and declination to
       !> rectangular coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RANGE    is the distance of the point from the origin. Input
       !>              should be in terms of the same units in which the
@@ -14324,7 +14324,7 @@ contains
       !>              The range (i.e., the set of allowed values) of
       !>              DEC is unrestricted. Units are radians.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECTAN   is the array containing the rectangular coordinates of
       !>              the point.
@@ -14332,19 +14332,19 @@ contains
       !>              The units associated with RECTAN are those
       !>              associated with the input RANGE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine converts the right ascension, declination, and range
       !>     of a point into the associated rectangular coordinates.
@@ -14353,7 +14353,7 @@ contains
       !>     an angle from a reference meridian, and an angle above the equator
       !>     of a sphere centered at the central reference point.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -14581,16 +14581,16 @@ contains
       !>         15778860.85892719  0.0000000107417474
       !>         18408660.88809383  0.0000001774135760
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  L. Taff, "Celestial Mechanics, A Computational Guide for the
       !>          Practitioner," Wiley, 1985
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -14598,7 +14598,7 @@ contains
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -14642,7 +14642,7 @@ contains
       !> Determine a state transformation matrix from a rotation matrix
       !> and the angular velocity of the rotation.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ROT      is a rotation matrix that gives the transformation from
       !>              some frame FRAME1 to another frame FRAME2.
@@ -14660,7 +14660,7 @@ contains
       !>                                 T
       !>                 V  =  AV x ( ROT  * P )
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XFORM    is a state transformation matrix associated
       !>              with ROT and AV. If S1 is the state of an object
@@ -14671,22 +14671,22 @@ contains
       !>
       !>              where "*" denotes Matrix-Vector multiplication.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  No checks are performed on ROT to ensure that it is indeed
       !>         a rotation matrix.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is essentially a macro routine for converting
       !>     a rotation and angular velocity of the rotation to the
@@ -14694,7 +14694,7 @@ contains
       !>
       !>     This routine is an inverse of XF2RAV.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -14883,20 +14883,20 @@ contains
       !>          0.000013 -0.000015 -0.000010 -0.784160 -0.596891 -0.169748
       !>         -0.000008 -0.000006 -0.000002 -0.138158 -0.098752  0.985475
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 04-JUL-2021 (JDR)
       !>
@@ -15014,7 +15014,7 @@ contains
       !> Convert rectangular coordinates of a point to range, azimuth and
       !> elevation.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RECTAN   are the rectangular coordinates of a point.
       !>
@@ -15029,7 +15029,7 @@ contains
       !>              If ELPLSZ is .TRUE., elevation increases from
       !>              the XY plane toward +Z; otherwise toward -Z.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RANGE    is the distance of the point from the origin.
       !>
@@ -15058,11 +15058,11 @@ contains
       !>              EL is output in radians. The range of EL is [-pi/2,
       !>              pi/2].
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -15072,11 +15072,11 @@ contains
       !>     2)  If RECTAN is the zero vector, azimuth and elevation
       !>         are both set to zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the range, azimuth, and elevation of a point
       !>     specified in rectangular coordinates.
@@ -15090,7 +15090,7 @@ contains
       !>     given by the user to the AZCCW and ELPLSZ logical flags. See the
       !>     descriptions of these input arguments for details.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -15469,22 +15469,22 @@ contains
       !>        Target elevation        (deg):         -48.94609726
       !>        Observer-target distance (km):   245721478.99272084
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     S.C. Krening       (JPL)
       !>     B.V. Semenov       (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 07-SEP-2021 (JDR) (NJB) (SCK) (BVS)
       pure subroutine recazl ( rectan, azccw, elplsz, range, az, el )
@@ -15566,12 +15566,12 @@ contains
 
       !> Convert from rectangular to cylindrical coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RECTAN   are the rectangular coordinates of the point of
       !>              interest.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     R        is the distance of the point of interest from Z-axis.
       !>
@@ -15580,24 +15580,24 @@ contains
       !>
       !>     Z        is the height of the point above XY plane.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine transforms the coordinates of a point from
       !>     rectangular to cylindrical coordinates.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -15827,22 +15827,22 @@ contains
       !>            0.000    1.000    1.000    1.000   90.000    1.000
       !>            1.000    1.000    1.000    1.414   45.000    1.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -15914,11 +15914,11 @@ contains
 
       !> Convert from rectangular coordinates to latitudinal coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RECTAN   are the rectangular coordinates of a point.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RADIUS   is the distance of a point from the origin.
       !>
@@ -15940,11 +15940,11 @@ contains
       !>              LAT is output in radians. The range of LAT is
       !>              [-pi/2, pi/2].
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -15954,11 +15954,11 @@ contains
       !>     2)  If RECTAN is the zero vector, longitude and latitude are
       !>         both set to zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the latitudinal coordinates of a point
       !>     whose position is input in rectangular coordinates.
@@ -15968,7 +15968,7 @@ contains
       !>     above the equator of a sphere centered at the central reference
       !>     point.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -16198,22 +16198,22 @@ contains
       !>            0.000    1.000    1.000    1.414   90.000   45.000
       !>            1.000    1.000    1.000    1.732   45.000   35.264
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUL-2021 (JDR)
       !>
@@ -16289,11 +16289,11 @@ contains
       !> Convert rectangular coordinates to range, right ascension,
       !> and declination.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RECTAN   are the rectangular coordinates of a point.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RANGE    is the distance of the point from the origin.
       !>
@@ -16315,11 +16315,11 @@ contains
       !>              DEC is output in radians. The range of DEC is
       !>              [-pi/2, pi/2].
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -16329,11 +16329,11 @@ contains
       !>     2)  If RECTAN is the zero vector, right ascension and declination
       !>         are both set to zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the range, right ascension, and declination
       !>     of a point specified in rectangular coordinates.
@@ -16343,7 +16343,7 @@ contains
       !>     the equator of a sphere centered at the central reference
       !>     point.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following code fragment converts right ascension and
       !>     declination from the B1950 reference frame to the J2000 frame.
@@ -16371,15 +16371,15 @@ contains
       !>        C
       !>              CALL RECRAD ( V2000, R, RA, DEC )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -16387,7 +16387,7 @@ contains
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -16435,11 +16435,11 @@ contains
 
       !> Convert from rectangular coordinates to spherical coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RECTAN   are the rectangular coordinates of a point.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     R        is the distance of the point from the origin.
       !>
@@ -16452,19 +16452,19 @@ contains
       !>              in the counterclockwise sense about the positive Z-axis.
       !>              The range of SLON is [-pi, pi].
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the spherical coordinates of a point
       !>     whose position is input in rectangular coordinates.
@@ -16473,7 +16473,7 @@ contains
       !>     reference point, an angle from a reference meridian, and an angle
       !>     from the z-axis.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -16706,22 +16706,22 @@ contains
       !>            0.000    1.000    1.000    1.414   45.000   90.000
       !>            1.000    1.000    1.000    1.732   54.736   45.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -16800,19 +16800,19 @@ contains
       !> going from left to right in the usual printed presentation
       !> of a matrix.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ROT      is a 3x3 matrix that is nearly a rotation matrix.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ROT      is the input after sharpening the columns.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -16826,11 +16826,11 @@ contains
       !>
       !>         No error handling is done for invalid input matrices.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine "sharpens" the orthogonality of a potential
       !>     rotation matrix. It is intended for use in those situations
@@ -16838,7 +16838,7 @@ contains
       !>     from single precision inputs or that may have experienced
       !>     round off errors in its construction.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose that you have a rotation matrix that needs to be
       !>     converted to a quaternion. The SPICE matrix to quaternion
@@ -16851,21 +16851,21 @@ contains
       !>         CALL SHARPR ( ROT )
       !>         CALL M2Q    ( ROT, Q )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  See the $Exceptions section above.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 26-OCT-2021 (JDR)
       !>
@@ -16910,30 +16910,30 @@ contains
       !> The function returns .TRUE. if the input arguments have the same
       !> sign.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is any double precision number.
       !>
       !>     Y        is any double precision number.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if X and Y are both positive or both
       !>     negative. Otherwise, it returns .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the value:
       !>
@@ -16947,7 +16947,7 @@ contains
       !>     Note: If either of the to inputs is zero. The result returned
       !>     will be .FALSE.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine can be used whenever a decision depends upon two
       !>     Double Precision values having the same sign.
@@ -16966,20 +16966,20 @@ contains
       !>           .
       !>     END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -17012,30 +17012,30 @@ contains
       !> The function returns .TRUE. if the input arguments have the same
       !> sign.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X        is any integer.
       !>
       !>     Y        is any integer.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns .TRUE. if X and Y are both positive or both
       !>     negative. Otherwise, it returns .FALSE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the value:
       !>
@@ -17049,7 +17049,7 @@ contains
       !>     Note: If either of the to inputs is zero. The result returned
       !>     will be .FALSE.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine can be used whenever a decision depends upon two
       !>     integer values having the same sign.
@@ -17068,20 +17068,20 @@ contains
       !>           .
       !>     END IF
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -17111,7 +17111,7 @@ contains
 
       !> Convert from spherical coordinates to cylindrical coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     RADIUS   is the distance of the point from origin.
       !>
@@ -17121,7 +17121,7 @@ contains
       !>     SLON     is the azimuthal angle (longitude) of the point
       !>              (radians).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     R        is the distance of the point of interest from Z-axis.
       !>
@@ -17130,24 +17130,24 @@ contains
       !>
       !>     Z        is the height of the point above XY plane.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This returns the cylindrical coordinates of a point whose
       !>     position is input through spherical coordinates.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -17474,21 +17474,21 @@ contains
       !>          Longitude (deg):          45.00000000000
       !>          Z          (km):         -21.64396139381
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUL-2021 (JDR)
       !>
@@ -17543,7 +17543,7 @@ contains
 
       !> Convert from spherical coordinates to latitudinal coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     R        is the distance of the point from the origin.
       !>
@@ -17552,7 +17552,7 @@ contains
       !>
       !>     SLON     is the angle of the point from the XZ plane (radians).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RADIUS   is the distance of a point from the origin.
       !>
@@ -17562,19 +17562,19 @@ contains
       !>     LAT      is the angle of the point from the XY plane in
       !>              radians. LAT is computed as pi/2 - COLAT.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the latitudinal coordinates of a point
       !>     whose position is input in spherical coordinates.
@@ -17588,7 +17588,7 @@ contains
       !>     reference point, an angle from a reference meridian, and an angle
       !>     from the Z-axis.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -17863,21 +17863,21 @@ contains
       !>            1.000    0.000  180.000    1.000  180.000   90.000
       !>            0.000   90.000   33.000    0.000   33.000    0.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUL-2021 (JDR)
       !>
@@ -17933,7 +17933,7 @@ contains
 
       !> Convert from spherical coordinates to rectangular coordinates.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     R        is the distance of the point from the origin.
       !>
@@ -17944,23 +17944,23 @@ contains
       !>              XY plane from the positive X-axis in radians. The
       !>              positive Y-axis is at longitude PI/2 radians.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     RECTAN   are the rectangular coordinates of a point.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine returns the rectangular coordinates of a point
       !>     whose position is input in spherical coordinates.
@@ -17970,7 +17970,7 @@ contains
       !>     from the Z-axis. The co-latitude of the positive Z-axis is
       !>     zero. The longitude of the positive Y-axis is PI/2 radians.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -18210,21 +18210,21 @@ contains
       !>            1.414   45.000   90.000    0.000    1.000    1.000
       !>            1.732   54.736   45.000    1.000    1.000    1.000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     B.V. Semenov       (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -18292,28 +18292,28 @@ contains
       !>
       !> The function returns the trace of MATRIX.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MATRIX   is a double precision 3x3 matrix.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the trace of MATRIX, i.e. it is the sum of
       !>     the diagonal elements of MATRIX.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical
       !>     expression:
@@ -18329,7 +18329,7 @@ contains
       !>     No error detection or correction is implemented within this
       !>     function.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -18388,23 +18388,23 @@ contains
       !>
       !>        Trace:  0.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No checking is performed to guard against floating point
       !>         overflow or underflow. This routine should probably not be
       !>         used if the input matrix is expected to have large double
       !>         precision numbers along the diagonal.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 03-JUL-2020 (JDR)
       !>
@@ -18435,7 +18435,7 @@ contains
       !> The function returns the trace of the square matrix of arbitrary
       !> dimension MATRIX.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MATRIX   is a double precision square matrix of arbitrary
       !>              dimension. The input matrix must be square or else the
@@ -18443,24 +18443,24 @@ contains
       !>
       !>     NDIM     is the dimension of MATRIX.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the trace of MATRIX, i.e. it is the sum of
       !>     the diagonal elements of MATRIX.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical
       !>     expression:
@@ -18476,7 +18476,7 @@ contains
       !>     No error detection or correction is implemented within this
       !>     function.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -18544,23 +18544,23 @@ contains
       !>
       !>        Trace:  0.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No checking is performed to guard against floating point
       !>         overflow or underflow. This routine should probably not be
       !>         used if the input matrix is expected to have large double
       !>         precision numbers along the diagonal.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 08-APR-2021 (JDR)
       !>
@@ -18597,7 +18597,7 @@ contains
 
       !> Compute the normalized cross product of two 3-vectors.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1,
       !>     V2       are two double precision 3-dimensional vectors.
@@ -18605,7 +18605,7 @@ contains
       !>              vector to a planet, Sun, or a star which defines the
       !>              orientation of axes of some reference frame.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is the double precision 3-dimensional normalized cross
       !>              product of V1 and V2. VOUT is the result of the
@@ -18618,11 +18618,11 @@ contains
       !>              where "x" denotes the cross product and ||X||| the norm
       !>              of a vector X.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -18630,15 +18630,15 @@ contains
       !>         then the zero-vector is returned instead of a vector of
       !>         unit length.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     None.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -18712,21 +18712,21 @@ contains
       !>        Vector B                :  -2.0 -2.0 -2.0
       !>        Normalized cross product:   0.0  0.0  0.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -18742,7 +18742,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO) (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 10-JAN-1989 (WLT)
       !>
@@ -18822,12 +18822,12 @@ contains
 
       !> Normalize a double precision 3-vector and return its magnitude.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1       is an arbitrary 3-vector, including the
       !>              zero vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is the unit vector in the direction of V1. If V1 is
       !>              the zero vector, then VOUT will also be the zero
@@ -18835,19 +18835,19 @@ contains
       !>
       !>     VMAG     is the magnitude of V1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     UNORM references a function called VNORM (which itself is
       !>     numerically stable) to calculate the norm of the input vector V1.
@@ -18855,7 +18855,7 @@ contains
       !>     vector VOUT is set to zero. Otherwise, VOUT is calculated by
       !>     dividing V1 by the norm.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -18920,22 +18920,22 @@ contains
       !>        Unit vector:    0.33333333   0.66666667   0.66666667
       !>        Magnitude:      0.00000030
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUL-2021 (JDR)
       !>
@@ -18991,14 +18991,14 @@ contains
       !> Normalize a double precision vector of arbitrary dimension and
       !> return its magnitude.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1       is an arbitrary double precision n-dimensional vector,
       !>              including the zero vector.
       !>
       !>     NDIM     is the dimension of V1 and VOUT.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is the double precision n-dimensional unit vector in the
       !>              direction of V1. If V1 is the zero vector, then VOUT
@@ -19006,19 +19006,19 @@ contains
       !>
       !>     VMAG     is the magnitude of V1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     UNORMG references a function called VNORMG (which itself is
       !>     numerically stable) to calculate the norm of the input vector V1.
@@ -19027,7 +19027,7 @@ contains
       !>     dividing V1 by the norm. No error detection or correction is
       !>     implemented.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -19096,23 +19096,23 @@ contains
       !>        Unit vector:   0.3333333   0.6666667   0.6666667   0.0000000
       !>        Magnitude  :   0.0000030
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No error checking is implemented in this subroutine to guard
       !>         against numeric overflow.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUL-2021 (JDR)
       !>
@@ -19174,36 +19174,36 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array expressions instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1,
       !>     V2       are two arbitrary double precision 3-dimensional
       !>              vectors.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is the double precision 3-dimensional vector sum of V1
       !>              and V2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine simply performs addition between components of V1
       !>     and V2. No checking is performed to determine whether floating
       !>     point overflow has occurred.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -19273,24 +19273,24 @@ contains
       !>        Vector B  :    0.10E+25   0.10E+24   0.00E+00
       !>        Sum vector:    0.10E+25   0.20E+24   0.10E-08
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is required to determine that the magnitude each
       !>         component of the vectors is within the appropriate range so as
       !>         not to cause floating point overflow.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -19326,7 +19326,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array expressions instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1,
       !>     V2       are two arbitrary double precision n-dimensional
@@ -19334,30 +19334,30 @@ contains
       !>
       !>     NDIM     is the dimension of V1, V2 and VOUT.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is the double precision n-dimensional vector sum of V1
       !>              and V2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine simply performs addition between components of V1
       !>     and V2. No checking is performed to determine whether floating
       !>     point overflow has occurred.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -19432,17 +19432,17 @@ contains
       !>        Vector B  :    0.10E+25   0.10E+24   0.00E+00   0.30E-22
       !>        Sum vector:    0.10E+25   0.20E+24   0.10E-08   0.30E-22
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is required to determine that the magnitude each
       !>         component of the vectors is within the appropriate range so as
       !>         not to cause floating point overflow.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -19450,7 +19450,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -19490,7 +19490,7 @@ contains
 
       !> Compute the cross product of two 3-dimensional vectors.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1,
       !>     V2       are two 3-dimensional vectors. Typically, these might
@@ -19498,23 +19498,23 @@ contains
       !>              or a star which defines the orientation of axes of some
       !>              reference frame.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is the cross product of V1 and V2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     VCRSS calculates the three dimensional cross product of two
       !>     vectors according to the definition.
@@ -19527,7 +19527,7 @@ contains
       !>     NOT check the magnitude of V1 or V2 to insure that overflow will
       !>     not occur.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -19600,7 +19600,7 @@ contains
       !>        Vector B     :  -1.0 -1.0 -1.0
       !>        Cross product:   0.0  0.0  0.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No checking of V1 or V2 is done to prevent floating point
       !>         overflow. The user is required to determine that the
@@ -19609,18 +19609,18 @@ contains
       !>         In almost every case there will be no problem and no checking
       !>         actually needs to be done.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUL-2021 (JDR)
       !>
@@ -19669,13 +19669,13 @@ contains
       !>
       !> The function returns the distance between V1 and V2.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1,
       !>     V2       are two vectors in three-dimensional space, the
       !>              distance between which is desired.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the distance between V1 and V2. This is
       !>     defined as
@@ -19684,19 +19684,19 @@ contains
       !>
       !>     where || x || indicates the Euclidean norm of the vector x.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function is simply shorthand for the code
       !>
@@ -19727,7 +19727,7 @@ contains
       !>     A related routine is VDISTG, which computes the distance between
       !>     two vectors of general dimension.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  If V1 is
       !>
@@ -19748,21 +19748,21 @@ contains
       !>         yields the distance between the spacecraft and Neptune at time
       !>         ET.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 25-MAY-2021 (JDR)
       !>
@@ -19799,7 +19799,7 @@ contains
       !>
       !> The function returns the distance between V1 and V2.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1,
       !>     V2       are two vectors of arbitrary dimension, the
@@ -19810,7 +19810,7 @@ contains
       !>              declared sizes of the actual arguments corresponding
       !>              to V1 and V2.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the distance between V1 and V2. This is
       !>     defined as
@@ -19821,19 +19821,19 @@ contains
       !>
       !>     If NDIM is less than 1, the function value is set to 0.D0.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The Euclidean norm of an n-dimensional vector
       !>
@@ -19861,7 +19861,7 @@ contains
       !>     A related routine is VDIST, which computes the distance between
       !>     two 3-vectors.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  If V1 is
       !>
@@ -19877,21 +19877,21 @@ contains
       !>
       !>         will be 5.D0.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 25-MAY-2021 (JDR)
       !>
@@ -19960,32 +19960,32 @@ contains
       !>
       !> The function returns the value of the dot product of V1 and V2.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1,
       !>     V2       are two arbitrary double precision 3-dimensional
       !>              vectors.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value of the dot product (inner product)
       !>     of V1 and V2:
       !>
       !>        < V1, V2 >
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     VDOT calculates the dot product of V1 and V2 by a simple
       !>     application of the definition:
@@ -20001,7 +20001,7 @@ contains
       !>     No error checking is performed to prevent or recover from numeric
       !>     overflow.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -20085,23 +20085,23 @@ contains
       !>        Input vector (V1):    0.0   0.0   1.0
       !>        V1 and Z are NOT orthogonal.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is responsible for determining that the vectors V1
       !>         and V2 are not so large as to cause numeric overflow. In
       !>         most cases this will not present a problem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 28-MAY-2021 (JDR)
       !>
@@ -20131,7 +20131,7 @@ contains
       !>
       !> The function returns the value of the dot product of V1 and V2.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1,
       !>     V2       are two arbitrary double precision n-dimensional
@@ -20139,26 +20139,26 @@ contains
       !>
       !>     NDIM     is the dimension of V1 and V2.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value of the dot product (inner product)
       !>     of V1 and V2:
       !>
       !>        < V1, V2 >
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     VDOTG calculates the dot product of V1 and V2 by a simple
       !>     application of the definition:
@@ -20174,7 +20174,7 @@ contains
       !>     No error checking is performed to prevent or recover from numeric
       !>     overflow.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -20266,23 +20266,23 @@ contains
       !>        Input vector (V1):    0.0   0.0   0.0   1.0
       !>        V1 and Z are orthogonal.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is responsible for determining that the vectors V1
       !>         and V2 are not so large as to cause numeric overflow. In
       !>         most cases this will not present a problem.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 28-MAY-2021 (JDR)
       !>
@@ -20320,33 +20320,33 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array assignment instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VIN      is an arbitrary, double precision 3-dimensional vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is a double precision 3-dimensional vector set equal
       !>              to VIN.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     VEQU simply sets each component of VOUT in turn equal to VIN. No
       !>     error checking is performed because none is needed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -20414,21 +20414,21 @@ contains
       !>        Angular velocity:
       !>           0.0000000000   0.0000000000   0.0100000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -20460,30 +20460,30 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array assignment instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VIN      is an arbitrary, double precision n-dimensional vector.
       !>
       !>     NDIM     is the dimension of VIN and VOUT.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is a double precision n-dimensional vector set equal
       !>              to VIN.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code simply sets each component of VOUT equal to the
       !>     corresponding component of VIN.
@@ -20492,7 +20492,7 @@ contains
       !>     sets each output array element equal to the corresponding
       !>     input array element.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -20560,21 +20560,21 @@ contains
       !>        Angular velocity:
       !>           0.0000000000   0.0000000000   0.0100000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -20604,39 +20604,39 @@ contains
       !> Find the unit vector along a double precision 3-dimensional
       !> vector.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1       is any double precision, 3-dimensional vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is the unit vector in the direction of V1.
       !>
       !>              If V1 represents the zero vector, then VOUT will also be
       !>              the zero vector. VOUT may overwrite V1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If V1 represents the zero vector, then VOUT will also be the
       !>         zero vector.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     VHAT determines the magnitude of V1 and then divides each
       !>     component of V1 by the magnitude. This process is highly stable
       !>     over the whole range of 3-dimensional vectors.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -20697,17 +20697,17 @@ contains
       !>        Vector     :    0.00000010   0.00000020   0.00000020
       !>        Unit vector:    0.33333333   0.66666667   0.66666667
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  There is no known case whereby floating point overflow may
       !>         occur. Thus, no error recovery or reporting scheme is
       !>         incorporated into this subroutine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -20715,7 +20715,7 @@ contains
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUL-2021 (JDR)
       !>
@@ -20769,13 +20769,13 @@ contains
       !> Find the unit vector along a double precision vector of
       !> arbitrary dimension.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1       is any double precision vector of arbitrary dimension.
       !>
       !>     NDIM     is the dimension of V1 (and also VOUT).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is the unit vector in the direction of V1:
       !>
@@ -20786,19 +20786,19 @@ contains
       !>              If V1 represents the zero vector, then VOUT will also be
       !>              the zero vector.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     VHATG determines the magnitude of V1 and then divides each
       !>     component of V1 by the magnitude. This process is highly stable
@@ -20807,7 +20807,7 @@ contains
       !>     This routine will detect if V1 the zero vector, and will not
       !>     attempt to divide by zero.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -20872,24 +20872,24 @@ contains
       !>        Input vector:    0.0000001   0.0000002   0.0000002   0.0000000
       !>        Unit vector :    0.3333333   0.6666667   0.6666667   0.0000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The relative number of cases whereby floating point overflow
       !>         may occur is negligible. Thus, no error recovery or reporting
       !>         scheme is incorporated into this subroutine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUL-2021 (JDR)
       !>
@@ -20947,34 +20947,34 @@ contains
 
       !> Scale a three-dimensional vector to unit length.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V        is any double precision, 3-dimensional vector. If this
       !>              vector is the zero vector, this routine will detect it,
       !>              and will not attempt to divide by zero.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     V        is the unit vector in the direction of the input vector.
       !>              If on input V represents the zero vector, then V will be
       !>              returned as the zero vector.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  The zero vector is returned if the input value of V is the
       !>         zero vector.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is provided for situation where it is convenient
       !>     to scale a vector to unit length in place rather than store
@@ -20990,7 +20990,7 @@ contains
       !>     process is highly stable over the whole range of 3-dimensional
       !>     vectors.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following table shows how selected vectors are mapped to
       !>     unit vectors
@@ -21000,17 +21000,17 @@ contains
       !>     (5, 12, 0)            (5/13, 12/13, 0)
       !>     (1D-7, 2D-7, 2D-7)    (1/3, 2/3, 2/3)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  There is no known case whereby floating point overflow may
       !>         occur. Thus, no error recovery or reporting scheme is
       !>         incorporated into this subroutine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -21018,7 +21018,7 @@ contains
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 20-AUG-2021 (JDR)
       !>
@@ -21070,7 +21070,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array expressions instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is the double precision scalar variable that multiplies
       !>              V1.
@@ -21082,26 +21082,26 @@ contains
       !>
       !>     V2       is an arbitrary, double precision 3-dimensional vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SUM      is the double precision 3-dimensional vector which
       !>              contains the linear combination
       !>
       !>                 A * V1 + B * V2
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical expression
       !>
@@ -21111,7 +21111,7 @@ contains
       !>
       !>     No error checking is performed to guard against numeric overflow.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -21253,22 +21253,22 @@ contains
       !>        Input vector             :    4.0  35.0  -5.0
       !>        Projection into 2-d plane:  -15.5  15.5  -5.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No error checking is performed to guard against numeric
       !>         overflow or underflow. The user is responsible for insuring
       !>         that the input values are reasonable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -21304,7 +21304,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array expressions instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is the double precision scalar variable that multiplies
       !>              V1.
@@ -21321,26 +21321,26 @@ contains
       !>
       !>     V3       is a double precision 3-dimensional vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SUM      is the double precision 3-dimensional vector which
       !>              contains the linear combination
       !>
       !>                 A * V1 + B * V2 + C * V3
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical expression
       !>
@@ -21350,7 +21350,7 @@ contains
       !>
       !>     No error checking is performed to guard against numeric overflow.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -21457,22 +21457,22 @@ contains
       !>        15:  0.049578 -0.024759  1.000000
       !>        16:  0.064777 -0.013399  1.000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No error checking is performed to guard against numeric
       !>         overflow or underflow. The user is responsible for insuring
       !>         that the input values are reasonable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -21510,7 +21510,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array expressions instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     N        is the dimension of V1, V2 and SUM.
       !>
@@ -21524,26 +21524,26 @@ contains
       !>
       !>     V2       is an arbitrary, double precision n-dimensional vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     SUM      is the double precision n-dimensional vector which
       !>              contains the linear combination
       !>
       !>                 A * V1 + B * V2
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The code reflects precisely the following mathematical expression
       !>
@@ -21553,7 +21553,7 @@ contains
       !>
       !>     No error checking is performed to guard against numeric overflow.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -21624,22 +21624,22 @@ contains
       !>        Input vector             :    4.0  35.0  -5.0   7.0
       !>        Projection into 2-d plane:   -8.0   8.0  -5.0  -8.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No error checking is performed to guard against numeric
       !>         overflow or underflow. The user is responsible for insuring
       !>         that the input values are reasonable.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -21675,30 +21675,30 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array expressions instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     VIN      is any double precision vector of arbitrary size.
       !>
       !>     NDIM     is the dimension of VIN and VOUT.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is a n-dimensional double precision vector which
       !>              contains the negation of VIN.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For each value of the index I from 1 to NDIM, VMINUG negates VIN
       !>     by the expression:
@@ -21712,7 +21712,7 @@ contains
       !>     The likelihood of this occurring is so small as to be of no
       !>     concern.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -21776,22 +21776,22 @@ contains
       !>        Input vector  :     0.0    0.0    0.0    0.0
       !>        Negated vector:    -0.0   -0.0   -0.0   -0.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.3, 02-OCT-2020 (JDR)
       !>
@@ -21829,28 +21829,28 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array expressions instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1       is any double precision 3-dimensional vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is the negation (additive inverse) of V1. It is a
       !>              double precision 3-dimensional vector.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For each value of the index I from 1 to 3, VMINUS negates V1
       !>     by the expression:
@@ -21864,7 +21864,7 @@ contains
       !>     The likelihood of this occurring is so small as to be of no
       !>     concern.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -21924,22 +21924,22 @@ contains
       !>        Input vector  :    0.0   0.0   0.0
       !>        Negated vector:   -0.0  -0.0  -0.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.3, 02-OCT-2021 (JDR)
       !>
@@ -21974,28 +21974,28 @@ contains
       !>
       !> The function returns the magnitude of V1.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1       is any double precision 3-dimensional vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the magnitude of V1 calculated in a
       !>     numerically stable way.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     VNORM takes care to avoid overflow while computing the norm of the
       !>     input vector V1. VNORM finds the component of V1 whose magnitude
@@ -22008,7 +22008,7 @@ contains
       !>
       !>     where the notation ||X|| indicates the norm of the vector X.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -22076,21 +22076,21 @@ contains
       !>        Input vector:  -0.50E-16  0.00E+00  0.12E-15
       !>        Magnitude   :   0.00000000000000013000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 06-JUL-2020 (JDR)
       !>
@@ -22139,30 +22139,30 @@ contains
       !>
       !> The function returns the magnitude of V1.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1       is any double precision vector of arbitrary dimension.
       !>
       !>     NDIM     is the dimension of the input vector V1.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the magnitude of V1 calculated in a
       !>     numerically stable way.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     VNORMG finds the component of V1 whose magnitude is the largest.
       !>     If the absolute magnitude of that component indicates that a
@@ -22180,7 +22180,7 @@ contains
       !>     Beyond the logic described above, no further checking of the
       !>     validity of the input is performed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -22236,21 +22236,21 @@ contains
       !>            5      (5.D0, 12.D0, 0.D0, 0.D0, 0.D0)   13.D0
       !>            3      (-5.D-17, 0.D0, 12.D-17)          13.D-17
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -22320,13 +22320,13 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (an array constructor instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     X,
       !>     Y,
       !>     Z        are the scalar components of a 3-dimensional vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     V        is the equivalent vector, such that
       !>
@@ -22334,19 +22334,19 @@ contains
       !>                 V(2) = Y
       !>                 V(3) = Z
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Basically, this is just shorthand notation for the common
       !>     sequence
@@ -22375,7 +22375,7 @@ contains
       !>        CALL VPACK  ( X,   Y, Z, V )
       !>        CALL VSCLIP ( RPD, V       )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input
@@ -22422,21 +22422,21 @@ contains
       !>
       !>        NORMAL =   0.0000000000000  0.0000000000000  2.5980762113533
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-JUL-2020 (JDR)
       !>
@@ -22469,7 +22469,7 @@ contains
       !> Find the component of a vector that is perpendicular to a second
       !> vector. All vectors are 3-dimensional.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a double precision, 3-dimensional vector. It the
       !>              vector whose component orthogonal to B is sought. (There
@@ -22481,25 +22481,25 @@ contains
       !>              vector is the vector used as a reference for the
       !>              decomposition of A.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     P        is a double precision, 3-dimensional vector containing
       !>              the component of A that is orthogonal to B.
       !>              P may overwrite either A or B.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given and non-zero vector B and a vector A, there is a unique
       !>     decomposition of A as a sum V + P such that P is orthogonal
@@ -22507,7 +22507,7 @@ contains
       !>
       !>     If B is a zero vector, P will be identical to A.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following table gives sample inputs and results from calling
       !>     VPERP.
@@ -22519,23 +22519,23 @@ contains
       !>        (6, 6, 0)      ( 0, 7, 0)        (6, 0, 0)
       !>        (6, 0, 0)      ( 0, 0, 9)        (6, 0, 0)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  G. Thomas and R. Finney, "Calculus and Analytic Geometry,"
       !>          7th Edition, Addison Wesley, 1988.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 16-SEP-2020 (JDR)
       !>
@@ -22624,7 +22624,7 @@ contains
       !> Compute the projection of one 3-dimensional vector onto another
       !> 3-dimensional vector.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a double precision, 3-dimensional vector. This
       !>              vector is to be projected onto the vector B.
@@ -22632,26 +22632,26 @@ contains
       !>     B        is a double precision, 3-dimensional vector. This
       !>              vector is the vector which receives the projection.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     P        is a double precision, 3-dimensional vector containing
       !>              the projection of A onto B. (P is necessarily parallel
       !>              to B.) If B is the zero vector then P will be returned
       !>              as the zero vector.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Given any vectors A and B, there is a unique decomposition of
       !>     A as a sum V + P such that V, the dot product of V and B, is zero,
@@ -22666,7 +22666,7 @@ contains
       !>     (This is not necessarily the prescription used to compute the
       !>     projection. It is intended only for descriptive purposes.)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -22751,24 +22751,24 @@ contains
       !>        Vector B  :   0.0  0.0  9.0
       !>        Projection:   0.0  0.0  0.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  An implicit assumption exists that A and B are specified in
       !>         the same reference frame. If this is not the case, the
       !>         numerical result has no meaning.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  G. Thomas and R. Finney, "Calculus and Analytic Geometry,"
       !>          7th Edition, Addison Wesley, 1988.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -22789,7 +22789,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 4-JAN-1989 (WLT)
       !>
@@ -22846,7 +22846,7 @@ contains
       !> Compute the projection of one vector onto another vector. All
       !> vectors are of arbitrary dimension.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     A        is a double precision vector of arbitrary dimension.
       !>              This vector is to be projected onto the vector B.
@@ -22857,25 +22857,25 @@ contains
       !>
       !>     NDIM     is the dimension of A, B and P.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     P        is a double precision vector of arbitrary dimension
       !>              containing the projection of A onto B. (P is
       !>              necessarily parallel to B.)
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The projection of a vector A onto a vector B is, by definition,
       !>     that component of A which is parallel to B. To find this
@@ -22889,7 +22889,7 @@ contains
       !>     does not attempt to divide by zero in the event that B is the
       !>     zero vector.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -22973,7 +22973,7 @@ contains
       !>        Vector B  :   0.0  0.0  9.0  0.0
       !>        Projection:   0.0  0.0  0.0  0.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No error detection or recovery schemes are incorporated into
       !>         this routine except to insure that no attempt is made to
@@ -22981,12 +22981,12 @@ contains
       !>         the vectors A and B are such that no floating point overflow
       !>         will occur when the dot products are calculated.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  G. Thomas and R. Finney, "Calculus and Analytic Geometry,"
       !>          7th Edition, Addison Wesley, 1988.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -22994,7 +22994,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -23054,13 +23054,13 @@ contains
       !> The function returns the relative difference between two
       !> 3-dimensional vectors.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1,
       !>     V2       are two 3-dimensional vectors for which the relative
       !>              difference is to be computed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the relative difference between the two input
       !>     3-dimensional vectors V1 and V2.
@@ -23076,22 +23076,22 @@ contains
       !>     VREL assumes values in the range [0,2]. If both V1 and V2 are zero
       !>     vectors then VREL is defined to be zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If both V1 and V2 are zero vectors, then VREL is defined
       !>         to be zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function computes the relative difference between two
       !>     3-dimensional vectors as defined above.
@@ -23099,7 +23099,7 @@ contains
       !>     The function VRELG may be used to find the relative difference
       !>     for two vectors of general dimension.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This example code fragment computes the relative difference
       !>     between the geometric and light time corrected state of Io
@@ -23165,20 +23165,20 @@ contains
       !>           .
       !>           .
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -23227,7 +23227,7 @@ contains
       !> The function returns the relative difference between two vectors
       !> of general dimension.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1,
       !>     V2       are two vectors for which the relative difference is to
@@ -23235,7 +23235,7 @@ contains
       !>
       !>     NDIM     is the dimension of V1 and V2.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the relative difference between the two input
       !>     n-dimensional vectors V1 and V2.
@@ -23251,22 +23251,22 @@ contains
       !>     VRELG assumes values in the range [0,2]. If both V1 and V2 are
       !>     zero vectors then VRELG is defined to be zero.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If both V1 and V2 are zero vectors, then VRELG is defined to
       !>         be zero.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function computes the relative difference between two vectors
       !>     of general dimension as defined above.
@@ -23274,7 +23274,7 @@ contains
       !>     The function VREL may be used to find the relative difference
       !>     for two 3-dimensional vectors.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This example determines if the state of Jupiter, with respect
       !>     to Voyager 2, for a set of times is the same for two different
@@ -23365,20 +23365,20 @@ contains
       !>
       !>                 END DO
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     J.M. Lynch         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -23425,7 +23425,7 @@ contains
       !> Rotate a vector about a specified axis vector by a specified
       !> angle and return the rotated vector.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V        is a 3-dimensional vector to be rotated.
       !>
@@ -23435,27 +23435,27 @@ contains
       !>     THETA    is the angle through which V is to be rotated about
       !>              AXIS.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     R        is the result of rotating V about AXIS by THETA.
       !>              If AXIS is the zero vector, R = V.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If the input axis is the zero vector, R will be returned
       !>         as V.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine computes the result of rotating (in a right handed
       !>     sense) the vector V about the axis represented by AXIS through
@@ -23467,7 +23467,7 @@ contains
       !>
       !>     where "x" above denotes the vector cross product.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     If AXIS = ( 0, 0, 1 ) and THETA = PI/2 then the following results
       !>     for R will be obtained
@@ -23497,22 +23497,22 @@ contains
       !>        ( 3.0      2.0,     1.0     )   ( 1.422.., 3.154.., 1.422.. )
       !>        ( 1.422.., 3.154.., 1.422.. )   ( 1.0      2.0,     3.0     )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -23602,7 +23602,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array expressions instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     S        is a double precision scalar used to multiply the vector
       !>              V1.
@@ -23610,24 +23610,24 @@ contains
       !>     V1       is a double precision 3-dimensional vector, which is to
       !>              be scaled by S.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is a double precision 3-dimensional vector containing
       !>              the product of the scalar with the vector V1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For each value of the index I from 1 to 3, this subroutine
       !>     performs the following multiplication
@@ -23637,7 +23637,7 @@ contains
       !>     No error checking is performed to guard against numeric overflow
       !>     or underflow.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -23706,25 +23706,25 @@ contains
       !>        Scale factor :   -1.0
       !>        Output vector:   -1.0  -2.0   3.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is responsible for insuring that no floating point
       !>         overflow occurs from multiplying S by any component of V1. No
       !>         error recovery or reporting scheme is incorporated in this
       !>         subroutine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -23761,7 +23761,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array expressions instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     S        is a double precision scalar.
       !>
@@ -23769,24 +23769,24 @@ contains
       !>
       !>     NDIM     is the dimension of V1 (and VOUT).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is a double precision n-dimensional vector containing
       !>              the product of the scalar with the vector V1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For each value of the index I from 1 to NDIM, this subroutine
       !>     performs the following multiplication
@@ -23796,7 +23796,7 @@ contains
       !>     No error checking is performed to guard against numeric overflow
       !>     or underflow.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -23868,24 +23868,24 @@ contains
       !>        Scale factor :   -1.0
       !>        Output vector:   -1.0  -2.0   3.0  -4.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No error checking is performed to guard against numeric
       !>         overflow. The programmer is thus required to insure that the
       !>         values in V1 and S are reasonable and will not cause overflow.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -23923,7 +23923,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array expressions instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     S        is a double precision scalar used to multiply the vector
       !>              V.
@@ -23931,26 +23931,26 @@ contains
       !>     V        is a 3-dimensional, double precision vector which is to
       !>              be scaled by S.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     V        is the 3-dimensional, double precision vector resulting
       !>              from the scalar multiplication
       !>
       !>                 S * V
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is provided for situation where it is convenient to
       !>     scale a vector in place rather than store the result in a
@@ -23964,7 +23964,7 @@ contains
       !>     VSCLIP multiplies each component of V by S to form the respective
       !>     components of the output vector. No error checking is performed.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following table shows the output V as a function of the
       !>     the inputs V and S.
@@ -23974,24 +23974,24 @@ contains
       !>        (1D0, -2D0, 0D0)   -1D0       (-1D0, 2D0, 0D0)
       !>        (0D0, 0D0, 0D0)     5D0       (0D0, 0D0, 0D0)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is responsible for insuring that no floating point
       !>         overflow occurs from multiplying S by any component of V. No
       !>         error recovery or reporting scheme is incorporated in this
       !>         subroutine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 16-AUG-2021 (JDR)
       !>
@@ -24017,7 +24017,7 @@ contains
       !> The function returns the angle between V1 and V2 expressed in
       !> radians.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1,
       !>     V2       are two double precision 3-dimensional vectors. Either
@@ -24028,7 +24028,7 @@ contains
       !>              the case, the numerical result of this routine has no
       !>              meaning.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the angle between V1 and V2 expressed in
       !>     radians.
@@ -24036,19 +24036,19 @@ contains
       !>     VSEP is strictly non-negative. If either V1 or V2 is the zero
       !>     vector, then VSEP is defined to be 0 radians.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In the plane, it is a simple matter to calculate the angle
       !>     between two vectors once the two vectors have been made to be
@@ -24076,7 +24076,7 @@ contains
       !>
       !>           VSEP = PI - SUPPLEMENTARY_ANGLE
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -24156,7 +24156,7 @@ contains
       !>        Second vector           :   -5.0   0.0   0.0
       !>        Angular separation (rad):    3.1415926536
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is required to insure that the input vectors will not
       !>         cause floating point overflow upon calculation of the vector
@@ -24164,11 +24164,11 @@ contains
       !>         implemented. In practice, this is not a significant
       !>         restriction.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     K.R. Gehringer     (JPL)
@@ -24176,7 +24176,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 05-JUL-2021 (JDR)
       !>
@@ -24267,7 +24267,7 @@ contains
       !> The function returns the angle between V1 and V2 expressed in
       !> radians.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1,
       !>     V2       are two double precision vectors of arbitrary dimension.
@@ -24280,7 +24280,7 @@ contains
       !>
       !>     NDIM     is the dimension of both V1 and V2.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the angle between V1 and V2 expressed in
       !>     radians.
@@ -24290,19 +24290,19 @@ contains
       !>     definition for three dimensions. If either V1 or V2 is the zero
       !>     vector, then VSEPG is defined to be 0 radians.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     In four or more dimensions this angle does not have a physically
       !>     realizable interpretation. However, the angle is defined as
@@ -24335,7 +24335,7 @@ contains
       !>
       !>           VSEPG = PI - SUPPLEMENTARY_ANGLE
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -24420,7 +24420,7 @@ contains
       !>        Second vector           :   -5.0   0.0   0.0   0.0
       !>        Angular separation (rad):    3.1415926536
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is required to insure that the input vectors will not
       !>         cause floating point overflow upon calculation of the vector
@@ -24428,11 +24428,11 @@ contains
       !>         implemented. In practice, this is not a significant
       !>         restriction.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.A. Curzon        (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -24440,7 +24440,7 @@ contains
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.2.0, 06-JUL-2021 (JDR)
       !>
@@ -24541,7 +24541,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array expressions instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1       is a double precision 3-dimensional vector which is the
       !>              minuend (i.e. first or left-hand member) in the vector
@@ -24551,24 +24551,24 @@ contains
       !>              subtrahend (i.e. second or right-hand member) in the
       !>              vector subtraction.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is a double precision 3-dimensional vector which
       !>              represents the vector difference, V1 - V2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For each value of the index I from 1 to 3, this routine performs
       !>     the following subtraction:
@@ -24578,7 +24578,7 @@ contains
       !>     No error checking is performed to guard against numeric overflow
       !>     or underflow.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -24654,18 +24654,18 @@ contains
       !>        Second vector:   -1.0   2.0  -3.0
       !>        Difference   :    2.0   0.0   6.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The user is required to determine that the magnitude each
       !>         component of the vectors is within the appropriate range so as
       !>         not to cause floating point overflow. No error recovery or
       !>         reporting scheme is incorporated in this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -24673,7 +24673,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.4, 03-JUL-2020 (JDR)
       !>
@@ -24716,7 +24716,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (array expressions instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1       is a double precision vector of arbitrary dimension which
       !>              is the minuend (i.e. first or left-hand member) in the
@@ -24728,24 +24728,24 @@ contains
       !>
       !>     NDIM     is the dimension of V1 and V2 (and VOUT).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     VOUT     is a double precision n-dimensional vector which
       !>              represents the vector difference, V1 - V2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     For each value of the index I from 1 to NDIM, this routine
       !>     performs the following subtraction:
@@ -24755,7 +24755,7 @@ contains
       !>     No error checking is performed to guard against numeric overflow
       !>     or underflow.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -24836,7 +24836,7 @@ contains
       !>        Second vector:   -1.0   2.0  -3.0   4.0
       !>        Difference   :    2.0   0.0   6.0   0.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  No error checking is performed to guard against numeric
       !>         overflow. The programmer is thus required to insure that the
@@ -24844,11 +24844,11 @@ contains
       !>         overflow. No error recovery or reporting scheme is
       !>         incorporated in this routine.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -24856,7 +24856,7 @@ contains
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -24898,7 +24898,7 @@ contains
       !> The function returns the result of multiplying the transpose of
       !> V1 by MATRIX by V2.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1       is any double precision 3-dimensional column vector.
       !>
@@ -24906,7 +24906,7 @@ contains
       !>
       !>     V2       is any double precision 3-dimensional column vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the double precision value of the equation
       !>
@@ -24917,19 +24917,19 @@ contains
       !>     resulting from multiplying the transpose of V1 and MATRIX and the
       !>     vector V2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine implements the following vector/matrix/vector
       !>     multiplication:
@@ -24943,7 +24943,7 @@ contains
       !>     No checking is performed to determine whether floating point
       !>     overflow has occurred.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -25035,21 +25035,21 @@ contains
       !>
       !>        Transpose of V1 times MATRIX times V2:   4.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -25090,7 +25090,7 @@ contains
       !>
       !> The function returns the result of (V1**T * MATRIX * V2 ).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V1       is an n-dimensional double precision vector.
       !>
@@ -25104,7 +25104,7 @@ contains
       !>     NCOL     is the number of columns in MATRIX. This is also
       !>              equivalent to the number of rows in the vector V2.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the double precision value of the equation
       !>     (V1**T * MATRIX * V2 ).
@@ -25113,19 +25113,19 @@ contains
       !>     resulting from multiplying the transpose of V1 and MATRIX and the
       !>     vector V2.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine implements the following vector/matrix/vector
       !>     multiplication:
@@ -25145,7 +25145,7 @@ contains
       !>     No checking is performed to determine whether floating point
       !>     overflow has occurred.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     If  V1 = | 1.0D0 |  MATRIX = | 2.0D0  0.0D0 |  V2 = | 1.0D0 |
       !>              |       |           |              |       |       |
@@ -25158,23 +25158,23 @@ contains
       !>
       !>     then the value of the function is  21.0D0.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  Since no error detection or recovery is implemented, the
       !>         programmer is required to insure that the inputs to this
       !>         routine are both valid and within the proper range.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 13-AUG-2021 (JDR)
       !>
@@ -25220,11 +25220,11 @@ contains
 
       !> Unpack three scalar components from a vector.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V        is a double precision 3-dimensional vector.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     X,
       !>     Y,
@@ -25235,19 +25235,19 @@ contains
       !>                 Y = V(2)
       !>                 Z = V(3)
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Basically, this is just shorthand notation for the common
       !>     sequence
@@ -25276,7 +25276,7 @@ contains
       !>        CALL VSCLIP ( RPD(),  V    )
       !>        CALL VUPACK ( V,   X, Y, Z )
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -25371,21 +25371,21 @@ contains
       !>        Green (nm): 550.00
       !>        Red   (nm): 650.00
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.2, 07-SEP-2020 (JDR)
       !>
@@ -25431,28 +25431,28 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (ALL instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V        is a vector in 3-space.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value .TRUE. if and only if V is the
       !>     zero vector.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function has the same truth value as the logical expression
       !>
@@ -25470,7 +25470,7 @@ contains
       !>     A related function is VZEROG, which accepts vectors of arbitrary
       !>     dimension.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     1)  When testing whether a vector is the zero vector, one
       !>         normally constructs tests like
@@ -25501,22 +25501,22 @@ contains
       !>                          .
       !>                          .
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUL-2021 (JDR)
       !>
@@ -25550,22 +25550,22 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (ALL instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     V,
       !>     NDIM     are, respectively, an n-dimensional vector and its
       !>              dimension.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     The function returns the value .TRUE. if and only if V is the
       !>     zero vector.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -25573,11 +25573,11 @@ contains
       !>         .FALSE. (A vector of non-positive dimension cannot be the
       !>         zero vector.)
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This function has the same truth value as the logical expression
       !>
@@ -25595,7 +25595,7 @@ contains
       !>     A related function is VZERO, which accepts three-dimensional
       !>     vectors.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -25751,22 +25751,22 @@ contains
       !>          -1.0000000   0.0000000  -0.0000000
       !>          -0.0000000   0.0000000   1.0000000
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 05-JUL-2021 (JDR)
       !>
@@ -25799,12 +25799,12 @@ contains
       !> Determine the rotation matrix and angular velocity of the
       !> rotation from a state transformation matrix.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     XFORM    is a state transformation matrix from one frame
       !>              FRAME1 to some other frame FRAME2.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ROT      is a rotation that gives the transformation from
       !>              some frame FRAME1 to another frame FRAME2.
@@ -25824,22 +25824,22 @@ contains
       !>
       !>              The components of AV are given relative to FRAME1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  No checks are performed on XFORM to ensure that it is indeed
       !>         a state transformation matrix.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine is essentially a macro routine for converting
       !>     state transformation matrices into the equivalent representation
@@ -25847,7 +25847,7 @@ contains
       !>
       !>     This routine is an inverse of the routine RAV2XF.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -25966,20 +25966,20 @@ contains
       !>        Angular velocity:
       !>           0.00000004025   0.00000000324   0.00007292114
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.1, 19-MAY-2020 (JDR)
       !>
@@ -26088,28 +26088,28 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (TRANSPOSE instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     M1       is any double precision 3x3 matrix.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MOUT     is a double precision, 3x3 matrix which contains the
       !>              transpose of M1.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     XPOSE first copies the diagonal elements of M1 to MOUT. Then
       !>     the off-diagonal elements are transposed using a temporary
@@ -26119,7 +26119,7 @@ contains
       !>        (1,3) <---> (3,1)
       !>        (2,3) <---> (3,2)
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -26186,22 +26186,22 @@ contains
       !>           2.0   4.0   6.0
       !>           3.0   5.0   0.0
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 06-JUL-2021 (JDR)
       !>
@@ -26240,7 +26240,7 @@ contains
       !> PEPPER: kept for backward compatibility (SPICELIB's interface); the
       !> library does not use it (TRANSPOSE and RESHAPE instead).
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MATRIX   is a matrix to be transposed.
       !>
@@ -26248,26 +26248,26 @@ contains
       !>
       !>     NCOL     is the number of columns of input matrix MATRIX.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     XPOSEM   is the transposed matrix.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If either NROW or NCOL is less than or equal to zero, no
       !>         action is taken. The routine simply returns.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine transposes the input matrix MATRIX and writes the
       !>     result to the matrix XPOSEM. This algorithm is performed in
@@ -26327,7 +26327,7 @@ contains
       !>     algorithm is slower than would be necessary if the numbers
       !>     of rows and columns were known in advance.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine is primarily useful when attempting to transpose
       !>     large matrices, where inplace transposition is important. For
@@ -26347,22 +26347,22 @@ contains
       !>
       !>         CALL XPOSEG ( MATRIX, 1003, 800, XPOSEM )
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
       !>     H.A. Neilan        (JPL)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 13-AUG-2021 (JDR)
       !>
@@ -26411,7 +26411,7 @@ contains
 
       !> Transpose a matrix of arbitrary size and shape in place.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NROW     is the number of rows of input matrix MATRIX.
       !>
@@ -26419,27 +26419,27 @@ contains
       !>
       !>     MATRIX   is a matrix to be transposed.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     MATRIX   is the transposed matrix: element (i,j) of the input
       !>              matrix is element (j,i) of the output matrix.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
       !>     1)  If either NROW or NCOL is less than or equal to zero, no
       !>         action is taken. The routine simply returns.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine replaces the input matrix MATRIX with its transpose.
       !>
@@ -26493,7 +26493,7 @@ contains
       !>     algorithm is slower than would be necessary if the numbers
       !>     of rows and columns were known in advance.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     This routine is provided for situation where it is convenient to
       !>     transpose a general two-dimensional matrix
@@ -26505,20 +26505,20 @@ contains
       !>     is not permitted by the ANSI Fortran 77 standard; this routine
       !>     can be called instead to achieve the same result.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 12-AUG-2021 (JDR)
       !>
@@ -26638,7 +26638,7 @@ contains
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -26647,7 +26647,7 @@ contains
       !>     This routine multiplies together a sequence of state
       !>     transformation matrices.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MATRIX      is an array of 6x6 state transformation matrices.
       !>                 It is essential that all these matrices have the form
@@ -26668,7 +26668,7 @@ contains
       !>     N           is an integer giving the number of matrices in the
       !>                 sequence.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUTPUT      is the product of the matrices stored in MATRIX.
       !>                 Specifically, it is the result of the product
@@ -26680,11 +26680,11 @@ contains
       !>
       !>                    M_K( I, J )  = MATRIX ( I, J, K )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -26694,11 +26694,11 @@ contains
       !>     2) IF N is 1 OUTPUT will be returned as M_1 where M_1 is
       !>        the matrix defined above in the description of OUTPUT.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a private SPICE routine that computes the product
       !>     of a sequence of state transformation matrices.
@@ -26736,23 +26736,23 @@ contains
       !>     As can be seen this can be computed with 3 3x3 matrix multiplies
       !>     and one 3x3 matrix addition.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber      (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>
@@ -27004,7 +27004,7 @@ contains
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
       !>
-      !> ## Abstract
+      !>## Abstract
       !>
       !>     SPICE Private routine intended solely for the support of SPICE
       !>     routines.  Users should not call this routine directly due
@@ -27013,14 +27013,14 @@ contains
       !>     This routine multiplies together a sequence of state
       !>     transformation matrices.
       !>
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     MATRIX      is an array of 3x3  matrices.
       !>
       !>     N           is an integer giving the number of matrices in the
       !>                 sequence.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUTPUT      is the product of the matrices stored in MATRIX.
       !>                 Specifically, it is the result of the product
@@ -27032,11 +27032,11 @@ contains
       !>
       !>                    M_K( I, J )  = MATRIX ( I, J, K )
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -27046,32 +27046,32 @@ contains
       !>     2) IF N is 1 OUTPUT will be returned as M_1 where M_1 is
       !>        the matrix defined above in the description of OUTPUT.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This is a private SPICE routine that computes the product
       !>     of a sequence of 3x3  matrices.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     None.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     W.L. Taber      (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.0.1, 03-OCT-2021 (NJB)
       !>

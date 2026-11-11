@@ -11,7 +11,7 @@ submodule (pepper_instance) pepper_time_api
 
 contains
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     EPOCH    is the epoch at which "delta ET" is to be computed.
       !>              EPOCH may be either UTC or ephemeris seconds past
@@ -26,7 +26,7 @@ contains
       !>                          also known as barycentric dynamical
       !>                          time (TDB).
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     DELTA    is the value of
       !>
@@ -45,11 +45,11 @@ contains
       !>
       !>              is always .TRUE.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input epoch is not recognized, the error
       !>         SPICE(INVALIDEPOCH) is signaled.
@@ -62,11 +62,11 @@ contains
       !>         the pool (SPICELIB: 200, then the error
       !>         SPICE(BUFFERTOOSMALL), documented as SPICE(BUFFEROVERFLOW)).
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     The constants necessary for computing the offset are taken
       !>     from the kernel pool, where they are assumed to have been
@@ -80,7 +80,7 @@ contains
       !>
       !>        Delta ET = ( ET - TAI ) + leap seconds
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The following example shows how DELTET may be used to convert
       !>     from UTC seconds past J2000 to ephemeris seconds past J2000.
@@ -96,7 +96,7 @@ contains
       !>
       !>     See the Time required reading time.req for further examples.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The routines STR2ET and ET2UTC are preferred for conversions
       !>         between UTC and ET. This routine is provided mainly as a
@@ -110,13 +110,13 @@ contains
       !>         kernel pools, please consult the Required Reading file
       !>         kernel.req.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  "The Astronomical Almanac for the Year 1990," United States
       !>          Naval Observatory, U.S. Government Printing Office,
       !>          Washington, D.C., 1989.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -125,7 +125,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     I.M. Underwood     (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.3.0, 24-AUG-2021 (JDR)
       !>
@@ -164,7 +164,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    Beta Version 1.1.0, 06-OCT-1988 (IMU)
       !>
@@ -393,7 +393,7 @@ contains
          end subroutine read_constants
       end procedure deltet
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is the input epoch, ephemeris seconds past J2000.
       !>
@@ -417,7 +417,7 @@ contains
       !>              point is appended to the output string. If PREC is
       !>              greater than 14, it is treated as 14.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     UTCSTR   is the output time string equivalent to the input
       !>              epoch, in the specified format. Some examples are
@@ -456,11 +456,11 @@ contains
       !>              For years prior to 1 A.D. an error will be signaled
       !>              if ISO format has been requested.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the format for the output string is not recognized, the
       !>         error SPICE(INVALIDTIMEFORMAT) is signaled.
@@ -491,20 +491,20 @@ contains
       !>         this routine, an error is signaled by a routine in the
       !>         call tree of this routine.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A leapseconds kernel must be loaded via FURNSH prior to calling
       !>     this routine. The kernel need be loaded only once during a program
       !>     run.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine handles the task of converting a double precision
       !>     representation of an epoch to a character string suitable for
       !>     human consumption. The more general routine TIMOUT may also be
       !>     used to convert ET to time strings.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Let the value of ET be -527644192.5403653 ephemeris seconds
       !>     past J2000. Assuming that the nominal values in the kernel pool
@@ -524,17 +524,17 @@ contains
       !>
       !>     respectively.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  J. Jespersen and J. Fitz-Randolph, "From Sundials to Atomic
       !>          Clocks, Understanding Time and Frequency," Dover
       !>          Publications, Inc. New York, 1982.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     C.H. Acton         (JPL)
       !>     N.J. Bachman       (JPL)
@@ -547,7 +547,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.0.5, 24-AUG-2021 (JDR)
       !>
@@ -607,7 +607,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO) (IMU)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 3.0.0, 13-MAR-1996 (WLT)
       !>
@@ -1438,7 +1438,7 @@ contains
 !
 !     Local variables
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     NMARKS   is the number of recognized marks that will be
       !>              recognized substrings of STRING.
@@ -1451,7 +1451,7 @@ contains
       !>              entries in MARKS is significant. The MARKS
       !>              'XX' and 'xx' are regarded as different MARKS.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     NMARKS   is the number of marks in the array MARKS after it
       !>              has been prepared for SCAN.
@@ -1648,11 +1648,11 @@ contains
       !>                                    '}'            125
       !>                                    '~'            126
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -1662,11 +1662,11 @@ contains
       !>     2)  If NMARKS is less than or equal to zero, SCAN will always
       !>         find a single token, namely the entire string to be scanned.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine prepares the arrays MARKS, MRKLEN and PNTERS
       !>     so that they are suitable for input to the routine SCAN.
@@ -1678,7 +1678,7 @@ contains
       !>     be efficiently scanned by the routine SCAN. This formatting
       !>     is the function of this routine.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Suppose you need to identify all of the words within a string
       !>     and wish to ignore punctuation marks such as ' ', ',', ':', ';'
@@ -1740,23 +1740,23 @@ contains
       !>     a small overhead required for preparing the data so that it
       !>     can be used efficiently in scanning.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  MRKLEN and PNTERS must be declared to be at least as large
       !>         as indicated above. If not, this routine will write
       !>         past the ends of these arrays. Much unpleasantness may
       !>         ensue in the attempt to debug such problems.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -1929,7 +1929,7 @@ contains
       return
       end procedure scanpr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     STRING   is any character string that is to be scanned
       !>              to locate recognized and unrecognized substrings.
@@ -1991,7 +1991,7 @@ contains
       !>     START    is the position from which scanning should commence.
       !>              Values of START less than 1 are treated as 1.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     START    is the position from which scanning should continue
       !>              in order to fully scan STRING (if sufficient memory was
@@ -2018,11 +2018,11 @@ contains
       !>              IDENT should be declared so that it can contain at least
       !>              ROOM integers.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -2036,11 +2036,11 @@ contains
       !>         tokens will be found and the value of START will return
       !>         unchanged.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     This routine allows you to scan a string and partition it into
       !>     recognized and unrecognized substrings.
@@ -2054,7 +2054,7 @@ contains
       !>     required to scan the string are the same in both instances. The
       !>     examples below illustrate some common situations.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     Example 1.
       !>     ----------
@@ -2238,21 +2238,21 @@ contains
       !>        The rest of the routine is left as a non-trivial exercise
       !>        for the reader.
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The arrays MARKS, MRKLEN, and PNTERS must be prepared by the
       !>         routine SCANPR prior to supplying them for use by SCAN.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 26-OCT-2021 (JDR)
       !>
@@ -2451,12 +2451,12 @@ contains
       return
       end procedure scan
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     SAMPLE   is a representative time string that to use
       !>              as a model to format time strings.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     PICTUR   is a format picture suitable for use with the SPICE
       !>              routine TIMOUT. This picture when used to format
@@ -2482,11 +2482,11 @@ contains
       !>              contain the full message, the message will be truncated
       !>              on the right.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     Error free.
       !>
@@ -2495,11 +2495,11 @@ contains
       !>     2)  If a format picture can not be created from the sample
       !>         time string, PICTUR is returned as a blank string.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Although the routine TIMOUT provides SPICE users with a great
       !>     deal of flexibility in formatting time strings, users must
@@ -2518,7 +2518,7 @@ contains
       !>     formats are not widely used and are not generally recognizable
       !>     to an uninitiated reader.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for this example may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -2612,20 +2612,20 @@ contains
       !>         Input UTC    : 24 Mar 2018  16:23:00 UTC
       !>         Output       : Sat Mar 24 09:23:00 PDT 2018
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.L. Taber         (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 1.1.0, 25-AUG-2021 (JDR)
       !>
@@ -2677,24 +2677,24 @@ contains
       return
       end procedure tpictr
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     UTCSTR   is an input time string, containing a Calendar or Julian
       !>              Date, UTC. Any input string acceptable to the SPICELIB
       !>              routine TPARTV are acceptable to UTC2ET. The length of
       !>              UTCSTR should not exceed 80 characters.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     ET       is the equivalent of UTCSTR, expressed in ephemeris
       !>              seconds past J2000. If an error occurs, or if the
       !>              input string is ambiguous, ET is not changed.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  If the input time string is ambiguous, the error
       !>         SPICE(INVALIDTIMESTRING) is signaled.
@@ -2704,11 +2704,11 @@ contains
       !>         to Jan 1, 1972. For days prior to that date, we assume
       !>         there are exactly 86400 ephemeris seconds.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     None.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     Note: NAIF recommends the use of STR2ET instead of UTC2ET.
       !>
@@ -2743,7 +2743,7 @@ contains
       !>     from Julian Calendar strings, we suggest that
       !>     you make use of the SPICELIB routine STR2ET.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as
@@ -2901,7 +2901,7 @@ contains
       !>        Ephemeris time       :   125124544.183560610
       !>        Julian Ephemeris Date:     2452993.200742865
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     1)  The conversion between ET and UTC depends on the values in the
       !>         input kernel pool. The kernel pool should be loaded prior to
@@ -2912,13 +2912,13 @@ contains
       !>         that the assumptions made in this routine are consistent
       !>         with the accuracy you require for your application.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     [1]  J. Jespersen and J. Fitz-Randolph, "From Sundials to Atomic
       !>          Clocks, Understanding Time and Frequency," Dover
       !>          Publications, Inc. New York, 1982.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     J. Diaz del Rio    (ODC Space)
       !>     W.M. Owen          (JPL)
@@ -2926,7 +2926,7 @@ contains
       !>     I.M. Underwood     (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 2.1.1, 13-AUG-2021 (JDR) (EDW)
       !>
@@ -3126,7 +3126,7 @@ contains
 
       end procedure utc2et
 
-      !> ## Detailed Input
+      !>## Detailed Input
       !>
       !>     ET       is a double precision representation of time in seconds
       !>              past the ephemeris epoch J2000.
@@ -3152,16 +3152,16 @@ contains
       !>              Note that leading and trailing blanks in PICTUR are
       !>              ignored.
       !>
-      !> ## Detailed Output
+      !>## Detailed Output
       !>
       !>     OUTPUT   is a time string equivalent to the input epoch ET,
       !>              matching the format specified by PICTUR.
       !>
-      !> ## Parameters
+      !>## Parameters
       !>
       !>     None.
       !>
-      !> ## Exceptions
+      !>## Exceptions
       !>
       !>     1)  A leapseconds kernel must be loaded via the routine FURNSH
       !>         before calling this routine. If a leapsecond kernel has not
@@ -3181,12 +3181,12 @@ contains
       !>         markers, has no effect and will be presented as is on the
       !>         output string.
       !>
-      !> ## Files
+      !>## Files
       !>
       !>     A leapseconds kernel must be "loaded" via the routine FURNSH
       !>     prior to calling TIMOUT.
       !>
-      !> ## Particulars
+      !>## Particulars
       !>
       !>     A format picture is simply a string of letters that lets
       !>     TIMOUT know where various components of a time representation
@@ -3514,7 +3514,7 @@ contains
       !>        patterns that you use when you want to communicate outside
       !>        your particular circle of colleagues.
       !>
-      !> ## Examples
+      !>## Examples
       !>
       !>     The numerical results shown for these examples may differ across
       !>     platforms. The results depend on the SPICE kernels used as input,
@@ -3672,15 +3672,15 @@ contains
       !>         Input UTC: 26 Nov 2018  16:23:00 UTC
       !>         Output   : Mon Nov 26 09:23  2018 (2458449.1826 JDUTC)
       !>
-      !> ## Restrictions
+      !>## Restrictions
       !>
       !>     None.
       !>
-      !> ## Literature References
+      !>## Literature References
       !>
       !>     None.
       !>
-      !> ## Author and Institution
+      !>## Author and Institution
       !>
       !>     N.J. Bachman       (JPL)
       !>     J. Diaz del Rio    (ODC Space)
@@ -3688,7 +3688,7 @@ contains
       !>     W.L. Taber         (JPL)
       !>     E.D. Wright        (JPL)
       !>
-      !> ## Version
+      !>## Version
       !>
       !>-    SPICELIB Version 3.4.0, 07-AUG-2021 (EDW) (JDR) (NJB)
       !>
@@ -3760,7 +3760,7 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT) (MJS) (NJB)
       !>
-      !> ## Revisions
+      !>## Revisions
       !>
       !>-    SPICELIB Version 3.0.0, 30-DEC-1997 (WLT)
       !>
