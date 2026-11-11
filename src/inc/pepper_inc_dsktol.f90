@@ -46,143 +46,107 @@ module pepper_inc_dsktol
 
    public
 
-!     This parameter is user-adjustable.
-!
-   real(wp), parameter :: xfract = 1.0e-10_wp
+   real(wp), parameter :: xfract = 1.0e-10_wp  !! This parameter is user-adjustable.
 
-!
-!     The keyword for setting or retrieving this factor is
-!
-   integer(ip), parameter :: keyxfr = 1
+   integer(ip), parameter :: keyxfr = 1  !! The keyword for setting or retrieving this factor is
 
-!
-!     Greedy segment selection factor
-!     -------------------------------
-!
-!     The factor SGREED is used to slightly expand DSK segment
-!     boundaries in order to select segments to consider for
-!     ray-surface intercept computations. The effect of this factor is
-!     to make the multi-segment intercept algorithm consider all
-!     segments that are sufficiently close to the ray of interest, even
-!     if the ray misses those segments.
-!
-!     This expansion is performed to prevent rays from passing through
-!     a target object without any intersection being detected. Such
-!     "false miss" conditions can occur due to round-off errors.
-!
-!     The exact way this parameter is used is dependent on the
-!     coordinate system of the segment to which it applies, and the DSK
-!     software implementation. This parameter may be changed in a
-!     future version of SPICE.
-!
-   real(wp), parameter :: sgreed = 1.0e-8_wp
+   real(wp), parameter :: sgreed = 1.0e-8_wp  !! Greedy segment selection factor
+                                              !! -------------------------------
+                                              !!
+                                              !! The factor SGREED is used to slightly expand DSK segment
+                                              !! boundaries in order to select segments to consider for
+                                              !! ray-surface intercept computations. The effect of this factor is
+                                              !! to make the multi-segment intercept algorithm consider all
+                                              !! segments that are sufficiently close to the ray of interest, even
+                                              !! if the ray misses those segments.
+                                              !!
+                                              !! This expansion is performed to prevent rays from passing through
+                                              !! a target object without any intersection being detected. Such
+                                              !! "false miss" conditions can occur due to round-off errors.
+                                              !!
+                                              !! The exact way this parameter is used is dependent on the
+                                              !! coordinate system of the segment to which it applies, and the DSK
+                                              !! software implementation. This parameter may be changed in a
+                                              !! future version of SPICE.
 
-!
-!     The keyword for setting or retrieving this factor is
-!
-   integer(ip), parameter :: keysgr = keyxfr + 1
+   integer(ip), parameter :: keysgr = keyxfr + 1  !! The keyword for setting or retrieving this factor is
 
-!
-!     Segment pad margin
-!     ------------------
-!
-!     The segment pad margin is a scale factor used to determine when a
-!     point resulting from a ray-surface intercept computation, if
-!     outside the segment's boundaries, is close enough to the segment
-!     to be considered a valid result.
-!
-!     This margin is required in order to make DSK segment padding
-!     (surface data extending slightly beyond the segment's coordinate
-!     boundaries) usable: if a ray intersects the pad surface outside
-!     the segment boundaries, the pad is useless if the intercept is
-!     automatically rejected.
-!
-!     However, an excessively large value for this parameter is
-!     detrimental, since a ray-surface intercept solution found "in" a
-!     segment can supersede solutions in segments farther from the
-!     ray's vertex. Solutions found outside of a segment thus can mask
-!     solutions that are closer to the ray's vertex by as much as the
-!     value of this margin, when applied to a segment's boundary
-!     dimensions.
+   real(wp), parameter :: sgpadm = 1.0e-10_wp  !! Segment pad margin
+                                               !! ------------------
+                                               !!
+                                               !! The segment pad margin is a scale factor used to determine when a
+                                               !! point resulting from a ray-surface intercept computation, if
+                                               !! outside the segment's boundaries, is close enough to the segment
+                                               !! to be considered a valid result.
+                                               !!
+                                               !! This margin is required in order to make DSK segment padding
+                                               !! (surface data extending slightly beyond the segment's coordinate
+                                               !! boundaries) usable: if a ray intersects the pad surface outside
+                                               !! the segment boundaries, the pad is useless if the intercept is
+                                               !! automatically rejected.
+                                               !!
+                                               !! However, an excessively large value for this parameter is
+                                               !! detrimental, since a ray-surface intercept solution found "in" a
+                                               !! segment can supersede solutions in segments farther from the
+                                               !! ray's vertex. Solutions found outside of a segment thus can mask
+                                               !! solutions that are closer to the ray's vertex by as much as the
+                                               !! value of this margin, when applied to a segment's boundary
+                                               !! dimensions.
 
-   real(wp), parameter :: sgpadm = 1.0e-10_wp
+   integer(ip), parameter :: keyspm = keysgr + 1  !! The keyword for setting or retrieving this factor is
 
-!
-!     The keyword for setting or retrieving this factor is
-!
-   integer(ip), parameter :: keyspm = keysgr + 1
+   real(wp), parameter :: ptmemm = 1.0e-7_wp  !! Surface-point membership margin
+                                              !! -------------------------------
+                                              !!
+                                              !! The surface-point membership margin limits the distance
+                                              !! between a point and a surface to which the point is
+                                              !! considered to belong. The margin is a scale factor applied
+                                              !! to the size of the segment containing the surface.
+                                              !!
+                                              !! This margin is used to map surface points to outward
+                                              !! normal vectors at those points.
+                                              !!
+                                              !! If this margin is set to an excessively small value,
+                                              !! routines that make use of the surface-point mapping won't
+                                              !! work properly.
 
-!
-!     Surface-point membership margin
-!     -------------------------------
-!
-!     The surface-point membership margin limits the distance
-!     between a point and a surface to which the point is
-!     considered to belong. The margin is a scale factor applied
-!     to the size of the segment containing the surface.
-!
-!     This margin is used to map surface points to outward
-!     normal vectors at those points.
-!
-!     If this margin is set to an excessively small value,
-!     routines that make use of the surface-point mapping won't
-!     work properly.
-!
-   real(wp), parameter :: ptmemm = 1.0e-7_wp
+   integer(ip), parameter :: keyptm = keyspm + 1  !! The keyword for setting or retrieving this factor is
 
-!
-!     The keyword for setting or retrieving this factor is
-!
-   integer(ip), parameter :: keyptm = keyspm + 1
+   real(wp), parameter :: angmrg = 1.0e-12_wp  !! Angular rounding margin
+                                               !! -----------------------
+                                               !!
+                                               !! This margin specifies an amount by which angular values
+                                               !! may deviate from their proper ranges without a SPICE error
+                                               !! condition being signaled.
+                                               !!
+                                               !! For example, if an input latitude exceeds pi/2 radians by a
+                                               !! positive amount less than this margin, the value is treated as
+                                               !! though it were pi/2 radians.
+                                               !!
+                                               !! Units are radians.
 
-!
-!     Angular rounding margin
-!     -----------------------
-!
-!     This margin specifies an amount by which angular values
-!     may deviate from their proper ranges without a SPICE error
-!     condition being signaled.
-!
-!     For example, if an input latitude exceeds pi/2 radians by a
-!     positive amount less than this margin, the value is treated as
-!     though it were pi/2 radians.
-!
-!     Units are radians.
-!
-   real(wp), parameter :: angmrg = 1.0e-12_wp
+   integer(ip), parameter :: keyamg = keyptm + 1  !! This parameter is not user-adjustable.
+                                                  !!
+                                                  !! The keyword for retrieving this parameter is
 
-!
-!     This parameter is not user-adjustable.
-!
-!     The keyword for retrieving this parameter is
-!
-   integer(ip), parameter :: keyamg = keyptm + 1
+   real(wp), parameter :: lonali = 1.0e-12_wp  !! Longitude alias margin
+                                               !! ----------------------
+                                               !!
+                                               !! This margin specifies an amount by which a longitude
+                                               !! value can be outside a given longitude range without
+                                               !! being considered eligible for transformation by
+                                               !! addition or subtraction of 2*pi radians.
+                                               !!
+                                               !! A longitude value, when compared to the endpoints of
+                                               !! a longitude interval, will be considered to be equal
+                                               !! to an endpoint if the value is outside the interval
+                                               !! differs from that endpoint by a magnitude less than
+                                               !! the alias margin.
+                                               !!
+                                               !! Units are radians.
 
-!
-!     Longitude alias margin
-!     ----------------------
-!
-!     This margin specifies an amount by which a longitude
-!     value can be outside a given longitude range without
-!     being considered eligible for transformation by
-!     addition or subtraction of 2*pi radians.
-!
-!     A longitude value, when compared to the endpoints of
-!     a longitude interval, will be considered to be equal
-!     to an endpoint if the value is outside the interval
-!     differs from that endpoint by a magnitude less than
-!     the alias margin.
-!
-!
-!     Units are radians.
-!
-   real(wp), parameter :: lonali = 1.0e-12_wp
-
-!
-!     This parameter is not user-adjustable.
-!
-!     The keyword for retrieving this parameter is
-!
-   integer(ip), parameter :: keylal = keyamg + 1
+   integer(ip), parameter :: keylal = keyamg + 1  !! This parameter is not user-adjustable.
+                                                  !!
+                                                  !! The keyword for retrieving this parameter is
 
 end module pepper_inc_dsktol

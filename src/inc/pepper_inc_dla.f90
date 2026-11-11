@@ -28,85 +28,73 @@ module pepper_inc_dla
 
    public
 
-!     DAS integer address of DLA version code.
-!
-   integer(ip), parameter :: veridx = 1
+   integer(ip), parameter :: veridx = 1  !! DAS integer address of DLA version code.
 
-!
-!     Linked list parameters
-!
-!     Logical arrays (aka "segments") in a DAS linked array (DLA) file
-!     are organized as a doubly linked list.  Each logical array may
-!     actually consist of character, double precision, and integer
-!     components.  A component of a given data type occupies a
-!     contiguous range of DAS addresses of that type.  Any or all
-!     array components may be empty.
-!
-!     The segment descriptors in a SPICE DLA (DAS linked array) file
-!     are connected by a doubly linked list.  Each node of the list is
-!     represented by a pair of integers acting as forward and backward
-!     pointers.  Each pointer pair occupies the first two integers of a
-!     segment descriptor in DAS integer address space.  The DLA file
-!     contains pointers to the first integers of both the first and
-!     last segment descriptors.
-!
-!     At the DLA level of a file format implementation, there is
-!     no knowledge of the data contents.  Hence segment descriptors
-!     provide information only about file layout (in contrast with
-!     the DAF system).  Metadata giving specifics of segment contents
-!     are stored within the segments themselves in DLA-based file
-!     formats.
-!
-!
-!     Parameter declarations follow.
-!
-!     DAS integer addresses of first and last segment linked list
-!     pointer pairs.  The contents of these pointers
-!     are the DAS addresses of the first integers belonging
-!     to the first and last link pairs, respectively.
-!
-!     The acronyms "LLB" and "LLE" denote "linked list begin"
-!     and "linked list end" respectively.
-!
-   integer(ip), parameter :: llbidx = veridx + 1
+   integer(ip), parameter :: llbidx = veridx + 1  !! Linked list parameters
+                                                  !!
+                                                  !! Logical arrays (aka "segments") in a DAS linked array (DLA) file
+                                                  !! are organized as a doubly linked list.  Each logical array may
+                                                  !! actually consist of character, double precision, and integer
+                                                  !! components.  A component of a given data type occupies a
+                                                  !! contiguous range of DAS addresses of that type.  Any or all
+                                                  !! array components may be empty.
+                                                  !!
+                                                  !! The segment descriptors in a SPICE DLA (DAS linked array) file
+                                                  !! are connected by a doubly linked list.  Each node of the list is
+                                                  !! represented by a pair of integers acting as forward and backward
+                                                  !! pointers.  Each pointer pair occupies the first two integers of a
+                                                  !! segment descriptor in DAS integer address space.  The DLA file
+                                                  !! contains pointers to the first integers of both the first and
+                                                  !! last segment descriptors.
+                                                  !!
+                                                  !! At the DLA level of a file format implementation, there is
+                                                  !! no knowledge of the data contents.  Hence segment descriptors
+                                                  !! provide information only about file layout (in contrast with
+                                                  !! the DAF system).  Metadata giving specifics of segment contents
+                                                  !! are stored within the segments themselves in DLA-based file
+                                                  !! formats.
+                                                  !!
+                                                  !! Parameter declarations follow.
+                                                  !!
+                                                  !! DAS integer addresses of first and last segment linked list
+                                                  !! pointer pairs.  The contents of these pointers
+                                                  !! are the DAS addresses of the first integers belonging
+                                                  !! to the first and last link pairs, respectively.
+                                                  !!
+                                                  !! The acronyms "LLB" and "LLE" denote "linked list begin"
+                                                  !! and "linked list end" respectively.
 
    integer(ip), parameter :: lleidx = llbidx + 1
 
-!
-!     Null pointer parameter.
-!
-   integer(ip), parameter :: nulptr = -1
+   integer(ip), parameter :: nulptr = -1  !! Null pointer parameter.
 
-!
-!     Segment descriptor parameters
-!
-!     Each segment descriptor occupies a contiguous
-!     range of DAS integer addresses.
-!
-!        The segment descriptor layout is:
-!
-!           +---------------+
-!           | BACKWARD PTR  | Linked list backward pointer
-!           +---------------+
-!           | FORWARD PTR   | Linked list forward pointer
-!           +---------------+
-!           | BASE INT ADDR | Base DAS integer address
-!           +---------------+
-!           | INT COMP SIZE | Size of integer segment component
-!           +---------------+
-!           | BASE DP ADDR  | Base DAS d.p. address
-!           +---------------+
-!           | DP COMP SIZE  | Size of d.p. segment component
-!           +---------------+
-!           | BASE CHR ADDR | Base DAS character address
-!           +---------------+
-!           | CHR COMP SIZE | Size of character segment component
-!           +---------------+
-!
-!     Parameters defining offsets for segment descriptor elements
-!     follow.
-!
-   integer(ip), parameter :: bwdidx = 1
+   integer(ip), parameter :: bwdidx = 1  !! Segment descriptor parameters
+                                         !!
+                                         !! Each segment descriptor occupies a contiguous
+                                         !! range of DAS integer addresses.
+                                         !!
+                                         !!     The segment descriptor layout is:
+                                         !!
+                                         !!        +---------------+
+                                         !!        | BACKWARD PTR  | Linked list backward pointer
+                                         !!        +---------------+
+                                         !!        | FORWARD PTR   | Linked list forward pointer
+                                         !!        +---------------+
+                                         !!        | BASE INT ADDR | Base DAS integer address
+                                         !!        +---------------+
+                                         !!        | INT COMP SIZE | Size of integer segment component
+                                         !!        +---------------+
+                                         !!        | BASE DP ADDR  | Base DAS d.p. address
+                                         !!        +---------------+
+                                         !!        | DP COMP SIZE  | Size of d.p. segment component
+                                         !!        +---------------+
+                                         !!        | BASE CHR ADDR | Base DAS character address
+                                         !!        +---------------+
+                                         !!        | CHR COMP SIZE | Size of character segment component
+                                         !!        +---------------+
+                                         !!
+                                         !! Parameters defining offsets for segment descriptor elements
+                                         !! follow.
 
    integer(ip), parameter :: fwdidx = bwdidx + 1
 
@@ -122,23 +110,13 @@ module pepper_inc_dla
 
    integer(ip), parameter :: cszidx = cbsidx + 1
 
-!
-!     Descriptor size:
-!
-   integer(ip), parameter :: dladsz = cszidx
+   integer(ip), parameter :: dladsz = cszidx  !! Descriptor size:
 
-!
-!     Other DLA parameters:
-!
-!
-!     DLA format version.  (This number is expected to occur very
-!     rarely at integer address VERIDX in uninitialized DLA files.)
-!
-   integer(ip), parameter :: fmtver = 1000000
+   integer(ip), parameter :: fmtver = 1000000  !! Other DLA parameters:
+                                               !!
+                                               !! DLA format version.  (This number is expected to occur very
+                                               !! rarely at integer address VERIDX in uninitialized DLA files.)
 
-!
-!     Characters per DAS comment record.
-!
-   integer(ip), parameter :: nchrec = 1024
+   integer(ip), parameter :: nchrec = 1024  !! Characters per DAS comment record.
 
 end module pepper_inc_dla

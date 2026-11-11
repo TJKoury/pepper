@@ -19,30 +19,19 @@ module pepper_inc_ektype
 
    public
 
-!     Character type:
-!
-   integer(ip), parameter :: chr = 1
+   integer(ip), parameter :: chr = 1  !! Character type:
 
-!
-!     Double precision type:
-!
-   integer(ip), parameter :: dp = 2
+   integer(ip), parameter :: dp = 2  !! Double precision type:
 
-!
-!     Integer type:
-!
-   integer(ip), parameter :: int = 3
+   integer(ip), parameter :: int = 3  !! Integer type:
 
-!
-!     `Time' type:
-!
-!     Within the EK system, time values are represented as ephemeris
-!     seconds past J2000 (TDB), and double precision numbers are used
-!     to store these values.  However, since time values require special
-!     treatment both on input and output, and since the `TIME' column
-!     has a special role in the EK specification and code, time values
-!     are identified as a type distinct from double precision numbers.
-!
-   integer(ip), parameter :: time = 4
+   integer(ip), parameter :: time = 4  !! `Time' type:
+                                       !!
+                                       !! Within the EK system, time values are represented as ephemeris
+                                       !! seconds past J2000 (TDB), and double precision numbers are used
+                                       !! to store these values.  However, since time values require special
+                                       !! treatment both on input and output, and since the `TIME' column
+                                       !! has a special role in the EK specification and code, time values
+                                       !! are identified as a type distinct from double precision numbers.
 
 end module pepper_inc_ektype

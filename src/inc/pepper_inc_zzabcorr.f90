@@ -67,21 +67,13 @@ module pepper_inc_zzabcorr
 
    public
 
-!     Number of aberration correction choices:
-!
-   integer(ip), parameter :: nabcor = 15
+   integer(ip), parameter :: nabcor = 15  !! Number of aberration correction choices:
 
-!
-!     Aberration correction attribute block size
-!     (number of aberration correction attributes):
-!
-   integer(ip), parameter :: abatsz = 6
+   integer(ip), parameter :: abatsz = 6  !! Aberration correction attribute block size
+                                         !! (number of aberration correction attributes):
 
-!
-!     Indices of attributes within an aberration correction
-!     attribute block:
-!
-   integer(ip), parameter :: geoidx = 1
+   integer(ip), parameter :: geoidx = 1  !! Indices of attributes within an aberration correction
+                                         !! attribute block:
 
    integer(ip), parameter :: ltidx = geoidx + 1
 
@@ -93,9 +85,6 @@ module pepper_inc_zzabcorr
 
    integer(ip), parameter :: relidx = xmtidx + 1
 
-!
-!     Maximum length of an aberration correction string:
-!
-   integer(ip), parameter :: corlen = 5
+   integer(ip), parameter :: corlen = 5  !! Maximum length of an aberration correction string:
 
 end module pepper_inc_zzabcorr

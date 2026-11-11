@@ -60,21 +60,12 @@ module pepper_inc_ekpage
 
    public
 
-!     The following parameters indicate positions of elements in the
-!     paging system metadata array:
-!
-!
-   integer(ip), parameter :: eparch = 1
+   integer(ip), parameter :: eparch = 1  !! The following parameters indicate positions of elements in the
+                                         !! paging system metadata array:
 
-!
-!     Number of metadata items per data type:
-!
-   integer(ip), parameter :: epnipt = 5
+   integer(ip), parameter :: epnipt = 5  !! Number of metadata items per data type:
 
-!
-!     Character metadata indices:
-!
-   integer(ip), parameter :: eppszc = eparch + 1
+   integer(ip), parameter :: eppszc = eparch + 1  !! Character metadata indices:
 
    integer(ip), parameter :: epbasc = eppszc + 1
 
@@ -84,10 +75,7 @@ module pepper_inc_ekpage
 
    integer(ip), parameter :: epfpc = epnfpc + 1
 
-!
-!     Double precision metadata indices:
-!
-   integer(ip), parameter :: eppszd = eppszc + epnipt
+   integer(ip), parameter :: eppszd = eppszc + epnipt  !! Double precision metadata indices:
 
    integer(ip), parameter :: epbasd = eppszd + 1
 
@@ -97,10 +85,7 @@ module pepper_inc_ekpage
 
    integer(ip), parameter :: epfpd = epnfpd + 1
 
-!
-!     Integer metadata indices:
-!
-   integer(ip), parameter :: eppszi = eppszd + epnipt
+   integer(ip), parameter :: eppszi = eppszd + epnipt  !! Integer metadata indices:
 
    integer(ip), parameter :: epbasi = eppszi + 1
 
@@ -110,24 +95,15 @@ module pepper_inc_ekpage
 
    integer(ip), parameter :: epfpi = epnfpi + 1
 
-!
-!     Size of metadata area:
-!
-   integer(ip), parameter :: epmdsz = 1 + 3*epnipt
+   integer(ip), parameter :: epmdsz = 1 + 3*epnipt  !! Size of metadata area:
 
-!
-!     Page sizes, in units of DAS words of the appropriate type:
-!
-   integer(ip), parameter :: pgsizc = 1024
+   integer(ip), parameter :: pgsizc = 1024  !! Page sizes, in units of DAS words of the appropriate type:
 
    integer(ip), parameter :: pgsizd = 128
 
    integer(ip), parameter :: pgsizi = 256
 
-!
-!     Default page base addresses:
-!
-   integer(ip), parameter :: pgbasc = 0
+   integer(ip), parameter :: pgbasc = 0  !! Default page base addresses:
 
    integer(ip), parameter :: pgbasd = 0
 

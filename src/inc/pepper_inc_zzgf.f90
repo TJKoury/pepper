@@ -26,26 +26,23 @@ module pepper_inc_zzgf
 
    public
 
-!
-!     The set of supported coordinate systems
-!
-!        System          Coordinates
-!        ----------      -----------
-!        Rectangular     X, Y, Z
-!        Latitudinal     Radius, Longitude, Latitude
-!        Spherical       Radius, Colatitude, Longitude
-!        RA/Dec          Range, Right Ascension, Declination
-!        Cylindrical     Radius, Longitude, Z
-!        Geodetic        Longitude, Latitude, Altitude
-!        Planetographic  Longitude, Latitude, Altitude
-!
-!     Below we declare parameters for naming coordinate systems.
-!     User inputs naming coordinate systems must match these
-!     when compared using EQSTR. That is, user inputs must
-!     match after being left justified, converted to upper case,
-!     and having all embedded blanks removed.
-!
-   character(*), parameter :: recsys = 'RECTANGULAR'
+   character(*), parameter :: recsys = 'RECTANGULAR'  !! The set of supported coordinate systems
+                                                      !!
+                                                      !!     System          Coordinates
+                                                      !!     ----------      -----------
+                                                      !!     Rectangular     X, Y, Z
+                                                      !!     Latitudinal     Radius, Longitude, Latitude
+                                                      !!     Spherical       Radius, Colatitude, Longitude
+                                                      !!     RA/Dec          Range, Right Ascension, Declination
+                                                      !!     Cylindrical     Radius, Longitude, Z
+                                                      !!     Geodetic        Longitude, Latitude, Altitude
+                                                      !!     Planetographic  Longitude, Latitude, Altitude
+                                                      !!
+                                                      !! Below we declare parameters for naming coordinate systems.
+                                                      !! User inputs naming coordinate systems must match these
+                                                      !! when compared using EQSTR. That is, user inputs must
+                                                      !! match after being left justified, converted to upper case,
+                                                      !! and having all embedded blanks removed.
 
    character(*), parameter :: latsys = 'LATITUDINAL'
 
@@ -59,12 +56,9 @@ module pepper_inc_zzgf
 
    character(*), parameter :: pgrsys = 'PLANETOGRAPHIC'
 
-!
-!     Below we declare names for coordinates. Again, user
-!     inputs naming coordinates must match these when
-!     compared using EQSTR.
-!
-   character(*), parameter :: xcrd = 'X'
+   character(*), parameter :: xcrd = 'X'  !! Below we declare names for coordinates. Again, user
+                                          !! inputs naming coordinates must match these when
+                                          !! compared using EQSTR.
 
    character(*), parameter :: ycrd = 'Y'
 
@@ -76,14 +70,11 @@ module pepper_inc_zzgf
 
    character(*), parameter :: latcrd = 'LATITUDE'
 
-!
-!     Note that the RA parameter value below matches
-!
-!        'RIGHT ASCENSION'
-!
-!     when extra blanks are compressed out of the above value.
-!
-   character(*), parameter :: racrd = 'RIGHT ASCENSION'
+   character(*), parameter :: racrd = 'RIGHT ASCENSION'  !! Note that the RA parameter value below matches
+                                                         !!
+                                                         !!     'RIGHT ASCENSION'
+                                                         !!
+                                                         !! when extra blanks are compressed out of the above value.
 
    character(*), parameter :: deccrd = 'DECLINATION'
 
@@ -93,65 +84,41 @@ module pepper_inc_zzgf
 
    character(*), parameter :: altcrd = 'ALTITUDE'
 
-!
-!     Parameters specifying types of vector definitions
-!     used for GF coordinate searches:
-!
-!     All string parameter values are left justified, upper
-!     case, with extra blanks compressed out.
-!
-!     POSDEF indicates the vector is defined by the
-!     position of a target relative to an observer.
-!
-   character(*), parameter :: posdef = 'POSITION'
+   character(*), parameter :: posdef = 'POSITION'  !! Parameters specifying types of vector definitions
+                                                   !! used for GF coordinate searches:
+                                                   !!
+                                                   !! All string parameter values are left justified, upper
+                                                   !! case, with extra blanks compressed out.
+                                                   !!
+                                                   !! POSDEF indicates the vector is defined by the
+                                                   !! position of a target relative to an observer.
 
-!
-!     SOBDEF indicates the vector points from the center
-!     of a target body to the sub-observer point on
-!     that body, for a given observer and target.
-!
-   character(*), parameter :: sobdef = 'SUB-OBSERVER POINT'
+   character(*), parameter :: sobdef = 'SUB-OBSERVER POINT'  !! SOBDEF indicates the vector points from the center
+                                                             !! of a target body to the sub-observer point on
+                                                             !! that body, for a given observer and target.
 
-!
-!     SOBDEF indicates the vector points from the center
-!     of a target body to the surface intercept point on
-!     that body, for a given observer, ray, and target.
-!
-   character(*), parameter :: sindef = 'SURFACE INTERCEPT POINT'
+   character(*), parameter :: sindef = 'SURFACE INTERCEPT POINT'  !! SOBDEF indicates the vector points from the center
+                                                                  !! of a target body to the surface intercept point on
+                                                                  !! that body, for a given observer, ray, and target.
 
-!
-!     Number of workspace windows used by ZZGFREL:
-!
-   integer(ip), parameter :: nwrel = 5
+   integer(ip), parameter :: nwrel = 5  !! Number of workspace windows used by ZZGFREL:
 
-!
-!     Number of additional workspace windows used by ZZGFLONG:
-!
-   integer(ip), parameter :: nwlong = 7
+   integer(ip), parameter :: nwlong = 7  !! Number of additional workspace windows used by ZZGFLONG:
 
-!
-!     Index of "existence window" used by ZZGFCSLV:
-!
-   integer(ip), parameter :: exwidx = nwrel + nwlong + 1
+   integer(ip), parameter :: exwidx = nwrel + nwlong + 1  !! Index of "existence window" used by ZZGFCSLV:
 
-!
-!     Progress report parameters:
-!
-!     MXBEGM,
-!     MXENDM    are, respectively, the maximum lengths of the progress
-!               report message prefix and suffix.
-!
-!     Note: the sum of these lengths, plus the length of the
-!     "percent complete" substring, should not be long enough
-!     to cause wrap-around on any platform's terminal window.
-!
-   integer(ip), parameter :: mxbegm = 55
+   integer(ip), parameter :: mxbegm = 55  !! Progress report parameters:
+                                          !!
+                                          !! MXBEGM,
+                                          !! MXENDM    are, respectively, the maximum lengths of the progress
+                                          !! report message prefix and suffix.
+                                          !!
+                                          !! Note: the sum of these lengths, plus the length of the
+                                          !! "percent complete" substring, should not be long enough
+                                          !! to cause wrap-around on any platform's terminal window.
 
    integer(ip), parameter :: mxendm = 13
 
-!
-!     Total progress report message length upper bound:
-!
-   integer(ip), parameter :: mxmsg = mxbegm + mxendm + 10
+   integer(ip), parameter :: mxmsg = mxbegm + mxendm + 10  !! Total progress report message length upper bound:
 
 end module pepper_inc_zzgf

@@ -41,394 +41,232 @@ module pepper_inc_zzdyn
 
    public
 
-!
-!     String length parameters
-!     ========================
-!
-!
-!     Kernel variable name length.  This parameter must be
-!     kept consistent with the parameter MAXLEN used in the
-!     POOL umbrella routine.
-!
-   integer(ip), parameter :: kvnmln = 32
+   integer(ip), parameter :: kvnmln = 32  !! String length parameters
+                                          !! ========================
+                                          !!
+                                          !! Kernel variable name length.  This parameter must be
+                                          !! kept consistent with the parameter MAXLEN used in the
+                                          !! POOL umbrella routine.
 
-!
-!     Length of a character kernel pool datum. This parameter must be
-!     kept consistent with the parameter MAXCHR used in the POOL
-!     umbrella routine.
-!
-   integer(ip), parameter :: kvlen = 80
+   integer(ip), parameter :: kvlen = 80  !! Length of a character kernel pool datum. This parameter must be
+                                         !! kept consistent with the parameter MAXCHR used in the POOL
+                                         !! umbrella routine.
 
-!
-!     Reference frame name length.  This parameter must be
-!     kept consistent with the parameter WDSIZE used in the
-!     FRAMEX umbrella routine.
-!
-   integer(ip), parameter :: frnmln = 32
+   integer(ip), parameter :: frnmln = 32  !! Reference frame name length.  This parameter must be
+                                          !! kept consistent with the parameter WDSIZE used in the
+                                          !! FRAMEX umbrella routine.
 
-!
-!     Body name length.  This parameter is used to provide a level
-!     of indirection so the dynamic frame source code doesn't
-!     have to change if the name of this SPICELIB-scope parameter
-!     is changed.  The value MAXL used here is defined in the
-!     INCLUDE file
-!
-!        zzbodtrn.inc
-!
-!     Current value of MAXL = 36
-!
-   integer(ip), parameter :: bdnmln = 36
+   integer(ip), parameter :: bdnmln = 36  !! Body name length.  This parameter is used to provide a level
+                                          !! of indirection so the dynamic frame source code doesn't
+                                          !! have to change if the name of this SPICELIB-scope parameter
+                                          !! is changed.  The value MAXL used here is defined in the
+                                          !! INCLUDE file
+                                          !!
+                                          !!     zzbodtrn.inc
+                                          !!
+                                          !! Current value of MAXL = 36
 
-!
-!     Numeric parameters
-!     ===================================
-!
-!     The parameter MAXCOF is the maximum number of polynomial
-!     coefficients that may be used to define an Euler angle
-!     in an "Euler frame" definition
-!
-   integer(ip), parameter :: maxcof = 20
+   integer(ip), parameter :: maxcof = 20  !! Numeric parameters
+                                          !! ===================================
+                                          !!
+                                          !! The parameter MAXCOF is the maximum number of polynomial
+                                          !! coefficients that may be used to define an Euler angle
+                                          !! in an "Euler frame" definition
 
-!
-!     The parameter MXNFAC is the maximum number of factors in
-!     a product frame.
-!
-   integer(ip), parameter :: mxnfac = 10
+   integer(ip), parameter :: mxnfac = 10  !! The parameter MXNFAC is the maximum number of factors in
+                                          !! a product frame.
 
-!
-!     The parameter LBSEP is the default angular separation limit for
-!     the vectors defining a two-vector frame.  The angular separation
-!     of the vectors must differ from Pi and 0 by at least this amount.
-!
-   real(wp), parameter :: lbsep = 1.0e-3_wp
+   real(wp), parameter :: lbsep = 1.0e-3_wp  !! The parameter LBSEP is the default angular separation limit for
+                                             !! the vectors defining a two-vector frame.  The angular separation
+                                             !! of the vectors must differ from Pi and 0 by at least this amount.
 
-!
-!     The parameter QEXP is used to determine the width of
-!     the interval DELTA used for the discrete differentiation
-!     of velocity in the routines ZZDYNFRM, ZZDYNROT, and their
-!     recursive analogs.  This parameter is appropriate for
-!     64-bit IEEE double precision numbers; when SPICELIB
-!     is hosted on platforms where longer mantissas are supported,
-!     this parameter (and hence this INCLUDE file) will become
-!     platform-dependent.
-!
-!     The choice of QEXP is based on heuristics.  It's believed to
-!     be a reasonable choice obtainable without expensive computation.
-!
-!     QEXP is the largest power of 2 such that
-!
-!        1.D0 + 2**QEXP  =  1.D0
-!
-!     Given an epoch T0 at which a discrete derivative is to be
-!     computed, this choice provides a value of DELTA that usually
-!     contributes no round-off error in the computation of the function
-!     evaluation epochs
-!
-!        T0 +/- DELTA
-!
-!     while providing the largest value of DELTA having this form that
-!     causes the order of the error term O(DELTA**2) in the quadratic
-!     function approximation to round to zero.  Note that the error
-!     itself will normally be small but doesn't necessarily round to
-!     zero.  Note also that the small function approximation error
-!     is not a measurement of the error in the discrete derivative
-!     itself.
-!
-!     For ET values T0 > 2**27 seconds past J2000, the value of
-!     DELTA will be set to
-!
-!        T0 * 2**QEXP
-!
-!     For smaller values of T0, DELTA should be set to 1.D0.
-!
-   integer(ip), parameter :: qexp = -27
+   integer(ip), parameter :: qexp = -27  !! The parameter QEXP is used to determine the width of
+                                         !! the interval DELTA used for the discrete differentiation
+                                         !! of velocity in the routines ZZDYNFRM, ZZDYNROT, and their
+                                         !! recursive analogs.  This parameter is appropriate for
+                                         !! 64-bit IEEE double precision numbers; when SPICELIB
+                                         !! is hosted on platforms where longer mantissas are supported,
+                                         !! this parameter (and hence this INCLUDE file) will become
+                                         !! platform-dependent.
+                                         !!
+                                         !! The choice of QEXP is based on heuristics.  It's believed to
+                                         !! be a reasonable choice obtainable without expensive computation.
+                                         !!
+                                         !! QEXP is the largest power of 2 such that
+                                         !!
+                                         !!     1.D0 + 2**QEXP  =  1.D0
+                                         !!
+                                         !! Given an epoch T0 at which a discrete derivative is to be
+                                         !! computed, this choice provides a value of DELTA that usually
+                                         !! contributes no round-off error in the computation of the function
+                                         !! evaluation epochs
+                                         !!
+                                         !!     T0 +/- DELTA
+                                         !!
+                                         !! while providing the largest value of DELTA having this form that
+                                         !! causes the order of the error term O(DELTA**2) in the quadratic
+                                         !! function approximation to round to zero.  Note that the error
+                                         !! itself will normally be small but doesn't necessarily round to
+                                         !! zero.  Note also that the small function approximation error
+                                         !! is not a measurement of the error in the discrete derivative
+                                         !! itself.
+                                         !!
+                                         !! For ET values T0 > 2**27 seconds past J2000, the value of
+                                         !! DELTA will be set to
+                                         !!
+                                         !!     T0 * 2**QEXP
+                                         !!
+                                         !! For smaller values of T0, DELTA should be set to 1.D0.
 
-!
-!     Frame kernel parameters
-!     =======================
-!
-!     Parameters relating to kernel variable names (keywords) start
-!     with the letters
-!
-!        KW
-!
-!     Parameters relating to kernel variable values start with the
-!     letters
-!
-!        KV
-!
-!
-!     Generic parameters
-!     ---------------------------------
-!
-!     Token used to build the base frame keyword:
-!
-   character(*), parameter :: kwbfrm = 'RELATIVE'
+   character(*), parameter :: kwbfrm = 'RELATIVE'  !! Frame kernel parameters
+                                                   !! =======================
+                                                   !!
+                                                   !! Parameters relating to kernel variable names (keywords) start
+                                                   !! with the letters
+                                                   !!
+                                                   !!     KW
+                                                   !!
+                                                   !! Parameters relating to kernel variable values start with the
+                                                   !! letters
+                                                   !!
+                                                   !!     KV
+                                                   !!
+                                                   !! Generic parameters
+                                                   !! ---------------------------------
+                                                   !!
+                                                   !! Token used to build the base frame keyword:
 
-!
-!     Frame definition style parameters
-!     ---------------------------------
-!
-!     Token used to build the frame definition style keyword:
-!
-   character(*), parameter :: kwstyl = 'DEF_STYLE'
+   character(*), parameter :: kwstyl = 'DEF_STYLE'  !! Frame definition style parameters
+                                                    !! ---------------------------------
+                                                    !!
+                                                    !! Token used to build the frame definition style keyword:
 
-!
-!     Token indicating parameterized dynamic frame.
-!
-   character(*), parameter :: kvparm = 'PARAMETERIZED'
+   character(*), parameter :: kvparm = 'PARAMETERIZED'  !! Token indicating parameterized dynamic frame.
 
-!
-!     Freeze epoch parameters
-!     ---------------------------------
-!
-!     Token used to build the freeze epoch keyword:
-!
-   character(*), parameter :: kwfrez = 'FREEZE_EPOCH'
+   character(*), parameter :: kwfrez = 'FREEZE_EPOCH'  !! Freeze epoch parameters
+                                                       !! ---------------------------------
+                                                       !!
+                                                       !! Token used to build the freeze epoch keyword:
 
-!
-!     Rotation state parameters
-!     ---------------------------------
-!
-!     Token used to build the rotation state keyword:
-!
-   character(*), parameter :: kwrsta = 'ROTATION_STATE'
+   character(*), parameter :: kwrsta = 'ROTATION_STATE'  !! Rotation state parameters
+                                                         !! ---------------------------------
+                                                         !!
+                                                         !! Token used to build the rotation state keyword:
 
-!
-!     Token indicating rotating rotation state:
-!
-   character(*), parameter :: kvrotg = 'ROTATING'
+   character(*), parameter :: kvrotg = 'ROTATING'  !! Token indicating rotating rotation state:
 
-!
-!     Token indicating inertial rotation state:
-!
-   character(*), parameter :: kvinrt = 'INERTIAL'
+   character(*), parameter :: kvinrt = 'INERTIAL'  !! Token indicating inertial rotation state:
 
-!
-!     Frame family parameters
-!     ---------------------------------
-!
-!     Token used to build the frame family keyword:
-!
-   character(*), parameter :: kwffam = 'FAMILY'
+   character(*), parameter :: kwffam = 'FAMILY'  !! Frame family parameters
+                                                 !! ---------------------------------
+                                                 !!
+                                                 !! Token used to build the frame family keyword:
 
-!
-!     Token indicating mean equator and equinox of date frame.
-!
-   character(*), parameter :: kvmeqt = 'MEAN_EQUATOR_AND_EQUINOX_OF_DATE'
+   character(*), parameter :: kvmeqt = 'MEAN_EQUATOR_AND_EQUINOX_OF_DATE'  !! Token indicating mean equator and equinox of date frame.
 
-!
-!     Token indicating mean ecliptic and equinox of date frame.
-!
-   character(*), parameter :: kvmecl = 'MEAN_ECLIPTIC_AND_EQUINOX_OF_DATE'
+   character(*), parameter :: kvmecl = 'MEAN_ECLIPTIC_AND_EQUINOX_OF_DATE'  !! Token indicating mean ecliptic and equinox of date frame.
 
-!
-!     Token indicating true equator and equinox of date frame.
-!
-   character(*), parameter :: kvteqt = 'TRUE_EQUATOR_AND_EQUINOX_OF_DATE'
+   character(*), parameter :: kvteqt = 'TRUE_EQUATOR_AND_EQUINOX_OF_DATE'  !! Token indicating true equator and equinox of date frame.
 
-!
-!     Token indicating two-vector frame.
-!
-   character(*), parameter :: kv2vec = 'TWO-VECTOR'
+   character(*), parameter :: kv2vec = 'TWO-VECTOR'  !! Token indicating two-vector frame.
 
-!
-!     Token indicating Euler frame.
-!
-   character(*), parameter :: kveulr = 'EULER'
+   character(*), parameter :: kveulr = 'EULER'  !! Token indicating Euler frame.
 
-!
-!     Token indicating product frame.
-!
-   character(*), parameter :: kvprod = 'PRODUCT'
+   character(*), parameter :: kvprod = 'PRODUCT'  !! Token indicating product frame.
 
-!
-!     "Of date" frame family parameters
-!     ---------------------------------
-!
-!     Token used to build the precession model keyword:
-!
-   character(*), parameter :: kwprcm = 'PREC_MODEL'
+   character(*), parameter :: kwprcm = 'PREC_MODEL'  !! "Of date" frame family parameters
+                                                     !! ---------------------------------
+                                                     !!
+                                                     !! Token used to build the precession model keyword:
 
-!
-!     Token used to build the nutation model keyword:
-!
-   character(*), parameter :: kwnutm = 'NUT_MODEL'
+   character(*), parameter :: kwnutm = 'NUT_MODEL'  !! Token used to build the nutation model keyword:
 
-!
-!     Token used to build the obliquity model keyword:
-!
-   character(*), parameter :: kwobqm = 'OBLIQ_MODEL'
+   character(*), parameter :: kwobqm = 'OBLIQ_MODEL'  !! Token used to build the obliquity model keyword:
 
-!
-!     Mathematical models used to define "of date" frames will
-!     likely accrue over time.  We will simply assign them
-!     numbers.
-!
-!
-!     Token indicating the Lieske earth precession model:
-!
-   character(*), parameter :: kvm001 = 'EARTH_IAU_1976'
+   character(*), parameter :: kvm001 = 'EARTH_IAU_1976'  !! Mathematical models used to define "of date" frames will
+                                                         !! likely accrue over time.  We will simply assign them
+                                                         !! numbers.
+                                                         !!
+                                                         !! Token indicating the Lieske earth precession model:
 
-!
-!     Token indicating the IAU 1980 earth nutation model:
-!
-   character(*), parameter :: kvm002 = 'EARTH_IAU_1980'
+   character(*), parameter :: kvm002 = 'EARTH_IAU_1980'  !! Token indicating the IAU 1980 earth nutation model:
 
-!
-!     Token indicating the IAU 1980 earth mean obliqity of
-!     date model.  Note the name matches that of the preceding
-!     nutation model---this is intentional.  The keyword
-!     used in the kernel variable definition indicates what
-!     kind of model is being defined.
-!
-   character(*), parameter :: kvm003 = 'EARTH_IAU_1980'
+   character(*), parameter :: kvm003 = 'EARTH_IAU_1980'  !! Token indicating the IAU 1980 earth mean obliqity of
+                                                         !! date model.  Note the name matches that of the preceding
+                                                         !! nutation model---this is intentional.  The keyword
+                                                         !! used in the kernel variable definition indicates what
+                                                         !! kind of model is being defined.
 
-!
-!     Two-vector frame family parameters
-!     ---------------------------------
-!
-!     Token used to build the vector axis keyword:
-!
-   character(*), parameter :: kwvaxi = 'AXIS'
+   character(*), parameter :: kwvaxi = 'AXIS'  !! Two-vector frame family parameters
+                                               !! ---------------------------------
+                                               !!
+                                               !! Token used to build the vector axis keyword:
 
-!
-!     Tokens indicating axis values:
-!
-   character(*), parameter :: kvx = 'X'
+   character(*), parameter :: kvx = 'X'  !! Tokens indicating axis values:
 
    character(*), parameter :: kvy = 'Y'
 
    character(*), parameter :: kvz = 'Z'
 
-!
-!     Prefixes used for primary and secondary vector definition
-!     keywords:
-!
-   character(*), parameter :: kwpri = 'PRI_'
+   character(*), parameter :: kwpri = 'PRI_'  !! Prefixes used for primary and secondary vector definition
+                                              !! keywords:
 
    character(*), parameter :: kwsec = 'SEC_'
 
-!
-!     Token used to build the vector definition keyword:
-!
-   character(*), parameter :: kwvcdf = 'VECTOR_DEF'
+   character(*), parameter :: kwvcdf = 'VECTOR_DEF'  !! Token used to build the vector definition keyword:
 
-!
-!     Token indicating observer-target position vector:
-!
-   character(*), parameter :: kvposv = 'OBSERVER_TARGET_POSITION'
+   character(*), parameter :: kvposv = 'OBSERVER_TARGET_POSITION'  !! Token indicating observer-target position vector:
 
-!
-!     Token indicating observer-target velocity vector:
-!
-   character(*), parameter :: kvvelv = 'OBSERVER_TARGET_VELOCITY'
+   character(*), parameter :: kvvelv = 'OBSERVER_TARGET_VELOCITY'  !! Token indicating observer-target velocity vector:
 
-!
-!     Token indicating observer-target near point vector:
-!
-   character(*), parameter :: kvnear = 'TARGET_NEAR_POINT'
+   character(*), parameter :: kvnear = 'TARGET_NEAR_POINT'  !! Token indicating observer-target near point vector:
 
-!
-!     Token indicating constant vector:
-!
-   character(*), parameter :: kvcons = 'CONSTANT'
+   character(*), parameter :: kvcons = 'CONSTANT'  !! Token indicating constant vector:
 
-!
-!     Token used to build the vector observer keyword:
-!
-   character(*), parameter :: kwvobs = 'OBSERVER'
+   character(*), parameter :: kwvobs = 'OBSERVER'  !! Token used to build the vector observer keyword:
 
-!
-!     Token used to build the vector target keyword:
-!
-   character(*), parameter :: kwvtrg = 'TARGET'
+   character(*), parameter :: kwvtrg = 'TARGET'  !! Token used to build the vector target keyword:
 
-!
-!     Token used to build the vector frame keyword:
-!
-   character(*), parameter :: kwvfrm = 'FRAME'
+   character(*), parameter :: kwvfrm = 'FRAME'  !! Token used to build the vector frame keyword:
 
-!
-!     Token used to build the vector aberration correction keyword:
-!
-   character(*), parameter :: kwvabc = 'ABCORR'
+   character(*), parameter :: kwvabc = 'ABCORR'  !! Token used to build the vector aberration correction keyword:
 
-!
-!     Token used to build the constant vector specification keyword:
-!
-   character(*), parameter :: kwvspc = 'SPEC'
+   character(*), parameter :: kwvspc = 'SPEC'  !! Token used to build the constant vector specification keyword:
 
-!
-!     Token indicating rectangular coordinates used to
-!     specify constant vector:
-!
-   character(*), parameter :: kvrecc = 'RECTANGULAR'
+   character(*), parameter :: kvrecc = 'RECTANGULAR'  !! Token indicating rectangular coordinates used to
+                                                      !! specify constant vector:
 
-!
-!     Token indicating latitudinal coordinates used to
-!     specify constant vector:
-!
-   character(*), parameter :: kvlatc = 'LATITUDINAL'
+   character(*), parameter :: kvlatc = 'LATITUDINAL'  !! Token indicating latitudinal coordinates used to
+                                                      !! specify constant vector:
 
-!
-!     Token indicating RA/DEC coordinates used to
-!     specify constant vector:
-!
-   character(*), parameter :: kvradc = 'RA/DEC'
+   character(*), parameter :: kvradc = 'RA/DEC'  !! Token indicating RA/DEC coordinates used to
+                                                 !! specify constant vector:
 
-!
-!     Token used to build the cartesian vector literal keyword:
-!
-   character(*), parameter :: kwvect = 'VECTOR'
+   character(*), parameter :: kwvect = 'VECTOR'  !! Token used to build the cartesian vector literal keyword:
 
-!
-!     Token used to build the constant vector latitude keyword:
-!
-   character(*), parameter :: kwlat = 'LATITUDE'
+   character(*), parameter :: kwlat = 'LATITUDE'  !! Token used to build the constant vector latitude keyword:
 
-!
-!     Token used to build the constant vector longitude keyword:
-!
-   character(*), parameter :: kwlon = 'LONGITUDE'
+   character(*), parameter :: kwlon = 'LONGITUDE'  !! Token used to build the constant vector longitude keyword:
 
-!
-!     Token used to build the constant vector right ascension keyword:
-!
-   character(*), parameter :: kwra = 'RA'
+   character(*), parameter :: kwra = 'RA'  !! Token used to build the constant vector right ascension keyword:
 
-!
-!     Token used to build the constant vector declination keyword:
-!
-   character(*), parameter :: kwdec = 'DEC'
+   character(*), parameter :: kwdec = 'DEC'  !! Token used to build the constant vector declination keyword:
 
-!
-!     Token used to build the angular separation tolerance keyword:
-!
-   character(*), parameter :: kwatol = 'ANGLE_SEP_TOL'
+   character(*), parameter :: kwatol = 'ANGLE_SEP_TOL'  !! Token used to build the angular separation tolerance keyword:
 
 !
 !     See the section "Physical unit parameters" below for additional
 !     parameters applicable to two-vector frames.
 !
 
-!
-!     Euler frame family parameters
-!     ---------------------------------
-!
-!     Token used to build the epoch keyword:
-!
-   character(*), parameter :: kwepoc = 'EPOCH'
+   character(*), parameter :: kwepoc = 'EPOCH'  !! Euler frame family parameters
+                                                !! ---------------------------------
+                                                !!
+                                                !! Token used to build the epoch keyword:
 
-!
-!     Token used to build the Euler axis sequence keyword:
-!
-   character(*), parameter :: kweuax = 'AXES'
+   character(*), parameter :: kweuax = 'AXES'  !! Token used to build the Euler axis sequence keyword:
 
-!
-!     Tokens used to build the Euler angle coefficients keywords:
-!
-   character(*), parameter :: kweac1 = 'ANGLE_1_COEFFS'
+   character(*), parameter :: kweac1 = 'ANGLE_1_COEFFS'  !! Tokens used to build the Euler angle coefficients keywords:
 
    character(*), parameter :: kweac2 = 'ANGLE_2_COEFFS'
 
@@ -439,30 +277,18 @@ module pepper_inc_zzdyn
 !     parameters applicable to Euler frames.
 !
 
-!
-!     Product frame family parameters
-!     ---------------------------------
-!
-   character(*), parameter :: kwffrm = 'FROM_FRAMES'
+   character(*), parameter :: kwffrm = 'FROM_FRAMES'  !! Product frame family parameters
+                                                      !! ---------------------------------
 
    character(*), parameter :: kwtfrm = 'TO_FRAMES'
 
-!
-!     Physical unit parameters
-!     ---------------------------------
-!
-!     Token used to build the units keyword:
-!
-   character(*), parameter :: kwunit = 'UNITS'
+   character(*), parameter :: kwunit = 'UNITS'  !! Physical unit parameters
+                                                !! ---------------------------------
+                                                !!
+                                                !! Token used to build the units keyword:
 
-!
-!     Token indicating radians:
-!
-   character(*), parameter :: kvradn = 'RADIANS'
+   character(*), parameter :: kvradn = 'RADIANS'  !! Token indicating radians:
 
-!
-!     Token indicating degrees:
-!
-   character(*), parameter :: kvdegr = 'DEGREES'
+   character(*), parameter :: kvdegr = 'DEGREES'  !! Token indicating degrees:
 
 end module pepper_inc_zzdyn

@@ -43,10 +43,7 @@ module pepper_inc_ekopcd
 
    public
 
-!     are used to test whether a value of any type is null.
-!
-!
-   integer(ip), parameter :: eq = 1
+   integer(ip), parameter :: eq = 1  !! are used to test whether a value of any type is null.
 
    integer(ip), parameter :: ge = eq + 1
 

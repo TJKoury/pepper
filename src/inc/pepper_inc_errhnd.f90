@@ -19,13 +19,8 @@ module pepper_inc_errhnd
 
    public
 
-!     Maximum length of the long error message:
-!
-   integer(ip), parameter :: lmsgln = 23 * 80
+   integer(ip), parameter :: lmsgln = 23 * 80  !! Maximum length of the long error message:
 
-!
-!     Maximum length of the short error message:
-!
-   integer(ip), parameter :: smsgln = 25
+   integer(ip), parameter :: smsgln = 25  !! Maximum length of the short error message:
 
 end module pepper_inc_errhnd

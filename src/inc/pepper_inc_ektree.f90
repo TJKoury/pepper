@@ -82,39 +82,19 @@ module pepper_inc_ektree
 
    public
 
-!     Maximum number of children allowed in a child node:
-!
-   integer(ip), parameter :: mxkidc = 63
+   integer(ip), parameter :: mxkidc = 63  !! Maximum number of children allowed in a child node:
 
-!
-!     Maximum number of keys allowed in a child node:
-!
-   integer(ip), parameter :: mxkeyc = mxkidc - 1
+   integer(ip), parameter :: mxkeyc = mxkidc - 1  !! Maximum number of keys allowed in a child node:
 
-!
-!     Minimum number of children allowed in a child node:
-!
-   integer(ip), parameter :: mnkidc = ( 2*mxkidc + 1 ) / 3
+   integer(ip), parameter :: mnkidc = ( 2*mxkidc + 1 ) / 3  !! Minimum number of children allowed in a child node:
 
-!
-!     Minimum number of keys allowed in a child node:
-!
-   integer(ip), parameter :: mnkeyc = mnkidc - 1
+   integer(ip), parameter :: mnkeyc = mnkidc - 1  !! Minimum number of keys allowed in a child node:
 
-!
-!     Maximum number of children allowed in the root node:
-!
-   integer(ip), parameter :: mxkidr = 2 * ( (2*mxkidc - 2)/3 ) + 1
+   integer(ip), parameter :: mxkidr = 2 * ( (2*mxkidc - 2)/3 ) + 1  !! Maximum number of children allowed in the root node:
 
-!
-!     Maximum number of keys allowed in the root node:
-!
-   integer(ip), parameter :: mxkeyr = mxkidr - 1
+   integer(ip), parameter :: mxkeyr = mxkidr - 1  !! Maximum number of keys allowed in the root node:
 
-!
-!     Minimum number of children allowed in the root node:
-!
-   integer(ip), parameter :: mnkidr = 2
+   integer(ip), parameter :: mnkidr = 2  !! Minimum number of children allowed in the root node:
 
 !
 !
@@ -125,103 +105,53 @@ module pepper_inc_ektree
 !     The following parameters are for the root node only:
 !
 
-!
-!     Location of version code:
-!
-   integer(ip), parameter :: trtype = 1
+   integer(ip), parameter :: trtype = 1  !! Location of version code:
 
-!
-!     Version code:
-!
-   integer(ip), parameter :: trvers = 1
+   integer(ip), parameter :: trvers = 1  !! Version code:
 
-!
-!     Location of node count:
-!
-   integer(ip), parameter :: trnnod = trtype + 1
+   integer(ip), parameter :: trnnod = trtype + 1  !! Location of node count:
 
-!
-!     Location of total key count for the tree:
-!
-   integer(ip), parameter :: trnkey = trnnod + 1
+   integer(ip), parameter :: trnkey = trnnod + 1  !! Location of total key count for the tree:
 
-!
-!     Location of tree depth:
-!
-   integer(ip), parameter :: trdpth = trnkey + 1
+   integer(ip), parameter :: trdpth = trnkey + 1  !! Location of tree depth:
 
-!
-!     Location of count of keys in root node:
-!
-   integer(ip), parameter :: trnkr = trdpth + 1
+   integer(ip), parameter :: trnkr = trdpth + 1  !! Location of count of keys in root node:
 
-!
-!     Base address of keys in the root node:
-!
-   integer(ip), parameter :: trkeyr = trnkr
+   integer(ip), parameter :: trkeyr = trnkr  !! Base address of keys in the root node:
 
-!
-!     Base address of child pointers in root node:
-!
-   integer(ip), parameter :: trkidr = trkeyr + mxkeyr + 1
+   integer(ip), parameter :: trkidr = trkeyr + mxkeyr + 1  !! Base address of child pointers in root node:
 
-!
-!     Base address of data pointers in the root node (allow room for
-!     overflow):
-!
-   integer(ip), parameter :: trdatr = trkidr + mxkidr + 1
+   integer(ip), parameter :: trdatr = trkidr + mxkidr + 1  !! Base address of data pointers in the root node (allow room for
+                                                           !! overflow):
 
-!
-!     Size of root node:
-!
-   integer(ip), parameter :: trsizr = trdatr + mxkeyr + 1
+   integer(ip), parameter :: trsizr = trdatr + mxkeyr + 1  !! Size of root node:
 
-!
-!     The following parameters are for child nodes only:
-!
-!
-!     Location of number of keys in node:
-!
-   integer(ip), parameter :: trnkc = 1
+   integer(ip), parameter :: trnkc = 1  !! The following parameters are for child nodes only:
+                                        !!
+                                        !! Location of number of keys in node:
 
-!
-!     Base address of keys in child nodes:
-!
-   integer(ip), parameter :: trkeyc = trnkc
+   integer(ip), parameter :: trkeyc = trnkc  !! Base address of keys in child nodes:
 
-!
-!     Base address of child pointers in child nodes:
-!
-   integer(ip), parameter :: trkidc = trkeyc + mxkeyc + 1
+   integer(ip), parameter :: trkidc = trkeyc + mxkeyc + 1  !! Base address of child pointers in child nodes:
 
-!
-!     Base address of data pointers in child nodes (allow room
-!     for overflow):
-!
-   integer(ip), parameter :: trdatc = trkidc + mxkidc + 1
+   integer(ip), parameter :: trdatc = trkidc + mxkidc + 1  !! Base address of data pointers in child nodes (allow room
+                                                           !! for overflow):
 
-!
-!     Size of child node:
-!
-   integer(ip), parameter :: trsizc = trdatc + mxkeyc + 1
+   integer(ip), parameter :: trsizc = trdatc + mxkeyc + 1  !! Size of child node:
 
-!
-!     A number of EK tree routines must declare stacks of fixed
-!     depth; this depth limit imposes a limit on the maximum depth
-!     that an EK tree can have.  Because of the large branching
-!     factor of EK trees, the depth limit is of no practical
-!     importance:  The number of keys that can be held in an EK
-!     tree of depth N is
-!
-!                           N-1
-!                     MXKIDC   -  1
-!         MXKIDR  *   -------------
-!                      MXKIDC  - 1
-!
-!
-!     This formula yields a capacity of over 1 billion keys for a
-!     tree of depth 6.
-!
-   integer(ip), parameter :: trmxdp = 10
+   integer(ip), parameter :: trmxdp = 10  !! A number of EK tree routines must declare stacks of fixed
+                                          !! depth; this depth limit imposes a limit on the maximum depth
+                                          !! that an EK tree can have.  Because of the large branching
+                                          !! factor of EK trees, the depth limit is of no practical
+                                          !! importance:  The number of keys that can be held in an EK
+                                          !! tree of depth N is
+                                          !!
+                                          !!                       N-1
+                                          !!                 MXKIDC   -  1
+                                          !!     MXKIDR  *   -------------
+                                          !!                  MXKIDC  - 1
+                                          !!
+                                          !! This formula yields a capacity of over 1 billion keys for a
+                                          !! tree of depth 6.
 
 end module pepper_inc_ektree

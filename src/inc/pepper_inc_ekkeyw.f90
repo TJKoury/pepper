@@ -13,38 +13,35 @@ module pepper_inc_ekkeyw
 
    public
 
-!        ALL
-!        AND
-!        ASC
-!        AVG
-!        BETWEEN
-!        BY
-!        COUNT
-!        DESC
-!        DISTINCT
-!        EQ
-!        FROM
-!        GE
-!        GROUP
-!        GT
-!        HAVING
-!        IS
-!        LE
-!        LT
-!        LIKE
-!        MAX
-!        MIN
-!        NE
-!        NOT
-!        NULL
-!        OR
-!        ORDER
-!        SELECT
-!        SUM
-!        WHERE
-!
-
-   integer(ip), parameter :: kwlen = 32
+   integer(ip), parameter :: kwlen = 32  !! ALL
+                                         !! AND
+                                         !! ASC
+                                         !! AVG
+                                         !! BETWEEN
+                                         !! BY
+                                         !! COUNT
+                                         !! DESC
+                                         !! DISTINCT
+                                         !! EQ
+                                         !! FROM
+                                         !! GE
+                                         !! GROUP
+                                         !! GT
+                                         !! HAVING
+                                         !! IS
+                                         !! LE
+                                         !! LT
+                                         !! LIKE
+                                         !! MAX
+                                         !! MIN
+                                         !! NE
+                                         !! NOT
+                                         !! NULL
+                                         !! OR
+                                         !! ORDER
+                                         !! SELECT
+                                         !! SUM
+                                         !! WHERE
 
    integer(ip), parameter :: nkeywd = 29
 

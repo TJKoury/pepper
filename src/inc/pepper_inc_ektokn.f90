@@ -17,19 +17,16 @@ module pepper_inc_ektokn
 
    public
 
-!        <keyword>
-!        <identifier>
-!        <integer>
-!        <d.p. number>
-!        <quoted string>
-!        <left parenthesis>
-!        <right parenthesis>
-!        <comma>
-!        <period>
-!        <end of query>
-!
-!
-   integer(ip), parameter :: tkkey = 1
+   integer(ip), parameter :: tkkey = 1  !! <keyword>
+                                        !! <identifier>
+                                        !! <integer>
+                                        !! <d.p. number>
+                                        !! <quoted string>
+                                        !! <left parenthesis>
+                                        !! <right parenthesis>
+                                        !! <comma>
+                                        !! <period>
+                                        !! <end of query>
 
    integer(ip), parameter :: tkid = tkkey + 1
 

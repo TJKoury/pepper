@@ -23,14 +23,8 @@ module pepper_inc_srftrn
 
    public
 
-!
-!     Maximum number of surface name/ID mapping entries:
-!
-   integer(ip), parameter :: mxnsrf = 2000
+   integer(ip), parameter :: mxnsrf = 2000  !! Maximum number of surface name/ID mapping entries:
 
-!
-!     Maximum length of a surface name string:
-!
-   integer(ip), parameter :: sfnmln = 36
+   integer(ip), parameter :: sfnmln = 36  !! Maximum length of a surface name string:
 
 end module pepper_inc_srftrn

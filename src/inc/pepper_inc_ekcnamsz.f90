@@ -11,8 +11,6 @@ module pepper_inc_ekcnamsz
 
    public
 
-!     Size of column name, in characters.
-!
-   integer(ip), parameter :: cnamsz = 32
+   integer(ip), parameter :: cnamsz = 32  !! Size of column name, in characters.
 
 end module pepper_inc_ekcnamsz

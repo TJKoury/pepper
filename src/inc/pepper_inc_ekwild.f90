@@ -16,13 +16,8 @@ module pepper_inc_ekwild
 
    public
 
-!     Wild string symbol:  this character matches any string.
-!
-   character(1), parameter :: wstr = '*'
+   character(1), parameter :: wstr = '*'  !! Wild string symbol:  this character matches any string.
 
-!
-!     Wild character symbol:  this character matches any character.
-!
-   character(1), parameter :: wchr = '%'
+   character(1), parameter :: wchr = '%'  !! Wild character symbol:  this character matches any character.
 
 end module pepper_inc_ekwild

@@ -134,7 +134,6 @@
 !>
 !>-    SPICELIB Version 1.0.0, 07-NOV-2001
 !>
-!>
 !>     Unit and file table size parameters.
 !>
 !>     FTSIZE     is the maximum number of files (DAS and DAF) that a
@@ -149,38 +148,26 @@ module pepper_inc_zzddhman
 
    integer(ip), parameter :: ftsize = 5000
 
-!
-!     RSVUNT     is the number of units protected from being locked
-!                to a particular handle by ZZDDHHLU.
-!
-   integer(ip), parameter :: rsvunt = 2
+   integer(ip), parameter :: rsvunt = 2  !! RSVUNT is the number of units protected from being locked
+                                         !! to a particular handle by ZZDDHHLU.
 
-!
-!     SCRUNT     is the number of units protected for use by scratch
-!                files.
-!
-   integer(ip), parameter :: scrunt = 1
+   integer(ip), parameter :: scrunt = 1  !! SCRUNT is the number of units protected for use by scratch
+                                         !! files.
 
-!
-!     UTSIZE     is the maximum number of logical units this manager
-!                will utilize at one time.
-!
-   integer(ip), parameter :: utsize = 20 + scrunt + rsvunt
+   integer(ip), parameter :: utsize = 20 + scrunt + rsvunt  !! UTSIZE is the maximum number of logical units this manager
+                                                            !! will utilize at one time.
 
-!
-!     Access method enumeration.  These parameters are used to
-!     identify which access method is associated with a particular
-!     handle.  They need to be synchronized with the STRAMH array
-!     defined in ZZDDHGSD in the following fashion:
-!
-!        STRAMH ( READ   ) = 'READ'
-!        STRAMH ( WRITE  ) = 'WRITE'
-!        STRAMH ( SCRTCH ) = 'SCRATCH'
-!        STRAMH ( NEW    ) = 'NEW'
-!
-!     These values are used in the file table variable FTAMH.
-!
-   integer(ip), parameter :: read = 1
+   integer(ip), parameter :: read = 1  !! Access method enumeration.  These parameters are used to
+                                       !! identify which access method is associated with a particular
+                                       !! handle.  They need to be synchronized with the STRAMH array
+                                       !! defined in ZZDDHGSD in the following fashion:
+                                       !!
+                                       !!     STRAMH ( READ   ) = 'READ'
+                                       !!     STRAMH ( WRITE  ) = 'WRITE'
+                                       !!     STRAMH ( SCRTCH ) = 'SCRATCH'
+                                       !!     STRAMH ( NEW    ) = 'NEW'
+                                       !!
+                                       !! These values are used in the file table variable FTAMH.
 
    integer(ip), parameter :: write = 2
 
@@ -190,20 +177,17 @@ module pepper_inc_zzddhman
 
    integer(ip), parameter :: numamh = 4
 
-!
-!     Binary file format enumeration.  These parameters are used to
-!     identify which binary file format is associated with a
-!     particular handle.  They need to be synchronized with the STRBFF
-!     array defined in ZZDDHGSD in the following fashion:
-!
-!        STRBFF ( BIGI3E ) = 'BIG-IEEE'
-!        STRBFF ( LTLI3E ) = 'LTL-IEEE'
-!        STRBFF ( VAXGFL ) = 'VAX-GFLT'
-!        STRBFF ( VAXDFL ) = 'VAX-DFLT'
-!
-!     These values are used in the file table variable FTBFF.
-!
-   integer(ip), parameter :: bigi3e = 1
+   integer(ip), parameter :: bigi3e = 1  !! Binary file format enumeration.  These parameters are used to
+                                         !! identify which binary file format is associated with a
+                                         !! particular handle.  They need to be synchronized with the STRBFF
+                                         !! array defined in ZZDDHGSD in the following fashion:
+                                         !!
+                                         !!     STRBFF ( BIGI3E ) = 'BIG-IEEE'
+                                         !!     STRBFF ( LTLI3E ) = 'LTL-IEEE'
+                                         !!     STRBFF ( VAXGFL ) = 'VAX-GFLT'
+                                         !!     STRBFF ( VAXDFL ) = 'VAX-DFLT'
+                                         !!
+                                         !! These values are used in the file table variable FTBFF.
 
    integer(ip), parameter :: ltli3e = 2
 
@@ -213,74 +197,58 @@ module pepper_inc_zzddhman
 
    integer(ip), parameter :: numbff = 4
 
-!
-!     Some random string lengths... more documentation required.
-!     For now this will have to suffice.
-!
-
-   integer(ip), parameter :: strsiz = 8
+   integer(ip), parameter :: strsiz = 8  !! Some random string lengths... more documentation required.
+                                         !! For now this will have to suffice.
 
    integer(ip), parameter :: strlen = (strsiz+1)*numbff
 
-!
-!     Architecture enumeration.  These parameters are used to identify
-!     which file architecture is associated with a particular handle.
-!     They need to be synchronized with the STRARC array defined in
-!     ZZDDHGSD in the following fashion:
-!
-!        STRARC ( DAF ) = 'DAF'
-!        STRARC ( DAS ) = 'DAS'
-!
-!     These values will be used in the file table variable FTARC.
-!
-   integer(ip), parameter :: daf = 1
+   integer(ip), parameter :: daf = 1  !! Architecture enumeration.  These parameters are used to identify
+                                      !! which file architecture is associated with a particular handle.
+                                      !! They need to be synchronized with the STRARC array defined in
+                                      !! ZZDDHGSD in the following fashion:
+                                      !!
+                                      !!     STRARC ( DAF ) = 'DAF'
+                                      !!     STRARC ( DAS ) = 'DAS'
+                                      !!
+                                      !! These values will be used in the file table variable FTARC.
 
    integer(ip), parameter :: das = 2
 
    integer(ip), parameter :: numarc = 2
 
-!
-!     For the following environments, record length is measured in
-!     characters (bytes) with eight characters per double precision
-!     number.
-!
-!     Environment: Sun, Sun FORTRAN
-!     Source:      Sun Fortran Programmer's Guide
-!
-!     Environment: PC, MS FORTRAN
-!     Source:      Microsoft Fortran Optimizing Compiler User's Guide
-!
-!     Environment: Macintosh, Language Systems FORTRAN
-!     Source:      Language Systems FORTRAN Reference Manual,
-!                  Version 1.2, page 12-7
-!
-!     Environment: PC/Linux, g77
-!     Source:      Determined by experiment.
-!
-!     Environment: PC, Lahey F77 EM/32 Version 4.0
-!     Source:      Lahey F77 EM/32 Language Reference Manual,
-!                  page 144
-!
-!     Environment: HP-UX 9000/750, FORTRAN/9000 Series 700 computers
-!     Source:      FORTRAN/9000 Reference-Series 700 Computers,
-!                  page 5-110
-!
-!     Environment: NeXT Mach OS (Black Hardware),
-!                  Absoft Fortran Version 3.2
-!     Source:      NAIF Program
-!
-   integer(ip), parameter :: recl = 1024
+   integer(ip), parameter :: recl = 1024  !! For the following environments, record length is measured in
+                                          !! characters (bytes) with eight characters per double precision
+                                          !! number.
+                                          !!
+                                          !! Environment: Sun, Sun FORTRAN
+                                          !! Source:      Sun Fortran Programmer's Guide
+                                          !!
+                                          !! Environment: PC, MS FORTRAN
+                                          !! Source:      Microsoft Fortran Optimizing Compiler User's Guide
+                                          !!
+                                          !! Environment: Macintosh, Language Systems FORTRAN
+                                          !! Source:      Language Systems FORTRAN Reference Manual,
+                                          !! Version 1.2, page 12-7
+                                          !!
+                                          !! Environment: PC/Linux, g77
+                                          !! Source:      Determined by experiment.
+                                          !!
+                                          !! Environment: PC, Lahey F77 EM/32 Version 4.0
+                                          !! Source:      Lahey F77 EM/32 Language Reference Manual,
+                                          !! page 144
+                                          !!
+                                          !! Environment: HP-UX 9000/750, FORTRAN/9000 Series 700 computers
+                                          !! Source:      FORTRAN/9000 Reference-Series 700 Computers,
+                                          !! page 5-110
+                                          !!
+                                          !! Environment: NeXT Mach OS (Black Hardware),
+                                          !! Absoft Fortran Version 3.2
+                                          !! Source:      NAIF Program
 
-!
-!     The following parameter defines the size of a string used
-!     to store a filenames on this target platform.
-!
-   integer(ip), parameter :: filen = 255
+   integer(ip), parameter :: filen = 255  !! The following parameter defines the size of a string used
+                                          !! to store a filenames on this target platform.
 
-!
-!     The following parameter controls the size of the character record
-!     buffer used to read data from non-native files.
-!
-   integer(ip), parameter :: cbfsiz = 1024
+   integer(ip), parameter :: cbfsiz = 1024  !! The following parameter controls the size of the character record
+                                            !! buffer used to read data from non-native files.
 
 end module pepper_inc_zzddhman

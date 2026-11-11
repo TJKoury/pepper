@@ -39,172 +39,84 @@ module pepper_inc_ckparam
 
    public
 
-!
-!     Number of quaternion components and number of quaternion and
-!     angular rate components together.
-!
-   integer(ip), parameter :: qsiz = 4
+   integer(ip), parameter :: qsiz = 4  !! Number of quaternion components and number of quaternion and
+                                       !! angular rate components together.
 
    integer(ip), parameter :: qavsiz = 7
 
-!
-!     CK Type 1 parameters:
-!
-!     CK1DTP   CK data type 1 ID;
-!
-!     CK1RSZ   maximum size of a record passed between CKR01
-!              and CKE01.
-!
-   integer(ip), parameter :: ck1dtp = 1
+   integer(ip), parameter :: ck1dtp = 1  !! CK Type 1 parameters: CK data type 1 ID
+   integer(ip), parameter :: ck1rsz = 8  !! CK Type 1 parameters: maximum size of a record passed between CKR01
+                                         !! and CKE01.
 
-   integer(ip), parameter :: ck1rsz = 8
+   integer(ip), parameter :: ck2dtp = 2  !! CK Type 2 parameters: CK data type 2 ID
+   integer(ip), parameter :: ck2rsz = 10 !! CK Type 2 parameters: maximum size of a record passed between CKR02
+                                         !! and CKE02.
 
-!
-!     CK Type 2 parameters:
-!
-!     CK2DTP   CK data type 2 ID;
-!
-!     CK2RSZ   maximum size of a record passed between CKR02
-!              and CKE02.
-!
-   integer(ip), parameter :: ck2dtp = 2
+   integer(ip), parameter :: ck3dtp = 3  !! CK Type 3 parameters: CK data type 3 ID
+   integer(ip), parameter :: ck3rsz = 17 !! CK Type 3 parameters: maximum size of a record passed between CKR03
+                                         !! and CKE03.
 
-   integer(ip), parameter :: ck2rsz = 10
+   ! CK Type 4 parameters:
+   integer(ip), parameter :: ck4dtp = 4  !! CK data type 4 ID
+   real(wp), parameter :: ck4pcd = 128.0_wp !! parameter defining integer to DP packing schema that
+                                            !! is applied when seven number integer array containing
+                                            !! polynomial degrees for quaternion and angular rate
+                                            !! components packed into a single DP number stored in
+                                            !! actual CK records in a file; the value of must not be
+                                            !! changed or compatibility with existing type 4 CK files
+                                            !! will be lost.
+   integer(ip), parameter :: ck4mxd = 18 !! maximum Chebychev polynomial degree allowed in type 4
+                                         !! records; the value of this parameter must never exceed
+                                         !! value of the CK4PCD;
+   integer(ip), parameter :: ck4sft = 10 !! number of additional DPs, which are not polynomial
+                                         !! coefficients, located at the beginning of a type 4
+                                         !! CK record that passed between routines CKR04 and CKE04;
+   integer(ip), parameter :: ck4rsz = ( ck4mxd + 1 ) * qavsiz + ck4sft !! maximum size of type 4 CK record passed between CKR04
+                                                                       !! and CKE04; CK4RSZ is computed as follows:
+                                                                       !!
+                                                                       !!     CK4RSZ = ( CK4MXD + 1 ) * QAVSIZ + CK4SFT
 
-!
-!     CK Type 3 parameters:
-!
-!     CK3DTP   CK data type 3 ID;
-!
-!     CK3RSZ   maximum size of a record passed between CKR03
-!              and CKE03.
-!
-   integer(ip), parameter :: ck3dtp = 3
+   ! CK Type 5 parameters:
+   integer(ip), parameter :: ck5dtp = 5  !! CK data type 5 ID;
+   integer(ip), parameter :: ck5mxd = 23 !! maximum polynomial degree allowed in type 5
+                                         !! records.
+   integer(ip), parameter :: ck5met = 4 !! number of additional DPs, which are not polynomial
+                                        !! coefficients, located at the beginning of a type 5
+                                        !! CK record that passed between routines CKR05 and CKE05;
+   integer(ip), parameter :: ck5mxp = 14 !! maximum packet size for any subtype.  Subtype 2
+                                         !! has the greatest packet size, since these packets
+                                         !! contain a quaternion, its derivative, an angular
+                                         !! velocity vector, and its derivative.  See ck05.inc
+                                         !! for a description of the subtypes.
+   integer(ip), parameter :: ck5rsz = (ck5mxd + 1) * ck5mxp + ck5met !! maximum size of type 5 CK record passed between CKR05
+                                                                     !! and CKE05; CK5RSZ is computed as follows:
+                                                                     !!
+                                                                     !!     CK5RSZ = ( CK5MXD + 1 ) * CK5MXP + CK5MET
 
-   integer(ip), parameter :: ck3rsz = 17
+   ! CK Type 6 parameters:
+   integer(ip), parameter :: ck6dtp = 6  !! CK6DTP CK data type 6 ID;
+   integer(ip), parameter :: ck6mxd = 23 !! maximum polynomial degree allowed in type 6
+                                         !! records.
+   integer(ip), parameter :: ck6met = 4 !! number of additional DPs, which are not polynomial
+                                        !! coefficients, located at the beginning of a type 6
+                                        !! CK record that passed between routines CKR06 and CKE06;
+   integer(ip), parameter :: ck6ps3 = 7  !! The parameter CK6PS3 must be in sync with C06PS3 defined in
+                                         !! ck06.inc.
+   integer(ip), parameter :: ck6rsz = ( ck6mxd + 1 ) * ( ck6ps3 + 1 ) + ck6met
+         !! maximum size of type 6 CK record passed between CKR06
+         !! and CKE06; CK6RSZ is computed as follows:
+         !!
+         !!     CK6RSZ = CK6MET + ( CK6MXD + 1 ) * ( CK6PS3 + 1 )
+         !!
+         !! where CK6PS3 is equal to the parameter CK06PS3 defined
+         !! in ck06.inc. Note that the subtype having the largest
+         !! packet size (subtype 2) does not give rise to the
+         !! largest record size, because that type is Hermite and
+         !! requires half the window size used by subtype 3 for a
+         !! given polynomial degree.
 
-!
-!     CK Type 4 parameters:
-!
-!     CK4DTP   CK data type 4 ID;
-!
-!     CK4PCD   parameter defining integer to DP packing schema that
-!              is applied when seven number integer array containing
-!              polynomial degrees for quaternion and angular rate
-!              components packed into a single DP number stored in
-!              actual CK records in a file; the value of must not be
-!              changed or compatibility with existing type 4 CK files
-!              will be lost.
-!
-!     CK4MXD   maximum Chebychev polynomial degree allowed in type 4
-!              records; the value of this parameter must never exceed
-!              value of the CK4PCD;
-!
-!     CK4SFT   number of additional DPs, which are not polynomial
-!              coefficients, located at the beginning of a type 4
-!              CK record that passed between routines CKR04 and CKE04;
-!
-!     CK4RSZ   maximum size of type 4 CK record passed between CKR04
-!              and CKE04; CK4RSZ is computed as follows:
-!
-!                 CK4RSZ = ( CK4MXD + 1 ) * QAVSIZ + CK4SFT
-!
-   integer(ip), parameter :: ck4dtp = 4
-
-   real(wp), parameter :: ck4pcd = 128.0_wp
-
-   integer(ip), parameter :: ck4mxd = 18
-
-   integer(ip), parameter :: ck4sft = 10
-
-   integer(ip), parameter :: ck4rsz = ( ck4mxd + 1 ) * qavsiz + ck4sft
-
-!
-!     CK Type 5 parameters:
-!
-!
-!     CK5DTP   CK data type 5 ID;
-!
-!     CK5MXD   maximum polynomial degree allowed in type 5
-!              records.
-!
-!     CK5MET   number of additional DPs, which are not polynomial
-!              coefficients, located at the beginning of a type 5
-!              CK record that passed between routines CKR05 and CKE05;
-!
-!     CK5MXP   maximum packet size for any subtype.  Subtype 2
-!              has the greatest packet size, since these packets
-!              contain a quaternion, its derivative, an angular
-!              velocity vector, and its derivative.  See ck05.inc
-!              for a description of the subtypes.
-!
-!     CK5RSZ   maximum size of type 5 CK record passed between CKR05
-!              and CKE05; CK5RSZ is computed as follows:
-!
-!                 CK5RSZ = ( CK5MXD + 1 ) * CK5MXP + CK5MET
-!
-   integer(ip), parameter :: ck5dtp = 5
-
-   integer(ip), parameter :: ck5mxd = 23
-
-   integer(ip), parameter :: ck5met = 4
-
-   integer(ip), parameter :: ck5mxp = 14
-
-   integer(ip), parameter :: ck5rsz = (ck5mxd + 1) * ck5mxp + ck5met
-
-!
-!     CK Type 6 parameters:
-!
-!
-!     CK6DTP   CK data type 6 ID;
-!
-!     CK6MXD   maximum polynomial degree allowed in type 6
-!              records.
-!
-!     CK6MET   number of additional DPs, which are not polynomial
-!              coefficients, located at the beginning of a type 6
-!              CK record that passed between routines CKR06 and CKE06;
-!
-!     CK6MXP   maximum packet size for any subtype.  Subtype 2
-!              has the greatest packet size, since these packets
-!              contain a quaternion, its derivative, an angular
-!              velocity vector, and its derivative.  See ck06.inc
-!              for a description of the subtypes.
-!
-!     CK6RSZ   maximum size of type 6 CK record passed between CKR06
-!              and CKE06; CK6RSZ is computed as follows:
-!
-!                 CK6RSZ = CK6MET + ( CK6MXD + 1 ) * ( CK6PS3 + 1 )
-!
-!              where CK6PS3 is equal to the parameter CK06PS3 defined
-!              in ck06.inc. Note that the subtype having the largest
-!              packet size (subtype 2) does not give rise to the
-!              largest record size, because that type is Hermite and
-!              requires half the window size used by subtype 3 for a
-!              given polynomial degree.
-!
-   integer(ip), parameter :: ck6dtp = 6
-
-   integer(ip), parameter :: ck6mxd = 23
-
-   integer(ip), parameter :: ck6met = 4
-
-!
-!     The parameter CK6PS3 must be in sync with C06PS3 defined in
-!     ck06.inc.
-!
-   integer(ip), parameter :: ck6ps3 = 7
-
-   integer(ip), parameter :: ck6rsz = ( ck6mxd + 1 ) * ( ck6ps3 + 1 ) &
-      + ck6met
-
-!
-!
-!     Maximum record size that can be handled by CKPFS. This value
-!     must be set to the maximum of all CKxRSZ parameters (currently
-!     CK5RSZ.)
-!
-   integer(ip), parameter :: ckmrsz = ck5rsz
+   integer(ip), parameter :: ckmrsz = ck5rsz  !! Maximum record size that can be handled by CKPFS. This value
+                                              !! must be set to the maximum of all CKxRSZ parameters (currently
+                                              !! CK5RSZ.)
 
 end module pepper_inc_ckparam

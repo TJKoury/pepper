@@ -11,8 +11,6 @@ module pepper_inc_ektnamsz
 
    public
 
-!     Size of table name, in characters.
-!
-   integer(ip), parameter :: tnamsz = 64
+   integer(ip), parameter :: tnamsz = 64  !! Size of table name, in characters.
 
 end module pepper_inc_ektnamsz

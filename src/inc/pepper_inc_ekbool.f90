@@ -15,23 +15,12 @@ module pepper_inc_ekbool
 
    public
 
-!     Integer code indicating `true':
-!
-   integer(ip), parameter :: itrue = 1
+   integer(ip), parameter :: itrue = 1  !! Integer code indicating `true':
 
-!
-!     Integer code indicating `false':
-!
-   integer(ip), parameter :: ifalse = -1
+   integer(ip), parameter :: ifalse = -1  !! Integer code indicating `false':
 
-!
-!     Character code indicating `true':
-!
-   character(*), parameter :: ctrue = 'T'
+   character(*), parameter :: ctrue = 'T'  !! Character code indicating `true':
 
-!
-!     Character code indicating `false':
-!
-   character(*), parameter :: cfalse = 'F'
+   character(*), parameter :: cfalse = 'F'  !! Character code indicating `false':
 
 end module pepper_inc_ekbool

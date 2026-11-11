@@ -52,37 +52,22 @@ module pepper_inc_zzbodtrn
 !     ZZBODTRN.INC.
 !
 
-!
-!     Maximum size of a NAME string
-!
-   integer(ip), parameter :: maxl = 36
+   integer(ip), parameter :: maxl = 36  !! Maximum size of a NAME string
 
-!
-!     Maximum number of additional names that may be added via the
-!     ZZBODDEF interface.
-!
-   integer(ip), parameter :: maxp = 150
+   integer(ip), parameter :: maxp = 150  !! Maximum number of additional names that may be added via the
+                                         !! ZZBODDEF interface.
 
-!
-!     Count of default SPICE mapping assignments.
-!
-   integer(ip), parameter :: nperm = 692
+   integer(ip), parameter :: nperm = 692  !! Count of default SPICE mapping assignments.
 
-!
-!     Size of the lists and hashes storing the built-in and
-!     ZZBODDEF-defined name/ID mappings. To ensure efficient hashing
-!     this size is the set to the first prime number greater than
-!     ( MAXP + NPERM ).
-!
-   integer(ip), parameter :: maxe = 853
+   integer(ip), parameter :: maxe = 853  !! Size of the lists and hashes storing the built-in and
+                                         !! ZZBODDEF-defined name/ID mappings. To ensure efficient hashing
+                                         !! this size is the set to the first prime number greater than
+                                         !! ( MAXP + NPERM ).
 
-!
-!     Size of the lists and hashes storing the POOL-defined name/ID
-!     mappings. To ensure efficient hashing and to provide the ability
-!     to store nearly as many names as can fit in the POOL, this size
-!     is set to the first prime number less than MAXLIN defined in
-!     the POOL umbrella routine.
-!
-   integer(ip), parameter :: nroom = 14983
+   integer(ip), parameter :: nroom = 14983  !! Size of the lists and hashes storing the POOL-defined name/ID
+                                            !! mappings. To ensure efficient hashing and to provide the ability
+                                            !! to store nearly as many names as can fit in the POOL, this size
+                                            !! is set to the first prime number less than MAXLIN defined in
+                                            !! the POOL umbrella routine.
 
 end module pepper_inc_zzbodtrn

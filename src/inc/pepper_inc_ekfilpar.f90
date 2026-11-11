@@ -21,18 +21,12 @@ module pepper_inc_ekfilpar
 
    public
 
-!     Size of file parameter block:
-!
-   integer(ip), parameter :: fparsz = 1
+   integer(ip), parameter :: fparsz = 1  !! Size of file parameter block:
 
-!
-!     All offsets shown below are relative to the beginning of the
-!     first integer page in the EK.
-!
-!
-!     Index of the segment pointer tree---this location contains the
-!     root page number of the tree:
-!
-   integer(ip), parameter :: sgtidx = 1
+   integer(ip), parameter :: sgtidx = 1  !! All offsets shown below are relative to the beginning of the
+                                         !! first integer page in the EK.
+                                         !!
+                                         !! Index of the segment pointer tree---this location contains the
+                                         !! root page number of the tree:
 
 end module pepper_inc_ekfilpar

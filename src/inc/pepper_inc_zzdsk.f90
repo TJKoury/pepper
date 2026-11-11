@@ -35,57 +35,31 @@ module pepper_inc_zzdsk
 
    public
 
-!     Parameters supporting METHOD string parsing:
-!
-   integer(ip), parameter :: dskshp = 2
+   integer(ip), parameter :: dskshp = 2  !! Parameters supporting METHOD string parsing:
 
    integer(ip), parameter :: ellshp = 1
 
-!
-!     Local method length.
-!
-   integer(ip), parameter :: mthlen = 500
+   integer(ip), parameter :: mthlen = 500  !! Local method length.
 
-!
-!     Length of sub-point type string.
-!
-   integer(ip), parameter :: sublen = 20
+   integer(ip), parameter :: sublen = 20  !! Length of sub-point type string.
 
-!
-!     Length of curve type string.
-!
-   integer(ip), parameter :: cvtlen = 20
+   integer(ip), parameter :: cvtlen = 20  !! Length of curve type string.
 
-!
-!     Limb type parameter codes.
-!
-   integer(ip), parameter :: tangnt = 1
+   integer(ip), parameter :: tangnt = 1  !! Limb type parameter codes.
 
    integer(ip), parameter :: guided = 2
 
-!
-!     Length of terminator type string.
-!
-   integer(ip), parameter :: tmtlen = 20
+   integer(ip), parameter :: tmtlen = 20  !! Length of terminator type string.
 
-!
-!     Terminator type and limb parameter codes.
-!
-   integer(ip), parameter :: lmbcrv = 0
+   integer(ip), parameter :: lmbcrv = 0  !! Terminator type and limb parameter codes.
 
    integer(ip), parameter :: umbral = 1
 
    integer(ip), parameter :: pnmbrl = 2
 
-!
-!     Length of aberration correction locus string.
-!
-   integer(ip), parameter :: acllen = 25
+   integer(ip), parameter :: acllen = 25  !! Length of aberration correction locus string.
 
-!
-!     Aberration correction locus codes.
-!
-   integer(ip), parameter :: ctrcor = 1
+   integer(ip), parameter :: ctrcor = 1  !! Aberration correction locus codes.
 
    integer(ip), parameter :: ellcor = 2
 

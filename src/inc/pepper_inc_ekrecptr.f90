@@ -55,10 +55,7 @@ module pepper_inc_ekrecptr
 
    public
 
-!     In EKs that are not shadowed, all records have status OLD.
-!
-!
-   integer(ip), parameter :: old = 1
+   integer(ip), parameter :: old = 1  !! In EKs that are not shadowed, all records have status OLD.
 
    integer(ip), parameter :: update = old + 1
 
@@ -70,52 +67,37 @@ module pepper_inc_ekrecptr
 
    integer(ip), parameter :: delupd = delnew + 1
 
-!
-!     The following parameters refer to indices within the record
-!     pointer structure:
-!
-!     Index of status indicator:
-!
-   integer(ip), parameter :: staidx = 1
+   integer(ip), parameter :: staidx = 1  !! The following parameters refer to indices within the record
+                                         !! pointer structure:
+                                         !!
+                                         !! Index of status indicator:
 
-!
-!     Each record pointer contains a pointer to its companion:  for a
-!     record belonging to a shadowed EK, this is the backup counterpart,
-!     or if the parent EK is itself a backup EK, a pointer to the
-!     record's source record.  The pointer is UNINIT (see below) if the
-!     record is unmodified.
-!
-!     Record companion pointers contain record numbers, not record
-!     base addresses.
-!
-!     Index of record's companion pointer:
-!
-   integer(ip), parameter :: rcpidx = staidx + 1
+   integer(ip), parameter :: rcpidx = staidx + 1  !! Each record pointer contains a pointer to its companion:  for a
+                                                  !! record belonging to a shadowed EK, this is the backup counterpart,
+                                                  !! or if the parent EK is itself a backup EK, a pointer to the
+                                                  !! record's source record.  The pointer is UNINIT (see below) if the
+                                                  !! record is unmodified.
+                                                  !!
+                                                  !! Record companion pointers contain record numbers, not record
+                                                  !! base addresses.
+                                                  !!
+                                                  !! Index of record's companion pointer:
 
-!
-!     Each data item is referenced by an integer.  The meaning of
-!     this integer depends on the representation of data in the
-!     column to which the data item belongs.  Actual lookup of a
-!     data item must be done by subroutines appropriate to the class of
-!     the column to which the item belongs.  Note that data items don't
-!     necessarily occupy contiguous ranges of DAS addresses.
-!
-!     Base address of data pointers:
-!
-   integer(ip), parameter :: dptbas = 2
+   integer(ip), parameter :: dptbas = 2  !! Each data item is referenced by an integer.  The meaning of
+                                         !! this integer depends on the representation of data in the
+                                         !! column to which the data item belongs.  Actual lookup of a
+                                         !! data item must be done by subroutines appropriate to the class of
+                                         !! the column to which the item belongs.  Note that data items don't
+                                         !! necessarily occupy contiguous ranges of DAS addresses.
+                                         !!
+                                         !! Base address of data pointers:
 
-!
-!     Maximum record pointer size:
-!
-   integer(ip), parameter :: mxrpsz = 254
+   integer(ip), parameter :: mxrpsz = 254  !! Maximum record pointer size:
 
-!
-!     Data pointers are given the value UNINIT to start with; this
-!     indicates that the data item is uninitialized.  UNINIT is
-!     distinct from the value NULL.  NOBACK indicates an uninitialized
-!     backup column entry.
-!
-   integer(ip), parameter :: uninit = -1
+   integer(ip), parameter :: uninit = -1  !! Data pointers are given the value UNINIT to start with; this
+                                          !! indicates that the data item is uninitialized.  UNINIT is
+                                          !! distinct from the value NULL.  NOBACK indicates an uninitialized
+                                          !! backup column entry.
 
    integer(ip), parameter :: null = uninit - 1
 

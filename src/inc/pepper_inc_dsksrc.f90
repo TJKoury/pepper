@@ -23,13 +23,9 @@ module pepper_inc_dsksrc
 
    public
 
-!     Size of double precision source information component:
-!
-   integer(ip), parameter :: dcsize = 1
+   integer(ip), parameter :: dcsize = 1  !! Size of double precision source information component:
 
-!     Size of integer source information component:
-!
-   integer(ip), parameter :: icsize = 1
+   integer(ip), parameter :: icsize = 1  !! Size of integer source information component:
 
 !
 !     The contents of the components are DSK data type-dependent.

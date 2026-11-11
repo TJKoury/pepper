@@ -51,57 +51,28 @@ module pepper_inc_ekdatpag
 
    public
 
-!     Size of encoded integer:
-!
-   integer(ip), parameter :: encsiz = 5
+   integer(ip), parameter :: encsiz = 5  !! Size of encoded integer:
 
-!
-!     Usable page size:
-!
-   integer(ip), parameter :: cpsize = 1014
+   integer(ip), parameter :: cpsize = 1014  !! Usable page size:
 
-!
-!     Location of character forward pointer:
-!
-   integer(ip), parameter :: cfpidx = cpsize + 1
+   integer(ip), parameter :: cfpidx = cpsize + 1  !! Location of character forward pointer:
 
-!
-!     Location of character link count:
-!
-   integer(ip), parameter :: clcidx = cfpidx + encsiz
+   integer(ip), parameter :: clcidx = cfpidx + encsiz  !! Location of character link count:
 
-!
-!     Double precision data page parameters:
-!
-!     Usable page size:
-!
-   integer(ip), parameter :: dpsize = 126
+   integer(ip), parameter :: dpsize = 126  !! Double precision data page parameters:
+                                           !!
+                                           !! Usable page size:
 
-!
-!     Location of d.p. forward pointer:
-!
-   integer(ip), parameter :: dfpidx = dpsize + 1
+   integer(ip), parameter :: dfpidx = dpsize + 1  !! Location of d.p. forward pointer:
 
-!
-!     Location of d.p. link count:
-!
-   integer(ip), parameter :: dlcidx = dfpidx + 1
+   integer(ip), parameter :: dlcidx = dfpidx + 1  !! Location of d.p. link count:
 
-!
-!     Integer data page parameters:
-!
-!     Usable page size:
-!
-   integer(ip), parameter :: ipsize = 254
+   integer(ip), parameter :: ipsize = 254  !! Integer data page parameters:
+                                           !!
+                                           !! Usable page size:
 
-!
-!     Location of integer forward pointer:
-!
-   integer(ip), parameter :: ifpidx = ipsize + 1
+   integer(ip), parameter :: ifpidx = ipsize + 1  !! Location of integer forward pointer:
 
-!
-!     Location of integer link count:
-!
-   integer(ip), parameter :: ilcidx = ifpidx + 1
+   integer(ip), parameter :: ilcidx = ifpidx + 1  !! Location of integer link count:
 
 end module pepper_inc_ekdatpag

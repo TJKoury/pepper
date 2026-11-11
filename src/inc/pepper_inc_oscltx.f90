@@ -11,17 +11,13 @@ module pepper_inc_oscltx
 
    public
 
-!
-!     Size of the OSCLTX output argument array ELTS.
-!
-!     The output array ELTS is intended to contain unused space to hold
-!     additional elements that may be added in a later version of this
-!     routine. In order to maintain forward compatibility, user
-!     applications should declare ELTS as follows:
-!
-!     DOUBLE PRECISION   ELTS( OSCXSZ )
-!
-
-   integer(ip), parameter :: oscxsz = 20
+   integer(ip), parameter :: oscxsz = 20  !! Size of the OSCLTX output argument array ELTS.
+                                          !!
+                                          !! The output array ELTS is intended to contain unused space to hold
+                                          !! additional elements that may be added in a later version of this
+                                          !! routine. In order to maintain forward compatibility, user
+                                          !! applications should declare ELTS as follows:
+                                          !!
+                                          !! DOUBLE PRECISION   ELTS( OSCXSZ )
 
 end module pepper_inc_oscltx

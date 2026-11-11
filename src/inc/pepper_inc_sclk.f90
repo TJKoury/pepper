@@ -38,62 +38,37 @@ module pepper_inc_sclk
 
    public
 
-!
-!        NOTE: many of the declarations present here are duplicated
-!        in the include file zzsc01.inc. Declarations in that file
-!        must be kept in sync with those in this file. The
-!        duplicated declarations are:
-!
-!           NDELIM
-!           DELIMS
-!           MXPART
-!           MXCOEF
-!           MXNFLD
-!           DPLEN
-!
-!
-!     Number of supported SCLK field delimiters:
-!
-   integer(ip), parameter :: ndelim = 5
+   integer(ip), parameter :: ndelim = 5  !!    NOTE: many of the declarations present here are duplicated
+                                         !!     in the include file zzsc01.inc. Declarations in that file
+                                         !!     must be kept in sync with those in this file. The
+                                         !!     duplicated declarations are:
+                                         !!
+                                         !!        NDELIM
+                                         !!        DELIMS
+                                         !!        MXPART
+                                         !!        MXCOEF
+                                         !!        MXNFLD
+                                         !!        DPLEN
+                                         !!
+                                         !! Number of supported SCLK field delimiters:
 
-!
-!     Supported SCLK string field delimiters:
-!
-   character(ndelim), parameter :: delims = '.:-, '
+   character(ndelim), parameter :: delims = '.:-, '  !! Supported SCLK string field delimiters:
 
-!
-!     Maximum number of partitions:
-!
-   integer(ip), parameter :: mxpart = 9999
+   integer(ip), parameter :: mxpart = 9999  !! Maximum number of partitions:
 
-!
-!     Partition string length.
-!
-!     Since the maximum number of partitions is given by MXPART is
-!     9999, PRTSTR needs at most 4 characters for the partition number
-!     and one character for the slash.
-!
-   integer(ip), parameter :: partln = 5
+   integer(ip), parameter :: partln = 5  !! Partition string length.
+                                         !!
+                                         !! Since the maximum number of partitions is given by MXPART is
+                                         !! 9999, PRTSTR needs at most 4 characters for the partition number
+                                         !! and one character for the slash.
 
-!
-!     Maximum number of coefficient records:
-!
-   integer(ip), parameter :: mxcoef = 100000
+   integer(ip), parameter :: mxcoef = 100000  !! Maximum number of coefficient records:
 
-!
-!     Maximum number of fields in an SCLK string:
-!
-   integer(ip), parameter :: mxnfld = 10
+   integer(ip), parameter :: mxnfld = 10  !! Maximum number of fields in an SCLK string:
 
-!
-!     Length of strings used to represent D.P.
-!     numbers:
-!
-   integer(ip), parameter :: dplen = 30
+   integer(ip), parameter :: dplen = 30  !! Length of strings used to represent D.P.
+                                         !! numbers:
 
-!
-!     Maximum number of supported parallel time systems:
-!
-   integer(ip), parameter :: mxtsys = 2
+   integer(ip), parameter :: mxtsys = 2  !! Maximum number of supported parallel time systems:
 
 end module pepper_inc_sclk

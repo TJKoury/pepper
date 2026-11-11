@@ -11,80 +11,61 @@ module pepper_inc_ekjrs
 
    public
 
-!     Maximum number of join row sets in a join row set union:
-!
-   integer(ip), parameter :: mxjrs = 200
+   integer(ip), parameter :: mxjrs = 200  !! Maximum number of join row sets in a join row set union:
 
-!
-!     The layout of a join row set in the EK scratch area is shown
-!     below:
-!
-!        +--------------------------------------------+
-!        |              join row set size             |  1 element
-!        +--------------------------------------------+
-!        |    number of row vectors in join row set   |  1 element
-!        +--------------------------------------------+
-!        |               table count (TC)             |  1 element
-!        +--------------------------------------------+
-!        |          segment vector count (SVC)        |  1 element
-!        +--------------------------------------------+
-!        |               segment vector 1             |  TC elements
-!        +--------------------------------------------+
-!                              .
-!                              .
-!                              .
-!        +--------------------------------------------+
-!        |               segment vector SVC           |  TC elements
-!        +--------------------------------------------+
-!        |   segment vector 1 row set base address    |  1 element
-!        +--------------------------------------------+
-!        |      segment vector 1 row count (RC_1)     |  1 element
-!        +--------------------------------------------+
-!                              .
-!                              .
-!                              .
-!        +--------------------------------------------+
-!        |  segment vector SVC row set base address   |  1 element
-!        +--------------------------------------------+
-!        |   segment vector SVC row count (RC_SVC)    |  1 element
-!        +--------------------------------------------+
-!        | Augmented row vectors for segment vector 1 |  (TC+1)*RC_1
-!        +--------------------------------------------+  elements
-!                              .
-!                              .
-!                              .
-!        +--------------------------------------------+
-!        |Augmented row vectors for segment vector SVC|  (TC+1)*RC_SVC1
-!        +--------------------------------------------+  elements
-!
-!
-!     The following parameters indicate positions of elements in the
-!     join row set structure:
-!
-!
-!     Base-relative index of join row set size
-!
-   integer(ip), parameter :: jszidx = 1
+   integer(ip), parameter :: jszidx = 1  !! The layout of a join row set in the EK scratch area is shown
+                                         !! below:
+                                         !!
+                                         !!     +--------------------------------------------+
+                                         !!     |              join row set size             |  1 element
+                                         !!     +--------------------------------------------+
+                                         !!     |    number of row vectors in join row set   |  1 element
+                                         !!     +--------------------------------------------+
+                                         !!     |               table count (TC)             |  1 element
+                                         !!     +--------------------------------------------+
+                                         !!     |          segment vector count (SVC)        |  1 element
+                                         !!     +--------------------------------------------+
+                                         !!     |               segment vector 1             |  TC elements
+                                         !!     +--------------------------------------------+
+                                         !!                           .
+                                         !!                           .
+                                         !!                           .
+                                         !!     +--------------------------------------------+
+                                         !!     |               segment vector SVC           |  TC elements
+                                         !!     +--------------------------------------------+
+                                         !!     |   segment vector 1 row set base address    |  1 element
+                                         !!     +--------------------------------------------+
+                                         !!     |      segment vector 1 row count (RC_1)     |  1 element
+                                         !!     +--------------------------------------------+
+                                         !!                           .
+                                         !!                           .
+                                         !!                           .
+                                         !!     +--------------------------------------------+
+                                         !!     |  segment vector SVC row set base address   |  1 element
+                                         !!     +--------------------------------------------+
+                                         !!     |   segment vector SVC row count (RC_SVC)    |  1 element
+                                         !!     +--------------------------------------------+
+                                         !!     | Augmented row vectors for segment vector 1 |  (TC+1)*RC_1
+                                         !!     +--------------------------------------------+  elements
+                                         !!                           .
+                                         !!                           .
+                                         !!                           .
+                                         !!     +--------------------------------------------+
+                                         !!     |Augmented row vectors for segment vector SVC|  (TC+1)*RC_SVC1
+                                         !!     +--------------------------------------------+  elements
+                                         !!
+                                         !! The following parameters indicate positions of elements in the
+                                         !! join row set structure:
+                                         !!
+                                         !! Base-relative index of join row set size
 
-!
-!     Index of row vector count
-!
-   integer(ip), parameter :: jrcidx = 2
+   integer(ip), parameter :: jrcidx = 2  !! Index of row vector count
 
-!
-!     Index of table count
-!
-   integer(ip), parameter :: jtcidx = 3
+   integer(ip), parameter :: jtcidx = 3  !! Index of table count
 
-!
-!     Index of segment vector count
-!
-   integer(ip), parameter :: jscidx = 4
+   integer(ip), parameter :: jscidx = 4  !! Index of segment vector count
 
-!
-!     Base address of first segment vector
-!
-   integer(ip), parameter :: jsvbas = 4
+   integer(ip), parameter :: jsvbas = 4  !! Base address of first segment vector
 !
 
 end module pepper_inc_ekjrs

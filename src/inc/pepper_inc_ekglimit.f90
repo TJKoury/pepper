@@ -13,10 +13,8 @@ module pepper_inc_ekglimit
 
    public
 
-!     MXCLSG is the maximum number of columns allowed in a segment.
-!     This limit applies to logical tables as well, since all segments
-!     in a logical table must have the same column definitions.
-!
-   integer(ip), parameter :: mxclsg = 100
+   integer(ip), parameter :: mxclsg = 100  !! MXCLSG is the maximum number of columns allowed in a segment.
+                                           !! This limit applies to logical tables as well, since all segments
+                                           !! in a logical table must have the same column definitions.
 
 end module pepper_inc_ekglimit

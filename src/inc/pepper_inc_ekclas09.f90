@@ -14,18 +14,10 @@ module pepper_inc_ekclas09
 
    public
 
-!     Data array base address:
-!
-   integer(ip), parameter :: dbix09 = 1
+   integer(ip), parameter :: dbix09 = 1  !! Data array base address:
 
-!
-!     Null flag array base address:
-!
-   integer(ip), parameter :: nfix09 = 2
+   integer(ip), parameter :: nfix09 = 2  !! Null flag array base address:
 
-!
-!     Size of class 9 metadata array:
-!
-   integer(ip), parameter :: mdsz09 = 2
+   integer(ip), parameter :: mdsz09 = 2  !! Size of class 9 metadata array:
 
 end module pepper_inc_ekclas09

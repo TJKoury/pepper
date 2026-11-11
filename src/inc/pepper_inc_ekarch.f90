@@ -16,8 +16,6 @@ module pepper_inc_ekarch
 
    public
 
-!     Architecture code:
-!
-   integer(ip), parameter :: archid = 8
+   integer(ip), parameter :: archid = 8  !! Architecture code:
 
 end module pepper_inc_ekarch

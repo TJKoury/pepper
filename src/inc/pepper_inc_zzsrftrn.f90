@@ -27,19 +27,13 @@ module pepper_inc_zzsrftrn
 
    public
 
-!
-!     Size of the lists and hashes storing the POOL-defined name/ID
-!     mappings. To ensure efficient hashing, this size is set to the
-!     first prime number greater than MXNSRF defined in the public
-!     include file
-!
-!        srftrn.inc.
-!
-   integer(ip), parameter :: nroom = 2003
+   integer(ip), parameter :: nroom = 2003  !! Size of the lists and hashes storing the POOL-defined name/ID
+                                           !! mappings. To ensure efficient hashing, this size is set to the
+                                           !! first prime number greater than MXNSRF defined in the public
+                                           !! include file
+                                           !!
+                                           !!     srftrn.inc.
 
-!
-!     Singly-linked list pool lower bound:
-!
-   integer(ip), parameter :: lbsngl = -5
+   integer(ip), parameter :: lbsngl = -5  !! Singly-linked list pool lower bound:
 
 end module pepper_inc_zzsrftrn

@@ -74,11 +74,7 @@ module pepper_inc_zzsgp4
 
    public
 
-!
-!      WGS gravitational constants IDs.
-!
-
-   integer(ip), parameter :: ngravs = 3
+   integer(ip), parameter :: ngravs = 3  !! WGS gravitational constants IDs.
 
    integer(ip), parameter :: ngravc = 8
 
@@ -88,11 +84,7 @@ module pepper_inc_zzsgp4
 
    integer(ip), parameter :: wgs84 = 3
 
-!
-!      Gravitational constant indices.
-!
-
-   integer(ip), parameter :: p_rad = 1
+   integer(ip), parameter :: p_rad = 1  !! Gravitational constant indices.
 
    integer(ip), parameter :: p_xke = 2
 
@@ -108,24 +100,20 @@ module pepper_inc_zzsgp4
 
    integer(ip), parameter :: p_j3j2 = 8
 
-!
-!     The following parameters give the indices in the GEOPHS
-!     array of the various geophysical parameters needed for
-!     the two line element sets.
-!
-!     K_J2  --- index of J2 gravitational harmonic for earth
-!     K_J3  --- index of J3 gravitational harmonic for earth
-!     K_J4  --- index of J4 gravitational harmonic for earth
-!     K_KE  --- index of KE = sqrt(GM) in earth-radii**1.5/MIN
-!     K_QO  --- index of high altitude bound for atmospheric
-!               model in km
-!     K_SO  --- index of low altitude bound for atmospheric
-!               model in km
-!     K_ER  --- index of earth equatorial radius in km
-!     K_AE  --- index of distance units/earth radius
-!
-
-   integer(ip), parameter :: k_j2 = 1
+   integer(ip), parameter :: k_j2 = 1  !! The following parameters give the indices in the GEOPHS
+                                       !! array of the various geophysical parameters needed for
+                                       !! the two line element sets.
+                                       !!
+                                       !! K_J2 --- index of J2 gravitational harmonic for earth
+                                       !! K_J3  --- index of J3 gravitational harmonic for earth
+                                       !! K_J4  --- index of J4 gravitational harmonic for earth
+                                       !! K_KE  --- index of KE = sqrt(GM) in earth-radii**1.5/MIN
+                                       !! K_QO  --- index of high altitude bound for atmospheric
+                                       !! model in km
+                                       !! K_SO  --- index of low altitude bound for atmospheric
+                                       !! model in km
+                                       !! K_ER  --- index of earth equatorial radius in km
+                                       !! K_AE  --- index of distance units/earth radius
 
    integer(ip), parameter :: k_j3 = 2
 
@@ -143,30 +131,22 @@ module pepper_inc_zzsgp4
 
    integer(ip), parameter :: ngeo = k_ae
 
-!
-!     Operation mode values, OPMODE.
-!
-
-   integer(ip), parameter :: afspc = 1
+   integer(ip), parameter :: afspc = 1  !! Operation mode values, OPMODE.
 
    integer(ip), parameter :: imprvd = 2
 
-!
-!     An enumeration of the various components of the
-!     elements array---ELEMS
-!
-!     KNDT20  --- location of NDT20
-!     KNDD60  --- location of NDD60
-!     KBSTAR  --- location of BSTAR
-!     KINCL   --- location of INCL
-!     KNODE0  --- location of NODE0
-!     KECC    --- location of ECC
-!     KOMEGA  --- location of OMEGA
-!     KMO     --- location of MO
-!     KNO     --- location of NO
-!
-
-   integer(ip), parameter :: kndt20 = 1
+   integer(ip), parameter :: kndt20 = 1  !! An enumeration of the various components of the
+                                         !! elements array---ELEMS
+                                         !!
+                                         !! KNDT20 --- location of NDT20
+                                         !! KNDD60  --- location of NDD60
+                                         !! KBSTAR  --- location of BSTAR
+                                         !! KINCL   --- location of INCL
+                                         !! KNODE0  --- location of NODE0
+                                         !! KECC    --- location of ECC
+                                         !! KOMEGA  --- location of OMEGA
+                                         !! KMO     --- location of MO
+                                         !! KNO     --- location of NO
 
    integer(ip), parameter :: kndd60 = 2
 

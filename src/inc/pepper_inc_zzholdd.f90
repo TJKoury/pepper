@@ -63,51 +63,30 @@ module pepper_inc_zzholdd
 
    public
 
-!
-!     OP codes. The values exist in the integer domain
-!     [ -ZZNOP, -1],
-!
-   integer(ip), parameter :: zzget = -1
+   integer(ip), parameter :: zzget = -1  !! OP codes. The values exist in the integer domain
+                                         !! [ -ZZNOP, -1],
 
    integer(ip), parameter :: zzput = -2
 
    integer(ip), parameter :: zzreset = -3
 
-!
-!     Current number of OP codes.
-!
-   integer(ip), parameter :: zznop = 3
+   integer(ip), parameter :: zznop = 3  !! Current number of OP codes.
 
 !
 !     ID codes. The values exist in the integer domain
 !     [ 1, NID],
 !
 
-!
-!     General use, primarily testing.
-!
-   integer(ip), parameter :: gen = 1
+   integer(ip), parameter :: gen = 1  !! General use, primarily testing.
 
-!
-!     The user defined GF reference value.
-!
-   integer(ip), parameter :: gf_ref = 2
+   integer(ip), parameter :: gf_ref = 2  !! The user defined GF reference value.
 
-!
-!     The user defined GF convergence tolerance.
-!
-   integer(ip), parameter :: gf_tol = 3
+   integer(ip), parameter :: gf_tol = 3  !! The user defined GF convergence tolerance.
 
-!
-!     The user defined GF step for numeric differentiation.
-!
-   integer(ip), parameter :: gf_dt = 4
+   integer(ip), parameter :: gf_dt = 4  !! The user defined GF step for numeric differentiation.
 
-!
-!     Current number of ID codes, dimension of array
-!     in ZZHOLDD. Bad things can happen if this parameter
-!     does not have the proper value.
-!
-   integer(ip), parameter :: nid = 4
+   integer(ip), parameter :: nid = 4  !! Current number of ID codes, dimension of array
+                                      !! in ZZHOLDD. Bad things can happen if this parameter
+                                      !! does not have the proper value.
 
 end module pepper_inc_zzholdd

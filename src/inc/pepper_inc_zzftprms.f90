@@ -19,39 +19,22 @@ module pepper_inc_zzftprms
 
    public
 
-!     Size of FTP Test String Component:
-!
-   integer(ip), parameter :: sizstr = 16
+   integer(ip), parameter :: sizstr = 16  !! Size of FTP Test String Component:
 
-!
-!     Size of Maximum Expanded FTP Validation String:
-!
-!      (This indicates the size of a buffer to hold the test
-!       string sequence from a possibly corrupt file. Empirical
-!       evidence strongly indicates that expansion due to FTP
-!       corruption at worst doubles the number of characters.
-!       So take 3*SIZSTR to be on the safe side.)
-!
-   integer(ip), parameter :: sizexp = (3 * sizstr)
+   integer(ip), parameter :: sizexp = (3 * sizstr)  !! Size of Maximum Expanded FTP Validation String:
+                                                    !!
+                                                    !! (This indicates the size of a buffer to hold the test
+                                                    !! string sequence from a possibly corrupt file. Empirical
+                                                    !! evidence strongly indicates that expansion due to FTP
+                                                    !! corruption at worst doubles the number of characters.
+                                                    !! So take 3*SIZSTR to be on the safe side.)
 
-!
-!     Size of FTP Validation String Brackets:
-!
-   integer(ip), parameter :: sizend = 6
+   integer(ip), parameter :: sizend = 6  !! Size of FTP Validation String Brackets:
 
-!
-!     Size of FTP Validation String:
-!
-   integer(ip), parameter :: sizftp = ( sizstr + 2*sizend )
+   integer(ip), parameter :: sizftp = ( sizstr + 2*sizend )  !! Size of FTP Validation String:
 
-!
-!     Size of DELIM.
-!
-   integer(ip), parameter :: sizdlm = 1
+   integer(ip), parameter :: sizdlm = 1  !! Size of DELIM.
 
-!
-!     Number of character clusters present in the validation string.
-!
-   integer(ip), parameter :: numtst = 6
+   integer(ip), parameter :: numtst = 6  !! Number of character clusters present in the validation string.
 
 end module pepper_inc_zzftprms

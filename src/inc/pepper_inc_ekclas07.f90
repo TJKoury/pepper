@@ -14,18 +14,10 @@ module pepper_inc_ekclas07
 
    public
 
-!     Data array base address:
-!
-   integer(ip), parameter :: dbix07 = 1
+   integer(ip), parameter :: dbix07 = 1  !! Data array base address:
 
-!
-!     Null flag array base address:
-!
-   integer(ip), parameter :: nfix07 = 2
+   integer(ip), parameter :: nfix07 = 2  !! Null flag array base address:
 
-!
-!     Size of class 7 metadata array:
-!
-   integer(ip), parameter :: mdsz07 = 2
+   integer(ip), parameter :: mdsz07 = 2  !! Size of class 7 metadata array:
 
 end module pepper_inc_ekclas07

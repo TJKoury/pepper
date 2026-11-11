@@ -44,96 +44,58 @@ module pepper_inc_gf
 
    public
 
-!
-!     Root finding parameters:
-!
-!     CNVTOL is the default convergence tolerance used by the
-!     high-level GF search API routines. This tolerance is
-!     used to terminate searches for binary state transitions:
-!     when the time at which a transition occurs is bracketed
-!     by two times that differ by no more than CNVTOL, the
-!     transition time is considered to have been found.
-!
-!     Units are TDB seconds.
-!
-   real(wp), parameter :: cnvtol = 1.0e-6_wp
+   real(wp), parameter :: cnvtol = 1.0e-6_wp  !! Root finding parameters:
+                                              !!
+                                              !! CNVTOL is the default convergence tolerance used by the
+                                              !! high-level GF search API routines. This tolerance is
+                                              !! used to terminate searches for binary state transitions:
+                                              !! when the time at which a transition occurs is bracketed
+                                              !! by two times that differ by no more than CNVTOL, the
+                                              !! transition time is considered to have been found.
+                                              !!
+                                              !! Units are TDB seconds.
 
-!
-!     NWMAX is the maximum number of windows allowed for user-defined
-!     workspace array.
-!
-!        DOUBLE PRECISION      WORK   ( LBCELL : MW, NWMAX )
-!
-!     Currently no more than twelve windows are required; the three
-!     extra windows are spares.
-!
-!     Callers of GFEVNT can include this file and use the parameter
-!     NWMAX to declare the second dimension of the workspace array
-!     if necessary.
-!
-   integer(ip), parameter :: nwmax = 15
+   integer(ip), parameter :: nwmax = 15  !! NWMAX is the maximum number of windows allowed for user-defined
+                                         !! workspace array.
+                                         !!
+                                         !!     DOUBLE PRECISION      WORK   ( LBCELL : MW, NWMAX )
+                                         !!
+                                         !! Currently no more than twelve windows are required; the three
+                                         !! extra windows are spares.
+                                         !!
+                                         !! Callers of GFEVNT can include this file and use the parameter
+                                         !! NWMAX to declare the second dimension of the workspace array
+                                         !! if necessary.
 
-!
-!     Callers of GFIDST should declare their workspace window
-!     count using NWDIST.
-!
-   integer(ip), parameter :: nwdist = 5
+   integer(ip), parameter :: nwdist = 5  !! Callers of GFIDST should declare their workspace window
+                                         !! count using NWDIST.
 
-!
-!     Callers of GFSEP should declare their workspace window
-!     count using NWSEP.
-!
-   integer(ip), parameter :: nwsep = 5
+   integer(ip), parameter :: nwsep = 5  !! Callers of GFSEP should declare their workspace window
+                                        !! count using NWSEP.
 
-!
-!     Callers of GFRR should declare their workspace window
-!     count using NWRR.
-!
-   integer(ip), parameter :: nwrr = 5
+   integer(ip), parameter :: nwrr = 5  !! Callers of GFRR should declare their workspace window
+                                       !! count using NWRR.
 
-!
-!     Callers of GFUDS should declare their workspace window
-!     count using NWUDS.
-!
-   integer(ip), parameter :: nwuds = 5
+   integer(ip), parameter :: nwuds = 5  !! Callers of GFUDS should declare their workspace window
+                                        !! count using NWUDS.
 
-!
-!     Callers of GFPA should declare their workspace window
-!     count using NWPA.
-!
-   integer(ip), parameter :: nwpa = 5
+   integer(ip), parameter :: nwpa = 5  !! Callers of GFPA should declare their workspace window
+                                       !! count using NWPA.
 
-!
-!     Callers of GFILUM should declare their workspace window
-!     count using NWILUM.
-!
-   integer(ip), parameter :: nwilum = 5
+   integer(ip), parameter :: nwilum = 5  !! Callers of GFILUM should declare their workspace window
+                                         !! count using NWILUM.
 
-!
-!     ADDWIN is a parameter used to expand each interval of the search
-!     (confinement) window by a small amount at both ends in order to
-!     accommodate searches using equality constraints. The loaded
-!     kernel files must accommodate these expanded time intervals.
-!
-   real(wp), parameter :: addwin = 0.5_wp
+   real(wp), parameter :: addwin = 0.5_wp  !! ADDWIN is a parameter used to expand each interval of the search
+                                           !! (confinement) window by a small amount at both ends in order to
+                                           !! accommodate searches using equality constraints. The loaded
+                                           !! kernel files must accommodate these expanded time intervals.
 
-!
-!     FRMNLN is a string length for frame names.
-!
+   integer(ip), parameter :: frmnln = 32  !! FRMNLN is a string length for frame names.
 
-   integer(ip), parameter :: frmnln = 32
+   integer(ip), parameter :: fovtln = 40  !! FOVTLN -- maximum length for FOV string.
 
-!
-!     FOVTLN -- maximum length for FOV string.
-!
-   integer(ip), parameter :: fovtln = 40
-
-!
-!     Specify the character strings that are allowed in the
-!     specification of field of view shapes.
-!
-
-   character(*), parameter :: ftcirc = 'CIRCLE'
+   character(*), parameter :: ftcirc = 'CIRCLE'  !! Specify the character strings that are allowed in the
+                                                 !! specification of field of view shapes.
 
    character(*), parameter :: ftelli = 'ELLIPSE'
 
@@ -141,11 +103,8 @@ module pepper_inc_gf
 
    character(*), parameter :: ftrect = 'RECTANGLE'
 
-!
-!     Character strings that are allowed in the
-!     specification of occultation types:
-!
-   character(*), parameter :: annulr = 'ANNULAR'
+   character(*), parameter :: annulr = 'ANNULAR'  !! Character strings that are allowed in the
+                                                  !! specification of occultation types:
 
    character(*), parameter :: any = 'ANY'
 
@@ -153,10 +112,7 @@ module pepper_inc_gf
 
    character(*), parameter :: full = 'FULL'
 
-!
-!     Occultation target shape specifications:
-!
-   character(*), parameter :: dsshap = 'DSK'
+   character(*), parameter :: dsshap = 'DSK'  !! Occultation target shape specifications:
 
    character(*), parameter :: edshap = 'ELLIPSOID'
 
@@ -166,32 +122,23 @@ module pepper_inc_gf
 
    character(*), parameter :: spshap = 'SPHERE'
 
-!
-!     Specify the number of supported occultation types and occultation
-!     type string length:
-!
-   integer(ip), parameter :: noctyp = 4
+   integer(ip), parameter :: noctyp = 4  !! Specify the number of supported occultation types and occultation
+                                         !! type string length:
 
    integer(ip), parameter :: oclln = 7
 
    integer(ip), parameter :: shplen = 9
 
-!
-!     Instrument field-of-view (FOV) parameters
-!
-!     Maximum number of FOV boundary vectors:
-!
-   integer(ip), parameter :: maxvrt = 10000
+   integer(ip), parameter :: maxvrt = 10000  !! Instrument field-of-view (FOV) parameters
+                                             !!
+                                             !! Maximum number of FOV boundary vectors:
 
-!
-!     FOV shape parameters:
-!
-!        circle
-!        ellipse
-!        polygon
-!        rectangle
-!
-   character(*), parameter :: cirfov = 'CIRCLE'
+   character(*), parameter :: cirfov = 'CIRCLE'  !! FOV shape parameters:
+                                                 !!
+                                                 !! circle
+                                                 !! ellipse
+                                                 !! polygon
+                                                 !! rectangle
 
    character(*), parameter :: ellfov = 'ELLIPSE'
 

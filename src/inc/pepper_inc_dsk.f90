@@ -11,8 +11,6 @@ module pepper_inc_dsk
 
    public
 
-!     Maximum size of surface ID list.
-!
-   integer(ip), parameter :: maxsrf = 100
+   integer(ip), parameter :: maxsrf = 100  !! Maximum size of surface ID list.
 
 end module pepper_inc_dsk

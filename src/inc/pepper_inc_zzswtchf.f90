@@ -8,7 +8,6 @@
 !>     informational purposes. The values of these parameters may be
 !>     increased in the future.
 !>
-!>
 !>     MAXFRM      is the maximum number of switch frame specifications
 !>                 that can be buffered concurrently by the switch frame
 !>                 subsystem.
