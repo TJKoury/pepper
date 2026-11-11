@@ -54,3 +54,30 @@ platform.windows.ifort.flags = "/fpp"
 
 [profiles]
 default = ["platform"]
+
+# Settings for the documentation (fdoc). fpm ignores what is under [extra].
+[extra.fdoc]
+project = "PEPPER"
+summary = "A modern Fortran, thread-safe reimagining of NAIF's SPICELIB (N0067)."
+author = "Jacob Williams"
+src_dir = ["./src"]
+output_dir = "./doc"
+project_github = "https://github.com/jacobwilliams/pepper"
+predocmark = ">"
+docmark = "!"
+docmark_alt = "*"
+predocmark_alt = "|"
+display = ["public", "protected"]
+source = true
+graph = true
+search = true
+preprocess = true
+fpp_extensions = ["F90"]
+macro = ["SPICE_OS_MACOS", "SPICE_COMPILER_GFORTRAN"]
+extra_filetypes = ["inc !"]
+md_extensions = ["markdown.extensions.toc"]
+front_page_file = "README.md"
+logo = "./media/logo.svg"
+graph_maxdepth = 4
+graph_maxnodes = 300
+graph_project_maxnodes = 1000
