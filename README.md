@@ -1,8 +1,13 @@
 PEPPER: Planetary Ephemerides, Positions, Pointing, Events & Rotations.
 
+[![Language](https://img.shields.io/badge/-Fortran-734f96?logo=fortran&logoColor=white)](https://github.com/topics/fortran)
+[![Language](https://img.shields.io/badge/-Python-3776AB?logo=python&logoColor=white)](https://github.com/topics/python)
+[![Language](https://img.shields.io/badge/-C-A8B9CC?logo=c&logoColor=white)](https://github.com/topics/c)
+[![Language](https://img.shields.io/badge/-C%2B%2B-00599C?logo=cplusplus&logoColor=white)](https://github.com/topics/cpp)
+
 ## Overview
 
-PEPPER provides tools for computing planetary ephemerides, positions, pointing, events, and rotations, leveraging modern Fortran features for high performance and maintainability. It can be thought of as a modern, thread-safe reimagining and replacement for SPICELIB, the Fortran 77 SPICE library that has been developed by NASA's NAIF for decades. PEPPER aims not to rewrite the SPICELIB code from scratch or convert it into another language, but to modernize, improve, and add new features to it while maintaining compatibility with existing SPICELIB applications and tools.
+PEPPER provides tools for computing planetary ephemerides, positions, pointing, events, and rotations, leveraging modern Fortran features for high performance and maintainability. It can be thought of as a modern, thread-safe reimagining and replacement for [SPICELIB](https://naif.jpl.nasa.gov/naif/toolkit.html), the Fortran 77 SPICE library that has been developed by NASA's [NAIF](https://naif.jpl.nasa.gov/naif/) for decades. PEPPER aims not to rewrite the SPICELIB code from scratch or convert it into another language, but to modernize, improve, and add new features to it while maintaining compatibility with existing SPICELIB applications and tools.
 
 PEPPER can be used from three languages:
 
