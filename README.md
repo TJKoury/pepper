@@ -1,4 +1,8 @@
-PEPPER: Planetary Ephemerides, Positions, Pointing, Events & Rotations.
+<p align="center">
+  <img src="media/logo.svg" alt="PEPPER" width="500">
+</p>
+
+**PEPPER**: Planetary Ephemerides, Positions, Pointing, Events & Rotations.
 
 [![Language](https://img.shields.io/badge/-Fortran-734f96?logo=fortran&logoColor=white)](https://github.com/topics/fortran)
 [![Language](https://img.shields.io/badge/-Python-3776AB?logo=python&logoColor=white)](https://github.com/topics/python)
