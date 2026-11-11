@@ -4407,6 +4407,29 @@ contains
          return
       end if
 
+!
+!     PEPPER: a name written as in the table (the usual case) is found by
+!     an exact comparison, and the context keeps the last one found; EQSTR
+!     (case and blanks ignored) is the fallback. The names are distinct
+!     even when compared with EQSTR, so the index is the one ESRCHC would
+!     return. (IRFNUM is called three times per aberration-corrected SPKEZR
+!     in an inertial frame; ESRCHC cost 0.11 us for ECLIPJ2000.)
+!
+      if ( ctx%irf_index /= 0 .and. len(name) <= len(ctx%irf_name) ) then
+         if ( name == ctx%irf_name ) then
+            index = ctx%irf_index
+            return
+         end if
+      end if
+      index = findloc ( frames, name, dim = 1 )
+      if ( index /= 0 ) then
+         if ( len_trim(name) <= len(ctx%irf_name) ) then
+            ctx%irf_name = name
+            ctx%irf_index = index
+         end if
+         return
+      end if
+
       if ( eqstr ( name, 'DEFAULT' ) ) then
          index = dframe
       else

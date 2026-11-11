@@ -226,6 +226,11 @@ module pepper_instance
       integer(ip) :: img_changes = -1  !! the file table's changes count when img_slot was found
       integer(ip) :: img_handle = 0  !! the handle last looked up
       integer(ip) :: img_slot = 0  !! its index in the file table (0: not in the table)
+      ! The last inertial frame name IRFNUM found in its table (exactly as
+      ! written there), and its index: SPKACS, SPKAPS and SPKLTC each look up
+      ! the output frame on every call.
+      character(16) :: irf_name = ' '  !! the frame name
+      integer(ip) :: irf_index = 0  !! its index (0: none yet)
       ! Kernel pool watches (SWPOOL, CVPOOL, DWPOOL) of the context.
       type(pool_watch), allocatable :: watches(:)  !! the watches
       type(string_map) :: watch_map  !! index in watches of each agent

@@ -30,6 +30,10 @@ Differences in what the two sides do:
   ANISE (the SPKGEO rows pass IDs to both).
 - ANISE 0.10.6 knows ECLIPJ2000 only from its own PCA file: its side applies
   SPICE's fixed obliquity rotation to the J2000 state.
+- ANISE's LT+S state applies the stellar aberration to the position only;
+  SPICE's (PEPPER's) velocity also includes the rate of change of the
+  correction, which needs the observer's acceleration. The LT and SPKPOS
+  rows compare the same quantities.
 - ANISE 0.10.6's FK converter maps the alias MOON_ME to the Moon's body
   frame; its side asks for MOON_ME_DE440_ME421, which MOON_ME stands for.
 """
@@ -51,11 +55,15 @@ OPERATIONS = {
     "anise_convert_text": ("Loading", "Converting the text PCK and the FK to ANISE's formats (ANISE only; once)"),
     "spkezr_moon": ("States, random epochs", "SPKEZR Moon from Earth, J2000, no correction"),
     "spkgeo_moon": ("States, random epochs", "SPKGEO Moon from Earth, by code"),
-    "spkezr_mars_lts": ("States, random epochs", "SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S"),
+    "spkezr_mars_lts": ("States, random epochs", "SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S (PEPPER's velocity includes the rate of the stellar aberration, ANISE's does not)"),
+    "spkezr_mars_lt": ("States, random epochs", "SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT"),
+    "spkpos_mars_lts": ("States, random epochs", "SPKPOS Mars barycenter from Earth, ECLIPJ2000, LT+S"),
     "spkpos_sun_cns": ("States, random epochs", "SPKPOS Sun from Earth, J2000, CN+S"),
     "spkezr_moon_seq": ("States, sequential epochs", "SPKEZR Moon from Earth, J2000, no correction"),
     "spkgeo_moon_seq": ("States, sequential epochs", "SPKGEO Moon from Earth, by code"),
-    "spkezr_mars_lts_seq": ("States, sequential epochs", "SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S"),
+    "spkezr_mars_lts_seq": ("States, sequential epochs", "SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S (PEPPER's velocity includes the rate of the stellar aberration, ANISE's does not)"),
+    "spkezr_mars_lt_seq": ("States, sequential epochs", "SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT"),
+    "spkpos_mars_lts_seq": ("States, sequential epochs", "SPKPOS Mars barycenter from Earth, ECLIPJ2000, LT+S"),
     "spkpos_sun_cns_seq": ("States, sequential epochs", "SPKPOS Sun from Earth, J2000, CN+S"),
     "pxform_itrf93": ("Frames, random epochs", "PXFORM J2000 to ITRF93 (binary PCK)"),
     "sxform_itrf93": ("Frames, random epochs", "SXFORM J2000 to ITRF93"),

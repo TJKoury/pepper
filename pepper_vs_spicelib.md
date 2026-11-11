@@ -36,9 +36,9 @@ machine (details in [Speed](#speed)):
 
 [Compared with ANISE](#compared-with-anise), the Rust rewrite of SPICE's
 core, PEPPER with its binary kernels in memory (an option of FURNSH) is
-1.4–2 times faster for states and Earth rotations, 17 times faster for frames
-from text PCKs, and slower only for light time with stellar aberration
-(LT+S). With the kernels read from their files as needed (the default, as
+1.3–2 times faster for states and Earth rotations and 17 times faster for
+frames from text PCKs. It is slower only for LT+S states, where it computes
+more than ANISE (the rate of the stellar aberration in the velocity). With the kernels read from their files as needed (the default, as
 SPICELIB), queries at scattered epochs are 8–27 times slower than ANISE's.
 
 ## Thread safety
@@ -392,28 +392,38 @@ to the last bit.
 | Operation | ANISE 0.10.6 (µs) | PEPPER, read as needed (µs) | PEPPER, in memory (µs) | In memory: speedup over ANISE |
 |---|--:|--:|--:|--:|
 | **Loading** | | | | |
-| Loading the kernel set (PEPPER: FURNSH of the 6 kernels; ANISE: the 3 binary kernels and the converted text PCK and FK), per set | 3,817 | 1,963 | 4,597 | 0.83× |
-| Converting the text PCK and the FK to ANISE's formats (ANISE only; once) | 1,034 | – | – | – |
+| Loading the kernel set (PEPPER: FURNSH of the 6 kernels; ANISE: the 3 binary kernels and the converted text PCK and FK), per set | 3,775 | 1,922 | 4,389 | 0.86× |
+| Converting the text PCK and the FK to ANISE's formats (ANISE only; once) | 938 | – | – | – |
 | **States, random epochs** | | | | |
-| SPKEZR Moon from Earth, J2000, no correction | 0.363 | 10 | 0.268 | 1.4× |
-| SPKGEO Moon from Earth, by code | 0.381 | 10.1 | 0.222 | 1.7× |
-| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S | 0.792 | 9.87 | 1.17 | 0.68× |
-| SPKPOS Sun from Earth, J2000, CN+S | 1.18 | 10 | 0.601 | 2.0× |
+| SPKEZR Moon from Earth, J2000, no correction | 0.352 | 10 | 0.262 | 1.3× |
+| SPKGEO Moon from Earth, by code | 0.376 | 9.79 | 0.217 | 1.7× |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S ¹ | 0.781 | 9.47 | 0.854 | 0.91× |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT | 0.756 | 8.88 | 0.473 | 1.6× |
+| SPKPOS Mars barycenter from Earth, ECLIPJ2000, LT+S | 0.777 | 8.78 | 0.468 | 1.7× |
+| SPKPOS Sun from Earth, J2000, CN+S | 1.17 | 9.87 | 0.591 | 2.0× |
 | **States, sequential epochs** | | | | |
-| SPKEZR Moon from Earth, J2000, no correction | 0.346 | 0.362 | 0.254 | 1.4× |
-| SPKGEO Moon from Earth, by code | 0.371 | 0.309 | 0.21 | 1.8× |
-| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S | 0.781 | 1.44 | 1.16 | 0.68× |
-| SPKPOS Sun from Earth, J2000, CN+S | 1.17 | 0.885 | 0.59 | 2.0× |
+| SPKEZR Moon from Earth, J2000, no correction | 0.34 | 0.374 | 0.248 | 1.4× |
+| SPKGEO Moon from Earth, by code | 0.364 | 0.328 | 0.202 | 1.8× |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT+S ¹ | 0.772 | 1.12 | 0.84 | 0.92× |
+| SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT | 0.744 | 0.583 | 0.464 | 1.6× |
+| SPKPOS Mars barycenter from Earth, ECLIPJ2000, LT+S | 0.768 | 0.572 | 0.457 | 1.7× |
+| SPKPOS Sun from Earth, J2000, CN+S | 1.16 | 0.864 | 0.583 | 2.0× |
 | **Frames, random epochs** | | | | |
-| PXFORM J2000 to ITRF93 (binary PCK) | 0.476 | 3.84 | 0.279 | 1.7× |
-| SXFORM J2000 to ITRF93 | 0.475 | 3.88 | 0.306 | 1.6× |
-| PXFORM J2000 to IAU_MARS (text PCK) | 10.1 | 0.606 | 0.606 | 17× |
-| PXFORM MOON_ME to J2000 (FK + binary PCK) | 0.622 | 1.79 | 0.609 | 1.0× |
+| PXFORM J2000 to ITRF93 (binary PCK) | 0.47 | 3.74 | 0.279 | 1.7× |
+| SXFORM J2000 to ITRF93 | 0.466 | 3.77 | 0.301 | 1.5× |
+| PXFORM J2000 to IAU_MARS (text PCK) | 9.92 | 0.578 | 0.592 | 17× |
+| PXFORM MOON_ME to J2000 (FK + binary PCK) | 0.619 | 1.8 | 0.598 | 1.0× |
 | **Frames, sequential epochs** | | | | |
-| PXFORM J2000 to ITRF93 (binary PCK) | 0.447 | 0.279 | 0.241 | 1.9× |
-| SXFORM J2000 to ITRF93 | 0.439 | 0.305 | 0.266 | 1.7× |
-| PXFORM J2000 to IAU_MARS (text PCK) | 9.56 | 0.529 | 0.533 | 18× |
-| PXFORM MOON_ME to J2000 (FK + binary PCK) | 0.608 | 0.625 | 0.578 | 1.1× |
+| PXFORM J2000 to ITRF93 (binary PCK) | 0.44 | 0.265 | 0.238 | 1.8× |
+| SXFORM J2000 to ITRF93 | 0.433 | 0.293 | 0.265 | 1.6× |
+| PXFORM J2000 to IAU_MARS (text PCK) | 9.49 | 0.514 | 0.52 | 18× |
+| PXFORM MOON_ME to J2000 (FK + binary PCK) | 0.623 | 0.618 | 0.574 | 1.1× |
+
+¹ Not the same quantity: SPICE's LT+S velocity (PEPPER's) is the velocity of
+the apparent position, including the rate of change of the stellar
+aberration correction, which needs the observer's acceleration; ANISE's
+applies the correction to the position only. The LT and SPKPOS rows compare
+the same quantities.
 
 ### Where the differences come from
 
@@ -428,9 +438,21 @@ to the last bit.
 - **In memory, the read is a copy.** PEPPER's in-memory reads skip the record
   buffer altogether (one array copy per read), so they are faster than reads
   from the buffer even at sequential epochs: SPKGEO 0.31 → 0.21 µs.
-- **The computation itself.** With the data in memory, PEPPER is 1.4–2 times
-  faster than ANISE for geometric states, CN+S and ITRF93, about equal for
-  MOON_ME, and slower for the LT+S correction (1.17 against 0.79 µs).
+- **The computation itself.** With the data in memory, PEPPER is 1.3–2
+  times faster than ANISE for geometric states, light time (LT), the LT+S and
+  CN+S positions and ITRF93, and about equal for MOON_ME.
+- **LT+S states.** The one row where ANISE is faster (0.78 against 0.85 µs)
+  computes more in PEPPER: SPICE's velocity includes the rate of change of
+  the stellar aberration, which needs the observer's acceleration
+  (SPKACS differentiates the observer's velocity numerically, with two more
+  ephemeris evaluations) and the derivative of the correction (ZZSTELAB).
+  ANISE leaves that rate out of the velocity. For the same quantities, the
+  LT state and the LT+S position, PEPPER takes 0.46–0.47 µs against ANISE's
+  0.74–0.78. (This comparison also found that inertial frames other than
+  J2000 cost PEPPER 0.33 µs per corrected state: SPKACS, SPKAPS and SPKLTC
+  each looked up the frame name with a case-insensitive search of SPICELIB's
+  21 inertial frames. A context now keeps the last name it found; the
+  ECLIPJ2000 LT+S state went from 1.17 to 0.85 µs.)
 - **Frames from text PCKs.** ANISE evaluates IAU_MARS in about 10 µs, and
   PEPPER in about 0.5–0.6 µs: PEPPER is 17–18 times faster.
 - **Loading.** Read as needed, PEPPER loads the kernel set in half ANISE's

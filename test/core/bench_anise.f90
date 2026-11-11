@@ -139,6 +139,18 @@ contains
       call report('spkezr_mars_lts' // suffix, nq, now() - t0, sum)
       sum = 0; t0 = now()
       do k = 1, nq
+         call ctx%spkezr('MARS BARYCENTER', et(k), 'ECLIPJ2000', 'LT', 'EARTH', state, lt)
+         sum = sum + state(1) + state(4)
+      end do
+      call report('spkezr_mars_lt' // suffix, nq, now() - t0, sum)
+      sum = 0; t0 = now()
+      do k = 1, nq
+         call ctx%spkpos('MARS BARYCENTER', et(k), 'ECLIPJ2000', 'LT+S', 'EARTH', pos, lt)
+         sum = sum + pos(1)
+      end do
+      call report('spkpos_mars_lts' // suffix, nq, now() - t0, sum)
+      sum = 0; t0 = now()
+      do k = 1, nq
          call ctx%spkpos('SUN', et(k), 'J2000', 'CN+S', 'EARTH', pos, lt)
          sum = sum + pos(1)
       end do

@@ -126,8 +126,38 @@ fn states(almanac: &Almanac, epochs: &[Epoch], suffix: &str) {
         let r = to_eclip([s.radius_km.x, s.radius_km.y, s.radius_km.z]);
         let v = to_eclip([s.velocity_km_s.x, s.velocity_km_s.y, s.velocity_km_s.z]);
         sum += black_box(r)[0] + 0.0 * black_box(v)[0];
+        // (ANISE's LT+S velocity has no stellar aberration rate, SPICE's
+        // has: the velocities differ, the positions agree)
     }
     report(&format!("spkezr_mars_lts{suffix}"), NQ, t0.elapsed().as_secs_f64(), sum);
+
+    // SPKEZR Mars barycenter from Earth, ECLIPJ2000, LT (no stellar
+    // aberration: both libraries compute the same velocity)
+    let mut sum = 0.0;
+    let t0 = Instant::now();
+    for &e in epochs {
+        let s = almanac
+            .translate(MARS_BARYCENTER_J2000, EARTH_J2000, e, Aberration::LT)
+            .unwrap();
+        let r = to_eclip([s.radius_km.x, s.radius_km.y, s.radius_km.z]);
+        let v = to_eclip([s.velocity_km_s.x, s.velocity_km_s.y, s.velocity_km_s.z]);
+        sum += r[0] + v[0];
+    }
+    report(&format!("spkezr_mars_lt{suffix}"), NQ, t0.elapsed().as_secs_f64(), sum);
+
+    // SPKPOS Mars barycenter from Earth, ECLIPJ2000, LT+S: the position.
+    // ANISE computes the state (its velocity has no stellar aberration
+    // rate); the position is the one SPKPOS returns.
+    let mut sum = 0.0;
+    let t0 = Instant::now();
+    for &e in epochs {
+        let s = almanac
+            .translate(MARS_BARYCENTER_J2000, EARTH_J2000, e, Aberration::LT_S)
+            .unwrap();
+        let r = to_eclip([s.radius_km.x, s.radius_km.y, s.radius_km.z]);
+        sum += r[0];
+    }
+    report(&format!("spkpos_mars_lts{suffix}"), NQ, t0.elapsed().as_secs_f64(), sum);
 
     // SPKPOS Sun from Earth, J2000, CN+S
     let mut sum = 0.0;
