@@ -16,6 +16,8 @@ PEPPER can be used from three languages:
 - **C and C++:** a C interface (`include/pepper.h`), generated from the Fortran interfaces (see [The C interface](#the-c-interface)).
 - **Python:** [PepperyPy](python/README.md), with [SpiceyPy](https://github.com/AndrewAnnex/SpiceyPy)'s API, so SpiceyPy programs run with `import pepperypy as spice`, 3 to 5 times faster and safe to call from several threads (see [Python: PepperyPy](#python-pepperypy)).
 
+> PEPPER is new and experimental. Its interfaces (Fortran, C and Python) may still change. It passes NAIF's test suite and agrees with SPICELIB and SpiceyPy in the comparisons described here, but it has not yet been used for any mission-critical applications. PEPPER is not developed or supported by NAIF, JPL, or NASA.
+
 ## Features
 
 - Compute planetary ephemerides with high precision.
