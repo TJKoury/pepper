@@ -60,7 +60,7 @@ PEPPER changes is in [pepper_vs_spicelib.md](pepper_vs_spicelib.md).
 PEPPER builds with [fpm](https://fpm.fortran-lang.org); the development
 environment (gfortran, fpm, Python, FORD) is managed with [pixi](https://pixi.sh):
 
-```
+```bash
 pixi run build          # the library
 pixi run test           # the unit tests (test/core)
 pixi run tspice         # NAIF's test suite (the tspice package), in parallel
