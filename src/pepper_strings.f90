@@ -3925,11 +3925,8 @@ contains
       integer(ip), intent(out) :: n  !! Number of items in the list.
       character(*), intent(out) :: items ( * )  !! Items in the list, left justified.
 
-      character(1) :: blank
-      parameter           ( blank = ' ' )
-
-      integer(ip) :: ispace
-      parameter           ( ispace = 32 )
+      character(1),parameter :: blank = ' '
+      integer(ip),parameter :: ispace = 32
 
       character(1) :: bchr
       character(1) :: echr
@@ -4324,11 +4321,8 @@ contains
       integer(ip), intent(out) :: n  !! Number of items in the list.
       character(*), intent(out) :: items ( * )  !! Items in the list, left justified.
 
-      character(1) :: blank
-      parameter           ( blank = ' ' )
-
-      integer(ip) :: ispace
-      parameter           ( ispace = 32 )
+      character(1),parameter :: blank = ' '
+      integer(ip),parameter :: ispace = 32
 
       character(1) :: bchr
       character(1) :: echr
@@ -6052,8 +6046,7 @@ contains
       character(*), intent(out) :: next  !! The next word in the string.
       character(*), intent(out) :: rest  !! The remaining part of STRING, left-justified.
 
-      integer(ip) :: ispace
-      parameter           ( ispace = 32 )
+      integer(ip),parameter :: ispace = 32
 
       integer(ip) :: begin
       integer(ip) :: end
@@ -10804,20 +10797,15 @@ contains
       integer(ip), intent(in) :: number  !! Integer to be converted.
       character(*), intent(out) :: string  !! Equivalent character string, left justified.
 
-      integer(ip) :: base
-      parameter           ( base = 10 )
-
-      integer(ip) :: strlen
-      parameter           ( strlen = 80 )
-      character(strlen) :: tmpstr
-
+      integer(ip),parameter :: base = 10
+      integer(ip),parameter :: strlen = 80
       character(1), parameter :: digits(0:9) = &
-                 ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+         ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
+      character(strlen) :: tmpstr
       integer(ip) :: tmpnum
       integer(ip) :: result
       integer(ip) :: remndr
-
       integer(ip) :: i
 
 !
@@ -11469,12 +11457,9 @@ contains
       character(1), intent(in) :: b  !! the other character to check
 
 !
-!     Entry points.
-!
 !     Range of characters
 !
-      integer(ip) :: lstchr
-      parameter           ( lstchr = 255 )
+      integer(ip),parameter :: lstchr = 255
 !     The array UVALUE contains the ICHAR values for the upper case
 !     version of each character.
 !
@@ -11619,16 +11604,15 @@ contains
       implicit none
       character(1), intent(in) :: a  !! one of the characters to check
       character(1), intent(in) :: b  !! the other character to check
-      integer(ip) :: lstchr
-      parameter           ( lstchr = 255 )
+      integer(ip),parameter :: lstchr = 255
       integer(ip) :: i
       integer(ip) :: j
       integer(ip), parameter :: uvalue ( 0 : lstchr ) = &
          [ ( merge( i - ( iachar('a') - iachar('A') ), i, &
                     i >= iachar('a') .and. i <= iachar('z') ), i = 0, lstchr ) ]
 
-      i     = ichar(a)
-      j     = ichar(b)
+      i = ichar(a)
+      j = ichar(b)
 
       if ( i > lstchr .or. j > lstchr ) then
          nechr = i /= j
@@ -12589,38 +12573,17 @@ contains
       character(*), intent(out) :: error  !! Message indicating whether errors have occurred.
       integer(ip), intent(out) :: ptr  !! Position in string where an error occurred.
 
-!
-!     SPICELIB functions.
-!
-
-!
-!     Local Parameters.
-!
-
-      real(wp) :: base
-      parameter           ( base   = 10.0_wp )
-
+      real(wp),parameter :: base = 10.0_wp
       integer(ip), parameter :: digit = 1
-
       integer(ip), parameter :: dpoint = 2
-
-      integer(ip) :: expont
-      parameter           ( expont = 3   )
-
+      integer(ip),parameter :: expont = 3
       integer(ip), parameter :: ignore = 4
-
       integer(ip), parameter :: bpistr = 5
-
       integer(ip), parameter :: epistr = 6
-
       integer(ip), parameter :: sign = 7
-
       integer(ip), parameter :: ibase = 10
-
       integer(ip), parameter :: nknown = 128
-
       integer(ip), parameter :: test = 16
-
       integer(ip), parameter :: errsiz = 160
 
       character(errsiz) :: blnkst
@@ -12632,7 +12595,7 @@ contains
 
       real(wp) :: decval
       real(wp) :: divisr
-      real(wp) :: dpsign (     2     )
+      real(wp) :: dpsign ( 2 )
       real(wp) :: ecount
       real(wp) :: expval
       real(wp) :: factor
@@ -12676,10 +12639,6 @@ contains
       logical :: sigchr
       logical :: signok
       logical :: zeroi
-!
-!     Save everything.  It's easier than tracking down every
-!     little variable that might need to be saved.
-!
 
 !
 !     PEPPER: SPICELIB computed these tables and limits on the first call

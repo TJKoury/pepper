@@ -929,16 +929,7 @@ contains
       !>     ID-based hash for text PCK data. KIDLST, KIDPOL, and KIDIDS
       !>     provide the index in the body PCK data arrays at which the data
       !>     of the body with a given ID are stored.
-      !>
-      !>     Saved variables
-      !>
-      !>     Because we need to save almost everything, we save everything
-      !>     rather than taking a chance and accidentally leaving something
-      !>     off the list.
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
+
       module procedure tisbod
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, j2000, rpd, spd, twopi

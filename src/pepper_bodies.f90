@@ -6208,8 +6208,7 @@ contains
       !>        contains the default mapping list.
       !>
       !>-    SPICELIB Version 2.0.0, 23-AUG-2002 (FST)
-      !>
-      !>     Standard SPICE error handling.
+
       module procedure zzbodget
       use pepper_kinds, only: ip
       use pepper_strings, only: cmprss, ucase

@@ -503,18 +503,7 @@ contains
       !>
       !>        Multiple FOUND flags and a bevy of new error messages
       !>        were implemented to cope with this unfortunate oversight.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
+
       module procedure deltet
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase
@@ -1064,26 +1053,13 @@ contains
       !>               before supplying it to DPSTRF. This integer
       !>               `anchors' the first significant digit of the input
       !>               value in the units place.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local Functions (Statement Functions)
-      !>
-      !>     Local variables
-      !>
-      !>     Save everything between calls
-      !>
-      !>     Initial values
-      !>
-      !>     The function NDIGIT gives the number of digits required to
-      !>     display a non-negative integer that is less than 10000
-      !>
-      !>     Standard SPICE error handling.
+
       module procedure et2utc
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, prefix, suffix, ucase
       implicit none
-      integer(ip) :: ndigit
+      integer(ip) :: ndigit !! The function NDIGIT gives the number of digits required to
+                            !! display a non-negative integer that is less than 10000
       integer(ip) :: day
       character(3), parameter :: mthnam   ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &

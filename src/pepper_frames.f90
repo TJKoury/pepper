@@ -288,10 +288,7 @@
 !>     provide an index in BIDIDX which stores the index for the frame
 !>     attributes in the built-in frame attributes arrays IDCODE, NAME,
 !>     CENTER, TYPE, and TYPEID.
-!>
-!>     Because we need to save almost everything we save everything
-!>     rather than taking a chance and accidentally leaving something
-!>     off the list.
+
 submodule (pepper_instance) pepper_frames
 
    implicit none

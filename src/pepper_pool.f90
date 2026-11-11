@@ -10717,9 +10717,6 @@ contains
       logical :: isplus
       logical :: isbad
       logical :: istime
-!
-!     Save everything.
-!
 
 !
 !     Constants (SPICELIB computed them on the first call).
@@ -11752,9 +11749,6 @@ contains
       logical :: isplus
       logical :: isbad
       logical :: istime
-!
-!     Save everything.
-!
 
 !
 !     Constants (SPICELIB computed them on the first call).
