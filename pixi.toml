@@ -28,3 +28,13 @@ verify = { cmd = "fpm run --flag -DPEPPER_VERIFY --runner 'python ../tools/run_t
 tspice = { cmd = "fpm run --runner 'python ../tools/run_tspice.py' --", cwd = "tspice", depends-on = ["clean-stale"], description = "Run the tspice test families in parallel (the tspice package; see tools/run_tspice.py)" }
 tspice-list = { cmd = "fpm run --runner 'python ../tools/run_tspice.py' -- --list", cwd = "tspice", description = "List the tspice test families" }
 inventory = { cmd = "python tools/state_inventory.py", description = "Summarize the saved state in SPICELIB sources (see tools/state_inventory.py; --list, --json PATH)" }
+
+# Rust, only for the ANISE comparison (bench/anise; pixi run -e anise compare-anise)
+[feature.anise.dependencies]
+rust = "*"
+
+[feature.anise.tasks]
+compare-anise = { cmd = "python bench/compare_anise.py", description = "Speed of PEPPER against ANISE, the Rust library (bench/compare_anise.py; pass --kernels DIR)" }
+
+[environments]
+anise = { features = ["anise"], solve-group = "default" }
