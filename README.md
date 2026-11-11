@@ -2,7 +2,7 @@ PEPPER: Planetary Ephemerides, Positions, Pointing, Events & Rotations. A modern
 
 ## Overview
 
-PEPPER provides tools for computing planetary ephemerides, positions, pointing, events, and rotations, leveraging modern Fortran features for high performance and maintainability.
+PEPPER provides tools for computing planetary ephemerides, positions, pointing, events, and rotations, leveraging modern Fortran features for high performance and maintainability. It can be thought of as a modern, thread-safe reimagining and replacement for SPICELIB, the original Fortran 77 SPICE library that has been developed by NASA's NAIF for decades but has been showing its age for a while. PEPPER aims not to rewrite the SPICELIB code from scratch or convert it into another language, but to modernize and improve it while maintaining compatibility with existing SPICELIB applications and tools.
 
 ## Features
 
